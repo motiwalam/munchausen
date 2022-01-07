@@ -24,11 +24,13 @@ The search also uses multiprocessing module to search different numbers of digit
 
 What is `0^0`?
 
-Technically, it is undefined. But simply disregarding any number containing the digit 0 seems unsatisfying, especially since that would mean losing some Munchausen numbers.
+Technically, it is undefined. But simply disregarding any number containing the digit 0 seems unsatisfying and needlessly restrictive.
 
 So, what is it then? Well, the consensus seems to be that if we are to give it a value anyway, it should be either 0 or 1.
 
 In our search, we aim to be as accomodating as possible. The search can use either `0^0 = 0` or `0^0 = 1`, depending on a user supplied parameter.
+
+If you're deadset on treating `0^0` as undefined, then you can simply ignore the ones with a zero in them. Doesn't quite the work the other way around though.
 
 ### Goal
 
