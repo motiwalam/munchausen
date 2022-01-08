@@ -78,10 +78,15 @@ Finally, we can also fix some digits in our combinations. Let's refer back to th
 
 The file `nb.py` contains functions that model the sizes of these search spaces and the gains made by each successive optimization.
 
-### A Conjecture
+### A Conjecture : an upperbound of `b^(b-1)` 
 
 I believe that for `b > 2`, `b` digit Munchausen numbers are not possible. If this conjecture is proven true, it would improve our search space to 75% of what it is currently.
 
+Some information that I have amassed regarding this that might be useful in solving it:
+* even in base 2, a b-digit number only exists if the convention `0^0 = 1` is adopted, in which case the b-digit number is `10`
+* `b(b-1)^(b-1) < b^b` so the largest possible b-digit number in our search space is `b(b-1)^(b-1)`
+* the leading digit of this number is approximately `b/e`
+* the digit `b-1` must appear 3 times in a b-digit number for `b>2`
 ### Next steps
 
 No number of optimizations will make an exhaustive search tractable in the long term. Even with the latest iteration of the algorithm, it took ~17 hours to search base 19 exhaustively. Searching base 20 will require searching ~32 billion combinations of digits.
