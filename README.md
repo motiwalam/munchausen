@@ -37,7 +37,7 @@ If you're deadset on treating `0^0` as undefined, then you can simply ignore the
 To find all Munchausen numbers in a given base and to do it as fast as possible.
 
 The long-term goal is to generally characterize the problem of Munchausen numbers and answer the following questions:
-* Can we find Munchausen nummbers in a given base in polynomial time?
+* Can we find Munchausen numbers in a given base in polynomial time?
 * Is there some sort of general form to a Munchausen number?
 * Is it possible to predict how many Munchausen numbers there are in a given base?
 
