@@ -12,7 +12,7 @@ Some examples of Munchausen numbers:
 
 ### Details for the impatient
 
-We search exhaustively. Optimizations detailed below are used to tighten the search space. The current iteration of the algorithm is able to search base 16 in 880 seconds (14 min 40 s).
+We search exhaustively. Optimizations detailed below are used to tighten the search space. The current iteration of the algorithm is able to search base 16 in 654 seconds (10 min 54 s).
 
 A list of all Munchausen numbers that have been found so far can be found in `/output`. Files `*-1.txt` employ the `0^0 = 1` convention and files `*-0.txt` employ the `0^0 = 0` convention. Numbers are represented as tuples of digits, and the digits themselves are represented as decimal numerals. More information about the format of the output can be found in `util.py`.
 
@@ -78,7 +78,7 @@ Finally, we can also fix some digits in our combinations. Let's refer back to th
 
 The file `nb.py` contains functions that model the sizes of these search spaces and the gains made by each successive optimization.
 
-### A Conjecture : an upperbound of `b^(b-1)` 
+### A Conjecture : an upperbound of `b^(b-1)`
 
 I believe that for `b > 2`, `b` digit Munchausen numbers are not possible. If this conjecture is proven true, it would improve our search space to 75% of what it is currently.
 
