@@ -78,7 +78,7 @@ def nb6(b):
 
 # all nb functions
 anb = tuple(map(lambda k: globals()[k], sorted(filter(lambda c: c.startswith('nb'), globals().keys()), key=lambda k: int(k[2:]))))
-li  = len(anb)
+li  = len(anb) - 1
 
 # ratio functions, comparing nb{i} to nb{j}
 ra = {f"{i}/{j}": (lambda b,i=i,j=j: anb[i](b)/anb[j](b)) for i,j in product(range(li),repeat=2)}
@@ -89,10 +89,10 @@ prog = lambda b: {i:anb[i](b) for i in range(li)}
 rprog = lambda b: {f"{i}/{i-1}":ra[f'{i}/{i-1}'](b) for i in range(1, li)}
 
 # give the search spaces for all bases from b2 to b1 using nb_j
-ss = lambda b1,b2=2,j=li-1: {b:anb[j](b) for b in range(b2,b1+1)}
+ss = lambda b1,b2=2,j=li: {b:anb[j](b) for b in range(b2,b1+1)}
 # compare the search spaces for all bases from b2 to b1 using nb_j
-ssr = lambda b1,b2=3,j=li-1: {f"{b}/{b-1}":anb[j](b)/anb[j](b-1) for b in range(b2,b1+1)}
+ssr = lambda b1,b2=3,j=li: {f"{b}/{b-1}":anb[j](b)/anb[j](b-1) for b in range(b2,b1+1)}
 
 # total progress, dividing by nb1 since that is usually a more useful indicator
-tp = ra[f'{li-1}/1']
-latest = anb[li-1]
+tp = ra[f'{li}/1']
+latest = anb[li]
