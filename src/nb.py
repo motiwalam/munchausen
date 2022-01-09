@@ -77,16 +77,13 @@ def nb7(b):
         for r in range(t, mx):
             n = 0 if b==2 else ceil(b**(d-1)/(r**r))
             if atbd[0](b, d, mx, r, n):
-                # print(f"computing {d} with {r}")
                 s += ncrr(mx,d-n)
-            else:
-                print(f"skipping {b,d,r,n}")
 
     return s
 
 # not currently proven
 # based on the conjecture that b-digit munchausen numbers are impossible for b>2
-# def nb7(b):
+# def nb8(b):
 #     s = 0
 #     for d in range(2,b):
 #         t = fm(b**(d-1)/d)
