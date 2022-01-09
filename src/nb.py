@@ -2,7 +2,8 @@
 
 from math import ceil
 from functools import reduce
-from itertools import takewhile, count, product
+from itertools import product
+from common import fm, atbd
 
 # ------- combinatoric functions ---------
 # factorial
@@ -12,8 +13,7 @@ ncr  = lambda n,r: fact(n)/(fact(r)*fact(n-r))
 # combinations with repetition
 ncrr = lambda n,r: ncr(n+r-1,r)
 
-# first number x such that x^x is greater than n
-fm = lambda n: max(takewhile(lambda x:x**x<n, count()), default=0)+1
+
 
 # -------- search space calculation functions ---------
 
@@ -64,6 +64,26 @@ def nb6(b):
     return s
 
 
+# we can get a minimum d-digit number
+# we can also establish a maximum digit
+# if the first number greater than that with all
+# digits less than that maximum digit has more than d-digits
+# then no d-digit number munchausen number exists
+def nb7(b):
+    s = 0
+    for d in range(2,b+1):
+        t = fm(b**(d-1)/d)
+        mx = fm(b**d)
+        for r in range(t, mx):
+            n = 0 if b==2 else ceil(b**(d-1)/(r**r))
+            if atbd[0](b, d, mx, r, n):
+                # print(f"computing {d} with {r}")
+                s += ncrr(mx,d-n)
+            else:
+                print(f"skipping {b,d,r,n}")
+
+    return s
+
 # not currently proven
 # based on the conjecture that b-digit munchausen numbers are impossible for b>2
 # def nb7(b):
@@ -81,12 +101,12 @@ anb = tuple(map(lambda k: globals()[k], sorted(filter(lambda c: c.startswith('nb
 li  = len(anb) - 1
 
 # ratio functions, comparing nb{i} to nb{j}
-ra = {f"{i}/{j}": (lambda b,i=i,j=j: anb[i](b)/anb[j](b)) for i,j in product(range(li),repeat=2)}
+ra = {f"{i}/{j}": (lambda b,i=i,j=j: anb[i](b)/anb[j](b)) for i,j in product(range(li+1),repeat=2)}
 
 # give the search space for a base for all nb's from 0 to latest
-prog = lambda b: {i:anb[i](b) for i in range(li)}
+prog = lambda b: {i:anb[i](b) for i in range(li+1)}
 # give the ratios of search spaces for a base, showing progressive improvements
-rprog = lambda b: {f"{i}/{i-1}":ra[f'{i}/{i-1}'](b) for i in range(1, li)}
+rprog = lambda b: {f"{i}/{i-1}":ra[f'{i}/{i-1}'](b) for i in range(1, li+1)}
 
 # give the search spaces for all bases from b2 to b1 using nb_j
 ss = lambda b1,b2=2,j=li: {b:anb[j](b) for b in range(b2,b1+1)}

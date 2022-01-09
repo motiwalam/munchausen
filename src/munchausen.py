@@ -4,15 +4,16 @@ import sys
 import time
 from functools import reduce
 from math import ceil
-from itertools import takewhile,count,combinations_with_replacement as cwr
+from itertools import combinations_with_replacement as cwr
+from common import fm, E, tbd
 from pathos.multiprocessing import ProcessPool as Pool, cpu_count
 
 # -------- find all valid numbers in a given base -------
 
-# encode n in base b
-E = lambda n,b: () if n==0 else E(n//b,b) + (n%b,)
 # m controls whether 0^0 counts as 1 or 0
 sp = lambda d,m: d**d if m else (0 if d==0 else d**d)
+# compute vector that encodes the function f(x) = x^x
+msp = lambda b,m: tuple(map(lambda c: sp(c, m), range(b)))
 # take a vector of digits, raise each to its own power,
 # and return the sum encoded in base b
 # m is an array representing the function f(x) = x^x
@@ -20,15 +21,16 @@ sp = lambda d,m: d**d if m else (0 if d==0 else d**d)
 msb = lambda v,b,m: E(sum(map(lambda n:m[n], v)), b)
 # predicate to test if a number in base b is valid
 P = lambda x,b,m: sorted(msb(x,b,m)) == sorted(x)
-# first number x such that x^x is greater than n
-fm = lambda n: max(takewhile(lambda x:x**x<n, count()), default=0)+1
+
 # return the digit combinations generator
 def gcwr(b,d):
     t = fm(b**(d-1)/d)
+    mx = fm(b**d)
     def g():
-        for r in range(t, fm(b**d)):
+        for r in range(t, mx):
             n = 0 if b==2 else ceil(b**(d-1)/(r**r))
-            yield from ((r,)*n + c for c in cwr(range(fm(b**d)),d-n))
+            if tbd(b,d,mx,r,n):
+                yield from ((r,)*n + c for c in cwr(range(mx),d-n))
 
     return g()
 
@@ -44,7 +46,7 @@ def search(sb,eb,mode=1):
     with Pool(cpu_count()) as p:
         for b in range(sb,eb+1):
             start = time.perf_counter()
-            m = tuple(map(lambda c: sp(c, mode), range(b)))
+            m = msp(b, mode)
             # f = fall(b,m,map)
             f = fall(b,m,p.imap)
             end = time.perf_counter()
