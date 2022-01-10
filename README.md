@@ -62,7 +62,13 @@ The maximum Munchausen sum of a `b` digit number is if there are `b` copies of t
 
 Since `1+b(b-1)^(b-1) < b^b` for all natural numbers `b >= 2`, there can never be a `b+1` digit Munchausen number.
 
-Therefore, we can improve our upperbound to only consider `b` digit numbers, or all numbers less than `b^b`.
+We can thus improve our upperbound to only consider b-digit numbers, or all numbers less than `b^b`.
+
+Furthermore, the maximum Munchausen sum of a b-digit number is `b*(b-1)^(b-1)`. This value is always less than `b^b` and greater than or equal to `b^(b-1)` meaning it always has b-digits itself.
+
+Thus, our upper bound is actually `b*(b-1)^(b-1)`.
+
+* **note**: In the current implementation, this second improvement to the upper bound is not used.
 
 #### Optimizing the search space
 
@@ -87,6 +93,7 @@ Some information that I have amassed regarding this that might be useful in solv
 * `b(b-1)^(b-1) < b^b` so the largest possible b-digit number in our search space is `b(b-1)^(b-1)`
 * the leading digit of this number is approximately `b/e`
 * the digit `b-1` must appear 3 times in a b-digit number for `b>2`
+
 ### Next steps
 
 No number of optimizations will make an exhaustive search tractable in the long term. Even with the latest iteration of the algorithm, it took ~17 hours to search base 19 exhaustively. Searching base 20 will require searching ~32 billion combinations of digits.
