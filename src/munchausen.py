@@ -1,4 +1,4 @@
-#!/usr/bin/env -S python3.10 -u
+#!/usr/bin/env -S pypy3 -u
 
 import sys
 import time

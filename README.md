@@ -12,7 +12,7 @@ Some examples of Munchausen numbers:
 
 ### Details for the impatient
 
-We search exhaustively. Optimizations detailed below are used to tighten the search space. The current iteration of the algorithm is able to search base 16 in 654 seconds (10 min 54 s).
+We search exhaustively. Optimizations detailed below are used to tighten the search space. The current iteration of the algorithm is able to search base 16 in 169 seconds under PyPy (the performance is less impressive in CPython, at 654 seconds).
 
 A list of all Munchausen numbers that have been found so far can be found in `/output`. Files `*-1.txt` employ the `0^0 = 1` convention and files `*-0.txt` employ the `0^0 = 0` convention. Numbers are represented as tuples of digits, and the digits themselves are represented as decimal numerals. More information about the format of the output can be found in `util.py`.
 
