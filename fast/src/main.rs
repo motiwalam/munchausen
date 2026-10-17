@@ -173,14 +173,8 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
             p.1 += 1;
             if o.progress && p.0.elapsed().as_secs_f64() >= 10.0 {
                 p.0 = Instant::now();
-                let frac = (p.1 - already) as f64 / (total - already) as f64;
-                let el = start.elapsed().as_secs_f64();
-                eprintln!(
-                    "  base {b}: {}/{total} units, {:.0}s elapsed, very rough eta {:.0}s",
-                    p.1,
-                    el,
-                    el / frac.max(1e-9) - el
-                );
+                // unit sizes vary wildly, so this is not a reliable fraction of the work
+                eprintln!("  base {b}: {}/{total} units done, {:.0}s elapsed", p.1, start.elapsed().as_secs_f64());
             }
         },
     );

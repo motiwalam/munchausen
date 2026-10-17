@@ -20,6 +20,41 @@ The program is currently written in Python. Its concise and easy to use generato
 
 The search also uses multiprocessing module to search different numbers of digits in parallel. We use the `pathos` package's implementation of `multiprocessing` instead of the built-in version because it is able to pickle `lambda` functions.
 
+### Fast implementation (Rust)
+
+`/fast` contains a Rust implementation; see `fast/README.md` for details. It
+searches both conventions in a single pass, and the tree it explores grows
+about 2x per base, versus about 4x for combination-based searches.
+
+Timings are for both conventions together, on an 8-core laptop CPU (Intel
+Core Ultra 7 258V) running on battery in power-saver mode, which caps the
+cores at about 1.7 GHz:
+
+| base | python (PyPy, this repo) | Rust port of the python algorithm | `fast search` |
+|-----:|-------------------------:|----------------------------------:|--------------:|
+| 16 | 131 s | 5.5 s | 0.010 s |
+| 19 | ~17 h (earlier figure) | — | 0.027 s |
+| 20 | — | — | 0.041 s |
+| 25 | — | — | 0.26 s |
+| 30 | — | — | 2.9 s |
+| 35 | — | — | 77 s |
+| 36 | — | — | 146 s |
+| 37 | — | — | 277 s |
+| 38 | — | — | 520 s |
+
+For comparison, the fastest published search I could find (C++ with GMP on 16
+threads, Programming Praxis, 2020) took 334 minutes for base 20.
+
+`output/b2-38-0.txt` and `output/b2-38-1.txt` list every Munchausen number in
+bases 2 through 38.
+
+- **`0^0 = 1`:** bases 2–35 agree exactly with OEIS
+  [A166623](https://oeis.org/A166623). That table comes from a single
+  exhaustive search by Karl W. Heuer in 2011, whose method was never published.
+- **`0^0 = 0`:** no public list goes beyond about base 17, so all larger
+  bases here are new.
+- **Bases 36–38:** these had never been searched under either convention.
+
 ### A note on convention
 
 What is `0^0`?
