@@ -101,6 +101,16 @@ pub struct Search<const N: usize> {
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
     pub nodes: AtomicU64,
     pub evals: AtomicU64,
+    /// called (from worker threads) as soon as a solution is found
+    pub on_found: Option<Box<dyn Fn(u32, u32, &[u8; 64]) + Send + Sync>>,
+}
+
+/// An independent piece of the search: a subtree rooted at depth `unit_depth`.
+pub struct Unit<const N: usize> {
+    pi: usize,
+    k: usize,
+    n: Node<N>,
+    cnt: [u8; 64],
 }
 
 impl<const N: usize> Search<N> {
@@ -111,6 +121,7 @@ impl<const N: usize> Search<N> {
             found: Mutex::new(vec![]),
             nodes: AtomicU64::new(0),
             evals: AtomicU64::new(0),
+            on_found: None,
         }
     }
 
@@ -119,12 +130,47 @@ impl<const N: usize> Search<N> {
         self.evals.fetch_add(l.evals, Ordering::Relaxed);
     }
 
-    pub fn run(&self) {
-        rayon::scope(|s| {
-            for p in &self.params {
-                let n = Node { t: DV::zero(), occ: [0; 64], pp: p.d, rf: p.d };
-                s.spawn(move |s| self.rec(s, p, p.kmax, n, [0; 64], 0));
+    /// Split the search into subtrees by expanding every root `depth` levels.
+    /// The order is deterministic, so unit indices are stable between runs.
+    pub fn units(&self, depth: u32) -> Vec<Unit<N>> {
+        let mut out = vec![];
+        let mut l = Local::default();
+        for (pi, p) in self.params.iter().enumerate() {
+            let root = Node { t: DV::zero(), occ: [0; 64], pp: p.d, rf: p.d };
+            let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 64] }];
+            for _ in 0..depth {
+                let mut next = vec![];
+                for u in frontier {
+                    if u.k == 1 {
+                        next.push(u);
+                        continue;
+                    }
+                    l.nodes += 1;
+                    self.expand(p, u.k, &u.n, &u.cnt, &mut l, |_, c, ck| {
+                        let mut cnt = u.cnt;
+                        cnt[u.k] = ck;
+                        next.push(Unit { pi, k: u.k - 1, n: c, cnt });
+                    });
+                }
+                frontier = next;
             }
+            out.extend(frontier);
+        }
+        self.flush(&l);
+        out
+    }
+
+    /// Search every unit for which `skip` is false, in parallel, calling
+    /// `done` after each one completes.
+    pub fn run_units(&self, units: &[Unit<N>], skip: impl Fn(usize) -> bool + Sync, done: impl Fn(usize) + Sync) {
+        use rayon::prelude::*;
+        units.par_iter().enumerate().with_max_len(1).for_each(|(i, u)| {
+            if skip(i) {
+                return;
+            }
+            let p = &self.params[u.pi];
+            rayon::scope(|s| self.rec(s, p, u.k, u.n, u.cnt, 0));
+            done(i);
         });
     }
 
@@ -230,6 +276,9 @@ impl<const N: usize> Search<N> {
                 h[v as usize] += 1;
             }
             if h == *cnt {
+                if let Some(f) = &self.on_found {
+                    f(mode, p.d, &x);
+                }
                 self.found.lock().unwrap().push((mode, p.d, x));
             }
         };

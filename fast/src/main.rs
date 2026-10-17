@@ -1,9 +1,11 @@
 mod digits;
+mod journal;
 mod port;
 mod reference;
 mod search;
 
 use num_bigint::BigUint;
+use std::sync::atomic::Ordering::Relaxed;
 use std::time::Instant;
 
 const USAGE: &str = "\
@@ -18,7 +20,14 @@ engines:
 options:
   -m, --mode <0|1|both>   value of 0^0 (default: both)
   -j, --threads <n>       worker threads (default: all cores)
-  --par-depth <n>         tree depth down to which work is split into tasks (default: 6)
+  --journal <file>        (search) record finished work units and solutions in
+                          <file> and resume from it if it exists; \"{base}\"
+                          in the name is replaced by the base
+  --progress              (search) report progress every 10 seconds
+  --unit-depth <n>        (search) tree depth at which the search is cut into
+                          resumable units (default: 4)
+  --par-depth <n>         (search) further depth below a unit down to which
+                          work is split into parallel tasks (default: 4)
 
 Results go to stdout in the same format as ../output/*.txt; timing and
 search statistics go to stderr.";
@@ -30,6 +39,9 @@ struct Opts {
     modes: Vec<u32>,
     threads: usize,
     par_depth: u32,
+    unit_depth: u32,
+    journal: Option<String>,
+    progress: bool,
 }
 
 fn parse_args() -> Opts {
@@ -41,7 +53,10 @@ fn parse_args() -> Opts {
     let mut pos = vec![];
     let mut modes = vec![0, 1];
     let mut threads = 0;
-    let mut par_depth = 6;
+    let mut par_depth = 4;
+    let mut unit_depth = 4;
+    let mut journal = None;
+    let mut progress = false;
     let mut i = 0;
     while i < args.len() {
         let a = args[i].as_str();
@@ -61,6 +76,9 @@ fn parse_args() -> Opts {
             }
             "-j" | "--threads" => threads = val().parse().unwrap_or_else(|_| die("bad thread count")),
             "--par-depth" => par_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
+            "--unit-depth" => unit_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
+            "--journal" => journal = Some(val()),
+            "--progress" => progress = true,
             _ => pos.push(a.to_string()),
         }
         i += 1;
@@ -73,7 +91,7 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, journal, progress }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -92,10 +110,10 @@ fn from_u128(v: Vec<u128>, b: u32) -> Vec<Vec<u32>> {
         .collect()
 }
 
-fn run_search(b: u32, par_depth: u32) -> Found {
+fn run_search(b: u32, o: &Opts) -> Found {
     match b {
-        2..=30 => run_search_n::<1>(b, par_depth),
-        31..=62 => run_search_n::<2>(b, par_depth),
+        2..=30 => run_search_n::<1>(b, o),
+        31..=62 => run_search_n::<2>(b, o),
         _ => {
             eprintln!("the search engine supports bases 2..=62");
             std::process::exit(2)
@@ -103,14 +121,77 @@ fn run_search(b: u32, par_depth: u32) -> Found {
     }
 }
 
-fn run_search_n<const N: usize>(b: u32, par_depth: u32) -> Found {
+fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
+    (0..d as usize).rev().map(|i| lanes[i] as u32).collect()
+}
+
+fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
     let mut out: Found = [vec![vec![0], vec![1]], vec![vec![1]]];
-    let sr = search::Search::<N>::new(b, par_depth);
-    sr.run();
-    eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes.into_inner(), sr.evals.into_inner());
-    for (mode, d, lanes) in sr.found.into_inner().unwrap() {
-        out[mode as usize].push((0..d as usize).rev().map(|i| lanes[i] as u32).collect());
+    let mut sr = search::Search::<N>::new(b, o.par_depth);
+    let units = sr.units(o.unit_depth);
+    let total = units.len();
+
+    let journal = o.journal.as_ref().map(|path| {
+        let path = path.replace("{base}", &b.to_string());
+        journal::Journal::open(&path, b, total, o.unit_depth)
+    });
+    let skip: Vec<bool> = match &journal {
+        Some(j) => {
+            for (mode, digits) in &j.found {
+                out[*mode as usize].push(digits.clone());
+            }
+            (0..total).map(|i| j.done.contains(&i)).collect()
+        }
+        None => vec![false; total],
+    };
+    let already = skip.iter().filter(|&&x| x).count();
+    if already > 0 {
+        eprintln!("  resuming: {already} of {total} units already done");
+    }
+    let journal = journal.map(std::sync::Mutex::new);
+    let journal = std::sync::Arc::new(journal);
+    if journal.is_some() {
+        let j = journal.clone();
+        sr.on_found = Some(Box::new(move |mode, d, lanes| {
+            if let Some(j) = &*j {
+                j.lock().unwrap().found(mode, &lanes_to_digits(d, lanes));
+            }
+        }));
+    }
+
+    let start = Instant::now();
+    let progress = std::sync::Mutex::new((Instant::now(), already));
+    sr.run_units(
+        &units,
+        |i| skip[i],
+        |i| {
+            if let Some(j) = &*journal {
+                j.lock().unwrap().done(i);
+            }
+            let mut p = progress.lock().unwrap();
+            p.1 += 1;
+            if o.progress && p.0.elapsed().as_secs_f64() >= 10.0 {
+                p.0 = Instant::now();
+                let frac = (p.1 - already) as f64 / (total - already) as f64;
+                let el = start.elapsed().as_secs_f64();
+                eprintln!(
+                    "  base {b}: {}/{total} units, {:.0}s elapsed, very rough eta {:.0}s",
+                    p.1,
+                    el,
+                    el / frac.max(1e-9) - el
+                );
+            }
+        },
+    );
+    eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes.load(Relaxed), sr.evals.load(Relaxed));
+    let found = std::mem::take(&mut *sr.found.lock().unwrap());
+    for (mode, d, lanes) in found {
+        out[mode as usize].push(lanes_to_digits(d, &lanes));
+    }
+    for v in out.iter_mut() {
+        v.sort();
+        v.dedup();
     }
     out
 }
@@ -141,7 +222,7 @@ fn main() {
     for b in o.b0..=o.b1 {
         let t = Instant::now();
         let mut res: Found = match o.engine.as_str() {
-            "search" => run_search(b, o.par_depth),
+            "search" => run_search(b, &o),
             "port" => [0, 1].map(|m| if o.modes.contains(&m) { from_u128(port::search(b, m).0, b) } else { vec![] }),
             "reference" => {
                 [0, 1].map(|m| if o.modes.contains(&m) { from_u128(reference::dfs_search(b, m).0, b) } else { vec![] })
@@ -175,9 +256,23 @@ mod tests {
         v
     }
 
+    fn test_opts() -> Opts {
+        Opts {
+            engine: "search".into(),
+            b0: 2,
+            b1: 2,
+            modes: vec![0, 1],
+            threads: 0,
+            par_depth: 3,
+            unit_depth: 2,
+            journal: None,
+            progress: false,
+        }
+    }
+
     fn check_against_reference<const N: usize>(bases: std::ops::RangeInclusive<u32>) {
         for b in bases {
-            let got = run_search_n::<N>(b, 3);
+            let got = run_search_n::<N>(b, &test_opts());
             for mode in 0..2 {
                 let want = from_u128(if b <= 9 { reference::brute(b, mode) } else { reference::dfs_search(b, mode).0 }, b);
                 assert_eq!(sorted(got[mode as usize].clone()), sorted(want), "base {b} mode {mode} N={N}");
