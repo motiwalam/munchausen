@@ -51,6 +51,11 @@ pub struct Params<const N: usize> {
     ln_ratio: f64,
     ln_fact: Vec<f64>, // ln(n!) for n <= d
     ln_b: f64,
+    zscore: f64,
+    // typical-set test: mean and standard deviation of ln E for a node at level
+    // k with pp unknown positions, at index k * (d + 1) + pp
+    lik_mean: Vec<f64>,
+    lik_sd: Vec<f64>,
 }
 
 /// Pruning rules for the inexact search. Both are off by default.
@@ -79,10 +84,13 @@ pub struct Prune {
     /// with perturb: make the amount a multiple of 2(b-1), which keeps the
     /// weights' residues modulo 2 and modulo b-1
     pub keep_residues: bool,
+    /// skip a node whose expected number of solutions is more than this many
+    /// standard deviations below its mean for a random suffix (typical-set test)
+    pub zscore: f64,
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY };
 }
 
 impl<const N: usize> Params<N> {
@@ -142,6 +150,27 @@ impl<const N: usize> Params<N> {
                 band_hi[k] = ((mean + prune.z * sd).ceil() as u32).min(d);
             }
         }
+        // ln E is the log-probability of the multinomial outcome (need_x for the
+        // m digits k..=kmax, rf below k) in pp random positions. Its mean and
+        // variance are minus the entropy and the varentropy of that law, here
+        // through the Poisson approximation.
+        let (mut lik_mean, mut lik_sd) = (vec![], vec![]);
+        if prune.zscore.is_finite() {
+            let kk = (kmax + 1) as f64;
+            for k in 0..=kmax {
+                let m = (kmax + 1 - k.max(1)) as f64;
+                for pp in 0..=d {
+                    let n = pp as f64;
+                    let (hh, vh) = poisson_entropy(n / kk);
+                    let (hs, vs) = poisson_entropy(n * k as f64 / kk);
+                    let (hn, vn) = poisson_entropy(n);
+                    let h = m * hh + hs - hn;
+                    let v = (m * vh + vs - vn).max(0.0);
+                    lik_mean.push(n * (kk / b as f64).ln() - h);
+                    lik_sd.push(v.sqrt().max(1e-9));
+                }
+            }
+        }
         Params {
             d,
             base: Base::new(b),
@@ -166,6 +195,9 @@ impl<const N: usize> Params<N> {
                 Some(*acc)
             }).collect(),
             ln_b: (b as f64).ln(),
+            zscore: prune.zscore,
+            lik_mean,
+            lik_sd,
         }
     }
 
@@ -194,13 +226,19 @@ impl<const N: usize> Params<N> {
     /// happens with probability pp! k^rf / (prod need_x! * rf! * b^pp).
     #[inline(always)]
     fn likely(&self, c: &mut Node<N>, parent_ln_e: f64, k: usize, l: &mut Local) -> bool {
-        if self.ln_eps == f64::NEG_INFINITY && self.ln_ratio == f64::NEG_INFINITY {
+        if self.ln_eps == f64::NEG_INFINITY && self.ln_ratio == f64::NEG_INFINITY && !self.zscore.is_finite() {
             return true;
         }
         let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * (k as f64).ln()
             - c.lneed - self.ln_fact[c.rf as usize] - c.pp as f64 * self.ln_b;
         c.ln_e = ln_e;
-        if ln_e < self.ln_eps || ln_e < parent_ln_e + self.ln_ratio {
+        // At the top levels only a few digit values are decided, ln E is far
+        // from normal, and the tree is narrow anyway, so the test starts at 3/4.
+        let atypical = self.zscore.is_finite() && 4 * k <= 3 * (self.kmax + 1) && {
+            let i = k * (self.d as usize + 1) + c.pp as usize;
+            ln_e < self.lik_mean[i] - self.zscore * self.lik_sd[i]
+        };
+        if atypical || ln_e < self.ln_eps || ln_e < parent_ln_e + self.ln_ratio {
             l.skipped += ln_e.exp();
             return false;
         }
@@ -217,6 +255,25 @@ impl<const N: usize> Params<N> {
     fn hi(&self, t: &DV<N>, z: u32, k: usize, rf: u32) -> DV<N> {
         t.add(self.mul_w(k - 1, rf), &self.base).add(self.mul_w(0, z), &self.base)
     }
+}
+
+// Entropy and varentropy (variance of -ln p) of the Poisson law with mean mu.
+fn poisson_entropy(mu: f64) -> (f64, f64) {
+    if mu <= 0.0 {
+        return (0.0, 0.0);
+    }
+    let (mut s1, mut s2) = (0.0, 0.0);
+    let mut lp = -mu; // ln p(0)
+    let top = (mu + 12.0 * mu.sqrt() + 30.0) as usize;
+    for j in 0..=top {
+        if j > 0 {
+            lp += mu.ln() - (j as f64).ln();
+        }
+        let p = lp.exp();
+        s1 -= p * lp;
+        s2 += p * lp * lp;
+    }
+    (s1, s2 - s1 * s1)
 }
 
 // The first unknown digit of n lies between the digits of lo and hi at that

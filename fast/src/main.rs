@@ -42,6 +42,9 @@ options:
   --perturb <seed>        (experiment) replace each weight x^x by x^x plus a
                           pseudo-random amount below x^x/4; output is not checked
   --keep-residues         (experiment) with --perturb, keep the weights modulo 2(b-1)
+  --zscore <z>            (search, inexact) skip a node whose expected number of
+                          solutions is more than z standard deviations below its
+                          mean for a random suffix (typical-set test)
   --uniform               (search, inexact) measure --band and --deficit on the
                           scale of the whole random walk instead of pointwise
   --unit-depth <n>        (search) tree depth at which the search is cut into
@@ -114,6 +117,7 @@ fn parse_args() -> Opts {
             "--uniform" => prune.uniform = true,
             "--perturb" => prune.perturb = val().parse().unwrap_or_else(|_| die("bad seed")),
             "--keep-residues" => prune.keep_residues = true,
+            "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
             "--progress" => progress = true,
             _ => pos.push(a.to_string()),
         }

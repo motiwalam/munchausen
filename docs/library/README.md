@@ -21,6 +21,7 @@ statement is marked by its source:
 | [7. Open problems](7-open.md) | conjectures with their evidence |
 | [8. Barriers](8-barriers.md) | what is settled, partial finiteness proofs, and why the rest needs new mathematics |
 | [9. Inexact search and counts](9-inexact.md) | a faster search with a measured miss rate, empty bases, bases with many solutions, length against base |
+| [10. Limits of randomized search](10-limits.md) | growth rates of the exact and likely trees, a lower bound for tree searches, the `--zscore` rule, failed routes to a larger speedup, the sharpened length window |
 
 ## Main results
 
@@ -48,6 +49,11 @@ Proven:
 - Base `n^(n-1)` has at least `2^(n-1) - 2` solutions under `0^0 = 0`, and
   at most `X^(1/(c+1))` bases up to `X` have `c` self-paying digits
   (section 9.8).
+- In the model, every search that walks the digit tree from the top needs
+  about `1.638^b` nodes, exact or not (Theorem 10.1). The only residue that
+  the digit multiset determines is `n mod (b-1)` (Proposition 10.2).
+- Up to `B`, at most a power of `ln B` bases have a solution with a fixed
+  number of digits (Proposition 10.4).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -72,7 +78,11 @@ Model:
   Perturbed weights show that the residues of `x^x` cause this (section 9.6).
 - About 17% of even and 8% of odd bases have no solution (section 9.7).
 - A search that misses a few percent of solutions grows about 1.71x per
-  base instead of 1.89x (section 9.3).
+  base instead of 1.89x (section 9.3). The `--zscore` rule keeps its miss rate
+  near 2% from base 30 to 300 (section 10.3).
+- The exact tree grows like `2^b` in the limit (section 10.1).
+- Under `0^0 = 1`, long solutions lie within `ln k + ln ln k` of their length
+  `k` (Conjecture 10.3).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data
@@ -95,6 +105,10 @@ Everything is reproducible with the scripts in `analysis/`:
 | `inexact_sweep.py` | speed and misses of the inexact search |
 | `perturb_experiment.py`, `emptiness_experiment.py` | tests of the model with perturbed weights |
 | `empty_bases.py`, `record_bases.py`, `lengths_vs_base.py` | empty bases, bases with many solutions, length against base |
+| `exponents.py` | growth rates of the exact tree and of its likely part |
+| `zscore_sweep.py`, `min_zscore.py` | speed and misses of the `--zscore` rule |
+| `dynamics.py` | orbits of `n -> F(n)` |
+| `length_window.py`, `length_window2.py`, `length_law.py` | the length window against the model |
 
 `analysis/data/` holds the lists of short solutions and the search of bases
 39 to 127 for numbers with at most 30 digits.

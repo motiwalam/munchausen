@@ -105,7 +105,8 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
   restricted to typical multisets grows about 1.6x per base, but it is not
   exact. Chapter 9 turns this into a search with a measured miss rate, and
   conjectures that any fixed miss rate allows the typical growth rate
-  (Conjecture 9.1). Chapter 6 explains why I do not expect a polynomial method.
+  (Conjecture 9.1). Chapter 10 shows that in the model no tree search can do
+  better than about `1.638^b`, and that the exact tree grows like `2^b`. Chapter 6 explains why I do not expect a polynomial method.
 - Section 8.1 shows that a proof either way is out of reach: an unconditional
   lower bound would prove P != NP, and NP-hardness would prove P = NP.
 - Can the number of solutions in a base be predicted exactly without a

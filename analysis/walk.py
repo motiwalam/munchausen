@@ -17,9 +17,16 @@ from collections import Counter
 
 
 class Rules:
-    def __init__(self, cap=None, band=None, deficit=None, ratio=None, uniform=False):
+    def __init__(self, cap=None, band=None, deficit=None, ratio=None, uniform=False, zscore=None):
         self.cap, self.band, self.deficit, self.ratio = cap, band, deficit, ratio
-        self.uniform = uniform
+        self.uniform, self.zscore = uniform, zscore
+
+    def typical_ok(self, b, kmax, k, pp, ln_e):
+        """The typical-set test of the engine's --zscore option."""
+        if self.zscore is None or 4 * k > 3 * (kmax + 1):
+            return True
+        mean, sd = likelihood_law(b, kmax, k, pp)
+        return ln_e >= mean - self.zscore * sd
 
     def band_ok(self, b, d, k, m):
         if self.band is None:
@@ -37,6 +44,32 @@ class Rules:
         mean = known * q
         var = m * (1 - q) / 4 if self.uniform else known * q * (1 - q) * (d - known) / (d - 1)
         return oh + 0.5 >= mean - self.deficit * math.sqrt(var)
+
+
+def poisson_entropy(mu):
+    """Entropy and varentropy of the Poisson law with mean mu."""
+    if mu <= 0:
+        return 0.0, 0.0
+    s1 = s2 = 0.0
+    lp = -mu
+    for j in range(int(mu + 12 * math.sqrt(mu) + 30) + 1):
+        if j > 0:
+            lp += math.log(mu) - math.log(j)
+        p = math.exp(lp)
+        s1 -= p * lp
+        s2 += p * lp * lp
+    return s1, s2 - s1 * s1
+
+
+def likelihood_law(b, kmax, k, pp):
+    """Mean and standard deviation of ln E for a random suffix of pp digits,
+    as in fast/src/search.rs."""
+    kk = kmax + 1
+    m = kk - max(k, 1)
+    hh, vh = poisson_entropy(pp / kk)
+    hs, vs = poisson_entropy(pp * k / kk)
+    hn, vn = poisson_entropy(pp)
+    return pp * math.log(kk / b) - (m * hh + hs - hn), math.sqrt(max(m * vh + vs - vn, 0.0)) or 1e-9
 
 
 def replay(b, digits, rules, mode=1):
@@ -89,11 +122,13 @@ def replay(b, digits, rules, mode=1):
                 break
         if not rules.deficit_ok(d, known, m, oh):
             return k
-        if rules.ratio is not None:
+        if rules.ratio is not None or rules.zscore is not None:
             pp = d - known
             lneed = sum(math.lgamma(c[x] - occ[x] + 1) for x in range(k, kmax + 1))
             ln_e = math.lgamma(pp + 1) + rf * math.log(k) - lneed - math.lgamma(rf + 1) - pp * math.log(b)
-            if ln_e < ln_e_parent + math.log(rules.ratio):
+            if rules.ratio is not None and ln_e < ln_e_parent + math.log(rules.ratio):
+                return k
+            if not rules.typical_ok(b, kmax, k, pp, ln_e):
                 return k
             ln_e_parent = ln_e
     return None

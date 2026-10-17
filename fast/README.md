@@ -86,12 +86,14 @@ model calls unlikely. The search is then faster but can miss solutions.
 | `--band <z>` | the count of digits `>= k` is more than `z` standard deviations from its mean |
 | `--deficit <z>` | the known leading digits hold too few digits `>= k`, by more than `z` standard deviations |
 | `--ratio <r>` | its expected number of solutions is below `r` times that of its parent |
+| `--zscore <z>` | its expected number of solutions is more than `z` standard deviations below the mean for a random suffix |
 | `--uniform` | (modifier) use `sqrt(d)/2` as the standard deviation in `--band` and `--deficit` |
 
 With any of these, the program prints the expected number of solutions in the
-skipped subtrees. Only `--ratio` adds to this number.
-`--deficit 2 --band 2.5` grows about 1.71x per base and misses about 5 to 20%
-of solutions between base 30 and base 100.
+skipped subtrees. Only `--ratio` and `--zscore` add to this number.
+`--zscore 3` is the best setting so far. It grows about 1.75x per base, found
+all 112 solutions in bases 10 to 38, and misses 1 to 3% of model solutions in
+every base from 30 to 300. `docs/library/10-limits.md` explains the rule.
 
 Two options exist for experiments on the model. `--perturb <seed>` adds a
 random amount of up to a quarter to each weight `x^x`. `--keep-residues`
