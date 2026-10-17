@@ -25,6 +25,7 @@ options:
                           in the name is replaced by the base
   --progress              (search) report progress every 10 seconds
   --max-digits <n>        (search) only look for numbers with at most n digits
+  --min-digits <n>        (search) only look for numbers with at least n digits
   --unit-depth <n>        (search) tree depth at which the search is cut into
                           resumable units (default: 4)
   --par-depth <n>         (search) further depth below a unit down to which
@@ -41,6 +42,7 @@ struct Opts {
     threads: usize,
     par_depth: u32,
     unit_depth: u32,
+    min_digits: u32,
     max_digits: u32,
     journal: Option<String>,
     progress: bool,
@@ -57,6 +59,7 @@ fn parse_args() -> Opts {
     let mut threads = 0;
     let mut par_depth = 4;
     let mut unit_depth = 4;
+    let mut min_digits = 1;
     let mut max_digits = u32::MAX;
     let mut journal = None;
     let mut progress = false;
@@ -82,6 +85,7 @@ fn parse_args() -> Opts {
             "--unit-depth" => unit_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
             "--journal" => journal = Some(val()),
             "--max-digits" => max_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
+            "--min-digits" => min_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
             "--progress" => progress = true,
             _ => pos.push(a.to_string()),
         }
@@ -95,7 +99,7 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, max_digits, journal, progress }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, journal, progress }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -132,8 +136,8 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
-    let mut out: Found = [vec![vec![0], vec![1]], vec![vec![1]]];
-    let mut sr = search::Search::<N>::new(b, o.max_digits, o.par_depth);
+    let mut out: Found = if o.min_digits <= 1 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
+    let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth);
     let units = sr.units(o.unit_depth);
     let total = units.len();
 
@@ -274,6 +278,7 @@ mod tests {
             threads: 0,
             par_depth: 3,
             unit_depth: 2,
+            min_digits: 1,
             max_digits: u32::MAX,
             journal: None,
             progress: false,

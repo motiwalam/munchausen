@@ -121,9 +121,9 @@ pub struct Unit<const N: usize> {
 }
 
 impl<const N: usize> Search<N> {
-    pub fn new(b: u32, max_digits: u32, par_depth: u32) -> Self {
+    pub fn new(b: u32, min_digits: u32, max_digits: u32, par_depth: u32) -> Self {
         Search {
-            params: (2..=b.min(max_digits)).rev().map(|d| Params::new(b, d)).collect(),
+            params: (min_digits.max(2)..=b.min(max_digits)).rev().map(|d| Params::new(b, d)).collect(),
             par_depth,
             found: Mutex::new(vec![]),
             nodes: AtomicU64::new(0),

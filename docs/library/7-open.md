@@ -2,7 +2,9 @@
 
 Each entry states what is known and what the evidence is. "Proven" means a
 proof in this library. "Computed" means an exhaustive search. "Model" means
-the probabilistic model of chapter 5.
+the probabilistic model of chapter 5. Chapter 8 settles some of these problems
+and explains which barrier blocks each of the others; its section 8.7 has a
+status table.
 
 ## 7.1 Solutions with `b` digits
 
@@ -33,6 +35,10 @@ a `k`-digit solution.
   (computed, section 3.2).
 - A heuristic count of integer roots gives a finite expectation for every
   `k >= 3` (section 3.5).
+- Proven when one digit is large and lies in its square class, with an
+  explicit bound (Theorem 8.3, Corollary 8.4). The remaining cases are
+  Pell-type equations with a prescribed coordinate, beyond current methods
+  (section 8.2).
 
 ## 7.3 Lengths without solutions
 
@@ -44,6 +50,7 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
   base 128 or above has probability below `10^-8` (section 3.4).
 - The model predicts that about 37% of long lengths are missing under
   `0^0 = 1`. Under `0^0 = 0` no length is missing (proven).
+- A proof meets the same barrier as section 7.2 (section 8.2).
 
 ## 7.4 How many solutions per base
 
@@ -55,13 +62,16 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
   the tails heavier.
 - Are there infinitely many bases without solutions? The model says that
   about 15% of bases have none under either convention. Bases 19, 27 and 35
-  are the empty ones up to 41.
+  are the empty ones up to 41. Section 8.5 explains why no uniform method is
+  available.
+- For `N_1(b)`, self-paying digits only help together with near-solutions of
+  small defect (Proposition 8.6).
 
 ## 7.5 Unexplained observations
 
 - The empty bases 19, 27 and 35 are all `== 3 (mod 8)`. Three of the four such
-  bases from 11 to 35 are empty. This can be chance (section 4.5). Base 43 is
-  the next test.
+  bases from 11 to 35 are empty. Resolved: base 43, the next one, has a
+  solution (computed), so the pattern was chance.
 - Under `0^0 = 1`, `(b-1)`-digit solutions are about 1.6 times as common as the
   refined model predicts in bases 10 to 38. Correlation tests found nothing,
   and after allowing for how the group was chosen the excess is consistent with
@@ -71,7 +81,9 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
 
 - Under `0^0 = 1`, is there an infinite family of solutions with 3 or more
   digits? Every known infinite family relies on zeros that weigh nothing, or
-  has 2 digits.
+  has 2 digits. Theorem 8.3 rules out families with a large leading digit in
+  the square class. Under `0^0 = 1` the only solutions made of zero-balance
+  placements alone are `(a, 1)` (section 8.3).
 - Can every solution under `0^0 = 1` be explained as a coincidence, apart from
   the self-paying digits, swaps and 2-digit families? The catalog of chapter 3
   has no other structured example.
@@ -83,5 +95,7 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
 - Is there an exact search whose cost grows more slowly than `1.87^b`? A search
   restricted to typical multisets grows about 1.6x per base, but it is not
   exact. Chapter 6 explains why I do not expect a polynomial method.
+- Section 8.1 shows that a proof either way is out of reach: an unconditional
+  lower bound would prove P != NP, and NP-hardness would prove P = NP.
 - Can the number of solutions in a base be predicted exactly without a
   search? Only on average, through the model.

@@ -19,6 +19,7 @@ statement is marked by its source:
 | [5. Probabilistic model](5-model.md) | the expected number of solutions, the parity effect, the `(b-1)`-digit excess, predictions |
 | [6. Cost of search](6-search.md) | why the exhaustive search grows like `1.87^b`, ideas that do not help, base 100 |
 | [7. Open problems](7-open.md) | conjectures with their evidence |
+| [8. Barriers](8-barriers.md) | what is settled, partial finiteness proofs, and why the rest needs new mathematics |
 
 ## Main results
 
@@ -39,6 +40,13 @@ Proven:
   `k`-digit solutions (Proposition 4.1).
 - In an odd base, every solution under `0^0 = 1` has an even number of zeros
   (section 1.6).
+- Self-paying digits never occupy adjacent positions, and under `0^0 = 1` the
+  only solutions made of zero-balance placements are `(a, 1)` (section 8.3).
+- Short solutions under `0^0 = 1` with one large digit are finite in the
+  square class, with an explicit bound (Theorem 8.3).
+- Deciding whether a base has a solution is an NP problem on a tally language.
+  So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
+  would prove P = NP (section 8.1).
 
 Computed:
 
