@@ -55,6 +55,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
 | `--progress` | `search` only. Print progress every 10 seconds. |
 | `--max-digits <n>` | `search` only. Look only for numbers with at most `n` digits. Bases above 62 need `n <= 62`. |
+| `--min-digits <n>` | `search` only. Look only for numbers with at least `n` digits. |
 | `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
 | `--par-depth <n>` | `search` only. Depth below a unit at which the program still splits work into parallel tasks (default 4). |
 
@@ -72,6 +73,30 @@ skips the finished units.
 
 A journal belongs to one base and one value of `--unit-depth`. The program
 refuses a journal that does not match.
+
+### Inexact search
+
+These options make `search` skip parts of the tree that the probabilistic
+model calls unlikely. The search is then faster but can miss solutions.
+`docs/library/9-inexact.md` measures the speed and the miss rates.
+
+| option | the search skips a node if |
+|---|---|
+| `--cap <c>` | one digit value has more than `c` copies |
+| `--band <z>` | the count of digits `>= k` is more than `z` standard deviations from its mean |
+| `--deficit <z>` | the known leading digits hold too few digits `>= k`, by more than `z` standard deviations |
+| `--ratio <r>` | its expected number of solutions is below `r` times that of its parent |
+| `--uniform` | (modifier) use `sqrt(d)/2` as the standard deviation in `--band` and `--deficit` |
+
+With any of these, the program prints the expected number of solutions in the
+skipped subtrees. Only `--ratio` adds to this number.
+`--deficit 2 --band 2.5` grows about 1.71x per base and misses about 5 to 20%
+of solutions between base 30 and base 100.
+
+Two options exist for experiments on the model. `--perturb <seed>` adds a
+random amount of up to a quarter to each weight `x^x`. `--keep-residues`
+rounds that amount to a multiple of `2(b-1)`. With `--perturb` the program
+does not verify its results, because they are not Munchausen numbers.
 
 ## Test
 

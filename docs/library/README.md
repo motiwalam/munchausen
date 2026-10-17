@@ -20,6 +20,7 @@ statement is marked by its source:
 | [6. Cost of search](6-search.md) | why the exhaustive search grows like `1.87^b`, ideas that do not help, base 100 |
 | [7. Open problems](7-open.md) | conjectures with their evidence |
 | [8. Barriers](8-barriers.md) | what is settled, partial finiteness proofs, and why the rest needs new mathematics |
+| [9. Inexact search and counts](9-inexact.md) | a faster search with a measured miss rate, empty bases, bases with many solutions, length against base |
 
 ## Main results
 
@@ -44,6 +45,9 @@ Proven:
   only solutions made of zero-balance placements are `(a, 1)` (section 8.3).
 - Short solutions under `0^0 = 1` with one large digit are finite in the
   square class, with an explicit bound (Theorem 8.3).
+- Base `n^(n-1)` has at least `2^(n-1) - 2` solutions under `0^0 = 0`, and
+  at most `X^(1/(c+1))` bases up to `X` have `c` self-paying digits
+  (section 9.8).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -65,6 +69,10 @@ Model:
 
 - A large base has about one nontrivial solution per convention, with `b-1`
   digits in 55% of cases. Odd bases have twice as many under `0^0 = 0`.
+  Perturbed weights show that the residues of `x^x` cause this (section 9.6).
+- About 17% of even and 8% of odd bases have no solution (section 9.7).
+- A search that misses a few percent of solutions grows about 1.71x per
+  base instead of 1.89x (section 9.3).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data
@@ -82,6 +90,11 @@ Everything is reproducible with the scripts in `analysis/`:
 | `selfpaying.py` | bases with self-paying digits |
 | `verify_constructions.py` | exact checks of the constructions in chapter 2 |
 | `tree.py`, `typical.py` | measurements of the search tree |
+| `tree_model.py` | the formula for the size of the search tree |
+| `walk.py`, `miss_rates.py`, `min_deficit.py`, `scaled_thresholds.py` | miss rates of the inexact rules, by replaying real and planted solutions |
+| `inexact_sweep.py` | speed and misses of the inexact search |
+| `perturb_experiment.py`, `emptiness_experiment.py` | tests of the model with perturbed weights |
+| `empty_bases.py`, `record_bases.py`, `lengths_vs_base.py` | empty bases, bases with many solutions, length against base |
 
 `analysis/data/` holds the lists of short solutions and the search of bases
 39 to 127 for numbers with at most 30 digits.

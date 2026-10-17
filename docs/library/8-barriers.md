@@ -198,7 +198,8 @@ family of coincidences never happens, which runs into the barrier of section
 The search handles `b`-digit numbers alone (option `--min-digits`) at about a
 quarter of the cost of a full base. Base 42 has no 42-digit solution under
 either convention (29 minutes). Base 43, searched in full, also has none.
-Searches of bases 44 to 46 are running.
+Bases 44 and 45 have no `b`-digit solution either (computed with
+`--min-digits`).
 
 ## 8.7 Status
 
@@ -209,7 +210,7 @@ Searches of bases 44 to 46 are running.
 | lengths without solutions | same barrier as the finiteness question; verified up to base 100,000 for 9 digits and 10,000 for the others |
 | is `N_1(b)` bounded | open; reduces to near-solutions with small defects (8.4) |
 | `N_0(b)` unbounded | proven (Proposition 4.2) |
-| infinitely many empty bases | open; no uniform method can exclude coincidences (8.5) |
+| infinitely many empty bases | open; no uniform method can exclude coincidences (8.5); rates and the even-base deficit in 9.7 |
 | empty bases `== 3 (mod 8)` | resolved: base 43 has a solution |
-| `b`-digit solutions under `0^0 = 1` | open; none in bases 3 to 43 (8.6) |
-| excess of `(b-1)`-digit solutions | weak evidence in fresh data (probability 0.10); no mechanism found (5.5) |
+| `b`-digit solutions under `0^0 = 1` | open; none in bases 3 to 45 (8.6) |
+| excess of `(b-1)`-digit solutions | resolved: the total over lengths `b-6` to `b` fits the model (9.6) |

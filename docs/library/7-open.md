@@ -63,9 +63,14 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
   the count in one base follows a Poisson law. The families of chapter 2 make
   the tails heavier.
 - Are there infinitely many bases without solutions? The model says that
-  about 15% of bases have none under either convention. Bases 19, 27 and 35
+  about 17% of even and 8% of odd bases have none under either convention
+  (section 9.7). Bases 19, 27 and 35
   are the empty ones up to 41. Section 8.5 explains why no uniform method is
-  available.
+  available. No even base from 10 to 41 is empty, against 2.6 expected
+  (probability 0.06), and base 44 has a solution.
+- How far apart are the bases with many solutions? Base `n^(n-1)` has at least
+  `2^(n-1) - 2` solutions under `0^0 = 0`, and the bases with `c` self-paying
+  digits are perfect `(c+1)`-th powers (section 9.8).
 - For `N_1(b)`, self-paying digits only help together with near-solutions of
   small defect (Proposition 8.6).
 
@@ -78,7 +83,8 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
   refined model predicts in bases 10 to 38. Correlation tests found nothing,
   and after allowing for how the group was chosen the excess is consistent with
   chance. In the fresh bases 39 to 43 the excess continues weakly: 5 observed
-  against 2.45 expected, probability 0.10 (section 5.5). Open.
+  against 2.45 expected, probability 0.10 (section 5.5). Resolved: over all
+  lengths from `b-6` to `b` the counts fit the model (section 9.6).
 
 ## 7.6 Structure
 
@@ -97,7 +103,9 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
 
 - Is there an exact search whose cost grows more slowly than `1.87^b`? A search
   restricted to typical multisets grows about 1.6x per base, but it is not
-  exact. Chapter 6 explains why I do not expect a polynomial method.
+  exact. Chapter 9 turns this into a search with a measured miss rate, and
+  conjectures that any fixed miss rate allows the typical growth rate
+  (Conjecture 9.1). Chapter 6 explains why I do not expect a polynomial method.
 - Section 8.1 shows that a proof either way is out of reach: an unconditional
   lower bound would prove P != NP, and NP-hardness would prove P = NP.
 - Can the number of solutions in a base be predicted exactly without a
