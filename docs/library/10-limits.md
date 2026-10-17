@@ -142,10 +142,11 @@ starting numbers per base (`analysis/dynamics.py`, `0^0 = 1`):
 | 18 | 4,788 | 5,382 | 0 |
 | 22 | 94,114 | 28,923 | 0 |
 
-The orbits grow about 2.4x per base, and none ends at a solution. All orbits
-fall into 2 to 5 cycles per base. That is the behavior of a random map on
-about `4^b` multisets. A fixed point then attracts only a vanishing share of
-starting points, so iteration is worse than the tree.
+The orbits grow about 1.85x per base from base 14 to 22, and none ends at a
+solution. All orbits fall into 2 to 5 cycles per base. A random map on the
+`C(2b, b) ~ 4^b` digit multisets behaves the same way: its orbits have length
+about `2^b`, and a fixed point attracts only a vanishing share of the starting
+points. So iteration is worse than the tree.
 
 Other invariants. The tree uses the leading digits of `n`. The only other
 cheap information would be a residue `n mod M` that the digit multiset
