@@ -42,6 +42,9 @@ pub struct Params<const N: usize> {
     // stored modulo b^(32 N), so adding it subtracts w[k-1] - w[x]: the step
     // of hi when a free slot (worth up to w[k-1]) turns out to hold x
     shift: Vec<DV<N>>,
+    // drop[k * (d + 1) + m] = -m * (w[k] - w[k-1]) modulo b^(32 N): turns
+    // hi = t + z + m w[k] into t + z + m w[k-1]
+    drop: Vec<DV<N>>,
     pow_lo: DV<N>,   // b^(d-1)
     max_v: DV<N>,    // b^d - 1
     dmask: u64,      // lanes < d
@@ -131,6 +134,12 @@ impl<const N: usize> Params<N> {
         }
         let w = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
         let modulus = bb.pow(32 * N as u32);
+        let mut drop = vec![];
+        for k in 0..=kmax {
+            for m in 0..=d {
+                drop.push(if k >= 1 { lanes(&((&modulus - (&w_hi[k] - &w_hi[k - 1]) * m % &modulus) % &modulus)) } else { DV::zero() });
+            }
+        }
         let mut shift = vec![];
         for k in 0..=kmax {
             for x in 0..=kmax {
@@ -162,6 +171,7 @@ impl<const N: usize> Params<N> {
             dhi,
             tw,
             shift,
+            drop,
             pow_lo: lanes(&bb.pow(d - 1)),
             max_v: lanes(&(limit - 1u32)),
             dmask: (1u64 << d) - 1,
@@ -230,11 +240,6 @@ impl<const N: usize> Params<N> {
         unsafe { self.tw.get_unchecked(j * (self.d as usize + 1) + m as usize) }
     }
 
-    // t + z + rf * w_{k-1}
-    #[inline(always)]
-    fn hi(&self, t: &DV<N>, z: u32, k: usize, rf: u32) -> DV<N> {
-        t.add(self.mul_w(k - 1, rf), &self.base).add(self.mul_w(0, z), &self.base)
-    }
 
     // lanes [pp, d): the known leading digits
     #[inline(always)]
@@ -272,6 +277,7 @@ fn first_digit_ok<const N: usize>(p: &Params<N>, lo: &DV<N>, hi: &DV<N>, pp: u32
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
+    hi: DV<N>,     // t + z + rf * w[k] for a node that decides c_k (z: known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
     m: u32,        // number of decided digits, all >= k
@@ -363,7 +369,7 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: DV::zero(), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let root = Node { t: DV::zero(), hi: *p.mul_w(p.kmax, p.d), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -416,10 +422,9 @@ impl<const N: usize> Search<N> {
         let known = p.known(n.pp);
         let nlo = p.clip_lo(&n.t);
         let occk = nlo.count(k as u8, known);
-        let z = nlo.count(0, known);
         let (wk, dhi) = unsafe { (p.w.get_unchecked(k), p.dhi.get_unchecked(k)) };
         let mut te = n.t;
-        let mut hi = p.hi(&te, z, k, n.rf);
+        let mut hi = n.hi.add(unsafe { p.drop.get_unchecked(k * (p.d as usize + 1) + n.rf as usize) }, base);
         for e in 0..=n.rf {
             if e > 0 {
                 te = te.add(wk, base);
@@ -448,8 +453,8 @@ impl<const N: usize> Search<N> {
             let mut clo = if nlo & top == 0 { p.pow_lo } else { te };
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
-            let mut c = Node { t: te, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
-            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, hi, cnt)
+            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
+            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt)
                 && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
             {
@@ -465,7 +470,7 @@ impl<const N: usize> Search<N> {
     // to t, which narrows the interval and can expose more leading digits.
     // Returns false if the node fails.
     #[inline(always)]
-    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, mut hi: DV<N>, cnt: &Hist) -> bool {
+    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, cnt: &Hist) -> bool {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1);
@@ -515,14 +520,14 @@ impl<const N: usize> Search<N> {
                 if x > 0 {
                     c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
                 }
-                hi = hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
+                c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
             }
-            let (n1, n2) = (c.t.nonzero_mask(), hi.nonzero_mask());
+            let (n1, n2) = (c.t.nonzero_mask(), c.hi.nonzero_mask());
             if n1 & !dm != 0 || n2 & top == 0 {
                 return false;
             }
             *clo = if n1 & top == 0 { p.pow_lo } else { c.t };
-            *chi = if n2 & !dm != 0 { p.max_v } else { hi };
+            *chi = if n2 & !dm != 0 { p.max_v } else { c.hi };
         }
     }
 

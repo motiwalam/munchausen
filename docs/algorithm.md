@@ -277,8 +277,17 @@ new digit `x >= k` then needs at most `c_x` copies in the whole prefix.
 
 When `e` grows by one, `t` grows by `w(k)` and `hi` grows by
 `w(k) - w(k-1)`. The search keeps both as running sums, so each step costs two
-additions. A table holds `m * w(x)` for every digit `x` and every `m <= d`.
-The search uses it to rebuild `hi` after a forced digit.
+additions.
+
+`hi` also never needs a full rebuild. A node stores its own `hi`. Its first
+child at the next level has `hi` smaller by `rf * (w(k) - w(k-1))`. A forced
+digit `x` makes `hi` smaller by `w(k-1) - w(x)`, because one free slot that
+was worth up to `w(k-1)` now holds `x`. Two tables hold these differences.
+
+A digit vector has `32N` lanes and the addition drops the carry out of the
+top lane, so it computes modulo `b^(32N)`. The tables store each difference
+`-v` as `b^(32N) - v`. Adding that entry subtracts `v`, and every subtraction
+costs one addition.
 
 ### Parallelism and resumable runs
 
