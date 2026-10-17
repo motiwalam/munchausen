@@ -31,9 +31,9 @@ In short:
 - an unconditional lower bound would prove P != NP;
 - an NP-hardness proof would prove P = NP.
 
-Neither direction is available. The question "is there a polynomial-time
-search?" is therefore out of reach of current methods, and chapter 6 gives the
-heuristic reasons to expect that the answer is no.
+Neither direction is available. So the question "is there a polynomial-time
+search?" is out of reach of current methods. Chapter 6 gives the heuristic
+reasons to expect that the answer is no.
 
 ## 8.2 Short solutions: a partial finiteness theorem
 
@@ -92,7 +92,7 @@ The rest of the problem. Outside the square class, the equation asks whether
 `r^2 - N Y^2 = R` with the extra condition that `Y` equals a prescribed number
 like `x^((x-1)/2)`. For each single `x` this is decidable. For all `x` at once
 it asks whether an exponentially growing sequence ever lands on the solution set
-of a Pell equation, and that set changes with `x`. For longer numbers it asks
+of a Pell equation. That solution set changes with `x`. For longer numbers it asks
 whether `x^((x-1)/(k-1))` comes within about `B/x` of an integer.
 
 Questions of this kind are far from current methods. For comparison, even for
@@ -157,7 +157,7 @@ and those are coincidences of the same kind as solutions. Base 64 shows one:
 replacing them by zeros leaves the 11-digit string `(0,0,0,0,0,0,1,0,0,0,8)`.
 Its weight is `9 + 1 + 8^8 = 16777226`, two more than its value
 `64^4 + 8 = 16777224`, so it is a near-solution with defect 2. In the model,
-near-solutions are coincidences at about the same rate as solutions, so bases
+near-solutions are coincidences at about the same rate as solutions. So bases
 with many self-paying digits are expected to have several solutions under
 `0^0 = 1` from time to time. A construction like
 Proposition 4.2 would need near-solutions with every small defect in one base,
@@ -184,13 +184,13 @@ for infinitely many bases at once. The tools of this library cannot give one:
   kind as the finiteness questions of section 8.2, about the absence of
   coincidences between powers, and no method for it is known.
 
-The opposite statement, "every large base has a solution", is just as far out
+The opposite statement, "every large base has a solution", is as far out
 of reach, and the model says it is false.
 
 ## 8.6 Solutions with `b` digits under `0^0 = 1`
 
 The model expects a `b`-digit solution in about 8% of large bases. If the model
-is right, the conjecture is simply false, and a counterexample is a matter of
+is right, the conjecture is false, and a counterexample is a matter of
 searching far enough. A proof of the conjecture would have to show that a whole
 family of coincidences never happens, which runs into the barrier of section
 8.5.
