@@ -219,6 +219,25 @@ impl<const N: usize> Params<N> {
     }
 }
 
+// The first unknown digit of n lies between the digits of lo and hi at that
+// position. If every value in that range is a decided digit (>= k) whose copies
+// are all placed already, no number in the interval fits the counts.
+#[inline(always)]
+fn first_digit_ok<const N: usize>(lo: &DV<N>, hi: &DV<N>, c: &Node<N>, k: usize, ck: u8, cnt: &Hist) -> bool {
+    if c.pp == 0 {
+        return true;
+    }
+    let (mut a, mut z) = ([0u8; 64], [0u8; 64]);
+    lo.to_bytes(&mut a);
+    let x0 = a[c.pp as usize - 1] as usize;
+    if x0 < k {
+        return true;
+    }
+    hi.to_bytes(&mut z);
+    let x1 = z[c.pp as usize - 1] as usize;
+    (x0..=x1).any(|x| c.occ[x] < if x == k { ck } else { cnt[x] })
+}
+
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
@@ -364,7 +383,7 @@ impl<const N: usize> Search<N> {
             if npp >= n.pp {
                 let c = Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e, m: mk, oh: n.oh + occk, lneed: n.lneed + p.ln_fact[e as usize], ln_e: 0.0 };
                 let mut c = c;
-                if p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
+                if first_digit_ok(&clo, &chi, &c, k, ck, cnt) && p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
                     emit(l, c, ck);
                 }
                 continue;
@@ -414,7 +433,7 @@ impl<const N: usize> Search<N> {
                     break true;
                 }
             };
-            if ok && p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
+            if ok && first_digit_ok(&clo, &chi, &c, k, ck, cnt) && p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
                 emit(l, c, ck);
             }
         }

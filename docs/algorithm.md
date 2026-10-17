@@ -150,6 +150,13 @@ now holds `x`. A narrower interval can
 expose more leading digits, and those can force more digits. The search
 repeats the test until no new digits appear.
 
+After the leading digits, the search looks at the first unknown digit. It
+lies between the digits of `lo` and `hi` at that position. If all of these
+values are at least `k`, their counts are already fixed. If each of them
+already has all its copies in the prefix, no number in the interval fits, and
+the search drops the node. Knuth's `back-pdi.w` uses the same test. It removes
+about 7% of the nodes in bases 20 to 32.
+
 The interval only shrinks on the way down the tree. So a child keeps every
 leading digit of its parent, and the search only inspects positions that are
 new. The prefix and its digit counts travel with the node.
@@ -218,6 +225,8 @@ Each rule only removes count vectors that cannot be solutions.
 - Every leading digit of the interval is a digit of every reachable sum. A
   solution must contain it.
 - Forcing a digit only removes completions that leave it out.
+- The first unknown digit of every reachable sum lies in the range that the
+  test checks. If no value in that range has a copy left, no completion fits.
 
 A count vector reaches a leaf only if it passed every check on the way down.
 The leaf then compares the exact sum with the vector.
