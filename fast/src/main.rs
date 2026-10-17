@@ -41,6 +41,8 @@ options:
   --perturb <seed>        (experiment) replace each weight x^x by x^x plus a
                           pseudo-random amount below x^x/4; output is not checked
   --keep-residues         (experiment) with --perturb, keep the weights modulo 2(b-1)
+  --offset <D>            (experiment) find the numbers n with n = F(n) + D instead;
+                          output is not checked
   --zscore <z>            (search, inexact) skip a node whose expected number of
                           solutions is more than z standard deviations below its
                           mean for a random suffix (typical-set test)
@@ -116,6 +118,7 @@ fn parse_args() -> Opts {
             "--uniform" => prune.uniform = true,
             "--perturb" => prune.perturb = val().parse().unwrap_or_else(|_| die("bad seed")),
             "--keep-residues" => prune.keep_residues = true,
+            "--offset" => prune.offset = val().parse().unwrap_or_else(|_| die("bad offset")),
             "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
             "--progress" => progress = true,
             _ => pos.push(a.to_string()),
@@ -167,7 +170,7 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
-    let mut out: Found = if o.min_digits <= 1 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
+    let mut out: Found = if o.min_digits <= 1 && o.prune.offset == 0 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
     let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth, o.prune);
     let units = sr.units(o.unit_depth);
     let total = units.len();
@@ -287,7 +290,7 @@ fn main() {
             res.sort_by(|x, y| x.len().cmp(&y.len()).then(x.cmp(y)));
             for r in res.iter() {
                 // perturbed weights are an experiment; their solutions are not Munchausen numbers
-                assert!(o.prune.perturb != 0 || verify(r, b, mode), "base {b}: {} is not a Munchausen number", tuple(r));
+                assert!(o.prune.perturb != 0 || o.prune.offset != 0 || verify(r, b, mode), "base {b}: {} is not a Munchausen number", tuple(r));
             }
             let strs: Vec<String> = res.iter().map(|r| tuple(r)).collect();
             println!("{}:{}:{}: {}", b, mode, res.len(), strs.join(", "));

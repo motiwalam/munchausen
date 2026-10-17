@@ -60,6 +60,7 @@ pub struct Params<const N: usize> {
     ln_fact: Vec<f64>, // ln(n!) for n <= d
     ln_k: Vec<f64>,    // ln(k) for k <= kmax
     ln_b: f64,
+    offset: DV<N>,   // value of the root: 0, or the experiment's offset
     zscore: f64,
     // typical-set test: mean and standard deviation of ln E for a node at level
     // k with pp unknown positions, at index k * (d + 1) + pp
@@ -96,10 +97,12 @@ pub struct Prune {
     /// skip a node whose expected number of solutions is more than this many
     /// standard deviations below its mean for a random suffix (typical-set test)
     pub zscore: f64,
+    /// experiment: look for n = F(n) + offset instead of n = F(n)
+    pub offset: u64,
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0 };
 }
 
 impl<const N: usize> Params<N> {
@@ -221,6 +224,7 @@ impl<const N: usize> Params<N> {
             }).collect(),
             ln_k: (0..=kmax).map(|k| (k as f64).ln()).collect(),
             ln_b: (b as f64).ln(),
+            offset: lanes(&BigUint::from(prune.offset)),
             zscore: prune.zscore,
             lik_mean,
             lik_sd,
@@ -431,7 +435,7 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: DV::zero(), hi: *p.mul_w(p.kmax, p.d), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let root = Node { t: p.offset, hi: p.mul_w(p.kmax, p.d).add(&p.offset, &p.base), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
