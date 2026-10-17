@@ -8,6 +8,11 @@ num-bigint = "0.5.1"
 num-traits = "0.2.19"
 rayon = "1.12.0"
 rayon-core = "1.13.0"
+ash = { version = "0.38", optional = true }
+
+[features]
+# the --gpu option: a Vulkan compute version of the search, built with glslc
+gpu = ["dep:ash"]
 
 [profile.release]
 lto = "fat"
