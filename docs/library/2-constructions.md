@@ -15,7 +15,7 @@ Proof. `n + 1` has the same digits as `n`, except a 1 in the last position in
 place of a 0. So `F(n + 1) = F(n) + 1`.
 
 So under `m = 0` every solution that ends in 0 or 1 has a twin. Under `m = 1` a
-0 and a 1 weigh the same, and there are no twins. Bases 2 to 38 contain 8 twin
+0 and a 1 weigh the same, and there are no twins. Bases 2 to 41 contain 8 twin
 pairs, for example `(4,0,0)` and `(4,0,1)` in base 8.
 
 ## 2.2 Self-paying digits

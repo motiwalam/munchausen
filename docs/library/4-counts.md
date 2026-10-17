@@ -63,7 +63,7 @@ A parity rule:
 
 ## 4.2 The data
 
-Exhaustive results for bases 2 to 40. `n0` and `n1` count nontrivial
+Exhaustive results for bases 2 to 41. `n0` and `n1` count nontrivial
 solutions under `0^0 = 0` and `0^0 = 1`. "shared" counts solutions without a
 zero, which are solutions under both conventions (Proposition 1.4). "longest" is
 the largest number of digits, under either convention.
@@ -89,30 +89,30 @@ the largest number of digits, under either convention.
 | 18 | 2 | 3 | 1 | 17 | | 38 | 2 | 3 | 2 | 37 |
 | 19 | 0 | 0 | 0 | - | | 39 | 2 | 2 | 1 | 38 |
 | 20 | 2 | 2 | 2 | 17 | | 40 | 3 | 1 | 1 | 39 |
-| 21 | 1 | 2 | 1 | 20 | | | | | | |
+| 21 | 1 | 2 | 1 | 20 | | 41 | 1 | 1 | 1 | 40 |
 
 ## 4.3 Relationships between the quantities
 
 - The two conventions share every zero-free solution, so their counts move
-  together. Over bases 10 to 40 the correlation of `n0` and `n1` is 0.56.
-  Of the 55 solutions under `0^0 = 1` in these bases, 34 are zero-free.
-- Base parity matters under `0^0 = 0`. Over bases 10 to 40, odd bases average
-  2.67 solutions and even bases 1.56. Under `0^0 = 1` the averages are 1.87
+  together. Over bases 10 to 41 the correlation of `n0` and `n1` is 0.56.
+  Of the 56 solutions under `0^0 = 1` in these bases, 35 are zero-free.
+- Base parity matters under `0^0 = 0`. Over bases 10 to 41, odd bases average
+  2.56 solutions and even bases 1.56. Under `0^0 = 1` the averages are 1.81
   and 1.69. Section 5.3 explains the difference.
-- The longest solution usually has `b-1` digits: in 22 of the 28 bases from 10
-  to 40 that have a solution. Two bases have `b`-digit solutions, 15 and 16,
+- The longest solution usually has `b-1` digits: in 23 of the 29 bases from 10
+  to 41 that have a solution. Two bases have `b`-digit solutions, 15 and 16,
   both under `0^0 = 0` only.
 - Perfect powers with self-paying digits always have solutions under
   `0^0 = 0`: bases 25 and 32 have 5 and 4.
 
 ## 4.4 Bases with exactly `n` solutions
 
-Bases 10 to 40, nontrivial solutions:
+Bases 10 to 41, nontrivial solutions:
 
 | `n` | `0^0 = 0` | `0^0 = 1` |
 |---:|---|---|
 | 0 | 19, 27, 28, 30, 35, 36 | 19, 23, 27, 29, 32, 35 |
-| 1 | 12, 14, 21, 22, 23, 24, 26, 29, 34 | 10, 12, 22, 24, 30, 34, 36, 40 |
+| 1 | 12, 14, 21, 22, 23, 24, 26, 29, 34, 41 | 10, 12, 22, 24, 30, 34, 36, 40, 41 |
 | 2 | 10, 18, 20, 38, 39 | 11, 16, 20, 21, 25, 26, 31, 33, 39 |
 | 3 | 31, 33, 37, 40 | 18, 28, 37, 38 |
 | 4 | 16, 17, 32 | 13, 14, 17 |
@@ -133,10 +133,20 @@ The counts roughly follow the Poisson shape. The upper tail is heavier than
 Poisson. Twins and constructed solutions come in groups, not one at a time, and
 small bases have extra solutions (section 5.4).
 
+The smallest base with exactly `n` nontrivial solutions, among bases 2 to 41:
+
+| `n` | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `0^0 = 0` | 2 | 7 | 3 | 4 | 16 | 11 | 9 | 15 |
+| `0^0 = 1` | 5 | 2 | 3 | 9 | 13 | 15 | - | - |
+
+Under `0^0 = 0`, every `n` is exceeded in some base (Proposition 4.2). Whether
+every `n` occurs exactly is open under both conventions.
+
 ## 4.5 Bases without solutions
 
 Bases 19, 27 and 35 have no nontrivial solution under either convention. They
-are the only such bases from 3 to 40.
+are the only such bases from 3 to 41.
 
 What is known:
 

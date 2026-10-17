@@ -1,6 +1,6 @@
 # munchausen
 
-An exhaustive search for Munchausen numbers in every base from 2 to 38.
+An exhaustive search for Munchausen numbers in every base from 2 to 41.
 
 ## The problem
 
@@ -24,8 +24,8 @@ in one direction only. You cannot rebuild the other two lists from that one.
 
 ## Results
 
-`output/b2-38-0.txt` (`0^0 = 0`) and `output/b2-38-1.txt` (`0^0 = 1`) list
-every Munchausen number in bases 2 to 38. Each line has the form
+`output/b2-41-0.txt` (`0^0 = 0`) and `output/b2-41-1.txt` (`0^0 = 1`) list
+every Munchausen number in bases 2 to 41. Each line has the form
 `base:convention:count: numbers`. Each number is a tuple of its digits, most
 significant first, with the digits written in decimal. `src/formatutil.py`
 reads and writes this format. `output/b2-19-*.txt` hold the older results of
@@ -36,25 +36,26 @@ counts the other solutions:
 
 | base | `0^0 = 0` | `0^0 = 1` | | base | `0^0 = 0` | `0^0 = 1` |
 |---:|---:|---:|---|---:|---:|---:|
-| 2 | 0 | 1 | | 21 | 1 | 2 |
-| 3 | 2 | 2 | | 22 | 1 | 1 |
-| 4 | 3 | 2 | | 23 | 1 | 0 |
-| 5 | 2 | 0 | | 24 | 1 | 1 |
-| 6 | 2 | 2 | | 25 | 5 | 2 |
-| 7 | 1 | 1 | | 26 | 1 | 2 |
-| 8 | 2 | 0 | | 27 | 0 | 0 |
-| 9 | 6 | 3 | | 28 | 0 | 3 |
-| 10 | 2 | 1 | | 29 | 1 | 0 |
-| 11 | 5 | 2 | | 30 | 0 | 1 |
-| 12 | 1 | 1 | | 31 | 3 | 2 |
-| 13 | 5 | 4 | | 32 | 4 | 0 |
-| 14 | 1 | 4 | | 33 | 3 | 2 |
-| 15 | 7 | 5 | | 34 | 1 | 1 |
-| 16 | 4 | 2 | | 35 | 0 | 0 |
-| 17 | 4 | 4 | | 36 | 0 | 1 |
-| 18 | 2 | 3 | | 37 | 3 | 3 |
-| 19 | 0 | 0 | | 38 | 2 | 3 |
-| 20 | 2 | 2 | | | | |
+| 2 | 0 | 1 | | 22 | 1 | 1 |
+| 3 | 2 | 2 | | 23 | 1 | 0 |
+| 4 | 3 | 2 | | 24 | 1 | 1 |
+| 5 | 2 | 0 | | 25 | 5 | 2 |
+| 6 | 2 | 2 | | 26 | 1 | 2 |
+| 7 | 1 | 1 | | 27 | 0 | 0 |
+| 8 | 2 | 0 | | 28 | 0 | 3 |
+| 9 | 6 | 3 | | 29 | 1 | 0 |
+| 10 | 2 | 1 | | 30 | 0 | 1 |
+| 11 | 5 | 2 | | 31 | 3 | 2 |
+| 12 | 1 | 1 | | 32 | 4 | 0 |
+| 13 | 5 | 4 | | 33 | 3 | 2 |
+| 14 | 1 | 4 | | 34 | 1 | 1 |
+| 15 | 7 | 5 | | 35 | 0 | 0 |
+| 16 | 4 | 2 | | 36 | 0 | 1 |
+| 17 | 4 | 4 | | 37 | 3 | 3 |
+| 18 | 2 | 3 | | 38 | 2 | 3 |
+| 19 | 0 | 0 | | 39 | 2 | 2 |
+| 20 | 2 | 2 | | 40 | 3 | 1 |
+| 21 | 1 | 2 | | 41 | 1 | 1 |
 
 How these results relate to earlier work:
 
@@ -62,7 +63,7 @@ How these results relate to earlier work:
   exactly. That table comes from one search by Karl W. Heuer in 2011, with an
   unpublished method.
 - For `0^0 = 0`, I found no published list beyond about base 17.
-- I found no published search of bases 36 to 38 under either convention.
+- I found no published search of bases 36 to 41 under either convention.
 
 ## Running the search
 
@@ -173,7 +174,7 @@ Under `0^0 = 0` the conjecture is false. Base 15 has the 15-digit solution
 `(1,2,4,3,14,14,13,3,4,1,9,1,1,0,14)`, and base 16 has the 16-digit solution
 `(1,2,3,11,2,3,0,9,15,15,5,7,2,15,6,11)`. Both are in `output/b2-19-0.txt`.
 
-Under `0^0 = 1` the conjecture holds for bases 3 to 40. The probabilistic
+Under `0^0 = 1` the conjecture holds for bases 3 to 41. The probabilistic
 model expects a `b`-digit solution in about 1 base in 12, so I expect it to
 fail in some larger base.
 

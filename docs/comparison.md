@@ -140,6 +140,12 @@ too slow to try, or that it was not measured.
 | 36 | | | | | 146 s |
 | 37 | | | | | 277 s |
 | 38 | | | | | 520 s |
+| 39 | | | | | 19 min |
+| 40 | | | | | 36 min |
+| 41 | | | | | 59 min |
+
+Bases 39 to 41 ran while other analysis jobs shared the machine, so their
+times are somewhat high.
 
 The original README gave 169 s for python at base 16 and about 17 hours at
 base 19, from a different machine.
@@ -196,10 +202,10 @@ with the laptop above, and most sources do not state it.
 | Matthew, [Programming Praxis](https://programmingpraxis.com/2019/12/06/muenchhausen-numbers/), 2019 | C++, all digit combinations, compare sorted digits | up to 16 | base 16 about 40 s |
 | Daniel, same thread, 2020 | C++ with GMP, OpenMP on 16 threads, combination unranking | 17 to 20 | base 19 91 min, base 20 334 min |
 | this repository, python | PyPy, `gcwr` | 2 to 19 | base 16 131 s, base 19 about 17 h |
-| this repository, `fast` | Rust, prefix-pruned counts, AVX2 digit vectors | 2 to 38, both | base 20 0.035 s, base 35 77 s, base 38 520 s |
+| this repository, `fast` | Rust, prefix-pruned counts, AVX2 digit vectors | 2 to 41, both | base 20 0.035 s, base 35 77 s, base 38 520 s, base 41 59 min |
 
 I found no published search beyond base 35. For `0^0 = 0`, I found no
-published list beyond about base 17. Bases 36 to 38 were not searched before, under either
+published list beyond about base 17. Bases 36 to 41 were not searched before, under either
 convention.
 
 ## Ideas that are not built yet

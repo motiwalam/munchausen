@@ -1,7 +1,7 @@
 """One catalog of every Munchausen number found so far.
 
 Sources:
-- output/b2-38-*.txt and fast/target/b39-41.txt: exhaustive, bases 2-41;
+- output/b2-41-*.txt: exhaustive, bases 2-41;
 - data/b39-127-d30.txt: every solution with at most 30 digits, bases 39-127;
 - data/k<k>.txt: every k-digit solution in every base up to a bound (k <= 6).
 
@@ -30,10 +30,7 @@ def _load_lines(path):
 def exhaustive_bases():
     """Bases searched completely, with their solutions per convention."""
     sols = {}
-    files = [os.path.join(ROOT, 'output', f'b2-38-{m}.txt') for m in (0, 1)]
-    extra = os.path.join(ROOT, 'fast', 'target', 'b39-41.txt')
-    if os.path.exists(extra):
-        files.append(extra)
+    files = [os.path.join(ROOT, 'output', f'b2-41-{m}.txt') for m in (0, 1)]
     for f in files:
         for m, b, t in _load_lines(f):
             sols.setdefault((m, b), set()).add(t)

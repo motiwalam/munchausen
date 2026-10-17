@@ -10,12 +10,12 @@ Conjecture (original). For `b > 2` no base has a `b`-digit solution.
 
 - Under `0^0 = 0` it is false: base 15 has `(1,2,4,3,14,14,13,3,4,1,9,1,1,0,14)`
   and base 16 has `(1,2,3,11,2,3,0,9,15,15,5,7,2,15,6,11)` (computed).
-- Under `0^0 = 1` it holds for bases 3 to 40 (computed).
+- Under `0^0 = 1` it holds for bases 3 to 41 (computed).
 - For `b >= 7`, a `b`-digit solution contains the digit `b-1` at least three
   times (proven, Proposition 1.6). Both counterexamples contain it exactly
   three times.
 - The model expects a `b`-digit solution in about 8% of large bases. Bases 3 to
-  38 have none under `0^0 = 1`, against 2.7 expected, which happens about 7% of
+  41 have none under `0^0 = 1`, against 2.9 expected, which happens about 5% of
   the time under the model. I expect the conjecture to fail under `0^0 = 1`
   too.
 
@@ -55,7 +55,7 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
   the tails heavier.
 - Are there infinitely many bases without solutions? The model says that
   about 15% of bases have none under either convention. Bases 19, 27 and 35
-  are the empty ones up to 40.
+  are the empty ones up to 41.
 
 ## 7.5 Unexplained observations
 

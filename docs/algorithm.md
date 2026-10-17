@@ -69,7 +69,7 @@ enumerates the remaining `d - n` digits freely.
 
 I do not know a proof for this rule. A sum can reach `b^(d-1)` through one
 copy each of several large digits, and then no single digit has `n` copies.
-I checked every number in `output/b2-38-*.txt` against the rule. All of them
+I checked every number in bases 2 to 38 against the rule. All of them
 satisfy it, except `10` in base 2. So far the rule has not removed a
 solution. The rule also generates some combinations twice, once for each
 qualifying `r`.

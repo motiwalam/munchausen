@@ -18,7 +18,7 @@ def value(t, b):
 
 import os
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'output')
-SOL = {m: load(os.path.join(ROOT, f'b2-38-{m}.txt')) for m in (0, 1)}
+SOL = {m: load(os.path.join(ROOT, f'b2-41-{m}.txt')) for m in (0, 1)}
 
 if __name__ == '__main__':
     # where the solutions live: d - b

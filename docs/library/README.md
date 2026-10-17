@@ -15,7 +15,7 @@ statement is marked by its source:
 | [1. Basics](1-basics.md) | notation, length bound, balance, one base per digit string, the two conventions, congruences, `b`-digit solutions |
 | [2. Constructions](2-constructions.md) | twins, self-paying digits, swaps, all 2-digit solutions, solutions of every length under `0^0 = 0` |
 | [3. Fixed length](3-lengths.md) | every short solution in every base up to huge bounds; which lengths occur; finitely or infinitely many |
-| [4. Counts per base](4-counts.md) | bounds on the number of solutions, the data for bases 2 to 40, bases with exactly `n` solutions, empty bases |
+| [4. Counts per base](4-counts.md) | bounds on the number of solutions, the data for bases 2 to 41, bases with exactly `n` solutions, empty bases |
 | [5. Probabilistic model](5-model.md) | the expected number of solutions, the parity effect, the `(b-1)`-digit excess, predictions |
 | [6. Cost of search](6-search.md) | why the exhaustive search grows like `1.87^b`, ideas that do not help, base 100 |
 | [7. Open problems](7-open.md) | conjectures with their evidence |
@@ -42,7 +42,7 @@ Proven:
 
 Computed:
 
-- All solutions in bases 2 to 40, both conventions (`output/`). Bases 2 to 35
+- All solutions in bases 2 to 41, both conventions (`output/`). Bases 2 to 35
   agree with OEIS A166623.
 - Every solution with 3, 4, 5 or 6 digits in every base up to `10^51`,
   `10^18`, `10^8` and `10^4` respectively (chapter 3).
@@ -51,7 +51,7 @@ Computed:
 - Under `0^0 = 1` no base up to 127 has a solution with 9, 18, 21, 22, 24, 26
   or 28 digits.
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
-  and 16) and true under `0^0 = 1` up to base 40.
+  and 16) and true under `0^0 = 1` up to base 41.
 
 Model:
 

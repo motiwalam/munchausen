@@ -126,17 +126,24 @@ depend on this choice (section 5.7).
   nontrivial solutions per convention: 0.55 with 99 digits, 0.24 with 98, 0.09
   with 97, 0.08 with 100, and 0.06 with fewer.
 - A `b`-digit solution under `0^0 = 1` is expected in about 8% of large bases.
-  Bases 3 to 38 have none, against 2.7 expected. Under the model that happens
-  about 7% of the time. So I expect a counterexample to the conjecture of
+  Bases 3 to 41 have none, against 2.9 expected. Under the model that happens
+  about 5% of the time. So I expect a counterexample to the conjecture of
   chapter 7 in some larger base.
 - Under `0^0 = 0` the model expects about 1.5 solutions per base on average,
   because odd bases count double.
 
 ## 5.7 New bases as a test
 
-Bases 39 and 40 were searched after the model was built. The refined model
-expects 2.10 and 1.04 solutions under `0^0 = 0`, and 1.19 and 1.09 under
-`0^0 = 1`. Observed: 2 and 3 under `0^0 = 0`, and 2 and 1 under `0^0 = 1`.
+Bases 39, 40 and 41 were searched after the model was built:
+
+| base | expected, `0^0 = 0` | observed | expected, `0^0 = 1` | observed |
+|---:|---:|---:|---:|---:|
+| 39 | 2.10 | 2 | 1.19 | 2 |
+| 40 | 1.04 | 3 | 1.09 | 1 |
+| 41 | 2.05 | 1 | 1.10 | 1 |
+| total | 5.19 | 6 | 3.38 | 4 |
+
+All six new solutions have `b-1` digits, as the model makes most likely.
 
 ## 5.8 What the model means
 
