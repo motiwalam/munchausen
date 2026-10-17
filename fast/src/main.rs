@@ -26,6 +26,24 @@ options:
   --progress              (search) report progress every 10 seconds
   --max-digits <n>        (search) only look for numbers with at most n digits
   --min-digits <n>        (search) only look for numbers with at least n digits
+  --cap <c>               (search, inexact) skip numbers in which a digit 2 or more
+                          occurs more than c times
+  --band <z>              (search, inexact) skip numbers whose count of digits >= k
+                          is more than z standard deviations from a random
+                          number's, at any k >= 2
+  --deficit <z>           (search, inexact) skip nodes whose known leading digits
+                          hold z standard deviations fewer digits >= k than a
+                          random arrangement would
+  --epsilon <e>           (search, inexact) skip subtrees in which the model expects
+                          fewer than e solutions; the total expected number of
+                          skipped solutions is reported
+  --ratio <r>             (search, inexact) skip a child whose expected number of
+                          solutions is below r times its parent's
+  --perturb <seed>        (experiment) replace each weight x^x by x^x plus a
+                          pseudo-random amount below x^x/4; output is not checked
+  --keep-residues         (experiment) with --perturb, keep the weights modulo 2(b-1)
+  --uniform               (search, inexact) measure --band and --deficit on the
+                          scale of the whole random walk instead of pointwise
   --unit-depth <n>        (search) tree depth at which the search is cut into
                           resumable units (default: 4)
   --par-depth <n>         (search) further depth below a unit down to which
@@ -44,6 +62,7 @@ struct Opts {
     unit_depth: u32,
     min_digits: u32,
     max_digits: u32,
+    prune: search::Prune,
     journal: Option<String>,
     progress: bool,
 }
@@ -60,6 +79,7 @@ fn parse_args() -> Opts {
     let mut par_depth = 4;
     let mut unit_depth = 4;
     let mut min_digits = 1;
+    let mut prune = search::Prune::NONE;
     let mut max_digits = u32::MAX;
     let mut journal = None;
     let mut progress = false;
@@ -86,6 +106,14 @@ fn parse_args() -> Opts {
             "--journal" => journal = Some(val()),
             "--max-digits" => max_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
             "--min-digits" => min_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
+            "--cap" => prune.cap = val().parse().unwrap_or_else(|_| die("bad cap")),
+            "--band" => prune.z = val().parse().unwrap_or_else(|_| die("bad band")),
+            "--deficit" => prune.deficit = val().parse().unwrap_or_else(|_| die("bad deficit")),
+            "--epsilon" => prune.epsilon = val().parse().unwrap_or_else(|_| die("bad epsilon")),
+            "--ratio" => prune.ratio = val().parse().unwrap_or_else(|_| die("bad ratio")),
+            "--uniform" => prune.uniform = true,
+            "--perturb" => prune.perturb = val().parse().unwrap_or_else(|_| die("bad seed")),
+            "--keep-residues" => prune.keep_residues = true,
             "--progress" => progress = true,
             _ => pos.push(a.to_string()),
         }
@@ -99,7 +127,7 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, journal, progress }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -137,7 +165,7 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
     let mut out: Found = if o.min_digits <= 1 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
-    let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth);
+    let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth, o.prune);
     let units = sr.units(o.unit_depth);
     let total = units.len();
 
@@ -188,6 +216,10 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
         },
     );
     eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes.load(Relaxed), sr.evals.load(Relaxed));
+    let skipped = *sr.skipped.lock().unwrap();
+    if skipped > 0.0 {
+        eprintln!("  base {b}: expected number of solutions in skipped subtrees {skipped:.4}");
+    }
     let found = std::mem::take(&mut *sr.found.lock().unwrap());
     for (mode, d, lanes) in found {
         out[mode as usize].push(lanes_to_digits(d, &lanes));
@@ -251,7 +283,8 @@ fn main() {
             let res = &mut res[mode as usize];
             res.sort_by(|x, y| x.len().cmp(&y.len()).then(x.cmp(y)));
             for r in res.iter() {
-                assert!(verify(r, b, mode), "base {b}: {} is not a Munchausen number", tuple(r));
+                // perturbed weights are an experiment; their solutions are not Munchausen numbers
+                assert!(o.prune.perturb != 0 || verify(r, b, mode), "base {b}: {} is not a Munchausen number", tuple(r));
             }
             let strs: Vec<String> = res.iter().map(|r| tuple(r)).collect();
             println!("{}:{}:{}: {}", b, mode, res.len(), strs.join(", "));
@@ -280,6 +313,7 @@ mod tests {
             unit_depth: 2,
             min_digits: 1,
             max_digits: u32::MAX,
+            prune: search::Prune::NONE,
             journal: None,
             progress: false,
         }

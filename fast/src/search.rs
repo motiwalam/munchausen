@@ -42,14 +42,77 @@ pub struct Params<const N: usize> {
     max_v: DV<N>,    // b^d - 1
     dmask: u64,      // lanes < d
     kmax: usize,     // largest digit with j^j < b^d
+    cap: u32,        // inexact search: no digit may occur more often than this
+    band_lo: Vec<u32>, // inexact search: bounds on the number of digits >= k
+    band_hi: Vec<u32>,
+    deficit: f64,
+    uniform: bool,
+    ln_eps: f64,
+    ln_ratio: f64,
+    ln_fact: Vec<f64>, // ln(n!) for n <= d
+    ln_b: f64,
+}
+
+/// Pruning rules for the inexact search. Both are off by default.
+#[derive(Clone, Copy)]
+pub struct Prune {
+    /// largest allowed count of any digit 2 or more
+    pub cap: u32,
+    /// allowed deviation, in standard deviations, of the number of digits >= k
+    /// from its mean for a random d-digit string
+    pub z: f64,
+    /// allowed shortfall, in standard deviations, of the number of digits >= k
+    /// seen in the known leading digits, against a random arrangement
+    pub deficit: f64,
+    /// skip a subtree when the model's expected number of solutions in it is
+    /// below this (0 disables the rule)
+    pub epsilon: f64,
+    /// skip a child when its expected number of solutions is below this
+    /// fraction of its parent's (0 disables the rule)
+    pub ratio: f64,
+    /// band and deficit tests measured on the scale of a whole Brownian bridge
+    /// (sqrt(d)/2 and sqrt(m)/2) instead of the pointwise standard deviation
+    pub uniform: bool,
+    /// experiment: replace each weight x^x (x >= 2) by x^x + a pseudo-random
+    /// amount below x^x / 4, chosen from this seed (0 keeps the true weights)
+    pub perturb: u64,
+    /// with perturb: make the amount a multiple of 2(b-1), which keeps the
+    /// weights' residues modulo 2 and modulo b-1
+    pub keep_residues: bool,
+}
+
+impl Prune {
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false };
 }
 
 impl<const N: usize> Params<N> {
-    pub fn new(b: u32, d: u32) -> Self {
+    pub fn new(b: u32, d: u32, prune: Prune) -> Self {
         assert!(d >= 2 && d + 2 <= 32 * N as u32);
         let bb = BigUint::from(b);
         // weights used for upper bounds: a zero is worth at most 1
-        let w_hi: Vec<BigUint> = (0..b).map(|j| if j == 0 { BigUint::from(1u32) } else { BigUint::from(j).pow(j) }).collect();
+        let mut w_hi: Vec<BigUint> = (0..b).map(|j| if j == 0 { BigUint::from(1u32) } else { BigUint::from(j).pow(j) }).collect();
+        if prune.perturb != 0 {
+            for j in 2..b as usize {
+                let room: BigUint = &w_hi[j] / 4u32 + 1u32;
+                let mut state = prune.perturb ^ ((b as u64) << 32) ^ (j as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15);
+                let limbs: Vec<u32> = (0..room.bits() / 32 + 2)
+                    .map(|_| {
+                        // splitmix64
+                        state = state.wrapping_add(0x9e37_79b9_7f4a_7c15);
+                        let mut z = state;
+                        z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
+                        z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
+                        (z ^ (z >> 31)) as u32
+                    })
+                    .collect();
+                let mut delta = BigUint::from_slice(&limbs) % &room;
+                if prune.keep_residues {
+                    let step = BigUint::from(2 * (b - 1));
+                    delta = &delta / &step * &step;
+                }
+                w_hi[j] += delta;
+            }
+        }
         let limit = bb.pow(d);
         let kmax = (1..b as usize).filter(|&j| w_hi[j] < limit).max().unwrap();
         let lanes = |x: &BigUint| DV::<N>::from_bytes(&big_to_lanes(x, b));
@@ -62,6 +125,23 @@ impl<const N: usize> Params<N> {
         }
         let w = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
         let dhi = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&(&w_hi[j] - &w_hi[j - 1])) }).collect();
+        // the number of digits >= k in a random d-digit string (leading digit
+        // nonzero) has this mean and variance
+        let (mut band_lo, mut band_hi) = (vec![0; kmax + 1], vec![d; kmax + 1]);
+        if prune.z.is_finite() {
+            for k in 1..=kmax {
+                let q1 = (b as f64 - k as f64) / (b as f64 - 1.0);
+                let q = (b as f64 - k as f64) / b as f64;
+                let mean = q1 + (d as f64 - 1.0) * q;
+                let sd = if prune.uniform {
+                    (d as f64).sqrt() / 2.0
+                } else {
+                    (q1 * (1.0 - q1) + (d as f64 - 1.0) * q * (1.0 - q)).sqrt()
+                };
+                band_lo[k] = (mean - prune.z * sd).floor().max(0.0) as u32;
+                band_hi[k] = ((mean + prune.z * sd).ceil() as u32).min(d);
+            }
+        }
         Params {
             d,
             base: Base::new(b),
@@ -72,7 +152,59 @@ impl<const N: usize> Params<N> {
             max_v: lanes(&(limit - 1u32)),
             dmask: (1u64 << d) - 1,
             kmax,
+            cap: prune.cap,
+            band_lo,
+            band_hi,
+            deficit: prune.deficit,
+            uniform: prune.uniform,
+            ln_eps: if prune.epsilon > 0.0 { prune.epsilon.ln() } else { f64::NEG_INFINITY },
+            ln_ratio: if prune.ratio > 0.0 { prune.ratio.ln() } else { f64::NEG_INFINITY },
+            ln_fact: (0..=d).scan(0.0, |acc, n| {
+                if n > 0 {
+                    *acc += (n as f64).ln();
+                }
+                Some(*acc)
+            }).collect(),
+            ln_b: (b as f64).ln(),
         }
+    }
+
+    /// Inexact search: under a random arrangement of the digits, the known
+    /// leading digits should contain about their share of the m digits >= k.
+    #[inline(always)]
+    fn plausible(&self, c: &Node<N>) -> bool {
+        if !self.deficit.is_finite() {
+            return true;
+        }
+        let d = self.d as f64;
+        let len = d - c.pp as f64; // number of known leading digits
+        let q = c.m as f64 / d;
+        let mean = len * q;
+        let var = if self.uniform {
+            c.m as f64 * (1.0 - q) / 4.0
+        } else {
+            len * q * (1.0 - q) * (d - len) / (d - 1.0)
+        };
+        c.oh as f64 + 0.5 >= mean - self.deficit * var.sqrt()
+    }
+
+    /// Inexact search: the model's expected number of solutions below this node.
+    /// The pp unknown digits must hold the missing copies of every decided
+    /// digit plus rf digits below k, in some order. With random digits that
+    /// happens with probability pp! k^rf / (prod need_x! * rf! * b^pp).
+    #[inline(always)]
+    fn likely(&self, c: &mut Node<N>, parent_ln_e: f64, k: usize, l: &mut Local) -> bool {
+        if self.ln_eps == f64::NEG_INFINITY && self.ln_ratio == f64::NEG_INFINITY {
+            return true;
+        }
+        let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * (k as f64).ln()
+            - c.lneed - self.ln_fact[c.rf as usize] - c.pp as f64 * self.ln_b;
+        c.ln_e = ln_e;
+        if ln_e < self.ln_eps || ln_e < parent_ln_e + self.ln_ratio {
+            l.skipped += ln_e.exp();
+            return false;
+        }
+        true
     }
 
     #[inline(always)]
@@ -93,12 +225,17 @@ struct Node<const N: usize> {
     occ: Hist,     // histogram of the known leading digits (occ[0] = known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
+    m: u32,        // number of decided digits, all >= k
+    oh: u32,       // how many of the known leading digits are >= k
+    lneed: f64,    // sum over decided digits x of ln((c_x - occ_x)!)
+    ln_e: f64,     // ln of the model's expected number of solutions below the node
 }
 
 #[derive(Default)]
 struct Local {
     nodes: u64,
     evals: u64,
+    skipped: f64, // expected number of solutions in skipped subtrees
 }
 
 pub struct Search<const N: usize> {
@@ -108,6 +245,8 @@ pub struct Search<const N: usize> {
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
     pub nodes: AtomicU64,
     pub evals: AtomicU64,
+    /// expected number of solutions in subtrees skipped by the inexact rules
+    pub skipped: Mutex<f64>,
     /// called (from worker threads) as soon as a solution is found
     pub on_found: Option<Box<dyn Fn(u32, u32, &[u8; 64]) + Send + Sync>>,
 }
@@ -121,13 +260,14 @@ pub struct Unit<const N: usize> {
 }
 
 impl<const N: usize> Search<N> {
-    pub fn new(b: u32, min_digits: u32, max_digits: u32, par_depth: u32) -> Self {
+    pub fn new(b: u32, min_digits: u32, max_digits: u32, par_depth: u32, prune: Prune) -> Self {
         Search {
-            params: (min_digits.max(2)..=b.min(max_digits)).rev().map(|d| Params::new(b, d)).collect(),
+            params: (min_digits.max(2)..=b.min(max_digits)).rev().map(|d| Params::new(b, d, prune)).collect(),
             par_depth,
             found: Mutex::new(vec![]),
             nodes: AtomicU64::new(0),
             evals: AtomicU64::new(0),
+            skipped: Mutex::new(0.0),
             on_found: None,
         }
     }
@@ -135,6 +275,9 @@ impl<const N: usize> Search<N> {
     fn flush(&self, l: &Local) {
         self.nodes.fetch_add(l.nodes, Ordering::Relaxed);
         self.evals.fetch_add(l.evals, Ordering::Relaxed);
+        if l.skipped > 0.0 {
+            *self.skipped.lock().unwrap() += l.skipped;
+        }
     }
 
     /// Split the search into subtrees by expanding every root `depth` levels.
@@ -143,7 +286,7 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: DV::zero(), occ: [0; 128], pp: p.d, rf: p.d };
+            let root = Node { t: DV::zero(), occ: [0; 128], pp: p.d, rf: p.d, m: 0, oh: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -199,6 +342,13 @@ impl<const N: usize> Search<N> {
                 hi = hi.add(dhi, base);
             }
             l.evals += 1;
+            let mk = n.m + occk + e;
+            if occk + e > p.cap || mk > p.band_hi[k] {
+                break; // both only grow with e
+            }
+            if mk < p.band_lo[k] {
+                continue;
+            }
             let nlo = te.nonzero_mask();
             if nlo & !dm != 0 {
                 break; // lo >= b^d, and it only grows with e
@@ -212,10 +362,14 @@ impl<const N: usize> Search<N> {
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let mut npp = 64 - (!clo.eq_mask(&chi) & dm).leading_zeros();
             if npp >= n.pp {
-                emit(l, Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e }, ck);
+                let c = Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e, m: mk, oh: n.oh + occk, lneed: n.lneed + p.ln_fact[e as usize], ln_e: 0.0 };
+                let mut c = c;
+                if p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
+                    emit(l, c, ck);
+                }
                 continue;
             }
-            let mut c = Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e };
+            let mut c = Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e, m: mk, oh: n.oh + occk, lneed: n.lneed + p.ln_fact[e as usize], ln_e: 0.0 };
             let ok = 'fix: loop {
                 let mut ld = [0u8; 64];
                 clo.to_bytes(&mut ld);
@@ -226,10 +380,13 @@ impl<const N: usize> Search<N> {
                     let o = unsafe { c.occ.get_unchecked_mut(x) };
                     *o += 1;
                     if x >= k {
+                        c.oh += 1;
                         let lim = if x == k { ck } else { unsafe { *cnt.get_unchecked(x) } };
                         if *o > lim {
                             break 'fix false;
                         }
+                        // one fewer copy of x still has to appear in the suffix
+                        c.lneed -= ((lim - *o + 1) as f64).ln();
                     } else {
                         if c.rf == 0 {
                             break 'fix false;
@@ -257,7 +414,7 @@ impl<const N: usize> Search<N> {
                     break true;
                 }
             };
-            if ok {
+            if ok && p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
                 emit(l, c, ck);
             }
         }
