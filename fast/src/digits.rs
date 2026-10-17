@@ -83,7 +83,9 @@ mod imp {
                 let mut p = 0u64;
                 for i in 0..N {
                     s[i] = _mm256_add_epi8(self.0[i], o.0[i]);
-                    g |= (_mm256_movemask_epi8(_mm256_cmpgt_epi8(s[i], base.bm1)) as u32 as u64) << (32 * i);
+                    // lane sums reach 2b-1 > 127, so compare unsigned: s >= b iff max(s, b) == s
+                    let ge = _mm256_cmpeq_epi8(_mm256_max_epu8(s[i], base.bv), s[i]);
+                    g |= (_mm256_movemask_epi8(ge) as u32 as u64) << (32 * i);
                     p |= (_mm256_movemask_epi8(_mm256_cmpeq_epi8(s[i], base.bm1)) as u32 as u64) << (32 * i);
                 }
                 let cin = ((g << 1).wrapping_add(p)) ^ p;
@@ -91,7 +93,7 @@ mod imp {
                 for i in 0..N {
                     // subtracting 0xFF adds one
                     let r = _mm256_sub_epi8(s[i], expand((cin >> (32 * i)) as u32));
-                    let over = _mm256_cmpgt_epi8(r, base.bm1);
+                    let over = _mm256_cmpeq_epi8(_mm256_max_epu8(r, base.bv), r);
                     out.0[i] = _mm256_sub_epi8(r, _mm256_and_si256(over, base.bv));
                 }
                 out
@@ -169,7 +171,7 @@ mod imp {
             let mut out = Self::zero();
             let mut c = 0u8;
             for i in 0..32 * N {
-                let mut s = self.0[i / 32][i % 32] + o.0[i / 32][i % 32] + c;
+                let mut s = self.0[i / 32][i % 32].wrapping_add(o.0[i / 32][i % 32]).wrapping_add(c);
                 c = (s >= base.b) as u8;
                 if c == 1 {
                     s -= base.b;

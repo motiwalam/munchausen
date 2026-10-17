@@ -228,9 +228,10 @@ The leaf then compares the exact sum with the vector.
 
 The search never converts between binary and base `b`. It stores each number
 as one byte per base-`b` digit, with the least significant digit first, in
-AVX2 registers. One 32-byte register holds 32 digits and covers bases up to 30.
-Two registers cover bases up to 62. Two lanes stay free for carries out of the
-top digit. No bignum library is needed, and the code is the same for every
+AVX2 registers. One 32-byte register holds 32 digits and covers numbers with
+up to 30 digits. Two registers cover up to 62 digits. Two lanes stay free for
+carries out of the top digit. A lane holds at most `2b - 1` before the carry
+step, so bases up to 127 fit in a byte. No bignum library is needed, and the code is the same for every
 base.
 
 Addition adds the lanes, then resolves carries with a carry-lookahead identity
@@ -280,4 +281,5 @@ leading-digit test.
 
 Each extra base costs about 1.9x more time. Base 38 took 520 seconds on the
 test laptop. At that rate, base 40 takes about 30 minutes and base 45 about
-13 hours. Bases above 62 need wider digit vectors.
+13 hours. Numbers with more than 62 digits need wider digit vectors. Bases
+from 63 to 127 work with `--max-digits 62` or less.

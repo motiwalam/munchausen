@@ -1,7 +1,7 @@
 # fast
 
-A Rust program that finds every Munchausen number in bases 2 to 62. It
-searches both conventions for `0^0` in one run. `../docs/algorithm.md`
+A Rust program that finds every Munchausen number in bases 2 to 127, up to 62
+digits. It searches both conventions for `0^0` in one run. `../docs/algorithm.md`
 explains the algorithm, and `../docs/comparison.md` measures it.
 
 ## Build
@@ -39,7 +39,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 
 | engine | what it does | bases |
 |---|---|---|
-| `search` | the fast search | 2 to 62 |
+| `search` | the fast search | 2 to 127, at most 62 digits |
 | `port` | a line-for-line port of `../src/munchausen.py`, which checks the same combinations | 2 to 26 |
 | `reference` | the leading-digit test alone, in `u128` arithmetic | 2 to 27 |
 | `brute` | tests every `n` up to `b * (b-1)^(b-1)` | 2 to about 9 |
@@ -54,6 +54,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
 | `--progress` | `search` only. Print progress every 10 seconds. |
+| `--max-digits <n>` | `search` only. Look only for numbers with at most `n` digits. Bases above 62 need `n <= 62`. |
 | `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
 | `--par-depth <n>` | `search` only. Depth below a unit at which the program still splits work into parallel tasks (default 4). |
 

@@ -101,9 +101,9 @@ convention, 62,785,212 in total:
 | 2 to 23 | 2.2% |
 
 A proof that no `b`-digit Munchausen number exists for `b > 2` would skip the
-first row and save about 16% of the time. The results support this
-conjecture. No base from 3 to 38 has a `b`-digit solution under either
-convention.
+first row and save about 16% of the time. Under `0^0 = 1`, no base from 3 to
+38 has a `b`-digit solution. Under `0^0 = 0`, bases 15 and 16 each have one,
+so there the statement is false.
 
 By depth. For base 27, 82% of the 33,204,174 intervals belong to the digits 13
 to 19, the middle of the tree. The digits 2 to 6 account for 8,549 intervals.
@@ -207,7 +207,7 @@ convention.
 | idea | expected effect | evidence |
 |---|---|---|
 | port the feasibility check | 10 to 13 percent fewer nodes | prototype counts above |
-| prove that no `b`-digit solution exists | about 16 percent less time | share of `d = b` at base 28 |
+| prove that no `b`-digit solution exists under `0^0 = 1` | about 16 percent less time | share of `d = b` at base 28 |
 | 48-lane vectors (32 + 16 bytes) for bases 31 to 46 | fewer vector instructions than two full registers | not measured |
 | split the work units over several machines | linear in the number of machines | the units are independent, but this is not measured |
 

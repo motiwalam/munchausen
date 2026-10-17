@@ -26,6 +26,12 @@ use num_bigint::BigUint;
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicU64, Ordering};
 
+/// Largest supported base: lane sums reach 2b-1, which must fit in a byte.
+pub const MAX_BASE: usize = 127;
+
+/// A count for every digit value.
+type Hist = [u8; 128];
+
 pub struct Params<const N: usize> {
     pub d: u32,
     base: Base,
@@ -48,13 +54,14 @@ impl<const N: usize> Params<N> {
         let kmax = (1..b as usize).filter(|&j| w_hi[j] < limit).max().unwrap();
         let lanes = |x: &BigUint| DV::<N>::from_bytes(&big_to_lanes(x, b));
         let mut tw = vec![];
-        for j in 0..b as usize {
+        // digits above kmax never appear, and their weights need more lanes
+        for j in 0..=kmax {
             for m in 0..=d {
                 tw.push(lanes(&(&w_hi[j] * m)));
             }
         }
-        let w = (0..b as usize).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
-        let dhi = (0..b as usize).map(|j| if j == 0 { DV::zero() } else { lanes(&(&w_hi[j] - &w_hi[j - 1])) }).collect();
+        let w = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
+        let dhi = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&(&w_hi[j] - &w_hi[j - 1])) }).collect();
         Params {
             d,
             base: Base::new(b),
@@ -83,7 +90,7 @@ impl<const N: usize> Params<N> {
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
-    occ: [u8; 64], // histogram of the known leading digits (occ[0] = known zeros)
+    occ: Hist,     // histogram of the known leading digits (occ[0] = known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
 }
@@ -110,13 +117,13 @@ pub struct Unit<const N: usize> {
     pi: usize,
     k: usize,
     n: Node<N>,
-    cnt: [u8; 64],
+    cnt: Hist,
 }
 
 impl<const N: usize> Search<N> {
-    pub fn new(b: u32, par_depth: u32) -> Self {
+    pub fn new(b: u32, max_digits: u32, par_depth: u32) -> Self {
         Search {
-            params: (2..=b).rev().map(|d| Params::new(b, d)).collect(),
+            params: (2..=b.min(max_digits)).rev().map(|d| Params::new(b, d)).collect(),
             par_depth,
             found: Mutex::new(vec![]),
             nodes: AtomicU64::new(0),
@@ -136,8 +143,8 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: DV::zero(), occ: [0; 64], pp: p.d, rf: p.d };
-            let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 64] }];
+            let root = Node { t: DV::zero(), occ: [0; 128], pp: p.d, rf: p.d };
+            let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
                 for u in frontier {
@@ -178,7 +185,7 @@ impl<const N: usize> Search<N> {
     // child whose interval survives the leading-digit test. cnt[x] holds c_x
     // for x > k.
     #[inline(always)]
-    fn expand(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &[u8; 64], l: &mut Local, mut emit: impl FnMut(&mut Local, Node<N>, u8)) {
+    fn expand(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, Node<N>, u8)) {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
@@ -259,10 +266,10 @@ impl<const N: usize> Search<N> {
     // All digits >= 2 are decided; the free slots hold ones and zeros. With
     // c_1 = occ[1] + e ones and c_0 = occ[0] + rf - e zeros the sum is
     // t + e (0^0 = 0) or t + e + c_0 (0^0 = 1). Check every candidate exactly.
-    fn leaf(&self, p: &Params<N>, n: &Node<N>, cnt: &mut [u8; 64]) {
+    fn leaf(&self, p: &Params<N>, n: &Node<N>, cnt: &mut Hist) {
         let d = p.d as usize;
         let (o0, o1) = (n.occ[0] as u32, n.occ[1] as u32);
-        let check = |mode: u32, s: DV<N>, e: u32, cnt: &mut [u8; 64]| {
+        let check = |mode: u32, s: DV<N>, e: u32, cnt: &mut Hist| {
             let nz = s.nonzero_mask();
             if nz & !p.dmask != 0 || nz & (1 << (d - 1)) == 0 {
                 return; // not a d-digit number
@@ -271,7 +278,7 @@ impl<const N: usize> Search<N> {
             cnt[0] = (o0 + n.rf - e) as u8;
             let mut x = [0u8; 64];
             s.to_bytes(&mut x);
-            let mut h = [0u8; 64];
+            let mut h = [0u8; 128];
             for &v in &x[..d] {
                 h[v as usize] += 1;
             }
@@ -295,7 +302,7 @@ impl<const N: usize> Search<N> {
         cnt[1] = 0;
     }
 
-    fn rec<'s>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: [u8; 64], depth: u32) {
+    fn rec<'s>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
         let mut l = Local::default();
         if depth < self.par_depth && k > 1 {
             l.nodes += 1;
@@ -310,7 +317,7 @@ impl<const N: usize> Search<N> {
         self.flush(&l);
     }
 
-    fn rec_seq(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut [u8; 64], l: &mut Local) {
+    fn rec_seq(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local) {
         l.nodes += 1;
         if k == 1 {
             self.leaf(p, n, cnt);

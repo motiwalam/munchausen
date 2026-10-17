@@ -12,7 +12,7 @@ const USAGE: &str = "\
 usage: fast <engine> <base> [<last base>] [options]
 
 engines:
-  search      fast prefix-pruned digit-count search (bases 2..=62)
+  search      fast prefix-pruned digit-count search (bases 2..=127, at most 62 digits)
   port        faithful port of the python algorithm (bases 2..=26)
   reference   simple u128 version of the search, for validation (bases 2..=27)
   brute       check every n up to the upper bound (tiny bases only)
@@ -24,6 +24,7 @@ options:
                           <file> and resume from it if it exists; \"{base}\"
                           in the name is replaced by the base
   --progress              (search) report progress every 10 seconds
+  --max-digits <n>        (search) only look for numbers with at most n digits
   --unit-depth <n>        (search) tree depth at which the search is cut into
                           resumable units (default: 4)
   --par-depth <n>         (search) further depth below a unit down to which
@@ -40,6 +41,7 @@ struct Opts {
     threads: usize,
     par_depth: u32,
     unit_depth: u32,
+    max_digits: u32,
     journal: Option<String>,
     progress: bool,
 }
@@ -55,6 +57,7 @@ fn parse_args() -> Opts {
     let mut threads = 0;
     let mut par_depth = 4;
     let mut unit_depth = 4;
+    let mut max_digits = u32::MAX;
     let mut journal = None;
     let mut progress = false;
     let mut i = 0;
@@ -78,6 +81,7 @@ fn parse_args() -> Opts {
             "--par-depth" => par_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
             "--unit-depth" => unit_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
             "--journal" => journal = Some(val()),
+            "--max-digits" => max_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
             "--progress" => progress = true,
             _ => pos.push(a.to_string()),
         }
@@ -91,7 +95,7 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, journal, progress }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, max_digits, journal, progress }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -111,11 +115,12 @@ fn from_u128(v: Vec<u128>, b: u32) -> Vec<Vec<u32>> {
 }
 
 fn run_search(b: u32, o: &Opts) -> Found {
-    match b {
-        2..=30 => run_search_n::<1>(b, o),
+    // the widest number searched has min(b, max_digits) digits, plus two lanes for carries
+    match b.min(o.max_digits) {
+        0..=30 => run_search_n::<1>(b, o),
         31..=62 => run_search_n::<2>(b, o),
         _ => {
-            eprintln!("the search engine supports bases 2..=62");
+            eprintln!("The search engine handles at most 62 digits. Add --max-digits 62 or less.");
             std::process::exit(2)
         }
     }
@@ -128,7 +133,7 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
     let mut out: Found = [vec![vec![0], vec![1]], vec![vec![1]]];
-    let mut sr = search::Search::<N>::new(b, o.par_depth);
+    let mut sr = search::Search::<N>::new(b, o.max_digits, o.par_depth);
     let units = sr.units(o.unit_depth);
     let total = units.len();
 
@@ -217,7 +222,7 @@ fn main() {
     let max_base = match o.engine.as_str() {
         "port" => 26,
         "reference" | "brute" => 27,
-        _ => 62,
+        _ => search::MAX_BASE as u32,
     };
     if o.b1 > max_base {
         eprintln!("The {} engine supports bases up to {max_base}. Choose a smaller last base.", o.engine);
@@ -269,6 +274,7 @@ mod tests {
             threads: 0,
             par_depth: 3,
             unit_depth: 2,
+            max_digits: u32::MAX,
             journal: None,
             progress: false,
         }

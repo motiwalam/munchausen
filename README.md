@@ -109,7 +109,7 @@ numbers.
 
 `docs/algorithm.md` explains both searches in detail, with a worked example.
 `docs/comparison.md` compares them, and other published searches, with
-measured numbers.
+measured numbers. `docs/theory.md` covers the mathematics.
 
 ## Layout
 
@@ -121,36 +121,61 @@ measured numbers.
 | `src/nb.py` | the size of the search space after each Python optimization |
 | `src/formatutil.py` | reads and writes the output format |
 | `output/` | results |
-| `docs/` | algorithm and comparison documents |
+| `docs/` | algorithm, comparison and theory documents |
+| `analysis/` | scripts for the probabilistic model and the tree measurements in `docs/theory.md` |
+
+## What we know
+
+`docs/theory.md` collects the mathematics. The main points:
+
+- Large-base Munchausen numbers behave like random coincidences. A
+  probabilistic model predicts about one nontrivial solution per base and
+  convention, most often with `b-1` digits. Bases 20 to 38 agree with it.
+- Some bases have solutions that need no search. If `a^(a-1) = b^k`, a leading
+  digit `a` at position `k` pays for itself, so it extends smaller solutions.
+  This gives `513` in base 25, `400` in base 8, and solutions in bases 49, 64
+  and 81. Each pair of digits also gives at most one base with a 2-digit
+  solution, for example `33` in base 17.
+- Under `0^0 = 0`, every solution that ends in 0 has a twin `n+1`.
+- The exhaustive search costs about `1.87^b`. I found no exact method that
+  grows more slowly, so a complete search of base 100 is out of reach. Base 100
+  has no nontrivial solution with 50 digits or fewer.
 
 ## Open questions
 
 The long-term goal is to understand Munchausen numbers well enough to answer
 these questions:
 
-- Can we find the Munchausen numbers of a base in polynomial time?
-- Do Munchausen numbers have a general form?
-- Can we predict how many Munchausen numbers a base has?
-
-An exhaustive search cannot keep up with the growth forever. At 1.9x per base,
-base 45 takes about 13 hours on the test laptop and base 50 about 13 days.
-Answers to these questions need a better understanding of the numbers
-themselves, for example a way to construct them directly.
+- Can we find the Munchausen numbers of a base in polynomial time? Section 3
+  of `docs/theory.md` explains why the known approaches stay exponential.
+- Do Munchausen numbers have a general form? Only the families in section 1 of
+  `docs/theory.md`. The solutions near `b` digits show no structure.
+- Can we predict how many Munchausen numbers a base has? On average, yes:
+  about one per convention for large bases. The exact count of a single base
+  looks random.
 
 ### Conjecture: no `b`-digit Munchausen numbers for `b > 2`
 
 In base 2, `10` (that is, 2) is a 2-digit Munchausen number under `0^0 = 1`.
-The conjecture says that this is the only case with `b` digits. The results
-agree: in bases 3 to 38, no solution has `b` digits under either convention.
+The conjecture says that this is the only case with `b` digits.
+
+Under `0^0 = 0` the conjecture is false. Base 15 has the 15-digit solution
+`(1,2,4,3,14,14,13,3,4,1,9,1,1,0,14)`, and base 16 has the 16-digit solution
+`(1,2,3,11,2,3,0,9,15,15,5,7,2,15,6,11)`. Both are in `output/b2-19-0.txt`.
+
+Under `0^0 = 1` the conjecture holds for bases 3 to 38. The probabilistic
+model expects a `b`-digit solution in about 1 base in 12, so I expect it to
+fail in some larger base.
 
 A proof would let both searches skip the `b`-digit case. That is 26% of the
 combinations in the Python search, and 16% of the work in the Rust search at
 base 28.
 
-Notes towards a proof:
+Facts about `b`-digit solutions:
 
 - The largest Munchausen sum of a `b`-digit number is `b * (b-1)^(b-1)`. This
   is less than `b^b`.
 - The leading digit of `b * (b-1)^(b-1)` in base `b` is about `b / e`.
-- For `b > 2`, a `b`-digit Munchausen number must contain the digit `b-1` 3
-  times.
+- For `b >= 7`, a `b`-digit Munchausen number contains the digit `b-1` at
+  least 3 times (proof in `docs/theory.md`). Both counterexamples above contain
+  it exactly 3 times.
