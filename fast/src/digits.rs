@@ -93,8 +93,8 @@ mod imp {
                 for i in 0..N {
                     // subtracting 0xFF adds one
                     let r = _mm256_sub_epi8(s[i], expand((cin >> (32 * i)) as u32));
-                    let over = _mm256_cmpeq_epi8(_mm256_max_epu8(r, base.bv), r);
-                    out.0[i] = _mm256_sub_epi8(r, _mm256_and_si256(over, base.bv));
+                    // r <= 2b-1 < 256; if r < b then r - b wraps above r
+                    out.0[i] = _mm256_min_epu8(r, _mm256_sub_epi8(r, base.bv));
                 }
                 out
             }

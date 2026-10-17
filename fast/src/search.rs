@@ -51,6 +51,7 @@ pub struct Params<const N: usize> {
     ln_ratio: f64,
     track_ln: bool,    // whether the model's expected counts are needed at all
     ln_fact: Vec<f64>, // ln(n!) for n <= d
+    ln_k: Vec<f64>,    // ln(k) for k <= kmax
     ln_b: f64,
 }
 
@@ -167,6 +168,7 @@ impl<const N: usize> Params<N> {
                 }
                 Some(*acc)
             }).collect(),
+            ln_k: (0..=kmax).map(|k| (k as f64).ln()).collect(),
             ln_b: (b as f64).ln(),
         }
     }
@@ -201,7 +203,7 @@ impl<const N: usize> Params<N> {
         if !self.track_ln {
             return true;
         }
-        let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * (k as f64).ln()
+        let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * self.ln_k[k]
             - c.lneed - self.ln_fact[c.rf as usize] - c.pp as f64 * self.ln_b;
         c.ln_e = ln_e;
         if ln_e < self.ln_eps || ln_e < parent_ln_e + self.ln_ratio {
@@ -275,6 +277,8 @@ struct Local {
 pub struct Search<const N: usize> {
     pub params: Vec<Params<N>>,
     pub par_depth: u32,
+    /// whether any inexact rule is on; the exact search compiles without them
+    inexact: bool,
     /// (convention, number of digits, digits with the least significant first)
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
     pub nodes: AtomicU64,
@@ -298,6 +302,11 @@ impl<const N: usize> Search<N> {
         Search {
             params: (min_digits.max(2)..=b.min(max_digits)).rev().map(|d| Params::new(b, d, prune)).collect(),
             par_depth,
+            inexact: prune.cap != u32::MAX
+                || prune.z.is_finite()
+                || prune.deficit.is_finite()
+                || prune.epsilon > 0.0
+                || prune.ratio > 0.0,
             found: Mutex::new(vec![]),
             nodes: AtomicU64::new(0),
             evals: AtomicU64::new(0),
@@ -331,7 +340,7 @@ impl<const N: usize> Search<N> {
                     }
                     l.nodes += 1;
                     let mut cnt = u.cnt;
-                    self.expand(p, u.k, &u.n, &mut cnt, &mut l, |_, c, cnt| {
+                    self.expand::<true>(p, u.k, &u.n, &mut cnt, &mut l, |_, c, cnt| {
                         next.push(Unit { pi, k: u.k - 1, n: *c, cnt: *cnt });
                     });
                 }
@@ -352,16 +361,21 @@ impl<const N: usize> Search<N> {
                 return;
             }
             let p = &self.params[u.pi];
-            rayon::scope(|s| self.rec(s, p, u.k, u.n, u.cnt, 0));
+            if self.inexact {
+                rayon::scope(|s| self.rec::<true>(s, p, u.k, u.n, u.cnt, 0));
+            } else {
+                rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+            }
             done(i);
         });
     }
 
     // Enumerate c_k = occ[k] + e for e = 0, 1, ... (k >= 2) and emit every
     // child whose interval survives the leading-digit test. cnt[x] holds c_x
-    // for x > k; expand sets cnt[k] before it emits a child.
+    // for x > k; expand sets cnt[k] before it emits a child. X enables the
+    // inexact rules.
     #[inline(always)]
-    fn expand(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, &Node<N>, &mut Hist)) {
+    fn expand<const X: bool>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, &Node<N>, &mut Hist)) {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
@@ -380,11 +394,13 @@ impl<const N: usize> Search<N> {
             l.evals += 1;
             let ck = occk + e;
             let mk = n.m + ck;
-            if ck > p.cap || mk > p.band_hi[k] {
-                break; // both only grow with e
-            }
-            if mk < p.band_lo[k] {
-                continue;
+            if X {
+                if ck > p.cap || mk > p.band_hi[k] {
+                    break; // both only grow with e
+                }
+                if mk < p.band_lo[k] {
+                    continue;
+                }
             }
             let nlo = te.nonzero_mask();
             if nlo & !dm != 0 {
@@ -397,12 +413,11 @@ impl<const N: usize> Search<N> {
             cnt[k] = ck as u8;
             let mut clo = if nlo & top == 0 { p.pow_lo } else { te };
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
-            let lneed = if p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
+            let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
             let mut c = Node { t: te, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
-            if self.settle(p, k, &mut c, &mut clo, &mut chi, z, cnt)
+            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, z, cnt)
                 && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
-                && p.plausible(&c, &clo, k)
-                && p.likely(&mut c, n.ln_e, k, l)
+                && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
             {
                 emit(l, &c, cnt);
             }
@@ -416,7 +431,7 @@ impl<const N: usize> Search<N> {
     // to t, which narrows the interval and can expose more leading digits.
     // Returns false if the node fails.
     #[inline(always)]
-    fn settle(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, mut z: u32, cnt: &Hist) -> bool {
+    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, mut z: u32, cnt: &Hist) -> bool {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1);
@@ -444,7 +459,7 @@ impl<const N: usize> Search<N> {
                 if clo.count(x, known) > lim as u32 {
                     return false;
                 }
-                if p.track_ln {
+                if X && p.track_ln {
                     // copies of x among the known digits up to lane i, in the
                     // order the counts were once built lane by lane
                     let o = clo.count(x, known & !(((1u64 << c.pp) - 1) & !((2u64 << i) - 1)));
@@ -519,26 +534,26 @@ impl<const N: usize> Search<N> {
         cnt[1] = 0;
     }
 
-    fn rec<'s>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
+    fn rec<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
         let mut l = Local::default();
         if depth < self.par_depth && k > 1 {
             l.nodes += 1;
-            self.expand(p, k, &n, &mut cnt, &mut l, |_, c, cnt| {
+            self.expand::<X>(p, k, &n, &mut cnt, &mut l, |_, c, cnt| {
                 let (c, cnt) = (*c, *cnt);
-                s.spawn(move |s| self.rec(s, p, k - 1, c, cnt, depth + 1))
+                s.spawn(move |s| self.rec::<X>(s, p, k - 1, c, cnt, depth + 1))
             });
         } else {
-            self.rec_seq(p, k, &n, &mut cnt, &mut l);
+            self.rec_seq::<X>(p, k, &n, &mut cnt, &mut l);
         }
         self.flush(&l);
     }
 
-    fn rec_seq(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local) {
+    fn rec_seq<const X: bool>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local) {
         l.nodes += 1;
         if k == 1 {
             self.leaf(p, n, cnt);
             return;
         }
-        self.expand(p, k, n, cnt, l, |l, c, cnt| self.rec_seq(p, k - 1, c, cnt, l));
+        self.expand::<X>(p, k, n, cnt, l, |l, c, cnt| self.rec_seq::<X>(p, k - 1, c, cnt, l));
     }
 }
