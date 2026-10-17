@@ -5,7 +5,6 @@ mod reference;
 mod search;
 
 use num_bigint::BigUint;
-use std::sync::atomic::Ordering::Relaxed;
 use std::time::Instant;
 
 const USAGE: &str = "\
@@ -219,8 +218,8 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
             }
         },
     );
-    eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes.load(Relaxed), sr.evals.load(Relaxed));
-    let skipped = *sr.skipped.lock().unwrap();
+    eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes(), sr.evals());
+    let skipped = sr.skipped();
     if skipped > 0.0 {
         eprintln!("  base {b}: expected number of solutions in skipped subtrees {skipped:.4}");
     }

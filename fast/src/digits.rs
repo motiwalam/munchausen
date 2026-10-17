@@ -35,14 +35,15 @@ mod imp {
         }
     }
 
-    // 32-bit mask -> bytes that are 0xFF where the bit is set
+    // bits 32w..32w+31 of a mask broadcast to every 64-bit lane of v ->
+    // bytes that are 0xFF where the bit is set
     #[inline(always)]
-    unsafe fn expand(m: u32) -> __m256i {
+    unsafe fn expand(v: __m256i, w: usize) -> __m256i {
         unsafe {
-            let v = _mm256_set1_epi32(m as i32);
+            let o = 4 * w as i8;
             let shuf = _mm256_setr_epi8(
-                0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, //
-                2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
+                o, o, o, o, o, o, o, o, o + 1, o + 1, o + 1, o + 1, o + 1, o + 1, o + 1, o + 1, //
+                o + 2, o + 2, o + 2, o + 2, o + 2, o + 2, o + 2, o + 2, o + 3, o + 3, o + 3, o + 3, o + 3, o + 3, o + 3, o + 3,
             );
             let v = _mm256_shuffle_epi8(v, shuf);
             let sel = _mm256_set1_epi64x(0x8040201008040201u64 as i64);
@@ -90,11 +91,13 @@ mod imp {
                 }
                 let cin = ((g << 1).wrapping_add(p)) ^ p;
                 let mut out = Self::zero();
+                // one move into a vector register serves both words
+                let cv = _mm256_set1_epi64x(cin as i64);
                 for i in 0..N {
                     // subtracting 0xFF adds one
-                    let r = _mm256_sub_epi8(s[i], expand((cin >> (32 * i)) as u32));
-                    let over = _mm256_cmpeq_epi8(_mm256_max_epu8(r, base.bv), r);
-                    out.0[i] = _mm256_sub_epi8(r, _mm256_and_si256(over, base.bv));
+                    let r = _mm256_sub_epi8(s[i], expand(cv, i));
+                    // r <= 2b-1 < 256; if r < b then r - b wraps above r
+                    out.0[i] = _mm256_min_epu8(r, _mm256_sub_epi8(r, base.bv));
                 }
                 out
             }
@@ -107,6 +110,47 @@ mod imp {
                 let mut m = 0u64;
                 for i in 0..N {
                     m |= (_mm256_movemask_epi8(_mm256_cmpeq_epi8(self.0[i], o.0[i])) as u32 as u64) << (32 * i);
+                }
+                m
+            }
+        }
+
+        // bit i set iff lane i equals x
+        #[inline(always)]
+        pub fn eq_byte_mask(&self, x: u8) -> u64 {
+            unsafe {
+                let v = _mm256_set1_epi8(x as i8);
+                let mut m = 0u64;
+                for i in 0..N {
+                    m |= (_mm256_movemask_epi8(_mm256_cmpeq_epi8(self.0[i], v)) as u32 as u64) << (32 * i);
+                }
+                m
+            }
+        }
+
+        // bit j set iff lane j equals x[i]; the broadcast reads x[i] from
+        // memory and skips a move through a general register
+        #[inline(always)]
+        pub fn eq_mask_at(&self, x: &[u8; 64], i: usize) -> u64 {
+            unsafe {
+                let v = _mm256_broadcastb_epi8(_mm_loadu_si16(x.as_ptr().add(i & 63) as *const u8));
+                let mut m = 0u64;
+                for i in 0..N {
+                    m |= (_mm256_movemask_epi8(_mm256_cmpeq_epi8(self.0[i], v)) as u32 as u64) << (32 * i);
+                }
+                m
+            }
+        }
+
+        // bit i set iff lane i is at least x
+        #[inline(always)]
+        pub fn ge_mask(&self, x: u8) -> u64 {
+            unsafe {
+                let v = _mm256_set1_epi8(x as i8);
+                let mut m = 0u64;
+                for i in 0..N {
+                    let ge = _mm256_cmpeq_epi8(_mm256_max_epu8(self.0[i], v), self.0[i]);
+                    m |= (_mm256_movemask_epi8(ge) as u32 as u64) << (32 * i);
                 }
                 m
             }
@@ -191,6 +235,29 @@ mod imp {
         }
 
         #[inline(always)]
+        pub fn eq_byte_mask(&self, x: u8) -> u64 {
+            let mut m = 0u64;
+            for i in 0..32 * N {
+                m |= ((self.0[i / 32][i % 32] == x) as u64) << i;
+            }
+            m
+        }
+
+        #[inline(always)]
+        pub fn eq_mask_at(&self, x: &[u8; 64], i: usize) -> u64 {
+            self.eq_byte_mask(x[i & 63])
+        }
+
+        #[inline(always)]
+        pub fn ge_mask(&self, x: u8) -> u64 {
+            let mut m = 0u64;
+            for i in 0..32 * N {
+                m |= ((self.0[i / 32][i % 32] >= x) as u64) << i;
+            }
+            m
+        }
+
+        #[inline(always)]
         pub fn nonzero_mask(&self) -> u64 {
             let mut m = 0u64;
             for i in 0..32 * N {
@@ -202,6 +269,22 @@ mod imp {
 }
 
 pub use imp::{Base, DV};
+
+impl<const N: usize> DV<N> {
+    /// the digit in lane i
+    #[inline(always)]
+    pub fn lane(&self, i: u32) -> u8 {
+        let mut x = [0u8; 64];
+        self.to_bytes(&mut x);
+        x[i as usize & 63]
+    }
+
+    /// how many of the lanes selected by mask hold x
+    #[inline(always)]
+    pub fn count(&self, x: u8, mask: u64) -> u32 {
+        (self.eq_byte_mask(x) & mask).count_ones()
+    }
+}
 
 /// digits of a BigUint in base b, least significant first, padded to 64 lanes
 pub fn big_to_lanes(x: &num_bigint::BigUint, b: u32) -> [u8; 64] {

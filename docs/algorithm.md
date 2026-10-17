@@ -159,7 +159,8 @@ about 7% of the nodes in bases 20 to 32.
 
 The interval only shrinks on the way down the tree. So a child keeps every
 leading digit of its parent, and the search only inspects positions that are
-new. The prefix and its digit counts travel with the node.
+new. The prefix is part of `lo` itself, so a node only stores `lo` and the
+length of the prefix (see "Counting digits in the prefix" below).
 
 ### Choosing the next count
 
@@ -258,19 +259,46 @@ The leading digits shared by `lo` and `hi` come from one lane-wise compare. A
 movemask turns it into a bitmask, and `lzcnt` gives the first differing
 position. The digits themselves are bytes, so the search reads them directly.
 
+### Counting digits in the prefix
+
+The known prefix is the top lanes of `lo`, clipped to `b^(d-1)`. The search
+does not keep a histogram of it. To count the copies of a digit `x` in the
+prefix, it compares every lane with `x`, turns the result into a bitmask, and
+counts the bits in the prefix lanes. That takes four instructions. A node is
+then only `t`, the prefix length and `rf`, and a child does not copy a
+128-byte histogram.
+
+The new leading digits of a child are handled in two steps. One compare
+against `k` finds the digits below `k`. If there are more of them than free
+positions, the child fails at once. This is the most common failure. Each
+new digit `x >= k` then needs at most `c_x` copies in the whole prefix.
+
 ### Incremental updates
 
 When `e` grows by one, `t` grows by `w(k)` and `hi` grows by
 `w(k) - w(k-1)`. The search keeps both as running sums, so each step costs two
-additions. A table holds `m * w(x)` for every digit `x` and every `m <= d`.
-The search uses it to rebuild `hi` after a forced digit.
+additions.
+
+`hi` also never needs a full rebuild. A node stores its own `hi`. Its first
+child at the next level has `hi` smaller by `rf * (w(k) - w(k-1))`. A forced
+digit `x` makes `hi` smaller by `w(k-1) - w(x)`, because one free slot that
+was worth up to `w(k-1)` now holds `x`. Two tables hold these differences.
+
+A digit vector has `32N` lanes and the addition drops the carry out of the
+top lane, so it computes modulo `b^(32N)`. The tables store each difference
+`-v` as `b^(32N) - v`. Adding that entry subtracts `v`, and every subtraction
+costs one addition.
 
 ### Parallelism and resumable runs
 
 The search expands every root four levels deep, in a fixed order. This gives
 33,801 subtrees for base 28 and 113,884 for base 35. Rayon spreads the subtrees
-over the cores with work stealing. Each subtree splits again, four levels
-below its root, into parallel tasks.
+over the cores with work stealing. Down to four levels below its root, a
+subtree can split again into parallel tasks. A node splits only when its
+thread has no queued tasks left, so that an idle thread could steal them.
+Otherwise its children run on the same thread, which avoids the cost of a
+task per node. Each thread counts nodes in its own slot, so that threads do
+not write to a shared cache line.
 
 The fixed order makes the subtree list the same in every run. With
 `--journal`, the program appends one line to the journal file when a subtree
@@ -288,7 +316,7 @@ leading-digit test.
 
 ### Limits
 
-Each extra base costs about 1.9x more time. Base 38 took 520 seconds on the
-test laptop. At that rate, base 40 takes about 30 minutes and base 45 about
-13 hours. Numbers with more than 62 digits need wider digit vectors. Bases
+Each extra base costs about 1.9x more time. Base 37 takes 205 seconds on the
+test laptop. At that rate, base 40 takes about 25 minutes and base 45 about
+10 hours. Numbers with more than 62 digits need wider digit vectors. Bases
 from 63 to 127 work with `--max-digits 62` or less.

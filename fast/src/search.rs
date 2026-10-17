@@ -38,6 +38,13 @@ pub struct Params<const N: usize> {
     w: Vec<DV<N>>,   // w[j] = j^j for j >= 1, w[0] = 0 (zeros are tracked by count)
     dhi: Vec<DV<N>>, // step of hi when c_j grows by one: w[j] - w[j-1] (w[0] taken as 1)
     tw: Vec<DV<N>>,  // tw[j * (d + 1) + m] = m * w[j] (w[0] taken as 1, i.e. just m)
+    // shift[k * (kmax + 1) + x] = w[x] - w[k-1] for x < k (w[0] taken as 1),
+    // stored modulo b^(32 N), so adding it subtracts w[k-1] - w[x]: the step
+    // of hi when a free slot (worth up to w[k-1]) turns out to hold x
+    shift: Vec<DV<N>>,
+    // drop[k * (d + 1) + m] = -m * (w[k] - w[k-1]) modulo b^(32 N): turns
+    // hi = t + z + m w[k] into t + z + m w[k-1]
+    drop: Vec<DV<N>>,
     pow_lo: DV<N>,   // b^(d-1)
     max_v: DV<N>,    // b^d - 1
     dmask: u64,      // lanes < d
@@ -49,7 +56,9 @@ pub struct Params<const N: usize> {
     uniform: bool,
     ln_eps: f64,
     ln_ratio: f64,
+    track_ln: bool,    // whether the model's expected counts are needed at all
     ln_fact: Vec<f64>, // ln(n!) for n <= d
+    ln_k: Vec<f64>,    // ln(k) for k <= kmax
     ln_b: f64,
     zscore: f64,
     // typical-set test: mean and standard deviation of ln E for a node at level
@@ -132,6 +141,19 @@ impl<const N: usize> Params<N> {
             }
         }
         let w = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
+        let modulus = bb.pow(32 * N as u32);
+        let mut drop = vec![];
+        for k in 0..=kmax {
+            for m in 0..=d {
+                drop.push(if k >= 1 { lanes(&((&modulus - (&w_hi[k] - &w_hi[k - 1]) * m % &modulus) % &modulus)) } else { DV::zero() });
+            }
+        }
+        let mut shift = vec![];
+        for k in 0..=kmax {
+            for x in 0..=kmax {
+                shift.push(if k >= 1 && x < k { lanes(&((&modulus - &w_hi[k - 1] + &w_hi[x]) % &modulus)) } else { DV::zero() });
+            }
+        }
         let dhi = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&(&w_hi[j] - &w_hi[j - 1])) }).collect();
         // the number of digits >= k in a random d-digit string (leading digit
         // nonzero) has this mean and variance
@@ -177,6 +199,8 @@ impl<const N: usize> Params<N> {
             w,
             dhi,
             tw,
+            shift,
+            drop,
             pow_lo: lanes(&bb.pow(d - 1)),
             max_v: lanes(&(limit - 1u32)),
             dmask: (1u64 << d) - 1,
@@ -188,12 +212,14 @@ impl<const N: usize> Params<N> {
             uniform: prune.uniform,
             ln_eps: if prune.epsilon > 0.0 { prune.epsilon.ln() } else { f64::NEG_INFINITY },
             ln_ratio: if prune.ratio > 0.0 { prune.ratio.ln() } else { f64::NEG_INFINITY },
+            track_ln: prune.epsilon > 0.0 || prune.ratio > 0.0 || prune.zscore.is_finite(),
             ln_fact: (0..=d).scan(0.0, |acc, n| {
                 if n > 0 {
                     *acc += (n as f64).ln();
                 }
                 Some(*acc)
             }).collect(),
+            ln_k: (0..=kmax).map(|k| (k as f64).ln()).collect(),
             ln_b: (b as f64).ln(),
             zscore: prune.zscore,
             lik_mean,
@@ -204,10 +230,12 @@ impl<const N: usize> Params<N> {
     /// Inexact search: under a random arrangement of the digits, the known
     /// leading digits should contain about their share of the m digits >= k.
     #[inline(always)]
-    fn plausible(&self, c: &Node<N>) -> bool {
+    fn plausible(&self, c: &Node<N>, clo: &DV<N>, k: usize) -> bool {
         if !self.deficit.is_finite() {
             return true;
         }
+        // how many of the known leading digits are >= k
+        let oh = (clo.ge_mask(k as u8) & self.known(c.pp)).count_ones();
         let d = self.d as f64;
         let len = d - c.pp as f64; // number of known leading digits
         let q = c.m as f64 / d;
@@ -217,7 +245,7 @@ impl<const N: usize> Params<N> {
         } else {
             len * q * (1.0 - q) * (d - len) / (d - 1.0)
         };
-        c.oh as f64 + 0.5 >= mean - self.deficit * var.sqrt()
+        oh as f64 + 0.5 >= mean - self.deficit * var.sqrt()
     }
 
     /// Inexact search: the model's expected number of solutions below this node.
@@ -226,10 +254,10 @@ impl<const N: usize> Params<N> {
     /// happens with probability pp! k^rf / (prod need_x! * rf! * b^pp).
     #[inline(always)]
     fn likely(&self, c: &mut Node<N>, parent_ln_e: f64, k: usize, l: &mut Local) -> bool {
-        if self.ln_eps == f64::NEG_INFINITY && self.ln_ratio == f64::NEG_INFINITY && !self.zscore.is_finite() {
+        if !self.track_ln {
             return true;
         }
-        let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * (k as f64).ln()
+        let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * self.ln_k[k]
             - c.lneed - self.ln_fact[c.rf as usize] - c.pp as f64 * self.ln_b;
         c.ln_e = ln_e;
         // At the top levels only a few digit values are decided, ln E is far
@@ -250,10 +278,17 @@ impl<const N: usize> Params<N> {
         unsafe { self.tw.get_unchecked(j * (self.d as usize + 1) + m as usize) }
     }
 
-    // t + z + rf * w_{k-1}
+
+    // lanes [pp, d): the known leading digits
     #[inline(always)]
-    fn hi(&self, t: &DV<N>, z: u32, k: usize, rf: u32) -> DV<N> {
-        t.add(self.mul_w(k - 1, rf), &self.base).add(self.mul_w(0, z), &self.base)
+    fn known(&self, pp: u32) -> u64 {
+        self.dmask & !((1u64 << pp) - 1)
+    }
+
+    // lo clipped to b^(d-1); its lanes >= pp hold the known leading digits
+    #[inline(always)]
+    fn clip_lo(&self, t: &DV<N>) -> DV<N> {
+        if t.nonzero_mask() & !(self.dmask >> 1) == 0 { self.pow_lo } else { *t }
     }
 }
 
@@ -279,32 +314,40 @@ fn poisson_entropy(mu: f64) -> (f64, f64) {
 // The first unknown digit of n lies between the digits of lo and hi at that
 // position. If every value in that range is a decided digit (>= k) whose copies
 // are all placed already, no number in the interval fits the counts.
+// cnt[x] holds c_x for every x >= k.
 #[inline(always)]
-fn first_digit_ok<const N: usize>(lo: &DV<N>, hi: &DV<N>, c: &Node<N>, k: usize, ck: u8, cnt: &Hist) -> bool {
-    if c.pp == 0 {
+fn first_digit_ok<const N: usize>(p: &Params<N>, lo: &DV<N>, hi: &DV<N>, pp: u32, k: usize, cnt: &Hist) -> bool {
+    if pp == 0 {
         return true;
     }
-    let (mut a, mut z) = ([0u8; 64], [0u8; 64]);
-    lo.to_bytes(&mut a);
-    let x0 = a[c.pp as usize - 1] as usize;
-    if x0 < k {
+    let x0 = lo.lane(pp - 1);
+    if (x0 as usize) < k {
         return true;
     }
-    hi.to_bytes(&mut z);
-    let x1 = z[c.pp as usize - 1] as usize;
-    (x0..=x1).any(|x| c.occ[x] < if x == k { ck } else { cnt[x] })
+    let x1 = hi.lane(pp - 1);
+    let known = p.known(pp);
+    (x0..=x1).any(|x| lo.count(x, known) < cnt[x as usize] as u32)
 }
 
+// The known leading digits are the lanes >= pp of lo (clipped to b^(d-1)).
+// Their histogram is not stored: a vector compare counts any digit on demand.
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
-    occ: Hist,     // histogram of the known leading digits (occ[0] = known zeros)
+    hi: DV<N>,     // t + z + rf * w[k] for a node that decides c_k (z: known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
     m: u32,        // number of decided digits, all >= k
-    oh: u32,       // how many of the known leading digits are >= k
     lneed: f64,    // sum over decided digits x of ln((c_x - occ_x)!)
     ln_e: f64,     // ln of the model's expected number of solutions below the node
+}
+
+#[derive(Default)]
+#[repr(align(128))]
+struct Stats {
+    nodes: AtomicU64,
+    evals: AtomicU64,
+    skipped: Mutex<f64>,
 }
 
 #[derive(Default)]
@@ -317,12 +360,12 @@ struct Local {
 pub struct Search<const N: usize> {
     pub params: Vec<Params<N>>,
     pub par_depth: u32,
+    /// whether any inexact rule is on; the exact search compiles without them
+    inexact: bool,
     /// (convention, number of digits, digits with the least significant first)
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
-    pub nodes: AtomicU64,
-    pub evals: AtomicU64,
-    /// expected number of solutions in subtrees skipped by the inexact rules
-    pub skipped: Mutex<f64>,
+    /// statistics, one slot per thread so that threads do not share cache lines
+    stats: Vec<Stats>,
     /// called (from worker threads) as soon as a solution is found
     pub on_found: Option<Box<dyn Fn(u32, u32, &[u8; 64]) + Send + Sync>>,
 }
@@ -338,22 +381,48 @@ pub struct Unit<const N: usize> {
 impl<const N: usize> Search<N> {
     pub fn new(b: u32, min_digits: u32, max_digits: u32, par_depth: u32, prune: Prune) -> Self {
         Search {
-            params: (min_digits.max(2)..=b.min(max_digits)).rev().map(|d| Params::new(b, d, prune)).collect(),
+            params: {
+                use rayon::prelude::*;
+                let ds: Vec<u32> = (min_digits.max(2)..=b.min(max_digits)).rev().collect();
+                ds.into_par_iter().map(|d| Params::new(b, d, prune)).collect()
+            },
             par_depth,
+            inexact: prune.cap != u32::MAX
+                || prune.z.is_finite()
+                || prune.deficit.is_finite()
+                || prune.epsilon > 0.0
+                || prune.ratio > 0.0
+                || prune.zscore.is_finite(),
             found: Mutex::new(vec![]),
-            nodes: AtomicU64::new(0),
-            evals: AtomicU64::new(0),
-            skipped: Mutex::new(0.0),
+            // slot 0 serves threads outside the pool
+            stats: (0..=rayon::current_num_threads()).map(|_| Stats::default()).collect(),
             on_found: None,
         }
     }
 
     fn flush(&self, l: &Local) {
-        self.nodes.fetch_add(l.nodes, Ordering::Relaxed);
-        self.evals.fetch_add(l.evals, Ordering::Relaxed);
+        let i = rayon::current_thread_index().map_or(0, |i| i + 1);
+        let st = &self.stats[i.min(self.stats.len() - 1)];
+        st.nodes.fetch_add(l.nodes, Ordering::Relaxed);
+        st.evals.fetch_add(l.evals, Ordering::Relaxed);
         if l.skipped > 0.0 {
-            *self.skipped.lock().unwrap() += l.skipped;
+            *st.skipped.lock().unwrap() += l.skipped;
         }
+    }
+
+    /// number of tree nodes visited so far
+    pub fn nodes(&self) -> u64 {
+        self.stats.iter().map(|s| s.nodes.load(Ordering::Relaxed)).sum()
+    }
+
+    /// number of intervals evaluated so far
+    pub fn evals(&self) -> u64 {
+        self.stats.iter().map(|s| s.evals.load(Ordering::Relaxed)).sum()
+    }
+
+    /// expected number of solutions in subtrees skipped by the inexact rules
+    pub fn skipped(&self) -> f64 {
+        self.stats.iter().map(|s| *s.skipped.lock().unwrap()).sum()
     }
 
     /// Split the search into subtrees by expanding every root `depth` levels.
@@ -362,7 +431,7 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: DV::zero(), occ: [0; 128], pp: p.d, rf: p.d, m: 0, oh: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let root = Node { t: DV::zero(), hi: *p.mul_w(p.kmax, p.d), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -372,10 +441,9 @@ impl<const N: usize> Search<N> {
                         continue;
                     }
                     l.nodes += 1;
-                    self.expand(p, u.k, &u.n, &u.cnt, &mut l, |_, c, ck| {
-                        let mut cnt = u.cnt;
-                        cnt[u.k] = ck;
-                        next.push(Unit { pi, k: u.k - 1, n: c, cnt });
+                    let mut cnt = u.cnt;
+                    self.expand::<true>(p, u.k, &u.n, &mut cnt, &mut l, |_, c, cnt| {
+                        next.push(Unit { pi, k: u.k - 1, n: *c, cnt: *cnt });
                     });
                 }
                 frontier = next;
@@ -395,35 +463,53 @@ impl<const N: usize> Search<N> {
                 return;
             }
             let p = &self.params[u.pi];
-            rayon::scope(|s| self.rec(s, p, u.k, u.n, u.cnt, 0));
+            if self.inexact {
+                rayon::scope(|s| self.rec::<true>(s, p, u.k, u.n, u.cnt, 0));
+            } else {
+                rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+            }
             done(i);
         });
     }
 
     // Enumerate c_k = occ[k] + e for e = 0, 1, ... (k >= 2) and emit every
     // child whose interval survives the leading-digit test. cnt[x] holds c_x
-    // for x > k.
+    // for x > k; the cursor sets cnt[k] before it hands out a child.
     #[inline(always)]
-    fn expand(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, Node<N>, u8)) {
+    fn expand<const X: bool>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, &Node<N>, &mut Hist)) {
+        let mut cur = Cursor::new(p, k, n);
+        while let Some(c) = self.next_child::<X>(p, &mut cur, cnt, l) {
+            emit(l, &c, cnt);
+        }
+    }
+
+    // Advance the cursor to its next child that survives every test. X
+    // enables the inexact rules.
+    #[inline(always)]
+    fn next_child<const X: bool>(&self, p: &Params<N>, cur: &mut Cursor<N>, cnt: &mut Hist, l: &mut Local) -> Option<Node<N>> {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
-        let occk = n.occ[k] as u32;
+        let (k, n) = (cur.k, &cur.n);
         let (wk, dhi) = unsafe { (p.w.get_unchecked(k), p.dhi.get_unchecked(k)) };
-        let mut te = n.t;
-        let mut hi = p.hi(&te, n.occ[0] as u32, k, n.rf);
-        for e in 0..=n.rf {
+        while cur.e <= n.rf {
+            let e = cur.e;
+            cur.e += 1;
             if e > 0 {
-                te = te.add(wk, base);
-                hi = hi.add(dhi, base);
+                cur.te = cur.te.add(wk, base);
+                cur.hi = cur.hi.add(dhi, base);
             }
+            let (te, hi) = (cur.te, cur.hi);
             l.evals += 1;
-            let mk = n.m + occk + e;
-            if occk + e > p.cap || mk > p.band_hi[k] {
-                break; // both only grow with e
-            }
-            if mk < p.band_lo[k] {
-                continue;
+            let ck = cur.occk + e;
+            let mk = n.m + ck;
+            if X {
+                if ck > p.cap || mk > p.band_hi[k] {
+                    break; // both only grow with e
+                }
+                if mk < p.band_lo[k] {
+                    continue;
+                }
             }
             let nlo = te.nonzero_mask();
             if nlo & !dm != 0 {
@@ -433,66 +519,87 @@ impl<const N: usize> Search<N> {
             if nhi & top == 0 {
                 continue; // hi < b^(d-1)
             }
-            let ck = (occk + e) as u8;
+            cnt[k] = ck as u8;
             let mut clo = if nlo & top == 0 { p.pow_lo } else { te };
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
-            let mut npp = 64 - (!clo.eq_mask(&chi) & dm).leading_zeros();
-            if npp >= n.pp {
-                let c = Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e, m: mk, oh: n.oh + occk, lneed: n.lneed + p.ln_fact[e as usize], ln_e: 0.0 };
-                let mut c = c;
-                if first_digit_ok(&clo, &chi, &c, k, ck, cnt) && p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
-                    emit(l, c, ck);
-                }
-                continue;
+            let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
+            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
+            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt)
+                && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
+                && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
+            {
+                return Some(c);
             }
-            let mut c = Node { t: te, occ: n.occ, pp: n.pp, rf: n.rf - e, m: mk, oh: n.oh + occk, lneed: n.lneed + p.ln_fact[e as usize], ln_e: 0.0 };
-            let ok = 'fix: loop {
-                let mut ld = [0u8; 64];
-                clo.to_bytes(&mut ld);
-                let mut forced = false;
-                for lane in npp..c.pp {
-                    // lanes < d <= 62 and digits < b <= 62, so indices stay in bounds
-                    let x = unsafe { *ld.get_unchecked(lane as usize) } as usize;
-                    let o = unsafe { c.occ.get_unchecked_mut(x) };
-                    *o += 1;
-                    if x >= k {
-                        c.oh += 1;
-                        let lim = if x == k { ck } else { unsafe { *cnt.get_unchecked(x) } };
-                        if *o > lim {
-                            break 'fix false;
-                        }
-                        // one fewer copy of x still has to appear in the suffix
-                        c.lneed -= ((lim - *o + 1) as f64).ln();
-                    } else {
-                        if c.rf == 0 {
-                            break 'fix false;
-                        }
-                        c.rf -= 1;
-                        if x > 0 {
-                            c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
-                        }
-                        forced = true;
-                    }
-                }
-                c.pp = npp;
-                if !forced {
-                    break true;
-                }
-                let hi2 = p.hi(&c.t, c.occ[0] as u32, k, c.rf);
-                let (n1, n2) = (c.t.nonzero_mask(), hi2.nonzero_mask());
-                if n1 & !dm != 0 || n2 & top == 0 {
-                    break false;
-                }
-                clo = if n1 & top == 0 { p.pow_lo } else { c.t };
-                chi = if n2 & !dm != 0 { p.max_v } else { hi2 };
-                npp = 64 - (!clo.eq_mask(&chi) & dm).leading_zeros();
-                if npp >= c.pp {
-                    break true;
-                }
-            };
-            if ok && first_digit_ok(&clo, &chi, &c, k, ck, cnt) && p.plausible(&c) && p.likely(&mut c, n.ln_e, k, l) {
-                emit(l, c, ck);
+        }
+        cur.e = n.rf + 1;
+        None
+    }
+
+    // The leading-digit test with forced digits, iterated to a fixpoint.
+    // [clo, chi] is the clipped interval of c, and z the number of known
+    // zeros. Every new leading digit x >= k must stay within c_x = cnt[x];
+    // every new leading digit below k takes a free slot and adds its weight
+    // to t, which narrows the interval and can expose more leading digits.
+    // Returns false if the node fails.
+    #[inline(always)]
+    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, cnt: &Hist) -> bool {
+        let base = &p.base;
+        let dm = p.dmask;
+        let top = !(dm >> 1);
+        loop {
+            let npp = 64 - (!clo.eq_mask(chi) & dm).leading_zeros();
+            if npp >= c.pp {
+                return true;
             }
+            let known = p.known(npp);
+            let new = known & ((1u64 << c.pp) - 1);
+            let forced = new & !clo.ge_mask(k as u8);
+            let f = forced.count_ones();
+            if f > c.rf {
+                return false;
+            }
+            let mut ld = [0u8; 64];
+            clo.to_bytes(&mut ld);
+            let mut big = new & !forced;
+            while big != 0 {
+                let i = big.trailing_zeros();
+                big &= big - 1;
+                // lanes < d <= 62 and digits < b <= 127, so indices stay in bounds
+                let x = unsafe { *ld.get_unchecked(i as usize) };
+                let lim = unsafe { *cnt.get_unchecked(x as usize) };
+                if (clo.eq_mask_at(&ld, i as usize) & known).count_ones() > lim as u32 {
+                    return false;
+                }
+                if X && p.track_ln {
+                    // copies of x among the known digits up to lane i, in the
+                    // order the counts were once built lane by lane
+                    let o = clo.count(x, known & !(((1u64 << c.pp) - 1) & !((2u64 << i) - 1)));
+                    // one fewer copy of x still has to appear in the suffix
+                    c.lneed -= ((lim as u32 - o + 1) as f64).ln();
+                }
+            }
+            c.pp = npp;
+            if f == 0 {
+                return true;
+            }
+            c.rf -= f;
+            let row = k * (p.kmax + 1);
+            let mut fl = forced;
+            while fl != 0 {
+                let i = fl.trailing_zeros();
+                fl &= fl - 1;
+                let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
+                if x > 0 {
+                    c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
+                }
+                c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
+            }
+            let (n1, n2) = (c.t.nonzero_mask(), c.hi.nonzero_mask());
+            if n1 & !dm != 0 || n2 & top == 0 {
+                return false;
+            }
+            *clo = if n1 & top == 0 { p.pow_lo } else { c.t };
+            *chi = if n2 & !dm != 0 { p.max_v } else { c.hi };
         }
     }
 
@@ -501,7 +608,9 @@ impl<const N: usize> Search<N> {
     // t + e (0^0 = 0) or t + e + c_0 (0^0 = 1). Check every candidate exactly.
     fn leaf(&self, p: &Params<N>, n: &Node<N>, cnt: &mut Hist) {
         let d = p.d as usize;
-        let (o0, o1) = (n.occ[0] as u32, n.occ[1] as u32);
+        let known = p.known(n.pp);
+        let nlo = p.clip_lo(&n.t);
+        let (o0, o1) = (nlo.count(0, known), nlo.count(1, known));
         let check = |mode: u32, s: DV<N>, e: u32, cnt: &mut Hist| {
             let nz = s.nonzero_mask();
             if nz & !p.dmask != 0 || nz & (1 << (d - 1)) == 0 {
@@ -535,31 +644,81 @@ impl<const N: usize> Search<N> {
         cnt[1] = 0;
     }
 
-    fn rec<'s>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
+    // A parallel task: search the subtree below n.
+    fn rec<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
         let mut l = Local::default();
-        if depth < self.par_depth && k > 1 {
-            l.nodes += 1;
-            self.expand(p, k, &n, &cnt.clone(), &mut l, |_, c, ck| {
-                cnt[k] = ck;
-                let cnt = cnt;
-                s.spawn(move |s| self.rec(s, p, k - 1, c, cnt, depth + 1))
-            });
-        } else {
-            self.rec_seq(p, k, &n, &mut cnt, &mut l);
-        }
+        self.rec_seq::<X>(s, p, k, &n, &mut cnt, &mut l, depth);
         self.flush(&l);
     }
 
-    fn rec_seq(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local) {
+    // Depth-first search below n, with an explicit stack of cursors instead
+    // of recursion. Down to par_depth levels below the unit, a node whose
+    // thread has no queued tasks left hands its children to the pool as
+    // tasks, so idle threads can steal them. Otherwise the children run
+    // here, which avoids the cost of a task per node.
+    fn rec_seq<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, depth: u32) {
         l.nodes += 1;
         if k == 1 {
             self.leaf(p, n, cnt);
             return;
         }
-        let snapshot = *cnt;
-        self.expand(p, k, n, &snapshot, l, |l, c, ck| {
-            cnt[k] = ck;
-            self.rec_seq(p, k - 1, &c, cnt, l)
-        });
+        // the cursors of the ancestors; k decreases by one per level
+        let mut stack: [std::mem::MaybeUninit<Cursor<N>>; 64] = [const { std::mem::MaybeUninit::uninit() }; 64];
+        let mut sp = 0;
+        let mut cur = Cursor::new(p, k, n);
+        loop {
+            let ck = cur.k;
+            let level = depth + (k - ck) as u32;
+            let child = if cur.e == 0 && level < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
+                // hand every child to the pool and drop this node
+                self.expand::<X>(p, ck, &cur.n, cnt, l, |_, c, cnt| {
+                    let (c, cnt) = (*c, *cnt);
+                    s.spawn(move |s| self.rec::<X>(s, p, ck - 1, c, cnt, level + 1))
+                });
+                None
+            } else {
+                self.next_child::<X>(p, &mut cur, cnt, l)
+            };
+            match child {
+                Some(c) => {
+                    l.nodes += 1;
+                    if ck == 2 {
+                        self.leaf(p, &c, cnt);
+                    } else {
+                        // a node has at most 62 ancestors below the root
+                        unsafe { stack.get_unchecked_mut(sp) }.write(cur);
+                        sp += 1;
+                        cur = Cursor::new(p, ck - 1, &c);
+                    }
+                }
+                None => {
+                    if sp == 0 {
+                        return;
+                    }
+                    sp -= 1;
+                    cur = unsafe { stack.get_unchecked(sp).assume_init_read() };
+                }
+            }
+        }
+    }
+}
+
+// The state of expand at one node: the node, the next value of e, and the
+// interval [te, hi] of the child for that e (before its forced digits).
+struct Cursor<const N: usize> {
+    n: Node<N>,
+    te: DV<N>,
+    hi: DV<N>,
+    k: usize,
+    e: u32,
+    occk: u32,
+}
+
+impl<const N: usize> Cursor<N> {
+    #[inline(always)]
+    fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
+        let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
+        let hi = n.hi.add(unsafe { p.drop.get_unchecked(k * (p.d as usize + 1) + n.rf as usize) }, &p.base);
+        Cursor { n: *n, te: n.t, hi, k, e: 0, occk }
     }
 }
