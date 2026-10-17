@@ -74,6 +74,35 @@ def by_offset(b0, b1, samples=60_000, jmax=10):
         print(f"  d<b-{jmax}  seen {seen['small']}")
 
 
+
+def expected_refined(b, d, mode=1, samples=400_000):
+    """E_d with the digit-sum identity S = digit sum (mod b-1) built in.
+
+    A solution's counts must satisfy sum c_x (w(x) - x) = 0 (mod b-1). Digits
+    that are random subject to this identity make every multiset that meets
+    it b-1 times as likely, and every other multiset impossible.
+    """
+    m = b - 1
+    x = np.arange(b, dtype=float)
+    logw = np.where(x > 0, x * np.log(np.maximum(x, 1)), 0.0)
+    scale = (d - 1) * math.log(b)
+    w = np.exp(np.minimum(logw - scale, 700.0))
+    w[0] = mode * math.exp(-scale)
+    u = np.array([((pow(int(v), int(v), m) if v > 0 else mode) - int(v)) % m for v in range(b)], dtype=np.int64)
+    hits = 0
+    done = 0
+    while done < samples:
+        n = min(50_000, samples - done)
+        counts = RNG.multinomial(d - 1, np.full(b, 1.0 / b), size=n)
+        lead = RNG.integers(1, b, size=n)
+        counts[np.arange(n), lead] += 1
+        f = counts @ w
+        ok = (f >= 1.0) & (f < b) & ((counts @ u) % m == 0)
+        hits += int(np.count_nonzero(ok))
+        done += n
+    p = hits * m / samples
+    return p, math.sqrt(hits) * m / samples
+
 if __name__ == '__main__':
     what = sys.argv[1] if len(sys.argv) > 1 else 'compare'
     if what == 'limit':

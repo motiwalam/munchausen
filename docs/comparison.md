@@ -214,3 +214,7 @@ convention.
 None of these ideas changes the growth rate of about 1.9x per base. At that
 rate, and on the laptop above, base 40 takes about 30 minutes, base 45 about
 13 hours, and base 50 about 13 days.
+
+Chapter 6 of `docs/library/` explains where the growth comes from. It also
+covers the meet-in-the-middle and lattice approaches that I examined and that
+do not lower it.
