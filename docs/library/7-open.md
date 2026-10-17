@@ -12,7 +12,8 @@ Conjecture (original). For `b > 2` no base has a `b`-digit solution.
 
 - Under `0^0 = 0` it is false: base 15 has `(1,2,4,3,14,14,13,3,4,1,9,1,1,0,14)`
   and base 16 has `(1,2,3,11,2,3,0,9,15,15,5,7,2,15,6,11)` (computed).
-- Under `0^0 = 1` it holds for bases 3 to 41 (computed).
+- Under `0^0 = 1` it holds for bases 3 to 43 (computed; base 42 only for
+  `b`-digit numbers).
 - For `b >= 7`, a `b`-digit solution contains the digit `b-1` at least three
   times (proven, Proposition 1.6). Both counterexamples contain it exactly
   three times.
@@ -45,7 +46,8 @@ a `k`-digit solution.
 Conjecture. Under `0^0 = 1` no base has a solution with 9 digits. The same
 holds for 18, 21, 22, 24, 26 and 28 digits.
 
-- No base up to 127 has one (computed).
+- No base up to 100,000 has a 9-digit solution, and no base up to 10,000 has
+  one with the other lengths (computed, section 3.4).
 - In larger bases the model makes them very unlikely: a 9-digit solution in
   base 128 or above has probability below `10^-8` (section 3.4).
 - The model predicts that about 37% of long lengths are missing under
@@ -75,7 +77,8 @@ holds for 18, 21, 22, 24, 26 and 28 digits.
 - Under `0^0 = 1`, `(b-1)`-digit solutions are about 1.6 times as common as the
   refined model predicts in bases 10 to 38. Correlation tests found nothing,
   and after allowing for how the group was chosen the excess is consistent with
-  chance (section 5.5).
+  chance. In the fresh bases 39 to 43 the excess continues weakly: 5 observed
+  against 2.45 expected, probability 0.10 (section 5.5). Open.
 
 ## 7.6 Structure
 

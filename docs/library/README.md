@@ -56,8 +56,8 @@ Computed:
   `10^18`, `10^8` and `10^4` respectively (chapter 3).
 - Under `0^0 = 1` there are exactly two 4-digit solutions in all these bases:
   3435 in base 10 and `(6,5,3,4)` in base 20.
-- Under `0^0 = 1` no base up to 127 has a solution with 9, 18, 21, 22, 24, 26
-  or 28 digits.
+- Under `0^0 = 1` no base up to 100,000 has a 9-digit solution, and no base up
+  to 10,000 has one with 18, 21, 22, 24, 26 or 28 digits.
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 41.
 

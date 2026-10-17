@@ -1,0 +1,1 @@
+length 9: bases 128-100000, 11872916 nodes, 527 s, solutions: []

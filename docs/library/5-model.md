@@ -116,9 +116,13 @@ Tests for a hidden correlation found none (`analysis/correlation.py`,
 
 Under the refined model, 27 or more occurs with probability 0.019. But I picked
 this group as the largest deviation among about 14 groups. Allowing for that,
-the chance of some group deviating this much is about 23%. So the remaining
-excess is consistent with chance. Bases 39 to 41 add new data that does not
-depend on this choice (section 5.7).
+the chance of some group deviating this much is about 23%.
+
+Bases 39, 40, 41 and 43 were searched after this group was chosen, so they test
+it fairly. Under `0^0 = 1` they have 5 solutions with `b-1` digits, against
+2.45 expected; 5 or more happens with probability 0.10. Under `0^0 = 0` they
+have 5 against 3.86 (probability 0.35). So the excess under `0^0 = 1`
+continues weakly in fresh data, and the question stays open.
 
 ## 5.6 Predictions
 

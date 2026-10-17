@@ -79,6 +79,14 @@ most 30 digits:
 
     no solution with 9, 18, 21, 22, 24, 26 or 28 digits in any base up to 127.
 
+`analysis/missing_lengths.py` extends this with the exact tree search of
+`analysis/tree.py`, which is fast for short numbers in large bases:
+
+| length | no solution in any base up to |
+|---:|---:|
+| 9 | 100,000 |
+| 18, 21, 22, 24, 26, 28 | 10,000 |
+
 For these lengths, larger bases are very unlikely to help. A 9-digit solution
 in a base `b >= 128` can only use digits `x` with `x^x < b^9`. Under the
 random model of chapter 5, the chance of a 9-digit solution in base 128 is

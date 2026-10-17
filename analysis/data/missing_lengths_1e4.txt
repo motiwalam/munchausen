@@ -1,3 +1,7 @@
 length 9: bases 128-10000, 658667 nodes, 37 s, solutions: []
 length 18: bases 128-10000, 2324669 nodes, 325 s, solutions: []
 length 21: bases 128-10000, 3188293 nodes, 561 s, solutions: []
+length 22: bases 128-10000, 3504122 nodes, 599 s, solutions: []
+length 24: bases 128-10000, 4266957 nodes, 829 s, solutions: []
+length 26: bases 128-10000, 5317111 nodes, 1182 s, solutions: []
+length 28: bases 128-10000, 6452597 nodes, 1601 s, solutions: []
