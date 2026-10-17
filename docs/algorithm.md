@@ -293,8 +293,12 @@ costs one addition.
 
 The search expands every root four levels deep, in a fixed order. This gives
 33,801 subtrees for base 28 and 113,884 for base 35. Rayon spreads the subtrees
-over the cores with work stealing. Each subtree splits again, four levels
-below its root, into parallel tasks.
+over the cores with work stealing. Down to four levels below its root, a
+subtree can split again into parallel tasks. A node splits only when its
+thread has no queued tasks left, so that an idle thread could steal them.
+Otherwise its children run on the same thread, which avoids the cost of a
+task per node. Each thread counts nodes in its own slot, so that threads do
+not write to a shared cache line.
 
 The fixed order makes the subtree list the same in every run. With
 `--journal`, the program appends one line to the journal file when a subtree
@@ -312,7 +316,7 @@ leading-digit test.
 
 ### Limits
 
-Each extra base costs about 1.9x more time. Base 38 took 520 seconds on the
-test laptop. At that rate, base 40 takes about 30 minutes and base 45 about
-13 hours. Numbers with more than 62 digits need wider digit vectors. Bases
+Each extra base costs about 1.9x more time. Base 37 takes 205 seconds on the
+test laptop. At that rate, base 40 takes about 25 minutes and base 45 about
+10 hours. Numbers with more than 62 digits need wider digit vectors. Bases
 from 63 to 127 work with `--max-digits 62` or less.

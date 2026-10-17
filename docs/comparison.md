@@ -147,6 +147,24 @@ too slow to try, or that it was not measured.
 Bases 39 to 41 ran while other analysis jobs shared the machine, so their
 times are somewhat high.
 
+The `fast` columns above predate the performance work in `fast/README.md`
+("Speed"). That work changed constant factors only, and the node counts
+stayed the same. The machine also runs slower on some days than on others.
+So the comparison below ran both builds on the same day, in alternating
+runs, and gives the median of three:
+
+| run | before | after |
+|---|---:|---:|
+| base 30, 1 thread | 26.2 s | 13.8 s |
+| base 30, 4 threads | 6.14 s | 3.19 s |
+| base 30, 8 threads | 3.54 s | 1.86 s |
+| base 33, 8 threads | 27.7 s | 16.3 s |
+| base 36, 8 threads | 181 s | 109 s |
+| base 37, 8 threads | | 205 s |
+
+On that day the old build took 181 s for base 36, against the 146 s in the
+table above.
+
 The original README gave 169 s for python at base 16 and about 17 hours at
 base 19, from a different machine.
 
@@ -187,6 +205,12 @@ That is about 146 cycles and 1.6 instructions per cycle for each interval. One
 digit-vector addition takes about 15 instructions, and each interval needs two
 to four additions. Most of the remaining instructions update the digit counts
 and handle the branches.
+
+After the performance work, a base 26 run on one performance core evaluates
+16,313,626 intervals in 1.59 billion cycles and 3.15 billion instructions.
+That is 97 cycles, 193 instructions and 1.0 branch mispredictions per
+interval, measured with the hardware counters. The two additions per
+interval take about 30% of the time.
 
 ## Other published searches
 
