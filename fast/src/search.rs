@@ -49,6 +49,7 @@ pub struct Params<const N: usize> {
     uniform: bool,
     ln_eps: f64,
     ln_ratio: f64,
+    track_ln: bool,    // whether the model's expected counts are needed at all
     ln_fact: Vec<f64>, // ln(n!) for n <= d
     ln_b: f64,
 }
@@ -159,6 +160,7 @@ impl<const N: usize> Params<N> {
             uniform: prune.uniform,
             ln_eps: if prune.epsilon > 0.0 { prune.epsilon.ln() } else { f64::NEG_INFINITY },
             ln_ratio: if prune.ratio > 0.0 { prune.ratio.ln() } else { f64::NEG_INFINITY },
+            track_ln: prune.epsilon > 0.0 || prune.ratio > 0.0,
             ln_fact: (0..=d).scan(0.0, |acc, n| {
                 if n > 0 {
                     *acc += (n as f64).ln();
@@ -194,7 +196,7 @@ impl<const N: usize> Params<N> {
     /// happens with probability pp! k^rf / (prod need_x! * rf! * b^pp).
     #[inline(always)]
     fn likely(&self, c: &mut Node<N>, parent_ln_e: f64, k: usize, l: &mut Local) -> bool {
-        if self.ln_eps == f64::NEG_INFINITY && self.ln_ratio == f64::NEG_INFINITY {
+        if !self.track_ln {
             return true;
         }
         let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * (k as f64).ln()
@@ -405,7 +407,9 @@ impl<const N: usize> Search<N> {
                             break 'fix false;
                         }
                         // one fewer copy of x still has to appear in the suffix
-                        c.lneed -= ((lim - *o + 1) as f64).ln();
+                        if p.track_ln {
+                            c.lneed -= ((lim - *o + 1) as f64).ln();
+                        }
                     } else {
                         if c.rf == 0 {
                             break 'fix false;
