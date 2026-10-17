@@ -13,7 +13,7 @@ usage: fast <engine> <base> [<last base>] [options]
 
 engines:
   search      fast prefix-pruned digit-count search (bases 2..=62)
-  port        faithful port of the python algorithm (bases 2..=27)
+  port        faithful port of the python algorithm (bases 2..=26)
   reference   simple u128 version of the search, for validation (bases 2..=27)
   brute       check every n up to the upper bound (tiny bases only)
 
@@ -212,6 +212,16 @@ fn main() {
     let o = parse_args();
     if o.threads > 0 {
         rayon::ThreadPoolBuilder::new().num_threads(o.threads).build_global().unwrap();
+    }
+    // port computes b^d in u128, which overflows from base 27; reference stays within u128 up to 27
+    let max_base = match o.engine.as_str() {
+        "port" => 26,
+        "reference" | "brute" => 27,
+        _ => 62,
+    };
+    if o.b1 > max_base {
+        eprintln!("The {} engine supports bases up to {max_base}. Choose a smaller last base.", o.engine);
+        std::process::exit(2);
     }
     for b in o.b0..=o.b1 {
         let t = Instant::now();

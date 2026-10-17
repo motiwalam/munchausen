@@ -1,138 +1,156 @@
 # munchausen
-Searching for Munchausen Numbers
 
-### Problem statement
-Let `F(n, b)` denote the "Munchausen sum" of a number, which is to say the sum of raising each digit of n to its own power, when `n` is represented in base `b`.
+An exhaustive search for Munchausen numbers in every base from 2 to 38.
 
-A Munchausen number, then, is an `n` such that `F(n, b) = n` for some `b`.
+## The problem
 
-Some examples of Munchausen numbers:
-* base 10: `3435 = 3^3 + 4^4 + 3^3 + 5^5 `
-* base 17: `54 (base 10) = 33 (base 17) = 3^3 + 3^3`
+Write `n` in base `b`, raise each digit to its own power, and add the results.
+This gives the Munchausen sum `F(n, b)`. A Munchausen number in base `b` is a
+number with `F(n, b) = n`.
 
-### Details for the impatient
+Two examples:
 
-We search exhaustively. Optimizations detailed below are used to tighten the search space. The current iteration of the algorithm is able to search base 16 in 169 seconds under PyPy (the performance is less impressive in CPython, at 654 seconds).
+- Base 10: `3435 = 3^3 + 4^4 + 3^3 + 5^5`.
+- Base 17: `54` is `33` in base 17, and `3^3 + 3^3 = 54`.
 
-A list of all Munchausen numbers that have been found so far can be found in `/output`. Files `*-1.txt` employ the `0^0 = 1` convention and files `*-0.txt` employ the `0^0 = 0` convention. Numbers are represented as tuples of digits, and the digits themselves are represented as decimal numerals. More information about the format of the output can be found in `util.py`.
+## The two conventions for `0^0`
 
-The program is currently written in Python. Its concise and easy to use generator syntax allowed for quick developments on the algorithm. Of course, its speed is an issue and contributions in the form of different language implementations are welcome!
+`0^0` has no agreed value. Ignoring every number that contains the digit 0
+throws away too much. So the search supports both common choices, `0^0 = 0`
+and `0^0 = 1`.
 
-The search also uses multiprocessing module to search different numbers of digits in parallel. We use the `pathos` package's implementation of `multiprocessing` instead of the built-in version because it is able to pickle `lambda` functions.
+If you treat `0^0` as undefined, drop the numbers that contain a 0. This works
+in one direction only. You cannot rebuild the other two lists from that one.
 
-### Fast implementation (Rust)
+## Results
 
-`/fast` contains a Rust implementation; see `fast/README.md` for details. It
-searches both conventions in a single pass, and the tree it explores grows
-about 2x per base, versus about 4x for combination-based searches.
+`output/b2-38-0.txt` (`0^0 = 0`) and `output/b2-38-1.txt` (`0^0 = 1`) list
+every Munchausen number in bases 2 to 38. Each line has the form
+`base:convention:count: numbers`. Each number is a tuple of its digits, most
+significant first, with the digits written in decimal. `src/formatutil.py`
+reads and writes this format. `output/b2-19-*.txt` hold the older results of
+the Python search, and the new files agree with them.
 
-Timings are for both conventions together, on an 8-core laptop CPU (Intel
-Core Ultra 7 258V) running on battery in power-saver mode, which caps the
-cores at about 1.7 GHz:
+Every base has the trivial solution 1, and `0^0 = 0` also has 0. The table
+counts the other solutions:
 
-| base | python (PyPy, this repo) | Rust port of the python algorithm | `fast search` |
-|-----:|-------------------------:|----------------------------------:|--------------:|
-| 16 | 131 s | 5.5 s | 0.010 s |
-| 19 | ~17 h (earlier figure) | — | 0.027 s |
-| 20 | — | — | 0.041 s |
-| 25 | — | — | 0.26 s |
-| 30 | — | — | 2.9 s |
-| 35 | — | — | 77 s |
-| 36 | — | — | 146 s |
-| 37 | — | — | 277 s |
-| 38 | — | — | 520 s |
+| base | `0^0 = 0` | `0^0 = 1` | | base | `0^0 = 0` | `0^0 = 1` |
+|---:|---:|---:|---|---:|---:|---:|
+| 2 | 0 | 1 | | 21 | 1 | 2 |
+| 3 | 2 | 2 | | 22 | 1 | 1 |
+| 4 | 3 | 2 | | 23 | 1 | 0 |
+| 5 | 2 | 0 | | 24 | 1 | 1 |
+| 6 | 2 | 2 | | 25 | 5 | 2 |
+| 7 | 1 | 1 | | 26 | 1 | 2 |
+| 8 | 2 | 0 | | 27 | 0 | 0 |
+| 9 | 6 | 3 | | 28 | 0 | 3 |
+| 10 | 2 | 1 | | 29 | 1 | 0 |
+| 11 | 5 | 2 | | 30 | 0 | 1 |
+| 12 | 1 | 1 | | 31 | 3 | 2 |
+| 13 | 5 | 4 | | 32 | 4 | 0 |
+| 14 | 1 | 4 | | 33 | 3 | 2 |
+| 15 | 7 | 5 | | 34 | 1 | 1 |
+| 16 | 4 | 2 | | 35 | 0 | 0 |
+| 17 | 4 | 4 | | 36 | 0 | 1 |
+| 18 | 2 | 3 | | 37 | 3 | 3 |
+| 19 | 0 | 0 | | 38 | 2 | 3 |
+| 20 | 2 | 2 | | | | |
 
-For comparison, the fastest published search I could find (C++ with GMP on 16
-threads, Programming Praxis, 2020) took 334 minutes for base 20.
+How these results relate to earlier work:
 
-`output/b2-38-0.txt` and `output/b2-38-1.txt` list every Munchausen number in
-bases 2 through 38.
+- For `0^0 = 1`, bases 2 to 35 match OEIS [A166623](https://oeis.org/A166623)
+  exactly. That table comes from one search by Karl W. Heuer in 2011, with an
+  unpublished method.
+- For `0^0 = 0`, I found no published list beyond about base 17.
+- I found no published search of bases 36 to 38 under either convention.
 
-- **`0^0 = 1`:** bases 2–35 agree exactly with OEIS
-  [A166623](https://oeis.org/A166623). That table comes from a single
-  exhaustive search by Karl W. Heuer in 2011, whose method was never published.
-- **`0^0 = 0`:** no public list goes beyond about base 17, so all larger
-  bases here are new.
-- **Bases 36–38:** these had never been searched under either convention.
+## Running the search
 
-### A note on convention
+The Rust search in `fast/` is the one to use. It needs a stable Rust
+toolchain.
 
-What is `0^0`?
+```sh
+cd fast
+cargo build --release
+./target/release/fast search 2 30
+./target/release/fast search 40 --journal 'journal-b{base}.txt' --progress
+```
 
-Technically, it is undefined. But simply disregarding any number containing the digit 0 seems unsatisfying and needlessly restrictive.
+The first command searches bases 2 to 30 under both conventions. The second
+command searches base 40 and records its progress in a journal file. If that
+run stops, run the same command again, and it continues where it stopped.
+`fast/README.md` lists every option.
 
-So, what is it then? Well, the consensus seems to be that if we are to give it a value anyway, it should be either 0 or 1.
+The original Python search is in `src/`. It needs PyPy and the `pathos`
+package:
 
-In our search, we aim to be as accomodating as possible. The search can use either `0^0 = 0` or `0^0 = 1`, depending on a user supplied parameter.
+```sh
+cd src
+pypy3 munchausen.py 2 16 1
+```
 
-If you're deadset on treating `0^0` as undefined, then you can simply ignore the ones with a zero in them. Doesn't quite the work the other way around though.
+The arguments are the first base, the last base, and the value of `0^0`.
 
-### Goal
+## How the search works
 
-To find all Munchausen numbers in a given base and to do it as fast as possible.
+A Munchausen number has at most `b` digits. Its sum depends only on how many
+times each digit appears, so both searches enumerate digit counts in place of
+numbers.
 
-The long-term goal is to generally characterize the problem of Munchausen numbers and answer the following questions:
-* Can we find Munchausen numbers in a given base in polynomial time?
-* Is there some sort of general form to a Munchausen number?
-* Is it possible to predict how many Munchausen numbers there are in a given base?
+- The Python search generates digit combinations and skips groups that
+  cannot reach the right number of digits. Its work grows about 3.9x per
+  base. Base 16 takes 131 seconds and base 19 about 17 hours.
+- The Rust search fixes the count of the largest digit first, then the next
+  one, and so on. After each step, the sum lies in an interval. Every number
+  in the interval starts with the same digits, and the digit counts must
+  allow those digits. Most branches fail this test after a few steps. The
+  work grows about 1.9x per base. Base 20 takes 0.035 seconds and base 38
+  takes 520 seconds.
 
+`docs/algorithm.md` explains both searches in detail, with a worked example.
+`docs/comparison.md` compares them, and other published searches, with
+measured numbers.
 
-### Search
+## Layout
 
-In his [2009 paper](https://arxiv.org/pdf/0911.3038.pdf), Daan van Berkel introduced Munchausen numbers, and established an upperbound of `2b^b` for a given base `b`. That is, there can be no Munchausen number in a base `b` greater than `2b^b`.
+| path | contents |
+|---|---|
+| `fast/` | the Rust search, a Rust port of the Python search, and two reference searches for testing |
+| `src/munchausen.py` | the Python search |
+| `src/common.py` | helpers for the Python search, including the `testbd0` pre-check |
+| `src/nb.py` | the size of the search space after each Python optimization |
+| `src/formatutil.py` | reads and writes the output format |
+| `output/` | results |
+| `docs/` | algorithm and comparison documents |
 
-Using this upper bound as a starting point, we can search a given base `b` exhaustively to find all Munchausen numbers in that base.
+## Open questions
 
-However, since this search space grows exponentially, we need to optimize. The rest of this section will outline the optimizations made.
+The long-term goal is to understand Munchausen numbers well enough to answer
+these questions:
 
-#### Improving the upper bound
+- Can we find the Munchausen numbers of a base in polynomial time?
+- Do Munchausen numbers have a general form?
+- Can we predict how many Munchausen numbers a base has?
 
-In a base `b>2`, the number `2b^b` starts with the digit 2 and is followed by `b` `0`'s.
+An exhaustive search cannot keep up with the growth forever. At 1.9x per base,
+base 45 takes about 13 hours on the test laptop and base 50 about 13 days.
+Answers to these questions need a better understanding of the numbers
+themselves, for example a way to construct them directly.
 
-Depending on which convention is adopted, this number has a Munchausen sum of either `undefined`, `4`, or `4 + b`. It is clear though, that none of these are equal to `2b^b`, so `2b^b` is not, in and of itself, a Munchausen number.
+### Conjecture: no `b`-digit Munchausen numbers for `b > 2`
 
-Thus, any `b+1` digit number in our search space, i.e any number n such that `b^b <= n < 2b^b` must start with the digit 1. This means that the Munchausen sum of `n` is 1 greater than the Munchausen sum of some `b` digit number.
+In base 2, `10` (that is, 2) is a 2-digit Munchausen number under `0^0 = 1`.
+The conjecture says that this is the only case with `b` digits. The results
+agree: in bases 3 to 38, no solution has `b` digits under either convention.
 
-The maximum Munchausen sum of a `b` digit number is if there are `b` copies of the largest digit, so `b(b-1)^(b-1)`. The minimum value for a `b+1` digit number is `b^b`.
+A proof would let both searches skip the `b`-digit case. That is 26% of the
+combinations in the Python search, and 16% of the work in the Rust search at
+base 28.
 
-Since `1+b(b-1)^(b-1) < b^b` for all natural numbers `b >= 2`, there can never be a `b+1` digit Munchausen number.
+Notes towards a proof:
 
-We can thus improve our upperbound to only consider b-digit numbers, or all numbers less than `b^b`.
-
-Furthermore, the maximum Munchausen sum of a b-digit number is `b*(b-1)^(b-1)`. This value is always less than `b^b` and greater than or equal to `b^(b-1)` meaning it always has b-digits itself.
-
-Thus, our upper bound is actually `b*(b-1)^(b-1)`.
-
-* **note**: In the current implementation, this second improvement to the upper bound is not used.
-
-#### Optimizing the search space
-
-We first notice that the Munchausen sum of a number is agnostic as to the actual order of its digits, meaning that the number `3435` has the same Munchausen sum as `5433` or `4353` or any other permutation. We can significantly reduce our search space by considering unique combinations of digits.
-
-Thus, instead of iterating over each number from 1 to `b^b`, we iterate over the number of digits from 1 to `b`, and generate all possible combinations of that many digits.
-
-Furthermore, for a given number of digits `d` in base `b`, we can exclude some digits from our combinations. If a digit `0 <= x < b` is such that `x^x >= b^d` then it can not possibly appear in a valid d-digit Munchausen number.
-
-As an example, when considering 3-digit combinations in base 10, digits 5 and greater can be ignored, since 5^5 has 4 digits and can not possibly appear in a 3-digit Munchausen number.
-
-Finally, we can also fix some digits in our combinations. Let's refer back to the above example. If we were to restrict our set of possible digits even further to exclude the digit 4, then the maximum obtainable Munchausen sum would be `3 * 3^3 = 81`. Since this has less than 3 digits, we know that the digit 4 must appear at least once. By applying this sort of reasoning at every stage, we can reduce the number of combinations we need to generate. In this example, instead of generating 3-digit combinations from the set `{0, 1, 2, 3, 4}` we can instead generate 2-digit combinations.
-
-The file `nb.py` contains functions that model the sizes of these search spaces and the gains made by each successive optimization.
-
-### A Conjecture : an upperbound of `b^(b-1)`
-
-I believe that for `b > 2`, `b` digit Munchausen numbers are not possible. If this conjecture is proven true, it would improve our search space to 75% of what it is currently.
-
-Some information that I have amassed regarding this that might be useful in solving it:
-* even in base 2, a b-digit number only exists if the convention `0^0 = 1` is adopted, in which case the b-digit number is `10`
-* `b(b-1)^(b-1) < b^b` so the largest possible b-digit number in our search space is `b(b-1)^(b-1)`
-* the leading digit of this number is approximately `b/e`
-* the digit `b-1` must appear 3 times in a b-digit number for `b>2`
-
-### Next steps
-
-No number of optimizations will make an exhaustive search tractable in the long term. Even with the latest iteration of the algorithm, it took ~17 hours to search base 19 exhaustively. Searching base 20 will require searching ~32 billion combinations of digits.
-
-If we are to really solve this problem, more work needs to be done in terms of studying the characteristics of Munchausen numbers. The next step is to explore ways of explicity constructing Munchausen numbers from the ground up.
-
-That said, there is still a lot of room for improvement in the programming side of things as well. Using a langauge faster than Python might allow for a viable search of the next few bases.
+- The largest Munchausen sum of a `b`-digit number is `b * (b-1)^(b-1)`. This
+  is less than `b^b`.
+- The leading digit of `b * (b-1)^(b-1)` in base `b` is about `b / e`.
+- For `b > 2`, a `b`-digit Munchausen number must contain the digit `b-1` 3
+  times.

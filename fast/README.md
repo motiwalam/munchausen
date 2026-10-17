@@ -1,80 +1,94 @@
-# fast: a Rust search for Munchausen numbers
+# fast
 
-An exhaustive search for Munchausen numbers (perfect digit-to-digit invariants)
-in bases 2 to 62. It handles both conventions for `0^0` in a single pass.
+A Rust program that finds every Munchausen number in bases 2 to 62. It
+searches both conventions for `0^0` in one run. `../docs/algorithm.md`
+explains the algorithm, and `../docs/comparison.md` measures it.
 
-## Build and run
+## Build
 
-Requires a Rust toolchain (stable, 2024 edition). `.cargo/config.toml` builds for
-the native CPU, so the AVX2 code path is used where available. Other CPUs get a
-portable fallback that gives the same results more slowly.
+The program needs a stable Rust toolchain with the 2024 edition.
 
 ```sh
 cargo build --release
-./target/release/fast search 2 30                 # bases 2..=30, both conventions
-./target/release/fast search 36 -m 1 --progress   # one base, 0^0 = 1 only
-./target/release/fast search 40 --journal 'journal-b{base}.txt' --progress
-cargo test --release                              # cross-check against the reference engines
 ```
 
-Results go to stdout in the same format as `../output/*.txt` (`base:mode:count: tuples`).
-Before anything is printed, each number is re-checked with arbitrary-precision arithmetic.
+`.cargo/config.toml` builds for the CPU of the build machine. On a CPU with
+AVX2, the program uses AVX2 digit vectors. On other CPUs, it uses plain loops.
+The plain loops give the same results and pass the same tests. They are about
+4.7x slower: base 25 on one thread takes 4.1 s, against 0.87 s with AVX2.
 
-`--journal` makes a long run resumable. The search is cut into a deterministic
-list of work units. Each finished unit and each solution is appended to the
-journal as soon as it happens. Rerunning the same command after an interruption
-skips the units that are already done.
+## Run
 
-### Other engines
+```sh
+./target/release/fast <engine> <base> [<last base>] [options]
+```
 
-These are kept for validation and comparison:
+For example:
 
-| engine      | what it is |
-|-------------|------------|
-| `port`      | Faithful port of `../src/munchausen.py`. It enumerates exactly the same digit combinations (`gcwr` + `testbd0`), so it measures the language change alone. |
-| `reference` | The core idea of `search` in plain `u128` arithmetic, without the refinements. Bases up to 27. |
-| `brute`     | Evaluates every `n` up to `b·(b-1)^(b-1)`. Bases up to about 9. |
+```sh
+./target/release/fast search 2 30
+./target/release/fast search 36 -m 1
+./target/release/fast search 40 --journal 'journal-b{base}.txt' --progress
+```
 
-## Algorithm
+The program writes results to stdout, in the format of `../output/*.txt`. It
+writes timings and statistics to stderr. Before it prints a number, it
+recomputes the Munchausen sum with arbitrary-precision integers.
 
-The Munchausen sum `F(n)` depends only on the multiset of digits. So for each
-number of digits `d` (2 to `b`; more digits are impossible), the search picks
-digit *counts* `c_{b-1}, c_{b-2}, ..., c_1` from the largest digit down.
+### Engines
 
-**Leading-digit pruning.** Once the counts of all digits `>= k` are fixed, the
-sum `S` lies in a known interval:
+| engine | what it does | bases |
+|---|---|---|
+| `search` | the fast search | 2 to 62 |
+| `port` | a line-for-line port of `../src/munchausen.py`, which checks the same combinations | 2 to 26 |
+| `reference` | the leading-digit test alone, in `u128` arithmetic | 2 to 27 |
+| `brute` | tests every `n` up to `b * (b-1)^(b-1)` | 2 to about 9 |
 
-- `lo = t`, where the remaining slots are all zeros;
-- `hi = t + z + rf·(k-1)^(k-1)`, where the remaining slots are all `k-1`.
+`port`, `reference` and `brute` exist for testing and comparison.
 
-Here `t` is the partial sum, `z` the number of zeros already known, and `rf` the
-number of free slots. All numbers in `[lo, hi]` share some leading base-`b`
-digits, and the final number must contain those digits. A leading digit `x >= k`
-can't appear more often than `c_x`, so violating that prunes the branch. This is
-the "fixed leading digits" idea from narcissistic-number searches.
+### Options
 
-**Forced digits.** A leading digit `x < k` hasn't been counted yet, but it now
-must appear at least that many times. Its weight is added to `t` immediately.
-That narrows `[lo, hi]` and can expose more leading digits, so this repeats until
-nothing changes. The interval only shrinks on the way down, so the
-leading-digit histogram is carried along and only newly exposed digits are
-examined.
+| option | meaning |
+|---|---|
+| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`) |
+| `-j`, `--threads <n>` | number of worker threads (default: one per core) |
+| `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
+| `--progress` | `search` only. Print progress every 10 seconds. |
+| `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
+| `--par-depth <n>` | `search` only. Depth below a unit at which the program still splits work into parallel tasks (default 4). |
 
-**Both conventions at once.** `0^0 = 0` and `0^0 = 1` differ only in what each
-zero adds to the sum, which is at most `d`. The interval above is the union over
-both conventions, so the whole tree is shared. The conventions are told apart
-only at the leaves, where every candidate is checked exactly.
+`search` always explores the tree for both conventions. `-m` only selects the
+output, so `-m 1` takes as long as `both`.
 
-**Digit-vector arithmetic.** Numbers are stored as one byte per base-`b` digit in
-AVX2 registers: one register up to base 30, two up to base 62. No bignum library
-is needed. Addition is a lane-wise add followed by carry resolution with the
-carry-lookahead identity `carry_in = ((generate << 1) + propagate) ^ propagate`
-on 64-bit masks. Finding the shared leading digits of `lo` and `hi` is then one
-vector compare and one `lzcnt`.
+### Long runs
 
-**Parallelism.** The tree is cut into a few tens of thousands of subtrees, which
-are spread across cores with rayon's work stealing. The same cut defines the
-resumable units.
+Each base takes about 1.9x as long as the one before. On the test laptop,
+base 38 took 520 seconds, so base 40 takes about 30 minutes. Use `--journal`
+for long runs. The program appends a line to the journal when a work unit
+finishes. It appends another line for each solution, as soon as it finds it.
+If a run stops, run the same command again. The program reads the journal and
+skips the finished units.
 
-The search tree grows about 2× per base, versus about 4× per base for searches
-that enumerate every digit combination. Most of the work is at `d = b-1`.
+A journal belongs to one base and one value of `--unit-depth`. The program
+refuses a journal that does not match.
+
+## Test
+
+```sh
+cargo test --release
+```
+
+The tests compare `search` with `brute` for bases 2 to 9 and with `reference`
+for bases 10 to 22. They test both widths of digit vectors. They also compare
+`port` with `reference` for bases 2 to 13. The tests take about 90 seconds.
+
+## Source files
+
+| file | contents |
+|---|---|
+| `src/search.rs` | the fast search |
+| `src/digits.rs` | base-`b` digit vectors in AVX2 registers, with a portable fallback |
+| `src/journal.rs` | the journal for resumable runs |
+| `src/port.rs` | the port of the Python search |
+| `src/reference.rs` | the brute force and the `u128` reference search |
+| `src/main.rs` | the command line, output, and tests |
