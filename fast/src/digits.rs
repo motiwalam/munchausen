@@ -125,6 +125,20 @@ mod imp {
             }
         }
 
+        // bit j set iff lane j equals x[i]; the broadcast reads x[i] from
+        // memory and skips a move through a general register
+        #[inline(always)]
+        pub fn eq_mask_at(&self, x: &[u8; 64], i: usize) -> u64 {
+            unsafe {
+                let v = _mm256_broadcastb_epi8(_mm_loadu_si16(x.as_ptr().add(i & 63) as *const u8));
+                let mut m = 0u64;
+                for i in 0..N {
+                    m |= (_mm256_movemask_epi8(_mm256_cmpeq_epi8(self.0[i], v)) as u32 as u64) << (32 * i);
+                }
+                m
+            }
+        }
+
         // bit i set iff lane i is at least x
         #[inline(always)]
         pub fn ge_mask(&self, x: u8) -> u64 {
@@ -224,6 +238,11 @@ mod imp {
                 m |= ((self.0[i / 32][i % 32] == x) as u64) << i;
             }
             m
+        }
+
+        #[inline(always)]
+        pub fn eq_mask_at(&self, x: &[u8; 64], i: usize) -> u64 {
+            self.eq_byte_mask(x[i & 63])
         }
 
         #[inline(always)]

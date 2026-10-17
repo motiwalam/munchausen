@@ -505,7 +505,7 @@ impl<const N: usize> Search<N> {
                 // lanes < d <= 62 and digits < b <= 127, so indices stay in bounds
                 let x = unsafe { *ld.get_unchecked(i as usize) };
                 let lim = unsafe { *cnt.get_unchecked(x as usize) };
-                if clo.count(x, known) > lim as u32 {
+                if (clo.eq_mask_at(&ld, i as usize) & known).count_ones() > lim as u32 {
                     return false;
                 }
                 if X && p.track_ln {
