@@ -159,7 +159,8 @@ about 7% of the nodes in bases 20 to 32.
 
 The interval only shrinks on the way down the tree. So a child keeps every
 leading digit of its parent, and the search only inspects positions that are
-new. The prefix and its digit counts travel with the node.
+new. The prefix is part of `lo` itself, so a node only stores `lo` and the
+length of the prefix (see "Counting digits in the prefix" below).
 
 ### Choosing the next count
 
@@ -257,6 +258,20 @@ reached `b`. One addition takes about 15 vector and scalar instructions.
 The leading digits shared by `lo` and `hi` come from one lane-wise compare. A
 movemask turns it into a bitmask, and `lzcnt` gives the first differing
 position. The digits themselves are bytes, so the search reads them directly.
+
+### Counting digits in the prefix
+
+The known prefix is the top lanes of `lo`, clipped to `b^(d-1)`. The search
+does not keep a histogram of it. To count the copies of a digit `x` in the
+prefix, it compares every lane with `x`, turns the result into a bitmask, and
+counts the bits in the prefix lanes. That takes four instructions. A node is
+then only `t`, the prefix length and `rf`, and a child does not copy a
+128-byte histogram.
+
+The new leading digits of a child are handled in two steps. One compare
+against `k` finds the digits below `k`. If there are more of them than free
+positions, the child fails at once. This is the most common failure. Each
+new digit `x >= k` then needs at most `c_x` copies in the whole prefix.
 
 ### Incremental updates
 

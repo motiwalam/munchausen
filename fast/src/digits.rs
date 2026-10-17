@@ -112,6 +112,33 @@ mod imp {
             }
         }
 
+        // bit i set iff lane i equals x
+        #[inline(always)]
+        pub fn eq_byte_mask(&self, x: u8) -> u64 {
+            unsafe {
+                let v = _mm256_set1_epi8(x as i8);
+                let mut m = 0u64;
+                for i in 0..N {
+                    m |= (_mm256_movemask_epi8(_mm256_cmpeq_epi8(self.0[i], v)) as u32 as u64) << (32 * i);
+                }
+                m
+            }
+        }
+
+        // bit i set iff lane i is at least x
+        #[inline(always)]
+        pub fn ge_mask(&self, x: u8) -> u64 {
+            unsafe {
+                let v = _mm256_set1_epi8(x as i8);
+                let mut m = 0u64;
+                for i in 0..N {
+                    let ge = _mm256_cmpeq_epi8(_mm256_max_epu8(self.0[i], v), self.0[i]);
+                    m |= (_mm256_movemask_epi8(ge) as u32 as u64) << (32 * i);
+                }
+                m
+            }
+        }
+
         // bit i set iff lane i is nonzero
         #[inline(always)]
         pub fn nonzero_mask(&self) -> u64 {
@@ -191,6 +218,24 @@ mod imp {
         }
 
         #[inline(always)]
+        pub fn eq_byte_mask(&self, x: u8) -> u64 {
+            let mut m = 0u64;
+            for i in 0..32 * N {
+                m |= ((self.0[i / 32][i % 32] == x) as u64) << i;
+            }
+            m
+        }
+
+        #[inline(always)]
+        pub fn ge_mask(&self, x: u8) -> u64 {
+            let mut m = 0u64;
+            for i in 0..32 * N {
+                m |= ((self.0[i / 32][i % 32] >= x) as u64) << i;
+            }
+            m
+        }
+
+        #[inline(always)]
         pub fn nonzero_mask(&self) -> u64 {
             let mut m = 0u64;
             for i in 0..32 * N {
@@ -202,6 +247,22 @@ mod imp {
 }
 
 pub use imp::{Base, DV};
+
+impl<const N: usize> DV<N> {
+    /// the digit in lane i
+    #[inline(always)]
+    pub fn lane(&self, i: u32) -> u8 {
+        let mut x = [0u8; 64];
+        self.to_bytes(&mut x);
+        x[i as usize & 63]
+    }
+
+    /// how many of the lanes selected by mask hold x
+    #[inline(always)]
+    pub fn count(&self, x: u8, mask: u64) -> u32 {
+        (self.eq_byte_mask(x) & mask).count_ones()
+    }
+}
 
 /// digits of a BigUint in base b, least significant first, padded to 64 lanes
 pub fn big_to_lanes(x: &num_bigint::BigUint, b: u32) -> [u8; 64] {
