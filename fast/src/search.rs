@@ -412,26 +412,34 @@ impl<const N: usize> Search<N> {
 
     // Enumerate c_k = occ[k] + e for e = 0, 1, ... (k >= 2) and emit every
     // child whose interval survives the leading-digit test. cnt[x] holds c_x
-    // for x > k; expand sets cnt[k] before it emits a child. X enables the
-    // inexact rules.
+    // for x > k; the cursor sets cnt[k] before it hands out a child.
     #[inline(always)]
     fn expand<const X: bool>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, &Node<N>, &mut Hist)) {
+        let mut cur = Cursor::new(p, k, n);
+        while let Some(c) = self.next_child::<X>(p, &mut cur, cnt, l) {
+            emit(l, &c, cnt);
+        }
+    }
+
+    // Advance the cursor to its next child that survives every test. X
+    // enables the inexact rules.
+    #[inline(always)]
+    fn next_child<const X: bool>(&self, p: &Params<N>, cur: &mut Cursor<N>, cnt: &mut Hist, l: &mut Local) -> Option<Node<N>> {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
-        let known = p.known(n.pp);
-        let nlo = p.clip_lo(&n.t);
-        let occk = nlo.count(k as u8, known);
+        let (k, n) = (cur.k, &cur.n);
         let (wk, dhi) = unsafe { (p.w.get_unchecked(k), p.dhi.get_unchecked(k)) };
-        let mut te = n.t;
-        let mut hi = n.hi.add(unsafe { p.drop.get_unchecked(k * (p.d as usize + 1) + n.rf as usize) }, base);
-        for e in 0..=n.rf {
+        while cur.e <= n.rf {
+            let e = cur.e;
+            cur.e += 1;
             if e > 0 {
-                te = te.add(wk, base);
-                hi = hi.add(dhi, base);
+                cur.te = cur.te.add(wk, base);
+                cur.hi = cur.hi.add(dhi, base);
             }
+            let (te, hi) = (cur.te, cur.hi);
             l.evals += 1;
-            let ck = occk + e;
+            let ck = cur.occk + e;
             let mk = n.m + ck;
             if X {
                 if ck > p.cap || mk > p.band_hi[k] {
@@ -458,9 +466,11 @@ impl<const N: usize> Search<N> {
                 && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
             {
-                emit(l, &c, cnt);
+                return Some(c);
             }
         }
+        cur.e = n.rf + 1;
+        None
     }
 
     // The leading-digit test with forced digits, iterated to a fixpoint.
@@ -579,23 +589,74 @@ impl<const N: usize> Search<N> {
         self.flush(&l);
     }
 
-    // Depth-first search below n. Down to par_depth levels below the unit,
-    // a node whose thread has no queued tasks left hands its children to
-    // the pool as tasks, so idle threads can steal them. Otherwise the
-    // children run here, which avoids the cost of a task per node.
+    // Depth-first search below n, with an explicit stack of cursors instead
+    // of recursion. Down to par_depth levels below the unit, a node whose
+    // thread has no queued tasks left hands its children to the pool as
+    // tasks, so idle threads can steal them. Otherwise the children run
+    // here, which avoids the cost of a task per node.
     fn rec_seq<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, depth: u32) {
         l.nodes += 1;
         if k == 1 {
             self.leaf(p, n, cnt);
             return;
         }
-        if depth < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
-            self.expand::<X>(p, k, n, cnt, l, |_, c, cnt| {
-                let (c, cnt) = (*c, *cnt);
-                s.spawn(move |s| self.rec::<X>(s, p, k - 1, c, cnt, depth + 1))
-            });
-        } else {
-            self.expand::<X>(p, k, n, cnt, l, |l, c, cnt| self.rec_seq::<X>(s, p, k - 1, c, cnt, l, depth + 1));
+        // the cursors of the ancestors; k decreases by one per level
+        let mut stack: [std::mem::MaybeUninit<Cursor<N>>; 64] = [const { std::mem::MaybeUninit::uninit() }; 64];
+        let mut sp = 0;
+        let mut cur = Cursor::new(p, k, n);
+        loop {
+            let ck = cur.k;
+            let level = depth + (k - ck) as u32;
+            let child = if cur.e == 0 && level < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
+                // hand every child to the pool and drop this node
+                self.expand::<X>(p, ck, &cur.n, cnt, l, |_, c, cnt| {
+                    let (c, cnt) = (*c, *cnt);
+                    s.spawn(move |s| self.rec::<X>(s, p, ck - 1, c, cnt, level + 1))
+                });
+                None
+            } else {
+                self.next_child::<X>(p, &mut cur, cnt, l)
+            };
+            match child {
+                Some(c) => {
+                    l.nodes += 1;
+                    if ck == 2 {
+                        self.leaf(p, &c, cnt);
+                    } else {
+                        // a node has at most 62 ancestors below the root
+                        unsafe { stack.get_unchecked_mut(sp) }.write(cur);
+                        sp += 1;
+                        cur = Cursor::new(p, ck - 1, &c);
+                    }
+                }
+                None => {
+                    if sp == 0 {
+                        return;
+                    }
+                    sp -= 1;
+                    cur = unsafe { stack.get_unchecked(sp).assume_init_read() };
+                }
+            }
         }
+    }
+}
+
+// The state of expand at one node: the node, the next value of e, and the
+// interval [te, hi] of the child for that e (before its forced digits).
+struct Cursor<const N: usize> {
+    n: Node<N>,
+    te: DV<N>,
+    hi: DV<N>,
+    k: usize,
+    e: u32,
+    occk: u32,
+}
+
+impl<const N: usize> Cursor<N> {
+    #[inline(always)]
+    fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
+        let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
+        let hi = n.hi.add(unsafe { p.drop.get_unchecked(k * (p.d as usize + 1) + n.rf as usize) }, &p.base);
+        Cursor { n: *n, te: n.t, hi, k, e: 0, occk }
     }
 }
