@@ -43,6 +43,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `port` | a line-for-line port of `../src/munchausen.py`, which checks the same combinations | 2 to 26 |
 | `reference` | the leading-digit test alone, in `u128` arithmetic | 2 to 27 |
 | `brute` | tests every `n` up to `b * (b-1)^(b-1)` | 2 to about 9 |
+| `merge` | combines the outputs of `--shard` runs, see "Split a base over processes" | |
 
 `port`, `reference` and `brute` exist for testing and comparison.
 
@@ -54,6 +55,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
 | `--progress` | `search` only. Print progress every 10 seconds. |
+| `--shard <i>/<n>` | `search` only. Search only the work units whose index is `i` modulo `n`, for `0 <= i < n`. `{shard}` in the journal name becomes `<i>of<n>`. |
 | `--max-digits <n>` | `search` only. Look only for numbers with at most `n` digits. Bases above 62 need `n <= 62`. |
 | `--min-digits <n>` | `search` only. Look only for numbers with at least `n` digits. |
 | `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
@@ -73,6 +75,40 @@ skips the finished units.
 
 A journal belongs to one base and one value of `--unit-depth`. The program
 refuses a journal that does not match.
+
+### Split a base over processes
+
+`--shard i/n` splits a base into `n` parts. Each part runs as its own
+process, on the same machine or on different machines. For example, on three
+machines:
+
+```sh
+./target/release/fast search 40 --shard 0/3 --journal 'j{base}-{shard}.txt' > s0.txt
+./target/release/fast search 40 --shard 1/3 --journal 'j{base}-{shard}.txt' > s1.txt
+./target/release/fast search 40 --shard 2/3 --journal 'j{base}-{shard}.txt' > s2.txt
+```
+
+Then copy the three outputs to one machine and merge them:
+
+```sh
+./target/release/fast merge s0.txt s1.txt s2.txt
+```
+
+`merge` prints the lines that a single run prints. It fails if the output of
+a shard is missing. A shard writes the line `# shard i/n base b` before its
+results, and `merge` uses it for this check. The one-digit numbers belong to
+shard 0.
+
+Every shard builds the full list of work units and takes every `n`-th unit.
+The list is sorted by digit count, so every shard gets its part of each
+digit count. For base 30 in 3 shards, the shards visit 22.9, 21.8 and 21.5
+million nodes. Each shard also counts the 11,675 nodes that build
+the unit list, so the sum of the shard counts is larger than the count of a
+single run.
+
+A shard has its own journal, and its header names the shard. Use
+`{shard}` in the journal name to keep the files apart. A shard refuses a
+journal of another shard.
 
 ### Inexact search
 
