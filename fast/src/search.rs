@@ -38,6 +38,10 @@ pub struct Params<const N: usize> {
     w: Vec<DV<N>>,   // w[j] = j^j for j >= 1, w[0] = 0 (zeros are tracked by count)
     dhi: Vec<DV<N>>, // step of hi when c_j grows by one: w[j] - w[j-1] (w[0] taken as 1)
     tw: Vec<DV<N>>,  // tw[j * (d + 1) + m] = m * w[j] (w[0] taken as 1, i.e. just m)
+    // shift[k * (kmax + 1) + x] = w[x] - w[k-1] for x < k (w[0] taken as 1),
+    // stored modulo b^(32 N), so adding it subtracts w[k-1] - w[x]: the step
+    // of hi when a free slot (worth up to w[k-1]) turns out to hold x
+    shift: Vec<DV<N>>,
     pow_lo: DV<N>,   // b^(d-1)
     max_v: DV<N>,    // b^d - 1
     dmask: u64,      // lanes < d
@@ -126,6 +130,13 @@ impl<const N: usize> Params<N> {
             }
         }
         let w = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
+        let modulus = bb.pow(32 * N as u32);
+        let mut shift = vec![];
+        for k in 0..=kmax {
+            for x in 0..=kmax {
+                shift.push(if k >= 1 && x < k { lanes(&((&modulus - &w_hi[k - 1] + &w_hi[x]) % &modulus)) } else { DV::zero() });
+            }
+        }
         let dhi = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&(&w_hi[j] - &w_hi[j - 1])) }).collect();
         // the number of digits >= k in a random d-digit string (leading digit
         // nonzero) has this mean and variance
@@ -150,6 +161,7 @@ impl<const N: usize> Params<N> {
             w,
             dhi,
             tw,
+            shift,
             pow_lo: lanes(&bb.pow(d - 1)),
             max_v: lanes(&(limit - 1u32)),
             dmask: (1u64 << d) - 1,
@@ -437,7 +449,7 @@ impl<const N: usize> Search<N> {
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
             let mut c = Node { t: te, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
-            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, z, cnt)
+            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, hi, cnt)
                 && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
             {
@@ -453,7 +465,7 @@ impl<const N: usize> Search<N> {
     // to t, which narrows the interval and can expose more leading digits.
     // Returns false if the node fails.
     #[inline(always)]
-    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, mut z: u32, cnt: &Hist) -> bool {
+    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, mut hi: DV<N>, cnt: &Hist) -> bool {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1);
@@ -494,6 +506,7 @@ impl<const N: usize> Search<N> {
                 return true;
             }
             c.rf -= f;
+            let row = k * (p.kmax + 1);
             let mut fl = forced;
             while fl != 0 {
                 let i = fl.trailing_zeros();
@@ -501,17 +514,15 @@ impl<const N: usize> Search<N> {
                 let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
                 if x > 0 {
                     c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
-                } else {
-                    z += 1;
                 }
+                hi = hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
             }
-            let hi2 = p.hi(&c.t, z, k, c.rf);
-            let (n1, n2) = (c.t.nonzero_mask(), hi2.nonzero_mask());
+            let (n1, n2) = (c.t.nonzero_mask(), hi.nonzero_mask());
             if n1 & !dm != 0 || n2 & top == 0 {
                 return false;
             }
             *clo = if n1 & top == 0 { p.pow_lo } else { c.t };
-            *chi = if n2 & !dm != 0 { p.max_v } else { hi2 };
+            *chi = if n2 & !dm != 0 { p.max_v } else { hi };
         }
     }
 
