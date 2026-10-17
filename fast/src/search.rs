@@ -268,6 +268,14 @@ struct Node<const N: usize> {
 }
 
 #[derive(Default)]
+#[repr(align(128))]
+struct Stats {
+    nodes: AtomicU64,
+    evals: AtomicU64,
+    skipped: Mutex<f64>,
+}
+
+#[derive(Default)]
 struct Local {
     nodes: u64,
     evals: u64,
@@ -281,10 +289,8 @@ pub struct Search<const N: usize> {
     inexact: bool,
     /// (convention, number of digits, digits with the least significant first)
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
-    pub nodes: AtomicU64,
-    pub evals: AtomicU64,
-    /// expected number of solutions in subtrees skipped by the inexact rules
-    pub skipped: Mutex<f64>,
+    /// statistics, one slot per thread so that threads do not share cache lines
+    stats: Vec<Stats>,
     /// called (from worker threads) as soon as a solution is found
     pub on_found: Option<Box<dyn Fn(u32, u32, &[u8; 64]) + Send + Sync>>,
 }
@@ -308,19 +314,35 @@ impl<const N: usize> Search<N> {
                 || prune.epsilon > 0.0
                 || prune.ratio > 0.0,
             found: Mutex::new(vec![]),
-            nodes: AtomicU64::new(0),
-            evals: AtomicU64::new(0),
-            skipped: Mutex::new(0.0),
+            // slot 0 serves threads outside the pool
+            stats: (0..=rayon::current_num_threads()).map(|_| Stats::default()).collect(),
             on_found: None,
         }
     }
 
     fn flush(&self, l: &Local) {
-        self.nodes.fetch_add(l.nodes, Ordering::Relaxed);
-        self.evals.fetch_add(l.evals, Ordering::Relaxed);
+        let i = rayon::current_thread_index().map_or(0, |i| i + 1);
+        let st = &self.stats[i.min(self.stats.len() - 1)];
+        st.nodes.fetch_add(l.nodes, Ordering::Relaxed);
+        st.evals.fetch_add(l.evals, Ordering::Relaxed);
         if l.skipped > 0.0 {
-            *self.skipped.lock().unwrap() += l.skipped;
+            *st.skipped.lock().unwrap() += l.skipped;
         }
+    }
+
+    /// number of tree nodes visited so far
+    pub fn nodes(&self) -> u64 {
+        self.stats.iter().map(|s| s.nodes.load(Ordering::Relaxed)).sum()
+    }
+
+    /// number of intervals evaluated so far
+    pub fn evals(&self) -> u64 {
+        self.stats.iter().map(|s| s.evals.load(Ordering::Relaxed)).sum()
+    }
+
+    /// expected number of solutions in subtrees skipped by the inexact rules
+    pub fn skipped(&self) -> f64 {
+        self.stats.iter().map(|s| *s.skipped.lock().unwrap()).sum()
     }
 
     /// Split the search into subtrees by expanding every root `depth` levels.
