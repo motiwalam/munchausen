@@ -556,26 +556,30 @@ impl<const N: usize> Search<N> {
         cnt[1] = 0;
     }
 
+    // A parallel task: search the subtree below n.
     fn rec<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
         let mut l = Local::default();
-        if depth < self.par_depth && k > 1 {
-            l.nodes += 1;
-            self.expand::<X>(p, k, &n, &mut cnt, &mut l, |_, c, cnt| {
-                let (c, cnt) = (*c, *cnt);
-                s.spawn(move |s| self.rec::<X>(s, p, k - 1, c, cnt, depth + 1))
-            });
-        } else {
-            self.rec_seq::<X>(p, k, &n, &mut cnt, &mut l);
-        }
+        self.rec_seq::<X>(s, p, k, &n, &mut cnt, &mut l, depth);
         self.flush(&l);
     }
 
-    fn rec_seq<const X: bool>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local) {
+    // Depth-first search below n. Down to par_depth levels below the unit,
+    // a node whose thread has no queued tasks left hands its children to
+    // the pool as tasks, so idle threads can steal them. Otherwise the
+    // children run here, which avoids the cost of a task per node.
+    fn rec_seq<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, depth: u32) {
         l.nodes += 1;
         if k == 1 {
             self.leaf(p, n, cnt);
             return;
         }
-        self.expand::<X>(p, k, n, cnt, l, |l, c, cnt| self.rec_seq::<X>(p, k - 1, c, cnt, l));
+        if depth < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
+            self.expand::<X>(p, k, n, cnt, l, |_, c, cnt| {
+                let (c, cnt) = (*c, *cnt);
+                s.spawn(move |s| self.rec::<X>(s, p, k - 1, c, cnt, depth + 1))
+            });
+        } else {
+            self.expand::<X>(p, k, n, cnt, l, |l, c, cnt| self.rec_seq::<X>(s, p, k - 1, c, cnt, l, depth + 1));
+        }
     }
 }

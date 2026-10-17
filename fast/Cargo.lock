@@ -46,6 +46,7 @@ dependencies = [
  "num-bigint",
  "num-traits",
  "rayon",
+ "rayon-core",
 ]
 
 [[package]]
