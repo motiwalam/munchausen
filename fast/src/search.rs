@@ -324,7 +324,11 @@ pub struct Unit<const N: usize> {
 impl<const N: usize> Search<N> {
     pub fn new(b: u32, min_digits: u32, max_digits: u32, par_depth: u32, prune: Prune) -> Self {
         Search {
-            params: (min_digits.max(2)..=b.min(max_digits)).rev().map(|d| Params::new(b, d, prune)).collect(),
+            params: {
+                use rayon::prelude::*;
+                let ds: Vec<u32> = (min_digits.max(2)..=b.min(max_digits)).rev().collect();
+                ds.into_par_iter().map(|d| Params::new(b, d, prune)).collect()
+            },
             par_depth,
             inexact: prune.cap != u32::MAX
                 || prune.z.is_finite()
