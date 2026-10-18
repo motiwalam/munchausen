@@ -341,7 +341,7 @@ fn first_digit_ok<const N: usize>(p: &Params<N>, lo: &DV<N>, hi: &DV<N>, pp: u32
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
-    hi: DV<N>,     // t + z + rf * w[k] for a node that decides c_k (z: known zeros)
+    hi: DV<N>,     // t + z + rf * w[k-1] for a node that decides c_k (z: known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
     m: u32,        // number of decided digits, all >= k
@@ -438,7 +438,8 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: p.offset, hi: p.mul_w(p.kmax, p.d).add(&p.offset, &p.base), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let hi = p.mul_w(p.kmax, p.d).add(&p.offset, &p.base).add(&p.drop[p.kmax * (p.d as usize + 1) + p.d as usize], &p.base);
+            let root = Node { t: p.offset, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -497,16 +498,17 @@ impl<const N: usize> Search<N> {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
-        let (k, n) = (cur.k, &cur.n);
+        let k = cur.k;
+        let n = &cur.h;
         let (wk, dhi) = unsafe { (p.w.get_unchecked(k), p.dhi.get_unchecked(k)) };
         while cur.e <= n.rf {
             let e = cur.e;
             cur.e += 1;
-            if e > 0 {
-                cur.te = cur.te.add(wk, base);
-                cur.hi = cur.hi.add(dhi, base);
-            }
             let (te, hi) = (cur.te, cur.hi);
+            // The sums for e + 1 come before the branches below, so that a
+            // mispredicted branch does not throw them away.
+            cur.te = te.add(wk, base);
+            cur.hi = hi.add(dhi, base);
             l.evals += 1;
             let ck = cur.occk + e;
             let mk = n.m + ck;
@@ -531,8 +533,11 @@ impl<const N: usize> Search<N> {
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
             let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
-            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt)
-                && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
+            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt) && {
+                // hi for the child's own cursor, before the branches below
+                c.hi = c.hi.add(unsafe { p.drop.get_unchecked((k - 1) * (p.d as usize + 1) + c.rf as usize) }, base);
+                first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
+            }
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
             {
                 return Some(c);
@@ -567,6 +572,18 @@ impl<const N: usize> Search<N> {
             }
             let mut ld = [0u8; 64];
             clo.to_bytes(&mut ld);
+            // The forced digits go in before the checks of the digits >= k, so
+            // that a mispredicted branch there does not discard the sums.
+            // w[0] is zero, so a forced zero adds nothing to t.
+            let row = k * (p.kmax + 1);
+            let mut fl = forced;
+            while fl != 0 {
+                let i = fl.trailing_zeros();
+                fl &= fl - 1;
+                let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
+                c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
+                c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
+            }
             let mut big = new & !forced;
             while big != 0 {
                 let i = big.trailing_zeros();
@@ -590,17 +607,6 @@ impl<const N: usize> Search<N> {
                 return true;
             }
             c.rf -= f;
-            let row = k * (p.kmax + 1);
-            let mut fl = forced;
-            while fl != 0 {
-                let i = fl.trailing_zeros();
-                fl &= fl - 1;
-                let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
-                if x > 0 {
-                    c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
-                }
-                c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
-            }
             let (n1, n2) = (c.t.nonzero_mask(), c.hi.nonzero_mask());
             if n1 & !dm != 0 || n2 & top == 0 {
                 return false;
@@ -678,7 +684,7 @@ impl<const N: usize> Search<N> {
             let level = depth + (k - ck) as u32;
             let child = if cur.e == 0 && level < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
                 // hand every child to the pool and drop this node
-                self.expand::<X>(p, ck, &cur.n, cnt, l, |_, c, cnt| {
+                self.expand::<X>(p, ck, &cur.node0(), cnt, l, |_, c, cnt| {
                     let (c, cnt) = (*c, *cnt);
                     s.spawn(move |s| self.rec::<X>(s, p, ck - 1, c, cnt, level + 1))
                 });
@@ -710,22 +716,38 @@ impl<const N: usize> Search<N> {
     }
 }
 
-// The state of expand at one node: the node, the next value of e, and the
-// interval [te, hi] of the child for that e (before its forced digits).
+// The state of expand at one node: the node without its sums, the next
+// value of e, and the interval [te, hi] of the child for that e (before its
+// forced digits).
 struct Cursor<const N: usize> {
-    n: Node<N>,
     te: DV<N>,
     hi: DV<N>,
+    h: Head,
     k: usize,
     e: u32,
     occk: u32,
+}
+
+// the fields of a node that its cursor still needs
+#[derive(Clone, Copy)]
+struct Head {
+    pp: u32,
+    rf: u32,
+    m: u32,
+    lneed: f64,
+    ln_e: f64,
 }
 
 impl<const N: usize> Cursor<N> {
     #[inline(always)]
     fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
         let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
-        let hi = n.hi.add(unsafe { p.drop.get_unchecked(k * (p.d as usize + 1) + n.rf as usize) }, &p.base);
-        Cursor { n: *n, te: n.t, hi, k, e: 0, occk }
+        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e }, k, e: 0, occk }
+    }
+
+    // the node of a cursor that has not started yet
+    fn node0(&self) -> Node<N> {
+        let h = &self.h;
+        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e }
     }
 }

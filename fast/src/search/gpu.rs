@@ -3,7 +3,7 @@
 // dispatches of bounded length, and collects the results.
 use super::{DV, Local, Search, Unit};
 use crate::vk::{Buffer, Gpu, Kernel};
-use super::{Cursor, Node};
+use super::{Cursor, Head, Node};
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::time::Instant;
@@ -237,7 +237,14 @@ impl<const N: usize> Search<N> {
             rayon::scope(|s| self.rec::<false>(s, p, k, n, cnt, 0));
             return;
         }
-        let mut cur = Cursor { n, te: DV::from_bytes(&dv(HEADER + 2 * vb)), hi: DV::from_bytes(&dv(HEADER + 3 * vb)), k, e, occk };
+        // A GPU cursor holds the sums of the last e it tried, e - 1; a CPU
+        // cursor holds those of the next one.
+        let (mut te, mut hi) = (DV::from_bytes(&dv(HEADER + 2 * vb)), DV::from_bytes(&dv(HEADER + 3 * vb)));
+        if e > 0 {
+            te = te.add(&p.w[k], &p.base);
+            hi = hi.add(&p.dhi[k], &p.base);
+        }
+        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: 0, lneed: 0.0, ln_e: 0.0 }, k, e, occk };
         let mut l = Local::default();
         rayon::scope(|s| {
             while let Some(c) = self.next_child::<false>(p, &mut cur, &mut cnt, &mut l) {
