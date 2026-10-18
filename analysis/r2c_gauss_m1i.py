@@ -46,7 +46,7 @@ def blocks(n):
 def main():
     N = int(sys.argv[1]) if len(sys.argv) > 1 else 10 ** 6
     rng = random.Random(1)
-    tests = list(range(-N, N + 1)) + [rng.randrange(-10 ** 60, 10 ** 60) for _ in range(10 ** 4)]
+    tests = list(range(-N, N + 1)) + [rng.randrange(-10 ** 60, 10 ** 60) for _ in range(10 ** 5)]
     lens = set()
     for n in tests:
         g = digits_gauss(n, 0)
