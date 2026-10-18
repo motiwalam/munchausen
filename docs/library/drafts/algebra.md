@@ -169,17 +169,19 @@ because the degrees add up to `x`.
   `log x - 2 - 2/(3(x-1)) > tau(x)/(x-1) + x^(2-x/2)`, which excludes
   `|D| = 1`, and `|D| >= 3` is excluded since `3 log x > 2.2 + 1`. Below 11
   only x = 3 and 7 are squarefree and `3 (mod 4)`.
-- `y >= 3`: the same Gauss-sum argument gives `|rho_d| <= 2/y + 1/sqrt x`
-  for `d / s` squarefree and `|rho_d| <= 1/sqrt x + 0.7 phi(d) x^(-3/2)`
-  otherwise. The sum over all pairs is at most
-  `2^(omega(y)+1)/y + (tau(y^2) + 1)/sqrt x < 2.1`, while
-  `log x >= log 27 = 3.3`. So `D = 0`, which is impossible.
+- `y >= 3`: the same Gauss-sum argument, with the imprimitive character
+  mod `4d`, gives `|rho_d| <= 2/y + 1/sqrt x` when `d / s` is squarefree and
+  `|rho_d| <= 1/sqrt x` otherwise, plus a total of at most `0.7/sqrt x` from
+  the terms `j >= 3`. There are at most `2^omega(y)` pairs of the first kind
+  and `tau(y^2) <= y` pairs in all, so the sum of the `|rho_d|` is at most
+  `4/3 + 1/sqrt 3 + 0.14 < 2.1`. The `eps` terms add at most
+  `tau(x)/(x-1) <= 0.41`. Since `|D| >= 1` and `log x >= log 27 = 3.29`,
+  the total cannot be near 0.
 
 Computed (`alg_algebraic171.py`, `data/alg_algebraic171_201.txt`): for every
-odd `x` up to 201, the best algebraic split has `|log(N/b^2)|` close to
-`|log x - 2|` when `x` is squarefree and `3 (mod 4)`, and at least
-`log x - 0.5` otherwise. It is 0.0077 for x = 7 and at least 0.54 for
-`x >= 11`.
+odd `x` up to 201, the best algebraic split has `|log(N/b^2)|` equal to
+0.0077 for x = 7 and at least 0.54 for every `x >= 11` (x = 11 is the
+closest). When no Aurifeuillian pair exists it is at least `log x - 0.72`.
 
 ### 1.5 The factor pair of every 3-digit solution
 
@@ -196,7 +198,7 @@ A 3-digit solution `(p, q, r)` in base `b` gives the factor pair
 | `(3,1,3)`, base 4 | `2 (3^3 - 1) = 52` | `(4, 13)` | `4 = 2 Phi_1(3)`, `13 = Phi_3(3)`; needs `x - 1 = 2` |
 | `(6,1,5)`, base 91 | `6^6 + 5^5 - 4 = 7 * 13 * 547` | `(91, 547)` | none; `91 = 6^3 - 5^3`, but `91 | F - r` needs `6 * 5^5 == 4 (mod 91)`, a coincidence |
 
-So four of the six have an algebraic factor pair, each completed by one small
+So five of the six have an algebraic factor pair, each completed by one small
 coincidence between powers. Only `(6,1,5)` in base 91 has none. The 4-digit
 solutions have no such structure: 3435 gives `3430 = 10 * 7^3`, a cube by
 chance, and `(6,5,3,4)` in base 20 gives `50060 = 20 * 2503`.
@@ -224,7 +226,7 @@ Answer (question 1). The pair `(8 * 113, 911)` is the Aurifeuillian pair
 The pair always satisfies (1) modulo `x^2` (Proposition 2). It satisfies (1)
 exactly only when `M/L` is within about `x/L` of `x + 1`, which happens for
 x = 3 and 7 and never again. By Theorem 2 no other algebraic factor pair of
-`x^x + 1` solves (1). Among the six 3-digit solutions, four have an
+`x^x + 1` solves (1). Among the six 3-digit solutions, five have an
 algebraic factor pair; `(6,1,5)` in base 91 is the counterexample candidate
 and indeed has none.
 
@@ -257,7 +259,8 @@ Proof. A solution has `b == 1 (mod x)` (Proposition 1: `A == 1`), so
 
 So a solution means that the top `(x-1)/2` base-`x` digits of `beta` mod
 `x^x` all vanish. For x = 7, `R = 904` and `7^3.5 = 907.5`. For the other
-primes up to 59, `R` is about `x^(x - 0.6)` (`alg_abc171.py`). Heuristically
+primes up to 59, `R` lies between `x^(x - 0.8)` and `x^x`, as a random
+residue would (`alg_abc171.py`). Heuristically
 this happens with probability `x^(-x/2)`.
 
 Proposition 5 (unit form). Let `x == 3 (mod 4)` be squarefree with `x^2 + 4`
@@ -300,18 +303,18 @@ proof must use infinitely many primes, or global information.
 
 Sieve (`alg_sieve171.c`, `data/alg_sieve171_4e9.txt`). For every `x` from 2
 to `4 * 10^9`, the program looks for an odd prime `p < 65536` with `f(x)` a
-nonresidue mod `p`. Every `x` other than 3 and 7 has one, and the prime 229
-always suffices. So (1) has no further solution with `x <= 4 * 10^9`, that
-is with `b` up to about `10^(1.9 * 10^10)` (computed, 18 minutes). The
+nonresidue mod `p`. Every `x` other than 3 and 7 has one, and a prime up to
+229 always suffices. So (1) has no further solution with `x <= 4 * 10^9`, that
+is with `b` up to about `10^(1.9 * 10^10)` (computed, about 18 minutes). The
 previous bound was x = 2500.
 
 | odd primes used | share of `x <= 10^9` not yet excluded |
 |---:|---:|
 | 3, 5 | 0.900 (only the even `x` are gone) |
-| up to 13 | 0.452 |
-| up to 31 | 0.103 |
-| up to 71 | 0.00069 |
-| up to 173 | 3.2e-8 |
+| up to 13 | 0.352 |
+| up to 31 | 0.048 |
+| up to 73 | 0.00071 |
+| up to 179 | 3.2e-8 |
 
 Exact densities (`alg_density171.py`). For the 31 primes `p` with
 `p - 1 | 20160`, from 11 to 20161, the residues mod `p` are independent of
@@ -433,7 +436,7 @@ By Gauss's lemma `2 s_1 tau` is an integer, so `q^2/(4 tau^2) <= s_1^2 q^2`,
 and `C u - u^2/4 <= C^2`. For `M >= 7` each term is at most a power of `M`:
 `s_1 |q| <= M + M^2/2 + M^3/8 <= M^3/4`, so the bound is at most
 `M^7/8 < M^M <= F`. For `3 <= M <= 12` an exact check of all strings
-(`alg_k5bound.py`) gives a largest ratio bound/F of 0.81.
+(`alg_k5bound.py`) gives a largest ratio bound/F of 0.84.
 
 Corollary. For k = 5 and every string with `M >= 3`, `Q_s` is reducible
 exactly when it has a rational root, or when `P_s = s_1 G((r + a/4)^2)` and
@@ -490,9 +493,9 @@ Theorem 4. (a) For k = 4 and `M >= 5`, every irreducible `Q_s` has group
 `S_3`. (b) For k = 5 and `M >= 6`, every irreducible `Q_s` has group `S_4`,
 unless `P_s` is decomposable, and then the group lies in `D_4`.
 
-Proof. On `|r| <= M + 1`, `|P_s(r)| <= (M+1)^(k-1)`, and outside that
+Proof. On `|r| <= M + 1`, `|P_s(r)| < (M+1)^k`, and outside that
 interval `P_s` has no critical point (Cauchy's bound for `P_s'`). If
-`F > (M + 1)^(k-1)`, which holds for `M >= 5` (k = 4) and `M >= 6` (k = 5),
+`F > (M + 1)^k`, which holds for `M >= 5` (k = 4) and `M >= 6` (k = 5),
 `Q_s` has exactly one real root (k = 4) or two (k = 5). (a) `A_3` needs three
 real roots. (b) Complex conjugation is a transposition, so the group is
 `S_4` or `D_4`. `D_4` means a rational root `y` of the resolvent cubic. With
@@ -592,9 +595,9 @@ Computed (`alg_twolarge.py`): all 3-digit strings with digits up to 200, and
 those with two digits up to 1000 and one up to 30. The negative-base
 solutions under `0^0 = 1` are `(1,1,1)` in base -2, `(1,3,1)` in base -7,
 `(1,2,6)` in base -217 and `(1,7,1)` in base -911. Only `(1,1,1)` is not a
-partner. Under `0^0 = 0` the extra ones are `(1,1,0)` in base -2, `(1,0,3)` in
-base -5, and the even polynomials `(x,0,0)`, `(x,0,1)`, `(3,0,27)`, which are
-partners with `delta = 0`.
+partner. Under `0^0 = 0` the only other non-partner is its twin `(1,1,0)`.
+The rest, `(1,0,3)` in base -5 and the even polynomials `(x,0,0)`, `(x,0,1)`
+and `(3,0,27)`, are partners with `delta = 0`.
 
 ### 6.2 Five digits and more
 
