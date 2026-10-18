@@ -232,6 +232,43 @@ Each rule only removes count vectors that cannot be solutions.
 A count vector reaches a leaf only if it passed every check on the way down.
 The leaf then compares the exact sum with the vector.
 
+### The loop over e
+
+At base 27 the search evaluates 31,145,365 intervals for 9,510,641 nodes.
+20,359,030 of them (65%) fail after the last child of their node that
+survives. Only 13 loops end because `lo >= b^d`. All others run to
+`e = rf`. A cut that ends the loop early must prove that every later child
+fails the tests above, or the node counts change. I found two such rules.
+Neither saves enough to pay for itself, so the search does not use them.
+
+The children of one node have disjoint intervals. Child `e` spans
+`z + (rf - e) * w(k-1)`, and the next child starts `w(k)` higher. For
+`k = 20`, `w(k)` is 53 times `w(k-1)`, more than one base-27 digit. So two
+neighbours differ in the lowest known positions of their prefixes, and
+their tests are close to independent.
+
+Rule 1, the first free position. Let `P` be the known prefix of the node,
+in positions `pp` and up. Let `y` be the smallest digit such that every
+digit `x >= y` is above `k` and already has all `c_x` copies in `P`. All
+children of the node lie in the node's clipped interval, so they share `P`.
+Their clipped `lo` grows with `e`, so its digit at position `pp - 1` never
+falls. If that digit is `y` or more for child `e`, then for every later child
+the first free digit is at least `y`. If settle makes position `pp - 1` known,
+the count test rejects the child. If not, the first-digit test rejects it.
+At base 27 the rule skips 327,181 evaluations, 1.1%.
+
+Rule 2, a failure that only depends on the top of the prefix. Say child `e`
+fails in the first round of settle, and the reason lies in positions `j`
+and up. That is, those positions hold more new digits below `k` than
+`rf - e`, or a digit `x > k` with more than `c_x` copies. A later child `e'`
+whose `hi` still has the same digits in positions `j` and up has the same
+prefix there, because `lo(e') >= lo(e)`. It has fewer free positions and the
+same counts for the digits above `k`, so it fails too. Child `e'` can use a
+larger `j`, because it has `e' - e` fewer free positions. At base 27 the rule
+skips 1,991,998 evaluations, 6.4%. Testing it costs a compare and the
+witness position on every failed child, more than the skipped work saves.
+An assertion in a test build checked both rules on bases 20, 24 and 27.
+
 ## Implementation
 
 ### Digit vectors
@@ -278,6 +315,13 @@ new digit `x >= k` then needs at most `c_x` copies in the whole prefix.
 When `e` grows by one, `t` grows by `w(k)` and `hi` grows by
 `w(k) - w(k-1)`. The search keeps both as running sums, so each step costs two
 additions.
+
+About one branch per child mispredicts, and a mispredict discards the work
+after the branch. So the search computes the sums of child `e + 1` before
+it tests child `e`, and the sums of the forced digits before it checks the
+new digits `>= k`. A child that passes settle gets the `hi` for its own
+children before the first-digit test. Each addition takes about 20 cycles,
+so this saves about 14% of the cycles at base 26.
 
 `hi` also never needs a full rebuild. A node for digit `k` stores the `hi`
 of its child with `e = 0`, that is `t + z + rf * w(k-1)`. A child that
