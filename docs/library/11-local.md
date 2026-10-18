@@ -106,6 +106,32 @@ With the spectrum's calibration, 0 solutions against 1.3 expected under
 `0^0 = 1` has probability 0.27. The missing `b`-digit solutions are therefore
 not evidence for the original conjecture of section 7.1.
 
+## 11.2a How well the model predicts a single base
+
+The spectrum measures each base's own mean `lambda_m(b)` (lengths `b-6` to
+`b`). Against the refined model of chapter 5, the ratio `lambda / model`
+averages 0.98 under `0^0 = 0` and 1.12 under `0^0 = 1` over bases 12 to 32. So
+the model is right on average. Its spread from base to base is about 20%,
+twice the sampling error of the offsets (chi-square 108 and 85 on 20 degrees
+of freedom). It shows no clear pattern in `b mod 3`, `b mod 4` or the number
+of prime factors of `b - 1`.
+
+Part of the spread comes from the forced top digits of section 11.2. A model
+that multiplies each length's expectation by the correction for the top two
+digits (`analysis/second_order.py`) follows the bases more closely:
+
+| | correlation with the measured `lambda`, refined model | second-order model |
+|---|---:|---:|
+| `0^0 = 0` | 0.83 | 0.86 |
+| `0^0 = 1` | 0.45 | 0.67 |
+
+The same effect shows in the lengths. Near-solutions in bases 24 and 28
+(`analysis/length_spectrum.py`, 150 offsets each) follow the law of
+`J = b - k` for `J <= 3`. In single cells they are far off: base 24 has 3 and
+5 near-solutions with `J = 11`, against 0.3 expected. In such a cell the top
+digits of `F` are fixed by one or two large digits, so all offsets share the
+same luck.
+
 ## 11.3 Local obstructions
 
 A digit string `s` with `k` digits is a solution in base `b` exactly when

@@ -144,7 +144,8 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     in every odd base 3 to 11 under `0^0 = 0`, none in even bases 4 to 10.
     Priority 1.
 
-21. The length law from near-solutions: use the lengths of the offset
+21. (Partly answered in section 11.2a: the law holds for small `J`, with
+    large cell-by-cell deviations.) The length law from near-solutions: use the lengths of the offset
     solutions of section 11.1 to test the `e^(-J)` law and the bump at
     `J > ln b + 1` with thousands of near-solutions. Priority 2.
 
@@ -155,7 +156,8 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     spectrum.) Empty even bases: run `--zscore 3` on bases 46, 48, 50. Large.
     Priority 2.
 
-24. Regress the per-base means `lambda_m(b)` of the defect spectrum on
+24. (Answered in section 11.2a: no residue pattern; about 20% real spread,
+    partly explained by forced top digits.) Regress the per-base means `lambda_m(b)` of the defect spectrum on
     `b mod 3, 4, 8`, `omega(b-1)` and perfect powers. Small. Priority 3.
 
 ## Theme V. Search algorithms and complexity
