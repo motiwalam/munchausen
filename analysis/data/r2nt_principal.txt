@@ -1,0 +1,19 @@
+n = x, B principal: Laurent allows x only up to 747069
+  check: x = 10000000 allowed: False
+  check: x = 100000000 allowed: False
+  check: x = 4000000000 allowed: False
+principal B: n_max(x), and n_max / (log x (log log x)^2)
+  x = 1e1: n_max = 133202, ratio 72622.3
+  x = 1e4: n_max = 508791, ratio 11205.2
+  x = 1e7: n_max = 890373, ratio 7148.0
+  x = 1e10: n_max = 1271960, ratio 5614.8
+  x = 1e13: n_max = 1653547, ratio 4781.5
+  x = 1e16: n_max = 2035135, ratio 4246.7
+  x = 1e19: n_max = 2416722, ratio 3869.2
+  x = 1e22: n_max = 2798310, ratio 3585.6
+  x = 1e25: n_max = 3179897, ratio 3363.0
+  x = 1e28: n_max = 3561484, ratio 3182.5
+B of order d: n_max(x, d) / d
+  x = 1001 [(1, 381645), (3, 673057), (5, 970725), (15, 2465124), (101, 15327499), (1001, 149938234)]
+  x = 1000001 [(1, 763177), (3, 1345917), (5, 1941167), (15, 4929533), (101, 30650558), (1001, 299833061)]
+  x = 1000000000001 [(1, 1526352), (3, 2691831), (5, 3882333), (15, 9859062), (101, 61301109), (1001, 599666077)]

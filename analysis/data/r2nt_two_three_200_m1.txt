@@ -1,0 +1,10 @@
+0^0 = 1
+part 1: bases of analysis/data/k3.txt (complete up to 10^51)
+  base 4: 3-digit ['1,3,1', '3,1,3']; 2-digit []
+  base 25: 3-digit ['5,1,3']; 2-digit [(1, 3)]
+  base 91: 3-digit ['6,1,5']; 2-digit []
+  base 215: 3-digit ['1,2,6']; 2-digit []
+  base 904: 3-digit ['1,7,1']; 2-digit []
+part 2: 3-digit solutions in the bases of all 2-digit solutions with a, c <= 200
+  8502 bases checked; bases with a 3-digit solution:
+    (1, 3, 25, [(5, 1, 3)])

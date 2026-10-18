@@ -1,0 +1,45 @@
+digits <= 70, 0^0 = 1
+heuristic expectation (local factors, primes <= 31), roots beyond the digits:
+   ('other', 'nonpartner', '+') 9.388e-01
+   ('other', 'nonpartner', '-') 9.388e-01
+   ('other', 'partner', '+') 1.412e-01
+   ('other', 'partner', '-') 1.412e-01
+   ('square', 'nonpartner', '+') 1.622e-04
+   ('square', 'nonpartner', '-') 1.622e-04
+   ('square', 'partner', '+') 1.010e+00
+   ('square', 'partner', '-') 1.010e+00
+near-integer roots:
+   ('other', 'nonpartner', '+', 0.001) 446
+   ('other', 'nonpartner', '+', 0.01) 4758
+   ('other', 'nonpartner', '-', 0.001) 520
+   ('other', 'nonpartner', '-', 0.01) 5377
+   ('other', 'partner', '+', 0.001) 65
+   ('other', 'partner', '+', 0.01) 439
+   ('other', 'partner', '-', 0.001) 65
+   ('other', 'partner', '-', 0.01) 439
+   ('square', 'nonpartner', '+', 0.001) 111
+   ('square', 'nonpartner', '+', 0.01) 1350
+   ('square', 'nonpartner', '-', 0.001) 118
+   ('square', 'nonpartner', '-', 0.01) 1462
+   ('square', 'partner', '+', 0.001) 2292
+   ('square', 'partner', '+', 0.01) 2470
+   ('square', 'partner', '-', 0.001) 2293
+   ('square', 'partner', '-', 0.01) 2471
+square class, position of delta = (sqrt(Delta) - Y)/(2p):
+   ('inner', 'delta<1', 'closer to +') 3060
+   ('inner', 'delta<1', 'closer to -') 2221
+   ('inner', 'delta>=1', 'closer to +') 3713
+   ('inner', 'delta>=1', 'closer to -') 3672
+   ('lead', 'delta<1', 'closer to +') 21974
+   ('lead', 'delta<1', 'closer to -') 214
+   ('lead', 'delta>=1', 'closer to +') 20954
+   ('lead', 'delta>=1', 'closer to -') 19632
+refined heuristic, square class, non-partner, roots beyond the digits:
+  expected solutions with t+ (Y + t* == q mod 2p), with t- (== -q), and the symmetric value
+   ('inner', '+') 1.161e-03
+   ('inner', '-') 1.732e-03
+   ('inner', 'symmetric, per sign') 8.066e-04
+   ('lead', '+') 5.642e-02
+   ('lead', '-') 6.362e-03
+   ('lead', 'symmetric, per sign') 2.482e-02
+integer roots beyond the digits: [(1, 1, 1, '-', -2), (1, 2, 6, '+', 215), (1, 2, 6, '-', -217), (1, 3, 1, '+', 4), (1, 3, 1, '-', -7), (1, 7, 1, '+', 904), (1, 7, 1, '-', -911), (3, 1, 3, '+', 4), (5, 1, 3, '+', 25), (6, 1, 5, '+', 91)]

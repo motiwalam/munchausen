@@ -1,0 +1,6 @@
+solution n=7 x=7
+n=7 X=1000000000 survivors=1 solutions=1 largest prime used=163
+n=9 X=1000000000 survivors=0 solutions=0 largest prime used=157
+n=11 X=1000000000 survivors=0 solutions=0 largest prime used=167
+n=13 X=1000000000 survivors=0 solutions=0 largest prime used=191
+n=15 X=1000000000 survivors=0 solutions=0 largest prime used=173

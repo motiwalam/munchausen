@@ -1,0 +1,5 @@
+part 1: 2117 integers with a 2-digit representation, digits <= 90
+  number of bases: {1: 1779, 2: 338}
+part 2: 483 integers a^a + c^c with two 2-digit bases, a, c <= 150
+integers with 3 or more bases, or with a representation of 3 or more digits:
+   none

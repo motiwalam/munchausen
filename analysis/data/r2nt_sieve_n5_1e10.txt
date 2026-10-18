@@ -1,0 +1,1 @@
+n=5 X=10000000000 survivors=0 solutions=0 largest prime used=193

@@ -1,0 +1,12 @@
+x = 101 done; ideals 132, non-principal 38, largest n tested 853695
+x = 201 done; ideals 294, non-principal 100, largest n tested 1079523
+x = 301 done; ideals 468, non-principal 174, largest n tested 3367629
+x = 401 done; ideals 648, non-principal 250, largest n tested 3367629
+x = 501 done; ideals 836, non-principal 340, largest n tested 7816158
+x = 601 done; ideals 1022, non-principal 428, largest n tested 7816158
+x = 701 done; ideals 1218, non-principal 526, largest n tested 7816158
+x = 801 done; ideals 1420, non-principal 620, largest n tested 7816158
+x = 901 done; ideals 1614, non-principal 716, largest n tested 7816158
+x = 1001 done; ideals 1818, non-principal 814, largest n tested 7816158
+X = 1001: 1818 ideals B, 814 non-principal, largest n allowed by Laurent 7816158
+candidates with n >= 17 (x, n, choice, d, is a solution): List([])
