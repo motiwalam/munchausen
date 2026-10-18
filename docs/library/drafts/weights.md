@@ -13,11 +13,11 @@ run by sampling with the exact weights of the experiment.
 |---|---|---|
 | 26 | `fast search` takes `--zero m`, `--shift t`, `--factorial` and `--set-residue r`. The default search is unchanged. | computed |
 | 19 | Forced residues `w(x) == x` multiply the count of long solutions by 18.9 against 17.0 = mean `b-1`. Residues `x + 1` leave only `(b-1)`-digit solutions, 0.583 `(b-1)` per base against 0.557 predicted. | proven and computed |
-| 9 | The odd-base factor is 2.0 for even `m` and 1.2 for odd `m`. The data agree within 1 standard deviation once the shared zero-free solutions are split off. | model and computed |
+| 9 | The odd-base factor is 2.0 for even `m` and 1.2 for odd `m`. The data agree within 1.4 standard deviations once the shared zero-free solutions are split off. | model and computed |
 | 10 | `x^(x+t)` keeps the length law and the parity factor. `x!` keeps about one solution per base, has no parity factor, and has a different length law. | model and computed |
 
 The surprise: factorions are rare in odd bases. Bases 14 to 36 have 3
-long factorions under `0!=0` where the model expects 11.9 (P = 0.002). The
+long factorions under `w(0) = 0` where the model expects 11.9 (P = 0.002). The
 near-factorions at 30 offsets in the same bases match the model. So the
 shortfall belongs to the offset 0 alone, and I have no explanation.
 
@@ -308,8 +308,14 @@ So the shortfall is either a fluctuation or a property of the exact equation
 `n = F(n)` that the offsets do not share. The two conventions share their
 zero-free solutions, so the two P values are not independent. I looked at
 about 16 groups before I saw this one, which makes a P of 0.002 worth about
-0.03. Status: open. The fair test is the next odd bases. Bases 43 and 45
-cost about 5 and 15 minutes.
+0.03.
+
+Fresh odd bases, searched after the shortfall was found (computed, 290 s
+and 1148 s on 3 threads): base 43 has one long factorion, 30 digits long and
+zero-free, so it counts under both conventions. Base 45 has none. The model
+expects 2.05 per convention in the two bases, and the shortfall at its
+observed rate (about 0.3 times the model) predicts 0.6. One observed fits
+both. Status: open. Bases 47 and 49 take about 1 and 3 hours.
 
 ## 5. Status
 
@@ -328,7 +334,7 @@ cost about 5 and 15 minutes.
   `analysis/data/wgt_residue.txt`.
 - `analysis/wgt_family.py`, `analysis/wgt_summary.py`: questions 9 and 10;
   data in `analysis/data/wgt_true.txt`, `wgt_zero_*.txt`, `wgt_shift_*.txt`,
-  `wgt_factorial.txt`.
+  `wgt_factorial.txt` and `wgt_factorial_odd_43_45.txt`.
 - `analysis/wgt_zero.py`: the split by zeros for question 9; data in
   `analysis/data/wgt_zero_summary.txt`.
 - `analysis/wgt_lowdigits.py`, `analysis/wgt_offsets.py`: the factorion
