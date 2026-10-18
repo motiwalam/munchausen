@@ -23,6 +23,7 @@
 //!
 //! usage: worlds <brute|tree> <base> <weights> [--offset K] [--offset-per-digit K]
 //!        [--dmin D] [--dmax D]
+//! --shard i/n (lanes only) searches the i-th of n parts of the tree.
 //! base is signed: -12 means base -12. The offset is K + K' (d - 1), which
 //! covers the imaginary bases ci under 0^0 = 1 (K' = 1, base -c^2).
 //! Arithmetic is u128; the program stops if a value does not fit.
@@ -662,7 +663,10 @@ mod lanes {
         children(cfg, n, |ch| dfs(cfg, &ch, out, cnt));
     }
 
-    pub fn tree(cfg: &LCfg) -> (Vec<Vec<u8>>, u64) {
+    /// With `shard = (i, n)`, only every n-th node of the parallel front,
+    /// starting at node i, is searched; the n shards together find every
+    /// solution once.
+    pub fn tree(cfg: &LCfg, shard: (usize, usize)) -> (Vec<Vec<u8>>, u64) {
         let mut root = Node { t: cfg.t0, k: cfg.kmax + 1, r: cfg.d, j: cfg.d, c: [0; MAXB], h: [0; MAXB] };
         if !settle(cfg, &mut root) {
             return (vec![], 1);
@@ -682,6 +686,7 @@ mod lanes {
             }
             front = next;
         }
+        let front: Vec<Node> = front.into_iter().enumerate().filter(|(i, _)| i % shard.1 == shard.0).map(|(_, n)| n).collect();
         front.par_iter().for_each(|n| {
             let mut cnt = 0;
             dfs(cfg, n, &out, &mut cnt);
@@ -716,7 +721,7 @@ fn main() {
     use num_bigint::BigUint;
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 4 {
-        eprintln!("usage: worlds <brute|tree|lanes> <base> <weights> [--offset K] [--offset-per-digit K] [--dmin D] [--dmax D]");
+        eprintln!("usage: worlds <brute|tree|lanes> <base> <weights> [--offset K] [--offset-per-digit K] [--dmin D] [--dmax D] [--shard i/n]");
         std::process::exit(2);
     }
     let engine = args[1].as_str();
@@ -725,6 +730,7 @@ fn main() {
     assert!((2..MAXB as u64).contains(&b));
     let wb = big_weights(&args[3], b);
     let (mut k0, mut k1, mut dmin, mut dmax) = (0u64, 0u64, 2usize, usize::MAX);
+    let mut shard = (0usize, 1usize);
     let mut i = 4;
     while i < args.len() {
         let v = args.get(i + 1).expect("missing value");
@@ -733,6 +739,11 @@ fn main() {
             "--offset-per-digit" => k1 = v.parse().unwrap(),
             "--dmin" => dmin = v.parse().unwrap(),
             "--dmax" => dmax = v.parse().unwrap(),
+            "--shard" => {
+                let (i, n) = v.split_once('/').expect("--shard i/n");
+                shard = (i.parse().unwrap(), n.parse().unwrap());
+                assert!(shard.0 < shard.1, "--shard i/n needs i < n");
+            }
             a => panic!("unknown option {a}"),
         }
         i += 2;
@@ -765,7 +776,7 @@ fn main() {
                 d += 1;
                 continue;
             };
-            let (s, nodes) = lanes::tree(&cfg);
+            let (s, nodes) = lanes::tree(&cfg, shard);
             print(&s);
             count += s.len();
             println!("len base {bs} w {name} d {d} sols {} nodes {nodes} secs {:.2}", s.len(), t0.elapsed().as_secs_f64());
