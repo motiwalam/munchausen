@@ -1,6 +1,6 @@
-# Dynamics, two-digit bases, coverings and constructions
+# 15. Dynamics, two-digit bases, coverings and constructions
 
-This draft answers questions 20, 13, 16, 14, 15 and 30 of `questions.md`.
+This chapter answers questions 20, 13, 16, 14, 15 and 30 of `questions.md`.
 Each statement carries one of three marks:
 
 - proven: the proof is here;
@@ -15,17 +15,17 @@ Notation follows chapter 1. `w(x) = x^x` for `x >= 1`, `w(0) = m`, and
 | question | answer | status |
 |---|---|---|
 | 20, cycle census | bases 3 to 17, both conventions. The only invariant residue is `n mod 2` in odd bases under `0^0 = 0`. A class-lumped random mapping predicts the cycle counts within 10% per group. The 2-cycle pattern of the lead does not persist: bases 13 and 15 have none, base 16 has one. | proven (invariant), computed (census), heuristic (model) |
-| 13, two 2-digit solutions | only base 3 under `0^0 = 1`. Under `0^0 = 0` only base 3 and the twin bases `a^(a-1)`. | proven (Theorem 13.1) |
+| 13, two 2-digit solutions | only base 3 under `0^0 = 1`. Under `0^0 = 0` only base 3 and the twin bases `a^(a-1)`. | proven (Theorem 15.7) |
 | 16, cores in self-paying bases | infinitely many 2-digit cores lie in self-paying bases: the swaps `(a, a^a)`. Apart from swaps, only `(1,3)` in base 25 for `a <= 200`, `c <= 3000`. Finiteness of the rest follows from abc in a large range. | proven (16.1, 16.2), computed, conditional (16.3) |
-| 14, coverings | coverings beyond parity exist and are common. The cause is the 3-adic rule `x^x - x == 2 (mod 27)` for `x == 2 (mod 6)`. About 8% of all prefixes make the last digit hopeless. | proven (Lemma 14.2, Theorem 14.3), computed |
-| 15, power identities | a chain-and-cycle construction covers the base-64 example. Bases `r^t` with `r <= 40`, `t <= 300` get at most 2 such solutions. No base with 6 found. | proven (Theorem 15.1), computed |
+| 14, coverings | coverings beyond parity exist and are common. The cause is the 3-adic rule `x^x - x == 2 (mod 27)` for `x == 2 (mod 6)`. About 8% of all prefixes make the last digit hopeless. | proven (Lemma 15.12, Theorem 15.13), computed |
+| 15, power identities | a chain-and-cycle construction covers the base-64 example. Bases `r^t` with `r <= 40`, `t <= 300` get at most 2 such solutions. No base with 6 found. | proven (Theorem 15.14), computed |
 | 30, several bases | under `0^0 = 0` the number of bases is unbounded; `2^2048 + 1` has exactly 26. Under `0^0 = 1` at most two 2-digit bases, and no known integer has a third base. | proven (30.1, 30.2), computed |
 
-## 20. Cycles of `n -> F(n)`
+## 15.1 Cycles of `n -> F(n)`
 
-### 20.1 Setting
+### 15.1.1 Setting
 
-Proposition 20.1 (proven). Let `M_b` be the set of digit multisets with 1 to
+Proposition 15.1 (proven). Let `M_b` be the set of digit multisets with 1 to
 `b` digits and at least one nonzero digit. The map `c -> multiset of S(c)`,
 with `S(c)` the sum of the weights, sends `M_b` into itself. Its cycles
 correspond one to one to the cycles of `n -> F(n)` on the integers `n >= 1`.
@@ -48,7 +48,7 @@ stopped at 17. Bases 3 to 9 agree with `analysis/questioner/cyc.py`. The
 fixed points agree with the solution counts of chapter 4 plus the trivial
 solution 1.
 
-### 20.2 The census (computed)
+### 15.1.2 The census (computed)
 
 Cycles of each length, the trivial fixed point 1 included
 (`analysis/data/dyn_cycles.txt`):
@@ -76,9 +76,9 @@ in bases 3, 5, 7, 9 (two), 11, 16 and 17. They do not occur in bases 13
 and 15. So the lead "every odd base, no even base" holds up to 11 and fails
 after it.
 
-### 20.3 The parity invariant
+### 15.1.3 The parity invariant
 
-Theorem 20.2 (proven). Let `b >= 3` and `q >= 2`. Then `F(n) == n (mod q)`
+Theorem 15.2 (proven). Let `b >= 3` and `q >= 2`. Then `F(n) == n (mod q)`
 for every `n >= 1` if and only if `q = 2`, `b` is odd and `0^0 = 0`.
 
 Proof. Suppose that the congruence holds for all `n`. Take `n = x` for a
@@ -90,12 +90,12 @@ Then `b == 1 (mod 2)`. Conversely, for odd `b` every `n` is congruent mod 2
 to its digit sum, because `b == 1 (mod 2)`. Also `x^x == x (mod 2)` for
 `x >= 1` and `w(0) = 0`. So `F(n) == digit sum == n (mod 2)`.
 
-Corollary 20.3 (proven). In an odd base under `0^0 = 0`, the even numbers
+Corollary 15.3 (proven). In an odd base under `0^0 = 0`, the even numbers
 below `b^b` form a set that `F` maps into itself, and so do the odd ones.
 Each set contains a cycle. So every odd base has a cycle of even numbers,
 and has at least one cycle besides the fixed point 1.
 
-Proof. Theorem 20.2 and Proposition 20.1 give two invariant finite sets. A
+Proof. Theorem 15.2 and Proposition 15.1 give two invariant finite sets. A
 map from a finite nonempty set into itself has a cycle. The fixed point 1 is
 odd.
 
@@ -106,17 +106,17 @@ constant parity string, for example `parity=00` for both 2-cycles of base 9.
 Under `0^0 = 1` an odd base has `F(n) == n + z(n) (mod 2)`, where `z(n)`
 counts zeros. The parity flips when `n` has an odd number of zeros. In an
 even base `n mod 2` is the last digit and no residue is invariant
-(Proposition 10.2 and Theorem 20.2).
+(Proposition 10.2 and Theorem 15.2).
 
-### 20.4 Cycles that come in pairs
+### 15.1.4 Cycles that come in pairs
 
-Proposition 20.4 (proven). A cycle whose members have no digit 0 is a cycle
+Proposition 15.4 (proven). A cycle whose members have no digit 0 is a cycle
 under both conventions.
 
 Proof. `F_1(n) = F_0(n) + z(n)` (Proposition 1.4), and `z(n) = 0` for every
 member.
 
-Proposition 20.5 (proven). Under `0^0 = 0`:
+Proposition 15.5 (proven). Under `0^0 = 0`:
 
 - if every member of a cycle ends in 0, adding 1 to every member gives a
   cycle of the same length;
@@ -133,14 +133,14 @@ The census has 6 shared cycles of length 2 or more: the 2-cycles of bases
 3, 7 and 9, the 3-cycle of base 8, the 5-cycle of base 9 and the 4-cycle of
 base 11. So three of the seven 2-cycles of odd bases under `0^0 = 0` are
 also 2-cycles under `0^0 = 1`. That explains the 2-cycles of bases 3, 7
-and 9 under `0^0 = 1`. Twin cycles (Proposition 20.5) occur only among
+and 9 under `0^0 = 1`. Twin cycles (Proposition 15.5) occur only among
 fixed points, for example `(4,0,0)` and `(4,0,1)` in base 8. No cycle of
 length 2 or more has all members ending in 0.
 
 Neither proposition pairs up 2-cycles inside one convention. I found no
-involution on 2-cycles. The data in section 20.6 say that none is needed.
+involution on 2-cycles. The data in section 15.1.6 say that none is needed.
 
-### 20.5 A random-mapping model with the invariant
+### 15.1.5 A random-mapping model with the invariant
 
 A uniform random mapping on `N` points has about Poisson(`1/L`) cycles of
 length `L` (Flajolet and Odlyzko 1990). The map `F` is not uniform: the
@@ -154,7 +154,7 @@ strings with nonzero leading digit that have it. In the model, the image of
 Let `M` be the matrix of class transitions. The trivial fixed point 1 forms
 its own class `(1, 1)`, and I remove it.
 
-Proposition 20.6 (proven within the model). The expected number of cycles
+Proposition 15.6 (proven within the model). The expected number of cycles
 of length `L` is
 
     E_L = (1/L) * (sum over L-tuples of distinct multisets of the product
@@ -175,7 +175,7 @@ uniform random mapping on `N_s` points.
 
 The spectrum explains the parity effect.
 
-- Odd base, `0^0 = 0`: by Theorem 20.2, `M` splits into two blocks, even and
+- Odd base, `0^0 = 0`: by Theorem 15.2, `M` splits into two blocks, even and
   odd, each stochastic. So the eigenvalue 1 has multiplicity 2, and
   `E_L ~ 2/L` for large `L`.
 - Odd base, `0^0 = 1`: the parity flips with the parity of the number of
@@ -195,7 +195,7 @@ bases 13 to 17, `E_2` is 1.01 to 1.05 in odd bases under `0^0 = 0` and
 0.51 to 0.55 otherwise. A model without residues gives 0.51 to 0.52 for
 every base, so the doubling comes from the residue mod 2 alone.
 
-### 20.6 Comparison (computed against heuristic)
+### 15.1.6 Comparison (computed against heuristic)
 
 Bases 3 to 17, observed cycles against the model, without the fixed point 1.
 In parentheses: `P(X <= observed)` and `P(X >= observed)` for a Poisson
@@ -221,12 +221,12 @@ What this shows:
 The lead as stated (2-cycles in all odd bases 3 to 11, none in even bases 4
 to 10) has model probability `0.081 * 0.141 = 0.011`. That is small, but
 the pattern was chosen after looking at the data, and it breaks at bases 13,
-15 and 16. I conclude that the lead is the parity doubling of Theorem 20.2
+15 and 16. I conclude that the lead is the parity doubling of Theorem 15.2
 plus chance.
 
-## 13. Bases with two 2-digit solutions
+## 15.2 Bases with two 2-digit solutions
 
-Theorem 13.1 (proven). Under `0^0 = 1`, base 3 is the only base with two
+Theorem 15.7 (proven). Under `0^0 = 1`, base 3 is the only base with two
 2-digit solutions, `(1,2)` and `(2,2)`. Under `0^0 = 0` the bases with two
 2-digit solutions are base 3 and the bases `a^(a-1)` with `a >= 3`, which
 have the twins `(a,0)` and `(a,1)`. No base has three.
@@ -295,13 +295,13 @@ with `a <= 200` and `c <= 3000`, that is bases up to about `10^10400`. Under
 and the 198 twin bases. The inequalities of steps 1 to 4 hold on the grid
 `A <= 60`.
 
-## 16. Cores in bases with self-paying digits
+## 15.3 Cores in bases with self-paying digits
 
 Under `0^0 = 0` a solution splits into a core, self-paying digits and an
 optional final 1 (Proposition 2.3). The question asks whether only finitely
 many nonzero cores sit in bases with a self-paying digit.
 
-Proposition 16.1 (proven). Write `b = r^t` with `r` not a perfect power.
+Proposition 15.8 (proven). Write `b = r^t` with `r` not a perfect power.
 Base `b` has a self-paying digit if and only if `t` has a prime factor that
 does not divide `r`.
 
@@ -315,7 +315,7 @@ and `s <= V phi(U) < U V = t`.
 So 4, 16, 27, 36 and 100 have no self-paying digit, as chapter 2 lists, and
 every base `r^p` with `p` prime and `p` not dividing `r` has one.
 
-Theorem 16.2 (proven). For every `a >= 2`, the 2-digit swap `(a, a^a)` is a
+Theorem 15.9 (proven). For every `a >= 2`, the 2-digit swap `(a, a^a)` is a
 core in a base with a self-paying digit. So infinitely many nonzero cores do.
 If `a` is not a perfect power, then
 
@@ -327,7 +327,7 @@ is a solution in base `a^(a^(a+1) - 1)` under `0^0 = 0`. For `a = 2` it is
 Proof. The swap of section 2.3 with `k = 1` is `(a, a^a)` in base
 `B = a^(a^(a+1) - 1)`. Write `a = r^u` with `r` not a perfect power. Then
 `B = r^t` with `t = u (a^(a+1) - 1)`. The factor `a^(a+1) - 1 > 1` is
-coprime to `r`, so Proposition 16.1 applies. Explicitly, `s = u (a+1)` gives
+coprime to `r`, so Proposition 15.8 applies. Explicitly, `s = u (a+1)` gives
 the digit `r^s = a^(a+1)`, and `s (r^s - 1) = t (a+1)`, so it is
 self-paying at position `a + 1`. The core occupies positions 0 and 1, and
 position `a + 1 >= 3` is free, so Proposition 2.3 gives the solution.
@@ -344,7 +344,7 @@ bases have a self-paying digit. Among all 1,779 known solutions under
 nonzero core with a self-paying digit: `(5,1,3)` in base 25, `(8,0,2,4)` in
 base 128 and `(3,0,0,0,9,27)` in base `3^16`.
 
-Theorem 16.3 (proven, assuming the abc conjecture). Fix `delta > 0`. Only
+Theorem 15.10 (proven, assuming the abc conjecture). Fix `delta > 0`. Only
 finitely many 2-digit solutions `(a, c)` under `0^0 = 0` with `c >= 2`,
 `c != a^a` and a perfect-power base satisfy
 
@@ -383,16 +383,16 @@ One unconditional case. For the family `(1, c)`, the base is
 lies strictly between `(Y-1)^t` and `Y^t`, because
 `Y^t - (Y-1)^t >= Y^(t-1) >= c^(c/2) > c - 1`.
 
-## 14. Coverings beyond parity
+## 15.4 Coverings beyond parity
 
-### 14.1 What section 1.6 gives
+### 15.4.1 What section 1.6 gives
 
 For a string `s` with `k` digits, `Q_s(r) = sum s_i r^(k-1-i) - F(s)` must
 vanish at `r = b`. The rules of section 1.6 look at bases `b == 1 (mod q)`
 (the digit sum) and at even bases (the last digit). Modulo 2 these are all
 residues.
 
-Proposition 14.1 (proven). `Q_s` has no root mod 2 exactly when both parity
+Proposition 15.11 (proven). `Q_s` has no root mod 2 exactly when both parity
 rules of section 1.6 fail for `s`: `Q_s(1)` odd excludes every odd base and
 `Q_s(0)` odd excludes every even base.
 
@@ -403,12 +403,12 @@ So a covering that uses only the modulus 2 reduces to section 1.6. Any
 covering that needs another modulus excludes bases in residue classes that
 section 1.6 does not touch, such as `b == 2 (mod 3)`.
 
-### 14.2 The values of `x^x - x`
+### 15.4.2 The values of `x^x - x`
 
 A varying last digit `x` enters `Q_s` as `x - x^x`. So the set
 `T(q) = { x^x - x mod q : x >= 1 }` decides which coverings exist.
 
-Lemma 14.2 (proven).
+Lemma 15.12 (proven).
 
 1. For `q = 2^e`, `T(q)` is the set of even residues.
 2. For a prime `p >= 5`, `T(p)` is all of `Z/p`. `T(3) = {0, 2}`.
@@ -438,9 +438,9 @@ because `(3t)^3` and higher powers vanish. So
 For `q = 25`, `T(25)` misses 3, 13, 18 and 23 (computed). For 49, 121, 169,
 289 and 361, `T(q)` is everything (computed).
 
-### 14.3 A covering theorem
+### 15.4.3 A covering theorem
 
-Theorem 14.3 (proven). Let `(s_1, ..., s_(k-1))` be a prefix, let
+Theorem 15.13 (proven). Let `(s_1, ..., s_(k-1))` be a prefix, let
 `A(r) = sum s_i r^(k-i)` and `F_0 = sum w(s_i)`. Suppose that for every
 residue `r mod 27`,
 
@@ -450,7 +450,7 @@ Then no string `(s_1, ..., s_(k-1), x)` with `x >= 1` is a solution in any
 base, under either convention. Under `0^0 = 0` this also holds for `x = 0`.
 
 Proof. A solution in base `b` gives `A(b) - F_0 = x^x - x` (for `x = 0`
-under `0^0 = 0`, the right side is 0). By Lemma 14.2 the right side is
+under `0^0 = 0`, the right side is 0). By Lemma 15.12 the right side is
 `0 (mod 3)` or `2 (mod 27)`.
 
 Example. `(2, 1, x)`: `A(r) - F_0 = 2r^2 + r - 5` takes the values 1, 1, 2
@@ -463,7 +463,7 @@ infinity in one stroke.
 The same theorem covers `(2, y, x)` and `(8, y, x)` for
 `y = 1, 2, 3, 4, 6, 8, 9, 10`, and many longer prefixes.
 
-### 14.4 The search (computed)
+### 15.4.4 The search (computed)
 
 `analysis/dyn_cover.py` uses the prime powers 2, 4, 8, 16, 32, 3, 9, 27,
 5, 25, 7, 49 and the primes 11 to 47. A family with varying digit `x` at
@@ -504,14 +504,14 @@ covered:
 
 Answer to question 14: coverings beyond parity exist, and they are not
 rare. About one prefix in twelve makes its last digit impossible in every
-base, and almost all of that is Theorem 14.3. Section 11.3 expected no such
+base, and almost all of that is Theorem 15.13. Section 11.3 expected no such
 coverings because it used primes only, and `T(p) = Z/p` for `p >= 5`. The
 prime powers `3^e` carry the structure, through the coupling of `x mod 3^e`
 and `x mod 2 * 3^(e-1)`.
 
-## 15. Constructions under `0^0 = 1` from power identities
+## 15.5 Constructions under `0^0 = 1` from power identities
 
-Theorem 15.1 (proven). Let `b = r^t`. For `0 <= u < t` put
+Theorem 15.14 (proven). Let `b = r^t`. For `0 <= u < t` put
 `phi(u) = u r^u mod t` and `pi(u) = floor(u r^u / t)`. Choose `u_0 >= 1` and
 follow `u_(i+1) = phi(u_i)` until `u_j = 0`. Place `c = r^(u_0)` at
 position 0 and `r^(u_(i+1))` at position `pi(u_i)`. Add any set of cycles
@@ -553,9 +553,9 @@ coincidence between `pi(u)` and `r^(u_0)`). A base with `N_1(b) >= 6` from
 constructions alone would need the multiplicity mechanism above, and the
 search found no instance of it.
 
-## 30. Integers with several bases
+## 15.6 Integers with several bases
 
-Proposition 30.1 (proven). Under `0^0 = 0`, let `c = r^u` with `r` not a
+Proposition 15.15 (proven). Under `0^0 = 0`, let `c = r^u` with `r` not a
 perfect power. Then `N = c^c + 1` is a solution in every base `r^t` with
 `u < t` and `t | u (c - 1)`, and in base `c^c - c + 1`. So one integer can be
 a solution in arbitrarily many bases.
@@ -569,7 +569,7 @@ For `c = 256 = 2^8`, `8 * 255 = 2040` has 25 divisors above 8. So
 `2^2048 + 1` is a solution in 26 bases. The complete search below confirms
 that these 26 are all.
 
-Proposition 30.2 (proven). Under `0^0 = 1`, an integer `N >= 3` has at most
+Proposition 15.16 (proven). Under `0^0 = 1`, an integer `N >= 3` has at most
 two 2-digit representations as a solution. If it has two, they are `(a, c)`
 and `(c, a)` with `N = a^a + c^c`, `a | c^c - c` and `c | a^a - a`.
 
@@ -583,7 +583,7 @@ Proposition 2.6 gives the divisibility conditions.
 So `N = c^c + 1`, with `(1, c)` and `(c, 1)`, has two bases for every
 `c >= 2`. A third base needs a representation with 3 or more digits.
 
-Proposition 30.3 (proven). Let `X` be the largest integer with `X^X <= N`.
+Proposition 15.17 (proven). Let `X` be the largest integer with `X^X <= N`.
 If `N` is a solution in base `b` with `k` digits and leading digit `p`, then
 `b <= (N/p)^(1/(k-1)) < b + (X+1) / (p (k-1))`.
 
@@ -593,7 +593,7 @@ and the mean value theorem gives the bound.
 
 So `analysis/dyn_multibase.py` finds every base of `N`: it checks bases up
 to 1000 directly, and for larger bases only the few candidates of
-Proposition 30.3 for each `k` and `p`.
+Proposition 15.17 for each `k` and `p`.
 
 Computed. Candidates: every known solution and every `a^a + w(c)` with
 `a, c <= 40`.
@@ -604,7 +604,7 @@ Computed. Candidates: every known solution and every `a^a + w(c)` with
 - Under `0^0 = 0`: 428 have 2 or more bases, and 272 have a representation
   with 3 or more digits. In 263 of the 272 every such representation is
   `(c, 0, ..., 0, 0)` or `(c, 0, ..., 0, 1)` with `c` self-paying, as in
-  Proposition 30.1. Seven of the other 9 combine two self-paying digits or
+  Proposition 15.15. Seven of the other 9 combine two self-paying digits or
   a swap with a self-paying digit, for example `(16,0,...,0,4,0)` in base
   64. Only 28 (also `(1,3,0)` in base 4 and `(1,0,3)` in base 5) and
   823544 (also `(1,7,0)` in base 904) have a representation that no
@@ -628,11 +628,11 @@ cannot exist.
 3. (from 14) Does every covering use a modulus `q` with `T(q) != Z/q`,
    that is a power of 2, 3 or 5? The covering of `(2,0,1,0,x)` uses 11, but
    together with 8 and 25.
-4. (from 14) Theorem 14.3 excludes about 8% of all prefixes. Does it explain
+4. (from 14) Theorem 15.13 excludes about 8% of all prefixes. Does it explain
    part of the 2x to 4x excess of the sieve in question 28?
 5. (from 16) Is `(1,3)` in base 25 the only 2-digit core in a perfect-power
    base that is not a swap? That needs the case `a^a ~ c^c` of
-   Theorem 16.3.
+   Theorem 15.10.
 6. (from 15) Is there a base `r^t` where a chain reaches a position above
    `r^(u_0)` with several self-paying digits below it? That would give
    `C(n, k)` solutions under `0^0 = 1`.

@@ -1,6 +1,6 @@
-# Draft: the generalized problem is NP-complete, and a Poisson law in the model
+# 13. The general problem is NP-complete, and a Poisson law
 
-This draft answers questions 27 and 22 of `questions.md`. Part 1 proves that
+This chapter answers questions 27 and 22 of `questions.md`. Part 1 proves that
 the Munchausen problem with arbitrary weights is NP-complete, and that its
 counting version is #P-complete under parsimonious reductions. It then
 explains what this means next to section 8.1. Part 2 proves a Poisson limit
@@ -12,9 +12,9 @@ data.
 Scripts: `analysis/thy_reduction.py` (part 1) and `analysis/thy_poisson.py`
 (part 2).
 
-## 1. The generalized problem
+## 13.1 The generalized problem
 
-### 1.1 Definitions
+### 13.1.1 Definitions
 
 GEN is the following decision problem.
 
@@ -32,7 +32,7 @@ digits. If `w(0) = 0`, then `F_w(n) = sum c_x w(x)` depends only on this
 multiset, and `n` is a solution exactly when the nonzero digits of the
 number `N = sum c_x w(x)` have the multiset `c`.
 
-Lemma 1.1 (length). Let `n` have `D >= 2` digits and `F_w(n) = n`.
+Lemma 13.1 (length). Let `n` have `D >= 2` digits and `F_w(n) = n`.
 
 - (a) `b^(D-1) <= D W`. So `D <= max(6, 2 log2 W + 1)`.
 - (b) If `W < b^M` and `b > M + 2`, then `D <= M + 1`.
@@ -46,14 +46,14 @@ this holds at `D = 7` (`64/7 > 8`) and the left side grows faster. So
 `b^t < D = t + M + 1`. But
 `b^t >= t b >= t + (b - 1) > t + M + 1`. This is a contradiction.
 
-Proposition 1.2. GEN is in NP.
+Proposition 13.2. GEN is in NP.
 
-Proof. The certificate is the digit string of `n`. By Lemma 1.1(a) it has
+Proof. The certificate is the digit string of `n`. By Lemma 13.1(a) it has
 `O(log W) = O(s)` digits, each with at most `log2 b + 1` bits. The verifier
 computes `n` and `F_w(n)` with integers of `O(s log b)` bits, in polynomial
 time.
 
-### 1.2 The reduction
+### 13.1.2 The reduction
 
 SUBSET-SUM: given positive integers `a_1, ..., a_k` and an integer
 `T >= 0`, is there a set `S` of indices with `sum over i in S of a_i = T`?
@@ -93,7 +93,7 @@ input size, and `p` is found by trial division. Then (R1) holds. We have
 `D* <= log2 p + beta + 2k + 5 <= p/8 + p/4`, which gives (R2). (R3) holds
 because `b^(L+1) >= b p B > D* p B`.
 
-Theorem 1.3. For every instance, the solutions `n >= b` of the weight table
+Theorem 13.3. For every instance, the solutions `n >= b` of the weight table
 above correspond one to one to the sets `S` with `sum over S of a_i = T`. The
 set `S` corresponds to
 
@@ -109,7 +109,7 @@ Conversely, let `n >= b` be a solution with `D` digits and nonzero multiset
 `w(x) = x b^(P_x) + e_x`, with `e_(x_i) = p a_i` and `e_z = -p T`.
 
 Step 1 (length). All weights are below `b^M` with `M = P_z + 1`, and
-`b >= 2 D* > P_z + 3 = M + 2`. By Lemma 1.1(b), `D <= P_z + 2 = D*`.
+`b >= 2 D* > P_z + 3 = M + 2`. By Lemma 13.1(b), `D <= P_z + 2 = D*`.
 
 Step 2 (no prohibited digit). The digit sum of `N` is `sum c_x x`, because
 the nonzero digits of `N` form `c`. Every integer is congruent to its digit
@@ -155,26 +155,26 @@ set of item digits (Step 3 excluded the empty set), and
 `0 = E = p (sum over S of a_i - T)` with `S = {i : x_i in X}`. Then
 `n = H = n_S`.
 
-Corollary 1.4. GEN is NP-complete. This holds also for the instances with
+Corollary 13.4. GEN is NP-complete. This holds also for the instances with
 `w(0) = 0`, strictly increasing weights and `W < b^(b/2)`.
 
-Proof. NP-hardness follows from Theorem 1.3, because SUBSET-SUM is
+Proof. NP-hardness follows from Theorem 13.3, because SUBSET-SUM is
 NP-complete. For increasing weights, change the roles: `x_i = b - 3 - k + i`
 for `i = 1, ..., k`, `z = b - 2`, and `w(b-1) = (b-1) b^(P_z) + 1`. The
 prohibited digits are now `1, ..., b - 3 - k` and `b - 1`. Then
 `w(y) = y + 1 < w(x_1) < ... < w(x_k) < w(z) < w(b-1)`, and the item weights
-increase because the positions do. The proof of Theorem 1.3 needs only that
+increase because the positions do. The proof of Theorem 13.3 needs only that
 designated digits satisfy `w(x) == x (mod p)`, that prohibited digits satisfy
 `w(y) == y + 1 (mod p)`, that all weights lie below `b^(P_z + 1)`, and that
 the designated digits lie in `(b/2, b-2]`. All four still hold:
 `w(b-1) - (b-1) = (b-1)(b^(P_z) - 1) + 1 == 1 (mod p)`. Finally
 `P_z + 1 = D* - 1 < b/2`.
 
-Corollary 1.5. Counting the solutions of GEN is #P-complete under
+Corollary 13.5. Counting the solutions of GEN is #P-complete under
 parsimonious reductions, also for increasing weights.
 
-Proof. The counting problem is in #P by Proposition 1.2: the accepting
-certificates are the solutions. Theorem 1.3 is parsimonious. #SUBSET-SUM is
+Proof. The counting problem is in #P by Proposition 13.2: the accepting
+certificates are the solutions. Theorem 13.3 is parsimonious. #SUBSET-SUM is
 #P-complete under parsimonious reductions. One route: #SAT is #P-complete
 under parsimonious reductions (the Cook-Levin construction is parsimonious),
 and so is #3SAT (the clause splitting with fresh variables determines the
@@ -189,10 +189,10 @@ All its numbers are positive.
 
 The reduction uses `w(0) = 0`, the analog of `0^0 = 0`. I did not settle the
 variant with `w(0) = 1` forced. There every zero costs 1, so the error depends
-on the number of zeros, and Step 2 of Theorem 1.3 no longer isolates the prohibited
+on the number of zeros, and Step 2 of Theorem 13.3 no longer isolates the prohibited
 digits.
 
-### 1.3 The gadgets that fail
+### 13.1.3 The gadgets that fail
 
 The gadgets of the sketch in question 27 need two changes. Both are visible
 in `python analysis/thy_reduction.py broken`, on the instance `a = (2, 3)`,
@@ -203,7 +203,7 @@ in `python analysis/thy_reduction.py broken`, on the instance `a = (2, 3)`,
   the weight 0 they are wildcards: their count is free, and the table has 3
   solutions, for example `(15, 19, 19, 19, 19, 19, 19, 16, 4)`. The residue
   modulo `p` in Step 2 is what removes them. It needs a uniform bound on the
-  number of digits, which Lemma 1.1(b) provides.
+  number of digits, which Lemma 13.1(b) provides.
 - The errors must be multiples of `p`. With errors `a_i` and `-T` the residue
   argument breaks, a prohibited low digit can absorb a nonzero error, and the
   table has 16 solutions such as `(16, 0, 17, 0, 0, 0, 0, 0, 1)`.
@@ -215,11 +215,11 @@ borrows through the gap at position `L + 1` and leaves the prohibited digit
 `b - 1` there (Step 3). A missing mandatory digit leaves a positive error
 (Step 6).
 
-### 1.4 The check
+### 13.1.4 The check
 
-`analysis/thy_reduction.py` builds the table of Theorem 1.3 and of
-Corollary 1.4, and finds every solution with an exact search that uses only
-Lemma 1.1(a), not the proof of Theorem 1.3. The search fixes the counts of
+`analysis/thy_reduction.py` builds the table of Theorem 13.3 and of
+Corollary 13.4, and finds every solution with an exact search that uses only
+Lemma 13.1(a), not the proof of Theorem 13.3. The search fixes the counts of
 the heavy digits, tries every total of the light weights, and checks the
 digits of the resulting number. On 300 random weight tables in bases 3 to 7
 it agrees with plain enumeration of all numbers up to the length bound
@@ -234,17 +234,17 @@ Every target `T` from 0 to `sum a_i + 1` was tried, with both the plain and
 the increasing tables. In every case the solutions are exactly the numbers
 `n_S`, so the count is the number of subsets.
 
-### 1.5 Weights that are powers of the digit
+### 13.1.5 Weights that are powers of the digit
 
 Now let `w(x) = x^(e(x))` with `w(0) = 0` or 1, and the exponents given in
 unary or in binary.
 
-Proposition 1.6. With exponents in unary, the problem is in NP. If all
+Proposition 13.6. With exponents in unary, the problem is in NP. If all
 exponents are at most a constant `K`, it is in P.
 
 Proof. Here `W <= (b-1)^K` with `K = max e(x)`, which is at most the input
-size. By Lemma 1.1(a) a solution has `O(K log b)` digits, and the check is
-polynomial. If `K` is a constant and `b > K + 2`, Lemma 1.1(b) with `M = K`
+size. By Lemma 13.1(a) a solution has `O(K log b)` digits, and the check is
+polynomial. If `K` is a constant and `b > K + 2`, Lemma 13.1(b) with `M = K`
 gives `D <= K + 1`, so trying all `b^(K+1)` numbers takes polynomial time.
 Bases `b <= K + 2` are finitely many.
 
@@ -254,11 +254,11 @@ whether it is in NP. A certificate would have to let the verifier find the
 digit histogram of `sum c_x x^(e(x))` for exponents with polynomially many
 bits, and no polynomial method for the middle digits of huge powers is known.
 
-NP-hardness is open in both versions. The reduction of Theorem 1.3 needs about
+NP-hardness is open in both versions. The reduction of Theorem 13.3 needs about
 `k` digit values whose weights have a prescribed base-`b` expansion: one
 digit at a chosen position plus a low part that the solution can control. For
 a pure power this means that `x^(e-1)` equals `b^P` exactly, or nearly.
-Exactly: then `x` and `b` are powers of one integer (Proposition 2.2 of the
+Exactly: then `x` and `b` are powers of one integer (Proposition 13.8 of the
 library), and a base has fewer than `log2 b` such digits, while `k` items need
 a base of size `2^(Omega(k))`, which is not polynomial in unary. Nearly: the
 difference `x^e - x b^P` is itself a long number whose digits nobody controls,
@@ -266,18 +266,18 @@ and each of them must match the multiset. So the hardness of the power
 variants is a question about the digits of powers, the same arithmetic that
 section 8.2 meets.
 
-### 1.6 What this means next to section 8.1
+### 13.1.6 What this means next to section 8.1
 
 Section 8.1 shows that `L_m` is in NP and is a tally language, so it is not
 NP-hard unless P = NP (Berman 1978; Mahaney 1982 for sparse sets).
-Corollary 1.4 shows that the same question with the weights left free is
+Corollary 13.4 shows that the same question with the weights left free is
 NP-complete. The two problems differ in one point: `L_m` fixes the weights,
 and that leaves one instance per base.
 
 - Every algorithm that treats the weights as an oracle is subject to
-  Corollary 1.4. This includes the prefix-pruned tree of chapter 6, which needs
+  Corollary 13.4. This includes the prefix-pruned tree of chapter 6, which needs
   only increasing weights, the splits and joins of sections 6.3 and 10.4, and
-  the near-solution search of chapter 11. On the instances of Corollary 1.4
+  the near-solution search of chapter 11. On the instances of Corollary 13.4
   the weights are increasing and below `b^(b/2)`, the same size regime as
   `x^x`, and the input has `O(b^2 log b)` bits. So no algorithm that is
   correct for all such tables runs in time polynomial in `b`, unless P = NP.
@@ -292,16 +292,16 @@ and that leaves one instance per base.
 - The counting function `b -> N_m(b)` is in #P. It is not #P-complete under
   parsimonious reductions unless P = NP: such a reduction from #SAT would map
   satisfiable formulas to bases with a solution, a many-one reduction from SAT
-  to a tally set. For GEN, counting is #P-complete (Corollary 1.5).
+  to a tally set. For GEN, counting is #P-complete (Corollary 13.5).
 - The hard instances are unlike the real ones. Their solutions have at most
   `b/2` digits, and their number is the number of subsets with sum `T`, which
   can be exponential in `b`. Real solutions have about `b - 1` digits and
   follow the model of chapter 5. Whether GEN stays NP-hard on tables whose
   solutions must be long is open.
 
-## 2. A Poisson theorem in the model
+## 13.2 A Poisson theorem in the model
 
-### 2.1 The coupled model
+### 13.2.1 The coupled model
 
 The model of chapter 5 assigns a probability to each multiset separately. To
 state a joint law for both conventions, the model must say how the events
@@ -360,9 +360,9 @@ The cluster of `alpha` is the set of indices with the same upper part. Indices
 in different clusters are independent, because they depend on different
 `Y_u`.
 
-### 2.2 Twins are the only coupling
+### 13.2.2 Twins are the only coupling
 
-Lemma 2.1. Let `alpha` and `beta` be distinct indices in one cluster, and
+Lemma 13.7. Let `alpha` and `beta` be distinct indices in one cluster, and
 suppose that both are solutions. Then both are shared or type 0, the string of
 one ends in 0, and the string of the other is that string plus 1. Conversely,
 if a shared or type 0 index `alpha` is a solution whose string ends in 0 or 1,
@@ -405,9 +405,9 @@ replaced by a 1, the same upper part and length, and `j_0` grows by 1. So
 `Y_u + j_0` of that multiset is `s + 1`. If `s` ends in 1, the same holds for
 `s - 1`.
 
-### 2.3 The theorem
+### 13.2.3 The theorem
 
-Theorem 2.2 (Poisson approximation in the coupled model). Let `Z_s`, `Z_0`,
+Theorem 13.8 (Poisson approximation in the coupled model). Let `Z_s`, `Z_0`,
 `Z_1` be independent Poisson variables with means `lambda_s`, `lambda_0`,
 `lambda_1`. In the basic and in the refined coupled model,
 
@@ -429,7 +429,7 @@ suffices to show, for one cluster with indicator vector `X` and
     d_TV(X, Z) <= E[K (K - 1)] + 2 sigma^2,          K = sum over the cluster of X_alpha,
 
 and then to sum over clusters, where `sum E[K(K-1)]` is the expected number of
-ordered pairs of distinct solutions in one cluster. By Lemma 2.1 these are the
+ordered pairs of distinct solutions in one cluster. By Lemma 13.7 these are the
 twin pairs, each counted twice, so this sum is `2 E[T]`.
 
 Let `B` be a vector of independent Bernoulli variables with means
@@ -451,9 +451,9 @@ With `P(K >= 2) <= E[K(K-1)]/2`, `E[K 1(K >= 2)] <= E[K(K-1)]` and
 `2 E[K(K-1)] + 2 sigma^2`, so `d_TV(X, B) <= E[K(K-1)] + sigma^2`. Adding
 `d_TV(B, Z) <= sigma^2` gives the claim.
 
-### 2.4 The error terms
+### 13.2.4 The error terms
 
-Lemma 2.3. In both versions, for every cluster,
+Lemma 13.9. In both versions, for every cluster,
 
     sigma_u <= 4 b (b + 1) ell! / b^ell.
 
@@ -472,7 +472,7 @@ excludes. Strings of length `D` with upper part `u` number at most
 `2 D! / b^(D-1)`. Indices have `ell <= D <= b`, and `D! / b^D` decreases in
 `D` there.
 
-Lemma 2.4. In the basic model with `ell >= b/2` and `b >= 12`,
+Lemma 13.10. In the basic model with `ell >= b/2` and `b >= 12`,
 `E[T] <= 7.1 / b`. In the refined model the same holds with `7.1 kappa / b`
 under the following assumption.
 
@@ -505,7 +505,7 @@ On `G_d` every digit `x` has `x^x < b^d`. Write `d = b - j`. For
 using `(b - j - 2)/b >= 0.3` for `j <= b/2` and `b >= 12`. Summing over
 `j >= 0` gives at most `e^0.3 / (1 - e^(-0.213)) <= 7.1`.
 
-Corollary 2.5. Let `ell = ceil(b/2)` and `b >= 12`. In the basic coupled model,
+Corollary 13.11. Let `ell = ceil(b/2)` and `b >= 12`. In the basic coupled model,
 
     d_TV( (N_0, N_1), (Z_s + Z_0, Z_s + Z_1) ) <= 14.2 / b + 16 b^2 (b+1) ell! / b^ell.
 
@@ -513,23 +513,23 @@ In the refined model the same holds with `14.2 kappa / b` and an extra factor
 `b - 1` in the last term, under Assumption R. In either case the joint law of
 `(N_0, N_1)` is within `O(1/b)` of a bivariate Poisson law.
 
-Proof. Combine Theorem 2.2 with Lemmas 2.3 and 2.4. It remains to bound
+Proof. Combine Theorem 13.8 with Lemmas 2.3 and 2.4. It remains to bound
 `lambda = lambda_s + lambda_0 + lambda_1`. In the basic model,
 `p_alpha` is at most the probability that a uniform `d`-digit string has the
 multiset of `alpha` (the case `D_u = d - 1` is excluded by `|u| >= 2`, as in
-Lemma 2.3). Summing over the multisets of one length and over the two
+Lemma 13.9). Summing over the multisets of one length and over the two
 conventions gives at most 2 per length, so `lambda <= 2b`. In the refined
 model each probability is at most `b - 1` times larger, so
 `lambda <= 2 b (b-1)`.
 
 The bound `lambda <= 2b` is crude. Section 5.2 computes that `lambda` tends to
-about 1.6 in even bases and 2.4 in odd ones, and the table in section 2.5
+about 1.6 in even bases and 2.4 in odd ones, and the table in section 13.2.5
 agrees.
 
 Status of the pieces:
 
-- Theorem 2.2, Lemma 2.1, Lemma 2.3, the basic case of Lemma 2.4 and the basic
-  case of Corollary 2.5 are proven.
+- Theorem 13.8, Lemma 13.7, Lemma 13.9, the basic case of Lemma 13.10 and the basic
+  case of Corollary 13.11 are proven.
 - The refined case rests on Assumption R. It is a statement about the
   residues of `x^x` modulo the odd prime powers in `b - 1`, not about the
   model's randomness, and it is the same assumption that section 5.3 uses to
@@ -539,14 +539,14 @@ Status of the pieces:
 The constant 14.2 is crude. `analysis/thy_poisson.py` computes `b_2` in the
 refined model by sampling, with every partner checked by brute force over all
 shifts `|delta| <= 2b + 2`. It finds no partner other than twins, as
-Lemma 2.1 says, and `b_2 b / lambda` is 1.2 to 1.4 in even bases and 1.6 to
+Lemma 13.7 says, and `b_2 b / lambda` is 1.2 to 1.4 in even bases and 1.6 to
 2.2 in odd bases from 10 to 41. At base 30, `b_2 = 0.07`. Summed over bases
 10 to 41, the model expects `sum E[T] = 2.7` twin pairs. The data have 5
 solutions under `0^0 = 0` that end in 0, each with its twin.
 
-### 2.5 The joint law and the correlation
+### 13.2.5 The joint law and the correlation
 
-Under Corollary 2.5, `(N_0, N_1)` is approximately a bivariate Poisson pair
+Under Corollary 13.11, `(N_0, N_1)` is approximately a bivariate Poisson pair
 `(Z_s + Z_0, Z_s + Z_1)`. Within one base its correlation is
 
     rho(b) = lambda_s / sqrt( (lambda_s + lambda_0) (lambda_s + lambda_1) ).
@@ -618,13 +618,13 @@ The observed correlation of the solutions with at least `b - 6` digits, the
 range where the model applies, is 0.69. Small bases contain the algebraic
 families of chapter 2, which the model does not describe.
 
-### 2.6 What remains open
+### 13.2.6 What remains open
 
 - Assumption R. A proof needs the residues of `x^x` modulo the odd prime
   powers dividing `b - 1` to spread over the classes, uniformly over the
   strings whose sum has the right length.
 - The limits of the means. Section 5.2 computes them with Poisson digit
   counts. A proof would turn that computation into a theorem about the model.
-- The real weights. Theorem 2.2 is about the model. Section 11.1 found that
+- The real weights. Theorem 13.8 is about the model. Section 11.1 found that
   the real counts behave like Poisson draws with each base's own mean. Whether
   this can be proven for `x^x` is the question of sections 8.5 and 6.4.

@@ -24,6 +24,10 @@ statement is marked by its source:
 | [10. Limits of randomized search](10-limits.md) | growth rates of the exact and likely trees, a lower bound for tree searches, the `--zscore` rule, failed routes to a larger speedup, the sharpened length window |
 | [11. Near-solutions and local obstructions](11-local.md) | the defect spectrum `n - F(n) = D`, empty bases and missing `b`-digit solutions explained, local obstructions for short strings, a sieved search 150 times faster, almost all bases have no short solution |
 | [12. The Munchausen polynomial](12-polynomial.md) | Galois groups of `Q_s`, completeness of the local test, Munchausen numbers in negative bases |
+| [13. Complexity and a Poisson law](13-complexity.md) | the general problem with arbitrary weights is NP-complete; a Chen-Stein Poisson theorem in the model |
+| [14. Other number systems](14-other-bases.md) | negative, imaginary and Gaussian bases; factorions; what is universal |
+| [15. Dynamics and nonexistence](15-dynamics.md) | cycles of `n -> F(n)`, bases with two 2-digit solutions, coverings, constructions, integers with many bases |
+| [16. Algebra of the polynomial](16-algebra.md) | Aurifeuillian factors and base 904, the equation `b(b+x) = x^x + 1`, reducibility, Galois groups, rational bases |
 | [Open questions](questions.md) | 30 research questions, with priorities |
 
 ## Main results

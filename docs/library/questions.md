@@ -8,7 +8,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme I. The polynomial Q_s as an algebraic object
 
-1. Is the base-904 solution an Aurifeuillian factorization? `(1,x,1)` under
+1. (Answered in chapter 16: the Aurifeuillian ratio M/L tends to e^2 (Theorem 16.1), so x = 3 and 7 are the only algebraic cases.) Is the base-904 solution an Aurifeuillian factorization? `(1,x,1)` under
    `0^0 = 1` (and `(1,x,0)` under `0^0 = 0`) is a solution exactly when
    `b (b + x) = x^x + 1`, so it needs a divisor of `x^x + 1` within `x` of its
    square root. For squarefree `x == 3 (mod 4)`, `Phi_2x(x)` splits into
@@ -21,7 +21,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
    - Why: it would make `(1,7,1)` in base 904 structural. `(6,1,5)` in base 91
      is a counterexample candidate. Small to medium. Priority 1.
 
-2. When is `Q_s` reducible, and can a string pass every local test without a
+2. (Answered in chapter 16 for k <= 5; criteria for k = 6.) When is `Q_s` reducible, and can a string pass every local test without a
    rational root? For k = 5, digits up to 7, `0^0 = 1`, 28,615 of 28,672 are
    irreducible: 39 split 1+3, 17 split 2+2, 1 splits 1+1+2.
    - Examples: `(1,2,1,0,2)` gives `(r^2+r-3)(r^2+r+3)`, from a decomposable
@@ -44,7 +44,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
    - State the cleanest near-integer problem, such as how close
      `sqrt(x) x^((x-2)/2)` comes to an integer. Medium. Priority 2.
 
-4. Small Galois groups and integral points. The discriminant of `P_s(r) - N`
+4. (Answered in chapter 16 for k = 4, 5.) Small Galois groups and integral points. The discriminant of `P_s(r) - N`
    is a polynomial in `N`. For k = 4 a smaller group needs a square; for k = 5,
    a point on `y^2 = cubic(N)`. Count non-decomposable strings with a smaller
    group, and ask whether `N = F(s)` hits integral points (Siegel, Baker).
@@ -52,24 +52,24 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme II. Other inputs to the polynomial
 
-5. A model for negative bases. In base `-b`, `n == digit sum (mod b+1)`, and
+5. (Answered in chapter 14: census of bases -2 to -35 fits the model.) A model for negative bases. In base `-b`, `n == digit sum (mod b+1)`, and
    the analog of Proposition 10.2 should make `b+1` the only such modulus.
    Predictions: the parity doubling under `0^0 = 0` moves to odd `b`; lengths
    are odd and at most `b+1`. Derive the length shares and the expected count
    per base, and compare with a census up to `b` = 16 to 18. Are -3, -6, -9
    empty by chance? Small to medium. Priority 1.
 
-6. A negative-base search engine. Fixed prefixes still form intervals in
+6. (Answered in chapter 14: fast/src/bin/worlds.rs.) A negative-base search engine. Fixed prefixes still form intervals in
    negabase. Adapt `fast search` and run bases up to about 35. Large.
    Priority 2.
 
-7. Gaussian bases. Count Munchausen numbers in the bases `-n+i` (digits 0 to
+7. (Answered in chapter 14 for n = 1 to 3.) Gaussian bases. Count Munchausen numbers in the bases `-n+i` (digits 0 to
    `n^2`). Leads: base -1+i has 6 under `0^0 = 0` and 1 under `0^0 = 1` up to
    length 20; base -2+i has `(4,2,4,0,4,1,0,4)` under `0^0 = 0`. A 3-digit
    `Q_s` never has nonreal roots. Imaginary bases `ci` reduce to base `-c^2`.
    Census for n = 1 to 3 or 4, a length bound and a model. Medium. Priority 2.
 
-8. Partners beyond length 3. Is there a 3-digit negative-base solution that is
+8. (Answered in chapter 16.) Partners beyond length 3. Is there a 3-digit negative-base solution that is
    not a partner (Proposition 12.3), apart from `(1,1,1)`? For k >= 5, is any
    string a solution in both a base `b` and a base `-c`? Small. Priority 3.
 
@@ -79,41 +79,41 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
    `N_m(b)` for m in {-2, -1, 2, 3}, bases 10 to 30. Needs question 26.
    Priority 3.
 
-10. Universality. Replace `x^x` by `x^(x+t)` or by `x!` (factorions, OEIS
+10. (Answered in chapter 14 (factorions) and the weights chapter.) Universality. Replace `x^x` by `x^(x+t)` or by `x!` (factorions, OEIS
     A193163, A014080). Are the length shares 8/55/23% and the Poisson law
     universal for weights of this size? Medium. Priority 2.
 
-11. Rational roots and rational bases. Count strings with a rational root
+11. (Answered in chapter 16.) Rational roots and rational bases. Count strings with a rational root
     `p/q > max(s)`, `q > 1`, for k = 3 and 4. Is there a meaningful version in
     the Akiyama-Frougny-Sakarovitch rational number systems? Small.
     Priority 3.
 
 ## Theme III. Nonexistence and finiteness
 
-12. Prove that `b (b + x) = x^x + 1` has only the solutions x = 3 and x = 7.
+12. (Partly answered in chapter 16: no solution for x up to 4e9; abc implies none.) Prove that `b (b + x) = x^x + 1` has only the solutions x = 3 and x = 7.
     Even `x` is in the square class. For odd prime `x`, the prime factors of
     `Phi_2x(x)` are `1 (mod 2x)`. Combine with coverings and the Pell form
     `U^2 - 4x Y^2 = x^2 + 4`, `Y = x^((x-1)/2)`. Literature: primitive
     divisors (Bilu-Hanrot-Voutier), S-unit values of recurrences. Large.
     Priority 2.
 
-13. Prove that only base 3 has two 2-digit solutions under `0^0 = 1` (true up
+13. (Answered in chapter 15: proven (Theorem 15.7).) Prove that only base 3 has two 2-digit solutions under `0^0 = 1` (true up
     to `10^54`). The condition `a'(a^a + c^c - c) = a(a'^a' + c'^c' - c')`
     forces near cancellation; p-adic valuations should finish it. Medium.
     Priority 2.
 
-14. Coverings beyond parity. Find an infinite family of strings, with one or
+14. (Answered in chapter 15: coverings with moduli 3^e and 2^e exist.) Coverings beyond parity. Find an infinite family of strings, with one or
     two varying digits, that is never a solution for a reason other than the
     congruences of section 1.6, or prove that every covering reduces to them.
     Use prime powers, k = 4 and 5, two parameters, both conventions. Medium.
     Priority 2.
 
-15. Constructions under `0^0 = 1` from power identities: self-paying digits,
+15. (Partly answered in chapter 15.) Constructions under `0^0 = 1` from power identities: self-paying digits,
     swaps, chains, and digits that pay for zeros, like
     `(16,0,0,0,0,0,1,0,0,4,8)` in base 64. Are there finitely many? Could they
     give a base with `N_1(b) >= 6`? Medium. Priority 2.
 
-16. Finitely many primitive cores under `0^0 = 0`? In particular, finitely many
+16. (Answered in chapter 15: no, swaps give infinitely many.) Finitely many primitive cores under `0^0 = 0`? In particular, finitely many
     perfect-power 2-digit bases with a self-paying digit on top, like
     `(8,0,2,4)` in base 128, that is, `(a^a + c^c - c)/a = r^t` with
     `t | s(r^s - 1)`: a Pillai-type problem. Small to medium. Priority 2.
@@ -138,7 +138,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     `(b-1)`-digit solutions, about `0.55 (b-1)` per base. Bases 12 to 24.
     Needs a `--set-residue` option. Priority 1.
 
-20. Cycle census of `n -> F(n)`. Count cycles of each length `L` on digit
+20. (Answered in chapter 15.) Cycle census of `n -> F(n)`. Count cycles of each length `L` on digit
     multisets for b = 3 to 16. Random mappings predict Poisson(`1/L`); in odd
     bases under `0^0 = 0`, `F(n) == n (mod 2)` predicts `2/L`. Lead: 2-cycles
     in every odd base 3 to 11 under `0^0 = 0`, none in even bases 4 to 10.
@@ -149,7 +149,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     solutions of section 11.1 to test the `e^(-J)` law and the bump at
     `J > ln b + 1` with thousands of near-solutions. Priority 2.
 
-22. (Answered in `drafts/complexity-and-poisson.md`, part 2: proven in the
+22. (Answered in chapter 13, part 2: proven in the
     basic coupled model with error `O(1/b)`; the refined model needs an
     assumption on residues; predicted pooled correlation 0.47, observed 0.56.)
     A Chen-Stein Poisson theorem in the model, with twins and shared
@@ -172,7 +172,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     residues. Pruning needs only increasing weights. Unblocks 9, 10, 19.
     Priority 1.
 
-27. (Answered in `drafts/complexity-and-poisson.md`, part 1: NP-complete,
+27. (Answered in chapter 13, part 1: NP-complete,
     also for increasing weights, and #P-complete under parsimonious
     reductions; the `x^(e(x))` variants stay open.) With `b` in unary and
     arbitrary binary weights, is "some `n` equals the sum of the weights of
@@ -190,7 +190,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme VI. Erdos-style
 
-30. Integers that are Munchausen in several bases. Under `0^0 = 0`,
+30. (Answered in chapter 15.) Integers that are Munchausen in several bases. Under `0^0 = 0`,
     `7^7 + 1 = 823544` is a solution in five bases (49, 343, 904, 117649,
     823537). Under `0^0 = 1` all 201 integers with two bases in the catalog are
     2-digit pairs. Is there one with a representation of 3 or more digits? What
