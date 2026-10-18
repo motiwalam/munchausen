@@ -37,7 +37,7 @@ PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31]
 PADIC = {2: 64, 3: 81, 5: 125}
 CHUNK = 20000
 # ranges of the real root b* for the split of the sums
-BINS = [(0, 10), (10, 100), (100, float('inf'))]
+BINS = [(0, 10), (10, 13), (13, 20), (20, 40), (40, 100), (100, float('inf'))]
 
 
 def strings(k, X):
@@ -149,7 +149,7 @@ def main():
         PADIC.update(zip((2, 3, 5), map(int, sys.argv[4].split(','))))
     st = Strings(k, X)
     print(f"# k={k} X={X}: {len(st.S)} strings; p-adic moduli {sorted(PADIC.values())}; columns: k X D mode strings_with_root plain prime padic avg_prime avg_padic, "
-          f"then prime and padic for b* < 10, 10 <= b* < 100, b* >= 100", flush=True)
+          f"then prime and padic for b* in [0, 10), [10, 13), [13, 20), [20, 40), [40, 100), [100, inf)", flush=True)
     for D in Ds:
         for mode in (1, 0):
             n, pl, pr, pa, ap, aa, bins = st.run(D, mode)

@@ -12,6 +12,8 @@ counts are given both for digits up to X and for digits up to M.
 """
 import math
 import sys
+
+from r3c_root_spectrum import BINS
 from collections import defaultdict
 
 L = 75600
@@ -62,7 +64,7 @@ def pois_ge(k, lam):
 
 
 def binof(b):
-    return 0 if b < 10 else (1 if b < 100 else 2)
+    return next(i for i, (lo, hi) in enumerate(BINS) if lo <= b < hi)
 
 
 def main():
@@ -90,18 +92,18 @@ def main():
             var = sum((v - mean) ** 2 for v in nx) / max(1, len(Ds) - 1)
             sums = {'plain': sum(pred[D, mode]['plain'] for D in Ds)}
             for key in ('prime', 'padic'):
-                sums[key] = sum(sum(pred[D, mode]['bins_' + key][:2]) for D in Ds)
-            bigp = sum(pred[D, mode]['bins_prime'][2] for D in Ds)
+                sums[key] = sum(sum(pred[D, mode]['bins_' + key][:-1]) for D in Ds)
+            bigp = sum(pred[D, mode]['bins_prime'][-1] for D in Ds)
             rows[name] = (Ds, nx, sums)
             print(f"| {name} | {len(Ds)} | {sum(nx)} | {mean:.3f} | {var / mean if mean else float('nan'):.2f} | "
                   f"{sums['plain']:.2f} | {sums['prime']:.2f} | {sums['padic']:.2f} | "
                   f"{sum(nx) / sums['prime']:.2f} | {sum(nx) / sums['padic']:.2f} | {big} / {bigp:.2f} | {sum(nm)} |")
         # by the size of the base
-        print("\n| offsets | base < 10: observed / prime / p-adic | 10 to 99 | 100 and up |")
-        print("|---|---|---|---|")
+        print("\n| offsets | " + " | ".join(f"base {lo} to {hi - 1}: observed / prime / p-adic" if hi < 1e9 else f"base {lo} and up" for lo, hi in BINS) + " |")
+        print("|---" * (len(BINS) + 1) + "|")
         for name, (Ds, nx, sums) in rows.items():
             cells = []
-            for i in range(3):
+            for i in range(len(BINS)):
                 o = sum(1 for D in Ds for b, s in obs[D, mode] if max(s) <= X and binof(b) == i)
                 pp = sum(pred[D, mode]['bins_prime'][i] for D in Ds)
                 pa = sum(pred[D, mode]['bins_padic'][i] for D in Ds)
@@ -129,7 +131,7 @@ def main():
             Ds, nx, sums = rows[name]
             for key in ('prime', 'padic'):
                 c = sum(nx) / sums[key]
-                e = {D: sum(pred[D, mode]['bins_' + key][:2]) for D in Ds}
+                e = {D: sum(pred[D, mode]['bins_' + key][:-1]) for D in Ds}
                 chi = sum((n - c * e[D]) ** 2 / (c * e[D]) for D, n in zip(Ds, nx) if e[D] > 0)
                 print(f"- {name}, {key}: sum (N_D - c E_D)^2 / (c E_D) = {chi:.1f} over {len(Ds)} offsets")
         # parity of D for the offsets D = j
@@ -137,8 +139,8 @@ def main():
         for par in (0, 1):
             sel = [(D, n) for D, n in zip(Ds, nx) if D % 2 == par]
             o = sum(n for D, n in sel)
-            pp = sum(sum(pred[D, mode]['bins_prime'][:2]) for D, n in sel)
-            pa = sum(sum(pred[D, mode]['bins_padic'][:2]) for D, n in sel)
+            pp = sum(sum(pred[D, mode]['bins_prime'][:-1]) for D, n in sel)
+            pa = sum(sum(pred[D, mode]['bins_padic'][:-1]) for D, n in sel)
             print(f"- D = j with j {'even' if par == 0 else 'odd'}: observed {o}, prime {pp:.2f}, p-adic {pa:.2f}")
 
 

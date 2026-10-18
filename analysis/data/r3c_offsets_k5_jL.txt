@@ -1,0 +1,227 @@
+# kdigit 5 60 --offset D for D in 75600:15120000:75600; columns: D mode base digits
+# k=5 M=60: offset D=75600; 1 solutions; 830750460 strings, 608 passed the test with the default moduli (3.66e-7); 5.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+75600 0 13 6,0,5,6,4
+# k=5 M=60: offset D=151200; 0 solutions; 830750460 strings, 611 passed the test with the default moduli (3.68e-7); 5.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=226800; 0 solutions; 830750460 strings, 574 passed the test with the default moduli (3.45e-7); 6.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=302400; 0 solutions; 830750460 strings, 600 passed the test with the default moduli (3.61e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=378000; 4 solutions; 830750460 strings, 600 passed the test with the default moduli (3.61e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+378000 0 22 5,3,3,3,7
+378000 0 23 4,7,1,5,4
+378000 1 22 5,3,3,3,7
+378000 1 23 4,7,1,5,4
+# k=5 M=60: offset D=453600; 0 solutions; 830750460 strings, 582 passed the test with the default moduli (3.50e-7); 4.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=529200; 0 solutions; 830750460 strings, 614 passed the test with the default moduli (3.70e-7); 3.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=604800; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 4.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=680400; 2 solutions; 830750460 strings, 596 passed the test with the default moduli (3.59e-7); 4.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+680400 0 19 5,5,2,2,2
+680400 1 19 5,5,2,2,2
+# k=5 M=60: offset D=756000; 3 solutions; 830750460 strings, 640 passed the test with the default moduli (3.85e-7); 4.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+756000 0 19 6,3,1,4,0
+756000 0 19 6,3,1,4,1
+756000 1 19 6,3,1,4,1
+# k=5 M=60: offset D=831600; 0 solutions; 830750460 strings, 585 passed the test with the default moduli (3.52e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=907200; 0 solutions; 830750460 strings, 599 passed the test with the default moduli (3.61e-7); 4.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=982800; 0 solutions; 830750460 strings, 591 passed the test with the default moduli (3.56e-7); 4.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1058400; 0 solutions; 830750460 strings, 580 passed the test with the default moduli (3.49e-7); 2.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1134000; 0 solutions; 830750460 strings, 645 passed the test with the default moduli (3.88e-7); 4.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1209600; 0 solutions; 830750460 strings, 630 passed the test with the default moduli (3.79e-7); 2.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1285200; 0 solutions; 830750460 strings, 601 passed the test with the default moduli (3.62e-7); 3.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1360800; 0 solutions; 830750460 strings, 606 passed the test with the default moduli (3.65e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1436400; 0 solutions; 830750460 strings, 612 passed the test with the default moduli (3.68e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1512000; 0 solutions; 830750460 strings, 596 passed the test with the default moduli (3.59e-7); 4.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1587600; 1 solutions; 830750460 strings, 537 passed the test with the default moduli (3.23e-7); 6.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+1587600 0 23 6,0,4,0,6
+# k=5 M=60: offset D=1663200; 0 solutions; 830750460 strings, 601 passed the test with the default moduli (3.62e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1738800; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 4.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1814400; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1890000; 0 solutions; 830750460 strings, 585 passed the test with the default moduli (3.52e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=1965600; 2 solutions; 830750460 strings, 661 passed the test with the default moduli (3.98e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+1965600 0 25 5,1,0,0,3
+1965600 0 25 5,1,5,0,3
+# k=5 M=60: offset D=2041200; 0 solutions; 830750460 strings, 587 passed the test with the default moduli (3.53e-7); 7.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2116800; 0 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 5.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2192400; 0 solutions; 830750460 strings, 565 passed the test with the default moduli (3.40e-7); 7.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2268000; 0 solutions; 830750460 strings, 653 passed the test with the default moduli (3.93e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2343600; 0 solutions; 830750460 strings, 592 passed the test with the default moduli (3.56e-7); 7.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2419200; 0 solutions; 830750460 strings, 642 passed the test with the default moduli (3.86e-7); 7.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2494800; 0 solutions; 830750460 strings, 569 passed the test with the default moduli (3.42e-7); 7.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2570400; 0 solutions; 830750460 strings, 634 passed the test with the default moduli (3.82e-7); 4.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2646000; 0 solutions; 830750460 strings, 610 passed the test with the default moduli (3.67e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2721600; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2797200; 0 solutions; 830750460 strings, 631 passed the test with the default moduli (3.80e-7); 6.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=2872800; 2 solutions; 830750460 strings, 605 passed the test with the default moduli (3.64e-7); 4.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+2872800 0 43 1,4,5,7,6
+2872800 1 43 1,4,5,7,6
+# k=5 M=60: offset D=2948400; 0 solutions; 830750460 strings, 651 passed the test with the default moduli (3.92e-7); 4.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3024000; 0 solutions; 830750460 strings, 622 passed the test with the default moduli (3.74e-7); 5.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3099600; 0 solutions; 830750460 strings, 593 passed the test with the default moduli (3.57e-7); 5.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3175200; 0 solutions; 830750460 strings, 606 passed the test with the default moduli (3.65e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3250800; 0 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 5.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3326400; 2 solutions; 830750460 strings, 622 passed the test with the default moduli (3.74e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+3326400 0 30 4,5,5,2,6
+3326400 1 30 4,5,5,2,6
+# k=5 M=60: offset D=3402000; 0 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 5.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3477600; 0 solutions; 830750460 strings, 655 passed the test with the default moduli (3.94e-7); 4.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3553200; 0 solutions; 830750460 strings, 588 passed the test with the default moduli (3.54e-7); 4.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3628800; 0 solutions; 830750460 strings, 614 passed the test with the default moduli (3.70e-7); 4.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3704400; 1 solutions; 830750460 strings, 565 passed the test with the default moduli (3.40e-7); 5.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+3704400 1 37 2,0,2,0,6
+# k=5 M=60: offset D=3780000; 0 solutions; 830750460 strings, 613 passed the test with the default moduli (3.69e-7); 4.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3855600; 0 solutions; 830750460 strings, 655 passed the test with the default moduli (3.94e-7); 4.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=3931200; 0 solutions; 830750460 strings, 577 passed the test with the default moduli (3.47e-7); 5.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4006800; 0 solutions; 830750460 strings, 625 passed the test with the default moduli (3.76e-7); 4.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4082400; 0 solutions; 830750460 strings, 593 passed the test with the default moduli (3.57e-7); 7.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4158000; 0 solutions; 830750460 strings, 583 passed the test with the default moduli (3.51e-7); 3.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4233600; 0 solutions; 830750460 strings, 555 passed the test with the default moduli (3.34e-7); 4.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4309200; 0 solutions; 830750460 strings, 583 passed the test with the default moduli (3.51e-7); 6.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4384800; 0 solutions; 830750460 strings, 614 passed the test with the default moduli (3.70e-7); 3.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4460400; 0 solutions; 830750460 strings, 591 passed the test with the default moduli (3.56e-7); 5.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4536000; 0 solutions; 830750460 strings, 574 passed the test with the default moduli (3.45e-7); 5.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4611600; 0 solutions; 830750460 strings, 566 passed the test with the default moduli (3.41e-7); 5.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4687200; 0 solutions; 830750460 strings, 615 passed the test with the default moduli (3.70e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4762800; 0 solutions; 830750460 strings, 613 passed the test with the default moduli (3.69e-7); 6.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4838400; 0 solutions; 830750460 strings, 601 passed the test with the default moduli (3.62e-7); 7.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4914000; 0 solutions; 830750460 strings, 601 passed the test with the default moduli (3.62e-7); 3.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=4989600; 0 solutions; 830750460 strings, 629 passed the test with the default moduli (3.79e-7); 4.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5065200; 0 solutions; 830750460 strings, 627 passed the test with the default moduli (3.77e-7); 4.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5140800; 0 solutions; 830750460 strings, 580 passed the test with the default moduli (3.49e-7); 4.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5216400; 0 solutions; 830750460 strings, 603 passed the test with the default moduli (3.63e-7); 5.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5292000; 0 solutions; 830750460 strings, 579 passed the test with the default moduli (3.48e-7); 6.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5367600; 0 solutions; 830750460 strings, 595 passed the test with the default moduli (3.58e-7); 7.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5443200; 0 solutions; 830750460 strings, 597 passed the test with the default moduli (3.59e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5518800; 0 solutions; 830750460 strings, 565 passed the test with the default moduli (3.40e-7); 4.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5594400; 0 solutions; 830750460 strings, 610 passed the test with the default moduli (3.67e-7); 5.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5670000; 0 solutions; 830750460 strings, 580 passed the test with the default moduli (3.49e-7); 5.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5745600; 0 solutions; 830750460 strings, 598 passed the test with the default moduli (3.60e-7); 3.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5821200; 0 solutions; 830750460 strings, 593 passed the test with the default moduli (3.57e-7); 6.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5896800; 0 solutions; 830750460 strings, 602 passed the test with the default moduli (3.62e-7); 6.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=5972400; 0 solutions; 830750460 strings, 601 passed the test with the default moduli (3.62e-7); 4.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6048000; 2 solutions; 830750460 strings, 581 passed the test with the default moduli (3.50e-7); 5.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+6048000 0 35 4,1,5,4,2
+6048000 1 35 4,1,5,4,2
+# k=5 M=60: offset D=6123600; 2 solutions; 830750460 strings, 584 passed the test with the default moduli (3.51e-7); 3.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+6123600 0 49 1,3,5,3,5
+6123600 1 49 1,3,5,3,5
+# k=5 M=60: offset D=6199200; 0 solutions; 830750460 strings, 623 passed the test with the default moduli (3.75e-7); 3.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6274800; 0 solutions; 830750460 strings, 633 passed the test with the default moduli (3.81e-7); 6.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6350400; 0 solutions; 830750460 strings, 661 passed the test with the default moduli (3.98e-7); 4.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6426000; 0 solutions; 830750460 strings, 560 passed the test with the default moduli (3.37e-7); 5.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6501600; 0 solutions; 830750460 strings, 544 passed the test with the default moduli (3.27e-7); 4.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6577200; 0 solutions; 830750460 strings, 584 passed the test with the default moduli (3.51e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6652800; 0 solutions; 830750460 strings, 642 passed the test with the default moduli (3.86e-7); 6.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6728400; 0 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 6.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6804000; 0 solutions; 830750460 strings, 574 passed the test with the default moduli (3.45e-7); 6.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6879600; 0 solutions; 830750460 strings, 626 passed the test with the default moduli (3.77e-7); 5.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=6955200; 0 solutions; 830750460 strings, 535 passed the test with the default moduli (3.22e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7030800; 0 solutions; 830750460 strings, 616 passed the test with the default moduli (3.71e-7); 7.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7106400; 0 solutions; 830750460 strings, 619 passed the test with the default moduli (3.73e-7); 6.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7182000; 0 solutions; 830750460 strings, 629 passed the test with the default moduli (3.79e-7); 6.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7257600; 0 solutions; 830750460 strings, 604 passed the test with the default moduli (3.64e-7); 6.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7333200; 0 solutions; 830750460 strings, 596 passed the test with the default moduli (3.59e-7); 6.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7408800; 0 solutions; 830750460 strings, 580 passed the test with the default moduli (3.49e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7484400; 0 solutions; 830750460 strings, 558 passed the test with the default moduli (3.36e-7); 6.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7560000; 1 solutions; 830750460 strings, 606 passed the test with the default moduli (3.65e-7); 7.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+7560000 0 45 2,2,0,1,7
+# k=5 M=60: offset D=7635600; 1 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 5.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+7635600 0 53 3,5,0,3,8
+# k=5 M=60: offset D=7711200; 2 solutions; 830750460 strings, 616 passed the test with the default moduli (3.71e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+7711200 0 35 5,6,3,3,5
+7711200 1 35 5,6,3,3,5
+# k=5 M=60: offset D=7786800; 0 solutions; 830750460 strings, 613 passed the test with the default moduli (3.69e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7862400; 0 solutions; 830750460 strings, 641 passed the test with the default moduli (3.86e-7); 3.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=7938000; 0 solutions; 830750460 strings, 594 passed the test with the default moduli (3.58e-7); 2.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8013600; 0 solutions; 830750460 strings, 573 passed the test with the default moduli (3.45e-7); 4.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8089200; 0 solutions; 830750460 strings, 619 passed the test with the default moduli (3.73e-7); 4.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8164800; 0 solutions; 830750460 strings, 573 passed the test with the default moduli (3.45e-7); 4.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8240400; 0 solutions; 830750460 strings, 624 passed the test with the default moduli (3.76e-7); 6.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8316000; 0 solutions; 830750460 strings, 640 passed the test with the default moduli (3.85e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8391600; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8467200; 0 solutions; 830750460 strings, 608 passed the test with the default moduli (3.66e-7); 4.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8542800; 0 solutions; 830750460 strings, 602 passed the test with the default moduli (3.62e-7); 5.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8618400; 0 solutions; 830750460 strings, 570 passed the test with the default moduli (3.43e-7); 7.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8694000; 0 solutions; 830750460 strings, 581 passed the test with the default moduli (3.50e-7); 3.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8769600; 0 solutions; 830750460 strings, 600 passed the test with the default moduli (3.61e-7); 5.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8845200; 0 solutions; 830750460 strings, 600 passed the test with the default moduli (3.61e-7); 5.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8920800; 0 solutions; 830750460 strings, 611 passed the test with the default moduli (3.68e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=8996400; 0 solutions; 830750460 strings, 614 passed the test with the default moduli (3.70e-7); 4.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9072000; 0 solutions; 830750460 strings, 626 passed the test with the default moduli (3.77e-7); 4.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9147600; 0 solutions; 830750460 strings, 580 passed the test with the default moduli (3.49e-7); 6.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9223200; 0 solutions; 830750460 strings, 621 passed the test with the default moduli (3.74e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9298800; 0 solutions; 830750460 strings, 660 passed the test with the default moduli (3.97e-7); 5.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9374400; 0 solutions; 830750460 strings, 578 passed the test with the default moduli (3.48e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9450000; 0 solutions; 830750460 strings, 614 passed the test with the default moduli (3.70e-7); 6.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9525600; 0 solutions; 830750460 strings, 654 passed the test with the default moduli (3.94e-7); 5.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9601200; 0 solutions; 830750460 strings, 645 passed the test with the default moduli (3.88e-7); 5.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9676800; 0 solutions; 830750460 strings, 556 passed the test with the default moduli (3.35e-7); 6.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9752400; 0 solutions; 830750460 strings, 570 passed the test with the default moduli (3.43e-7); 7.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9828000; 0 solutions; 830750460 strings, 580 passed the test with the default moduli (3.49e-7); 3.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9903600; 0 solutions; 830750460 strings, 592 passed the test with the default moduli (3.56e-7); 6.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=9979200; 0 solutions; 830750460 strings, 648 passed the test with the default moduli (3.90e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10054800; 0 solutions; 830750460 strings, 577 passed the test with the default moduli (3.47e-7); 5.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10130400; 0 solutions; 830750460 strings, 579 passed the test with the default moduli (3.48e-7); 5.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10206000; 0 solutions; 830750460 strings, 600 passed the test with the default moduli (3.61e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10281600; 0 solutions; 830750460 strings, 581 passed the test with the default moduli (3.50e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10357200; 0 solutions; 830750460 strings, 621 passed the test with the default moduli (3.74e-7); 3.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10432800; 0 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 5.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10508400; 0 solutions; 830750460 strings, 603 passed the test with the default moduli (3.63e-7); 3.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10584000; 0 solutions; 830750460 strings, 646 passed the test with the default moduli (3.89e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10659600; 0 solutions; 830750460 strings, 596 passed the test with the default moduli (3.59e-7); 5.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10735200; 0 solutions; 830750460 strings, 598 passed the test with the default moduli (3.60e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10810800; 0 solutions; 830750460 strings, 660 passed the test with the default moduli (3.97e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10886400; 0 solutions; 830750460 strings, 597 passed the test with the default moduli (3.59e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=10962000; 0 solutions; 830750460 strings, 611 passed the test with the default moduli (3.68e-7); 5.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11037600; 0 solutions; 830750460 strings, 621 passed the test with the default moduli (3.74e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11113200; 0 solutions; 830750460 strings, 576 passed the test with the default moduli (3.47e-7); 2.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11188800; 0 solutions; 830750460 strings, 561 passed the test with the default moduli (3.38e-7); 3.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11264400; 0 solutions; 830750460 strings, 611 passed the test with the default moduli (3.68e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11340000; 0 solutions; 830750460 strings, 695 passed the test with the default moduli (4.18e-7); 4.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11415600; 0 solutions; 830750460 strings, 620 passed the test with the default moduli (3.73e-7); 3.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11491200; 0 solutions; 830750460 strings, 592 passed the test with the default moduli (3.56e-7); 6.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11566800; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11642400; 0 solutions; 830750460 strings, 604 passed the test with the default moduli (3.64e-7); 4.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11718000; 0 solutions; 830750460 strings, 604 passed the test with the default moduli (3.64e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11793600; 0 solutions; 830750460 strings, 572 passed the test with the default moduli (3.44e-7); 6.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11869200; 0 solutions; 830750460 strings, 639 passed the test with the default moduli (3.85e-7); 5.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=11944800; 0 solutions; 830750460 strings, 616 passed the test with the default moduli (3.71e-7); 6.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12020400; 0 solutions; 830750460 strings, 610 passed the test with the default moduli (3.67e-7); 6.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12096000; 0 solutions; 830750460 strings, 606 passed the test with the default moduli (3.65e-7); 3.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12171600; 0 solutions; 830750460 strings, 615 passed the test with the default moduli (3.70e-7); 7.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12247200; 0 solutions; 830750460 strings, 612 passed the test with the default moduli (3.68e-7); 7.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12322800; 0 solutions; 830750460 strings, 608 passed the test with the default moduli (3.66e-7); 7.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12398400; 0 solutions; 830750460 strings, 585 passed the test with the default moduli (3.52e-7); 6.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12474000; 0 solutions; 830750460 strings, 587 passed the test with the default moduli (3.53e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12549600; 0 solutions; 830750460 strings, 622 passed the test with the default moduli (3.74e-7); 5.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12625200; 0 solutions; 830750460 strings, 618 passed the test with the default moduli (3.72e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12700800; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 5.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12776400; 0 solutions; 830750460 strings, 598 passed the test with the default moduli (3.60e-7); 6.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12852000; 0 solutions; 830750460 strings, 622 passed the test with the default moduli (3.74e-7); 4.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=12927600; 0 solutions; 830750460 strings, 674 passed the test with the default moduli (4.06e-7); 4.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13003200; 0 solutions; 830750460 strings, 577 passed the test with the default moduli (3.47e-7); 3.5s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13078800; 0 solutions; 830750460 strings, 566 passed the test with the default moduli (3.41e-7); 3.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13154400; 0 solutions; 830750460 strings, 667 passed the test with the default moduli (4.01e-7); 5.7s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13230000; 0 solutions; 830750460 strings, 695 passed the test with the default moduli (4.18e-7); 7.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13305600; 0 solutions; 830750460 strings, 597 passed the test with the default moduli (3.59e-7); 3.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13381200; 0 solutions; 830750460 strings, 607 passed the test with the default moduli (3.65e-7); 3.4s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13456800; 0 solutions; 830750460 strings, 593 passed the test with the default moduli (3.57e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13532400; 0 solutions; 830750460 strings, 590 passed the test with the default moduli (3.55e-7); 3.6s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13608000; 0 solutions; 830750460 strings, 573 passed the test with the default moduli (3.45e-7); 2.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13683600; 0 solutions; 830750460 strings, 630 passed the test with the default moduli (3.79e-7); 5.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13759200; 0 solutions; 830750460 strings, 581 passed the test with the default moduli (3.50e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13834800; 0 solutions; 830750460 strings, 599 passed the test with the default moduli (3.61e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13910400; 0 solutions; 830750460 strings, 598 passed the test with the default moduli (3.60e-7); 5.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=13986000; 0 solutions; 830750460 strings, 617 passed the test with the default moduli (3.71e-7); 5.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14061600; 0 solutions; 830750460 strings, 636 passed the test with the default moduli (3.83e-7); 6.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14137200; 0 solutions; 830750460 strings, 589 passed the test with the default moduli (3.54e-7); 6.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14212800; 0 solutions; 830750460 strings, 567 passed the test with the default moduli (3.41e-7); 6.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14288400; 0 solutions; 830750460 strings, 644 passed the test with the default moduli (3.88e-7); 4.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14364000; 0 solutions; 830750460 strings, 608 passed the test with the default moduli (3.66e-7); 3.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14439600; 0 solutions; 830750460 strings, 570 passed the test with the default moduli (3.43e-7); 5.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14515200; 0 solutions; 830750460 strings, 564 passed the test with the default moduli (3.39e-7); 5.9s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14590800; 0 solutions; 830750460 strings, 571 passed the test with the default moduli (3.44e-7); 5.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14666400; 0 solutions; 830750460 strings, 654 passed the test with the default moduli (3.94e-7); 3.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14742000; 0 solutions; 830750460 strings, 586 passed the test with the default moduli (3.53e-7); 4.1s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14817600; 0 solutions; 830750460 strings, 607 passed the test with the default moduli (3.65e-7); 3.3s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14893200; 0 solutions; 830750460 strings, 650 passed the test with the default moduli (3.91e-7); 3.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=14968800; 0 solutions; 830750460 strings, 636 passed the test with the default moduli (3.83e-7); 4.2s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=15044400; 0 solutions; 830750460 strings, 615 passed the test with the default moduli (3.70e-7); 3.8s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
+# k=5 M=60: offset D=15120000; 0 solutions; 830750460 strings, 597 passed the test with the default moduli (3.59e-7); 4.0s; complete for bases b with b^5 <= 61^61, that is b <= about 10^21.8
