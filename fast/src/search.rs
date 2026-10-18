@@ -564,6 +564,18 @@ impl<const N: usize> Search<N> {
             }
             let mut ld = [0u8; 64];
             clo.to_bytes(&mut ld);
+            // The forced digits go in before the checks of the digits >= k, so
+            // that a mispredicted branch there does not discard the sums.
+            // w[0] is zero, so a forced zero adds nothing to t.
+            let row = k * (p.kmax + 1);
+            let mut fl = forced;
+            while fl != 0 {
+                let i = fl.trailing_zeros();
+                fl &= fl - 1;
+                let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
+                c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
+                c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
+            }
             let mut big = new & !forced;
             while big != 0 {
                 let i = big.trailing_zeros();
@@ -587,17 +599,6 @@ impl<const N: usize> Search<N> {
                 return true;
             }
             c.rf -= f;
-            let row = k * (p.kmax + 1);
-            let mut fl = forced;
-            while fl != 0 {
-                let i = fl.trailing_zeros();
-                fl &= fl - 1;
-                let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
-                if x > 0 {
-                    c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
-                }
-                c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
-            }
             let (n1, n2) = (c.t.nonzero_mask(), c.hi.nonzero_mask());
             if n1 & !dm != 0 || n2 & top == 0 {
                 return false;
