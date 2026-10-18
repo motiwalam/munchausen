@@ -1,0 +1,5 @@
+1779 known solutions under 0^0 = 0 with at least 2 digits
+3 have a nonzero core and a self-paying digit:
+  base 25: (5, 1, 3)  core (1, 3)  self-paying [(5, 2)]
+  base 128: (8, 0, 2, 4)  core (2, 4)  self-paying [(8, 3)]
+  base 43046721: (3, 0, 0, 0, 9, 27)  core (3, 0, 0, 0, 0, 27)  self-paying [(9, 1)]
