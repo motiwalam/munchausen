@@ -54,3 +54,29 @@ lengths 1, 4, 4.
 
 This is the census of section 14.5 (computed there to 18 digits), now
 proven complete.
+
+## Question 41: long factorions in odd bases
+
+Setting. `F(n)` is the sum of `x!` over the base-`b` digits, with `w(0) = 0`
+(`m = 0`) or `w(0) = 0! = 1` (`m = 1`). `L(b)` is the length of `(b-1)!`,
+and a factorion is long if it has at least `L(b) - 5` digits. The engine is
+`fast search --factorial` of branch q-weights (commit 2e67477), built in
+`fast/target/qweights` and run with `--journal`.
+
+### New bases (computed)
+
+Bases 37 to 45 were already done (bases 10 to 42 and 43, 45 on branch
+q-weights, `analysis/data/r2c_qw_factorial*.txt`). Base 47 is new:
+
+| base | time | nodes | long factorions, `m = 0` | `m = 1` | model per convention |
+|---:|---:|---:|---|---|---:|
+| 43 | 290 s, 3 threads | `5.2 * 10^9` | one, 30 digits, zero-free | the same | 0.98, 1.01 |
+| 45 | 1148 s, 3 threads | | none | none | 1.07, 1.07 |
+| 47 | 6292 s, 2 threads | `5.4 * 10^10` | one, 34 digits | another, 34 digits | 1.05, 1.06 |
+
+The two 34-digit factorions of base 47 (`analysis/data/r2c_fact47_raw.txt`):
+
+    m = 0: (7,43,14,26,45,17,6,35,16,16,6,1,38,18,38,6,38,36,22,0,3,40,28,25,34,19,37,42,35,35,1,35,38,20)
+    m = 1: (8,12,30,39,40,11,0,11,34,18,18,22,18,45,10,7,24,2,5,16,4,10,22,34,2,0,14,44,23,34,40,28,31,44)
+
+`L(47) = 35`, so both are one digit short of the top length.

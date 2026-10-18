@@ -1,6 +1,6 @@
 """Question 41: near-factorions at offsets that keep more residues of D = 0.
 
-    python3 r2c_fact_offsets.py OUT b0 b1 J MULT [threads]
+    python3 r2c_fact_offsets.py OUT b0 b1 J MULT [threads] [odd]
 
 For each base b in b0..b1 and j = 1..J, count the n with n = F(n) + D,
 F = sum of x! over the base-b digits, D = j * MULT(b), and at least L(b) - 5
@@ -8,6 +8,8 @@ digits, where L(b) is the length of (b-1)!. MULT is one of
     b1     D = j (b-1)          residue 0 mod b-1 only (as in wgt_offsets.py)
     bb1    D = j b (b-1)        residues 0 mod b-1 and mod b
     b2b1   D = j b^2 (b-1)      residues 0 mod b-1 and mod b^2
+    b3b1   D = j b^3 (b-1)      residues 0 mod b-1 and mod b^3
+    lcm    D = j b^2 lcm(1..b+1) residues 0 mod every integer up to b+1, and mod b^3
 The engine is fast search --factorial of branch q-weights (commit 2e67477),
 built in fast/target/qweights. Lines "off b j mode count" are appended to
 OUT; a rerun skips the (b, j) already in OUT, so the run can resume.
@@ -30,7 +32,9 @@ def ref_len(b):
 
 
 def mult(kind, b):
-    return {'b1': b - 1, 'bb1': b * (b - 1), 'b2b1': b * b * (b - 1)}[kind]
+    if kind == 'lcm':
+        return b * b * math.lcm(*range(1, b + 2))
+    return {'b1': b - 1, 'bb1': b * (b - 1), 'b2b1': b * b * (b - 1), 'b3b1': b ** 3 * (b - 1)}[kind]
 
 
 def run(b, D, dmin, threads):
@@ -47,6 +51,7 @@ def run(b, D, dmin, threads):
 def main():
     out, b0, b1, J, kind = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), sys.argv[5]
     threads = int(sys.argv[6]) if len(sys.argv) > 6 else 1
+    only_odd = len(sys.argv) > 7 and sys.argv[7] == 'odd'
     done = set()
     if os.path.exists(out):
         for line in open(out):
@@ -58,6 +63,8 @@ def main():
             f.write(f"# factorions, offsets D = j * {kind}, j = 1..{J}, bases {b0}-{b1}, d >= L(b)-5\n")
     with open(out, 'a') as f:
         for b in range(b0, b1 + 1):
+            if only_odd and b % 2 == 0:
+                continue
             for j in range(1, J + 1):
                 if (b, j) in done:
                     continue
