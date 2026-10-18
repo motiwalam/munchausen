@@ -149,7 +149,10 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     solutions of section 11.1 to test the `e^(-J)` law and the bump at
     `J > ln b + 1` with thousands of near-solutions. Priority 2.
 
-22. A Chen-Stein Poisson theorem in the model, with twins and shared
+22. (Answered in `drafts/complexity-and-poisson.md`, part 2: proven in the
+    basic coupled model with error `O(1/b)`; the refined model needs an
+    assumption on residues; predicted pooled correlation 0.47, observed 0.56.)
+    A Chen-Stein Poisson theorem in the model, with twins and shared
     solutions; predict the correlation 0.56 of `N_0` and `N_1`. Priority 3.
 
 23. (Section 11.2 finds the deficit to be chance with each base's own
@@ -169,9 +172,12 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     residues. Pruning needs only increasing weights. Unblocks 9, 10, 19.
     Priority 1.
 
-27. With `b` in unary and arbitrary binary weights, is "some `n` equals the sum
-    of the weights of its digits" NP-complete? Unlike `L_m` this is not a
-    tally language. Priority 3.
+27. (Answered in `drafts/complexity-and-poisson.md`, part 1: NP-complete,
+    also for increasing weights, and #P-complete under parsimonious
+    reductions; the `x^(e(x))` variants stay open.) With `b` in unary and
+    arbitrary binary weights, is "some `n` equals the sum of the weights of
+    its digits" NP-complete? Unlike `L_m` this is not a tally language.
+    Priority 3.
 
 28. (Answered in section 11.5: small primes pass most strings because of the
     digit-sum identity at r = 1, and rational roots pass every prime.) Why the
