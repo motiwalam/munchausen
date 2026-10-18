@@ -1,0 +1,11 @@
+# fast/target/release/kdigit 8 22 at commit ecffb0c (RAYON_NUM_THREADS=3, load average about 40)
+# k=8 M=22: 9 solutions; 74906159834 strings, 68750 passed the test with the default moduli (4.59e-7); 1243.5s; complete for bases b with b^8 <= 23^23, that is b <= about 10^3.9
+8 0 9 3,4,6,6,4,0,8,4
+8 0 11 1,8,4,5,3,2,7,8
+8 0 11 1,8,4,5,3,4,8,7
+8 0 225 15,0,0,0,0,0,0,0
+8 0 225 15,0,0,0,0,0,0,1
+8 0 10648 22,0,0,0,0,0,0,0
+8 0 10648 22,0,0,0,0,0,0,1
+8 1 11 1,8,4,5,3,2,7,8
+8 1 11 1,8,4,5,3,4,8,7

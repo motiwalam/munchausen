@@ -179,14 +179,16 @@ average about 40 (data `r3c_k7_M32.txt`, `r3c_k8_M22.txt`):
 | length | digits up to | complete for bases up to | time | strings | survivors | new solutions |
 |---:|---:|---:|---:|---:|---:|---|
 | 7 | 32 | `10^7.2` (was `10^5.5`) | 565 s | `4.1 * 10^10` | 36,309 | under `0^0 = 0`: `(27,0,0,0,0,0,0)` and `(27,0,0,0,0,0,1)` in base `3^13`, `(31,0,...,0)` and `(31,0,...,0,1)` in base `31^5`; none under `0^0 = 1` |
-K8ROW
+| 8 | 22 | `10^3.9` (was 127) | 1,244 s | `7.5 * 10^10` | 68,750 | none beyond the known `(1,8,4,5,3,2,7,8)` and `(1,8,4,5,3,4,8,7)` in base 11 under both conventions, `(3,4,6,6,4,0,8,4)` in base 9, and the self-paying `(15,0,...,0)` in base 225 and `(22,0,...,0)` in base 10648 with their twins under `0^0 = 0` |
 
-The new 7-digit solutions are the self-paying family `(x, 0, ..., 0)` and its
+Before this run, 8-digit solutions were known to be complete only for bases
+up to 127 (`fast search`, chapter 3). Now the list is complete for bases up
+to 8,220 (`23^(23/8)`). This is a first step for question 29. The new 7-digit solutions are the self-paying family `(x, 0, ..., 0)` and its
 twin, with `x^(x-1)` a sixth power (chapter 2). Under `0^0 = 1` the only
 7-digit solution in all bases up to `10^7.2` is still `(1,6,5,6,5,4,7)` in
 base 9. By the tail estimate of section 11.4 (`analysis/list_tails.py`),
 the expected number of 7-digit solutions with a larger digit is
-`1.7 * 10^-33`, and `K8TAIL` for 8 digits.
+`1.7 * 10^-33`, and `4.2 * 10^-18` for 8 digits.
 
 ## 58. Narcissistic numbers as a model test
 
