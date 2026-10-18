@@ -12,9 +12,26 @@ const MAXLEV: usize = 63;
 const MAXFOUND: usize = 4096;
 // a dispatch should take about this long; the xe driver kills jobs after 5 s
 const TARGET_SECS: f64 = 0.25;
+// threads per workgroup
+const GROUP: usize = 64;
+
+// Digit vectors in GPU buffers are stored lane by lane: byte l * C + c
+// holds digit l + L c, with L lanes and C digits per lane.
+fn gpu_order(x: &[u8], c: usize, out: &mut Vec<u8>) {
+    let l = x.len() / c;
+    for i in 0..l {
+        for j in 0..c {
+            out.push(x[l * j + i]);
+        }
+    }
+}
 
 static SPIRV1: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/search1.spv"));
 static SPIRV2: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/search2.spv"));
+// lanes per subgroup; numbers of N words have N digits per lane. Subgroups
+// of 16 lanes with 2 N digits each measured slower for N = 1 and the same
+// for N = 2.
+const LANES: usize = 32;
 
 pub struct GpuOptions {
     /// number of subgroups that search in parallel
@@ -42,7 +59,7 @@ impl<const N: usize> Search<N> {
             let i = tab.len() / vb;
             let mut x = [0u8; 64];
             v.to_bytes(&mut x);
-            tab.extend_from_slice(&x[..vb]);
+            gpu_order(&x[..vb], N, tab);
             i as u32
         };
         for p in &self.params {
@@ -79,17 +96,19 @@ impl<const N: usize> Search<N> {
         out.extend_from_slice(&h);
         let mut x = [0u8; 64];
         u.n.t.to_bytes(&mut x);
-        out.extend_from_slice(&x[..vb]);
+        gpu_order(&x[..vb], N, out);
         u.n.hi.to_bytes(&mut x);
-        out.extend_from_slice(&x[..vb]);
+        gpu_order(&x[..vb], N, out);
         out.extend(std::iter::repeat_n(0u8, 2 * vb));
-        out.extend_from_slice(&u.cnt[..vb]);
+        gpu_order(&u.cnt[..vb], N, out);
     }
 
     fn gpu_setup(&self, b: u32, o: &GpuOptions) -> Result<Ctx, String> {
         let vb = 32 * N;
         let item = HEADER + 5 * vb;
+        let t0 = Instant::now();
         let gpu = Gpu::new()?;
+        let t1 = Instant::now();
         if o.verbose {
             eprintln!("  gpu: {}", gpu.name);
         }
@@ -98,15 +117,18 @@ impl<const N: usize> Search<N> {
         parb.u32s_mut()[..par.len()].copy_from_slice(&par);
         let mut tabb = gpu.buffer(tab.len())?;
         tabb.bytes_mut()[..tab.len()].copy_from_slice(&tab);
-        let sg = o.subgroups as usize;
+        let sg = (o.subgroups as usize).next_multiple_of(GROUP / LANES);
         let items = gpu.buffer(64 * sg * item)?;
         let out = gpu.buffer(MAXLEV * sg * item)?;
         let stats = gpu.buffer(2 * sg * 8)?;
         let found = gpu.buffer(MAXFOUND * FOUND)?;
         let ctl = gpu.buffer(16)?;
-        let kernel = gpu.kernel(if N == 1 { SPIRV1 } else { SPIRV2 }, 7, 20, 32)?;
+        let kernel = gpu.kernel(if N == 1 { SPIRV1 } else { SPIRV2 }, 7, 20, LANES as u32)?;
         gpu.bind(&kernel, &[&parb, &tabb, &items, &out, &stats, &found, &ctl]);
         let _ = b;
+        if o.verbose {
+            eprintln!("  gpu: {:.3} s to open the device, {:.3} s for buffers and pipeline", (t1 - t0).as_secs_f64(), t1.elapsed().as_secs_f64());
+        }
         Ok(Ctx { gpu, kernel, items, out, stats, found, ctl, bufs: vec![parb, tabb] })
     }
 
@@ -122,7 +144,7 @@ impl<const N: usize> Search<N> {
         let vb = 32 * N;
         let item = HEADER + 5 * vb;
         let mut c = self.gpu_setup(b, o)?;
-        let sg = o.subgroups as usize;
+        let sg = (o.subgroups as usize).next_multiple_of(GROUP / LANES);
         let cap = 64 * sg;
         // a stack of work items; the first unit is on top
         let mut pending: Vec<u8> = Vec::with_capacity(units.len() * item);
@@ -142,7 +164,8 @@ impl<const N: usize> Search<N> {
             let eff = if n < sg { ((budget as usize * n / sg) as u32).max(256) } else { budget };
             let push: Vec<u8> = [n as u32, eff, (MAXLEV * sg) as u32, MAXFOUND as u32, b].iter().flat_map(|v| v.to_le_bytes()).collect();
             let t = Instant::now();
-            c.gpu.run(&c.kernel, &push, (sg / 2) as u32)?;
+            let per_group = GROUP / LANES;
+            c.gpu.run(&c.kernel, &push, sg.div_ceil(per_group) as u32)?;
             let dt = t.elapsed().as_secs_f64();
             busy += dt;
             rounds += 1;

@@ -151,8 +151,8 @@ fn parse_args() -> Opts {
     if gpu && !cfg!(feature = "gpu") {
         die("--gpu needs a build with --features gpu");
     }
-    if gpu_subgroups < 2 || gpu_subgroups % 2 != 0 {
-        die("--gpu-subgroups must be even");
+    if gpu_subgroups == 0 {
+        die("--gpu-subgroups must be positive");
     }
     Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, gpu, gpu_subgroups }
 }
@@ -192,8 +192,13 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
     let mut out: Found = if o.min_digits <= 1 && o.prune.offset == 0 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
+    let t0 = Instant::now();
     let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth, o.prune);
+    let t1 = Instant::now();
     let units = sr.units(o.unit_depth);
+    if o.progress {
+        eprintln!("  base {b}: {:.3} s for the tables, {:.3} s for {} units", (t1 - t0).as_secs_f64(), t1.elapsed().as_secs_f64(), units.len());
+    }
     let total = units.len();
 
     let journal = o.journal.as_ref().map(|path| {

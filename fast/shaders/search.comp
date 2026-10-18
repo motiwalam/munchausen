@@ -1,9 +1,12 @@
-// The exact search of src/search.rs on the GPU. One subgroup of 32 lanes
+// The exact search of src/search.rs on the GPU. One subgroup of 16 lanes
 // runs one depth-first search, and it plays the part of an AVX2 register:
-// lane l holds digit l of every digit vector (W = 1, up to 30 digits), or
-// digits l and l + 32 (W = 2, up to 62 digits). A ballot replaces movemask,
-// so every branch depends only on values that are the same in all lanes,
-// and the lanes never diverge.
+// component c of lane l holds digit l + 16 c of every digit vector, with
+// C = 2 components for up to 30 digits (W = 1) and C = 4 for up to 62
+// (W = 2). A ballot replaces movemask, so every branch depends only on
+// values that are the same in all lanes, and the lanes never diverge.
+// Values that are the same in all lanes cost a full instruction each, and
+// a 16-lane instruction issues in one cycle where a 32-lane one takes two,
+// so 16 lanes with several digits each beat 32 lanes with one.
 //
 // Work items are cursors: a node, its digit k, and the next count e to try.
 // A fresh unit from the host also counts its node. When a subgroup has
@@ -11,12 +14,14 @@
 // on its stack back as a new work item and stops. The host runs the new
 // items in a later dispatch. So no dispatch runs long, and large subtrees
 // split by themselves.
+//
+// Digit vectors in buffers are stored lane by lane: byte l * C + c holds
+// digit l + 16 c, so that a lane reads its digits with one load.
 #version 460
 #extension GL_KHR_shader_subgroup_basic : require
 #extension GL_KHR_shader_subgroup_ballot : require
 #extension GL_KHR_shader_subgroup_arithmetic : require
 #extension GL_KHR_shader_subgroup_vote : require
-#extension GL_KHR_shader_subgroup_shuffle : require
 #extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
 #extension GL_EXT_shader_explicit_arithmetic_types_int8 : require
 #extension GL_EXT_shader_8bit_storage : require
@@ -33,8 +38,8 @@ const uint FOUND = 16 + 64;
 const uint MAXLEV = 62;
 
 layout(std430, binding = 0) readonly buffer Pars { uint par[]; };
-layout(std430, binding = 1) readonly buffer Tabs { uint8_t tab[]; };
-layout(std430, binding = 2) readonly buffer Items { uint8_t item[]; };
+layout(std430, binding = 1) readonly buffer Tabs { uint tab[]; };
+layout(std430, binding = 2) readonly buffer Items { uint item[]; };
 layout(std430, binding = 3) writeonly buffer Outs { uint8_t outr[]; };
 // per subgroup: nodes, evals
 layout(std430, binding = 4) buffer Stats { uint64_t stats[]; };
@@ -53,128 +58,161 @@ layout(push_constant) uniform PC {
 uint lane;
 uint B;
 
-#if W == 1
+// L lanes per subgroup, each with C digits: component c of lane l holds
+// digit l + L c
+const uint L = 32 * W / C;
+#if C == 1
 #define DV uint
+#define BV bool
+#define VEQ(a, b) ((a) == (b))
+#define VNE(a, b) ((a) != (b))
+#define VGE(a, b) ((a) >= (b))
+#define VGT(a, b) ((a) > (b))
+#define VLT(a, b) ((a) < (b))
+#define ALL(v) (v)
+#define COMP(v, c) (v)
+#elif C == 2
+#define DV uvec2
+#define BV bvec2
+#elif C == 4
+#define DV uvec4
+#define BV bvec4
+#endif
+#if C > 1
+#define VEQ(a, b) equal(a, b)
+#define VNE(a, b) notEqual(a, b)
+#define VGE(a, b) greaterThanEqual(a, b)
+#define VGT(a, b) greaterThan(a, b)
+#define VLT(a, b) lessThan(a, b)
+#define ALL(v) all(v)
+#define COMP(v, c) (v)[c]
+#endif
+#if W == 1
 #define MASK uint
-MASK bal(bool c) { return subgroupBallot(c).x; }
+const MASK ONES = 0xffffffffu;
+const uint MBITS = 32u;
+uvec2 words(MASK m) { return uvec2(m, 0u); }
 uint popc(MASK m) { return bitCount(m); }
 int msb(MASK m) { return findMSB(m); }
 uint lsb(MASK m) { return uint(findLSB(m)); }
-MASK m_nz(DV a) { return bal(a != 0u); }
-MASK m_eq(DV a, DV o) { return bal(a == o); }
-MASK m_eqx(DV a, uint x) { return bal(a == x); }
-MASK m_ge(DV a, uint x) { return bal(a >= x); }
 MASK bit(uint i) { return 1u << i; }
-uint lane_of(DV a, uint i) { return subgroupShuffle(a, i); }
-DV set_lane(DV a, uint i, uint v) { return lane == i ? v : a; }
-DV ldv(uint idx) { return uint(tab[idx * VB + lane]); }
-DV ldi(uint off) { return uint(item[off + lane]); }
-void sti(uint off, DV v) { outr[off + lane] = uint8_t(v); }
-DV dzero() { return 0u; }
-DV add(DV a, DV o) {
-    DV s = a + o;
-    uint g = bal(s >= B);
-    uint p = bal(s == B - 1u);
-    uint cin = ((g << 1) + p) ^ p;
-    DV r = s + ((cin >> lane) & 1u);
-    return r >= B ? r - B : r;
-}
-uint pack4(DV t, DV h, DV te, DV ch) { return t | (h << 8) | (te << 16) | (ch << 24); }
-DV unpack_at(uint v, uint s) { return (v >> s) & 255u; }
-uint hash_lanes(DV a, MASK m) {
-    uint x = a * 0x9e3779b1u + 0x7f4a7c15u;
-    x ^= x >> 15;
-    x *= 0x85ebca77u;
-    x ^= x >> 13;
-    return subgroupAdd((m >> lane & 1u) != 0u ? x : 0u);
-}
-// sum over lanes x of v[x] * H(x)
-uint weigh(DV v) {
-    uint x = lane * 0x9e3779b1u + 0x7f4a7c15u;
-    x ^= x >> 15;
-    x *= 0x85ebca77u;
-    x ^= x >> 13;
-    return subgroupAdd(v * x);
-}
-uint hash_of(uint y) {
-    uint x = y * 0x9e3779b1u + 0x7f4a7c15u;
-    x ^= x >> 15;
-    x *= 0x85ebca77u;
-    x ^= x >> 13;
-    return x;
-}
-// the histogram of digits [0, d) of a, in lanes
-DV hist(DV a, uint d) {
-    DV h = 0u;
-    for (uint j = 0; j < d; j++) {
-        h += lane_of(a, j) == lane ? 1u : 0u;
-    }
-    return h;
-}
-bool all_eq(DV a, DV o) { return subgroupAll(a == o); }
 #else
-#define DV uvec2
 #define MASK uint64_t
-MASK bal2(bool c0, bool c1) { return packUint2x32(uvec2(subgroupBallot(c0).x, subgroupBallot(c1).x)); }
+const MASK ONES = ~uint64_t(0);
+const uint MBITS = 64u;
+uvec2 words(MASK m) { return unpackUint2x32(m); }
 uint popc(MASK m) { uvec2 v = unpackUint2x32(m); return bitCount(v.x) + bitCount(v.y); }
 int msb(MASK m) { uvec2 v = unpackUint2x32(m); return v.y != 0u ? 32 + findMSB(v.y) : findMSB(v.x); }
 uint lsb(MASK m) { uvec2 v = unpackUint2x32(m); return v.x != 0u ? uint(findLSB(v.x)) : 32u + uint(findLSB(v.y)); }
-MASK m_nz(DV a) { return bal2(a.x != 0u, a.y != 0u); }
-MASK m_eq(DV a, DV o) { return bal2(a.x == o.x, a.y == o.y); }
-MASK m_eqx(DV a, uint x) { return bal2(a.x == x, a.y == x); }
-MASK m_ge(DV a, uint x) { return bal2(a.x >= x, a.y >= x); }
 MASK bit(uint i) { return uint64_t(1) << i; }
-uint lane_of(DV a, uint i) { return subgroupShuffle(i < 32u ? a.x : a.y, i & 31u); }
-DV set_lane(DV a, uint i, uint v) {
-    if (i < 32u) { a.x = lane == i ? v : a.x; } else { a.y = lane == i - 32u ? v : a.y; }
-    return a;
+#endif
+
+DV LANEV; // the digit position of each component: lane + L c
+DV HV;    // a hash of each digit value lane + L c
+
+MASK bal(BV v) {
+    uvec2 w = uvec2(0u);
+    for (uint c = 0u; c < C; c++) {
+        uint m = subgroupBallot(COMP(v, c)).x;
+        w[(L * c) >> 5] |= m << ((L * c) & 31u);
+    }
+#if W == 1
+    return w.x;
+#else
+    return packUint2x32(w);
+#endif
 }
-DV ldv(uint idx) { uint o = idx * VB + lane; return uvec2(uint(tab[o]), uint(tab[o + 32u])); }
-DV ldi(uint off) { return uvec2(uint(item[off + lane]), uint(item[off + lane + 32u])); }
-void sti(uint off, DV v) { outr[off + lane] = uint8_t(v.x); outr[off + lane + 32u] = uint8_t(v.y); }
-DV dzero() { return uvec2(0u); }
+// bit lane + L c of m, in component c
+DV mbits(MASK m) {
+    uvec2 w = words(m);
+    DV r;
+    for (uint c = 0u; c < C; c++) {
+        COMP(r, c) = (w[(L * c) >> 5] >> (lane + ((L * c) & 31u))) & 1u;
+    }
+    return r;
+}
+uint pick(DV a, uint c) {
+#if C == 1
+    return a;
+#elif C == 2
+    return c == 0u ? a.x : a.y;
+#else
+    return c < 2u ? (c == 0u ? a.x : a.y) : (c == 2u ? a.z : a.w);
+#endif
+}
+// a lane's C digits are C consecutive bytes
+DV ldw(uint w) {
+    uint sh = (lane * C * 8u) & 31u;
+    DV r;
+    for (uint c = 0u; c < C; c++) {
+        COMP(r, c) = (w >> (sh + 8u * c)) & 255u;
+    }
+    return r;
+}
+DV ldv(uint idx) { return ldw(tab[idx * (VB / 4u) + (lane * C) / 4u]); }
+DV ldi(uint off) { return ldw(item[off / 4u + (lane * C) / 4u]); }
+
+void sti(uint off, DV v) {
+    for (uint c = 0u; c < C; c++) {
+        outr[off + lane * C + c] = uint8_t(pick(v, c));
+    }
+}
+MASK m_nz(DV a) { return bal(VNE(a, DV(0u))); }
+MASK m_eq(DV a, DV o) { return bal(VEQ(a, o)); }
+MASK m_eqx(DV a, uint x) { return bal(VEQ(a, DV(x))); }
+MASK m_ge(DV a, uint x) { return bal(VGE(a, DV(x))); }
+// digit i of a, in every lane; i must be the same in all lanes
+uint lane_of(DV a, uint i) { return subgroupBroadcast(pick(a, i / L), i % L); }
+DV set_lane(DV a, uint i, uint v) { return mix(a, DV(v), VEQ(LANEV, DV(i))); }
 DV add(DV a, DV o) {
     DV s = a + o;
-    uint64_t g = bal2(s.x >= B, s.y >= B);
-    uint64_t p = bal2(s.x == B - 1u, s.y == B - 1u);
-    uvec2 cin = unpackUint2x32(((g << 1) + p) ^ p);
-    DV r = s + uvec2((cin.x >> lane) & 1u, (cin.y >> lane) & 1u);
-    return uvec2(r.x >= B ? r.x - B : r.x, r.y >= B ? r.y - B : r.y);
+    MASK g = bal(VGE(s, DV(B)));
+    MASK p = bal(VEQ(s, DV(B - 1u)));
+    DV r = s + mbits(((g << 1) + p) ^ p);
+    return mix(r, r - B, VGE(r, DV(B)));
 }
-uvec2 pack4(DV t, DV h, DV te, DV ch) { return t | (h << 8) | (te << 16) | (ch << 24); }
-DV unpack_at(uvec2 v, uint s) { return (v >> s) & 255u; }
-uint hash_of(uint y) {
-    uint x = y * 0x9e3779b1u + 0x7f4a7c15u;
+uint pack1(DV v) {
+    uint s = 0u;
+    for (uint c = 0u; c < C; c++) {
+        s += pick(v, c);
+    }
+    return s;
+}
+DV hashv(DV y) {
+    DV x = y * 0x9e3779b1u + 0x7f4a7c15u;
     x ^= x >> 15;
     x *= 0x85ebca77u;
     x ^= x >> 13;
     return x;
 }
-uint hash_lanes(DV a, MASK m) {
-    uvec2 mm = unpackUint2x32(m);
-    uint s = ((mm.x >> lane) & 1u) != 0u ? hash_of(a.x) : 0u;
-    s += ((mm.y >> lane) & 1u) != 0u ? hash_of(a.y) : 0u;
-    return subgroupAdd(s);
-}
-uint weigh(DV v) { return subgroupAdd(v.x * hash_of(lane) + v.y * hash_of(lane + 32u)); }
+uint hash_of(uint y) { return hashv(DV(y)).x; }
+// the sum of H(digit) over the digits of a selected by m
+uint hash_lanes(DV a, MASK m) { return subgroupAdd(pack1(hashv(a) * mbits(m))); }
+// the sum over digit values x of v[x] * H(x)
+uint weigh(DV v) { return subgroupAdd(pack1(v * HV)); }
+// the histogram of digits [0, d) of a, by digit value
 DV hist(DV a, uint d) {
-    DV h = uvec2(0u);
+    DV h = DV(0u);
     for (uint j = 0; j < d; j++) {
-        uint v = lane_of(a, j);
-        h.x += v == lane ? 1u : 0u;
-        h.y += v == lane + 32u ? 1u : 0u;
+        h += DV(VEQ(LANEV, DV(lane_of(a, j))));
     }
     return h;
 }
-bool all_eq(DV a, DV o) { return subgroupAll(a.x == o.x && a.y == o.y); }
-#endif
+bool all_eq(DV a, DV o) { return subgroupAll(ALL(VEQ(a, o))); }
+// digits and prefix counts are below 64
+DV pack5(DV t, DV h, DV te, DV ch, DV hp) { return t | (h << 6) | (te << 12) | (ch << 18) | (hp << 24); }
+DV unpack_at(DV v, uint s) { return (v >> s) & 63u; }
+// bits x0 to x1 of a mask, for x1 < MBITS
+MASK range(uint x0, uint x1) { return (ONES >> (MBITS - 1u - x1)) & ~(bit(x0) - MASK(1)); }
+// one more copy of digit i of a in the histogram h
+DV count_digit(DV h, DV a, uint i) { return h + DV(VEQ(LANEV, DV(lane_of(a, i)))); }
+
+uint nodes_here, evals_here;
 
 // parameters of the current digit count
 uint D, KMAX, OW, ODHI, OSHIFT, ODROP, OTW0;
 MASK DM, TOP;
 DV POW_LO, MAX_V;
-uint64_t nodes, evals;
-uint nodes_here;
 
 // lanes [pp, d): the known leading digits
 MASK known(uint pp) { return DM & ~(bit(pp) - MASK(1)); }
@@ -184,7 +222,11 @@ DV clip_lo(DV t) { return (m_nz(t) & ~(DM >> 1)) == MASK(0) ? POW_LO : t; }
 uint count_in(DV a, uint x, MASK m) { return popc(m_eqx(a, x) & m); }
 
 // see settle in search.rs
-bool settle(uint k, inout DV ct, inout DV chi_n, inout uint cpp, inout uint crf, inout DV clo, inout DV chi, DV cnt) {
+// hp is the histogram of the known leading digits, by digit value. It
+// replaces the counts by vector compares in search.rs: a parent's prefix
+// never holds more copies of a decided digit x >= k than cnt[x], so only
+// the new digits can break the rule.
+bool settle(uint k, inout DV ct, inout DV chi_n, inout uint cpp, inout uint crf, inout DV clo, inout DV chi, DV cnt, inout DV hp) {
     for (;;) {
         uint npp = uint(msb(~m_eq(clo, chi) & DM) + 1);
         if (npp >= cpp) {
@@ -198,11 +240,13 @@ bool settle(uint k, inout DV ct, inout DV chi_n, inout uint cpp, inout uint crf,
             return false;
         }
         MASK big = nw & ~forced;
-        while (big != MASK(0)) {
-            uint i = lsb(big);
-            big &= big - MASK(1);
-            uint x = lane_of(clo, i);
-            if (count_in(clo, x, kn) > lane_of(cnt, x)) {
+        if (big != MASK(0)) {
+            do {
+                uint i = lsb(big);
+                big &= big - MASK(1);
+                hp = count_digit(hp, clo, i);
+            } while (big != MASK(0));
+            if ((bal(VGT(hp, cnt)) & ~(bit(k) - MASK(1))) != MASK(0)) {
                 return false;
             }
         }
@@ -217,6 +261,7 @@ bool settle(uint k, inout DV ct, inout DV chi_n, inout uint cpp, inout uint crf,
             uint i = lsb(fl);
             fl &= fl - MASK(1);
             uint x = lane_of(clo, i);
+            hp += DV(VEQ(LANEV, DV(x)));
             if (x > 0u) {
                 ct = add(ct, ldv(OW + x));
             }
@@ -231,7 +276,7 @@ bool settle(uint k, inout DV ct, inout DV chi_n, inout uint cpp, inout uint crf,
     }
 }
 
-bool first_digit_ok(DV lo, DV hi, uint pp, uint k, DV cnt) {
+bool first_digit_ok(DV lo, DV hi, uint pp, uint k, DV cnt, DV hp) {
     if (pp == 0u) {
         return true;
     }
@@ -240,13 +285,7 @@ bool first_digit_ok(DV lo, DV hi, uint pp, uint k, DV cnt) {
         return true;
     }
     uint x1 = lane_of(hi, pp - 1u);
-    MASK kn = known(pp);
-    for (uint x = x0; x <= x1; x++) {
-        if (count_in(lo, x, kn) < lane_of(cnt, x)) {
-            return true;
-        }
-    }
-    return false;
+    return (bal(VLT(hp, cnt)) & range(x0, x1)) != MASK(0);
 }
 
 void report(uint mode, DV s) {
@@ -263,21 +302,15 @@ void report(uint mode, DV s) {
         found[o] = uint8_t(mode);
         found[o + 1u] = uint8_t(D);
     }
-#if W == 1
-    found[o + 16u + lane] = uint8_t(s);
-    found[o + 48u + lane] = uint8_t(0);
-#else
-    found[o + 16u + lane] = uint8_t(s.x);
-    found[o + 48u + lane] = uint8_t(s.y);
-#endif
+    for (uint c = 0u; c < C; c++) {
+        found[o + 16u + L * c + lane] = uint8_t(pick(s, c));
+    }
 }
 
 // see leaf in search.rs; a hash of the digit multiset filters the candidates
 // before the exact comparison of histograms
-void leaf(DV t, uint pp, uint rf, DV cnt) {
-    MASK kn = known(pp);
-    DV nlo = clip_lo(t);
-    uint o0 = count_in(nlo, 0u, kn), o1 = count_in(nlo, 1u, kn);
+void leaf(DV t, uint pp, uint rf, DV cnt, DV hp) {
+    uint o0 = lane_of(hp, 0u), o1 = lane_of(hp, 1u);
     DV c2 = set_lane(set_lane(cnt, 0u, 0u), 1u, 0u);
     uint want2 = weigh(c2);
     uint h0 = hash_of(0u), h1 = hash_of(1u);
@@ -324,13 +357,9 @@ void load_params(uint pi) {
     TOP = ~(DM >> 1);
 }
 
-// the DFS stack: per level, t, hi, te, chi packed in one word per digit,
+// the DFS stack: per level, t, hi, te, chi and hp packed in one word per digit,
 // and e, occk, pp, rf packed in one word
-#if W == 1
-uint stk[MAXLEV];
-#else
-uvec2 stk[MAXLEV];
-#endif
+DV stk[MAXLEV];
 uint sst[MAXLEV];
 
 void write_item(uint pi, uint k, uint e, uint occk, uint pp, uint rf, DV t, DV hi, DV te, DV chi, DV cnt) {
@@ -341,7 +370,7 @@ void write_item(uint pi, uint k, uint e, uint occk, uint pp, uint rf, DV t, DV h
     slot = subgroupBroadcastFirst(slot);
     // the host sizes the output for every possible item
     uint o = slot * ITEM;
-    if (lane < 16u) {
+    {
         uint v = lane == H_PI ? pi : lane == H_K ? k : lane == H_E ? e : lane == H_OCCK ? occk : lane == H_PP ? pp : lane == H_RF ? rf : 0u;
         outr[o + lane] = uint8_t(v);
     }
@@ -356,28 +385,35 @@ void write_item(uint pi, uint k, uint e, uint occk, uint pp, uint rf, DV t, DV h
 // the pending cursors are then written out.
 bool run_item(uint idx) {
     uint o = idx * ITEM;
-    uint pi = uint(item[o + H_PI]);
-    uint k = uint(item[o + H_K]);
-    uint e = uint(item[o + H_E]);
-    uint occk = uint(item[o + H_OCCK]);
-    uint pp = uint(item[o + H_PP]);
-    uint rf = uint(item[o + H_RF]);
-    bool root = item[o + H_ROOT] != uint8_t(0);
+    uint h0 = item[o / 4u], h1 = item[o / 4u + 1u];
+    uint pi = h0 & 255u;
+    uint k = (h0 >> 8) & 255u;
+    uint e = (h0 >> 16) & 255u;
+    uint occk = h0 >> 24;
+    uint pp = h1 & 255u;
+    uint rf = (h1 >> 8) & 255u;
+    bool root = ((h1 >> 16) & 255u) != 0u;
     load_params(pi);
     DV nt = ldi(o + 16u);
     DV nhi = ldi(o + 16u + VB);
     DV te = ldi(o + 16u + 2u * VB);
     DV chi = ldi(o + 16u + 3u * VB);
     DV cnt = ldi(o + 16u + 4u * VB);
+    DV nhp = DV(0u);
+    {
+        DV lo = clip_lo(nt);
+        for (uint j = pp; j < D; j++) {
+            nhp = count_digit(nhp, lo, j);
+        }
+    }
     if (root) {
-        nodes++;
         nodes_here++;
         if (k == 1u) {
-            leaf(nt, pp, rf, cnt);
+            leaf(nt, pp, rf, cnt, nhp);
             return nodes_here < pc.budget;
         }
         // Cursor::new
-        occk = count_in(clip_lo(nt), k, known(pp));
+        occk = lane_of(nhp, k);
         te = nt;
         chi = add(nhi, ldv(ODROP + k * (D + 1u) + rf));
         e = 0u;
@@ -386,7 +422,7 @@ bool run_item(uint idx) {
     for (;;) {
         // next_child: the cursor is (nt, nhi, pp, rf) with k, e, te, chi, occk
         bool got = false;
-        DV ct, chn, clo, chc;
+        DV ct, chn, clo, chc, chp;
         uint cpp = 0u, crf = 0u;
         DV wk = ldv(OW + k), dhi = ldv(ODHI + k);
         while (e <= rf) {
@@ -396,7 +432,7 @@ bool run_item(uint idx) {
                 te = add(te, wk);
                 chi = add(chi, dhi);
             }
-            evals++;
+            evals_here++;
             uint ck = occk + ee;
             MASK nlo = m_nz(te);
             if ((nlo & ~DM) != MASK(0)) {
@@ -414,18 +450,18 @@ bool run_item(uint idx) {
             chn = chi;
             cpp = pp;
             crf = rf - ee;
-            if (settle(k, ct, chn, cpp, crf, clo, chc, cnt) && first_digit_ok(clo, chc, cpp, k, cnt)) {
+            chp = nhp;
+            if (settle(k, ct, chn, cpp, crf, clo, chc, cnt, chp) && first_digit_ok(clo, chc, cpp, k, cnt, chp)) {
                 got = true;
                 break;
             }
         }
         if (got) {
-            nodes++;
             nodes_here++;
             if (k == 2u) {
-                leaf(ct, cpp, crf, cnt);
+                leaf(ct, cpp, crf, cnt, chp);
             } else {
-                stk[sp] = pack4(nt, nhi, te, chi);
+                stk[sp] = pack5(nt, nhi, te, chi, nhp);
                 sst[sp] = e | (occk << 8) | (pp << 16) | (rf << 24);
                 sp++;
                 k--;
@@ -433,7 +469,8 @@ bool run_item(uint idx) {
                 nhi = chn;
                 pp = cpp;
                 rf = crf;
-                occk = count_in(clip_lo(nt), k, known(pp));
+                nhp = chp;
+                occk = lane_of(nhp, k);
                 te = nt;
                 chi = add(nhi, ldv(ODROP + k * (D + 1u) + rf));
                 e = 0u;
@@ -448,8 +485,8 @@ bool run_item(uint idx) {
                     uint ke = k + (sp - i + 1u);
                     uint se = s & 255u, srf = s >> 24;
                     if (se <= srf) {
-                        write_item(pi, ke, se, (s >> 8) & 255u, (s >> 16) & 255u, srf, unpack_at(stk[i - 1u], 0u), unpack_at(stk[i - 1u], 8u),
-                                   unpack_at(stk[i - 1u], 16u), unpack_at(stk[i - 1u], 24u), cnt);
+                        write_item(pi, ke, se, (s >> 8) & 255u, (s >> 16) & 255u, srf, unpack_at(stk[i - 1u], 0u), unpack_at(stk[i - 1u], 6u),
+                                   unpack_at(stk[i - 1u], 12u), unpack_at(stk[i - 1u], 18u), cnt);
                     }
                 }
                 return false;
@@ -462,9 +499,10 @@ bool run_item(uint idx) {
             k++;
             uint s = sst[sp];
             nt = unpack_at(stk[sp], 0u);
-            nhi = unpack_at(stk[sp], 8u);
-            te = unpack_at(stk[sp], 16u);
-            chi = unpack_at(stk[sp], 24u);
+            nhi = unpack_at(stk[sp], 6u);
+            te = unpack_at(stk[sp], 12u);
+            chi = unpack_at(stk[sp], 18u);
+            nhp = unpack_at(stk[sp], 24u);
             e = s & 255u;
             occk = (s >> 8) & 255u;
             pp = (s >> 16) & 255u;
@@ -477,9 +515,12 @@ void main() {
     lane = gl_SubgroupInvocationID;
     B = pc.b;
     uint sg = gl_WorkGroupID.x * gl_NumSubgroups + gl_SubgroupID;
-    nodes = 0;
-    evals = 0;
+    for (uint c = 0u; c < C; c++) {
+        COMP(LANEV, c) = lane + L * c;
+    }
+    HV = hashv(LANEV);
     nodes_here = 0u;
+    evals_here = 0u;
     for (;;) {
         uint idx = 0u;
         if (subgroupElect()) {
@@ -494,7 +535,7 @@ void main() {
         }
     }
     if (subgroupElect()) {
-        stats[2u * sg] += nodes;
-        stats[2u * sg + 1u] += evals;
+        stats[2u * sg] += uint64_t(nodes_here);
+        stats[2u * sg + 1u] += uint64_t(evals_here);
     }
 }
