@@ -1,0 +1,7 @@
+# 4 threads, best of 2 alternating runs; load average at start 25.0
+# k M | survivors old | new | wall old s | new s | speedup | user old s | new s | speedup | outputs equal
+4 150 | 615113 | 2089 | 19.46 | 1.80 | 10.81 | 51.66 | 4.59 | 11.27 | True
+5 60 | 507922 | 716 | 48.95 | 3.59 | 13.63 | 118.99 | 10.63 | 11.20 | True
+6 30 | 588869 | 961 | 76.68 | 5.83 | 13.16 | 190.10 | 17.69 | 10.75 | True
+7 18 | 596001 | 1318 | 125.10 | 10.26 | 12.19 | 275.96 | 24.62 | 11.21 | True
+# load average at end 31.9
