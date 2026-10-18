@@ -28,6 +28,7 @@ statement is marked by its source:
 | [14. Other number systems](14-other-bases.md) | negative, imaginary and Gaussian bases; factorions; what is universal |
 | [15. Dynamics and nonexistence](15-dynamics.md) | cycles of `n -> F(n)`, bases with two 2-digit solutions, coverings, constructions, integers with many bases |
 | [16. Algebra of the polynomial](16-algebra.md) | Aurifeuillian factors and base 904, the equation `b(b+x) = x^x + 1`, reducibility, Galois groups, rational bases |
+| [17. Other weights](17-weights.md) | a general weight table in the engine; forced residues multiply the count by `b-1` as predicted; `0^0 = m`; universality of the laws |
 | [Open questions](questions.md) | 30 research questions, with priorities |
 
 ## Main results

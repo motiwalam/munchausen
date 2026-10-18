@@ -73,13 +73,13 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
    not a partner (Proposition 12.3), apart from `(1,1,1)`? For k >= 5, is any
    string a solution in both a base `b` and a base `-c`? Small. Priority 3.
 
-9. The convention `0^0 = m` as a free integer. For `m` other than 0 and 1
+9. (Answered in chapter 17.) The convention `0^0 = m` as a free integer. For `m` other than 0 and 1
    there are no twins or self-paying families. Predictions: in odd bases the
    parity factor is 2 for even `m` and `1 + e^(-2)` for odd `m`. Measure
    `N_m(b)` for m in {-2, -1, 2, 3}, bases 10 to 30. Needs question 26.
    Priority 3.
 
-10. (Answered in chapter 14 (factorions) and the weights chapter.) Universality. Replace `x^x` by `x^(x+t)` or by `x!` (factorions, OEIS
+10. (Answered in chapters 14 and 17.) Universality. Replace `x^x` by `x^(x+t)` or by `x!` (factorions, OEIS
     A193163, A014080). Are the length shares 8/55/23% and the Poisson law
     universal for weights of this size? Medium. Priority 2.
 
@@ -132,7 +132,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme IV. The model, probability and dynamics
 
-19. A sharp test of the model: force `w'(x) == x (mod b-1)` in perturbed
+19. (Answered in chapter 17: forced residues multiply the count by 18.9 against 16.9 predicted.) A sharp test of the model: force `w'(x) == x (mod b-1)` in perturbed
     weights. The refined model then predicts about `b-1` times as many
     solutions. Forcing `w'(x) == x + 1 (mod b-1)` should leave only
     `(b-1)`-digit solutions, about `0.55 (b-1)` per base. Bases 12 to 24.
@@ -168,7 +168,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 25. The defect spectrum in one pass: widen the interval by `W` and check every
     `|D| <= W` at the leaves. Priority 2.
 
-26. A general weight table in the engine: `w(0) = m`, `x^(x+t)`, `x!`, forced
+26. (Answered in chapter 17: options --zero, --shift, --factorial, --set-residue.) A general weight table in the engine: `w(0) = m`, `x^(x+t)`, `x!`, forced
     residues. Pruning needs only increasing weights. Unblocks 9, 10, 19.
     Priority 1.
 
@@ -219,7 +219,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     between the NP-complete general problem and the real one. (chapter 13)
 41. Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
     expected (P about 0.03 after the look-elsewhere effect). Bases 47 and 49
-    would decide it. (weights chapter)
+    would decide it. (chapter 17)
 42. Six of the eight empty negative bases up to -35 are multiples of 3
     (P = 0.06 for those not named in advance). Chance? (chapter 14)
 43. In base `-n+i`, positive integers occupy lengths in runs of one parity.

@@ -1,4 +1,4 @@
-# Other weights: a sharp test of the model
+# 17. Other weights: a sharp test of the model
 
 Draft for questions 26, 19, 9 and 10. The engine now searches exactly with
 other weights than `x^x`. Four experiments use it: weights with forced
@@ -21,7 +21,7 @@ long factorions under `w(0) = 0` where the model expects 11.9 (P = 0.002). The
 near-factorions at 30 offsets in the same bases match the model. So the
 shortfall belongs to the offset 0 alone, and I have no explanation.
 
-## 1. The engine (question 26)
+## 17.1 The engine (question 26)
 
 `fast search` accepts four new options (`fast/README.md`):
 
@@ -82,7 +82,7 @@ Cost in base 30, 3 threads (computed):
 The `x!` tree grows about 1.75 times per base. Base 42 takes 2.97 billion
 nodes and 158 s on 3 threads.
 
-## 2. Forced residues (question 19)
+## 17.2 Forced residues (question 19)
 
 ### The identity (proven)
 
@@ -159,7 +159,7 @@ Two details differ from a Poisson law:
   `b >= 4`, the numbers `(1,2)` and `(2,2)` are solutions in every base and
   for every seed.
 
-## 3. The convention `0^0 = m` (question 9)
+## 17.3 The convention `0^0 = m` (question 9)
 
 ### The prediction (model)
 
@@ -202,7 +202,7 @@ with odd `m` have 11 solutions with zeros against 10.9, while odd bases with
 even `m` have 42 against 39.5. The values `m = -2, 2, 3` have no twins or
 self-paying families, and they fit as well as `m = 0, 1`.
 
-## 4. Universality (question 10)
+## 17.4 Universality (question 10)
 
 ### Predictions (model)
 
@@ -317,7 +317,7 @@ expects 2.05 per convention in the two bases, and the shortfall at its
 observed rate (about 0.3 times the model) predicts 0.6. One observed fits
 both. Status: open. Bases 47 and 49 take about 1 and 3 hours.
 
-## 5. Status
+## 17.5 Status
 
 | question | status |
 |---|---|
