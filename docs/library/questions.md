@@ -195,3 +195,34 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     823537). Under `0^0 = 1` all 201 integers with two bases in the catalog are
     2-digit pairs. Is there one with a representation of 3 or more digits? What
     is the most bases one integer can have under `0^0 = 1`? Priority 3.
+
+## Round 2: questions raised by the answers
+
+31. Does the exact series for `M / L` (Theorem 16.1) extend to Aurifeuillian
+    factors of `a^n +- b^n` in general? (chapter 16)
+32. Is the set of solutions `(x, n)` of `b (b + x) = x^n + 1` with `n >= 4`
+    finite? Only `(7, 7)` is known. (chapter 16)
+33. For every `k`, is there a bound `F <= C_k M^(c_k)` beyond which every
+    factorization of `Q_s` without a linear factor comes from a decomposition
+    of `P_s`? (chapter 16)
+34. Why do negative bases lack the non-partner 3-digit solutions, such as
+    `(3,1,3)`, that positive bases have? (chapters 12 and 16)
+35. Even bases under `0^0 = 0` have 1 two-cycle of `n -> F(n)` against 3.5
+    expected. Is there a second invariant, or is this chance? (chapter 15)
+36. Which bases have one 2-digit and one 3-digit solution? (chapter 15)
+37. Close the case `a^a ~ c^c` of the cores in self-paying bases, where abc
+    does not apply. (chapter 15)
+38. Does every covering need a modulus on which `x^x - x` misses residues,
+    that is a power of 2 or 3, or 25? (chapter 15)
+39. Does some integer have three bases under `0^0 = 1`? (chapter 15)
+40. Is the problem with weights `x^(e(x))`, `e` in unary, NP-hard? It sits
+    between the NP-complete general problem and the real one. (chapter 13)
+41. Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
+    expected (P about 0.03 after the look-elsewhere effect). Bases 47 and 49
+    would decide it. (weights chapter)
+42. Six of the eight empty negative bases up to -35 are multiples of 3
+    (P = 0.06 for those not named in advance). Chance? (chapter 14)
+43. In base `-n+i`, positive integers occupy lengths in runs of one parity.
+    For `-1+i`, are the lengths exactly the residues 1 and 4 mod 8? (chapter 14)
+44. Per-base expected counts vary by about 20% beyond sampling error, and
+    forced top digits explain part of it. What explains the rest? (section 11.2a)
