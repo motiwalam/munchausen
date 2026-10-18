@@ -1,0 +1,11 @@
+s=2 m=4 k=1 y=1: M/L = 5.000000000000000000  log = 1.6094379124341003746  leading term 2 chi(k) mu(k) = 2
+s=2 m=12 k=3 y=1: M/L = 13.000000000000000000  log = 2.564949357461536736  leading term 2 chi(k) mu(k) = 2
+s=3 m=6 k=1 y=1: M/L = 7.000000000000000000  log = 1.9459101490553133051  leading term 2 chi(k) mu(k) = 2
+s=3 m=18 k=3 y=1: M/L = 1.9473684210526315789  log = 0.6664789334777839844  leading term 2 chi(k) mu(k) = 0
+s=5 m=5 k=1 y=1: M/L = 6.454545454545454546  log = 1.8647846042429448773  leading term 2 chi(k) mu(k) = 2
+s=5 m=15 k=3 y=1: M/L = 9.618784530386740332  log = 2.263717908502363295  leading term 2 chi(k) mu(k) = 2
+s=6 m=12 k=1 y=1: M/L = 7.461538461538461539  log = 2.009761621041846086  leading term 2 chi(k) mu(k) = 2
+s=6 m=36 k=3 y=1: M/L = 1.3956144126807282303  log = 0.3333347575061105572  leading term 2 chi(k) mu(k) = 0
+s=7 m=14 k=1 y=1: M/L = 8.061946902654867257  log = 2.087155078547617752  leading term 2 chi(k) mu(k) = 2
+s=7 m=42 k=3 y=1: M/L = 6.056691030941976446  log = 1.8011636164520732482  leading term 2 chi(k) mu(k) = -2
+cases: 456; largest |direct - series| (any k): 1.82229431459029419010136575372234105533 E-62; largest error of the gcd(k,D)=1 formula: 1.82229431459029419010136575372234105533 E-62

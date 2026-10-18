@@ -1,0 +1,4 @@
+progress 20001 max n_hi (214407, 20001)
+progress 60003 max n_hi (238188, 60001)
+X = 100001 largest n_hi = (249246, 99999)
+hits: [(7, 7, 'direct')]
