@@ -1,0 +1,37 @@
+base 10 lanes: 1 solutions, same as fast search: 1,4,5
+base 10 brute: 1 solutions, same as fast search: 1,4,5
+base 11 lanes: 3 solutions, same as fast search: 2,4 2,8,4,5,3 4,4
+base 11 brute: 3 solutions, same as fast search: 2,4 2,8,4,5,3 4,4
+base 12 lanes: 2 solutions, same as fast search: 1,2,7,0,2,11,10,5 2,2,8,11,11,5,0,4
+base 12 brute: 2 solutions, same as fast search: 1,2,7,0,2,11,10,5 2,2,8,11,11,5,0,4
+base 13 lanes: 1 solutions, same as fast search: 9,2,3,0,10,9,11
+base 13 brute: 1 solutions, same as fast search: 9,2,3,0,10,9,11
+base 14 lanes: 0 solutions, same as fast search: 
+base 14 brute: 0 solutions, same as fast search: 
+base 15 lanes: 3 solutions, same as fast search: 6,6,0 6,6,1 6,6,2
+base 15 brute: 3 solutions, same as fast search: 6,6,0 6,6,1 6,6,2
+base 16 lanes: 0 solutions, same as fast search: 
+base 16 brute: 0 solutions, same as fast search: 
+base 17 lanes: 2 solutions, same as fast search: 1,4,6,15,2,16,8,5,8,6,16,4 11,0,9,1,6,15,12,7,3,7
+base 17 brute: 2 solutions, same as fast search: 1,4,6,15,2,16,8,5,8,6,16,4 11,0,9,1,6,15,12,7,3,7
+base 18 lanes: 0 solutions, same as fast search: 
+base 18 brute: 0 solutions, same as fast search: 
+base 19 lanes: 0 solutions, same as fast search: 
+base 19 brute: 0 solutions, same as fast search: 
+base 20 lanes: 0 solutions, same as fast search: 
+base 20 brute: 0 solutions, same as fast search: 
+base 21 lanes: 1 solutions, same as fast search: 1,4
+base 22 lanes: 0 solutions, same as fast search: 
+base 23 lanes: 0 solutions, same as fast search: 
+base 24 lanes: 4 solutions, same as fast search: 2,7,15,22,16,17,3,19,3,2,23,22,0,10,20,18,16 5,0 5,1 5,2
+base 25 lanes: 0 solutions, same as fast search: 
+base 26 lanes: 0 solutions, same as fast search: 
+base 27 lanes: 2 solutions, same as fast search: 7,2,5 7,5,12,10,7,11,14,21,9,17,1,20,2,25,6,13,20,15
+base 28 lanes: 2 solutions, same as fast search: 5,4 6,27,0,25,19,1,25,14,1,12,8,8,9,24,20,1,25,6,27,15
+base 29 lanes: 0 solutions, same as fast search: 
+base 30 lanes: 0 solutions, same as fast search: 
+base 31 lanes: 0 solutions, same as fast search: 
+base 32 lanes: 3 solutions, same as fast search: 6,24,22,26,17,27,29,11,14,17,14,25,30,26,6,24,26,28,28,26,21,0 6,24,22,26,17,27,29,11,14,17,14,25,30,26,6,24,26,28,28,26,21,1 6,24,22,26,17,27,29,11,14,17,14,25,30,26,6,24,26,28,28,26,21,2
+base 33 lanes: 0 solutions, same as fast search: 
+base 34 lanes: 3 solutions, same as fast search: 1,24,23,30,3,19,31,2,18,29,26,15,17,29,19,7,26,23,4,26,17,8,5 3,6,18,21,14,18,15,9,23,32,29,17,30,32,31,9,9,18,12,25,1,16,18,27 3,6,22,9,30,30,17,12,30,10,3,4,14,29,3,32,31,25,5,6,22,4,32,26
+base 35 lanes: 1 solutions, same as fast search: 1,6,6

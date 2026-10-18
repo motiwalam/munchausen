@@ -3,6 +3,7 @@
 //!   pow0, pow1   w(x) = x^x, with w(0) = 0 or 1
 //!   powt:T:M     w(x) = x^(x+T), with w(0) = M
 //!   fact         w(x) = x!  (factorions)
+//!   fact0        w(x) = x! for x >= 1, w(0) = 0
 //!
 //! Two engines:
 //!   brute  enumerates every digit multiset whose sum can have d digits. It
@@ -100,7 +101,8 @@ fn weights(spec: &str, b: u64) -> Vec<u128> {
                     v
                 }
             }
-            "fact" => {
+            "fact0" if x == 0 => 0,
+            "fact" | "fact0" => {
                 let mut v: u128 = 1;
                 for i in 2..=x as u128 {
                     v = v.checked_mul(i).expect("weight does not fit in u128");
@@ -711,7 +713,8 @@ fn big_weights(spec: &str, b: u64) -> Vec<num_bigint::BigUint> {
                 };
                 if x == 0 { BigUint::from(m) } else { BigUint::from(x).pow((x as i64 + t) as u32) }
             }
-            "fact" => (2..=x).fold(BigUint::from(1u32), |a, i| a * i),
+            "fact0" if x == 0 => BigUint::from(0u32),
+            "fact" | "fact0" => (2..=x).fold(BigUint::from(1u32), |a, i| a * i),
             _ => panic!("unknown weights {spec}"),
         })
         .collect()
