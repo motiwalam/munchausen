@@ -1,0 +1,237 @@
+sol base -2 w pow1 d 3 digits 1,1,1
+len base -2 w pow1 d 3 sols 1 leaves 4 basic 1.000000e0 refined 7.500000e-1 refined_zerofree 7.500000e-1 secs 0.00
+total base -2 w pow1 sols 1 secs 0.00
+sol base -2 w pow0 d 3 digits 1,1,0
+sol base -2 w pow0 d 3 digits 1,1,1
+len base -2 w pow0 d 3 sols 2 leaves 4 basic 7.500000e-1 refined 2.250000e0 refined_zerofree 7.500000e-1 secs 0.00
+total base -2 w pow0 sols 2 secs 0.00
+len base -3 w pow1 d 3 sols 0 leaves 10 basic 1.000000e0 refined 1.111111e0 refined_zerofree 8.888889e-1 secs 0.00
+total base -3 w pow1 sols 0 secs 0.00
+len base -3 w pow0 d 3 sols 0 leaves 10 basic 8.333333e-1 refined 1.333333e0 refined_zerofree 8.888889e-1 secs 0.00
+total base -3 w pow0 sols 0 secs 0.00
+len base -4 w pow1 d 3 sols 0 leaves 12 basic 7.291667e-1 refined 6.250000e-1 refined_zerofree 0.000000e0 secs 0.00
+len base -4 w pow1 d 5 sols 0 leaves 20 basic 4.023437e-1 refined 4.231771e-1 refined_zerofree 2.018229e-1 secs 0.00
+total base -4 w pow1 sols 0 secs 0.00
+len base -4 w pow0 d 3 sols 0 leaves 12 basic 7.291667e-1 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+sol base -4 w pow0 d 5 digits 1,3,0,2,3
+len base -4 w pow0 d 5 sols 1 leaves 20 basic 4.023437e-1 refined 6.315104e-1 refined_zerofree 2.018229e-1 secs 0.00
+total base -4 w pow0 sols 1 secs 0.00
+len base -5 w pow1 d 3 sols 0 leaves 16 basic 4.400000e-1 refined 4.800000e-1 refined_zerofree 4.800000e-1 secs 0.00
+sol base -5 w pow1 d 5 digits 1,3,4,3,3
+len base -5 w pow1 d 5 sols 1 leaves 74 basic 6.988000e-1 refined 6.840000e-1 refined_zerofree 6.408000e-1 secs 0.00
+total base -5 w pow1 sols 1 secs 0.00
+sol base -5 w pow0 d 3 digits 1,0,3
+len base -5 w pow0 d 3 sols 1 leaves 15 basic 4.300000e-1 refined 9.000000e-1 refined_zerofree 4.800000e-1 secs 0.00
+sol base -5 w pow0 d 5 digits 1,3,4,3,3
+len base -5 w pow0 d 5 sols 1 leaves 74 basic 6.988000e-1 refined 1.636800e0 refined_zerofree 6.408000e-1 secs 0.00
+total base -5 w pow0 sols 2 secs 0.00
+len base -6 w pow1 d 3 sols 0 leaves 16 basic 2.444444e-1 refined 1.944444e-1 refined_zerofree 1.166667e-1 secs 0.00
+len base -6 w pow1 d 5 sols 0 leaves 170 basic 8.229938e-1 refined 8.199074e-1 refined_zerofree 4.331790e-1 secs 0.00
+len base -6 w pow1 d 7 sols 0 leaves 161 basic 1.691144e-1 refined 1.832219e-1 refined_zerofree 6.451475e-2 secs 0.00
+total base -6 w pow1 sols 0 secs 0.00
+len base -6 w pow0 d 3 sols 0 leaves 14 basic 2.166667e-1 refined 1.166667e-1 refined_zerofree 1.166667e-1 secs 0.00
+len base -6 w pow0 d 5 sols 0 leaves 170 basic 8.229938e-1 refined 9.462963e-1 refined_zerofree 4.331790e-1 secs 0.00
+len base -6 w pow0 d 7 sols 0 leaves 161 basic 1.691144e-1 refined 1.115055e-1 refined_zerofree 6.451475e-2 secs 0.00
+total base -6 w pow0 sols 0 secs 0.00
+sol base -7 w pow1 d 3 digits 1,3,1
+len base -7 w pow1 d 3 sols 1 leaves 22 basic 2.482993e-1 refined 2.721088e-1 refined_zerofree 2.721088e-1 secs 0.00
+len base -7 w pow1 d 5 sols 0 leaves 170 basic 3.458281e-1 refined 4.031653e-1 refined_zerofree 3.831737e-1 secs 0.00
+sol base -7 w pow1 d 7 digits 1,2,6,6,2,5,1
+sol base -7 w pow1 d 7 digits 1,4,0,1,0,6,5
+len base -7 w pow1 d 7 sols 2 leaves 945 basic 6.702763e-1 refined 8.002901e-1 refined_zerofree 5.746925e-1 secs 0.00
+total base -7 w pow1 sols 3 secs 0.00
+sol base -7 w pow0 d 3 digits 1,3,0
+sol base -7 w pow0 d 3 digits 1,3,1
+len base -7 w pow0 d 3 sols 2 leaves 22 basic 2.482993e-1 refined 4.625850e-1 refined_zerofree 2.721088e-1 secs 0.00
+len base -7 w pow0 d 5 sols 0 leaves 170 basic 3.458281e-1 refined 7.835624e-1 refined_zerofree 3.831737e-1 secs 0.00
+sol base -7 w pow0 d 7 digits 1,2,6,6,2,5,0
+sol base -7 w pow0 d 7 digits 1,2,6,6,2,5,1
+len base -7 w pow0 d 7 sols 2 leaves 945 basic 6.702763e-1 refined 1.306394e0 refined_zerofree 5.746925e-1 secs 0.00
+total base -7 w pow0 sols 4 secs 0.00
+len base -8 w pow1 d 3 sols 0 leaves 23 basic 1.696429e-1 refined 1.607143e-1 refined_zerofree 8.035714e-2 secs 0.00
+len base -8 w pow1 d 5 sols 0 leaves 161 basic 1.635045e-1 refined 1.889648e-1 refined_zerofree 1.086077e-1 secs 0.00
+sol base -8 w pow1 d 7 digits 7,5,7,6,2,0,3
+len base -8 w pow1 d 7 sols 1 leaves 2309 basic 8.240978e-1 refined 9.015901e-1 refined_zerofree 4.433670e-1 secs 0.00
+len base -8 w pow1 d 9 sols 0 leaves 1744 basic 9.563304e-2 refined 1.050374e-1 refined_zerofree 5.237810e-2 secs 0.00
+total base -8 w pow1 sols 1 secs 0.00
+sol base -8 w pow0 d 3 digits 4,0,0
+sol base -8 w pow0 d 3 digits 4,0,1
+len base -8 w pow0 d 3 sols 2 leaves 23 basic 1.696429e-1 refined 1.808036e-1 refined_zerofree 8.035714e-2 secs 0.00
+len base -8 w pow0 d 5 sols 0 leaves 161 basic 1.635045e-1 refined 2.147042e-1 refined_zerofree 1.086077e-1 secs 0.00
+len base -8 w pow0 d 7 sols 0 leaves 2309 basic 8.240978e-1 refined 1.057414e0 refined_zerofree 4.433670e-1 secs 0.00
+len base -8 w pow0 d 9 sols 0 leaves 1744 basic 9.563304e-2 refined 1.255817e-1 refined_zerofree 5.237810e-2 secs 0.00
+total base -8 w pow0 sols 2 secs 0.00
+len base -9 w pow1 d 3 sols 0 leaves 27 basic 1.342593e-1 refined 9.259259e-2 refined_zerofree 9.259259e-2 secs 0.00
+len base -9 w pow1 d 5 sols 0 leaves 256 basic 1.791076e-1 refined 1.710867e-1 refined_zerofree 1.642280e-1 secs 0.00
+len base -9 w pow1 d 7 sols 0 leaves 2261 basic 3.235340e-1 refined 3.763329e-1 refined_zerofree 3.052408e-1 secs 0.00
+len base -9 w pow1 d 9 sols 0 leaves 12990 basic 6.590585e-1 refined 7.580005e-1 refined_zerofree 5.451506e-1 secs 0.00
+total base -9 w pow1 sols 0 secs 0.00
+len base -9 w pow0 d 3 sols 0 leaves 26 basic 1.311728e-1 refined 9.259259e-2 refined_zerofree 9.259259e-2 secs 0.00
+len base -9 w pow0 d 5 sols 0 leaves 256 basic 1.791076e-1 refined 2.640604e-1 refined_zerofree 1.642280e-1 secs 0.00
+len base -9 w pow0 d 7 sols 0 leaves 2261 basic 3.235340e-1 refined 6.325114e-1 refined_zerofree 3.052408e-1 secs 0.00
+len base -9 w pow0 d 9 sols 0 leaves 12990 basic 6.590585e-1 refined 1.317519e0 refined_zerofree 5.451506e-1 secs 0.00
+total base -9 w pow0 sols 0 secs 0.00
+len base -10 w pow1 d 3 sols 0 leaves 26 basic 9.222222e-2 refined 1.222222e-1 refined_zerofree 7.333333e-2 secs 0.00
+len base -10 w pow1 d 5 sols 0 leaves 257 basic 1.068444e-1 refined 1.199000e-1 refined_zerofree 4.400000e-2 secs 0.00
+len base -10 w pow1 d 7 sols 0 leaves 2178 basic 1.468658e-1 refined 1.440658e-1 refined_zerofree 7.282489e-2 secs 0.00
+sol base -10 w pow1 d 9 digits 4,0,5,8,1,9,1,1,1
+sol base -10 w pow1 d 9 digits 5,8,1,1,8,2,4,9,2
+len base -10 w pow1 d 9 sols 2 leaves 32175 basic 8.148850e-1 refined 8.232828e-1 refined_zerofree 3.605629e-1 secs 0.00
+sol base -10 w pow1 d 11 digits 1,9,2,1,7,4,5,8,9,8,9
+len base -10 w pow1 d 11 sols 1 leaves 24313 basic 9.171420e-2 refined 9.259273e-2 refined_zerofree 4.001029e-2 secs 0.00
+total base -10 w pow1 sols 3 secs 0.00
+len base -10 w pow0 d 3 sols 0 leaves 26 basic 9.222222e-2 refined 7.333333e-2 refined_zerofree 7.333333e-2 secs 0.00
+len base -10 w pow0 d 5 sols 0 leaves 257 basic 1.068444e-1 refined 1.085333e-1 refined_zerofree 4.400000e-2 secs 0.00
+len base -10 w pow0 d 7 sols 0 leaves 2178 basic 1.468658e-1 refined 1.602749e-1 refined_zerofree 7.282489e-2 secs 0.00
+sol base -10 w pow0 d 9 digits 4,0,5,8,1,9,4,3,0
+sol base -10 w pow0 d 9 digits 4,0,5,8,1,9,4,3,1
+sol base -10 w pow0 d 9 digits 5,8,1,1,8,2,4,9,2
+len base -10 w pow0 d 9 sols 3 leaves 32175 basic 8.148850e-1 refined 8.053858e-1 refined_zerofree 3.605629e-1 secs 0.00
+sol base -10 w pow0 d 11 digits 1,9,2,1,7,4,5,8,9,8,9
+len base -10 w pow0 d 11 sols 1 leaves 24313 basic 9.171420e-2 refined 8.927378e-2 refined_zerofree 4.001029e-2 secs 0.00
+total base -10 w pow0 sols 4 secs 0.00
+len base -11 w pow1 d 3 sols 0 leaves 26 basic 6.859504e-2 refined 2.578512e-1 refined_zerofree 2.578512e-1 secs 0.00
+len base -11 w pow1 d 5 sols 0 leaves 330 basic 8.112151e-2 refined 1.245817e-1 refined_zerofree 1.231063e-1 secs 0.00
+len base -11 w pow1 d 7 sols 0 leaves 3192 basic 1.407897e-1 refined 1.567099e-1 refined_zerofree 1.273358e-1 secs 0.00
+sol base -11 w pow1 d 9 digits 2,2,0,9,0,3,7,6,3
+len base -11 w pow1 d 9 sols 1 leaves 32248 basic 3.193238e-1 refined 3.614454e-1 refined_zerofree 2.797912e-1 secs 0.00
+sol base -11 w pow1 d 11 digits 1,3,8,9,2,10,2,5,10,7,1
+len base -11 w pow1 d 11 sols 1 leaves 186758 basic 6.531194e-1 refined 7.076814e-1 refined_zerofree 4.992649e-1 secs 0.01
+total base -11 w pow1 sols 2 secs 0.01
+len base -11 w pow0 d 3 sols 0 leaves 26 basic 6.859504e-2 refined 4.363636e-1 refined_zerofree 2.578512e-1 secs 0.00
+len base -11 w pow0 d 5 sols 0 leaves 330 basic 8.112151e-2 refined 2.400656e-1 refined_zerofree 1.231063e-1 secs 0.00
+len base -11 w pow0 d 7 sols 0 leaves 3192 basic 1.407897e-1 refined 2.742774e-1 refined_zerofree 1.273358e-1 secs 0.00
+len base -11 w pow0 d 9 sols 0 leaves 32248 basic 3.193238e-1 refined 6.228120e-1 refined_zerofree 2.797912e-1 secs 0.00
+sol base -11 w pow0 d 11 digits 1,3,8,9,2,10,2,5,10,7,0
+sol base -11 w pow0 d 11 digits 1,3,8,9,2,10,2,5,10,7,1
+len base -11 w pow0 d 11 sols 2 leaves 186758 basic 6.531194e-1 refined 1.225288e0 refined_zerofree 4.992649e-1 secs 0.01
+total base -11 w pow0 sols 2 secs 0.02
+len base -12 w pow1 d 3 sols 0 leaves 26 basic 5.239899e-2 refined 5.744949e-2 refined_zerofree 4.924242e-2 secs 0.00
+len base -12 w pow1 d 5 sols 0 leaves 335 basic 5.219294e-2 refined 5.328897e-2 refined_zerofree 3.425312e-2 secs 0.00
+len base -12 w pow1 d 7 sols 0 leaves 3460 basic 8.428091e-2 refined 8.242573e-2 refined_zerofree 4.097321e-2 secs 0.00
+len base -12 w pow1 d 9 sols 0 leaves 30745 basic 1.370760e-1 refined 1.381446e-1 refined_zerofree 6.353774e-2 secs 0.00
+sol base -12 w pow1 d 11 digits 10,8,8,9,11,2,4,7,6,0,11
+len base -12 w pow1 d 11 sols 1 leaves 461890 basic 8.092126e-1 refined 8.078951e-1 refined_zerofree 3.435881e-1 secs 0.03
+len base -12 w pow1 d 13 sols 0 leaves 352716 basic 8.946585e-2 refined 8.968148e-2 refined_zerofree 3.753969e-2 secs 0.04
+total base -12 w pow1 sols 1 secs 0.07
+len base -12 w pow0 d 3 sols 0 leaves 26 basic 5.239899e-2 refined 8.207071e-2 refined_zerofree 4.924242e-2 secs 0.00
+len base -12 w pow0 d 5 sols 0 leaves 335 basic 5.219294e-2 refined 6.497264e-2 refined_zerofree 3.425312e-2 secs 0.00
+len base -12 w pow0 d 7 sols 0 leaves 3460 basic 8.428091e-2 refined 7.859925e-2 refined_zerofree 4.097321e-2 secs 0.00
+len base -12 w pow0 d 9 sols 0 leaves 30745 basic 1.370760e-1 refined 1.414267e-1 refined_zerofree 6.353774e-2 secs 0.00
+len base -12 w pow0 d 11 sols 0 leaves 461890 basic 8.092126e-1 refined 8.087922e-1 refined_zerofree 3.435881e-1 secs 0.02
+len base -12 w pow0 d 13 sols 0 leaves 352716 basic 8.946585e-2 refined 8.921346e-2 refined_zerofree 3.753969e-2 secs 0.01
+total base -12 w pow0 sols 0 secs 0.03
+len base -13 w pow1 d 3 sols 0 leaves 25 basic 4.043393e-2 refined 6.903353e-2 refined_zerofree 6.903353e-2 secs 0.00
+len base -13 w pow1 d 5 sols 0 leaves 336 basic 3.473851e-2 refined 5.371544e-2 refined_zerofree 4.636276e-2 secs 0.00
+len base -13 w pow1 d 7 sols 0 leaves 4554 basic 6.089810e-2 refined 9.072975e-2 refined_zerofree 7.373664e-2 secs 0.01
+len base -13 w pow1 d 9 sols 0 leaves 25597 basic 5.720834e-2 refined 6.481520e-2 refined_zerofree 5.052889e-2 secs 0.01
+len base -13 w pow1 d 11 sols 0 leaves 533104 basic 3.572593e-1 refined 4.178540e-1 refined_zerofree 3.068462e-1 secs 0.03
+sol base -13 w pow1 d 13 digits 1,8,6,2,7,1,11,11,9,12,5,11,2
+len base -13 w pow1 d 13 sols 1 leaves 2735980 basic 6.493196e-1 refined 7.447009e-1 refined_zerofree 5.185765e-1 secs 0.16
+total base -13 w pow1 sols 1 secs 0.20
+len base -13 w pow0 d 3 sols 0 leaves 25 basic 4.043393e-2 refined 1.173570e-1 refined_zerofree 6.903353e-2 secs 0.00
+len base -13 w pow0 d 5 sols 0 leaves 336 basic 3.473851e-2 refined 8.712930e-2 refined_zerofree 4.636276e-2 secs 0.00
+sol base -13 w pow0 d 7 digits 4,5,7,0,1,6,8
+len base -13 w pow0 d 7 sols 1 leaves 4554 basic 6.089810e-2 refined 1.513053e-1 refined_zerofree 7.373664e-2 secs 0.00
+len base -13 w pow0 d 9 sols 0 leaves 25597 basic 5.720834e-2 refined 1.084335e-1 refined_zerofree 5.052889e-2 secs 0.00
+len base -13 w pow0 d 11 sols 0 leaves 533104 basic 3.572593e-1 refined 7.140034e-1 refined_zerofree 3.068462e-1 secs 0.04
+sol base -13 w pow0 d 13 digits 1,3,0,8,7,5,12,10,0,12,3,3,4
+sol base -13 w pow0 d 13 digits 1,8,6,2,7,1,11,11,9,12,5,11,2
+sol base -13 w pow0 d 13 digits 2,12,12,0,6,12,0,0,2,9,3,6,2
+len base -13 w pow0 d 13 sols 3 leaves 2735980 basic 6.493196e-1 refined 1.298677e0 refined_zerofree 5.185765e-1 secs 0.23
+total base -13 w pow0 sols 4 secs 0.27
+len base -14 w pow1 d 3 sols 0 leaves 25 basic 3.218210e-2 refined 4.120879e-2 refined_zerofree 1.766091e-2 secs 0.00
+len base -14 w pow1 d 5 sols 0 leaves 336 basic 2.384023e-2 refined 2.889421e-2 refined_zerofree 1.687999e-2 secs 0.00
+len base -14 w pow1 d 7 sols 0 leaves 4710 basic 3.622225e-2 refined 3.526650e-2 refined_zerofree 1.616986e-2 secs 0.00
+len base -14 w pow1 d 9 sols 0 leaves 48785 basic 7.170452e-2 refined 7.123069e-2 refined_zerofree 3.060333e-2 secs 0.01
+len base -14 w pow1 d 11 sols 0 leaves 445094 basic 1.305985e-1 refined 1.300901e-1 refined_zerofree 5.326918e-2 secs 0.03
+sol base -14 w pow1 d 13 digits 1,12,3,2,8,9,10,0,10,4,0,7,4
+len base -14 w pow1 d 13 sols 1 leaves 6760390 basic 8.053489e-1 refined 8.052869e-1 refined_zerofree 3.156402e-1 secs 0.22
+sol base -14 w pow1 d 15 digits 1,13,3,12,9,13,4,5,8,8,5,13,5,7,8
+len base -14 w pow1 d 15 sols 1 leaves 5200300 basic 8.795349e-2 refined 8.790804e-2 refined_zerofree 3.453855e-2 secs 0.25
+total base -14 w pow1 sols 2 secs 0.52
+len base -14 w pow0 d 3 sols 0 leaves 25 basic 3.218210e-2 refined 1.766091e-2 refined_zerofree 1.766091e-2 secs 0.00
+len base -14 w pow0 d 5 sols 0 leaves 336 basic 2.384023e-2 refined 3.508154e-2 refined_zerofree 1.687999e-2 secs 0.00
+len base -14 w pow0 d 7 sols 0 leaves 4710 basic 3.622225e-2 refined 3.097463e-2 refined_zerofree 1.616986e-2 secs 0.00
+len base -14 w pow0 d 9 sols 0 leaves 48785 basic 7.170452e-2 refined 6.603492e-2 refined_zerofree 3.060333e-2 secs 0.01
+len base -14 w pow0 d 11 sols 0 leaves 445094 basic 1.305985e-1 refined 1.218748e-1 refined_zerofree 5.326918e-2 secs 0.02
+len base -14 w pow0 d 13 sols 0 leaves 6760390 basic 8.053489e-1 refined 7.626045e-1 refined_zerofree 3.156402e-1 secs 0.37
+sol base -14 w pow0 d 15 digits 1,13,3,12,9,13,4,5,8,8,5,13,5,7,8
+len base -14 w pow0 d 15 sols 1 leaves 5200300 basic 8.795349e-2 refined 8.332704e-2 refined_zerofree 3.453855e-2 secs 0.37
+total base -14 w pow0 sols 1 secs 0.76
+len base -15 w pow1 d 3 sols 0 leaves 34 basic 3.777778e-2 refined 6.095238e-2 refined_zerofree 6.095238e-2 secs 0.00
+len base -15 w pow1 d 5 sols 0 leaves 311 basic 1.577002e-2 refined 2.047549e-2 refined_zerofree 1.830829e-2 secs 0.00
+len base -15 w pow1 d 7 sols 0 leaves 4719 basic 2.223404e-2 refined 2.610387e-2 refined_zerofree 2.207650e-2 secs 0.01
+len base -15 w pow1 d 9 sols 0 leaves 65065 basic 4.977712e-2 refined 6.004980e-2 refined_zerofree 4.777436e-2 secs 0.01
+len base -15 w pow1 d 11 sols 0 leaves 372164 basic 5.267998e-2 refined 6.181993e-2 refined_zerofree 4.633493e-2 secs 0.02
+len base -15 w pow1 d 13 sols 0 leaves 7858760 basic 3.517252e-1 refined 4.094544e-1 refined_zerofree 2.955376e-1 secs 0.35
+len base -15 w pow1 d 15 sols 0 leaves 40446060 basic 6.466254e-1 refined 7.407331e-1 refined_zerofree 5.108681e-1 secs 1.55
+total base -15 w pow1 sols 0 secs 1.94
+len base -15 w pow0 d 3 sols 0 leaves 34 basic 3.777778e-2 refined 9.650794e-2 refined_zerofree 6.095238e-2 secs 0.00
+len base -15 w pow0 d 5 sols 0 leaves 311 basic 1.577002e-2 refined 2.959577e-2 refined_zerofree 1.830829e-2 secs 0.00
+len base -15 w pow0 d 7 sols 0 leaves 4719 basic 2.223404e-2 refined 4.276891e-2 refined_zerofree 2.207650e-2 secs 0.01
+len base -15 w pow0 d 9 sols 0 leaves 65065 basic 4.977712e-2 refined 9.986823e-2 refined_zerofree 4.777436e-2 secs 0.01
+len base -15 w pow0 d 11 sols 0 leaves 372164 basic 5.267998e-2 refined 1.054506e-1 refined_zerofree 4.633493e-2 secs 0.02
+len base -15 w pow0 d 13 sols 0 leaves 7858760 basic 3.517252e-1 refined 7.039680e-1 refined_zerofree 2.955376e-1 secs 0.44
+len base -15 w pow0 d 15 sols 0 leaves 40446060 basic 6.466254e-1 refined 1.293111e0 refined_zerofree 5.108681e-1 secs 1.54
+total base -15 w pow0 sols 0 secs 2.03
+len base -16 w pow1 d 3 sols 0 leaves 40 basic 3.828125e-2 refined 3.541667e-2 refined_zerofree 0.000000e0 secs 0.00
+len base -16 w pow1 d 5 sols 0 leaves 480 basic 2.033488e-2 refined 2.139181e-2 refined_zerofree 1.098124e-2 secs 0.00
+len base -16 w pow1 d 7 sols 0 leaves 3823 basic 1.123264e-2 refined 1.107608e-2 refined_zerofree 4.878533e-3 secs 0.00
+len base -16 w pow1 d 9 sols 0 leaves 68002 basic 2.792744e-2 refined 2.806217e-2 refined_zerofree 1.395347e-2 secs 0.01
+len base -16 w pow1 d 11 sols 0 leaves 706433 basic 6.373820e-2 refined 6.373225e-2 refined_zerofree 2.850614e-2 secs 0.03
+len base -16 w pow1 d 13 sols 0 leaves 6552378 basic 1.259912e-1 refined 1.260277e-1 refined_zerofree 5.387913e-2 secs 0.27
+len base -16 w pow1 d 15 sols 0 leaves 100291514 basic 8.025391e-1 refined 8.026274e-1 refined_zerofree 3.278907e-1 secs 3.55
+len base -16 w pow1 d 17 sols 0 leaves 77558760 basic 8.686767e-2 refined 8.686872e-2 refined_zerofree 3.561007e-2 secs 2.90
+total base -16 w pow1 sols 0 secs 6.76
+len base -16 w pow0 d 3 sols 0 leaves 40 basic 3.828125e-2 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.01
+len base -16 w pow0 d 5 sols 0 leaves 480 basic 2.033488e-2 refined 1.319478e-2 refined_zerofree 1.098124e-2 secs 0.00
+len base -16 w pow0 d 7 sols 0 leaves 3823 basic 1.123264e-2 refined 8.152302e-3 refined_zerofree 4.878533e-3 secs 0.00
+len base -16 w pow0 d 9 sols 0 leaves 68002 basic 2.792744e-2 refined 2.915501e-2 refined_zerofree 1.395347e-2 secs 0.01
+len base -16 w pow0 d 11 sols 0 leaves 706433 basic 6.373820e-2 refined 6.346729e-2 refined_zerofree 2.850614e-2 secs 0.03
+len base -16 w pow0 d 13 sols 0 leaves 6552378 basic 1.259912e-1 refined 1.258886e-1 refined_zerofree 5.387913e-2 secs 0.29
+sol base -16 w pow0 d 15 digits 7,15,5,4,10,2,10,0,11,4,0,6,7,7,13
+len base -16 w pow0 d 15 sols 1 leaves 100291514 basic 8.025391e-1 refined 8.026193e-1 refined_zerofree 3.278907e-1 secs 3.33
+len base -16 w pow0 d 17 sols 0 leaves 77558760 basic 8.686767e-2 refined 8.687891e-2 refined_zerofree 3.561007e-2 secs 2.24
+total base -16 w pow0 sols 1 secs 5.91
+len base -17 w pow1 d 3 sols 0 leaves 40 basic 3.179066e-2 refined 4.282007e-2 refined_zerofree 4.282007e-2 secs 0.00
+len base -17 w pow1 d 5 sols 0 leaves 476 basic 1.490194e-2 refined 2.664300e-2 refined_zerofree 2.640055e-2 secs 0.00
+len base -17 w pow1 d 7 sols 0 leaves 4635 basic 9.098112e-3 refined 9.949982e-3 refined_zerofree 8.288878e-3 secs 0.00
+len base -17 w pow1 d 9 sols 0 leaves 65527 basic 1.575406e-2 refined 1.717928e-2 refined_zerofree 1.416229e-2 secs 0.00
+len base -17 w pow1 d 11 sols 0 leaves 948974 basic 4.285404e-2 refined 4.746929e-2 refined_zerofree 3.734619e-2 secs 0.03
+len base -17 w pow1 d 13 sols 0 leaves 5494230 basic 4.950777e-2 refined 5.429719e-2 refined_zerofree 4.033679e-2 secs 0.22
+len base -17 w pow1 d 15 sols 0 leaves 117184926 basic 3.475780e-1 refined 4.032267e-1 refined_zerofree 2.844004e-1 secs 4.03
+sol base -17 w pow1 d 17 digits 2,15,11,2,16,8,2,13,0,16,15,3,16,10,0,9,14
+len base -17 w pow1 d 17 sols 1 leaves 604352210 basic 6.446226e-1 refined 7.354302e-1 refined_zerofree 4.993850e-1 secs 36.61
+total base -17 w pow1 sols 1 secs 40.90
+len base -17 w pow0 d 3 sols 0 leaves 40 basic 3.179066e-2 refined 7.006920e-2 refined_zerofree 4.282007e-2 secs 0.00
+len base -17 w pow0 d 5 sols 0 leaves 476 basic 1.490194e-2 refined 4.880060e-2 refined_zerofree 2.640055e-2 secs 0.00
+len base -17 w pow0 d 7 sols 0 leaves 4635 basic 9.098112e-3 refined 1.574898e-2 refined_zerofree 8.288878e-3 secs 0.00
+len base -17 w pow0 d 9 sols 0 leaves 65527 basic 1.575406e-2 refined 2.933211e-2 refined_zerofree 1.416229e-2 secs 0.01
+len base -17 w pow0 d 11 sols 0 leaves 948974 basic 4.285404e-2 refined 8.225690e-2 refined_zerofree 3.734619e-2 secs 0.11
+len base -17 w pow0 d 13 sols 0 leaves 5494230 basic 4.950777e-2 refined 9.469917e-2 refined_zerofree 4.033679e-2 secs 0.54
+len base -17 w pow0 d 15 sols 0 leaves 117184926 basic 3.475780e-1 refined 6.842251e-1 refined_zerofree 2.844004e-1 secs 4.90
+sol base -17 w pow0 d 17 digits 1,11,8,8,8,7,5,16,3,11,0,0,5,12,0,10,9
+sol base -17 w pow0 d 17 digits 1,11,13,5,16,4,13,1,10,15,0,3,7,1,11,6,15
+len base -17 w pow0 d 17 sols 2 leaves 604352210 basic 6.446226e-1 refined 1.267125e0 refined_zerofree 4.993850e-1 secs 50.90
+total base -17 w pow0 sols 2 secs 56.46
+len base -18 w pow1 d 3 sols 0 leaves 40 basic 2.668845e-2 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -18 w pow1 d 5 sols 0 leaves 560 basic 1.291612e-2 refined 1.491601e-2 refined_zerofree 1.261633e-2 secs 0.00
+len base -18 w pow1 d 7 sols 0 leaves 6349 basic 1.016015e-2 refined 9.629965e-3 refined_zerofree 5.325021e-3 secs 0.00
+len base -18 w pow1 d 9 sols 0 leaves 55198 basic 7.740277e-3 refined 7.931661e-3 refined_zerofree 3.792266e-3 secs 0.00
+len base -18 w pow1 d 11 sols 0 leaves 997542 basic 2.298135e-2 refined 2.297485e-2 refined_zerofree 1.058822e-2 secs 0.04
+len base -18 w pow1 d 13 sols 0 leaves 10419164 basic 5.826642e-2 refined 5.826390e-2 refined_zerofree 2.537624e-2 secs 0.62
+len base -18 w pow1 d 15 sols 0 leaves 97617059 basic 1.225457e-1 refined 1.225479e-1 refined_zerofree 5.141877e-2 secs 2.90
+len base -18 w pow1 d 17 sols 0 leaves 1502701111 basic 8.004001e-1 refined 8.003995e-1 refined_zerofree 3.230952e-1 secs 41.69
+len base -18 w pow1 d 19 sols 0 leaves 1166803110 basic 8.605073e-2 refined 8.605055e-2 refined_zerofree 3.486306e-2 secs 41.10
+total base -18 w pow1 sols 0 secs 86.35
+len base -18 w pow0 d 3 sols 0 leaves 40 basic 2.668845e-2 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -18 w pow0 d 5 sols 0 leaves 560 basic 1.291612e-2 refined 1.680048e-2 refined_zerofree 1.261633e-2 secs 0.00
+len base -18 w pow0 d 7 sols 0 leaves 6349 basic 1.016015e-2 refined 9.997276e-3 refined_zerofree 5.325021e-3 secs 0.00
+len base -18 w pow0 d 9 sols 0 leaves 55198 basic 7.740277e-3 refined 7.672857e-3 refined_zerofree 3.792266e-3 secs 0.00
+len base -18 w pow0 d 11 sols 0 leaves 997542 basic 2.298135e-2 refined 2.298593e-2 refined_zerofree 1.058822e-2 secs 0.02
+len base -18 w pow0 d 13 sols 0 leaves 10419164 basic 5.826642e-2 refined 5.827981e-2 refined_zerofree 2.537624e-2 secs 0.32
+len base -18 w pow0 d 15 sols 0 leaves 97617059 basic 1.225457e-1 refined 1.225458e-1 refined_zerofree 5.141877e-2 secs 1.77
+len base -18 w pow0 d 17 sols 0 leaves 1502701111 basic 8.004001e-1 refined 8.004001e-1 refined_zerofree 3.230952e-1 secs 36.99
+len base -18 w pow0 d 19 sols 0 leaves 1166803110 basic 8.605073e-2 refined 8.605077e-2 refined_zerofree 3.486306e-2 secs 39.06
+total base -18 w pow0 sols 0 secs 78.15
