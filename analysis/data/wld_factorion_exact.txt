@@ -1,0 +1,110 @@
+sol base 2 w fact d 2 digits 1,0
+len base 2 w fact d 2 sols 1 leaves 3 basic 1.000000e0 refined 1.000000e0 refined_zerofree 5.000000e-1 secs 0.00
+total base 2 w fact sols 1 secs 0.00
+len base 3 w fact d 2 sols 0 leaves 6 basic 6.666667e-1 refined 1.000000e0 refined_zerofree 1.000000e0 secs 0.00
+total base 3 w fact sols 0 secs 0.00
+sol base 4 w fact d 2 digits 1,3
+len base 4 w fact d 2 sols 1 leaves 5 basic 5.833333e-1 refined 1.500000e0 refined_zerofree 1.500000e0 secs 0.00
+len base 4 w fact d 3 sols 0 leaves 1 basic 2.083333e-2 refined 6.250000e-2 refined_zerofree 6.250000e-2 secs 0.00
+total base 4 w fact sols 1 secs 0.00
+len base 5 w fact d 2 sols 0 leaves 4 basic 3.000000e-1 refined 2.000000e-1 refined_zerofree 0.000000e0 secs 0.00
+sol base 5 w fact d 3 digits 1,4,4
+len base 5 w fact d 3 sols 1 leaves 15 basic 5.200000e-1 refined 9.200000e-1 refined_zerofree 7.600000e-1 secs 0.00
+total base 5 w fact sols 1 secs 0.00
+sol base 6 w fact d 2 digits 4,1
+sol base 6 w fact d 2 digits 4,2
+len base 6 w fact d 2 sols 2 leaves 8 basic 4.333333e-1 refined 6.666667e-1 refined_zerofree 6.666667e-1 secs 0.00
+len base 6 w fact d 3 sols 0 leaves 21 basic 4.444444e-1 refined 9.444444e-1 refined_zerofree 9.444444e-1 secs 0.00
+len base 6 w fact d 4 sols 0 leaves 21 basic 1.435185e-1 refined 3.101852e-1 refined_zerofree 3.101852e-1 secs 0.00
+total base 6 w fact sols 2 secs 0.00
+len base 7 w fact d 2 sols 0 leaves 9 basic 3.333333e-1 refined 1.428571e-1 refined_zerofree 1.428571e-1 secs 0.00
+len base 7 w fact d 3 sols 0 leaves 25 basic 3.095238e-1 refined 1.428571e-1 refined_zerofree 1.428571e-1 secs 0.00
+len base 7 w fact d 4 sols 0 leaves 89 basic 4.844509e-1 refined 4.198251e-1 refined_zerofree 3.673469e-1 secs 0.00
+len base 7 w fact d 5 sols 0 leaves 7 basic 2.082466e-3 refined 4.581424e-3 refined_zerofree 4.581424e-3 secs 0.00
+total base 7 w fact sols 0 secs 0.00
+len base 8 w fact d 2 sols 0 leaves 7 basic 1.964286e-1 refined 1.250000e-1 refined_zerofree 0.000000e0 secs 0.00
+len base 8 w fact d 3 sols 0 leaves 22 basic 1.808036e-1 refined 9.375000e-2 refined_zerofree 0.000000e0 secs 0.00
+len base 8 w fact d 4 sols 0 leaves 84 basic 2.728795e-1 refined 2.851563e-1 refined_zerofree 1.269531e-1 secs 0.00
+len base 8 w fact d 5 sols 0 leaves 330 basic 4.975586e-1 refined 5.134277e-1 refined_zerofree 2.004395e-1 secs 0.00
+total base 8 w fact sols 0 secs 0.00
+len base 9 w fact d 2 sols 0 leaves 6 basic 1.250000e-1 refined 1.111111e-1 refined_zerofree 1.111111e-1 secs 0.00
+len base 9 w fact d 3 sols 0 leaves 30 basic 1.805556e-1 refined 4.938272e-2 refined_zerofree 0.000000e0 secs 0.00
+len base 9 w fact d 4 sols 0 leaves 153 basic 3.549383e-1 refined 4.211248e-1 refined_zerofree 3.141289e-1 secs 0.00
+sol base 9 w fact d 5 digits 6,2,5,5,8
+len base 9 w fact d 5 sols 1 leaves 462 basic 4.286504e-1 refined 4.796525e-1 refined_zerofree 3.238836e-1 secs 0.00
+len base 9 w fact d 6 sols 0 leaves 503 basic 1.420409e-1 refined 1.467933e-1 refined_zerofree 9.666548e-2 secs 0.00
+total base 9 w fact sols 1 secs 0.00
+len base 10 w fact d 2 sols 0 leaves 6 basic 1.000000e-1 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+sol base 10 w fact d 3 digits 1,4,5
+len base 10 w fact d 3 sols 1 leaves 42 basic 1.955556e-1 refined 1.600000e-1 refined_zerofree 1.500000e-1 secs 0.00
+len base 10 w fact d 4 sols 0 leaves 113 basic 1.612222e-1 refined 1.610000e-1 refined_zerofree 1.160000e-1 secs 0.00
+sol base 10 w fact d 5 digits 4,0,5,8,5
+len base 10 w fact d 5 sols 1 leaves 570 basic 2.977889e-1 refined 3.000000e-1 refined_zerofree 2.080000e-1 secs 0.00
+len base 10 w fact d 6 sols 0 leaves 1948 basic 4.702189e-1 refined 4.507700e-1 refined_zerofree 2.880700e-1 secs 0.00
+len base 10 w fact d 7 sols 0 leaves 715 basic 2.678500e-2 refined 2.186300e-2 refined_zerofree 1.596800e-2 secs 0.00
+total base 10 w fact sols 2 secs 0.00
+sol base 11 w fact d 2 digits 2,4
+sol base 11 w fact d 2 digits 4,4
+len base 11 w fact d 2 sols 2 leaves 6 basic 8.181818e-2 refined 4.545455e-1 refined_zerofree 4.545455e-1 secs 0.00
+len base 11 w fact d 3 sols 0 leaves 42 basic 1.454545e-1 refined 1.322314e-1 refined_zerofree 9.917355e-2 secs 0.00
+len base 11 w fact d 4 sols 0 leaves 140 basic 1.292261e-1 refined 1.014275e-1 refined_zerofree 8.114200e-2 secs 0.00
+sol base 11 w fact d 5 digits 2,8,4,5,3
+len base 11 w fact d 5 sols 1 leaves 522 basic 1.657879e-1 refined 1.870091e-1 refined_zerofree 1.256745e-1 secs 0.00
+len base 11 w fact d 6 sols 0 leaves 2037 basic 2.660784e-1 refined 2.804267e-1 refined_zerofree 1.687850e-1 secs 0.00
+len base 11 w fact d 7 sols 0 leaves 8052 basic 4.920660e-1 refined 5.090499e-1 refined_zerofree 3.033822e-1 secs 0.00
+len base 11 w fact d 8 sols 0 leaves 66 basic 1.441974e-5 refined 1.565132e-5 refined_zerofree 1.565132e-5 secs 0.00
+total base 11 w fact sols 3 secs 0.00
+len base 12 w fact d 2 sols 0 leaves 10 basic 1.212121e-1 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base 12 w fact d 3 sols 0 leaves 38 basic 9.659091e-2 refined 1.111111e-1 refined_zerofree 4.166667e-2 secs 0.00
+len base 12 w fact d 4 sols 0 leaves 127 basic 8.154461e-2 refined 7.581019e-2 refined_zerofree 5.671296e-2 secs 0.00
+len base 12 w fact d 5 sols 0 leaves 497 basic 1.044385e-1 refined 1.069155e-1 refined_zerofree 7.788387e-2 secs 0.00
+len base 12 w fact d 6 sols 0 leaves 2002 basic 1.562237e-1 refined 1.544456e-1 refined_zerofree 1.003528e-1 secs 0.00
+len base 12 w fact d 7 sols 0 leaves 8008 basic 2.653491e-1 refined 2.641736e-1 refined_zerofree 1.638706e-1 secs 0.00
+len base 12 w fact d 8 sols 0 leaves 31824 basic 5.055898e-1 refined 5.040447e-1 refined_zerofree 2.987083e-1 secs 0.00
+total base 12 w fact sols 0 secs 0.00
+len base 13 w fact d 2 sols 0 leaves 10 basic 1.089744e-1 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base 13 w fact d 3 sols 0 leaves 34 basic 6.360947e-2 refined 5.325444e-2 refined_zerofree 5.325444e-2 secs 0.00
+len base 13 w fact d 4 sols 0 leaves 122 basic 5.807161e-2 refined 6.326809e-2 refined_zerofree 4.142012e-2 secs 0.00
+len base 13 w fact d 5 sols 0 leaves 789 basic 1.188130e-1 refined 1.258709e-1 refined_zerofree 7.930395e-2 secs 0.00
+len base 13 w fact d 6 sols 0 leaves 3322 basic 1.847889e-1 refined 1.827667e-1 refined_zerofree 1.214539e-1 secs 0.00
+len base 13 w fact d 7 sols 0 leaves 11067 basic 2.375445e-1 refined 2.373378e-1 refined_zerofree 1.468187e-1 secs 0.00
+sol base 13 w fact d 8 digits 8,3,7,9,0,12,5,11
+len base 13 w fact d 8 sols 1 leaves 44201 basic 4.270145e-1 refined 4.268328e-1 refined_zerofree 2.528040e-1 secs 0.00
+len base 13 w fact d 9 sols 0 leaves 50388 basic 1.507635e-1 refined 1.506942e-1 refined_zerofree 8.914698e-2 secs 0.00
+total base 13 w fact sols 1 secs 0.00
+len base 14 w fact d 2 sols 0 leaves 10 basic 9.340659e-2 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base 14 w fact d 3 sols 0 leaves 34 basic 5.062794e-2 refined 8.673469e-2 refined_zerofree 4.591837e-2 secs 0.00
+len base 14 w fact d 4 sols 0 leaves 121 basic 4.280668e-2 refined 4.300292e-2 refined_zerofree 2.988338e-2 secs 0.00
+len base 14 w fact d 5 sols 0 leaves 990 basic 1.075373e-1 refined 1.187005e-1 refined_zerofree 7.783215e-2 secs 0.00
+len base 14 w fact d 6 sols 0 leaves 3213 basic 1.068765e-1 refined 1.071373e-1 refined_zerofree 6.857448e-2 secs 0.00
+len base 14 w fact d 7 sols 0 leaves 12727 basic 1.611201e-1 refined 1.589261e-1 refined_zerofree 1.006854e-1 secs 0.00
+len base 14 w fact d 8 sols 0 leaves 51571 basic 2.643080e-1 refined 2.650154e-1 refined_zerofree 1.593319e-1 secs 0.00
+sol base 14 w fact d 9 digits 8,11,0,13,13,4,0,9,12
+len base 14 w fact d 9 sols 1 leaves 205464 basic 4.940093e-1 refined 4.950809e-1 refined_zerofree 2.876617e-1 secs 0.01
+len base 14 w fact d 10 sols 0 leaves 27235 basic 3.959145e-3 refined 4.019592e-3 refined_zerofree 2.624884e-3 secs 0.00
+total base 14 w fact sols 1 secs 0.01
+len base 15 w fact d 2 sols 0 leaves 10 basic 8.095238e-2 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+sol base 15 w fact d 3 digits 6,6,1
+sol base 15 w fact d 3 digits 6,6,2
+len base 15 w fact d 3 sols 2 leaves 34 basic 4.095238e-2 refined 8.444444e-2 refined_zerofree 8.444444e-2 secs 0.00
+len base 15 w fact d 4 sols 0 leaves 238 basic 7.123810e-2 refined 6.074074e-2 refined_zerofree 1.629630e-2 secs 0.00
+len base 15 w fact d 5 sols 0 leaves 796 basic 5.722469e-2 refined 6.976790e-2 refined_zerofree 6.024691e-2 secs 0.00
+len base 15 w fact d 6 sols 0 leaves 3312 basic 7.132266e-2 refined 7.094255e-2 refined_zerofree 4.467753e-2 secs 0.00
+len base 15 w fact d 7 sols 0 leaves 12639 basic 9.519744e-2 refined 9.083918e-2 refined_zerofree 5.615802e-2 secs 0.00
+len base 15 w fact d 8 sols 0 leaves 50663 basic 1.500415e-1 refined 1.494178e-1 refined_zerofree 9.279648e-2 secs 0.00
+len base 15 w fact d 9 sols 0 leaves 203839 basic 2.618870e-1 refined 2.614270e-1 refined_zerofree 1.526866e-1 secs 0.00
+len base 15 w fact d 10 sols 0 leaves 817083 basic 5.009473e-1 refined 4.999214e-1 refined_zerofree 2.818424e-1 secs 0.01
+len base 15 w fact d 11 sols 0 leaves 3060 basic 1.585850e-6 refined 1.611356e-6 refined_zerofree 1.285474e-6 secs 0.00
+total base 15 w fact sols 2 secs 0.02
+len base 16 w fact d 2 sols 0 leaves 11 basic 7.500000e-2 refined 1.250000e-1 refined_zerofree 1.250000e-1 secs 0.00
+len base 16 w fact d 3 sols 0 leaves 30 basic 3.072917e-2 refined 3.125000e-2 refined_zerofree 1.562500e-2 secs 0.00
+len base 16 w fact d 4 sols 0 leaves 240 basic 5.504557e-2 refined 4.760742e-2 refined_zerofree 4.394531e-2 secs 0.00
+len base 16 w fact d 5 sols 0 leaves 825 basic 4.280294e-2 refined 4.339600e-2 refined_zerofree 2.807617e-2 secs 0.00
+len base 16 w fact d 6 sols 0 leaves 3212 basic 4.612249e-2 refined 4.616165e-2 refined_zerofree 3.054523e-2 secs 0.00
+len base 16 w fact d 7 sols 0 leaves 12441 basic 6.013045e-2 refined 6.013280e-2 refined_zerofree 3.752798e-2 secs 0.00
+len base 16 w fact d 8 sols 0 leaves 50400 basic 8.911699e-2 refined 8.902418e-2 refined_zerofree 5.351576e-2 secs 0.00
+len base 16 w fact d 9 sols 0 leaves 203491 basic 1.458527e-1 refined 1.457860e-1 refined_zerofree 8.452714e-2 secs 0.01
+len base 16 w fact d 10 sols 0 leaves 817190 basic 2.615594e-1 refined 2.615178e-1 refined_zerofree 1.468687e-1 secs 0.01
+sol base 16 w fact d 11 digits 2,6,0,15,3,11,6,6,11,15,9
+len base 16 w fact d 11 sols 1 leaves 3268760 basic 5.105036e-1 refined 5.104875e-1 refined_zerofree 2.789170e-1 secs 0.06
+total base 16 w fact sols 1 secs 0.08
