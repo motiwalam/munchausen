@@ -226,3 +226,41 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     For `-1+i`, are the lengths exactly the residues 1 and 4 mod 8? (chapter 14)
 44. Per-base expected counts vary by about 20% beyond sampling error, and
     forced top digits explain part of it. What explains the rest? (section 11.2a)
+
+## Round 3: questions raised by chapters 11 to 18
+
+Each question has a longer statement, with its motivation and a first
+attack, in [questions-round3.md](questions-round3.md).
+
+45. Count digit multisets instead of strings. Does this show that almost all
+    bases have no solution with at most `(1 - eps) ln b / ln ln b` digits,
+    twice the range of Theorem 11.2? (proof)
+46. Describe `T(q)`, the residues of `x^x - x` mod `q`, for `q = 3^e` and
+    `5^e`, and prove `T(p^e)` is everything for `p >= 7`. (proof; Lemma 15.12)
+47. Add the prime powers 4, 8, 16, 9, 27, 81, 25, 125 to the `kdigit` sieve.
+    (computation; Theorem 15.13)
+48. Do 2-, 3- and 5-adic root densities in the root heuristic explain the
+    5-digit excess, 6 found against 2.42 predicted? (computation; section 11.4)
+49. A defect spectrum for short solutions: the test of section 11.1 at 4 and
+    5 digits, with a `kdigit` offset. (computation)
+50. Does every base have at most two 3-digit solutions under `0^0 = 1`?
+    (proof; Theorems 15.7 and section 18.2)
+51. Solve the families `(1,x,2)` and `(1,x,3)`, that is
+    `b(b+x) = x^n + 3` and `x^n + 25`. (proof)
+52. Settle the case `x == 0 (mod 8)` of `b(b+x) = x^n + 1`. (proof; 18.1.9)
+53. How large are the orders of mixed ideal classes in `Q(sqrt(x^2+4))`, the
+    one loophole of Corollary 18.11? (computation)
+54. Prove Assumption R, which would make Corollary 13.11 unconditional. (proof)
+55. Is the general weighted problem still NP-hard when solutions must be
+    long? (proof; section 13.1.6)
+56. Does the length tail beyond `ln b` (Conjecture 10.3) hold in many
+    perturbed worlds? (computation)
+57. Does the factorion shortfall survive offsets `j b (b-1)`, which also keep
+    `n mod b`? (computation; question 41)
+58. Narcissistic numbers (weights `x^d`) as a model test: residue factors
+    that change with the length, and doubling in odd bases. (twist)
+59. Munchausen numbers in the Pisot base `(x + sqrt(x^2+4)) / 2`. (twist)
+60. Parity doubling in AFS rational bases. (twist; section 16.5)
+61. A function-field analogue in `F_q[T]` with weights `d^|d|`. (twist)
+62. Are there finitely many solutions in the factorial number system? (twist)
+63. Eisenstein bases `-n + omega`: no parity doubling predicted. (twist)

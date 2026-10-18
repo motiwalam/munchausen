@@ -30,7 +30,7 @@ statement is marked by its source:
 | [16. Algebra of the polynomial](16-algebra.md) | Aurifeuillian factors and base 904, the equation `b(b+x) = x^x + 1`, reducibility, Galois groups, rational bases |
 | [17. Other weights](17-weights.md) | a general weight table in the engine; forced residues multiply the count by `b-1` as predicted; `0^0 = m`; universality of the laws |
 | [18. The equation b(b+x) = x^n + 1 and more](18-number-theory.md) | `b(b+x) = x^n + 1` solved for prime powers and odd `x <= 1001`; the M/L series in general; bases with 2- and 3-digit solutions; integers with three bases; signs of roots; powers as weights |
-| [Open questions](questions.md) | 44 research questions in two rounds, with priorities and answers |
+| [Open questions](questions.md) | 63 research questions in three rounds, with priorities and answers |
 
 ## Main results
 
