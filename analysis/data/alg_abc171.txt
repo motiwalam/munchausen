@@ -1,0 +1,27 @@
+x=9: quality > 1.1813
+x=15: quality > 1.4078
+x=21: quality > 1.5371
+x=25: quality > 1.5961
+x=27: quality > 1.6204
+x=29: quality > 1.6419
+x=31: quality > 1.6611
+x=51: quality > 1.7798
+x=101: quality > 1.8829
+x=199: quality > 1.9391
+every odd x >= 29 would give quality above Reyssat's 1.6299
+x=3: residue of the root mod x^x is about x^1.262  (below x^(x/2): solution b=4)
+x=5: residue of the root mod x^x is about x^4.538
+x=7: residue of the root mod x^x is about x^3.498  (below x^(x/2): solution b=904)
+x=11: residue of the root mod x^x is about x^10.233
+x=13: residue of the root mod x^x is about x^12.703
+x=17: residue of the root mod x^x is about x^16.799
+x=19: residue of the root mod x^x is about x^18.813
+x=23: residue of the root mod x^x is about x^22.902
+x=29: residue of the root mod x^x is about x^28.367
+x=31: residue of the root mod x^x is about x^30.791
+x=37: residue of the root mod x^x is about x^36.737
+x=41: residue of the root mod x^x is about x^40.754
+x=43: residue of the root mod x^x is about x^42.813
+x=47: residue of the root mod x^x is about x^46.973
+x=53: residue of the root mod x^x is about x^52.925
+x=59: residue of the root mod x^x is about x^58.957

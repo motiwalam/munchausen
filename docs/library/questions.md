@@ -33,7 +33,9 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
      rational root), or find one.
    - Literature: Fried, Ritt, Bilu-Tichy, Capelli, Berend-Bilu. Priority 1.
 
-3. Roots as a function of one varying digit: the near-integer law. Fix all
+3. (Answered in section 12.5 for four families: uniform outside the square
+   class, `1/(2x)` inside it.) Roots as a function of one varying digit: the
+   near-integer law. Fix all
    digits but `x` and let `b*(x)` be the real root.
    - Square class: does the fractional part of `b*(x)` concentrate at rational
      points?
@@ -116,7 +118,9 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     `(8,0,2,4)` in base 128, that is, `(a^a + c^c - c)/a = r^t` with
     `t | s(r^s - 1)`: a Pillai-type problem. Small to medium. Priority 2.
 
-17. The missing `b`-digit solution under `0^0 = 1`. Bases 3 to 45 have none
+17. (Answered in section 11.2: the model overestimates `b` digits by about
+    1.6x at these bases because of the forced top digits; the data are
+    normal.) The missing `b`-digit solution under `0^0 = 1`. Bases 3 to 45 have none
     against about 3.2 expected (P about 0.04). Is there a suppression
     mechanism for this shape (leading digit 1, 3 to 5 copies of `b-1`)? Check
     the parity of zeros and the residue mod `b-1` against the exact finite-`b`
@@ -140,17 +144,23 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     in every odd base 3 to 11 under `0^0 = 0`, none in even bases 4 to 10.
     Priority 1.
 
-21. The length law from near-solutions: use the lengths of the offset
+21. (Partly answered in section 11.2a: the law holds for small `J`, with
+    large cell-by-cell deviations.) The length law from near-solutions: use the lengths of the offset
     solutions of section 11.1 to test the `e^(-J)` law and the bump at
     `J > ln b + 1` with thousands of near-solutions. Priority 2.
 
-22. A Chen-Stein Poisson theorem in the model, with twins and shared
+22. (Answered in `drafts/complexity-and-poisson.md`, part 2: proven in the
+    basic coupled model with error `O(1/b)`; the refined model needs an
+    assumption on residues; predicted pooled correlation 0.47, observed 0.56.)
+    A Chen-Stein Poisson theorem in the model, with twins and shared
     solutions; predict the correlation 0.56 of `N_0` and `N_1`. Priority 3.
 
-23. Empty even bases: run `--zscore 3` on bases 46, 48, 50. Large.
+23. (Section 11.2 finds the deficit to be chance with each base's own
+    spectrum.) Empty even bases: run `--zscore 3` on bases 46, 48, 50. Large.
     Priority 2.
 
-24. Regress the per-base means `lambda_m(b)` of the defect spectrum on
+24. (Answered in section 11.2a: no residue pattern; about 20% real spread,
+    partly explained by forced top digits.) Regress the per-base means `lambda_m(b)` of the defect spectrum on
     `b mod 3, 4, 8`, `omega(b-1)` and perfect powers. Small. Priority 3.
 
 ## Theme V. Search algorithms and complexity
@@ -162,11 +172,16 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     residues. Pruning needs only increasing weights. Unblocks 9, 10, 19.
     Priority 1.
 
-27. With `b` in unary and arbitrary binary weights, is "some `n` equals the sum
-    of the weights of its digits" NP-complete? Unlike `L_m` this is not a
-    tally language. Priority 3.
+27. (Answered in `drafts/complexity-and-poisson.md`, part 1: NP-complete,
+    also for increasing weights, and #P-complete under parsimonious
+    reductions; the `x^(e(x))` variants stay open.) With `b` in unary and
+    arbitrary binary weights, is "some `n` equals the sum of the weights of
+    its digits" NP-complete? Unlike `L_m` this is not a tally language.
+    Priority 3.
 
-28. Why the sieve passes 2 to 4 times more strings than the product of
+28. (Answered in section 11.5: small primes pass most strings because of the
+    digit-sum identity at r = 1, and rational roots pass every prime.) Why the
+    sieve passes 2 to 4 times more strings than the product of
     derangement shares: for k = 3 with digits up to 80, 46 pass against about
     2 expected. Small primes, leading digits, square discriminants. Priority 3.
 

@@ -1,0 +1,7 @@
+# alg_rational.py 4 44: no rational root p/q with q > 1 in any of the strings
+total (1, 'above') 0
+total (1, 'small') 0
+total (1, 'negative') 0
+total (0, 'above') 0
+total (0, 'small') 0
+total (0, 'negative') 0

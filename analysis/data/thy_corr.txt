@@ -1,0 +1,3 @@
+model totals, bases 10-41: shared 21.89, zero under 0^0=0 31.10, zero under 0^0=1 16.29
+observed: N0 66, N1 56; correlation 0.563
+model sample correlation: mean 0.470, median 0.482, 5%-95% 0.191 to 0.706, P(r >= observed) 0.299
