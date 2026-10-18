@@ -29,7 +29,8 @@ statement is marked by its source:
 | [15. Dynamics and nonexistence](15-dynamics.md) | cycles of `n -> F(n)`, bases with two 2-digit solutions, coverings, constructions, integers with many bases |
 | [16. Algebra of the polynomial](16-algebra.md) | Aurifeuillian factors and base 904, the equation `b(b+x) = x^x + 1`, reducibility, Galois groups, rational bases |
 | [17. Other weights](17-weights.md) | a general weight table in the engine; forced residues multiply the count by `b-1` as predicted; `0^0 = m`; universality of the laws |
-| [Open questions](questions.md) | 30 research questions, with priorities |
+| [18. The equation b(b+x) = x^n + 1 and more](18-number-theory.md) | `b(b+x) = x^n + 1` solved for prime powers and odd `x <= 1001`; the M/L series in general; bases with 2- and 3-digit solutions; integers with three bases; signs of roots; powers as weights |
+| [Open questions](questions.md) | 44 research questions in two rounds, with priorities and answers |
 
 ## Main results
 
@@ -76,6 +77,14 @@ Proven:
   (Theorem 16.1). This explains `(1,7,1)` in base 904 and why no larger `x`
   works the same way; `b(b+x) = x^x + 1` has no further solution for `x` up to
   `4 * 10^9`, and the abc conjecture would rule them out entirely.
+- For `x` a prime power, the only solutions of `b(b+x) = x^n + 1` with
+  `n >= 2` are `(x, n) = (3,2), (8,2), (3,3), (5,3), (8,3), (64,3), (7,7)`
+  (Theorem 18.8). There are none with `n >= 4` even. So `(1,x,1)` with `x`
+  an odd prime power is a solution only for `x = 3, 7`; any other `x` must be
+  composite, above `4 * 10^9`, with a non-principal ideal class (Corollary 18.11).
+- For every Aurifeuillian pair of `Phi_m(s y^2)`, `log(M/L)` is an exact
+  series with a twisted Ramanujan sum, and `M/L` tends to `e^(2/y)` or 1
+  (Theorem 18.20).
 - With arbitrary weights in place of `x^x`, deciding whether a solution exists
   is NP-complete and counting them is #P-complete (chapter 13). Any fast
   algorithm for real Munchausen numbers must use the arithmetic of `x^x`.
@@ -101,6 +110,8 @@ Computed:
   under `0^0 = 1` (section 12.3).
 - Under `0^0 = 1` no base up to 100,000 has a 9-digit solution, and no base up
   to 10,000 has one with 18, 21, 22, 24, 26 or 28 digits.
+- Under `0^0 = 1`, base 25 is the only base below `10^51` with both a
+  2-digit and a 3-digit solution: `(1,3)` and `(5,1,3)` (section 18.2).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 41.
 

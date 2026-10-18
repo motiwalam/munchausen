@@ -90,7 +90,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme III. Nonexistence and finiteness
 
-12. (Partly answered in chapter 16: no solution for x up to 4e9; abc implies none.) Prove that `b (b + x) = x^x + 1` has only the solutions x = 3 and x = 7.
+12. (Partly answered in chapters 16 and 18: no solution for x up to 4e9; none for odd prime powers x >= 9 (Proposition 18.6); a further solution needs a mixed non-principal ideal (Corollary 18.11); abc implies none.) Prove that `b (b + x) = x^x + 1` has only the solutions x = 3 and x = 7.
     Even `x` is in the square class. For odd prime `x`, the prime factors of
     `Phi_2x(x)` are `1 (mod 2x)`. Combine with coverings and the Pell form
     `U^2 - 4x Y^2 = x^2 + 4`, `Y = x^((x-1)/2)`. Literature: primitive
@@ -198,24 +198,24 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Round 2: questions raised by the answers
 
-31. Does the exact series for `M / L` (Theorem 16.1) extend to Aurifeuillian
+31. (Answered in chapter 18: yes, with a twisted Ramanujan sum; M/L tends to e^(2/y) or 1 (Theorem 18.20).) Does the exact series for `M / L` (Theorem 16.1) extend to Aurifeuillian
     factors of `a^n +- b^n` in general? (chapter 16)
-32. Is the set of solutions `(x, n)` of `b (b + x) = x^n + 1` with `n >= 4`
+32. (Partly answered in chapter 18: solved for prime powers x (Theorem 18.8) and odd x <= 1001 (Theorem 18.12); none for n even; finite under abc; n = 5 open.) Is the set of solutions `(x, n)` of `b (b + x) = x^n + 1` with `n >= 4`
     finite? Only `(7, 7)` is known. (chapter 16)
 33. For every `k`, is there a bound `F <= C_k M^(c_k)` beyond which every
     factorization of `Q_s` without a linear factor comes from a decomposition
     of `P_s`? (chapter 16)
-34. Why do negative bases lack the non-partner 3-digit solutions, such as
+34. (Answered in chapter 18: the root heuristic is symmetric in sign; in the square class small t favours positive roots about 9 to 1.) Why do negative bases lack the non-partner 3-digit solutions, such as
     `(3,1,3)`, that positive bases have? (chapters 12 and 16)
 35. Even bases under `0^0 = 0` have 1 two-cycle of `n -> F(n)` against 3.5
     expected. Is there a second invariant, or is this chance? (chapter 15)
-36. Which bases have one 2-digit and one 3-digit solution? (chapter 15)
+36. (Answered in chapter 18 below 10^51: only base 25.) Which bases have one 2-digit and one 3-digit solution? (chapter 15)
 37. Close the case `a^a ~ c^c` of the cores in self-paying bases, where abc
     does not apply. (chapter 15)
 38. Does every covering need a modulus on which `x^x - x` misses residues,
     that is a power of 2 or 3, or 25? (chapter 15)
-39. Does some integer have three bases under `0^0 = 1`? (chapter 15)
-40. Is the problem with weights `x^(e(x))`, `e` in unary, NP-hard? It sits
+39. (Partly answered in chapter 18: none in the ranges searched; such an integer has a rigid shape (Corollary 18.17).) Does some integer have three bases under `0^0 = 1`? (chapter 15)
+40. (Partly answered in chapter 18: still open; gadgets made of pure powers need superpolynomial exponents (Corollary 18.23).) Is the problem with weights `x^(e(x))`, `e` in unary, NP-hard? It sits
     between the NP-complete general problem and the real one. (chapter 13)
 41. Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
     expected (P about 0.03 after the look-elsewhere effect). Bases 47 and 49
