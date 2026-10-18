@@ -495,7 +495,8 @@ impl<const N: usize> Search<N> {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
-        let (k, n) = (cur.k, &cur.n);
+        let k = cur.k;
+        let n = &cur.h;
         let (wk, dhi) = unsafe { (p.w.get_unchecked(k), p.dhi.get_unchecked(k)) };
         while cur.e <= n.rf {
             let e = cur.e;
@@ -680,7 +681,7 @@ impl<const N: usize> Search<N> {
             let level = depth + (k - ck) as u32;
             let child = if cur.e == 0 && level < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
                 // hand every child to the pool and drop this node
-                self.expand::<X>(p, ck, &cur.n, cnt, l, |_, c, cnt| {
+                self.expand::<X>(p, ck, &cur.node0(), cnt, l, |_, c, cnt| {
                     let (c, cnt) = (*c, *cnt);
                     s.spawn(move |s| self.rec::<X>(s, p, ck - 1, c, cnt, level + 1))
                 });
@@ -712,21 +713,38 @@ impl<const N: usize> Search<N> {
     }
 }
 
-// The state of expand at one node: the node, the next value of e, and the
-// interval [te, hi] of the child for that e (before its forced digits).
+// The state of expand at one node: the node without its sums, the next
+// value of e, and the interval [te, hi] of the child for that e (before its
+// forced digits).
 struct Cursor<const N: usize> {
-    n: Node<N>,
     te: DV<N>,
     hi: DV<N>,
+    h: Head,
     k: usize,
     e: u32,
     occk: u32,
+}
+
+// the fields of a node that its cursor still needs
+#[derive(Clone, Copy)]
+struct Head {
+    pp: u32,
+    rf: u32,
+    m: u32,
+    lneed: f64,
+    ln_e: f64,
 }
 
 impl<const N: usize> Cursor<N> {
     #[inline(always)]
     fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
         let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
-        Cursor { n: *n, te: n.t, hi: n.hi, k, e: 0, occk }
+        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e }, k, e: 0, occk }
+    }
+
+    // the node of a cursor that has not started yet
+    fn node0(&self) -> Node<N> {
+        let h = &self.h;
+        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e }
     }
 }
