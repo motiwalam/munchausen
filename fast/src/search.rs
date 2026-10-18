@@ -123,17 +123,20 @@ pub struct Prune {
     pub shift: i32,
     /// experiment: weights x! for x >= 1
     pub factorial: bool,
+    /// experiment: weights x^power for x >= 1, as in narcissistic numbers
+    /// (0 keeps x^x)
+    pub power: u32,
     /// experiment: raise each weight w(x), x >= 1, by the least amount that
     /// makes it congruent to x + r modulo b-1 (after --perturb, if given)
     pub set_residue: Option<u32>,
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, set_residue: None };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None };
 
     /// whether the weights differ from x^x with 0^0 in {0, 1}
     pub fn custom_weights(&self) -> bool {
-        self.perturb != 0 || self.zero != 1 || self.shift != 0 || self.factorial || self.set_residue.is_some()
+        self.perturb != 0 || self.zero != 1 || self.shift != 0 || self.factorial || self.power != 0 || self.set_residue.is_some()
     }
 }
 
@@ -145,6 +148,7 @@ pub fn weights(b: u32, prune: &Prune) -> (Vec<BigUint>, [i64; 2]) {
         .map(|j| match j {
             0 => BigUint::ZERO,
             _ if prune.factorial => (1..=j).map(BigUint::from).product(),
+            _ if prune.power > 0 => BigUint::from(j).pow(prune.power),
             _ => BigUint::from(j).pow((j as i64 + prune.shift as i64) as u32),
         })
         .collect();

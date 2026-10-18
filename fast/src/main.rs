@@ -56,6 +56,9 @@ options:
                           convention (default 1); the first keeps 0^0 = 0
   --shift <t>             (experiment) weights x^(x+t) for x >= 1, t >= -1
   --factorial             (experiment) weights x! for x >= 1
+  --power <p>             (experiment) weights x^p for x >= 1; with --zero 0,
+                          --min-digits p and --max-digits p it finds the
+                          p-digit narcissistic numbers
   --set-residue <r>       (experiment) raise each weight w(x), x >= 1, by the
                           least amount that makes it x + r modulo b-1; it acts
                           after --perturb
@@ -156,6 +159,7 @@ fn parse_args() -> Opts {
             "--zero" => prune.zero = val().parse().unwrap_or_else(|_| die("bad weight for 0")),
             "--shift" => prune.shift = val().parse().ok().filter(|&t| t >= -1).unwrap_or_else(|| die("bad shift: use an integer t >= -1")),
             "--factorial" => prune.factorial = true,
+            "--power" => prune.power = val().parse().ok().filter(|&p| p >= 1).unwrap_or_else(|| die("bad power: use an integer p >= 1")),
             "--set-residue" => prune.set_residue = Some(val().parse().unwrap_or_else(|_| die("bad residue"))),
             "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
             "--progress" => progress = true,
@@ -190,8 +194,8 @@ fn parse_args() -> Opts {
     if gpu && (journal.is_some() || prune.offset != 0 || prune.custom_weights() || shard.1 > 1) {
         die("--gpu works only with the true weights, without --journal, --offset and --shard");
     }
-    if prune.shift != 0 && prune.factorial {
-        die("--shift and --factorial exclude each other");
+    if (prune.shift != 0) as u32 + prune.factorial as u32 + (prune.power != 0) as u32 > 1 {
+        die("--shift, --factorial and --power exclude each other");
     }
     if gpu && !cfg!(feature = "gpu") {
         die("--gpu needs a build with --features gpu");
@@ -526,6 +530,7 @@ mod tests {
         v.push(search::Prune { factorial: true, ..n });
         v.push(search::Prune { factorial: true, zero: 2, ..n });
         v.push(search::Prune { shift: 1, zero: -1, offset: 5, ..n });
+        v.extend([1, 2, 3, 5, 8].map(|p| search::Prune { power: p, zero: 0, ..n }));
         v.push(search::Prune { perturb: 3, keep_residues: true, ..n });
         for r in 0..3 {
             v.push(search::Prune { set_residue: Some(r), ..n });
@@ -573,7 +578,7 @@ mod tests {
                 let o = Opts { prune, ..test_opts() };
                 let want = brute_multisets(b, &prune).map(sorted);
                 let got = run_search_n::<1>(b, &o).map(sorted);
-                let what = format!("base {b}: zero {} shift {} factorial {} perturb {} residue {:?} offset {}", prune.zero, prune.shift, prune.factorial, prune.perturb, prune.set_residue, prune.offset);
+                let what = format!("base {b}: zero {} shift {} factorial {} power {} perturb {} residue {:?} offset {}", prune.zero, prune.shift, prune.factorial, prune.power, prune.perturb, prune.set_residue, prune.offset);
                 assert_eq!(got, want, "{what}");
                 assert_eq!(run_search_n::<2>(b, &o).map(sorted), want, "{what}, N=2");
                 for mode in 0..2 {
