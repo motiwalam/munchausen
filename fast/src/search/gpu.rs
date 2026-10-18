@@ -3,6 +3,9 @@
 // dispatches of bounded length, and collects the results.
 use super::{DV, Local, Search, Unit};
 use crate::vk::{Buffer, Gpu, Kernel};
+use super::{Cursor, Node};
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::time::Instant;
 
 const HEADER: usize = 16;
@@ -36,7 +39,17 @@ const LANES: usize = 32;
 pub struct GpuOptions {
     /// number of subgroups that search in parallel
     pub subgroups: u32,
+    /// whether the CPU threads search units too
+    pub cpu: bool,
     pub verbose: bool,
+}
+
+struct Shared {
+    /// the next unit to claim
+    next: AtomicUsize,
+    /// a stack of GPU work items: claimed units and split-off cursors
+    pending: Mutex<Vec<u8>>,
+    gpu_done: AtomicBool,
 }
 
 struct Ctx {
@@ -132,8 +145,11 @@ impl<const N: usize> Search<N> {
         Ok(Ctx { gpu, kernel, items, out, stats, found, ctl, bufs: vec![parb, tabb] })
     }
 
-    /// Search the given units on the GPU. Adds to the node counts and the
-    /// solutions of self, like run_units.
+    /// Search the given units on the GPU, and with o.cpu also on the
+    /// threads of the rayon pool. Both sides take units from one shared
+    /// index, and the CPU threads also take the cursors that the GPU split
+    /// off. Adds to the node counts and the solutions of self, like
+    /// run_units.
     pub fn run_gpu(&self, b: u32, units: &[Unit<N>], o: &GpuOptions) -> Result<(), String> {
         if b as usize > 32 * N {
             return Err(format!("--gpu handles bases up to {} for numbers of this width", 32 * N));
@@ -141,23 +157,128 @@ impl<const N: usize> Search<N> {
         if self.inexact {
             return Err("--gpu runs only the exact search".into());
         }
+        let item = HEADER + 5 * 32 * N;
+        let sh = Shared { next: AtomicUsize::new(0), pending: Mutex::new(vec![]), gpu_done: AtomicBool::new(false) };
+        let (on_cpu, cursors) = (AtomicUsize::new(0), AtomicUsize::new(0));
+        let start = Instant::now();
+        let mut cpu_secs = 0.0;
+        let r = std::thread::scope(|s| {
+            let g = s.spawn(|| {
+                let r = self.gpu_loop(b, units, &sh, o);
+                sh.gpu_done.store(true, Ordering::Release);
+                r
+            });
+            if o.cpu {
+                rayon::scope(|s| {
+                    for _ in 0..rayon::current_num_threads() {
+                        s.spawn(|_| {
+                            loop {
+                                let i = sh.next.fetch_add(1, Ordering::Relaxed);
+                                if i < units.len() {
+                                    let u = &units[i];
+                                    let p = &self.params[u.pi];
+                                    rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+                                    on_cpu.fetch_add(1, Ordering::Relaxed);
+                                    continue;
+                                }
+                                // read the flag first: once it is set, the GPU adds no more items
+                                let done = sh.gpu_done.load(Ordering::Acquire);
+                                let it = {
+                                    let mut pd = sh.pending.lock().unwrap();
+                                    let have = pd.len() / item;
+                                    if have > 0 { Some(pd.split_off((have - 1) * item)) } else { None }
+                                };
+                                match it {
+                                    Some(it) => {
+                                        self.cpu_item(&it);
+                                        cursors.fetch_add(1, Ordering::Relaxed);
+                                    }
+                                    None if done => break,
+                                    None => std::thread::sleep(std::time::Duration::from_micros(200)),
+                                }
+                            }
+                        });
+                    }
+                });
+                cpu_secs = start.elapsed().as_secs_f64();
+            }
+            g.join().unwrap()
+        });
+        if o.cpu {
+            eprintln!(
+                "  cpu: {} of {} units and {} GPU items, done after {cpu_secs:.3} s",
+                on_cpu.load(Ordering::Relaxed),
+                units.len(),
+                cursors.load(Ordering::Relaxed)
+            );
+        }
+        r
+    }
+
+    // Run one GPU work item on this thread: a unit, or a cursor that a
+    // subgroup handed back.
+    fn cpu_item(&self, it: &[u8]) {
+        let vb = 32 * N;
+        let dv = |off: usize| {
+            let mut x = [0u8; 64];
+            for l in 0..LANES {
+                for c in 0..N {
+                    x[LANES * c + l] = it[off + l * N + c];
+                }
+            }
+            x
+        };
+        let (pi, k, e, occk, pp, rf, root) = (it[0] as usize, it[1] as usize, it[2] as u32, it[3] as u32, it[4] as u32, it[5] as u32, it[6] != 0);
+        let mut cnt = [0u8; 128];
+        cnt[..64].copy_from_slice(&dv(HEADER + 4 * vb));
+        let n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0 };
+        let p = &self.params[pi];
+        if root {
+            rayon::scope(|s| self.rec::<false>(s, p, k, n, cnt, 0));
+            return;
+        }
+        let mut cur = Cursor { n, te: DV::from_bytes(&dv(HEADER + 2 * vb)), hi: DV::from_bytes(&dv(HEADER + 3 * vb)), k, e, occk };
+        let mut l = Local::default();
+        rayon::scope(|s| {
+            while let Some(c) = self.next_child::<false>(p, &mut cur, &mut cnt, &mut l) {
+                self.rec_seq::<false>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
+            }
+        });
+        self.flush(&l);
+    }
+
+    fn gpu_loop(&self, b: u32, units: &[Unit<N>], sh: &Shared, o: &GpuOptions) -> Result<(), String> {
         let vb = 32 * N;
         let item = HEADER + 5 * vb;
         let mut c = self.gpu_setup(b, o)?;
         let sg = (o.subgroups as usize).next_multiple_of(GROUP / LANES);
         let cap = 64 * sg;
-        // a stack of work items; the first unit is on top
-        let mut pending: Vec<u8> = Vec::with_capacity(units.len() * item);
-        for u in units.iter().rev() {
-            self.gpu_item(u, &mut pending);
-        }
+        // The GPU takes only about as many items as it finished in the last
+        // dispatch, and claims units only as fast as that, so that the CPU
+        // threads find work in the shared stack.
+        let mut want = 4 * sg;
         let mut budget: u32 = 4096;
         let (mut rounds, mut busy) = (0u64, 0.0f64);
         let start = Instant::now();
-        while !pending.is_empty() {
-            let have = pending.len() / item;
-            let n = have.min(cap);
-            let chunk = pending.split_off((have - n) * item);
+        loop {
+            let chunk = {
+                let mut pending = sh.pending.lock().unwrap();
+                let have = pending.len() / item;
+                if have < want {
+                    let i = sh.next.fetch_add(want - have, Ordering::Relaxed).min(units.len());
+                    let j = (i + want - have).min(units.len());
+                    for u in units[i..j].iter().rev() {
+                        self.gpu_item(u, &mut pending);
+                    }
+                }
+                let have = pending.len() / item;
+                let n = have.min(want);
+                pending.split_off((have - n) * item)
+            };
+            if chunk.is_empty() {
+                break;
+            }
+            let n = chunk.len() / item;
             c.items.bytes_mut()[..chunk.len()].copy_from_slice(&chunk);
             c.ctl.u32s_mut()[..4].fill(0);
             // with few items, split them sooner so that every subgroup gets work
@@ -178,8 +299,13 @@ impl<const N: usize> Search<N> {
             if taken < n && eff == budget {
                 budget = ((budget as f64 * (TARGET_SECS / dt).clamp(0.5, 2.0)) as u32).clamp(256, 1 << 24);
             }
-            pending.extend_from_slice(&chunk[taken * item..]);
-            pending.extend_from_slice(&c.out.bytes()[..nout * item]);
+            // grow while the GPU finishes every item, else follow what it finished
+            want = if taken == n || !o.cpu { 2 * taken } else { taken + taken / 4 }.clamp(2 * sg, cap);
+            {
+                let mut pending = sh.pending.lock().unwrap();
+                pending.extend_from_slice(&chunk[taken * item..]);
+                pending.extend_from_slice(&c.out.bytes()[..nout * item]);
+            }
             for r in c.found.bytes()[..nfound * FOUND].chunks_exact(FOUND) {
                 let (mode, d) = (r[0] as u32, r[1] as u32);
                 let mut x = [0u8; 64];

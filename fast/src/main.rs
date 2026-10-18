@@ -56,6 +56,8 @@ options:
                           work is split into parallel tasks (default: 4)
   --gpu                   (search, exact only) run the search on the GPU through
                           Vulkan; needs a build with --features gpu
+  --hybrid                (search, exact only) like --gpu, but the CPU threads
+                          search units too
   --gpu-subgroups <n>     (with --gpu) number of subgroups that search in
                           parallel (default: 2048)
 
@@ -75,7 +77,12 @@ struct Opts {
     prune: search::Prune,
     journal: Option<String>,
     progress: bool,
+    // read only in builds with the gpu feature
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     gpu: bool,
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    hybrid: bool,
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     gpu_subgroups: u32,
 }
 
@@ -96,6 +103,7 @@ fn parse_args() -> Opts {
     let mut journal = None;
     let mut progress = false;
     let mut gpu = false;
+    let mut hybrid = false;
     let mut gpu_subgroups = 2048;
     let mut i = 0;
     while i < args.len() {
@@ -132,6 +140,10 @@ fn parse_args() -> Opts {
             "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
             "--progress" => progress = true,
             "--gpu" => gpu = true,
+            "--hybrid" => {
+                gpu = true;
+                hybrid = true
+            }
             "--gpu-subgroups" => gpu_subgroups = val().parse().unwrap_or_else(|_| die("bad subgroup count")),
             _ => pos.push(a.to_string()),
         }
@@ -154,7 +166,7 @@ fn parse_args() -> Opts {
     if gpu_subgroups == 0 {
         die("--gpu-subgroups must be positive");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, gpu, gpu_subgroups }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, gpu, hybrid, gpu_subgroups }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -233,7 +245,7 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     let progress = std::sync::Mutex::new((Instant::now(), already));
     #[cfg(feature = "gpu")]
     if o.gpu {
-        let go = search::gpu::GpuOptions { subgroups: o.gpu_subgroups, verbose: o.progress };
+        let go = search::gpu::GpuOptions { subgroups: o.gpu_subgroups, cpu: o.hybrid, verbose: o.progress };
         if let Err(e) = sr.run_gpu(b, &units, &go) {
             eprintln!("GPU search failed: {e}");
             std::process::exit(1);
@@ -362,6 +374,7 @@ mod tests {
             journal: None,
             progress: false,
             gpu: false,
+            hybrid: false,
             gpu_subgroups: 2048,
         }
     }
@@ -386,15 +399,16 @@ mod tests {
         check_against_reference::<2>(2..=22);
     }
 
-    // the GPU search must find the same numbers and visit the same nodes
+    // the GPU search, alone and with the CPU, must find the same numbers and
+    // visit the same nodes
     #[cfg(feature = "gpu")]
     fn check_gpu<const N: usize>(bases: std::ops::RangeInclusive<u32>) {
         for b in bases {
-            let run = |gpu: bool| {
+            let run = |gpu: bool, cpu: bool| {
                 let sr = search::Search::<N>::new(b, 1, u32::MAX, 3, search::Prune::NONE);
                 let units = sr.units(2);
                 if gpu {
-                    let go = search::gpu::GpuOptions { subgroups: 64, verbose: false };
+                    let go = search::gpu::GpuOptions { subgroups: 64, cpu, verbose: false };
                     sr.run_gpu(b, &units, &go).unwrap();
                 } else {
                     sr.run_units(&units, |_| false, |_| {});
@@ -404,7 +418,9 @@ mod tests {
                 f.dedup();
                 (f, sr.nodes(), sr.evals())
             };
-            assert!(run(true) == run(false), "base {b} N={N}");
+            let want = run(false, false);
+            assert!(run(true, false) == want, "base {b} N={N}");
+            assert!(run(true, true) == want, "base {b} N={N} with the CPU");
         }
     }
 
