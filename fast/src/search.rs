@@ -499,11 +499,11 @@ impl<const N: usize> Search<N> {
         while cur.e <= n.rf {
             let e = cur.e;
             cur.e += 1;
-            if e > 0 {
-                cur.te = cur.te.add(wk, base);
-                cur.hi = cur.hi.add(dhi, base);
-            }
             let (te, hi) = (cur.te, cur.hi);
+            // The sums for e + 1 come before the branches below, so that a
+            // mispredicted branch does not throw them away.
+            cur.te = te.add(wk, base);
+            cur.hi = hi.add(dhi, base);
             l.evals += 1;
             let ck = cur.occk + e;
             let mk = n.m + ck;
