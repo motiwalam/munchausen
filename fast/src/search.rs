@@ -26,6 +26,9 @@ use num_bigint::BigUint;
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicU64, Ordering};
 
+#[cfg(feature = "gpu")]
+pub mod gpu;
+
 /// Largest supported base: lane sums reach 2b-1, which must fit in a byte.
 pub const MAX_BASE: usize = 127;
 

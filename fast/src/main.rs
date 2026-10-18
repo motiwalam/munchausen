@@ -3,6 +3,8 @@ mod journal;
 mod port;
 mod reference;
 mod search;
+#[cfg(feature = "gpu")]
+mod vk;
 
 use num_bigint::BigUint;
 use std::time::Instant;
@@ -52,6 +54,12 @@ options:
                           resumable units (default: 4)
   --par-depth <n>         (search) further depth below a unit down to which
                           work is split into parallel tasks (default: 4)
+  --gpu                   (search, exact only) run the search on the GPU through
+                          Vulkan; needs a build with --features gpu
+  --hybrid                (search, exact only) like --gpu, but the CPU threads
+                          search units too
+  --gpu-subgroups <n>     (with --gpu) number of subgroups that search in
+                          parallel (default: 2048)
 
 Results go to stdout in the same format as ../output/*.txt; timing and
 search statistics go to stderr.";
@@ -69,6 +77,13 @@ struct Opts {
     prune: search::Prune,
     journal: Option<String>,
     progress: bool,
+    // read only in builds with the gpu feature
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    gpu: bool,
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    hybrid: bool,
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    gpu_subgroups: u32,
 }
 
 fn parse_args() -> Opts {
@@ -87,6 +102,9 @@ fn parse_args() -> Opts {
     let mut max_digits = u32::MAX;
     let mut journal = None;
     let mut progress = false;
+    let mut gpu = false;
+    let mut hybrid = false;
+    let mut gpu_subgroups = 2048;
     let mut i = 0;
     while i < args.len() {
         let a = args[i].as_str();
@@ -121,6 +139,12 @@ fn parse_args() -> Opts {
             "--offset" => prune.offset = val().parse().unwrap_or_else(|_| die("bad offset")),
             "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
             "--progress" => progress = true,
+            "--gpu" => gpu = true,
+            "--hybrid" => {
+                gpu = true;
+                hybrid = true
+            }
+            "--gpu-subgroups" => gpu_subgroups = val().parse().unwrap_or_else(|_| die("bad subgroup count")),
             _ => pos.push(a.to_string()),
         }
         i += 1;
@@ -133,7 +157,16 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress }
+    if gpu && (journal.is_some() || prune.offset != 0 || prune.perturb != 0) {
+        die("--gpu works without --journal, --offset and --perturb");
+    }
+    if gpu && !cfg!(feature = "gpu") {
+        die("--gpu needs a build with --features gpu");
+    }
+    if gpu_subgroups == 0 {
+        die("--gpu-subgroups must be positive");
+    }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, gpu, hybrid, gpu_subgroups }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -171,8 +204,13 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
     let mut out: Found = if o.min_digits <= 1 && o.prune.offset == 0 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
+    let t0 = Instant::now();
     let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth, o.prune);
+    let t1 = Instant::now();
     let units = sr.units(o.unit_depth);
+    if o.progress {
+        eprintln!("  base {b}: {:.3} s for the tables, {:.3} s for {} units", (t1 - t0).as_secs_f64(), t1.elapsed().as_secs_f64(), units.len());
+    }
     let total = units.len();
 
     let journal = o.journal.as_ref().map(|path| {
@@ -205,6 +243,15 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
 
     let start = Instant::now();
     let progress = std::sync::Mutex::new((Instant::now(), already));
+    #[cfg(feature = "gpu")]
+    if o.gpu {
+        let go = search::gpu::GpuOptions { subgroups: o.gpu_subgroups, cpu: o.hybrid, verbose: o.progress };
+        if let Err(e) = sr.run_gpu(b, &units, &go) {
+            eprintln!("GPU search failed: {e}");
+            std::process::exit(1);
+        }
+        return finish(b, &sr, out);
+    }
     sr.run_units(
         &units,
         |i| skip[i],
@@ -221,6 +268,10 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
             }
         },
     );
+    finish(b, &sr, out)
+}
+
+fn finish<const N: usize>(b: u32, sr: &search::Search<N>, mut out: Found) -> Found {
     eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes(), sr.evals());
     let skipped = sr.skipped();
     if skipped > 0.0 {
@@ -322,6 +373,9 @@ mod tests {
             prune: search::Prune::NONE,
             journal: None,
             progress: false,
+            gpu: false,
+            hybrid: false,
+            gpu_subgroups: 2048,
         }
     }
 
@@ -343,6 +397,38 @@ mod tests {
     #[test]
     fn wide_vectors_match_reference() {
         check_against_reference::<2>(2..=22);
+    }
+
+    // the GPU search, alone and with the CPU, must find the same numbers and
+    // visit the same nodes
+    #[cfg(feature = "gpu")]
+    fn check_gpu<const N: usize>(bases: std::ops::RangeInclusive<u32>) {
+        for b in bases {
+            let run = |gpu: bool, cpu: bool| {
+                let sr = search::Search::<N>::new(b, 1, u32::MAX, 3, search::Prune::NONE);
+                let units = sr.units(2);
+                if gpu {
+                    let go = search::gpu::GpuOptions { subgroups: 64, cpu, verbose: false };
+                    sr.run_gpu(b, &units, &go).unwrap();
+                } else {
+                    sr.run_units(&units, |_| false, |_| {});
+                }
+                let mut f = std::mem::take(&mut *sr.found.lock().unwrap());
+                f.sort();
+                f.dedup();
+                (f, sr.nodes(), sr.evals())
+            };
+            let want = run(false, false);
+            assert!(run(true, false) == want, "base {b} N={N}");
+            assert!(run(true, true) == want, "base {b} N={N} with the CPU");
+        }
+    }
+
+    #[cfg(feature = "gpu")]
+    #[test]
+    fn gpu_matches_cpu() {
+        check_gpu::<1>(2..=26);
+        check_gpu::<2>(2..=24);
     }
 
     #[test]

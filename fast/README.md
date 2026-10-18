@@ -135,6 +135,62 @@ billion before, 1.59 billion after):
 
 `docs/algorithm.md` describes the data structures.
 
+## GPU search
+
+With `--features gpu`, the program can run the exact search on a GPU
+through Vulkan 1.3. The build needs `glslc` (from shaderc) to compile
+`shaders/search.comp`. The default build does not use the GPU.
+
+```sh
+cargo build --release --features gpu
+./target/release/fast search 32 --gpu
+./target/release/fast search 32 --hybrid
+```
+
+`--gpu` runs every unit on the GPU. `--hybrid` also runs units on the CPU
+threads. Both give the same solutions and the same node counts as the CPU
+search. A test checks this for bases 2 to 26. The GPU path supports only
+the exact search, without `--journal`.
+
+### How it works
+
+One subgroup of 32 lanes runs one depth-first search. It plays the part
+of an AVX2 register: lane `l` holds digit `l` (or digits `l` and `l + 32`
+above 30 digits), and a ballot replaces movemask. Every branch depends on
+values that are the same in all lanes, so the lanes never diverge. The
+lanes also hold a histogram of the known leading digits, so a count check
+is one compare and one ballot.
+
+The `xe` driver kills a GPU job after 5 seconds. So each subgroup stops
+after a node budget per dispatch, about 0.25 s of work, and writes every
+pending cursor of its stack back as a new work item. Large subtrees split
+by themselves. With `--hybrid`, the CPU threads take units and these
+cursors from the same pool.
+
+### Speed
+
+On the test laptop (Arc 140V GPU, power-saver mode), the median of 5
+interleaved runs. Other jobs shared the machine: the 1-minute load was
+9.5 to 14, so the CPU times are slower than in the table above.
+
+| base | nodes | CPU, 8 threads | `--gpu` | `--hybrid` |
+|---|---:|---:|---:|---:|
+| 26 | 4,955,060 | 0.22 s | 0.25 s | 0.19 s |
+| 28 | 18,025,432 | 0.67 s | 0.41 s | 0.43 s |
+| 30 | 66,246,690 | 1.98 s | 1.06 s | 0.90 s |
+| 32 | 214,709,067 | 7.42 s | 4.60 s | 3.11 s |
+| 33 | 464,274,849 | 12.1 s | 9.6 s | 6.2 s |
+
+Base 33 is one run each. The GPU spends about 0.15 s on setup, so it
+loses below base 27. Above 30 digits, each lane holds two digits, and the
+GPU visits about 48 million nodes per second instead of 62 million.
+
+What limits it: not divergence, and not memory. Each subgroup runs a long
+chain of dependent instructions. Values that are the same in all lanes
+still take a full 32-lane instruction. With one subgroup per vector engine,
+base 30 takes 4.2 s; with eight it takes 1.19 s, only 3.6 times faster.
+Subgroups of 16 lanes with two digits each were slower.
+
 ## Test
 
 ```sh
@@ -155,3 +211,6 @@ for bases 10 to 22. They test both widths of digit vectors. They also compare
 | `src/port.rs` | the port of the Python search |
 | `src/reference.rs` | the brute force and the `u128` reference search |
 | `src/main.rs` | the command line, output, and tests |
+| `src/search/gpu.rs` | the host side of the GPU search |
+| `src/vk.rs` | a minimal Vulkan compute context |
+| `shaders/search.comp` | the GPU search |
