@@ -10,12 +10,19 @@ order. Every statement is marked:
 
 Scripts are in `analysis/` with names starting `r3c_`. Their output is in
 `analysis/data/r3c_*`. Timings were taken while other jobs kept the load
-average of the 8-thread test machine at 20 to 36, so they are slower than on
+average of the 8-thread test machine at 20 to 42, so they are slower than on
 an idle machine. Each comparison of two programs alternated their runs.
 
 ## Summary
 
-SUMMARY
+| question | answer | status |
+|---|---|---|
+| 47, the sieve | Any modulus up to 128 works; only one power of each prime adds information. 32 removes 22 to 34% of the candidates where 2 removes 1 to 9%, and 27 removes 35 to 42% where 3 removes 20 to 28%. A rewritten `kdigit` (byte residues without division, masks built only while a last digit is alive, bit-set filters) is about 11 times faster and passes 300 to 800 times fewer strings to the exact step. The output is unchanged on all lists. | proven (method), computed |
+| 47, longer lists | 7 digits complete for bases up to `10^7.2` (was `10^5.5`), 8 digits up to 8,220 (was 127). No new solution under `0^0 = 1`. | computed |
+| 49 | `kdigit --offset D`. For 4 digits, 200 offsets `D = j` are Poisson draws that match the root heuristic within 7% (primes) or 1% (p-adic), and the two 4-digit solutions are an ordinary draw. For 5 digits the heuristic fits in bases below 13. In bases 13 to 99 the far offsets `D = j L` fall below it (10 against 16), so the three 5-digit solutions there are an excess of about 17 times (P about 0.005 after the choice of range). Near offsets show algebraic families, self-paying blocks and clusters. | computed against heuristic |
+| 48 | The right factor is the number of roots mod `p^e`; it averages exactly 1. It is stable from `2^4, 3^3, 5^2` on. It moves the predictions for 3, 4 and 5 digits from 5.09, 1.39, 2.42 to 5.59, 0.75, 3.32. It fits the 4-digit offsets better, but it does not explain the 5-digit excess. | proven (factor), heuristic |
+| 58 | `fast search --power d` finds all narcissistic numbers; bases 3 to 13 match OEIS. The refined model predicts 671 against 760 observed (basic model 253). In the cells with `x^d == x (mod b-1)` for all digits, `d >= 6`, it predicts 208.5 against 207 (basic model 24). | computed against heuristic |
+| 57 | The offsets `D = j b (b-1)` keep the last digit and have the normal count, 0.91 times the model. The factorion shortfall at `D = 0` (3 and 4 against about 11) is not a last-digit effect. It stays a fluctuation of P = 0.006 to 0.02 per convention, about 0.1 after the look-elsewhere factor. | computed against heuristic |
 
 ## 47. Prime powers in the sieve of `kdigit`
 
@@ -183,12 +190,290 @@ average about 40 (data `r3c_k7_M32.txt`, `r3c_k8_M22.txt`):
 
 Before this run, 8-digit solutions were known to be complete only for bases
 up to 127 (`fast search`, chapter 3). Now the list is complete for bases up
-to 8,220 (`23^(23/8)`). This is a first step for question 29. The new 7-digit solutions are the self-paying family `(x, 0, ..., 0)` and its
-twin, with `x^(x-1)` a sixth power (chapter 2). Under `0^0 = 1` the only
+to 8,220 (`23^(23/8)`). This is a first step for question 29.
+
+The new 7-digit solutions are the self-paying family `(x, 0, ..., 0)` and
+its twin, with `x^(x-1)` a sixth power (chapter 2). Under `0^0 = 1` the only
 7-digit solution in all bases up to `10^7.2` is still `(1,6,5,6,5,4,7)` in
 base 9. By the tail estimate of section 11.4 (`analysis/list_tails.py`),
 the expected number of 7-digit solutions with a larger digit is
 `1.7 * 10^-33`, and `4.2 * 10^-18` for 8 digits.
+
+## 49. A defect spectrum for short strings
+
+### 49.1 The runs (computed)
+
+`kdigit --offset D` finds every pair `(s, b)` with `b > max(s)` and
+`P_s(b) - F(s) = D`: it adds `D` to the residue that the last digit needs,
+and solves `P_s(b) = F(s) + D` exactly. For `D >= 0` it is complete for the
+same bases as without the offset. `r3c_offsets.py` runs it for two classes
+of 200 offsets each:
+
+- `D = j`, `j = 1` to 200. These change the local factors from one offset to
+  the next, so they test the factors themselves.
+- `D = j L` with `L = 2^4 * 3^3 * 5^2 * 7 = 75600`, `j = 1` to 200. These keep
+  `Q_s mod 16, 27, 25, 7`, so they keep the main local factors of `D = 0`.
+
+`k = 4` uses digits up to `M = 150`, `k = 5` digits up to 60 (data
+`r3c_offsets_k<k>_j.txt` and `_jL.txt`). A run takes 1.4 s for `k = 4` and
+about 8 to 16 s for `k = 5` on 4 threads at load average 30 to 40.
+`r3c_root_spectrum.py` computes the root heuristic for every offset, over
+the strings with digits up to 22 (`k = 4`) and 11 (`k = 5`) as in section
+11.4. `r3c_spectrum_report.py` compares them (`r3c_spectrum_report_k<k>.txt`).
+
+Two remarks before the numbers.
+
+Algebraic families (proven). Some offsets have solutions for a structural
+reason, which the heuristic cannot see. Two examples under `0^0 = 1`:
+
+- `(1, 0, 0, x)` with `x^x` a cube, that is `3 | x` or `x` a cube. In base
+  `b = x^(x/3)`, `P = b^3 + x` and `F = x^x + 3`, so `D = x - 3`. This gives
+  `(1,0,0,6)` in base 36 at `D = 3` and `(1,0,0,24)` in base `24^8` at
+  `D = 21`.
+- `(1, 3, 3, x)` with `x^x` a cube. In base `b = x^(x/3) - 1`,
+  `P = (b+1)^3 + x - 1` and `F = x^x + 55`, so `D = x - 56`. This gives
+  `(1,3,3,57)` at `D = 1`, `(1,3,3,60)` at `D = 4`, `(1,3,3,64)` at `D = 8`,
+  and so on.
+
+The self-paying digits of chapter 2 give more: 7 in base 49 (`7 * 49^3 =
+7^7`) and 8 in base 128 (`8 * 128^3 = 8^8`) pay for themselves, and any
+lower digits that make up `D` complete a solution. Such families need
+`D` near a weight difference, so they occur for small `D` and not for
+`D = j L`. Most of them sit in bases of 100 and more, where the heuristic
+expects almost nothing. So for `D = j` the comparison uses bases below 100,
+and the rest is counted apart. For `D = j L` it uses all bases.
+
+Neighbours. A small offset also catches near neighbours of the true
+solutions. 3435 = `(3,4,3,5)` in base 10 has neighbours `(3,4,1,5)` at
+`D = 6`, `(3,4,2,5)` at `D = 13` and `(3,4,5,x)` at `D = 18` and 40 to 42.
+So the offsets `D = j` are not independent of `D = 0`. The offsets `D = j L`
+are too far away for this.
+
+### 49.2 Four-digit strings (computed against heuristic)
+
+Under `0^0 = 1`, digits up to 22 (observed pairs `(s, b)` against the sums
+of the heuristic weights over the same offsets):
+
+| offsets | bases | observed | mean per offset | variance / mean | spacing only | primes | p-adic |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `D = j`, 200 | below 10 | 556 | | | | 601.2 | 558.4 |
+| `D = j`, 200 | 10 to 99 | 126 | | | | 129.8 | 118.6 |
+| `D = j`, 200 | below 100 | 682 | 3.41 | 0.97 | 525 (all bases) | 731.0 | 677.1 |
+| `D = j`, 200 | 100 and up | 16 | | | | 1.75 | 1.82 |
+| `D = j L`, 200 | all | 10 | 0.05 | | 7.3 | 9.79 | 11.27 |
+| `D = 0` | all | 2 | | | 1.38 | 1.39 | 0.75 |
+
+Of the 16 pairs of `D = j` in bases of 100 and more, 15 belong to the
+algebraic families of section 49.1; chance expects 1.8. In bases below 100
+the observed count is 0.93 times the prediction with primes and 1.01 times
+the p-adic one. The spacing alone, without local factors, predicts 525 for
+all bases, a quarter too few. The parity of `D` tests the 2-adic factor:
+for even `j`, 373 observed against 414 (primes) and 377 (p-adic); for odd
+`j`, 309 against 317 and 300. The counts per offset are Poisson draws around their
+own predictions: `sum (N_D - c E_D)^2 / (c E_D)` is 81 (primes) and 92
+(p-adic) over the 200 offsets, below the 200 of pure Poisson noise, because
+the predictions follow most of the variation from offset to offset.
+
+The offsets `D = j L` force larger bases (`P_s(b) >= D`), 44 to 353 here, so
+the counts are small: 10 against 9.8 and 11.3.
+
+Under `0^0 = 0` the offsets `D = j` say nothing new. A string with `z` zeros
+has `F_0 = F_1 - z`, so it is a solution at `D` under `0^0 = 0` exactly when
+it is one at `D - z` under `0^0 = 1` (proven). Over 200 consecutive
+offsets the two conventions see almost the same set: 682 pairs in both. For
+`D = j L` the shift leaves the class, and the counts are 14 against 13.6
+(primes) and 18.2 (p-adic).
+
+`D = 0` against the calibrated heuristic. The factor `c` = observed /
+predicted from the offsets scales the prediction for `D = 0`:
+
+| convention | calibrated by | primes: expected at `D = 0` | P(at least observed) | p-adic: expected | P | observed |
+|---|---|---:|---:|---:|---:|---:|
+| `0^0 = 1` | `D = j` | 1.29 | 0.37 | 0.74 | 0.17 | 2 |
+| `0^0 = 1` | `D = j L` | 1.44 | 0.42 | 0.63 | 0.13 | 2 |
+| `0^0 = 0`, bases below 100 | `D = j` | 2.41 | 0.10 | 2.11 | 0.06 | 5 |
+| `0^0 = 0`, bases below 100 | `D = j L` | 2.81 | 0.15 | 1.76 | 0.03 | 5 |
+
+Two of the 5 solutions of `D = 0` under `0^0 = 0` in bases below 100 are
+the self-paying `(7,0,0,0)` and `(7,0,0,1)` in base 49. The other 3 fit both
+versions. `D = 0` also has 13 solutions in bases of 100 and more, all from
+self-paying digits, against 0.01 for chance.
+
+### 49.3 Five-digit strings (computed against heuristic)
+
+Under `0^0 = 1`, digits up to 11, by the size of the base (observed /
+primes / p-adic):
+
+| offsets | base below 10 | 10 to 12 | 13 to 19 | 20 to 39 | 40 to 99 | all |
+|---|---:|---:|---:|---:|---:|---:|
+| `D = j`, 200 | 354 / 353.7 / 392.1 | 98 / 42.9 / 63.8 | 29 / 23.6 / 24.6 | 27 / 14.1 / 16.4 | 23 / 2.5 / 2.6 | 531 / 437.0 / 499.6 |
+| `D = j L`, 200 | 0 / 0 / 0 | 0 / 0.2 / 0.2 | 2 / 1.3 / 1.2 | 6 / 8.6 / 11.1 | 2 / 5.6 / 5.8 | 10 / 16.0 / 18.6 |
+| `D = 0` | 3 / 1.93 / 2.81 | 0 / 0.22 / 0.18 | 2 / 0.13 / 0.21 | 0 / 0.14 / 0.11 | 1 / 0.01 / 0.01 | 6 / 2.42 / 3.32 |
+
+The spacing alone predicts 292 for `D = j` and 13.8 for `D = j L`. The
+counts per offset of `D = j` have variance / mean 0.99.
+
+What the table shows:
+
+- In bases below 10, where most pairs lie, the heuristic with primes fits
+  exactly: 354 against 353.7. The p-adic version is 11% high.
+- In bases 10 to 99 the offsets `D = j` show twice the predicted count, 177
+  against 83 (primes) or 107 (p-adic). Most of it has a structural cause.
+  The hits come in clusters of about 4, a common prefix of 3 digits with
+  different last two digits: 177 hits in 44 clusters. Three clusters are
+  algebraic. `(9,0,0,x,y)` in base 81 (13 hits) and `(1,0,0,x,8)` in base 64
+  (5 hits) come from the self-paying digits 9 (`9 * 81^4 = 9^9`) and 8
+  (`64^4 = 8^8`). `(6,6,5,x,y)` in base 11 (9 hits) comes from the exact
+  block identity `6 * 11^4 + 6 * 11^3 + 5 * 11^2 = 6^6 + 6^6 + 5^5 = 96437`
+  (computed), which also gives the solutions `(6,6,5,0,0)` and `(6,6,5,0,1)`
+  under `0^0 = 0`. Other clusters come from blocks that miss by a little.
+  For `(5,3,7,x,y)` in base 20 (16 hits), the block value 826,800 exceeds
+  its weights `5^5 + 3^3 + 7^7 = 826,695` by 105, and many last pairs
+  `(x, y)` make up the difference plus `D`.
+- The offsets `D = j L` have no neighbours and no families. They land in
+  bases 13 to 99, and they show 10 against 16.0 (primes) and 18.6 (p-adic).
+  If anything, the heuristic is high there.
+- `D = 0` has 3 solutions in bases 13 to 99: `(3,3,6,6,1)` in base 13,
+  `(2,6,0,3,6)` in base 14 and `(3,8,6,2,0)` in base 48. The heuristic
+  expects 0.28 (primes) or 0.33 (p-adic) there.
+
+`D = 0` against the calibrated heuristic, `0^0 = 1`:
+
+| calibrated by | factor `c`, primes | expected at `D = 0` | P(at least 6) | factor `c`, p-adic | expected | P(at least 6) |
+|---|---:|---:|---:|---:|---:|---:|
+| `D = j` | 1.22 | 2.95 | 0.08 | 1.06 | 3.53 | 0.15 |
+| `D = j L` | 0.64 | 1.55 | 0.005 | 0.55 | 1.82 | 0.011 |
+| bases 13 to 99 only, by `D = j L` | 0.64 | 0.18 | 0.0008 (at least 3) | 0.55 | 0.18 | 0.0009 |
+
+The last row picks the base range after seeing the data. With about 5
+ranges to choose from, its P is worth about 0.005.
+
+Under `0^0 = 0` the 9 solutions of `D = 0` include 4 from structure: the
+self-paying `(9,0,0,0,0)` and `(9,0,0,0,1)` in base 81 and the block
+`(6,6,5,0,0)`, `(6,6,5,0,1)` in base 11. The offsets `D = j L` show 16 against
+22.6 (primes) and 29.8 (p-adic).
+
+### 49.4 Answer to question 49
+
+Is the count of short solutions a Poisson draw with the mean of its offsets?
+
+- Four digits: yes (computed against heuristic). Over 200 offsets `D = j`
+  the counts are Poisson (variance / mean 0.97) and match the heuristic
+  within 7% (primes) or 1% (p-adic) in bases below 100. The two 4-digit
+  solutions are an ordinary draw: 2 against 0.6 to 1.4, P = 0.13 to 0.42.
+- Five digits, bases below 13: yes. There the heuristic with primes matches
+  the offsets to 0.1% (354 against 353.7), and `D = 0` has 3 against 1.9.
+- Five digits, bases 13 to 99: no clear answer. The offsets `D = j` are
+  inflated by clusters and families, and the offsets `D = j L` say the
+  heuristic is if anything too high there (10 against 16). Against that
+  calibration, the 3 solutions of `D = 0` in bases 13, 14 and 48 are an
+  excess of about 17 times, with P about 0.001, or 0.005 after the choice
+  of the range.
+
+So the 5-digit excess (6 against 2.42) is not a missing local factor that
+all offsets share: the p-adic factor and the offsets together put the
+prediction at 1.6 to 3.5. Either it is luck at the level of P = 0.005 to
+0.08, depending on the calibration, or `D = 0` has a structure that the
+offsets lack. One candidate is visible in the data: `(3,3,6,6,1)` in base 13
+is a 4-digit block with `13 * P_(3,3,6,6)(13) = 3^3 + 3^3 + 6^6 + 6^6`
+exactly, followed by the digit 1 with `1^1 = 1`. Blocks of this kind are a
+lower-order version of the self-paying digits. I have not counted how often
+they occur.
+
+The calibration to "about 5%" that the question hoped for holds only where
+the counts are large: bases below 13 for both lengths. Above that, the
+offsets `D = j L` have 10 hits per length, and the systematic errors of the
+heuristic (the cap at 1, the clusters) are larger than 5%.
+
+## 48. p-adic local factors in the root heuristic
+
+### 48.1 The factor (proven)
+
+Section 11.4 gives a string `s` the weight `min(1, S / P_s'(b*))`, where
+`b*` is the real root of `P_s(b) = F(s)` and `S = prod_p rho_s(p)` over the
+primes up to 31. Here `rho_s(p)` is the number of roots of `Q_s` modulo `p`.
+
+The right local factor at `p` is the density of the event `p^e | Q_s(b)`
+for a random integer `b`, divided by the chance `p^(-e)` for a random value,
+in the limit of large `e`. That is the number `N_s(p^e)` of roots of `Q_s`
+modulo `p^e`, not `N_s(p^e) / p^(e-1)` as the question writes. Facts:
+
+- If every root of `Q_s` mod `p` is simple (`Q_s'(r) != 0 mod p`), each
+  lifts to exactly one root mod `p^e` (Hensel), and `N_s(p^e) = rho_s(p)`.
+- A multiple root mod `p` can lift to no root, or to several. So
+  `N_s(p^e)` can be 0 where `rho_s(p) = 2`, and it can grow with `e` near a
+  root that is multiple in `Z_p`.
+- Over a constant term that is uniform mod `p^e`, `N_s(p^e)` averages
+  exactly 1, for every `e`: each of the `p^e` residues `r` is a root for
+  exactly one constant term. So the new factor is unbiased in the same sense
+  as the old one.
+
+`r3c_root_spectrum.py` computes both versions. The "p-adic" version uses
+`N_s(64)`, `N_s(81)` and `N_s(125)` in place of `rho_s(2)`, `rho_s(3)` and
+`rho_s(5)`, and keeps `rho_s(p)` for `p = 7` to 31. It reproduces the
+numbers of section 11.4 for the old version exactly.
+
+### 48.2 The table of section 11.4, redone (heuristic)
+
+Expected number of solutions under `0^0 = 1`, against the 6, 2 and 6 observed
+(digits up to `X`, as in section 11.4):
+
+| length | digits up to | spacing only | primes (11.4) | p-adic, 16, 27, 25 | p-adic, 64, 81, 125 | p-adic, 128, 81, 125 | p-adic, 32, 243, 125 | observed |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 3 | 60 | 2.31 | 5.09 | 5.59 | 5.59 | 5.59 | 5.59 | 6 |
+| 4 | 22 | 1.38 | 1.39 | 0.79 | 0.75 | 0.74 | 0.74 | 2 |
+| 5 | 11 | 1.13 | 2.42 | 3.44 | 3.32 | 3.34 | 3.34 | 6 |
+| all | | 4.82 | 8.90 | 9.82 | 9.66 | 9.67 | 9.67 | 14 |
+
+The p-adic factor is stable once `e` reaches 4, 3 and 2 for the primes 2, 3
+and 5. It moves the 5-digit prediction from 2.42 to 3.32, so 6 observed is
+no longer unusual (P(at least 6) = 0.12 against 0.037). It moves the
+4-digit prediction down, from 1.39 to 0.75 (P(at least 2) = 0.17 against
+0.41). The total moves from 8.90 to 9.66 against 14 observed.
+
+Most of the change comes from the observed solutions themselves, because
+their weights are near the cap of 1. For example 3435 = `(3,4,3,5)` in base
+10 has `rho(2) = 2` but only one root mod 64 (`N(64) = 1`), so its weight
+drops from 1 (capped) to 0.49. `(2,2,3,5,2)` in base 6 has `rho(5) = 1` but
+`N(125) = 10`. With 2 to 6 solutions per length, such single strings decide
+the comparison. Section 49 replaces them by hundreds of offsets.
+
+### 48.3 The test with the offsets (computed against heuristic)
+
+The offsets of section 49 calibrate both versions on hundreds of pairs
+(bases below 100 for `D = j`, all bases for `D = j L`; observed / predicted):
+
+| length | offsets | primes | p-adic |
+|---:|---|---:|---:|
+| 4 | `D = j`, `0^0 = 1` | 0.93 | 1.01 |
+| 4 | `D = j`, even `j` | 0.90 | 0.99 |
+| 4 | `D = j`, odd `j` | 0.97 | 1.03 |
+| 4 | `D = j L`, `0^0 = 1` | 1.02 | 0.89 |
+| 5 | `D = j`, bases below 10 | 1.00 | 0.90 |
+| 5 | `D = j`, bases 10 to 99 | 2.13 | 1.65 |
+| 5 | `D = j L`, `0^0 = 1` | 0.63 | 0.54 |
+
+The p-adic factor does what it should for 4 digits: it removes the 7%
+excess of the prediction, and it fixes the parity of `D`, which the 2-adic
+factor controls (373 observed for even `j`, against 414 with primes and
+377 p-adic). For 5 digits it moves every prediction up by 10 to 25%. That
+helps in bases 10 to 99, where the offsets `D = j` are high for structural
+reasons, and hurts in bases below 10 and for `D = j L`.
+
+Over `D = 1` to 200, the mean factor over all strings is 1.00 (primes) and
+1.04 (p-adic) for 4 digits, but 1.03 and 2.1 for 5 digits. The p-adic factor
+has a heavy tail: some strings have tens of roots modulo 64 or 81 at a few
+offsets and none at the others. Its mean over a full period of `D` is still
+exactly 1, by the identity of section 48.1.
+
+Answer to question 48 (heuristic). The p-adic factor is the right local
+density, and for 4 digits it fits the offsets better than the factor mod
+`p`. It does not resolve the 5-digit excess. It raises the 5-digit
+prediction at `D = 0` from 2.42 to 3.32, but the offsets `D = j L` say
+that the heuristic is already too high for 5-digit strings in the bases
+where the excess sits. The completeness estimates of section 11.4 replace
+the local factors by their mean, which is 1 for both versions, so they do
+not change.
 
 ## 58. Narcissistic numbers as a model test
 
@@ -216,10 +501,12 @@ there.
 
 The counts with at least 2 digits are 3, 8, 13, 25, 53, 55, 50, 79, 124, 76,
 189 for bases 3 to 13, and 85 up to 50 digits in base 14. They agree with
-the OEIS lists of narcissistic numbers per base (A010344 for base 4 up to
-A161950 for base 13, A005188 for base 10): each list holds our count plus
-the `b - 1` one-digit numbers. So bases 11 to 13 have no narcissistic
-number with more than 62 digits. A161951 (base 14) has 90 multi-digit terms,
+the OEIS lists of narcissistic numbers per base that I checked: A010344,
+A010346, A010348, A010350, A010354, A010353 for bases 4 to 9, A005188 (88
+terms) for base 10, and A161948, A161949, A161950 for bases 11 to 13. Each
+list holds our count plus the `b - 1` one-digit numbers. Base 3 agrees with
+the lead of the question. So bases 11 to 13 have no narcissistic number
+with more than 62 digits. A161951 (base 14) has 90 multi-digit terms,
 5 more than our 85, and they have more than 50 digits. A note on the
 question: A010353 is the list for base 9, not a table of counts.
 
@@ -237,11 +524,11 @@ this length. Two cases are exact (proven):
 - If `x^d == x (mod b-1)` for every digit `x`, the identity holds for every
   multiset, and the factor is `b - 1`. This happens for example when `b - 1`
   is squarefree and `d == 1 (mod lambda(b-1))`: every `d` in base 3, every
-  odd `d` in bases 4 and 7, and `d = 13, 25, 37, 49` in base 14. It is the forced-residue experiment of section
-  17.2, now in data that nobody tuned.
+  odd `d` in bases 4 and 7, and `d = 13, 25, 37, 49` in base 14. It is the
+  forced-residue experiment of section 17.2, now in data that nobody tuned.
 
 `r3c_narcissistic.py model` samples 400,000 multisets per cell (data
-`r3c_narcissistic_model.txt`). The sampling error is below 2% of each cell.
+`r3c_narcissistic_model.txt`). The sampling error is below 0.02 per cell.
 
 ### 58.3 The comparison (computed against heuristic)
 
@@ -363,169 +650,35 @@ equation `n = F(n)` that the offsets lack. So I would close question 41 as
 "a fluctuation of about 2.5 standard deviations", with fresh bases as the
 only test left. Bases 43 and 45 (section 17.4) fit both readings.
 
-## 49. A defect spectrum for short strings
+## Files
 
-### 49.1 The runs (computed)
+- `fast/src/bin/kdigit.rs`: the new sieve with `--moduli`, `--stats` and
+  `--offset`. `fast/src/search.rs`, `fast/src/main.rs`: `--power`.
+- `analysis/r3c_kdigit_moduli.py`: shares per modulus and timings per list;
+  data `r3c_kdigit_singles.txt`, `r3c_kdigit_moduli.txt`,
+  `r3c_kdigit_stats_k5_40.txt`.
+- `analysis/r3c_kdigit_speed.py`: old against new; data
+  `r3c_kdigit_speed.txt`.
+- `analysis/data/r3c_k7_M32.txt`, `r3c_k8_M22.txt`K8FILE: the longer lists, in the
+  format of `k7.txt`.
+- `analysis/r3c_offsets.py`, `analysis/r3c_root_spectrum.py`,
+  `analysis/r3c_spectrum_report.py`: questions 49 and 48; data
+  `r3c_offsets_k<k>_j.txt`, `r3c_offsets_k<k>_jL.txt`,
+  `r3c_root_spectrum_k<k>.txt`, `r3c_spectrum_report_k<k>.txt`.
+- `analysis/r3c_narcissistic.py`: question 58; data
+  `r3c_narcissistic_search.txt`, `r3c_narcissistic_model.txt`,
+  `r3c_narcissistic_compare.txt`.
+- `analysis/r3c_factorion_offsets.py`: question 57; data
+  `r3c_factorion_offsets.txt`, `r3c_factorion_offsets_report.txt`.
 
-`kdigit --offset D` finds every pair `(s, b)` with `b > max(s)` and
-`P_s(b) - F(s) = D`: it adds `D` to the residue that the last digit needs,
-and solves `P_s(b) = F(s) + D` exactly. For `D >= 0` it is complete for the
-same bases as without the offset. `r3c_offsets.py` runs it for two classes
-of 200 offsets each:
+## New questions
 
-- `D = j`, `j = 1` to 200. These change the local factors from one offset to
-  the next, so they test the factors themselves.
-- `D = j L` with `L = 2^4 * 3^3 * 5^2 * 7 = 75600`, `j = 1` to 200. These keep
-  `Q_s mod 16, 27, 25, 7`, so they keep the main local factors of `D = 0`.
-
-`k = 4` uses digits up to `M = 150`, `k = 5` digits up to 60 (data
-`r3c_offsets_k<k>_j.txt` and `_jL.txt`). A run takes 1.4 s for `k = 4` and
-about 8 to 16 s for `k = 5` on 4 threads at load average 30 to 40.
-`r3c_root_spectrum.py` computes the root heuristic for every offset, over
-the strings with digits up to 22 (`k = 4`) and 11 (`k = 5`) as in section
-11.4. `r3c_spectrum_report.py` compares them (`r3c_spectrum_report_k<k>.txt`).
-
-Two remarks before the numbers.
-
-Algebraic families (proven). Some offsets have solutions for a structural
-reason, which the heuristic cannot see. Two examples under `0^0 = 1`:
-
-- `(1, 0, 0, x)` with `x^x` a cube, that is `3 | x` or `x` a cube. In base
-  `b = x^(x/3)`, `P = b^3 + x` and `F = x^x + 3`, so `D = x - 3`. This gives
-  `(1,0,0,6)` in base 36 at `D = 3` and `(1,0,0,24)` in base `24^8` at
-  `D = 21`.
-- `(1, 3, 3, x)` with `x^x` a cube. In base `b = x^(x/3) - 1`,
-  `P = (b+1)^3 + x - 1` and `F = x^x + 55`, so `D = x - 56`. This gives
-  `(1,3,3,57)` at `D = 1`, `(1,3,3,60)` at `D = 4`, `(1,3,3,64)` at `D = 8`,
-and so on.
-
-The self-paying digits of chapter 2 give more: 7 in base 49 (`7 * 49^3 =
-7^7`) and 8 in base 128 (`8 * 128^3 = 8^8`) pay for themselves, and any
-lower digits that make up `D` complete a solution. Such families need
-`D` near a weight difference, so they occur for small `D` and not for
-`D = j L`. Most of them sit in bases of 100 and more, where the heuristic
-expects almost nothing. So for `D = j` the comparison uses bases below 100,
-and the rest is counted apart. For `D = j L` it uses all bases.
-
-Neighbours. A small offset also catches near neighbours of the true
-solutions. 3435 = `(3,4,3,5)` in base 10 has neighbours `(3,4,1,5)` at
-`D = 6`, `(3,4,2,5)` at `D = 13` and `(3,4,5,x)` at `D = 18` and 40 to 42.
-So the offsets `D = j` are not independent of `D = 0`. The offsets `D = j L`
-are too far away for this.
-
-### 49.2 Four-digit strings (computed against heuristic)
-
-Under `0^0 = 1`, digits up to 22 (observed pairs `(s, b)` against the sums
-of the heuristic weights over the same offsets):
-
-| offsets | bases | observed | mean per offset | variance / mean | spacing only | primes | p-adic |
-|---|---|---:|---:|---:|---:|---:|---:|
-| `D = j`, 200 | below 10 | 556 | | | | 601.2 | 558.4 |
-| `D = j`, 200 | 10 to 99 | 126 | | | | 129.8 | 118.6 |
-| `D = j`, 200 | below 100 | 682 | 3.41 | 0.97 | 525 (all bases) | 731.0 | 677.1 |
-| `D = j`, 200 | 100 and up | 16 | | | | 1.75 | 1.82 |
-| `D = j L`, 200 | all | 10 | 0.05 | | 7.3 | 9.79 | 11.27 |
-| `D = 0` | all | 2 | | | 1.38 | 1.39 | 0.75 |
-
-The 16 pairs of `D = j` in bases of 100 and more are the algebraic
-families of section 49.1, against 1.8 expected for chance. In bases below
-100 the observed count is 0.93 times the prediction with primes and 1.01
-times the p-adic one. The spacing alone, without local factors, predicts
-525 for all bases, a quarter too few. The parity of `D` is a test of the 2-adic factor: for even
-`j`, 373 observed against 414 (primes) and 377 (p-adic); for odd `j`, 309
-against 317 and 300. The counts per offset are Poisson draws around their
-own predictions: `sum (N_D - c E_D)^2 / (c E_D)` is 81 (primes) and 92
-(p-adic) over the 200 offsets, below the 200 of pure Poisson noise, because
-the predictions follow most of the variation from offset to offset.
-
-The offsets `D = j L` force larger bases (`P_s(b) >= D`), 44 to 353 here, so
-the counts are small: 10 against 9.8 and 11.3.
-
-Under `0^0 = 0` the offsets `D = j` say nothing new. A string with `z` zeros
-has `F_0 = F_1 - z`, so it is a solution at `D` under `0^0 = 0` exactly when
-it is one at `D - z` under `0^0 = 1` (proven). Over 200 consecutive
-offsets the two conventions see almost the same set: 682 pairs in both. For
-`D = j L` the shift leaves the class, and the counts are 14 against 13.6
-(primes) and 18.2 (p-adic).
-
-`D = 0` against the calibrated heuristic. The factor `c` = observed /
-predicted from the offsets scales the prediction for `D = 0`:
-
-| convention | calibrated by | primes: expected at `D = 0` | P(at least observed) | p-adic: expected | P | observed |
-|---|---|---:|---:|---:|---:|---:|
-| `0^0 = 1` | `D = j` | 1.29 | 0.37 | 0.74 | 0.17 | 2 |
-| `0^0 = 1` | `D = j L` | 1.44 | 0.42 | 0.63 | 0.13 | 2 |
-| `0^0 = 0`, bases below 100 | `D = j` | 2.41 | 0.10 | 2.11 | 0.06 | 5 |
-| `0^0 = 0`, bases below 100 | `D = j L` | 2.81 | 0.15 | 1.76 | 0.03 | 5 |
-
-Two of the 5 solutions of `D = 0` under `0^0 = 0` in bases below 100 are
-the self-paying `(7,0,0,0)` and `(7,0,0,1)` in base 49. The other 3 fit both
-versions. `D = 0` also has 13 solutions in bases of 100 and more, all from
-self-paying digits, against 0.01 for chance.
-
-### 49.3 Five-digit strings (computed against heuristic)
-
-SPEC5
-
-### 49.4 Answer to question 49
-
-ANSWER49
-
-## 48. p-adic local factors in the root heuristic
-
-### 48.1 The factor (proven)
-
-Section 11.4 gives a string `s` the weight `min(1, S / P_s'(b*))`, where
-`b*` is the real root of `P_s(b) = F(s)` and `S = prod_p rho_s(p)` over the
-primes up to 31. Here `rho_s(p)` is the number of roots of `Q_s` modulo `p`.
-
-The right local factor at `p` is the density of the event `p^e | Q_s(b)`
-for a random integer `b`, divided by the chance `p^(-e)` for a random value,
-in the limit of large `e`. That is the number `N_s(p^e)` of roots of `Q_s`
-modulo `p^e`, not `N_s(p^e) / p^(e-1)` as the question writes. Facts:
-
-- If every root of `Q_s` mod `p` is simple (`Q_s'(r) != 0 mod p`), each
-  lifts to exactly one root mod `p^e` (Hensel), and `N_s(p^e) = rho_s(p)`.
-- A multiple root mod `p` can lift to no root, or to several. So
-  `N_s(p^e)` can be 0 where `rho_s(p) = 2`, and it can grow with `e` near a
-  root that is multiple in `Z_p`.
-- Over a constant term that is uniform mod `p^e`, `N_s(p^e)` averages
-  exactly 1, for every `e`: each of the `p^e` residues `r` is a root for
-  exactly one constant term. So the new factor is unbiased in the same sense
-  as the old one.
-
-`r3c_root_spectrum.py` computes both versions. The "p-adic" version uses
-`N_s(64)`, `N_s(81)` and `N_s(125)` in place of `rho_s(2)`, `rho_s(3)` and
-`rho_s(5)`, and keeps `rho_s(p)` for `p = 7` to 31. It reproduces the
-numbers of section 11.4 for the old version exactly.
-
-### 48.2 The table of section 11.4, redone (heuristic)
-
-Expected number of solutions under `0^0 = 1`, against the 6, 2 and 6 observed
-(digits up to `X`, as in section 11.4):
-
-| length | digits up to | spacing only | primes (11.4) | p-adic, 16, 27, 25 | p-adic, 64, 81, 125 | p-adic, 128, 81, 125 | p-adic, 32, 243, 125 | observed |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 3 | 60 | 2.31 | 5.09 | 5.59 | 5.59 | 5.59 | 5.59 | 6 |
-| 4 | 22 | 1.38 | 1.39 | 0.79 | 0.75 | 0.74 | 0.74 | 2 |
-| 5 | 11 | 1.13 | 2.42 | 3.44 | 3.32 | 3.34 | 3.34 | 6 |
-| all | | 4.82 | 8.90 | 9.82 | 9.66 | 9.67 | 9.67 | 14 |
-
-The p-adic factor is stable once `e` reaches 4, 3 and 2 for the primes 2, 3
-and 5. It moves the 5-digit prediction from 2.42 to 3.32, so 6 observed is
-no longer unusual (P(at least 6) = 0.12 against 0.037). It moves the
-4-digit prediction down, from 1.39 to 0.75 (P(at least 2) = 0.17 against
-0.41). The total moves from 8.90 to 9.66 against 14 observed.
-
-Most of the change comes from the observed solutions themselves, because
-their weights are near the cap of 1. For example 3435 = `(3,4,3,5)` in base
-10 has `rho(2) = 2` but only one root mod 64 (`N(64) = 1`), so its weight
-drops from 1 (capped) to 0.49. `(2,2,3,5,2)` in base 6 has `rho(5) = 1` but
-`N(125) = 10`. With 2 to 6 solutions per length, such single strings decide
-the comparison. Section 49 replaces them by hundreds of offsets.
-
-### 48.3 The test with the offsets (computed against heuristic)
-
-CALIB48
-
-SECTIONS
+- Count the self-paying blocks: strings `t` and bases `b` with
+  `b^m P_t(b) = F(t)` for some `m >= 1`, such as `(6,6,5)` in base 11 and
+  `(3,3,6,6)` in base 13. They give short solutions and clusters of near
+  solutions. Does their rate explain the 5-digit solutions in bases 13 to
+  99?
+- Narcissistic numbers in even bases, `d >= 6`, are 18% above the refined
+  model, mostly in bases 8 and 10. Do bases 16, 18 and 20 show the same?
+- Push 8 digits to `10^5` (digits up to 27, about `3.6 * 10^11` strings) and
+  start 9 and 10 digits with `kdigit` (question 29).
