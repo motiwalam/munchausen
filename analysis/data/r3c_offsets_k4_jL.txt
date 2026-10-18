@@ -1,0 +1,225 @@
+# kdigit 4 150 --offset D for D in 75600:15120000:75600; columns: D mode base digits
+# k=4 M=150: offset D=75600; 1 solutions; 516442650 strings, 1847 passed the test with the default moduli (1.79e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+75600 0 25 5,1,0,3
+# k=4 M=150: offset D=151200; 0 solutions; 516442650 strings, 1874 passed the test with the default moduli (1.81e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=226800; 0 solutions; 516442650 strings, 1897 passed the test with the default moduli (1.84e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=302400; 0 solutions; 516442650 strings, 1865 passed the test with the default moduli (1.81e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=378000; 4 solutions; 516442650 strings, 1883 passed the test with the default moduli (1.82e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+378000 0 44 5,1,4,6
+378000 0 73 3,7,5,3
+378000 1 44 5,1,4,6
+378000 1 73 3,7,5,3
+# k=4 M=150: offset D=453600; 0 solutions; 516442650 strings, 1848 passed the test with the default moduli (1.79e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=529200; 0 solutions; 516442650 strings, 1846 passed the test with the default moduli (1.79e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=604800; 0 solutions; 516442650 strings, 1864 passed the test with the default moduli (1.80e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=680400; 0 solutions; 516442650 strings, 1789 passed the test with the default moduli (1.73e-6); 3.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=756000; 0 solutions; 516442650 strings, 1831 passed the test with the default moduli (1.77e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=831600; 0 solutions; 516442650 strings, 1909 passed the test with the default moduli (1.85e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=907200; 0 solutions; 516442650 strings, 1864 passed the test with the default moduli (1.80e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=982800; 3 solutions; 516442650 strings, 1808 passed the test with the default moduli (1.75e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+982800 0 58 5,4,5,0
+982800 0 58 5,4,5,1
+982800 1 58 5,4,5,1
+# k=4 M=150: offset D=1058400; 0 solutions; 516442650 strings, 1826 passed the test with the default moduli (1.77e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1134000; 0 solutions; 516442650 strings, 1894 passed the test with the default moduli (1.83e-6); 1.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1209600; 1 solutions; 516442650 strings, 1859 passed the test with the default moduli (1.80e-6); 1.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+1209600 0 105 1,5,0,3
+# k=4 M=150: offset D=1285200; 0 solutions; 516442650 strings, 1882 passed the test with the default moduli (1.82e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1360800; 0 solutions; 516442650 strings, 1849 passed the test with the default moduli (1.79e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1436400; 0 solutions; 516442650 strings, 1900 passed the test with the default moduli (1.84e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1512000; 0 solutions; 516442650 strings, 1867 passed the test with the default moduli (1.81e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1587600; 0 solutions; 516442650 strings, 1808 passed the test with the default moduli (1.75e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1663200; 0 solutions; 516442650 strings, 1856 passed the test with the default moduli (1.80e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1738800; 0 solutions; 516442650 strings, 1879 passed the test with the default moduli (1.82e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1814400; 0 solutions; 516442650 strings, 1913 passed the test with the default moduli (1.85e-6); 2.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1890000; 0 solutions; 516442650 strings, 1827 passed the test with the default moduli (1.77e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=1965600; 0 solutions; 516442650 strings, 1813 passed the test with the default moduli (1.76e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2041200; 0 solutions; 516442650 strings, 1852 passed the test with the default moduli (1.79e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2116800; 0 solutions; 516442650 strings, 1830 passed the test with the default moduli (1.77e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2192400; 0 solutions; 516442650 strings, 1836 passed the test with the default moduli (1.78e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2268000; 0 solutions; 516442650 strings, 1848 passed the test with the default moduli (1.79e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2343600; 0 solutions; 516442650 strings, 1835 passed the test with the default moduli (1.78e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2419200; 0 solutions; 516442650 strings, 1797 passed the test with the default moduli (1.74e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2494800; 0 solutions; 516442650 strings, 1890 passed the test with the default moduli (1.83e-6); 2.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2570400; 0 solutions; 516442650 strings, 1792 passed the test with the default moduli (1.73e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2646000; 0 solutions; 516442650 strings, 1862 passed the test with the default moduli (1.80e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2721600; 0 solutions; 516442650 strings, 1814 passed the test with the default moduli (1.76e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2797200; 0 solutions; 516442650 strings, 1877 passed the test with the default moduli (1.82e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2872800; 0 solutions; 516442650 strings, 1827 passed the test with the default moduli (1.77e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=2948400; 0 solutions; 516442650 strings, 1899 passed the test with the default moduli (1.84e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3024000; 0 solutions; 516442650 strings, 1841 passed the test with the default moduli (1.78e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3099600; 0 solutions; 516442650 strings, 1794 passed the test with the default moduli (1.74e-6); 2.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3175200; 0 solutions; 516442650 strings, 1843 passed the test with the default moduli (1.78e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3250800; 2 solutions; 516442650 strings, 1856 passed the test with the default moduli (1.80e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+3250800 0 87 5,1,6,3
+3250800 1 87 5,1,6,3
+# k=4 M=150: offset D=3326400; 0 solutions; 516442650 strings, 1810 passed the test with the default moduli (1.75e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3402000; 0 solutions; 516442650 strings, 1821 passed the test with the default moduli (1.76e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3477600; 0 solutions; 516442650 strings, 1792 passed the test with the default moduli (1.73e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3553200; 0 solutions; 516442650 strings, 1732 passed the test with the default moduli (1.68e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3628800; 0 solutions; 516442650 strings, 1860 passed the test with the default moduli (1.80e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3704400; 0 solutions; 516442650 strings, 1874 passed the test with the default moduli (1.81e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3780000; 0 solutions; 516442650 strings, 1815 passed the test with the default moduli (1.76e-6); 3.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3855600; 0 solutions; 516442650 strings, 1833 passed the test with the default moduli (1.77e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=3931200; 0 solutions; 516442650 strings, 1909 passed the test with the default moduli (1.85e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4006800; 0 solutions; 516442650 strings, 1760 passed the test with the default moduli (1.70e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4082400; 0 solutions; 516442650 strings, 1811 passed the test with the default moduli (1.75e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4158000; 0 solutions; 516442650 strings, 1897 passed the test with the default moduli (1.84e-6); 3.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4233600; 0 solutions; 516442650 strings, 1866 passed the test with the default moduli (1.81e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4309200; 0 solutions; 516442650 strings, 1883 passed the test with the default moduli (1.82e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4384800; 0 solutions; 516442650 strings, 1781 passed the test with the default moduli (1.72e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4460400; 0 solutions; 516442650 strings, 1848 passed the test with the default moduli (1.79e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4536000; 0 solutions; 516442650 strings, 1843 passed the test with the default moduli (1.78e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4611600; 0 solutions; 516442650 strings, 1890 passed the test with the default moduli (1.83e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4687200; 0 solutions; 516442650 strings, 1922 passed the test with the default moduli (1.86e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4762800; 0 solutions; 516442650 strings, 1789 passed the test with the default moduli (1.73e-6); 1.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4838400; 0 solutions; 516442650 strings, 1727 passed the test with the default moduli (1.67e-6); 2.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4914000; 0 solutions; 516442650 strings, 1856 passed the test with the default moduli (1.80e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=4989600; 0 solutions; 516442650 strings, 1844 passed the test with the default moduli (1.79e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5065200; 0 solutions; 516442650 strings, 1870 passed the test with the default moduli (1.81e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5140800; 0 solutions; 516442650 strings, 1825 passed the test with the default moduli (1.77e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5216400; 0 solutions; 516442650 strings, 1883 passed the test with the default moduli (1.82e-6); 3.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5292000; 0 solutions; 516442650 strings, 1815 passed the test with the default moduli (1.76e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5367600; 0 solutions; 516442650 strings, 1797 passed the test with the default moduli (1.74e-6); 1.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5443200; 0 solutions; 516442650 strings, 1893 passed the test with the default moduli (1.83e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5518800; 2 solutions; 516442650 strings, 1924 passed the test with the default moduli (1.86e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+5518800 0 122 3,5,2,4
+5518800 1 122 3,5,2,4
+# k=4 M=150: offset D=5594400; 0 solutions; 516442650 strings, 1896 passed the test with the default moduli (1.84e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5670000; 0 solutions; 516442650 strings, 1850 passed the test with the default moduli (1.79e-6); 3.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5745600; 0 solutions; 516442650 strings, 1815 passed the test with the default moduli (1.76e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5821200; 0 solutions; 516442650 strings, 1810 passed the test with the default moduli (1.75e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5896800; 0 solutions; 516442650 strings, 1817 passed the test with the default moduli (1.76e-6); 3.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=5972400; 0 solutions; 516442650 strings, 1803 passed the test with the default moduli (1.75e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6048000; 0 solutions; 516442650 strings, 1852 passed the test with the default moduli (1.79e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6123600; 0 solutions; 516442650 strings, 1920 passed the test with the default moduli (1.86e-6); 3.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6199200; 0 solutions; 516442650 strings, 1822 passed the test with the default moduli (1.76e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6274800; 0 solutions; 516442650 strings, 1884 passed the test with the default moduli (1.82e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6350400; 1 solutions; 516442650 strings, 1832 passed the test with the default moduli (1.77e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+6350400 0 147 2,0,5,4
+# k=4 M=150: offset D=6426000; 0 solutions; 516442650 strings, 1850 passed the test with the default moduli (1.79e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6501600; 0 solutions; 516442650 strings, 1866 passed the test with the default moduli (1.81e-6); 2.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6577200; 0 solutions; 516442650 strings, 1854 passed the test with the default moduli (1.79e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6652800; 0 solutions; 516442650 strings, 1995 passed the test with the default moduli (1.93e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6728400; 0 solutions; 516442650 strings, 1928 passed the test with the default moduli (1.87e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6804000; 0 solutions; 516442650 strings, 1827 passed the test with the default moduli (1.77e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6879600; 0 solutions; 516442650 strings, 1755 passed the test with the default moduli (1.70e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=6955200; 0 solutions; 516442650 strings, 1852 passed the test with the default moduli (1.79e-6); 3.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7030800; 0 solutions; 516442650 strings, 1836 passed the test with the default moduli (1.78e-6); 3.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7106400; 0 solutions; 516442650 strings, 1890 passed the test with the default moduli (1.83e-6); 1.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7182000; 0 solutions; 516442650 strings, 1838 passed the test with the default moduli (1.78e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7257600; 2 solutions; 516442650 strings, 1843 passed the test with the default moduli (1.78e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+7257600 0 200 1,2,7,4
+7257600 1 200 1,2,7,4
+# k=4 M=150: offset D=7333200; 0 solutions; 516442650 strings, 1910 passed the test with the default moduli (1.85e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7408800; 0 solutions; 516442650 strings, 1800 passed the test with the default moduli (1.74e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7484400; 0 solutions; 516442650 strings, 1873 passed the test with the default moduli (1.81e-6); 2.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7560000; 0 solutions; 516442650 strings, 1837 passed the test with the default moduli (1.78e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7635600; 0 solutions; 516442650 strings, 1809 passed the test with the default moduli (1.75e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7711200; 0 solutions; 516442650 strings, 1758 passed the test with the default moduli (1.70e-6); 1.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7786800; 0 solutions; 516442650 strings, 1878 passed the test with the default moduli (1.82e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7862400; 0 solutions; 516442650 strings, 1856 passed the test with the default moduli (1.80e-6); 2.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=7938000; 0 solutions; 516442650 strings, 1875 passed the test with the default moduli (1.82e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8013600; 2 solutions; 516442650 strings, 1878 passed the test with the default moduli (1.82e-6); 3.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+8013600 0 353 9,3,3,7
+8013600 1 353 9,3,3,7
+# k=4 M=150: offset D=8089200; 2 solutions; 516442650 strings, 1888 passed the test with the default moduli (1.83e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+8089200 0 206 1,4,7,2
+8089200 1 206 1,4,7,2
+# k=4 M=150: offset D=8164800; 0 solutions; 516442650 strings, 1784 passed the test with the default moduli (1.73e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8240400; 2 solutions; 516442650 strings, 1914 passed the test with the default moduli (1.85e-6); 3.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+8240400 0 127 4,6,1,5
+8240400 1 127 4,6,1,5
+# k=4 M=150: offset D=8316000; 0 solutions; 516442650 strings, 1899 passed the test with the default moduli (1.84e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8391600; 0 solutions; 516442650 strings, 1848 passed the test with the default moduli (1.79e-6); 2.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8467200; 0 solutions; 516442650 strings, 1811 passed the test with the default moduli (1.75e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8542800; 0 solutions; 516442650 strings, 1822 passed the test with the default moduli (1.76e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8618400; 0 solutions; 516442650 strings, 1880 passed the test with the default moduli (1.82e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8694000; 0 solutions; 516442650 strings, 1869 passed the test with the default moduli (1.81e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8769600; 0 solutions; 516442650 strings, 1843 passed the test with the default moduli (1.78e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8845200; 0 solutions; 516442650 strings, 1868 passed the test with the default moduli (1.81e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8920800; 0 solutions; 516442650 strings, 1839 passed the test with the default moduli (1.78e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=8996400; 0 solutions; 516442650 strings, 1863 passed the test with the default moduli (1.80e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9072000; 0 solutions; 516442650 strings, 1859 passed the test with the default moduli (1.80e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9147600; 0 solutions; 516442650 strings, 1886 passed the test with the default moduli (1.83e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9223200; 0 solutions; 516442650 strings, 1830 passed the test with the default moduli (1.77e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9298800; 2 solutions; 516442650 strings, 1834 passed the test with the default moduli (1.78e-6); 3.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+9298800 0 123 5,6,1,6
+9298800 1 123 5,6,1,6
+# k=4 M=150: offset D=9374400; 0 solutions; 516442650 strings, 1802 passed the test with the default moduli (1.74e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9450000; 0 solutions; 516442650 strings, 1922 passed the test with the default moduli (1.86e-6); 3.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9525600; 0 solutions; 516442650 strings, 1894 passed the test with the default moduli (1.83e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9601200; 0 solutions; 516442650 strings, 1916 passed the test with the default moduli (1.85e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9676800; 0 solutions; 516442650 strings, 1791 passed the test with the default moduli (1.73e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9752400; 0 solutions; 516442650 strings, 1821 passed the test with the default moduli (1.76e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9828000; 0 solutions; 516442650 strings, 1824 passed the test with the default moduli (1.77e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9903600; 0 solutions; 516442650 strings, 1848 passed the test with the default moduli (1.79e-6); 2.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=9979200; 0 solutions; 516442650 strings, 1861 passed the test with the default moduli (1.80e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10054800; 0 solutions; 516442650 strings, 1887 passed the test with the default moduli (1.83e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10130400; 0 solutions; 516442650 strings, 1874 passed the test with the default moduli (1.81e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10206000; 0 solutions; 516442650 strings, 1899 passed the test with the default moduli (1.84e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10281600; 0 solutions; 516442650 strings, 1926 passed the test with the default moduli (1.86e-6); 2.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10357200; 0 solutions; 516442650 strings, 1819 passed the test with the default moduli (1.76e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10432800; 0 solutions; 516442650 strings, 1851 passed the test with the default moduli (1.79e-6); 1.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10508400; 0 solutions; 516442650 strings, 1870 passed the test with the default moduli (1.81e-6); 2.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10584000; 0 solutions; 516442650 strings, 1795 passed the test with the default moduli (1.74e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10659600; 0 solutions; 516442650 strings, 1837 passed the test with the default moduli (1.78e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10735200; 0 solutions; 516442650 strings, 1792 passed the test with the default moduli (1.73e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10810800; 0 solutions; 516442650 strings, 1871 passed the test with the default moduli (1.81e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10886400; 0 solutions; 516442650 strings, 1876 passed the test with the default moduli (1.82e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=10962000; 0 solutions; 516442650 strings, 1783 passed the test with the default moduli (1.73e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11037600; 0 solutions; 516442650 strings, 1854 passed the test with the default moduli (1.79e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11113200; 0 solutions; 516442650 strings, 1802 passed the test with the default moduli (1.74e-6); 1.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11188800; 0 solutions; 516442650 strings, 1814 passed the test with the default moduli (1.76e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11264400; 0 solutions; 516442650 strings, 1833 passed the test with the default moduli (1.77e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11340000; 0 solutions; 516442650 strings, 1942 passed the test with the default moduli (1.88e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11415600; 0 solutions; 516442650 strings, 1874 passed the test with the default moduli (1.81e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11491200; 0 solutions; 516442650 strings, 1811 passed the test with the default moduli (1.75e-6); 3.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11566800; 0 solutions; 516442650 strings, 1809 passed the test with the default moduli (1.75e-6); 2.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11642400; 0 solutions; 516442650 strings, 1859 passed the test with the default moduli (1.80e-6); 3.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11718000; 0 solutions; 516442650 strings, 1810 passed the test with the default moduli (1.75e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11793600; 0 solutions; 516442650 strings, 1908 passed the test with the default moduli (1.85e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11869200; 0 solutions; 516442650 strings, 1888 passed the test with the default moduli (1.83e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=11944800; 0 solutions; 516442650 strings, 1896 passed the test with the default moduli (1.84e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12020400; 0 solutions; 516442650 strings, 1828 passed the test with the default moduli (1.77e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12096000; 0 solutions; 516442650 strings, 1871 passed the test with the default moduli (1.81e-6); 3.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12171600; 0 solutions; 516442650 strings, 1820 passed the test with the default moduli (1.76e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12247200; 0 solutions; 516442650 strings, 1859 passed the test with the default moduli (1.80e-6); 2.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12322800; 0 solutions; 516442650 strings, 1863 passed the test with the default moduli (1.80e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12398400; 0 solutions; 516442650 strings, 1801 passed the test with the default moduli (1.74e-6); 3.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12474000; 0 solutions; 516442650 strings, 1878 passed the test with the default moduli (1.82e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12549600; 0 solutions; 516442650 strings, 1843 passed the test with the default moduli (1.78e-6); 1.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12625200; 0 solutions; 516442650 strings, 1814 passed the test with the default moduli (1.76e-6); 1.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12700800; 0 solutions; 516442650 strings, 1868 passed the test with the default moduli (1.81e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12776400; 0 solutions; 516442650 strings, 1909 passed the test with the default moduli (1.85e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12852000; 0 solutions; 516442650 strings, 1808 passed the test with the default moduli (1.75e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=12927600; 0 solutions; 516442650 strings, 1911 passed the test with the default moduli (1.85e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13003200; 0 solutions; 516442650 strings, 1814 passed the test with the default moduli (1.76e-6); 3.7s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13078800; 0 solutions; 516442650 strings, 1834 passed the test with the default moduli (1.78e-6); 1.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13154400; 0 solutions; 516442650 strings, 1878 passed the test with the default moduli (1.82e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13230000; 0 solutions; 516442650 strings, 1823 passed the test with the default moduli (1.76e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13305600; 0 solutions; 516442650 strings, 1775 passed the test with the default moduli (1.72e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13381200; 0 solutions; 516442650 strings, 1895 passed the test with the default moduli (1.83e-6); 3.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13456800; 0 solutions; 516442650 strings, 1904 passed the test with the default moduli (1.84e-6); 2.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13532400; 0 solutions; 516442650 strings, 1818 passed the test with the default moduli (1.76e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13608000; 0 solutions; 516442650 strings, 1812 passed the test with the default moduli (1.75e-6); 1.5s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13683600; 0 solutions; 516442650 strings, 1915 passed the test with the default moduli (1.85e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13759200; 0 solutions; 516442650 strings, 1850 passed the test with the default moduli (1.79e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13834800; 0 solutions; 516442650 strings, 1934 passed the test with the default moduli (1.87e-6); 1.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13910400; 0 solutions; 516442650 strings, 1862 passed the test with the default moduli (1.80e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=13986000; 0 solutions; 516442650 strings, 1838 passed the test with the default moduli (1.78e-6); 3.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14061600; 0 solutions; 516442650 strings, 1841 passed the test with the default moduli (1.78e-6); 3.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14137200; 0 solutions; 516442650 strings, 1868 passed the test with the default moduli (1.81e-6); 2.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14212800; 0 solutions; 516442650 strings, 1807 passed the test with the default moduli (1.75e-6); 1.4s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14288400; 0 solutions; 516442650 strings, 1855 passed the test with the default moduli (1.80e-6); 3.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14364000; 0 solutions; 516442650 strings, 1907 passed the test with the default moduli (1.85e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14439600; 0 solutions; 516442650 strings, 1825 passed the test with the default moduli (1.77e-6); 2.1s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14515200; 0 solutions; 516442650 strings, 1910 passed the test with the default moduli (1.85e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14590800; 0 solutions; 516442650 strings, 1779 passed the test with the default moduli (1.72e-6); 3.8s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14666400; 0 solutions; 516442650 strings, 1858 passed the test with the default moduli (1.80e-6); 2.3s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14742000; 0 solutions; 516442650 strings, 1892 passed the test with the default moduli (1.83e-6); 2.2s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14817600; 0 solutions; 516442650 strings, 1816 passed the test with the default moduli (1.76e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14893200; 0 solutions; 516442650 strings, 1819 passed the test with the default moduli (1.76e-6); 2.6s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=14968800; 0 solutions; 516442650 strings, 1824 passed the test with the default moduli (1.77e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=15044400; 0 solutions; 516442650 strings, 1865 passed the test with the default moduli (1.81e-6); 1.9s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3
+# k=4 M=150: offset D=15120000; 0 solutions; 516442650 strings, 1842 passed the test with the default moduli (1.78e-6); 2.0s; complete for bases b with b^4 <= 151^151, that is b <= about 10^82.3

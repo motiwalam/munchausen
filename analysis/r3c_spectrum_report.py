@@ -77,20 +77,25 @@ def main():
     print(f"## k = {k}: heuristic over digits <= {X}, kdigit over digits <= {M}")
     for mode in (1, 0):
         print(f"\n### 0^0 = {mode}\n")
-        print("| offsets | count | observed, digits <= X | all digits <= M | mean per offset | variance / mean | plain | prime | p-adic | observed / prime | observed / p-adic |")
-        print("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+        print("Base below 100 and digits <= X, unless stated.\n")
+        print("| offsets | count | observed | mean per offset | variance / mean | plain, all bases | prime | p-adic | observed / prime | observed / p-adic | base >= 100: observed / prime | all bases, digits <= M |")
+        print("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
         rows = {}
         for name, Ds in [('D = 0', [0])] + [(('D = j' if n == 'j' else 'D = j L'), Ds) for n, Ds in classes.items()]:
             Ds = [D for D in Ds if (D, mode) in pred]
-            nx = [sum(1 for b, s in obs[D, mode] if max(s) <= X) for D in Ds]
+            nx = [sum(1 for b, s in obs[D, mode] if max(s) <= X and b < 100) for D in Ds]
+            big = sum(1 for D in Ds for b, s in obs[D, mode] if max(s) <= X and b >= 100)
             nm = [len(obs[D, mode]) for D in Ds]
             mean = sum(nx) / len(Ds)
             var = sum((v - mean) ** 2 for v in nx) / max(1, len(Ds) - 1)
-            sums = {key: sum(pred[D, mode][key] for D in Ds) for key in ('plain', 'prime', 'padic')}
+            sums = {'plain': sum(pred[D, mode]['plain'] for D in Ds)}
+            for key in ('prime', 'padic'):
+                sums[key] = sum(sum(pred[D, mode]['bins_' + key][:2]) for D in Ds)
+            bigp = sum(pred[D, mode]['bins_prime'][2] for D in Ds)
             rows[name] = (Ds, nx, sums)
-            print(f"| {name} | {len(Ds)} | {sum(nx)} | {sum(nm)} | {mean:.3f} | {var / mean if mean else float('nan'):.2f} | "
+            print(f"| {name} | {len(Ds)} | {sum(nx)} | {mean:.3f} | {var / mean if mean else float('nan'):.2f} | "
                   f"{sums['plain']:.2f} | {sums['prime']:.2f} | {sums['padic']:.2f} | "
-                  f"{sum(nx) / sums['prime']:.2f} | {sum(nx) / sums['padic']:.2f} |")
+                  f"{sum(nx) / sums['prime']:.2f} | {sum(nx) / sums['padic']:.2f} | {big} / {bigp:.2f} | {sum(nm)} |")
         # by the size of the base
         print("\n| offsets | base < 10: observed / prime / p-adic | 10 to 99 | 100 and up |")
         print("|---|---|---|---|")
@@ -102,6 +107,13 @@ def main():
                 pa = sum(pred[D, mode]['bins_padic'][i] for D in Ds)
                 cells.append(f"{o} / {pp:.2f} / {pa:.2f}")
             print(f"| {name} | " + " | ".join(cells) + " |")
+        # all bases: the offsets D = j L have no algebraic families at large bases
+        print()
+        for name, (Ds, nx, sums) in rows.items():
+            o = sum(1 for D in Ds for b, s in obs[D, mode] if max(s) <= X)
+            pp = sum(pred[D, mode]['prime'] for D in Ds)
+            pa = sum(pred[D, mode]['padic'] for D in Ds)
+            print(f"- {name}, all bases, digits <= X: observed {o}, prime {pp:.2f}, p-adic {pa:.2f}")
         # D = 0 against the calibrated means
         Ds0, nx0, s0 = rows['D = 0']
         print()
@@ -117,16 +129,16 @@ def main():
             Ds, nx, sums = rows[name]
             for key in ('prime', 'padic'):
                 c = sum(nx) / sums[key]
-                chi = sum((n - c * pred[D, mode][key]) ** 2 / (c * pred[D, mode][key]) for D, n in zip(Ds, nx)
-                          if pred[D, mode][key] > 0)
+                e = {D: sum(pred[D, mode]['bins_' + key][:2]) for D in Ds}
+                chi = sum((n - c * e[D]) ** 2 / (c * e[D]) for D, n in zip(Ds, nx) if e[D] > 0)
                 print(f"- {name}, {key}: sum (N_D - c E_D)^2 / (c E_D) = {chi:.1f} over {len(Ds)} offsets")
         # parity of D for the offsets D = j
         Ds, nx, sums = rows['D = j']
         for par in (0, 1):
             sel = [(D, n) for D, n in zip(Ds, nx) if D % 2 == par]
             o = sum(n for D, n in sel)
-            pp = sum(pred[D, mode]['prime'] for D, n in sel)
-            pa = sum(pred[D, mode]['padic'] for D, n in sel)
+            pp = sum(sum(pred[D, mode]['bins_prime'][:2]) for D, n in sel)
+            pa = sum(sum(pred[D, mode]['bins_padic'][:2]) for D, n in sel)
             print(f"- D = j with j {'even' if par == 0 else 'odd'}: observed {o}, prime {pp:.2f}, p-adic {pa:.2f}")
 
 
