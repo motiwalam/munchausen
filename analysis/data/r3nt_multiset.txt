@@ -1,0 +1,36 @@
+part 1: 3135 known solutions with 2 or more digits, 1745 with a leading digit below the largest digit; window failures: 0; largest relative position in the window: 0.9836
+part 3: lcm inequality of Lemma 1.4 holds on random tests: True (largest bound / lcm = 0.9696635844210675)
+part 4: B = 10^96, ln B / ln ln B = 40.95
+   K   alpha   strings: log_B   multisets: log_B
+    4  0.098      0.093      0.101
+    8  0.195      0.207      0.182
+   12  0.293      0.330      0.263
+   16  0.391      0.458      0.343
+   20  0.488      0.590      0.422
+   24  0.586      0.725      0.502
+   28  0.684      0.863      0.581
+   32  0.781      1.003      0.659
+   36  0.879      1.145      0.738
+   40  0.977      1.289      0.816
+   44  1.075      1.435      0.895
+   48  1.172      1.582      0.973
+   52  1.270      1.730      1.051
+  largest K with multiset bound below B: 49 (alpha = 1.197)
+  largest K with string bound below B: 31 (alpha = 0.757)
+threshold: largest K with bound < B, against L/ln L and the formula of Theorem 1.3
+  B = 10^100: K = 51, L/lnL = 42.3, formula = 53.1, K lnL / L = 1.2047
+  B = 10^1000: K = 362, L/lnL = 297.4, formula = 364.3, K lnL / L = 1.2171
+  B = 10^10000: K = 2765, L/lnL = 2292.4, formula = 2748.9, K lnL / L = 1.2062
+  B = 10^1000000: K = 184385, L/lnL = 157177.9, formula = 182687.2, K lnL / L = 1.1731
+  B = 10^100000000: K = 13720374, L/lnL = 11958553.1, formula = 13604953.3, K lnL / L = 1.1473
+  B = 10^10000000000: K = 1088827070, L/lnL = 965044571.6, formula = 1080937272.3, K lnL / L = 1.1283
+part 2: k=3 M=40 0^0=0: 12341 multisets, 76599 window bases (at most 21 per multiset and leading digit), 174 with b-1 | F-S, 52 solutions; list: same
+part 2: k=3 M=40 0^0=1: 12341 multisets, 76600 window bases (at most 21 per multiset and leading digit), 107 with b-1 | F-S, 6 solutions; list: same
+part 2: k=4 M=22 0^0=0: 14950 multisets, 66914 window bases (at most 8 per multiset and leading digit), 224 with b-1 | F-S, 18 solutions; list: same
+part 2: k=4 M=22 0^0=1: 14950 multisets, 66914 window bases (at most 8 per multiset and leading digit), 163 with b-1 | F-S, 2 solutions; list: same
+part 2: k=5 M=12 0^0=0: 6188 multisets, 17368 window bases (at most 4 per multiset and leading digit), 405 with b-1 | F-S, 9 solutions; list: same
+part 2: k=5 M=12 0^0=1: 6188 multisets, 17368 window bases (at most 4 per multiset and leading digit), 314 with b-1 | F-S, 6 solutions; list: same
+part 2: k=6 M=9 0^0=0: 5005 multisets, 8512 window bases (at most 2 per multiset and leading digit), 695 with b-1 | F-S, 2 solutions; list: same
+part 2: k=6 M=9 0^0=1: 5005 multisets, 8512 window bases (at most 2 per multiset and leading digit), 569 with b-1 | F-S, 1 solutions; list: same
+part 2: k=7 M=7 0^0=0: 3432 multisets, 2031 window bases (at most 2 per multiset and leading digit), 464 with b-1 | F-S, 2 solutions; list: same
+part 2: k=7 M=7 0^0=1: 3432 multisets, 2031 window bases (at most 2 per multiset and leading digit), 342 with b-1 | F-S, 1 solutions; list: same
