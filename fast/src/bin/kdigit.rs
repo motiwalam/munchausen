@@ -14,7 +14,10 @@
 //! A k-digit solution in base b only uses digits x with x^x < b^k, so the
 //! output is complete for every base b with b^k <= (M+1)^(M+1).
 //!
-//! usage: kdigit <k> <M>   prints "k mode base digits" lines, like analysis/kdigit.py
+//! usage: kdigit <k> <M> [--survivors]
+//! prints "k mode base digits" lines, like analysis/kdigit.py. With
+//! --survivors it prints "k mode digits" for every string that passes the
+//! test instead, for other uses of the polynomial (negative roots, say).
 
 use num_bigint::BigUint;
 use num_traits::{One, Zero};
@@ -103,6 +106,8 @@ fn base_for(s: &[usize], f: &BigUint) -> Option<BigUint> {
 }
 
 struct Out {
+    survivors_only: bool,
+    passed: Mutex<Vec<(u32, Vec<usize>)>>,
     found: Mutex<Vec<(u32, BigUint, Vec<usize>)>>,
     survivors: AtomicU64,
     strings: AtomicU64,
@@ -135,6 +140,11 @@ fn rec(t: &Tables, s: &mut Vec<usize>, a: &mut Vec<Vec<Vec<u64>>>, zeros: usize,
                 }
                 local += 1;
                 s.push(x);
+                if out.survivors_only {
+                    out.passed.lock().unwrap().push((mode, s.clone()));
+                    s.pop();
+                    continue;
+                }
                 let mut f: BigUint = s.iter().map(|&v| &t.w[v]).sum();
                 if mode == 0 {
                     f -= z;
@@ -166,15 +176,16 @@ fn rec(t: &Tables, s: &mut Vec<usize>, a: &mut Vec<Vec<Vec<u64>>>, zeros: usize,
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 3 {
-        eprintln!("usage: kdigit <k> <M>");
+    let survivors_only = args.len() == 4 && args[3] == "--survivors";
+    if args.len() != 3 && !survivors_only {
+        eprintln!("usage: kdigit <k> <M> [--survivors]");
         std::process::exit(2);
     }
     let k: usize = args[1].parse().expect("k must be a number");
     let m: usize = args[2].parse().expect("M must be a number");
     assert!(k >= 2, "k must be at least 2");
     let t = Tables::new(k, m);
-    let out = Out { found: Mutex::new(vec![]), survivors: AtomicU64::new(0), strings: AtomicU64::new(0) };
+    let out = Out { survivors_only, passed: Mutex::new(vec![]), found: Mutex::new(vec![]), survivors: AtomicU64::new(0), strings: AtomicU64::new(0) };
     let start = std::time::Instant::now();
     // split the work over the first two digits
     let firsts: Vec<(usize, usize)> = (1..=m).flat_map(|x| (0..=m).map(move |y| (x, y))).collect();
@@ -205,6 +216,15 @@ fn main() {
         s.push(y);
         rec(&t, &mut s, &mut a, (y == 0) as usize, &out);
     });
+    if survivors_only {
+        let mut v = out.passed.into_inner().unwrap();
+        v.sort();
+        for (md, s) in v {
+            let ds: Vec<String> = s.iter().map(|x| x.to_string()).collect();
+            println!("{k} {md} {}", ds.join(","));
+        }
+        return;
+    }
     let mut found = out.found.into_inner().unwrap();
     // a string without zeros solves both conventions
     let mut lines = vec![];
