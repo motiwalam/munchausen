@@ -1,0 +1,2 @@
+# fast/target/r3nt_sieve 4 1 0 100 0 1000000000: (1,x,3), 4 x^x + x^2 + 100 square
+tested 999999999 values of x in [2, 1000000000] (step 1, offset 0): 375000000 excluded mod 64, 0 survivors; largest prime needed 131 (x = 700036240)
