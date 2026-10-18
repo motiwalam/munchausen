@@ -84,9 +84,9 @@ The proofs are those of section 1.6. The census of section 3 obeys all three
 rules (`analysis/wld_negacompare.py` checks them).
 
 So the parity doubling of section 5.3 happens in odd negative bases, the bases
-`-b` with `b + 1` even. In positive bases it happens in odd `b`, where `b - 1`
-is even. The two families are the same set of `|b|`, odd, but for a different
-reason.
+`-b` with `b + 1` even. In positive bases it happens for odd `b`, where `b - 1`
+is even. Both moduli are even exactly when `b` is odd, so the same `|b|` double
+in both signs.
 
 ### 1.2 Length
 
@@ -243,10 +243,10 @@ Algebraic solutions show up as in positive bases. Under `0^0 = 0` the twins
 position 12, because `16 * 32^12 = 2^64 = 16^16` and `(-32)^12 > 0`.
 
 The `(b+1)`-digit solutions, in bases -10, -14 and -26, all start with the
-digit 1, like the `b`-digit solutions of positive bases (section 1.8). With
-`c` copies of `b-1` the sum is about `(c/e) b^(b-1)`, and in base `-b` that is
-`1 * b^b - s * b^(b-1) + ...` with `s` about `b (1 - c/e)`. Base -26 has
-`(1,25,13,0,...)`, base -14 `(1,13,3,12,...)`.
+digit 1 and continue with the digit `b-1`: `(1,9,2,...)`, `(1,13,3,...)`,
+`(1,25,13,...)`. With `c >= 3` copies of `b-1` the sum is about
+`(c/e) b^(b-1)`, and in base `-b` that is `1 * b^b - s * b^(b-1) + ...` with
+`s` about `b - c/e`, so `s = b-1` for `c` = 3 or 4.
 
 ### 3.1 Counts against the model
 
@@ -266,7 +266,7 @@ the identity, predicts the same for both. Unlike positive bases (section
 groups, by 1 standard deviation or less.
 
 At finite `b` the model expects more than its limit: 1.25 per convention in
-base -10, 1.15 in base -18, 1.05 in base -34 (basic model). The surplus comes
+base -10 and 1.15 in base -18 (basic model, exact), 1.05 in base -34. The surplus comes
 from short lengths, where a few large digits suffice. Lengths 3 to 7 carry
 0.35 of the 1.25 in base -10 and 0.05 in base -18.
 
@@ -305,9 +305,9 @@ this census, so the fair test uses the later multiples of 3: -12 to -33.
 Three of these eight bases are empty (-15, -18, -30) against 0.97 expected;
 3 or more happens with probability 0.06.
 
-No obstruction exists. A multiple of 3 has `b + 1 == 1 (mod 3)`, so
-Proposition 1.4 gives it no congruence at 3, and -21, -24, -27 and -33 have
-solutions. The defect spectrum of section 11.1 settles it
+No congruence explains it. A multiple of 3 has `b + 1 == 1 (mod 3)`, so
+Proposition 1.4 gives it no condition at 3, and -21, -24, -27 and -33 have
+solutions. The defect spectrum of section 11.1 tests the rest
 (`analysis/wld_negadefects.py`, `analysis/data/wld_negadefects.txt`): for
 30 offsets `D` in the class of 0 (multiples of `b+1`, of `2(b+1)` in even
 bases), count the `n` with `n = F(n) + D`.
@@ -324,9 +324,12 @@ bases), count the `n` with `n = F(n) + D`.
 The empty bases -15 and -18 have normal spectra. Over all 30 cases (bases
 -10 to -24, both conventions), the variance/mean ratio of the counts has
 median 0.90 (range 0.51 to 1.61), a Poisson law as in positive bases. So a
-base does not "know" that it is empty, and bases -3, -6, -9, -15 and -18 are
-empty by chance (computed, with the model's standard caveat). The cluster at
-multiples of 3 is a 6% coincidence after the selection is removed.
+base does not "know" that it is empty, and -15 and -18 are empty by chance.
+Bases -3, -6 and -9 are too small for a spectrum; the model gives them
+chances 0.21, 0.17 and 0.07 to be empty, and the product 0.0026 is not small
+among 34 bases with 8 empty. The cluster at multiples of 3 is a 6% event once
+the three named bases are set aside. Verdict: chance (computed for -15 and
+-18, model for -3, -6, -9).
 
 ## 4. Imaginary bases `ci`
 
@@ -420,7 +423,7 @@ Gaussian arithmetic.
 
 Base -4+i is out of reach for this enumeration. Length 22 alone has
 `5 * 10^8` multisets in the window and took 458 seconds, and the model puts
-99.8% of its expectation above 22 digits, mostly at 34 digits (83%). A prefix
+99% of its expectation above 22 digits, mostly at 34 digits (83%). A prefix
 tree like that of section 2 would need the top digits of a real interval,
 which in base `-n+i` are not an interval but the points of a fractal tile on
 a line.
@@ -440,10 +443,12 @@ Positive integers do not use every length (computed for all integers up to
 This is the analog of the odd lengths of negative bases (Proposition 12.2). A
 positive `N` with `D` digits is `beta^(D-1)` times a point of the tile
 `s + T0` near the top digit `s`, so `(D-1) arg(beta)` must point into that
-tile. `arg(beta) = pi - arctan(1/n)`, so the allowed lengths drift with
-period about `2 pi / arctan(1/n)` digits: runs of even lengths, then runs of
-odd ones. For base -1+i, `beta^8 = 16`, so the pattern repeats every 8
-digits exactly. The model sees the same gaps: `E_d = 0` at the missing
+tile (heuristic). `arg(beta) = pi - arctan(1/n)`, so two more digits turn
+the direction by `-2 arctan(1/n)`. The lengths come in runs of one parity,
+and the parity switches about every `pi / arctan(1/n)` digits: 6.8 for
+-2+i, 9.8 for -3+i, 12.8 for -4+i, as in the table. For base -1+i,
+`beta^8 = 16`, so `ell(16 N) = ell(N) + 8` and the set of lengths is closed
+under adding 8 (proven). The model has `E_d = 0` exactly at the missing
 lengths, and the Munchausen numbers found have lengths 4, 8, 9, 19 and 21,
 all allowed.
 
@@ -469,8 +474,133 @@ the size of a number by `|beta|^2 = n^2 + 1`. So the typical values of `c`
 (1 to 4) move `F` by less than two lengths, and the gaps of section 5.1 leave
 one or two allowed lengths in that range.
 
-FACTORIONS
+## 6. Universality: factorions (question 10)
+
+A factorion is an `n` equal to the sum of `x!` over its base-`b` digits, with
+`0! = 1` (OEIS A014080 for base 10, A193163 for the counts). `worlds` handles
+the weights `x!` with the same engines (`analysis/data/wld_factorion_census.txt`,
+bases 2 to 41; `brute` and `lanes` agree on bases 2 to 16). Base 10 gives
+145 and 40585, base 11 gives 26, 48 and 40472, as known.
+
+### 6.1 What changes
+
+The 8/55/23% law of section 5.2 rests on two facts about `w(x) = x^x`:
+
+- the top weight sits at a fixed height: `(b-1)^(b-1) = b^(b-1) / e` in the
+  limit, so `c` copies cross a power of `b` at `c = e`;
+- one digit value lower costs a factor `e b`: `(b-1)^(b-1) / (b-2)^(b-2)` is
+  about `e (b-1)`.
+
+For `x^(x+t)` with fixed `t`, both facts hold unchanged, with the lengths
+shifted by `t`. So the law is the same (model). The census of `x^(x+1)` under
+`0^0 = 1`, bases 10 to 28 (`analysis/data/wld_powt1_census.txt`), has 26
+solutions: 3 with `b+1` digits, 15 with `b`, 2 with `b-1`, 6 shorter. The
+model says 8%, 55% and 23% for `b+1`, `b`, `b-1`.
+
+For `x!` both facts fail. One digit value lower costs only a factor `b-1`,
+and the height of the top weight, `theta(b) = frac(log_b (b-1)!)`, moves with
+`b`. Let `L(b) = floor(log_b (b-1)!) + 1`, the length of `(b-1)!`.
+
+Proposition 6.1 (model). For factorions, a `d`-digit string has digit counts
+of mean `lambda = d / b`, and lengths near `L(b)` have `lambda` about
+`L(b)/b = 1 - 1/ln b + o(1/ln b)`. With `c` copies of the largest digit
+`b-1-k`, `F` is about `c (b-1)! / b^k`, so it has `L(b) - k` digits unless
+`theta + log_b c >= 1`, when it has one more. Since `log_b c -> 0`, for
+almost all large `b` the shares are
+
+    P(length L(b) - k) = (1 - e^-lambda) e^(-k lambda),   k = 0, 1, 2, ...
+
+which tends to 63.2%, 23.3%, 8.6%, 3.2%. The top share equals that of odd
+negative bases (Proposition 1.7), but the shares fall by `e^-1` per length,
+not `e^-2`. It is not the 8/55/23% law. The expected total is still 1 per base.
+
+Derivation. The weights `(b-1-k)!` fall by a factor about `b` per step, so the
+largest digit present fixes the power of `b`, and the number of its copies only
+fixes the leading digit. The top digit `b-1-k` is the largest present with
+chance `e^(-k lambda) (1 - e^-lambda)`.
+
+The convergence is slow, because `lambda - 1` is about `-1/ln b` and
+`log_b c` is about `ln c / ln b`. Sampled model (`analysis/wld_factmodel.py`):
+
+| base | `L(b)/b` | `L-2` | `L-1` | `L` | `L+1` | total |
+|---:|---:|---:|---:|---:|---:|---:|
+| 100 | 0.780 | 11.1% | 20.1% | 43.9% | 18.5% | 1.02 |
+| 300 | 0.827 | 10.8% | 24.4% | 56.2% | 0 | 1.01 |
+| 1,000 | 0.855 | 9.5% | 23.1% | 54.6% | 5.6% | 1.00 |
+| 10,000 | 0.891 | 11.3% | 24.4% | 57.0% | 0.8% | 1.00 |
+
+The `L+1` share is the leak through `theta`. `theta(100) = 0.985`, so 2
+copies of the digit 99 already reach the next power of 100.
+`theta(1000) = 0.868` needs 3 copies and `theta(10^4) = 0.864` needs 4.
+`theta(300) = 0.064` leaves no leak.
+
+### 6.2 The census against the model
+
+Bases 10 to 41 (`analysis/wld_factcompare.py`):
+
+| | observed | model |
+|---|---:|---:|
+| factorions | 37 | 37.1 |
+| bases with none | 11 | 10.1 |
+| lengths `L-5` to `L+1` | 28 | 34.8 |
+| lengths `L-6` and shorter | 9 | 2.3 |
+
+| length | `L-4` | `L-3` | `L-2` | `L-1` | `L` | `L+1` |
+|---|---:|---:|---:|---:|---:|---:|
+| observed | 3 | 1 | 2 | 9 | 9 | 2 |
+| model | 1.6 | 2.6 | 4.5 | 8.0 | 15.8 | 1.3 |
+
+The count per base and the share of empty bases follow the model. The long
+factorions follow its length law loosely; the top length is short of the
+model (9 against 15.8). Short factorions, most of them with 2 digits, are four
+times too common, as are the short Munchausen numbers of section 10.5. They
+are roots of a low-degree polynomial in `b`, where the per-base model does not
+apply. The two `L+1` factorions sit in bases 17 and 5, where `theta` is 0.83
+and 0.97, as Proposition 6.1 requires.
+
+There is no parity effect: `x! == 0 (mod 2)` for `x >= 2`, so the identity
+modulo `b-1` gives no free factor. The census agrees: 15 factorions in the 16
+odd bases from 11 to 41, 22 in the 16 even bases from 10 to 40.
+
+### 6.3 What is universal
+
+- Universal (model, confirmed in all four systems): about one solution per
+  base and convention, a Poisson count, and empty bases at rate
+  `exp(-E)`. Section 5.2 explains why: the length of the sum barely depends on
+  the length of the string, so the expectations over all lengths add to 1.
+- Universal: the identity modulo the "digit-sum modulus" (`b-1`, `b+1`,
+  `(n+1)^2 + 1`) and the parity factor 2 whenever that modulus is even and
+  `w(x) == x (mod 2)`.
+- Not universal: the length shares. They depend on the height of the top
+  weight between powers of the base and on the cost of one digit value less.
+  `x^x` and `x^(x+t)` give 8/55/23%; even negative bases give 8/78/12%; odd
+  negative bases and factorions give geometric laws, with ratio `e^-2` and
+  `e^-1` respectively.
 
 ## 7. Status
 
-STATUS
+| question | answer | status |
+|---|---|---|
+| 5. invariant residues in base `-b` | only the divisors of `b+1` (Proposition 1.4) | proven |
+| 5. identity, parity, length | `sum (w(x) - x) == 0 (mod b+1)`; parity doubling in odd `b`; odd lengths up to `b+1` (Propositions 1.5, 1.6) | proven |
+| 5. length shares | even `b`: 8.0/78.4/11.7%; odd `b`: 63.2/31.8/4.3% (Proposition 1.7) | model |
+| 5. census | bases -2 to -35, both conventions (section 3) | computed |
+| 5. census against model | counts within 1 standard deviation; parity doubling confirmed | computed |
+| 5. bases -3, -6, -9 | empty by chance: normal defect spectra; the multiples of 3 cluster is a 6% event after selection | computed and model |
+| 6. engine | prefix intervals (Proposition 1.1) and a shifted digit vector (Proposition 1.3); 1.9x per base, base -35 in 4 minutes | computed |
+| 7. imaginary bases `ci` | reduce to base `-c^2` with offset `m (d-1)`; lengths `== 1 (mod 4)` (Proposition 4.1) | proven |
+| 7. Gaussian bases | census for -1+i, -2+i, -3+i; -4+i only to 22 digits; length bound (Proposition 5.2); about 1 per convention | computed, model |
+| 7. lengths in Gaussian bases | positive integers skip some lengths, in runs (section 5.1) | computed |
+| 10. universality | count law universal; length shares not: factorions follow `(1 - e^-lambda) e^(-k lambda)` (Proposition 6.1) | model, computed to base 41 |
+
+Open questions raised here:
+
+- A proof of the set of lengths that positive integers take in base -n+i.
+  For -1+i the data say lengths `== 1` or `4 (mod 8)`.
+- A search for base -4+i past 22 digits needs the top digits of a real
+  interval, which are not an interval. A tile-based prefix test might work.
+- Base -3+i has 4 solutions under `0^0 = 1` against 1.11 expected, three of
+  them with 19 digits. Is it chance (`P = 0.026`)?
+- Short factorions and short negative-base solutions are much more common
+  than the per-base model says, as for short Munchausen numbers. The
+  polynomial heuristic of section 11.4 is the natural tool for them.
