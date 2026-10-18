@@ -24,6 +24,10 @@ statement is marked by its source:
 | [10. Limits of randomized search](10-limits.md) | growth rates of the exact and likely trees, a lower bound for tree searches, the `--zscore` rule, failed routes to a larger speedup, the sharpened length window |
 | [11. Near-solutions and local obstructions](11-local.md) | the defect spectrum `n - F(n) = D`, empty bases and missing `b`-digit solutions explained, local obstructions for short strings, a sieved search 150 times faster, almost all bases have no short solution |
 | [12. The Munchausen polynomial](12-polynomial.md) | Galois groups of `Q_s`, completeness of the local test, Munchausen numbers in negative bases |
+| [13. Complexity and a Poisson law](13-complexity.md) | the general problem with arbitrary weights is NP-complete; a Chen-Stein Poisson theorem in the model |
+| [14. Other number systems](14-other-bases.md) | negative, imaginary and Gaussian bases; factorions; what is universal |
+| [15. Dynamics and nonexistence](15-dynamics.md) | cycles of `n -> F(n)`, bases with two 2-digit solutions, coverings, constructions, integers with many bases |
+| [16. Algebra of the polynomial](16-algebra.md) | Aurifeuillian factors and base 904, the equation `b(b+x) = x^x + 1`, reducibility, Galois groups, rational bases |
 | [Open questions](questions.md) | 30 research questions, with priorities |
 
 ## Main results
@@ -65,6 +69,18 @@ Proven:
 - Munchausen numbers in negative bases have an odd number of digits
   (Proposition 12.2); 3-digit solutions with `s_1 | s_2` have a partner in a
   negative base (Proposition 12.3).
+- Under `0^0 = 1`, base 3 is the only base with two 2-digit solutions
+  (Theorem 15.7).
+- The Aurifeuillian factors `L < M` of `x^x + 1` satisfy `M / L -> e^2`
+  (Theorem 16.1). This explains `(1,7,1)` in base 904 and why no larger `x`
+  works the same way; `b(b+x) = x^x + 1` has no further solution for `x` up to
+  `4 * 10^9`, and the abc conjecture would rule them out entirely.
+- With arbitrary weights in place of `x^x`, deciding whether a solution exists
+  is NP-complete and counting them is #P-complete (chapter 13). Any fast
+  algorithm for real Munchausen numbers must use the arithmetic of `x^x`.
+- Infinitely many digit strings are excluded in every base by covering
+  congruences with moduli `3^e` and `2^e`; `(2,1,x)` is never a solution
+  (chapter 15).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
