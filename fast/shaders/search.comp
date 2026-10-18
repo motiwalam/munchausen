@@ -413,9 +413,10 @@ bool run_item(uint idx) {
             return nodes_here < pc.budget;
         }
         // Cursor::new
+        // a unit's hi already holds the drop for its cursor (see Node in search.rs)
         occk = lane_of(nhp, k);
         te = nt;
-        chi = add(nhi, ldv(ODROP + k * (D + 1u) + rf));
+        chi = nhi;
         e = 0u;
     }
     uint sp = 0u;

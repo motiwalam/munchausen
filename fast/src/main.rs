@@ -1,5 +1,6 @@
 mod digits;
 mod journal;
+mod merge;
 mod port;
 mod reference;
 mod search;
@@ -11,12 +12,14 @@ use std::time::Instant;
 
 const USAGE: &str = "\
 usage: fast <engine> <base> [<last base>] [options]
+       fast merge <file>...
 
 engines:
   search      fast prefix-pruned digit-count search (bases 2..=127, at most 62 digits)
   port        faithful port of the python algorithm (bases 2..=26)
   reference   simple u128 version of the search, for validation (bases 2..=27)
   brute       check every n up to the upper bound (tiny bases only)
+  merge       combine the outputs of --shard runs into the output of a full run
 
 options:
   -m, --mode <0|1|both>   value of 0^0 (default: both)
@@ -25,6 +28,10 @@ options:
                           <file> and resume from it if it exists; \"{base}\"
                           in the name is replaced by the base
   --progress              (search) report progress every 10 seconds
+  --shard <i>/<n>         (search) search only the work units whose index is
+                          i modulo n; \"{shard}\" in the journal name becomes
+                          <i>of<n>; merge the outputs of all n shards with
+                          fast merge
   --max-digits <n>        (search) only look for numbers with at most n digits
   --min-digits <n>        (search) only look for numbers with at least n digits
   --cap <c>               (search, inexact) skip numbers in which a digit 2 or more
@@ -84,6 +91,7 @@ struct Opts {
     hybrid: bool,
     #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     gpu_subgroups: u32,
+    shard: (u32, u32),
 }
 
 fn parse_args() -> Opts {
@@ -105,6 +113,7 @@ fn parse_args() -> Opts {
     let mut gpu = false;
     let mut hybrid = false;
     let mut gpu_subgroups = 2048;
+    let mut shard = (0, 1);
     let mut i = 0;
     while i < args.len() {
         let a = args[i].as_str();
@@ -145,6 +154,13 @@ fn parse_args() -> Opts {
                 hybrid = true
             }
             "--gpu-subgroups" => gpu_subgroups = val().parse().unwrap_or_else(|_| die("bad subgroup count")),
+            "--shard" => {
+                let v = val();
+                shard = match v.split_once('/').map(|(i, n)| (i.parse(), n.parse())) {
+                    Some((Ok(i), Ok(n))) if i < n => (i, n),
+                    _ => die(&format!("bad shard {v}: write i/n with 0 <= i < n")),
+                }
+            }
             _ => pos.push(a.to_string()),
         }
         i += 1;
@@ -157,8 +173,11 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    if gpu && (journal.is_some() || prune.offset != 0 || prune.perturb != 0) {
-        die("--gpu works without --journal, --offset and --perturb");
+    if shard.1 > 1 && pos[0] != "search" {
+        die("--shard works only with the search engine");
+    }
+    if gpu && (journal.is_some() || prune.offset != 0 || prune.perturb != 0 || shard.1 > 1) {
+        die("--gpu works without --journal, --offset, --perturb and --shard");
     }
     if gpu && !cfg!(feature = "gpu") {
         die("--gpu needs a build with --features gpu");
@@ -166,7 +185,7 @@ fn parse_args() -> Opts {
     if gpu_subgroups == 0 {
         die("--gpu-subgroups must be positive");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, gpu, hybrid, gpu_subgroups }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, shard, gpu, hybrid, gpu_subgroups }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -202,8 +221,9 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 }
 
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
+    let (shard, shards) = o.shard;
     // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
-    let mut out: Found = if o.min_digits <= 1 && o.prune.offset == 0 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
+    let mut out: Found = if o.min_digits <= 1 && o.prune.offset == 0 && shard == 0 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
     let t0 = Instant::now();
     let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth, o.prune);
     let t1 = Instant::now();
@@ -212,23 +232,25 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
         eprintln!("  base {b}: {:.3} s for the tables, {:.3} s for {} units", (t1 - t0).as_secs_f64(), t1.elapsed().as_secs_f64(), units.len());
     }
     let total = units.len();
+    let mine = |i: usize| i % shards as usize == shard as usize;
+    let my_total = (0..total).filter(|&i| mine(i)).count();
 
     let journal = o.journal.as_ref().map(|path| {
-        let path = path.replace("{base}", &b.to_string());
-        journal::Journal::open(&path, b, total, o.unit_depth)
+        let path = path.replace("{base}", &b.to_string()).replace("{shard}", &format!("{shard}of{shards}"));
+        journal::Journal::open(&path, b, total, o.unit_depth, o.shard)
     });
     let skip: Vec<bool> = match &journal {
         Some(j) => {
             for (mode, digits) in &j.found {
                 out[*mode as usize].push(digits.clone());
             }
-            (0..total).map(|i| j.done.contains(&i)).collect()
+            (0..total).map(|i| !mine(i) || j.done.contains(&i)).collect()
         }
-        None => vec![false; total],
+        None => (0..total).map(|i| !mine(i)).collect(),
     };
-    let already = skip.iter().filter(|&&x| x).count();
+    let already = my_total - skip.iter().filter(|&&x| !x).count();
     if already > 0 {
-        eprintln!("  resuming: {already} of {total} units already done");
+        eprintln!("  resuming: {already} of {my_total} units already done");
     }
     let journal = journal.map(std::sync::Mutex::new);
     let journal = std::sync::Arc::new(journal);
@@ -264,7 +286,7 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
             if o.progress && p.0.elapsed().as_secs_f64() >= 10.0 {
                 p.0 = Instant::now();
                 // unit sizes vary wildly, so this is not a reliable fraction of the work
-                eprintln!("  base {b}: {}/{total} units done, {:.0}s elapsed", p.1, start.elapsed().as_secs_f64());
+                eprintln!("  base {b}: {}/{my_total} units done, {:.0}s elapsed", p.1, start.elapsed().as_secs_f64());
             }
         },
     );
@@ -307,6 +329,10 @@ fn tuple(v: &[u32]) -> String {
 }
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    if args.get(1).map(String::as_str) == Some("merge") {
+        std::process::exit(if merge::run(&args[2..]) { 0 } else { 1 });
+    }
     let o = parse_args();
     if o.threads > 0 {
         rayon::ThreadPoolBuilder::new().num_threads(o.threads).build_global().unwrap();
@@ -336,6 +362,9 @@ fn main() {
             }
         };
         let secs = t.elapsed().as_secs_f64();
+        if o.shard.1 > 1 {
+            println!("{}", merge::shard_line(b, o.shard));
+        }
         for &mode in &o.modes {
             let res = &mut res[mode as usize];
             res.sort_by(|x, y| x.len().cmp(&y.len()).then(x.cmp(y)));
@@ -373,6 +402,7 @@ mod tests {
             prune: search::Prune::NONE,
             journal: None,
             progress: false,
+            shard: (0, 1),
             gpu: false,
             hybrid: false,
             gpu_subgroups: 2048,
@@ -429,6 +459,25 @@ mod tests {
     fn gpu_matches_cpu() {
         check_gpu::<1>(2..=26);
         check_gpu::<2>(2..=24);
+    }
+
+    #[test]
+    fn shards_cover_the_search() {
+        for b in [12, 17, 21] {
+            let full = run_search_n::<1>(b, &test_opts());
+            for n in [2, 3, 7] {
+                let mut union: Found = [vec![], vec![]];
+                for i in 0..n {
+                    let part = run_search_n::<1>(b, &Opts { shard: (i, n), ..test_opts() });
+                    for m in 0..2 {
+                        union[m].extend(part[m].iter().cloned());
+                    }
+                }
+                for m in 0..2 {
+                    assert_eq!(sorted(union[m].clone()), sorted(full[m].clone()), "base {b} mode {m} {n} shards");
+                }
+            }
+        }
     }
 
     #[test]

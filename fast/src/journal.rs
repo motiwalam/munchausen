@@ -1,7 +1,7 @@
 // Append-only record of a long search so that it can be interrupted and
 // resumed. Format (one record per line):
 //
-//   # munchausen journal v1 base=<b> units=<n> unit_depth=<k>
+//   # munchausen journal v1 base=<b> units=<n> unit_depth=<k>[ shard=<i>/<n>]
 //   done <unit index>
 //   found <0^0 convention> <digits, most significant first, comma separated>
 //
@@ -17,17 +17,18 @@ pub struct Journal {
     pub found: Vec<(u32, Vec<u32>)>,
 }
 
-fn header(b: u32, units: usize, unit_depth: u32) -> String {
-    format!("# munchausen journal v1 base={b} units={units} unit_depth={unit_depth}")
+fn header(b: u32, units: usize, unit_depth: u32, (i, n): (u32, u32)) -> String {
+    let h = format!("# munchausen journal v1 base={b} units={units} unit_depth={unit_depth}");
+    if n > 1 { format!("{h} shard={i}/{n}") } else { h }
 }
 
 impl Journal {
-    pub fn open(path: &str, b: u32, units: usize, unit_depth: u32) -> Journal {
+    pub fn open(path: &str, b: u32, units: usize, unit_depth: u32, shard: (u32, u32)) -> Journal {
         let die = |msg: String| -> ! {
             eprintln!("journal {path}: {msg}");
             std::process::exit(1)
         };
-        let want = header(b, units, unit_depth);
+        let want = header(b, units, unit_depth, shard);
         let mut done = HashSet::new();
         let mut found = vec![];
         let exists = std::path::Path::new(path).exists();
