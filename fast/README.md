@@ -273,21 +273,22 @@ cursors from the same pool.
 
 ### Speed
 
-On the test laptop (Arc 140V GPU, power-saver mode), the median of 5
-interleaved runs. Other jobs shared the machine: the 1-minute load was
-9.5 to 14, so the CPU times are slower than in the table above.
+On the test laptop (Arc 140V GPU, power-saver mode), after the second
+round of CPU speedups. Each time is the median of 5 interleaved runs (3
+for base 33). Other jobs shared the machine: the 1-minute load was 7.6 to
+10, so the CPU times are slower than on an idle machine.
 
 | base | nodes | CPU, 8 threads | `--gpu` | `--hybrid` |
 |---|---:|---:|---:|---:|
-| 26 | 4,955,060 | 0.22 s | 0.25 s | 0.19 s |
-| 28 | 18,025,432 | 0.67 s | 0.41 s | 0.43 s |
-| 30 | 66,246,690 | 1.98 s | 1.06 s | 0.90 s |
-| 32 | 214,709,067 | 7.42 s | 4.60 s | 3.11 s |
-| 33 | 464,274,849 | 12.1 s | 9.6 s | 6.2 s |
+| 30 | 66,246,690 | 1.34 s | 0.95 s | 0.83 s |
+| 32 | 214,709,067 | 5.24 s | 4.33 s | 3.09 s |
+| 33 | 464,274,849 | 10.9 s | 9.6 s | 6.1 s |
 
-Base 33 is one run each. The GPU spends about 0.15 s on setup, so it
-loses below base 27. Above 30 digits, each lane holds two digits, and the
-GPU visits about 48 million nodes per second instead of 62 million.
+The GPU spends about 0.15 s on setup, so it loses on small bases: before
+the CPU speedups, base 26 took 0.25 s on the GPU and 0.22 s on the CPU.
+Above 30 digits, each lane holds two digits, and the GPU visits about 48
+million nodes per second instead of 62 million. `--hybrid` is the fastest
+mode in every base measured from 30 up.
 
 What limits it: not divergence, and not memory. Each subgroup runs a long
 chain of dependent instructions. Values that are the same in all lanes
