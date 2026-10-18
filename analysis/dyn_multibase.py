@@ -11,7 +11,7 @@ Candidates: every known solution (output/, analysis/data/) and the sums
 a^a + c^c with a, c up to a bound, which are the integers with two 2-digit
 representations (Proposition 30.2).
 
-usage: python3 analysis/dyn_multibase.py [pair bound]
+usage: python3 analysis/dyn_multibase.py [pair bound] [convention]
 """
 import glob
 import os
@@ -88,7 +88,7 @@ def known(m):
 
 def main():
     bound = int(sys.argv[1]) if len(sys.argv) > 1 else 40
-    for m in (1, 0):
+    for m in ((1, 0) if len(sys.argv) < 3 else (int(sys.argv[2]),)):
         cands = set(known(m))
         for a in range(1, bound + 1):
             for c in range(0, bound + 1):
@@ -103,6 +103,14 @@ def main():
             if len(fb) >= 2:
                 multi.append((N, fb))
         long_multi = [(N, fb) for N, fb in multi if any(len(d) >= 3 for d in fb.values())]
+        # representations with 3 or more digits not of the form (c, 0, ..., 0, e), e in {0, 1}
+        def plain(d):
+            return len(d) <= 2 or (set(d[1:-1]) <= {0} and d[-1] in (0, 1))
+        odd = [(N, fb) for N, fb in multi if not all(plain(d) for d in fb.values())]
+        print(f'  integers with 2 or more bases and a representation of 3 or more digits '
+              f'not of the form (c, 0, ..., 0, 0 or 1): {len(odd)}')
+        for N, fb in odd[:20]:
+            print(f'  other: N = {N}: ' + '; '.join(f'base {b}: {d}' for b, d in sorted(fb.items())))
         print(f'0^0 = {m}: {len(cands)} candidates; number of bases: {dict(sorted(hist.items()))}')
         print(f'  integers with 2 or more bases: {len(multi)}; with a representation of 3 or more digits: {len(long_multi)}')
         for N, fb in long_multi[:30]:

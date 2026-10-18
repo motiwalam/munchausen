@@ -602,8 +602,13 @@ Computed. Candidates: every known solution and every `a^a + w(c)` with
   bases and none in 3. None of them has a representation with 3 or more
   digits.
 - Under `0^0 = 0`: 428 have 2 or more bases, and 272 have a representation
-  with 3 or more digits. All of these come from Proposition 30.1 and its
-  twin `c^c` (bases `r^t` only). The maximum is 26, for `2^2048 + 1`.
+  with 3 or more digits. In 263 of the 272 every such representation is
+  `(c, 0, ..., 0, 0)` or `(c, 0, ..., 0, 1)` with `c` self-paying, as in
+  Proposition 30.1. Seven of the other 9 combine two self-paying digits or
+  a swap with a self-paying digit, for example `(16,0,...,0,4,0)` in base
+  64. Only 28 (also `(1,3,0)` in base 4 and `(1,0,3)` in base 5) and
+  823544 (also `(1,7,0)` in base 904) have a representation that no
+  construction explains. The maximum is 26 bases, for `2^2048 + 1`.
 
 Answer to question 30: under `0^0 = 0` the count is unbounded, through
 self-paying digits. Under `0^0 = 1` every known multi-base integer is a
