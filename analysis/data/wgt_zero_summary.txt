@@ -1,0 +1,18 @@
+# bases 10-30, nontrivial solutions under 0^0 = m; observed / refined model
+# m  parity  all: obs pred | with zeros: obs pred | no zeros: obs pred | odd/even factor of the model
+ -2 even  all  17  13.07 | zeros   7   7.24 | no zeros  10   5.83
+ -2 odd   all  30  23.89 | zeros  16  13.26 | no zeros  14  10.64 | factor 2.011
+ -1 even  all  16  12.99 | zeros   6   7.16 | no zeros  10   5.83
+ -1 odd   all  17  14.38 | zeros   3   3.74 | no zeros  14  10.64 | factor 1.217
+  0 even  all  15  13.08 | zeros   5   7.25 | no zeros  10   5.83
+  0 odd   all  29  23.95 | zeros  15  13.31 | no zeros  14  10.64 | factor 2.015
+  1 even  all  21  13.02 | zeros  11   7.19 | no zeros  10   5.83
+  1 odd   all  19  14.21 | zeros   5   3.58 | no zeros  14  10.64 | factor 1.201
+  2 even  all  14  13.03 | zeros   4   7.20 | no zeros  10   5.83
+  2 odd   all  25  23.60 | zeros  11  12.96 | no zeros  14  10.64 | factor 1.992
+  3 even  all  21  13.16 | zeros  11   7.33 | no zeros  10   5.83
+  3 odd   all  17  14.24 | zeros   3   3.60 | no zeros  14  10.64 | factor 1.190
+# even m, even bases, with zeros: observed 16, expected 21.7, P(>= observed) 0.913
+# even m, odd bases, with zeros: observed 42, expected 39.5, P(>= observed) 0.368
+# odd m, even bases, with zeros: observed 28, expected 21.7, P(>= observed) 0.109
+# odd m, odd bases, with zeros: observed 11, expected 10.9, P(>= observed) 0.530
