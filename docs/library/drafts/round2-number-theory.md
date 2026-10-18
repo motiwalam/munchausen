@@ -19,6 +19,7 @@ Scripts are in `analysis/` with names starting `r2nt_`. Their output is in
 | 32, prime powers | for `x` a prime power, the solutions of `b(b+x) = x^n + 1` with `n >= 2` are `(x, n) = (3,2), (8,2), (3,3), (5,3), (8,3), (64,3), (7,7)` | proven (Theorem 1.8) |
 | 32, general | every other solution with `n >= 4` has `n` odd, `x` not a square, and either `x == 0 (mod 8)` or `x` odd with two distinct prime factors and a "mixed" ideal; then `n < 6.4 * 10^4 d log x`, with `d` the order of an ideal class | proven, computed constant |
 | 32, `n = 4, 6` | no solution | proven |
+| 32, small `x` | for odd `x <= 1001`, `(7, 7)` is the only solution with `n >= 4`, for every `n` | computed (Theorem 1.12) |
 | 32, `n = 5` | no solution with `x <= 10^10`; the curve has genus 2 and Jacobian of analytic rank 3, so Chabauty methods do not apply | computed |
 | 32, finiteness | follows from abc, and from the weak form with exponent `2 - delta` | proven (conditional) |
 | 12, `n = x` | a solution with `x > 7` needs `x > 4 * 10^9` odd, composite, not a prime power, a mixed non-principal ideal `B` whose class has order `d` dividing `x`, and `x / d < 3.3 * 10^4 log x` | proven, computed |
@@ -315,6 +316,32 @@ Proposition 1.6. Principal `B`: Theorem 1.10 with `d = 1` allows only
 `x <= 747,069` (`r2nt_principal.py`). Otherwise `3 <= d` divides `x`, and
 Theorem 1.10 gives the bound on `x / d`.
 
+### 1.6.1 Small x, every exponent
+
+For a fixed odd `x` the proof of Theorem 1.10 is a finite procedure: for each
+choice of `B` it bounds `n`, and the convergents of `theta / (2 mu0)` give
+the only candidates.
+
+Theorem 1.12 (computed). For odd `x <= 1001` the only solution of (1) with
+`n >= 4` is `(7, 7)`.
+
+Proof. Squares and even `n` are excluded by Proposition 1.1, and `n <= 15`
+by the direct check of `r2nt_pure.py`. For `n >= 17`,
+`analysis/r2nt_allnx.gp` builds `K` with a certified class group
+(`bnfcertify`). For each of the `2^omega(x)` ideals `B` it finds the order
+`d` of its class, skips even `d` (since `d | n` and `n` is odd), takes a
+generator `eta` of `B^d`, and runs through the convergents `p/q` of
+`theta / (2 mu0)` with `d q` up to the bound of Theorem 1.10, testing
+`|q theta - 2 p mu0| < tau_(dq)`. By Legendre's theorem every solution with
+`n >= 17` is among these candidates, because `n tau_n < mu0`. Of the 1,818 ideals `B`, 814 are not principal. Laurent's bound allows
+exponents up to 7,816,158. No candidate appears (`data/r2nt_allnx_1001.txt`,
+25 minutes).
+
+The same program with the threshold lowered to `n >= 3` finds the known
+solutions `(5, 3)`, `(7, 7)` and `(119, 3)`. The last one is mixed:
+`119 = 7 * 17`, its ideal `B` is not principal, and its class has order
+`d = 3 = n`. This is the shape that Corollary 1.11 leaves open for `n = x`.
+
 ### 1.7 The exponent n = 5
 
 Computed:
@@ -347,7 +374,7 @@ none with `x <= 10^8`.
 
 ### 1.8 The family uniformly in n
 
-Proposition 1.12 (proven, conditional). (a) The abc conjecture implies that
+Proposition 1.13 (proven, conditional). (a) The abc conjecture implies that
 (1) has finitely many solutions with `n >= 7`. (b) Faltings's theorem gives
 finitely many for each `n >= 5`. (c) So abc implies that the set of
 solutions with `n >= 4` is finite. The weak form `c < K rad(abc)^(2 - delta)`
@@ -692,6 +719,7 @@ one. The variant with `w(0) = 1` forced has the extra problem of section
 | file | content |
 |---|---|
 | `analysis/r2nt_pure.py` | pure solutions of (1), odd `x <= X` (Theorem 1.7, part B): `data/r2nt_pure_1e5.txt` |
+| `analysis/r2nt_allnx.gp` | all `n` for odd `x <= 1001` (Theorem 1.12): `data/r2nt_allnx_1001.txt` |
 | `analysis/r2nt_principal.py` | the Laurent bounds of Theorem 1.10 and Corollary 1.11: `data/r2nt_principal.txt` |
 | `analysis/r2nt_sieve_n.c` | sieve for fixed `n`: `data/r2nt_sieve_n5_1e10.txt`, `data/r2nt_sieve_n7-15_1e9.txt`, `data/r2nt_sieve_n17-201_1e8.txt` |
 | `analysis/r2nt_genus2.gp` | the `n = 5` curve and the `n = 3` elliptic curve: `data/r2nt_genus2.txt` |
