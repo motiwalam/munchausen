@@ -32,6 +32,7 @@ def load(path):
     exp = defaultdict(float)     # (b, mode, d) -> refined
     basic = defaultdict(float)
     bases = set()
+    raw = {}
     for line in open(path):
         p = line.split()
         if not p or p[0].startswith('#'):
@@ -42,14 +43,16 @@ def load(path):
             k = (int(p[1]), int(p[2]), int(p[3]))
             basic[k] += float(p[4])
             exp[k] += float(p[5])
+        elif p[0] == 'raw':
+            raw[int(p[1]), int(p[2])] = [tuple(map(int, t.split(','))) for t in p[3:]]
         elif p[0] == 'time':
             bases.add(int(p[1]))
-    return sorted(bases), sol, exp, basic
+    return sorted(bases), sol, exp, basic, raw
 
 
 def summary(path):
     name = path.split('/')[-1]
-    bases, sol, exp, basic = load(path)
+    bases, sol, exp, basic, raw = load(path)
     print(f"== {name}, bases {bases[0]}-{bases[-1]}")
     for mode in (0, 1):
         print(f" mode {mode}")
@@ -86,6 +89,32 @@ def summary(path):
             empty_e += math.exp(-lam)
         print(f"  Poisson: sum (N - lambda)^2 / lambda = {x2:.1f} over {len(bases)} bases;"
               f" empty bases observed {empty_o}, expected {empty_e:.1f}")
+        # the same for the bulk, d >= ref - 5, where the model is meant to hold
+        x2 = empty_e = 0.0
+        empty_o = to = 0
+        te = 0.0
+        for b in bases:
+            r = ref_len(name, b)
+            lam = sum(v for (bb, m, d), v in exp.items() if bb == b and m == mode and d >= r - 5)
+            n = sum(v for (bb, m, d), v in sol.items() if bb == b and m == mode and d >= r - 5)
+            x2 += (n - lam) ** 2 / lam
+            empty_o += n == 0
+            empty_e += math.exp(-lam)
+            to += n
+            te += lam
+        print(f"  bulk d >= ref-5: observed {to}, expected {te:.1f}; sum (N - lambda)^2 / lambda = {x2:.1f};"
+              f" bases without a bulk solution observed {empty_o}, expected {empty_e:.1f}")
+        # twins: solutions n and n+1 in the same base
+        tw = 0
+        for b in bases:
+            vals = set()
+            for t in raw.get((b, mode), []):
+                v = 0
+                for x in t:
+                    v = v * b + x
+                vals.add(v)
+            tw += sum(1 for v in vals if v + 1 in vals and v > 1)
+        print(f"  twin pairs (n, n+1) with n > 1: {tw}")
 
 
 for path in sys.argv[1:]:
