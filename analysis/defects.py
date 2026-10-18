@@ -16,7 +16,7 @@ b0, b1, jmax = map(int, sys.argv[1:4])
 print("# base mode j count   (D = j (b-1), n - F(n) = D, n >= b)")
 for b in range(b0, b1 + 1):
     for j in range(jmax + 1):
-        out = subprocess.run([FAST, 'search', str(b), '--offset', str(j * (b - 1)), '--min-digits', '2'],
+        out = subprocess.run(['nice', '-n', '10', FAST, 'search', str(b), '-j', '3', '--offset', str(j * (b - 1)), '--min-digits', '2'],
                              capture_output=True, text=True).stdout
         for line in out.splitlines():
             bb, m, n, _ = line.split(':', 3)
