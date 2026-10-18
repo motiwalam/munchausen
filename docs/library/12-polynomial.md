@@ -154,7 +154,37 @@ Munchausen numbers. They are the reason why the local test alone can never
 prove that a string fails in every base: a rational root of `Q_s` passes every
 local test. The real-root bound `r > max(s)` must come from outside.
 
-## 12.5 Status
+## 12.5 One varying digit: the root as a function of `x`
+
+Fix two digits of a 3-digit string and let the third, `x`, vary. The real root
+`b*(x)` of `Q_s` is then a function of `x`, and a solution is an `x` where
+`b*(x)` is an integer above the digits. `analysis/near_integer.py` computes
+the distance `||b*(x)||` to the nearest integer exactly, with integer square
+roots, for odd `x` up to 6,001 (`0^0 = 1`).
+
+Two behaviours appear, and they match the two cases of Theorem 8.3.
+
+- Square class. For `(x, 1, 5)` with `x` odd, the dominant term `x * x^x` is
+  the square `x^(x+1)`. The root sits just below an integer, at a distance of
+  `1/(2x)` up to lower-order terms: `x ||b*(x)|| = 0.500` for every `x` from 19
+  to 6,001. So the root approaches the integers but never reaches them, which
+  is the content of Theorem 8.3.
+- Outside it. For `(1, x, 1)`, `(6, 1, x)` and `(2, x, 3)`, the fractional
+  parts look uniform. Below 0.01, 0.05 and 0.25 lie 1.8 to 2.1%, 9.7 to 10.2%
+  and 48.5 to 49.6% of the values, against 2%, 10% and 50% for a uniform law.
+  The record small distances behave like the minimum of independent uniform
+  draws (`x ||b*(x)||` between 0.06 and 2.6). The only exact hits are the known
+  solutions: `x = 3` and `x = 7` for `(1, x, 1)`, and `x = 5` for `(6, 1, x)`
+  in base 91.
+
+For `(1, x, 1)` the condition is that `x^2 + 4 x^x + 4` is a perfect square.
+For odd `x`, `4 x^x = 4x Y^2` with `Y = x^((x-1)/2)`, so it is the Pell-type
+equation `U^2 - 4x Y^2 = x^2 + 4` with a prescribed `Y` (section 8.2). The
+uniform fractional parts are what the spacing heuristic assumes. They do not
+decide the question, because a solution needs `b*(x)` to be an integer to
+within `x^(-x/2)`, far below the resolution of this test.
+
+## 12.6 Status
 
 | question | status |
 |---|---|
@@ -162,3 +192,4 @@ local test. The real-root bound `r > max(s)` must come from outside.
 | sieve survival per prime | the derangement share of `S_(k-1)`, about `1/e` |
 | can a string pass every local test without a rational root | only if `Q_s` is reducible (Proposition 12.1); none found |
 | negative bases | new solutions found; odd length only (Proposition 12.2); quadratic partners (Proposition 12.3) |
+| one varying digit | square class: the root stays `1/(2x)` below an integer; otherwise its fractional part is uniform (12.5) |

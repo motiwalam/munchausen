@@ -33,7 +33,9 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
      rational root), or find one.
    - Literature: Fried, Ritt, Bilu-Tichy, Capelli, Berend-Bilu. Priority 1.
 
-3. Roots as a function of one varying digit: the near-integer law. Fix all
+3. (Answered in section 12.5 for four families: uniform outside the square
+   class, `1/(2x)` inside it.) Roots as a function of one varying digit: the
+   near-integer law. Fix all
    digits but `x` and let `b*(x)` be the real root.
    - Square class: does the fractional part of `b*(x)` concentrate at rational
      points?
