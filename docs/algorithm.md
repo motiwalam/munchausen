@@ -279,10 +279,12 @@ When `e` grows by one, `t` grows by `w(k)` and `hi` grows by
 `w(k) - w(k-1)`. The search keeps both as running sums, so each step costs two
 additions.
 
-`hi` also never needs a full rebuild. A node stores its own `hi`. Its first
-child at the next level has `hi` smaller by `rf * (w(k) - w(k-1))`. A forced
-digit `x` makes `hi` smaller by `w(k-1) - w(x)`, because one free slot that
-was worth up to `w(k-1)` now holds `x`. Two tables hold these differences.
+`hi` also never needs a full rebuild. A node for digit `k` stores the `hi`
+of its child with `e = 0`, that is `t + z + rf * w(k-1)`. A child that
+passes the tests stores its own interval `hi` minus
+`rf * (w(k-1) - w(k-2))`, with its own `rf`. A forced digit `x` makes `hi`
+smaller by `w(k-1) - w(x)`, because one free slot that was worth up to
+`w(k-1)` now holds `x`. Two tables hold these differences.
 
 A digit vector has `32N` lanes and the addition drops the carry out of the
 top lane, so it computes modulo `b^(32N)`. The tables store each difference

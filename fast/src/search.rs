@@ -338,7 +338,7 @@ fn first_digit_ok<const N: usize>(p: &Params<N>, lo: &DV<N>, hi: &DV<N>, pp: u32
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
-    hi: DV<N>,     // t + z + rf * w[k] for a node that decides c_k (z: known zeros)
+    hi: DV<N>,     // t + z + rf * w[k-1] for a node that decides c_k (z: known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
     m: u32,        // number of decided digits, all >= k
@@ -435,7 +435,8 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: p.offset, hi: p.mul_w(p.kmax, p.d).add(&p.offset, &p.base), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let hi = p.mul_w(p.kmax, p.d).add(&p.offset, &p.base).add(&p.drop[p.kmax * (p.d as usize + 1) + p.d as usize], &p.base);
+            let root = Node { t: p.offset, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -528,8 +529,11 @@ impl<const N: usize> Search<N> {
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
             let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
-            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt)
-                && first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
+            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt) && {
+                // hi for the child's own cursor, before the branches below
+                c.hi = c.hi.add(unsafe { p.drop.get_unchecked((k - 1) * (p.d as usize + 1) + c.rf as usize) }, base);
+                first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
+            }
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
             {
                 return Some(c);
@@ -723,7 +727,6 @@ impl<const N: usize> Cursor<N> {
     #[inline(always)]
     fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
         let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
-        let hi = n.hi.add(unsafe { p.drop.get_unchecked(k * (p.d as usize + 1) + n.rf as usize) }, &p.base);
-        Cursor { n: *n, te: n.t, hi, k, e: 0, occk }
+        Cursor { n: *n, te: n.t, hi: n.hi, k, e: 0, occk }
     }
 }
