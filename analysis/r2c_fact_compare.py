@@ -69,7 +69,19 @@ def main():
                 cols.append(f"{sum(sum(off[b, m]) / len(off[b, m]) for b in bs if off[b, m]):.2f}")
             print(f"{lab:4s} {m} | {o:3d} | {e:6.2f} | " + " | ".join(cols))
     print()
-    print("per base (odd), m = 0 / m = 1: D=0, model, offset means")
+    print("group totals per offset j (odd bases 15-35): the empirical law of the D = 0 count")
+    for name, off in offs:
+        for m in (0, 1):
+            js = sorted({j for (b, mm), v in off.items() for j in range(1, len(v) + 1) if mm == m})
+            tot = [sum(off[b, m][j - 1] for b in BASES if b % 2 == 1 and len(off[b, m]) >= j) for j in js]
+            mean = sum(tot) / len(tot)
+            var = sum((t - mean) ** 2 for t in tot) / (len(tot) - 1)
+            o = sum(sol[b, m] for b in BASES if b % 2 == 1)
+            le = sum(1 for t in tot if t <= o)
+            print(f"{name} m={m}: {len(tot)} offsets, mean {mean:.2f}, variance {var:.2f}, min {min(tot)}, "
+                  f"D=0 has {o}; offsets with at most {o}: {le}")
+    print()
+    print("per base, m = 0 / m = 1: D=0, model, offset means")
     for b in BASES:
         row = f"{b:3d} L={ref_len(b):2d}"
         for m in (0, 1):

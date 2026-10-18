@@ -97,3 +97,24 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def empirical():
+    """Group totals of A_j / 2 for each offset j: the law of the D = 0 count."""
+    S = load_summaries()
+    print()
+    print("group totals of A_j / 2 per offset j = 1..30 (bases 4 and up)")
+    for par in (0, 1):
+        for m in (0, 1):
+            keys = [k for k in S if k[0] >= 4 and k[0] % 2 == par and k[1] == m]
+            J = min(len(S[k][0]) for k in keys) - 1
+            tot = [sum(S[k][0][j] for k in keys) / 2 for j in range(1, J + 1)]
+            o = sum(S[k][0][0] // 2 for k in keys)
+            mean = sum(tot) / J
+            var = sum((t - mean) ** 2 for t in tot) / (J - 1)
+            print(f"{'odd' if par else 'even':4s} m={m}: mean {mean:.2f}, variance {var:.2f}, min {min(tot)}, "
+                  f"D=0 has {o}; offsets with at most {o}: {sum(1 for t in tot if t <= o)} of {J}")
+
+
+if __name__ == '__main__':
+    empirical()
