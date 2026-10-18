@@ -1,0 +1,25 @@
+# base -4+i, 0^0 = 1: R0 = 5.123, L0 = 4, length bound 38, modulus 26
+len base -4+i m 1 d 2 sols 0 leaves 10 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -4+i m 1 d 3 sols 0 leaves 30 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -4+i m 1 d 4 sols 0 leaves 70 basic 1.691940e-3 refined 7.938123e-3 refined_zerofree 5.953593e-3 secs 0.00
+len base -4+i m 1 d 5 sols 0 leaves 196 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -4+i m 1 d 6 sols 0 leaves 462 basic 4.345508e-4 refined 2.403411e-4 refined_zerofree 1.945618e-4 secs 0.00
+len base -4+i m 1 d 7 sols 0 leaves 1474 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -4+i m 1 d 8 sols 0 leaves 2900 basic 1.659596e-4 refined 1.732880e-4 refined_zerofree 9.378412e-5 secs 0.00
+len base -4+i m 1 d 9 sols 0 leaves 9249 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.00
+len base -4+i m 1 d 10 sols 0 leaves 18565 basic 1.011433e-4 refined 1.105198e-4 refined_zerofree 5.473625e-5 secs 0.01
+len base -4+i m 1 d 11 sols 0 leaves 48941 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 0.02
+len base -4+i m 1 d 12 sols 0 leaves 119540 basic 8.201425e-5 refined 8.557469e-5 refined_zerofree 4.070482e-5 secs 0.04
+len base -4+i m 1 d 13 sols 0 leaves 314210 basic 2.230790e-6 refined 2.349436e-6 refined_zerofree 5.507680e-7 secs 0.11
+len base -4+i m 1 d 14 sols 0 leaves 755050 basic 1.690911e-4 refined 1.790392e-4 refined_zerofree 8.535291e-5 secs 0.30
+len base -4+i m 1 d 15 sols 0 leaves 1214487 basic 1.617136e-4 refined 1.678009e-4 refined_zerofree 7.062232e-5 secs 0.48
+len base -4+i m 1 d 16 sols 0 leaves 4428083 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 1.98
+len base -4+i m 1 d 17 sols 0 leaves 7848390 basic 2.788769e-5 refined 2.903672e-5 refined_zerofree 1.247518e-5 secs 3.82
+len base -4+i m 1 d 18 sols 0 leaves 24788179 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 12.64
+len base -4+i m 1 d 19 sols 0 leaves 51239158 basic 2.070400e-4 refined 2.129652e-4 refined_zerofree 7.685983e-5 secs 26.93
+len base -4+i m 1 d 20 sols 0 leaves 126141149 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 83.92
+len base -4+i m 1 d 21 sols 0 leaves 310088516 basic 5.408849e-4 refined 5.556581e-4 refined_zerofree 1.946065e-4 secs 296.13
+len base -4+i m 1 d 22 sols 0 leaves 503871719 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 secs 458.47
+total base -4+i m 1 up to d 22 sols 0 secs 884.84
+
+[exited with code 0]
