@@ -1,0 +1,12 @@
+k = 3, prefix digits 1..40: 1600 prefixes; excluded by 27: 204, by 81: 210, by 125: 0
+   first excluded by 81 but not by 27: [(8, 7), (14, 25), (26, 7), (32, 24), (32, 30), (38, 25)]
+   first excluded by 125: []
+k = 4, prefix digits 1..12: 1728 prefixes; excluded by 27: 131, by 81: 134, by 125: 0
+   first excluded by 81 but not by 27: [(3, 8, 1), (6, 2, 4), (9, 2, 7)]
+   first excluded by 125: []
+k = 5, prefix digits 1..7: 2401 prefixes; excluded by 27: 168, by 81: 169, by 125: 0
+   first excluded by 81 but not by 27: [(3, 6, 2, 1)]
+   first excluded by 125: []
+k = 6, prefixes (s1, s2, s3, s4, s5) with s1 == 1, s5 == 4 mod 5 and the rest in {5,10,15,20}: 0 excluded by 125; first: []
+direct check of (8, 7) + (x) for 1 <= x <= 1500: no solution
+direct check of (3, 8, 1) + (x) for 1 <= x <= 1500: no solution
