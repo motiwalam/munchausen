@@ -22,6 +22,9 @@ statement is marked by its source:
 | [8. Barriers](8-barriers.md) | what is settled, partial finiteness proofs, and why the rest needs new mathematics |
 | [9. Inexact search and counts](9-inexact.md) | a faster search with a measured miss rate, empty bases, bases with many solutions, length against base |
 | [10. Limits of randomized search](10-limits.md) | growth rates of the exact and likely trees, a lower bound for tree searches, the `--zscore` rule, failed routes to a larger speedup, the sharpened length window |
+| [11. Near-solutions and local obstructions](11-local.md) | the defect spectrum `n - F(n) = D`, empty bases and missing `b`-digit solutions explained, local obstructions for short strings, a sieved search 150 times faster, almost all bases have no short solution |
+| [12. The Munchausen polynomial](12-polynomial.md) | Galois groups of `Q_s`, completeness of the local test, Munchausen numbers in negative bases |
+| [Open questions](questions.md) | 30 research questions, with priorities |
 
 ## Main results
 
@@ -54,6 +57,14 @@ Proven:
   the digit multiset determines is `n mod (b-1)` (Proposition 10.2).
 - Up to `B`, at most a power of `ln B` bases have a solution with a fixed
   number of digits (Proposition 10.4).
+- Almost all bases have no solution with fewer than `(1/2 - eps) ln b / ln ln b`
+  digits (Theorem 11.2).
+- A digit string whose polynomial `Q_s` has no root modulo some prime is not a
+  solution in any base (Proposition 11.1). If `Q_s` is irreducible, this
+  happens for a positive density of primes (Proposition 12.1).
+- Munchausen numbers in negative bases have an odd number of digits
+  (Proposition 12.2); 3-digit solutions with `s_1 | s_2` have a partner in a
+  negative base (Proposition 12.3).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -66,6 +77,11 @@ Computed:
   `10^18`, `10^8` and `10^4` respectively (chapter 3).
 - Under `0^0 = 1` there are exactly two 4-digit solutions in all these bases:
   3435 in base 10 and `(6,5,3,4)` in base 20.
+- Under `0^0 = 1` the only 4-digit solutions in all bases up to `10^186` are
+  3435 and `(6,5,3,4)`; the 5-digit list is complete up to `10^30.9`, the
+  6-digit one up to `10^11` (section 11.5).
+- Base -10 has 404201091 = `(4,0,5,8,1,9,1,1,1)` and two more solutions
+  under `0^0 = 1` (section 12.3).
 - Under `0^0 = 1` no base up to 100,000 has a 9-digit solution, and no base up
   to 10,000 has one with 18, 21, 22, 24, 26 or 28 digits.
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
@@ -77,6 +93,10 @@ Model:
   digits in 55% of cases. Odd bases have twice as many under `0^0 = 0`.
   Perturbed weights show that the residues of `x^x` cause this (section 9.6).
 - About 17% of even and 8% of odd bases have no solution (section 9.7).
+- The number of solutions in a base is a Poisson draw with the mean of its
+  near-solution counts `n - F(n) = D` (section 11.1).
+- The random-polynomial view, with local factors, explains the short
+  solutions, and says the short lists are complete (section 11.4).
 - A search that misses a few percent of solutions grows about 1.71x per
   base instead of 1.89x (section 9.3). The `--zscore` rule keeps its miss rate
   near 2% from base 30 to 300 (section 10.3).

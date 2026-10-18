@@ -129,6 +129,11 @@ one more than in a positive base. Nontrivial solutions:
 | -9 | none | none |
 | -10 | `(4,0,5,8,1,9,1,1,1)`, `(5,8,1,1,8,2,4,9,2)`, `(1,9,2,1,7,4,5,8,9,8,9)` | `(4,0,5,8,1,9,4,3,0)`, `(4,0,5,8,1,9,4,3,1)`, `(5,8,1,1,8,2,4,9,2)`, `(1,9,2,1,7,4,5,8,9,8,9)` |
 
+Bases -11 and -12 (`analysis/data/negabase_11_12.txt`): under `0^0 = 1`,
+`(2,2,0,9,0,3,7,6,3)` and `(1,3,8,9,2,10,2,5,10,7,1)` in base -11, and
+`(10,8,8,9,11,2,4,7,6,0,11)` in base -12; under `0^0 = 0`, the 11-digit one of
+base -11 and its twin, and none in base -12.
+
 All lengths are odd, as Proposition 12.2 requires. The first base -10 example
 is 404201091:
 `4 * 10^8 + 5 * 10^6 - 8 * 10^5 + 10^4 - 9 * 10^3 + 100 - 10 + 1 = 404201091`

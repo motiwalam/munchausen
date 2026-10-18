@@ -116,7 +116,9 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     `(8,0,2,4)` in base 128, that is, `(a^a + c^c - c)/a = r^t` with
     `t | s(r^s - 1)`: a Pillai-type problem. Small to medium. Priority 2.
 
-17. The missing `b`-digit solution under `0^0 = 1`. Bases 3 to 45 have none
+17. (Answered in section 11.2: the model overestimates `b` digits by about
+    1.6x at these bases because of the forced top digits; the data are
+    normal.) The missing `b`-digit solution under `0^0 = 1`. Bases 3 to 45 have none
     against about 3.2 expected (P about 0.04). Is there a suppression
     mechanism for this shape (leading digit 1, 3 to 5 copies of `b-1`)? Check
     the parity of zeros and the residue mod `b-1` against the exact finite-`b`
@@ -147,7 +149,8 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 22. A Chen-Stein Poisson theorem in the model, with twins and shared
     solutions; predict the correlation 0.56 of `N_0` and `N_1`. Priority 3.
 
-23. Empty even bases: run `--zscore 3` on bases 46, 48, 50. Large.
+23. (Section 11.2 finds the deficit to be chance with each base's own
+    spectrum.) Empty even bases: run `--zscore 3` on bases 46, 48, 50. Large.
     Priority 2.
 
 24. Regress the per-base means `lambda_m(b)` of the defect spectrum on
