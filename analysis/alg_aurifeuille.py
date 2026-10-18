@@ -17,7 +17,6 @@ import math
 import cypari2
 from mpmath import mp, mpf, log
 from sympy import factorint
-from sympy.ntheory import jacobi_symbol
 
 pari = cypari2.Pari()
 pari.allocatemem(10**9)
@@ -62,7 +61,7 @@ if __name__ == '__main__':
         L, M = aurifeuille(x)
         lr = log(mpf(M)) - log(mpf(L))
         err = abs(lr - series(x))
-        chi = int(jacobi_symbol(x, 3)) if x % 3 else 0
+        chi = kronecker(x, 3) if x % 3 else 0
         extra = ''
         if x % 4 == 3:
             assert (L - 1) % x == 0 and (M - 1) % x == 0

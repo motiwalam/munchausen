@@ -34,5 +34,6 @@ if __name__ == '__main__':
                 count[(m, kind)] += 1
                 if kind != 'small':
                     print(f"0^0={m} {s} F={F} root {root} ({float(root):.4f}) {kind}", flush=True)
-    for key in sorted(count):
-        print('total', key, count[key])
+    for m in (1, 0):
+        for kind in ('above', 'small', 'negative'):
+            print('total', (m, kind), count[(m, kind)])
