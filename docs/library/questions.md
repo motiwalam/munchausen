@@ -173,7 +173,9 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     of the weights of its digits" NP-complete? Unlike `L_m` this is not a
     tally language. Priority 3.
 
-28. Why the sieve passes 2 to 4 times more strings than the product of
+28. (Answered in section 11.5: small primes pass most strings because of the
+    digit-sum identity at r = 1, and rational roots pass every prime.) Why the
+    sieve passes 2 to 4 times more strings than the product of
     derangement shares: for k = 3 with digits up to 80, 46 pass against about
     2 expected. Small primes, leading digits, square discriminants. Priority 3.
 

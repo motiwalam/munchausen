@@ -238,6 +238,17 @@ New ranges:
 | 6 | 40 | `10^11.0` | 201 s | the same 1, `(1,5,6,2,6,2)` in base 9 |
 | 7 | 26 | `10^5.5` | 644 s | 1: `(1,6,5,6,5,4,7)` in base 9 |
 
+Why small primes filter little. For 3-digit strings with digits up to 80
+under `0^0 = 1`, the share of strings with a root mod `p` is 0.988 for
+`p = 2`, 0.80 for `p = 3` and 0.69 for `p = 5`, and tends to 1/2 for large
+`p`. At `r == 1 (mod p)` the value `Q_s(1)` is the sum of the terms
+`s_i - s_i^(s_i)`, which vanish mod `p` for many digits. That is the digit-sum
+identity of section 1.6 in the language of roots, and it makes the small
+primes weak tests. The product of the 18 measured shares predicts 28.9
+survivors. Eleven more strings have a rational root, so they pass every prime
+by definition. That gives about 40, against 46 observed. So the tests for
+different primes are close to independent.
+
 Under `0^0 = 0` the new solutions are the self-paying families of chapter 2,
 such as `(x, 0, 0, 0)` and `(x, 0, 0, 1)` with `x^(x-1)` a cube.
 
