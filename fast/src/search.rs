@@ -21,6 +21,12 @@
 // where t is the sum over all known non-zero digits, z the number of known
 // zeros and rf the number of digit slots not accounted for yet. The two
 // conventions are told apart only at the leaves.
+//
+// The experiments replace x^x by other weights (see `weights`). The bounds
+// stay valid for any weights >= 0: hi uses W_{k-1}, the largest weight of a
+// digit below k (w_{k-1} when the weights increase), and 1 above becomes the
+// largest weight of 0. A negative weight m for 0 lowers lo by up to |m| d, so
+// the root then starts at t = -|m| d, and the leaf adds |m| d back.
 use crate::digits::{Base, DV, big_to_lanes};
 use num_bigint::BigUint;
 use std::sync::Mutex;
@@ -39,14 +45,17 @@ pub struct Params<const N: usize> {
     pub d: u32,
     base: Base,
     w: Vec<DV<N>>,   // w[j] = j^j for j >= 1, w[0] = 0 (zeros are tracked by count)
-    dhi: Vec<DV<N>>, // step of hi when c_j grows by one: w[j] - w[j-1] (w[0] taken as 1)
-    tw: Vec<DV<N>>,  // tw[j * (d + 1) + m] = m * w[j] (w[0] taken as 1, i.e. just m)
-    // shift[k * (kmax + 1) + x] = w[x] - w[k-1] for x < k (w[0] taken as 1),
-    // stored modulo b^(32 N), so adding it subtracts w[k-1] - w[x]: the step
-    // of hi when a free slot (worth up to w[k-1]) turns out to hold x
+    // Below, w[0] is the largest weight of 0 (1 by default), and W[j] is the
+    // largest of w[0..=j]. W[j] = w[j] when the weights increase.
+    dhi: Vec<DV<N>>, // step of hi when c_j grows by one: w[j] - W[j-1]
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    tw: Vec<DV<N>>,  // tw[j * (d + 1) + m] = m * w[j], read by the GPU search
+    // shift[k * (kmax + 1) + x] = w[x] - W[k-1] for x < k, stored modulo
+    // b^(32 N), so adding it subtracts W[k-1] - w[x]: the step of hi when a
+    // free slot (worth up to W[k-1]) turns out to hold x
     shift: Vec<DV<N>>,
-    // drop[k * (d + 1) + m] = -m * (w[k] - w[k-1]) modulo b^(32 N): turns
-    // hi = t + z + m w[k] into t + z + m w[k-1]
+    // drop[k * (d + 1) + m] = -m * (W[k] - W[k-1]) modulo b^(32 N): turns
+    // hi = t + z w[0] + m W[k] into t + z w[0] + m W[k-1]
     drop: Vec<DV<N>>,
     pow_lo: DV<N>,   // b^(d-1)
     max_v: DV<N>,    // b^d - 1
@@ -63,7 +72,12 @@ pub struct Params<const N: usize> {
     ln_fact: Vec<f64>, // ln(n!) for n <= d
     ln_k: Vec<f64>,    // ln(k) for k <= kmax
     ln_b: f64,
-    offset: DV<N>,   // value of the root: 0, or the experiment's offset
+    root_t: DV<N>,   // t at the root: the experiment's offset (default 0) minus lshift
+    root_hi: DV<N>,  // hi at the root: offset + d * (largest weight up to kmax)
+    zsum: Vec<DV<N>>,
+    zstep: [DV<N>; 2],
+    // the top lane, if t can be negative (a negative weight for 0), else 0
+    negbit: u64,
     zscore: f64,
     // typical-set test: mean and standard deviation of ln E for a node at level
     // k with pp unknown positions, at index k * (d + 1) + pp
@@ -102,43 +116,105 @@ pub struct Prune {
     pub zscore: f64,
     /// experiment: look for n = F(n) + offset instead of n = F(n)
     pub offset: u64,
+    /// experiment: the weight of the digit 0 under the second convention
+    /// (1 by default, that is 0^0 = 1; the first convention keeps 0^0 = 0)
+    pub zero: i64,
+    /// experiment: weights x^(x + shift) for x >= 1 (at least -1)
+    pub shift: i32,
+    /// experiment: weights x! for x >= 1
+    pub factorial: bool,
+    /// experiment: raise each weight w(x), x >= 1, by the least amount that
+    /// makes it congruent to x + r modulo b-1 (after --perturb, if given)
+    pub set_residue: Option<u32>,
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0 };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, set_residue: None };
+
+    /// whether the weights differ from x^x with 0^0 in {0, 1}
+    pub fn custom_weights(&self) -> bool {
+        self.perturb != 0 || self.zero != 1 || self.shift != 0 || self.factorial || self.set_residue.is_some()
+    }
+}
+
+/// The weight w(x) of every digit x >= 1 (index 0 holds 0), and the weight of
+/// the digit 0 under each of the two conventions.
+pub fn weights(b: u32, prune: &Prune) -> (Vec<BigUint>, [i64; 2]) {
+    assert!(prune.shift >= -1, "weights x^(x+t) need t >= -1");
+    let mut w: Vec<BigUint> = (0..b)
+        .map(|j| match j {
+            0 => BigUint::ZERO,
+            _ if prune.factorial => (1..=j).map(BigUint::from).product(),
+            _ => BigUint::from(j).pow((j as i64 + prune.shift as i64) as u32),
+        })
+        .collect();
+    if prune.perturb != 0 {
+        for j in 2..b as usize {
+            let room: BigUint = &w[j] / 4u32 + 1u32;
+            let mut state = prune.perturb ^ ((b as u64) << 32) ^ (j as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15);
+            let limbs: Vec<u32> = (0..room.bits() / 32 + 2)
+                .map(|_| {
+                    // splitmix64
+                    state = state.wrapping_add(0x9e37_79b9_7f4a_7c15);
+                    let mut z = state;
+                    z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
+                    z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
+                    (z ^ (z >> 31)) as u32
+                })
+                .collect();
+            let mut delta = BigUint::from_slice(&limbs) % &room;
+            if prune.keep_residues {
+                let step = BigUint::from(2 * (b - 1));
+                delta = &delta / &step * &step;
+            }
+            w[j] += delta;
+        }
+    }
+    if let Some(r) = prune.set_residue {
+        let m = BigUint::from(b - 1);
+        for j in 1..b as usize {
+            let want = BigUint::from(j as u64 + r as u64) % &m;
+            let have = &w[j] % &m;
+            w[j] += (&m + want - have) % &m;
+        }
+    }
+    (w, [0, prune.zero])
+}
+
+/// The largest number of digits a solution can have: d digits need
+/// d * max w + offset >= b^(d-1).
+pub fn max_len(b: u32, prune: &Prune) -> u32 {
+    let (w, zw) = weights(b, prune);
+    let top = w.iter().max().unwrap().clone().max(BigUint::from(zw[1].max(0) as u64));
+    let bb = BigUint::from(b);
+    (1..=64u32).take_while(|&d| &top * d + prune.offset >= bb.pow(d - 1)).last().unwrap()
 }
 
 impl<const N: usize> Params<N> {
     pub fn new(b: u32, d: u32, prune: Prune) -> Self {
-        assert!(d >= 2 && d + 2 <= 32 * N as u32);
         let bb = BigUint::from(b);
-        // weights used for upper bounds: a zero is worth at most 1
-        let mut w_hi: Vec<BigUint> = (0..b).map(|j| if j == 0 { BigUint::from(1u32) } else { BigUint::from(j).pow(j) }).collect();
-        if prune.perturb != 0 {
-            for j in 2..b as usize {
-                let room: BigUint = &w_hi[j] / 4u32 + 1u32;
-                let mut state = prune.perturb ^ ((b as u64) << 32) ^ (j as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15);
-                let limbs: Vec<u32> = (0..room.bits() / 32 + 2)
-                    .map(|_| {
-                        // splitmix64
-                        state = state.wrapping_add(0x9e37_79b9_7f4a_7c15);
-                        let mut z = state;
-                        z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
-                        z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
-                        (z ^ (z >> 31)) as u32
-                    })
-                    .collect();
-                let mut delta = BigUint::from_slice(&limbs) % &room;
-                if prune.keep_residues {
-                    let step = BigUint::from(2 * (b - 1));
-                    delta = &delta / &step * &step;
-                }
-                w_hi[j] += delta;
-            }
-        }
+        let (wt, zw) = weights(b, &prune);
+        // A negative weight for 0 makes the sum smaller than t: the root
+        // starts at -lshift, and the leaf adds lshift back.
+        let lshift = (-zw[0].min(zw[1])).max(0) as u64 * d as u64;
+        // a negative t needs a free top lane to be told apart from a large one
+        assert!(d >= 2 && d + 2 + (lshift > 0) as u32 <= 32 * N as u32);
+        // weights used for upper bounds: a zero is worth at most max(0, zero)
+        let mut w_hi = wt.clone();
+        w_hi[0] = BigUint::from(zw[0].max(zw[1]) as u64);
+        // wmax[j] = max of w_hi[0..=j], the most a slot holding a digit <= j
+        // can add; it equals w_hi[j] when the weights increase
+        let wmax: Vec<BigUint> = w_hi.iter().scan(BigUint::ZERO, |m, v| {
+            *m = m.clone().max(v.clone());
+            Some(m.clone())
+        }).collect();
         let limit = bb.pow(d);
         let kmax = (1..b as usize).filter(|&j| w_hi[j] < limit).max().unwrap();
         let lanes = |x: &BigUint| DV::<N>::from_bytes(&big_to_lanes(x, b));
+        let modulus = bb.pow(32 * N as u32);
+        // the value v - u modulo b^(32 N), for signed u and v
+        let modv = |v: &BigUint, u: &BigUint| lanes(&((&modulus + v % &modulus - u % &modulus) % &modulus));
+        let signed = |x: i64| if x >= 0 { modv(&BigUint::from(x as u64), &BigUint::ZERO) } else { modv(&BigUint::ZERO, &BigUint::from(x.unsigned_abs())) };
         let mut tw = vec![];
         // digits above kmax never appear, and their weights need more lanes
         for j in 0..=kmax {
@@ -147,20 +223,24 @@ impl<const N: usize> Params<N> {
             }
         }
         let w = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&w_hi[j]) }).collect();
-        let modulus = bb.pow(32 * N as u32);
         let mut drop = vec![];
         for k in 0..=kmax {
             for m in 0..=d {
-                drop.push(if k >= 1 { lanes(&((&modulus - (&w_hi[k] - &w_hi[k - 1]) * m % &modulus) % &modulus)) } else { DV::zero() });
+                drop.push(if k >= 1 { modv(&BigUint::ZERO, &((&wmax[k] - &wmax[k - 1]) * m)) } else { DV::zero() });
             }
         }
         let mut shift = vec![];
         for k in 0..=kmax {
             for x in 0..=kmax {
-                shift.push(if k >= 1 && x < k { lanes(&((&modulus - &w_hi[k - 1] + &w_hi[x]) % &modulus)) } else { DV::zero() });
+                shift.push(if k >= 1 && x < k { modv(&w_hi[x], &wmax[k - 1]) } else { DV::zero() });
             }
         }
-        let dhi = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { lanes(&(&w_hi[j] - &w_hi[j - 1])) }).collect();
+        let dhi = (0..=kmax).map(|j| if j == 0 { DV::zero() } else { modv(&w_hi[j], &wmax[j - 1]) }).collect();
+        // leaf: zsum[mode * (d + 1) + c] = lshift + c * (weight of 0), and
+        // zstep[mode] = w(1) - (weight of 0), the change when a 0 becomes a 1
+        let w1 = i64::try_from(&wt[1]).expect("w(1) too large");
+        let zsum = (0..2).flat_map(|m| (0..=d as i64).map(move |c| lshift as i64 + c * zw[m])).map(signed).collect();
+        let zstep = [signed(w1 - zw[0]), signed(w1 - zw[1])];
         // the number of digits >= k in a random d-digit string (leading digit
         // nonzero) has this mean and variance
         let (mut band_lo, mut band_hi) = (vec![0; kmax + 1], vec![d; kmax + 1]);
@@ -227,7 +307,11 @@ impl<const N: usize> Params<N> {
             }).collect(),
             ln_k: (0..=kmax).map(|k| (k as f64).ln()).collect(),
             ln_b: (b as f64).ln(),
-            offset: lanes(&BigUint::from(prune.offset)),
+            root_t: modv(&BigUint::from(prune.offset), &BigUint::from(lshift)),
+            root_hi: lanes(&(&wmax[kmax] * d + prune.offset)),
+            zsum,
+            zstep,
+            negbit: if lshift > 0 { 1u64 << (32 * N - 1) } else { 0 },
             zscore: prune.zscore,
             lik_mean,
             lik_sd,
@@ -280,6 +364,7 @@ impl<const N: usize> Params<N> {
         true
     }
 
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     #[inline(always)]
     fn mul_w(&self, j: usize, m: u32) -> &DV<N> {
         unsafe { self.tw.get_unchecked(j * (self.d as usize + 1) + m as usize) }
@@ -295,7 +380,8 @@ impl<const N: usize> Params<N> {
     // lo clipped to b^(d-1); its lanes >= pp hold the known leading digits
     #[inline(always)]
     fn clip_lo(&self, t: &DV<N>) -> DV<N> {
-        if t.nonzero_mask() & !(self.dmask >> 1) == 0 { self.pow_lo } else { *t }
+        let nz = t.nonzero_mask();
+        if nz & !(self.dmask >> 1) == 0 || nz & self.negbit != 0 { self.pow_lo } else { *t }
     }
 }
 
@@ -341,7 +427,7 @@ fn first_digit_ok<const N: usize>(p: &Params<N>, lo: &DV<N>, hi: &DV<N>, pp: u32
 #[derive(Clone, Copy)]
 struct Node<const N: usize> {
     t: DV<N>,      // sum over decided non-zero digits and forced lower digits
-    hi: DV<N>,     // t + z + rf * w[k] for a node that decides c_k (z: known zeros)
+    hi: DV<N>,     // t + z w[0] + rf * W[k] for a node that decides c_k (z: known zeros)
     pp: u32,       // known leading digits occupy lanes [pp, d)
     rf: u32,       // digit slots not yet accounted for
     m: u32,        // number of decided digits, all >= k
@@ -390,7 +476,7 @@ impl<const N: usize> Search<N> {
         Search {
             params: {
                 use rayon::prelude::*;
-                let ds: Vec<u32> = (min_digits.max(2)..=b.min(max_digits)).rev().collect();
+                let ds: Vec<u32> = (min_digits.max(2)..=max_len(b, &prune).min(max_digits)).rev().collect();
                 ds.into_par_iter().map(|d| Params::new(b, d, prune)).collect()
             },
             par_depth,
@@ -399,7 +485,9 @@ impl<const N: usize> Search<N> {
                 || prune.deficit.is_finite()
                 || prune.epsilon > 0.0
                 || prune.ratio > 0.0
-                || prune.zscore.is_finite(),
+                || prune.zscore.is_finite()
+                // the generic path also handles a negative t
+                || prune.zero < 0,
             found: Mutex::new(vec![]),
             // slot 0 serves threads outside the pool
             stats: (0..=rayon::current_num_threads()).map(|_| Stats::default()).collect(),
@@ -438,7 +526,7 @@ impl<const N: usize> Search<N> {
         let mut out = vec![];
         let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
-            let root = Node { t: p.offset, hi: p.mul_w(p.kmax, p.d).add(&p.offset, &p.base), pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let root = Node { t: p.root_t, hi: p.root_hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -518,7 +606,10 @@ impl<const N: usize> Search<N> {
                     continue;
                 }
             }
-            let nlo = te.nonzero_mask();
+            let mut nlo = te.nonzero_mask();
+            if X && nlo & p.negbit != 0 {
+                nlo = 0; // lo < 0: clip it to b^(d-1)
+            }
             if nlo & !dm != 0 {
                 break; // lo >= b^d, and it only grows with e
             }
@@ -601,7 +692,10 @@ impl<const N: usize> Search<N> {
                 }
                 c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
             }
-            let (n1, n2) = (c.t.nonzero_mask(), c.hi.nonzero_mask());
+            let (mut n1, n2) = (c.t.nonzero_mask(), c.hi.nonzero_mask());
+            if X && n1 & p.negbit != 0 {
+                n1 = 0;
+            }
             if n1 & !dm != 0 || n2 & top == 0 {
                 return false;
             }
@@ -612,7 +706,8 @@ impl<const N: usize> Search<N> {
 
     // All digits >= 2 are decided; the free slots hold ones and zeros. With
     // c_1 = occ[1] + e ones and c_0 = occ[0] + rf - e zeros the sum is
-    // t + e (0^0 = 0) or t + e + c_0 (0^0 = 1). Check every candidate exactly.
+    // t + e w(1) + c_0 w(0), with w(0) = 0 for convention 0 and 1 (or the
+    // value of --zero) for convention 1. Check every candidate exactly.
     fn leaf(&self, p: &Params<N>, n: &Node<N>, cnt: &mut Hist) {
         let d = p.d as usize;
         let known = p.known(n.pp);
@@ -638,14 +733,14 @@ impl<const N: usize> Search<N> {
                 self.found.lock().unwrap().push((mode, p.d, x));
             }
         };
-        // 0^0 = 1: every free slot is worth 1 whatever it holds
-        let one = p.mul_w(0, 1);
-        let s1 = n.t.add(p.mul_w(0, o0 + n.rf), &p.base);
-        let mut s0 = n.t;
+        let c0 = (o0 + n.rf) as usize;
+        let mut s0 = n.t.add(unsafe { p.zsum.get_unchecked(c0) }, &p.base);
+        let mut s1 = n.t.add(unsafe { p.zsum.get_unchecked(d + 1 + c0) }, &p.base);
         for e in 0..=n.rf {
             check(1, s1, e, cnt);
             check(0, s0, e, cnt);
-            s0 = s0.add(one, &p.base);
+            s0 = s0.add(&p.zstep[0], &p.base);
+            s1 = s1.add(&p.zstep[1], &p.base);
         }
         cnt[0] = 0;
         cnt[1] = 0;

@@ -95,10 +95,28 @@ skipped subtrees. Only `--ratio` and `--zscore` add to this number.
 all 112 solutions in bases 10 to 38, and misses 1 to 3% of model solutions in
 every base from 30 to 300. `docs/library/10-limits.md` explains the rule.
 
-Two options exist for experiments on the model. `--perturb <seed>` adds a
-random amount of up to a quarter to each weight `x^x`. `--keep-residues`
-rounds that amount to a multiple of `2(b-1)`. With `--perturb` the program
-does not verify its results, because they are not Munchausen numbers.
+### Other weights
+
+These options replace the weight `x^x` for experiments on the model. The
+program verifies every result with the same weights in arbitrary precision.
+
+| option | weights |
+|---|---|
+| `--zero <m>` | the digit 0 weighs `m` under the second convention (mode 1); mode 0 keeps 0 |
+| `--shift <t>` | `x^(x+t)` for `x >= 1`, with `t >= -1` |
+| `--factorial` | `x!` for `x >= 1` |
+| `--perturb <seed>` | each weight `w(x)`, `x >= 2`, plus a pseudo-random amount below `w(x)/4` |
+| `--keep-residues` | with `--perturb`: the amount is a multiple of `2(b-1)` |
+| `--set-residue <r>` | each weight `w(x)`, `x >= 1`, raised by less than `b-1` to make it `x + r` modulo `b-1`, after `--perturb` |
+
+The search needs only weights that are at least 0. It bounds the free digits
+below `k` by the largest weight among the digits up to `k-1`, so the weights
+need not increase. A negative `m` lowers the root of the tree by `|m| d`.
+Then the program runs the generic path that also serves the inexact rules,
+and it needs one more lane per vector. The program searches up to the
+largest length `d` with `d * (largest weight) >= b^(d-1)`. That is `b` for
+`x^x`, about `b + t` for `x^(x+t)` and about `b - b / ln b` for `x!`. The
+GPU path supports only the true weights.
 
 ## Speed
 
@@ -199,7 +217,11 @@ cargo test --release
 
 The tests compare `search` with `brute` for bases 2 to 9 and with `reference`
 for bases 10 to 22. They test both widths of digit vectors. They also compare
-`port` with `reference` for bases 2 to 13. The tests take about 90 seconds.
+`port` with `reference` for bases 2 to 13. For 24 weight options (`--zero`
+from -3 to 7, `--shift` from -1 to 3, `--factorial`, `--perturb` with
+`--keep-residues` or `--set-residue`), a test compares `search` with a brute
+force over all digit multisets in bases 2 to 8. Another test checks the weight
+tables. The tests take about 90 seconds.
 
 ## Source files
 

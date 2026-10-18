@@ -191,6 +191,25 @@ the bottom of the tree. So one tree serves both conventions. The leaves check
 each convention exactly. A combined run visits 19,362,129 nodes for base 28,
 and a run for one convention visited 19,361,945.
 
+### Other weights
+
+`fast search` also accepts other weights for experiments: `--zero`,
+`--shift`, `--factorial`, `--perturb`, `--keep-residues` and
+`--set-residue` (`fast/README.md`). Only three parts of the search use the
+weights:
+
+- `hi` bounds a free position below `k` by `W(k-1)`, the largest weight among
+  the digits `0` to `k-1`, and a known zero by the larger of its two weights.
+  For `x^x`, `W(k-1) = (k-1)^(k-1)`. The rule holds for any weights at least
+  0, increasing or not.
+- The leaf computes `t + e w(1) + c_0 w(0)` for each convention.
+- The lengths `d` run up to the largest `d` with `d * max w >= b^(d-1)`.
+
+A negative weight `m` for 0 makes sums smaller than `t`. The root then
+starts at `t = -|m| d`, which the vector stores modulo `b^(32N)`. A test of
+the top lane tells a negative `t` from a large one. This test runs only on
+the generic path of the inexact rules, so the exact search is unchanged.
+
 ### Example: 3435 in base 10
 
 This is the path to `3435` in the search for `d = 4`. The largest usable digit

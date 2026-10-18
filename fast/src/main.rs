@@ -6,7 +6,7 @@ mod search;
 #[cfg(feature = "gpu")]
 mod vk;
 
-use num_bigint::BigUint;
+use num_bigint::{BigInt, BigUint};
 use std::time::Instant;
 
 const USAGE: &str = "\
@@ -40,11 +40,18 @@ options:
                           skipped solutions is reported
   --ratio <r>             (search, inexact) skip a child whose expected number of
                           solutions is below r times its parent's
-  --perturb <seed>        (experiment) replace each weight x^x by x^x plus a
-                          pseudo-random amount below x^x/4; output is not checked
+  --perturb <seed>        (experiment) replace each weight w(x), x >= 2, by w(x)
+                          plus a pseudo-random amount below w(x)/4
   --keep-residues         (experiment) with --perturb, keep the weights modulo 2(b-1)
   --offset <D>            (experiment) find the numbers n with n = F(n) + D instead;
                           output is not checked
+  --zero <m>              (experiment) weight of the digit 0 in the second
+                          convention (default 1); the first keeps 0^0 = 0
+  --shift <t>             (experiment) weights x^(x+t) for x >= 1, t >= -1
+  --factorial             (experiment) weights x! for x >= 1
+  --set-residue <r>       (experiment) raise each weight w(x), x >= 1, by the
+                          least amount that makes it x + r modulo b-1; it acts
+                          after --perturb
   --zscore <z>            (search, inexact) skip a node whose expected number of
                           solutions is more than z standard deviations below its
                           mean for a random suffix (typical-set test)
@@ -137,6 +144,10 @@ fn parse_args() -> Opts {
             "--perturb" => prune.perturb = val().parse().unwrap_or_else(|_| die("bad seed")),
             "--keep-residues" => prune.keep_residues = true,
             "--offset" => prune.offset = val().parse().unwrap_or_else(|_| die("bad offset")),
+            "--zero" => prune.zero = val().parse().unwrap_or_else(|_| die("bad weight for 0")),
+            "--shift" => prune.shift = val().parse().ok().filter(|&t| t >= -1).unwrap_or_else(|| die("bad shift: use an integer t >= -1")),
+            "--factorial" => prune.factorial = true,
+            "--set-residue" => prune.set_residue = Some(val().parse().unwrap_or_else(|_| die("bad residue"))),
             "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
             "--progress" => progress = true,
             "--gpu" => gpu = true,
@@ -157,8 +168,11 @@ fn parse_args() -> Opts {
     if b0 < 2 || b1 < b0 {
         die("bases must satisfy 2 <= first <= last");
     }
-    if gpu && (journal.is_some() || prune.offset != 0 || prune.perturb != 0) {
-        die("--gpu works without --journal, --offset and --perturb");
+    if gpu && (journal.is_some() || prune.offset != 0 || prune.custom_weights()) {
+        die("--gpu works only with the true weights, without --journal and --offset");
+    }
+    if prune.shift != 0 && prune.factorial {
+        die("--shift and --factorial exclude each other");
     }
     if gpu && !cfg!(feature = "gpu") {
         die("--gpu needs a build with --features gpu");
@@ -186,8 +200,9 @@ fn from_u128(v: Vec<u128>, b: u32) -> Vec<Vec<u32>> {
 }
 
 fn run_search(b: u32, o: &Opts) -> Found {
-    // the widest number searched has min(b, max_digits) digits, plus two lanes for carries
-    match b.min(o.max_digits) {
+    // the widest number searched has min(max_len, max_digits) digits, plus two
+    // lanes for carries, and one more lane when t can be negative
+    match search::max_len(b, &o.prune).min(o.max_digits) + (o.prune.zero < 0) as u32 {
         0..=30 => run_search_n::<1>(b, o),
         31..=62 => run_search_n::<2>(b, o),
         _ => {
@@ -202,8 +217,15 @@ fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
 }
 
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
-    // one-digit numbers: x^x == x only for x = 1, and x = 0 when 0^0 = 0
-    let mut out: Found = if o.min_digits <= 1 && o.prune.offset == 0 { [vec![vec![0], vec![1]], vec![vec![1]]] } else { [vec![], vec![]] };
+    // one-digit numbers: w(x) == x, which for x^x holds for x = 1, and for
+    // x = 0 when 0^0 = 0
+    let mut out: Found = [vec![], vec![]];
+    if o.min_digits <= 1 && o.prune.offset == 0 {
+        let (w, zw) = search::weights(b, &o.prune);
+        for mode in 0..2 {
+            out[mode].extend((0..b).filter(|&x| if x == 0 { zw[mode] == 0 } else { w[x as usize] == BigUint::from(x) }).map(|x| vec![x]));
+        }
+    }
     let t0 = Instant::now();
     let mut sr = search::Search::<N>::new(b, o.min_digits, o.max_digits, o.par_depth, o.prune);
     let t1 = Instant::now();
@@ -292,13 +314,15 @@ fn value(digits: &[u32], b: u32) -> BigUint {
     digits.iter().fold(BigUint::ZERO, |acc, &x| acc * b + x)
 }
 
-// independent check with arbitrary precision arithmetic
-fn verify(digits: &[u32], b: u32, mode: u32) -> bool {
-    let sum: BigUint = digits
+// independent check with arbitrary precision arithmetic: n = F(n) + offset,
+// with the weights of the experiment (x^x by default)
+fn verify(digits: &[u32], b: u32, mode: u32, prune: &search::Prune) -> bool {
+    let (w, zw) = search::weights(b, prune);
+    let sum: BigInt = digits
         .iter()
-        .map(|&x| if x == 0 { BigUint::from(mode) } else { BigUint::from(x).pow(x) })
+        .map(|&x| if x == 0 { BigInt::from(zw[mode as usize]) } else { BigInt::from(w[x as usize].clone()) })
         .sum();
-    (digits.len() == 1 || digits[0] != 0) && sum == value(digits, b)
+    (digits.len() == 1 || digits[0] != 0) && sum + BigInt::from(prune.offset) == BigInt::from(value(digits, b))
 }
 
 fn tuple(v: &[u32]) -> String {
@@ -340,8 +364,7 @@ fn main() {
             let res = &mut res[mode as usize];
             res.sort_by(|x, y| x.len().cmp(&y.len()).then(x.cmp(y)));
             for r in res.iter() {
-                // perturbed weights are an experiment; their solutions are not Munchausen numbers
-                assert!(o.prune.perturb != 0 || o.prune.offset != 0 || verify(r, b, mode), "base {b}: {} is not a Munchausen number", tuple(r));
+                assert!(verify(r, b, mode, &o.prune), "base {b}: {} is not a Munchausen number", tuple(r));
             }
             let strs: Vec<String> = res.iter().map(|r| tuple(r)).collect();
             println!("{}:{}:{}: {}", b, mode, res.len(), strs.join(", "));
@@ -429,6 +452,107 @@ mod tests {
     fn gpu_matches_cpu() {
         check_gpu::<1>(2..=26);
         check_gpu::<2>(2..=24);
+    }
+
+    // every solution for the weights of `prune`, by trying every digit multiset
+    fn brute_multisets(b: u32, prune: &search::Prune) -> Found {
+        let (w, zw) = search::weights(b, prune);
+        let mut out: Found = [vec![], vec![]];
+        fn rec(b: u32, x: u32, left: u32, cnt: &mut Vec<u32>, w: &[BigUint], zw: [i64; 2], offset: u64, out: &mut Found) {
+            if x == 0 {
+                cnt[0] = left;
+                for mode in 0..2 {
+                    let mut s = BigInt::from(offset) + BigInt::from(zw[mode]) * cnt[0];
+                    for y in 1..b as usize {
+                        s += BigInt::from(w[y].clone()) * cnt[y];
+                    }
+                    let Some(s) = s.to_biguint() else { continue };
+                    let digits: Vec<u32> = s.to_radix_be(b).into_iter().map(u32::from).collect();
+                    let mut h = vec![0u32; b as usize];
+                    digits.iter().for_each(|&v| h[v as usize] += 1);
+                    if h == *cnt {
+                        out[mode].push(digits);
+                    }
+                }
+                return;
+            }
+            for c in 0..=left {
+                cnt[x as usize] = c;
+                rec(b, x - 1, left - c, cnt, w, zw, offset, out);
+            }
+            cnt[x as usize] = 0;
+        }
+        for d in 1..=search::max_len(b, prune) {
+            rec(b, b - 1, d, &mut vec![0; b as usize], &w, zw, prune.offset, &mut out);
+        }
+        out
+    }
+
+    fn weight_options() -> Vec<search::Prune> {
+        let n = search::Prune::NONE;
+        let mut v = vec![n];
+        v.extend([-3, -2, -1, 0, 2, 3, 7].map(|m| search::Prune { zero: m, ..n }));
+        v.extend([-1, 1, 2, 3].map(|t| search::Prune { shift: t, ..n }));
+        v.push(search::Prune { factorial: true, ..n });
+        v.push(search::Prune { factorial: true, zero: 2, ..n });
+        v.push(search::Prune { shift: 1, zero: -1, offset: 5, ..n });
+        v.push(search::Prune { perturb: 3, keep_residues: true, ..n });
+        for r in 0..3 {
+            v.push(search::Prune { set_residue: Some(r), ..n });
+            for seed in 1..3 {
+                v.push(search::Prune { perturb: seed, set_residue: Some(r), ..n });
+            }
+        }
+        v
+    }
+
+    #[test]
+    fn weight_tables_are_right() {
+        for b in 2..=12u32 {
+            let n = search::Prune::NONE;
+            let big = |x: u32| BigUint::from(x);
+            for t in -1..=3 {
+                let (w, zw) = search::weights(b, &search::Prune { shift: t, ..n });
+                assert_eq!(zw, [0, 1]);
+                for x in 1..b {
+                    assert_eq!(w[x as usize], big(x).pow((x as i32 + t) as u32), "base {b} shift {t}");
+                }
+            }
+            let (w, _) = search::weights(b, &search::Prune { factorial: true, ..n });
+            for x in 1..b {
+                assert_eq!(w[x as usize], (1..=x).map(big).product::<BigUint>(), "base {b} factorial");
+            }
+            for r in 0..4 {
+                for seed in 0..3 {
+                    let (w, _) = search::weights(b, &search::Prune { perturb: seed, set_residue: Some(r), ..n });
+                    for x in 1..b {
+                        let (w, x0) = (&w[x as usize], big(x).pow(x));
+                        assert_eq!(w % (b - 1), big((x + r) % (b - 1)), "base {b} residue {r} seed {seed}");
+                        // the perturbation adds below x^x / 4 + 1, the residue below b - 1
+                        assert!(*w >= x0 && *w < &x0 + &x0 / 4u32 + b, "base {b} residue {r} seed {seed}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn weight_options_match_brute_force() {
+        for prune in weight_options() {
+            for b in 2..=8 {
+                let o = Opts { prune, ..test_opts() };
+                let want = brute_multisets(b, &prune).map(sorted);
+                let got = run_search_n::<1>(b, &o).map(sorted);
+                let what = format!("base {b}: zero {} shift {} factorial {} perturb {} residue {:?} offset {}", prune.zero, prune.shift, prune.factorial, prune.perturb, prune.set_residue, prune.offset);
+                assert_eq!(got, want, "{what}");
+                assert_eq!(run_search_n::<2>(b, &o).map(sorted), want, "{what}, N=2");
+                for mode in 0..2 {
+                    for r in &want[mode] {
+                        assert!(verify(r, b, mode as u32, &prune), "{what}");
+                    }
+                }
+            }
+        }
     }
 
     #[test]
