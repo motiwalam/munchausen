@@ -126,24 +126,25 @@ def compare(fs, fm):
         tot[2] += e1
         print(f"| {b} | {min(ds)}-{max(ds)} | {o} | {e0:.2f} | {e1:.2f} | {chi:.1f} on {len(ds)} |")
     print(f"| all | | {tot[0]} | {tot[1]:.2f} | {tot[2]:.2f} | |")
-    # by the residue class of the factor
+    # by the factor refined / basic of the cell, for cells the model can reach
     print()
-    print("| class of (b, d) | cells | observed | basic | refined |")
+    print("| factor refined / basic | cells | observed | basic | refined |")
     print("|---|---:|---:|---:|---:|")
+    bins = [(0, 0.9), (0.9, 1.5), (1.5, 2.5), (2.5, 5), (5, 1e9)]
     groups = {}
     for (b, d), o in obs.items():
-        if (b, d) not in mod:
+        if (b, d) not in mod or mod[b, d][0] < 0.001:
             continue
         basic, ref, se, allzero = mod[b, d]
-        f = ref / basic if basic > 0 else 0
-        key = 'x^d == x mod b-1 for all x' if allzero else ('factor >= 1.5' if f >= 1.5 else ('factor <= 0.67' if f <= 0.67 else 'factor 0.67-1.5'))
+        f = ref / basic
+        key = (1, 'x^d == x mod b-1 for all x') if allzero else (0, next(f"{lo} to {hi}" if hi < 1e9 else f"{lo} and up" for lo, hi in bins if lo <= f < hi))
         g = groups.setdefault(key, [0, 0, 0.0, 0.0])
         g[0] += 1
         g[1] += o
         g[2] += basic
         g[3] += ref
     for key, g in sorted(groups.items()):
-        print(f"| {key} | {g[0]} | {g[1]} | {g[2]:.2f} | {g[3]:.2f} |")
+        print(f"| {key[1]} | {g[0]} | {g[1]} | {g[2]:.2f} | {g[3]:.2f} |")
     # short and long lengths, base parity, and the dispersion of the long cells
     print()
     print("| cells | count | observed | basic | refined | sum (N - E)^2 / E, cells with E >= 0.05 |")

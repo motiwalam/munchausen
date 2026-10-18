@@ -160,6 +160,7 @@ program verifies every result with the same weights in arbitrary precision.
 | `--perturb <seed>` | each weight `w(x)`, `x >= 2`, plus a pseudo-random amount below `w(x)/4` |
 | `--keep-residues` | with `--perturb`: the amount is a multiple of `2(b-1)` |
 | `--set-residue <r>` | each weight `w(x)`, `x >= 1`, raised by less than `b-1` to make it `x + r` modulo `b-1`, after `--perturb` |
+| `--power <p>` | `x^p` for `x >= 1`; with `--zero 0 --min-digits p --max-digits p` the search finds the `p`-digit narcissistic numbers |
 
 The search needs only weights that are at least 0. It bounds the free digits
 below `k` by the largest weight among the digits up to `k-1`, so the weights
@@ -313,6 +314,24 @@ chain of dependent instructions. Values that are the same in all lanes
 still take a full 32-lane instruction. With one subgroup per vector engine,
 base 30 takes 4.2 s; with eight it takes 1.19 s, only 3.6 times faster.
 Subgroups of 16 lanes with two digits each were slower.
+
+## kdigit: short solutions in all bases
+
+`kdigit <k> <M>` finds every `k`-digit solution, in every base, whose
+digits are at most `M`. It is complete for the bases `b` with
+`b^k <= (M+1)^(M+1)`. It discards the strings whose polynomial `Q_s` has
+no root modulo some modulus, and solves the rest exactly
+(`../docs/library/11-local.md`, section 11.5, and
+`../docs/library/drafts/round3-computation.md`, section 47).
+
+| option | meaning |
+|---|---|
+| `--survivors` | print the strings that pass the test instead of the solutions |
+| `--offset <D>` | find the strings with `P_s(b) - F(s) = D` in place of 0 |
+| `--moduli <q1,q2,...>` | the moduli of the test, each from 2 to 128, in the order they are tried (default 32, 27, 25, 49 and the primes 11 to 127) |
+| `--stats` | print, per modulus, how many candidates it tests and removes |
+
+The thread count comes from `RAYON_NUM_THREADS`.
 
 ## Test
 
