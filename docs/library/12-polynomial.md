@@ -112,6 +112,30 @@ For odd `x`, `(x, 0, 0)` and `(x, 0, 1)` are solutions in base
 `-x^((x-1)/2)` as well as in base `x^((x-1)/2)`. A swap-like solution is
 `(3, 0, 0, 0, 27)` in base `-3^20`: `3 * 3^80 = 27^27`.
 
+Complete lists for small negative bases. `analysis/negabase.py` checks every
+digit multiset in bases -2 to -10 (all lengths). A number with `d` digits in
+base `-b` can be as small as about `b^(d-2)`, so lengths up to `b + 1` occur,
+one more than in a positive base. Nontrivial solutions:
+
+| base | `0^0 = 1` | `0^0 = 0` |
+|---:|---|---|
+| -2 | `(1,1,1)` | `(1,1,0)`, `(1,1,1)` |
+| -3 | none | none |
+| -4 | none | `(1,3,0,2,3)` |
+| -5 | `(1,3,4,3,3)` | `(1,0,3)`, `(1,3,4,3,3)` |
+| -6 | none | none |
+| -7 | `(1,3,1)`, `(1,2,6,6,2,5,1)`, `(1,4,0,1,0,6,5)` | `(1,3,0)`, `(1,3,1)`, `(1,2,6,6,2,5,0)`, `(1,2,6,6,2,5,1)` |
+| -8 | `(7,5,7,6,2,0,3)` | `(4,0,0)`, `(4,0,1)` |
+| -9 | none | none |
+| -10 | `(4,0,5,8,1,9,1,1,1)`, `(5,8,1,1,8,2,4,9,2)`, `(1,9,2,1,7,4,5,8,9,8,9)` | `(4,0,5,8,1,9,4,3,0)`, `(4,0,5,8,1,9,4,3,1)`, `(5,8,1,1,8,2,4,9,2)`, `(1,9,2,1,7,4,5,8,9,8,9)` |
+
+All lengths are odd, as Proposition 12.2 requires. The first base -10 example
+is 404201091:
+`4 * 10^8 + 5 * 10^6 - 8 * 10^5 + 10^4 - 9 * 10^3 + 100 - 10 + 1 = 404201091`
+and `4^4 + 1 + 5^5 + 8^8 + 1 + 9^9 + 1 + 1 + 1 = 404201091`. The last one has
+11 digits, more than the base. Twins appear under `0^0 = 0` as in section 2.1.
+Bases -3, -6 and -9 have no solution under either convention.
+
 ## 12.4 Roots that are too small to be bases
 
 An integer root `r` with `|r|` at most the largest digit gives a value
