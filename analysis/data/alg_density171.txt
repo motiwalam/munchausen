@@ -1,0 +1,9 @@
+L0 = 20160, 31 primes from 11 to 20161, L = 20160
+after 5 primes (up to 29): density of odd x not excluded = 0.17328
+after 10 primes (up to 61): density of odd x not excluded = 0.02762
+after 15 primes (up to 127): density of odd x not excluded = 0.00422
+after 20 primes (up to 281): density of odd x not excluded = 0.00117
+after 25 primes (up to 631): density of odd x not excluded = 0.00047
+after 30 primes (up to 3361): density of odd x not excluded = 0.00033
+after 31 primes (up to 20161): density of odd x not excluded = 0.00029
+density (all x, even x excluded) <= 0.00015
