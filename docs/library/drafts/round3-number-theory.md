@@ -529,7 +529,9 @@ The bound is sharp for `x = 2^a`, where `Q^(a-2)` is principal. Computed
 holds, with equality in some cases.
 
 Proposition 3.3 (proven). Let `b` be a solution, `C = Q^a B`, and `d` the
-order of the class of `C` in the class group of `R`. Then:
+order of the class of `C` in the class group of `R`. (Parts (b) and (c), and
+Theorem 3.4 below, hold with the same proofs in the maximal order, which the
+computations use.) Then:
 
 - (a) `n [C] = 2 [Q]`, so `d >= t / 2 >= (floor(log2 x) - 2) / 2`;
 - (b) write `n = n0 + d j` with `0 <= n0 < d`. Then
@@ -561,8 +563,10 @@ exponential: `x < 2^(2n+1)` in place of `x < 11 n`. The second gives only
 Why there is no analogue of Proposition 18.4. In chapter 18 the fixed factor
 is trivial, so the linear form has two terms and the explicit generator
 `eps + 1` gives the lower bound `n log z >= mu0 - tau_n`. Here
-`rho` generates `C^(n0) Q^(-2)`, which is never trivial: `Q^2` is not
-principal (Lemma 3.2), and `lam` is a fixed real number of size up to `mu0`.
+`rho` generates `C^(n0) Q^(-2)`, which is never the unit ideal (its norm is
+`x^(n0) / 4`), and `Q^2` itself is not principal (Lemma 3.2). So `lam` is a
+fixed real number of size up to `mu0` that need not lie in
+`Z th + 2 mu0 Z`.
 The form in (b) has three logarithms with coefficients `2k`, `j` and 1.
 Laurent's two-logarithm theorem does not apply, and an inhomogeneous form
 gives no lower bound for `j`: `j th + lam` can be close to a multiple of
@@ -619,9 +623,10 @@ every `n0` with `n0 [C] = 2 [Q]`, and generators `rho`, `eta` in compact
 form. Theorem 3.4 then bounds `j` by `J` (at most `EVEN-J`). The reduction
 lemma of Dujella and Petho (cited: A. Dujella, A. Petho, Quart. J. Math.
 Oxford 49 (1998) 291-306, Lemma 5a) with a convergent `p/q` of
-`th / (2 mu0)`, `q > 6 J`, and `eps = ||q lam/(2 mu0)|| - J ||q th/(2 mu0)|| > 0`
-leaves only `j < log(A q / eps) / log B`, here a handful of exponents, which
-are checked exactly; every odd `n <= 301` is also checked exactly. As a test,
+`th / (2 mu0)`, `q > 6 J`, and `eps_1 = ||q lam/(2 mu0)|| - J ||q th/(2 mu0)|| > 0`
+leaves only `j < log(A_0 q / eps_1) / log B_0`, with
+`A_0 = 2 sqrt(x^2 + 4) x^(-n0/2) / mu0` and `B_0 = x^(d/2)`. Those few
+exponents are checked exactly, and so is every odd `n <= 301`. As a test,
 the same script with `n >= 3` and `x = 2^a` allowed finds the known
 solution `(x, n) = (8, 3)`.
 
@@ -782,7 +787,7 @@ Proof. Even `x` and squares: Lemma 4.2(a). `x = 5^e`: Proposition 4.6 (for
 is pure (Lemma 4.3(d)), so `x < 22,027` by Proposition 4.5, and the sieve
 excludes every `x <= 10^9`.
 
-Theorem 4.8 (proven for x >= 507,211; computed below). Let `x` be odd and
+Theorem 4.8 (proven for `x > 507,211`; computed for smaller `x`). Let `x` be odd and
 prime to 5, and `n >= 5` odd. Then `b (b + x) = x^n + 25` has no pure
 solution.
 
@@ -850,12 +855,18 @@ and use `mu0 > log x > 1`. Then `b' <= (x + 1)/log x + x / log x <= 2 x`.
 
 So for prime `x` the family `(1, x, 2)` would need either a class group with an
 element of order `x` in a field of discriminant about `x^2`, or a principal
-`p` with a regulator of at least about `sqrt(x / log x) / (10 M)`. The class
+`p` with a regulator `mu0 > sqrt(x log x) / (21 M)`. (If `mu0 <= log x`, the
+inequality gives `mu0 > x / (404 M^2)`, which is larger than `log x`; so
+`mu0 > log x` and `2 mu0^2 > x log x / (202 M^2)`.) The class
 number formula makes the first case implausible: with `mu0 > log x`,
 `h(R) mu0` is about `sqrt D L(1, chi) / 2` with `L(1, chi)` of size
 `log x`, so `h(R)` is at most about `x / 2` (heuristic; I did not write out the
 explicit constants). The second case is the generic one. This is the
 obstacle for `c = 3`: the regulator of `Z[theta]` is not bounded by `log x`.
+
+The question suggested the case `3 | x`, where `x^2 + 12` is of
+Richaud-Degert type with the unit `1 + (x/3) theta = theta^2 / 3`. By Lemma
+4.2(b) that case has no solution at all, so it gives no foothold.
 
 For a fixed `x` the method still works, because it only needs `mu0`.
 
