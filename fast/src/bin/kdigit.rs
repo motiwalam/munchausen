@@ -55,6 +55,11 @@ struct Tables {
     zmod: Vec<u8>,
     w: Vec<BigUint>, // x^x, with 0^0 = 1
     offset: BigInt,
+    words: usize, // u64 words in a bit set of the digits 0..=M
+    // xs[(qi * 128 + v) * words ..] = the digits x >= 1 with need = v
+    xs: Vec<u64>,
+    used: Vec<u128>, // the values of need for x >= 1, per modulus
+    full: Vec<u64>,  // the digits 1..=M
 }
 
 fn pow_mod(mut a: u64, mut e: u64, p: u64) -> u64 {
@@ -103,7 +108,19 @@ impl Tables {
             }
         }
         let w = (0..=m).map(|x| if x == 0 { BigUint::one() } else { BigUint::from(x).pow(x as u32) }).collect();
-        Tables { k, m, qs, off, len, qlane, c, need, zmod, w, offset: BigInt::from(offset) }
+        let words = (m + 64) / 64;
+        let mut xs = vec![0u64; qs.len() * 128 * words];
+        let mut used = vec![0u128; qs.len()];
+        let mut full = vec![0u64; words];
+        for x in 1..=m {
+            full[x / 64] |= 1 << (x % 64);
+            for qi in 0..qs.len() {
+                let v = need[qi * (m + 1) + x] as usize;
+                xs[(qi * 128 + v) * words + x / 64] |= 1 << (x % 64);
+                used[qi] |= 1 << v;
+            }
+        }
+        Tables { k, m, qs, off, len, qlane, c, need, zmod, w, offset: BigInt::from(offset), words, xs, used, full }
     }
 
     fn cslice(&self, e: usize, x: usize) -> &[u8] {
@@ -181,13 +198,15 @@ struct Local {
     survivors: u64,
     per_q: Vec<[u64; 3]>,
     cand: Vec<u32>,
+    c1: Vec<u64>,
+    c0: Vec<u64>,
     found: Vec<(u32, BigUint, Vec<usize>)>,
     passed: Vec<(u32, Vec<usize>)>,
 }
 
 impl Local {
     fn new(n: usize) -> Self {
-        Local { strings: 0, survivors: 0, per_q: vec![[0; 3]; n], cand: vec![], found: vec![], passed: vec![] }
+        Local { strings: 0, survivors: 0, per_q: vec![[0; 3]; n], cand: vec![], c1: vec![], c0: vec![], found: vec![], passed: vec![] }
     }
 
     fn flush(self, out: &Out) {
@@ -205,45 +224,123 @@ impl Local {
     }
 }
 
+// The bit mask of the values of a + cy modulo the modulus qi, over all r.
+#[inline]
+fn mask_of(t: &Tables, a: &[u8], cy: &[u8], qi: usize) -> u128 {
+    let (o, q) = (t.off[qi], t.qs[qi] as usize);
+    let qb = q as u8;
+    let (aq, cq) = (&a[o..o + q], &cy[o..o + q]);
+    if q <= 64 {
+        let mut m64 = 0u64;
+        for (&av, &cv) in aq.iter().zip(cq) {
+            let v = av.wrapping_add(cv);
+            m64 |= 1u64 << v.min(v.wrapping_sub(qb));
+        }
+        m64 as u128
+    } else {
+        let mut mask = 0u128;
+        for (&av, &cv) in aq.iter().zip(cq) {
+            let v = av.wrapping_add(cv);
+            mask |= 1u128 << v.min(v.wrapping_sub(qb));
+        }
+        mask
+    }
+}
+
+// c &= !(digits whose need is in kill)
+#[inline]
+fn kill_digits(t: &Tables, c: &mut [u64], qi: usize, mut kill: u128) {
+    let wn = t.words;
+    while kill != 0 {
+        let v = kill.trailing_zeros() as usize;
+        kill &= kill - 1;
+        let xv = &t.xs[(qi * 128 + v) * wn..(qi * 128 + v + 1) * wn];
+        for (cw, &xw) in c.iter_mut().zip(xv) {
+            *cw &= !xw;
+        }
+    }
+}
+
+fn popcount(c: &[u64]) -> usize {
+    c.iter().map(|w| w.count_ones() as usize).sum()
+}
+
+// Below this many candidates, the filter tests each one; above it, it
+// removes whole bit sets of digits per value of the mask.
+const SPARSE: usize = 12;
+
 // The last two positions: a holds the prefix part of Q for the digits before
 // the digit y of exponent 1; the last digit x has exponent 0.
 fn last(t: &Tables, s: &mut Vec<usize>, a: &[u8], y: usize, zeros: usize, out: &Out, loc: &mut Local) {
     let m = t.m;
     let zy = zeros + (y == 0) as usize;
     let cy = t.cslice(1, y);
+    loc.strings += (m + 1) as u64;
+    // Dense phase: c1 and c0 hold the digits x >= 1 still alive under
+    // 0^0 = 1 and 0^0 = 0; f1 and f0 say the same for x = 0.
+    let (mut c1, mut c0) = (std::mem::take(&mut loc.c1), std::mem::take(&mut loc.c0));
+    c1.clear();
+    c1.extend_from_slice(&t.full);
+    c0.clear();
+    if zy > 0 {
+        c0.extend_from_slice(&t.full);
+    } else {
+        // without zeros, 0^0 = 0 gives the same equation as 0^0 = 1
+        c0.resize(t.words, 0);
+    }
+    let (mut f1, mut f0) = (true, true);
+    let mut count = popcount(&c1) + popcount(&c0) + 2;
+    let mut qi = 0;
+    while qi < t.qs.len() && count > SPARSE {
+        let q = t.qs[qi] as usize;
+        let mask = mask_of(t, a, cy, qi);
+        let qbits = if q == 128 { !0u128 } else { (1u128 << q) - 1 };
+        kill_digits(t, &mut c1, qi, !mask & t.used[qi]);
+        let zq = t.zmod[qi * (t.k + 1) + zy] as usize;
+        if zy > 0 {
+            // under 0^0 = 0 the digit x needs need(x) - zy in the mask
+            let rot = if zq == 0 { mask } else { ((mask << zq) | (mask >> (q - zq))) & qbits };
+            kill_digits(t, &mut c0, qi, !rot & t.used[qi]);
+        }
+        let n0 = t.need[qi * (m + 1)] as usize;
+        f1 &= mask >> n0 & 1 == 1;
+        let z0 = t.zmod[qi * (t.k + 1) + zy + 1] as usize;
+        f0 &= mask >> ((n0 + q - z0) % q) & 1 == 1;
+        let after = popcount(&c1) + popcount(&c0) + f1 as usize + f0 as usize;
+        let st = &mut loc.per_q[qi];
+        st[0] += 1;
+        st[1] += count as u64;
+        st[2] += (count - after) as u64;
+        count = after;
+        qi += 1;
+    }
+    // Sparse phase: a candidate is x | mode << 16 | zero count << 17.
     let mut cand = std::mem::take(&mut loc.cand);
     cand.clear();
-    for x in 0..=m {
-        // a candidate is x | mode << 16 | zero count << 17
-        let z = zy + (x == 0) as usize;
-        cand.push(x as u32 | 1 << 16 | (z as u32) << 17);
-        if z > 0 {
-            // without zeros, 0^0 = 0 gives the same equation as 0^0 = 1
-            cand.push(x as u32 | (z as u32) << 17);
+    for (c, mode) in [(&c1, 1u32), (&c0, 0u32)] {
+        for (wi, &w) in c.iter().enumerate() {
+            let mut w = w;
+            while w != 0 {
+                let x = wi * 64 + w.trailing_zeros() as usize;
+                w &= w - 1;
+                cand.push(x as u32 | mode << 16 | (zy as u32) << 17);
+            }
         }
     }
-    loc.strings += (m + 1) as u64;
-    for (qi, &q) in t.qs.iter().enumerate() {
+    if f1 {
+        cand.push(1 << 16 | ((zy + 1) as u32) << 17);
+    }
+    if f0 {
+        cand.push(((zy + 1) as u32) << 17);
+    }
+    loc.c1 = c1;
+    loc.c0 = c0;
+    for qi in qi..t.qs.len() {
         if cand.is_empty() {
             break;
         }
-        let o = t.off[qi];
-        let qb = q as u8;
-        let (aq, cq) = (&a[o..o + q as usize], &cy[o..o + q as usize]);
-        let mut mask = 0u128;
-        if q <= 64 {
-            let mut m64 = 0u64;
-            for (&av, &cv) in aq.iter().zip(cq) {
-                let v = av.wrapping_add(cv);
-                m64 |= 1u64 << v.min(v.wrapping_sub(qb));
-            }
-            mask = m64 as u128;
-        } else {
-            for (&av, &cv) in aq.iter().zip(cq) {
-                let v = av.wrapping_add(cv);
-                mask |= 1u128 << v.min(v.wrapping_sub(qb));
-            }
-        }
+        let qb = t.qs[qi] as u8;
+        let mask = mask_of(t, a, cy, qi);
         let need = &t.need[qi * (m + 1)..];
         let zmod = &t.zmod[qi * (t.k + 1)..];
         let before = cand.len();
