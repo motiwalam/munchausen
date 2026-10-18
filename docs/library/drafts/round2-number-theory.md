@@ -17,7 +17,7 @@ Scripts are in `analysis/` with names starting `r2nt_`. Their output is in
 | question | what is now known | status |
 |---|---|---|
 | 32, prime powers | for `x` a prime power, the solutions of `b(b+x) = x^n + 1` with `n >= 2` are `(x, n) = (3,2), (8,2), (3,3), (5,3), (8,3), (64,3), (7,7)` | proven (Theorem 1.8) |
-| 32, general | every other solution with `n >= 4` has `n` odd, `x` not a square, and either `x == 0 (mod 8)` or `x` odd with two distinct prime factors and a "mixed" ideal; then `n < 6.4 * 10^4 d log x`, with `d` the order of an ideal class | proven, computed constant |
+| 32, general | every other solution with `n >= 4` has `n` odd, `x` not a square, and either `x == 0 (mod 8)` or `x` odd with two distinct prime factors and a "mixed" ideal; then `n < 6.4 * 10^4 d log x` when `d < n`, with `d` the order of an ideal class | proven, computed constant |
 | 32, `n = 4, 6` | no solution | proven |
 | 32, small `x` | for odd `x <= 1001`, `(7, 7)` is the only solution with `n >= 4`, for every `n` | computed (Theorem 1.12) |
 | 32, `n = 5` | no solution with `x <= 10^10`; the curve has genus 2 and Jacobian of analytic rank 3, so Chabauty methods do not apply | computed |
