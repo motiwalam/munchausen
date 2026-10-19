@@ -172,7 +172,7 @@ stated.
 | Proposition 16.8 (3 and 5 never exclude; no finite set of primes suffices) | `prop16_8_a`, `prop16_8_b`, `prop16_8_finite` [Local] | formalized |
 | Proposition 16.9 (abc triple) | none | not formalized |
 | Propositions 16.10, 16.11, Theorem 16.12, Corollary 16.13, Theorem 16.14 | none | not formalized (Chebotarev, Galois groups) |
-| Proposition 16.15 (rational roots for `k = 3`) | none | not formalized (Gauss's lemma; possible) |
+| Proposition 16.15 (rational roots for `k = 3`) | `prop16_15`, `prop16_15_quadratic` [Poly] | formalized (`Q_s = (q r - p)(q' r - p')` over `ℤ` with `q q' = s_1`, roots of opposite signs; the proof divides out the root instead of citing Gauss's lemma) |
 | Proposition 16.16 (no twins for `q > 1`) | none | not formalized (needs the AFS number system) |
 | Theorem 16.17 | none | not formalized |
 
