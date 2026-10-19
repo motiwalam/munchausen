@@ -319,7 +319,7 @@ every base `r^p` with `p` prime and `p` not dividing `r` has one.
 
 Theorem 15.9 (proven). For every `a >= 2`, the 2-digit swap `(a, a^a)` is a
 core in a base with a self-paying digit. So infinitely many nonzero cores do.
-If `a` is not a perfect power, then
+Explicitly,
 
     (a^(a+1), 0, ..., 0, a, a^a)    (a + 2 digits)
 
@@ -332,7 +332,9 @@ Proof. The swap of section 2.3 with `k = 1` is `(a, a^a)` in base
 coprime to `r`, so Proposition 15.8 applies. Explicitly, `s = u (a+1)` gives
 the digit `r^s = a^(a+1)`, and `s (r^s - 1) = t (a+1)`, so it is
 self-paying at position `a + 1`. The core occupies positions 0 and 1, and
-position `a + 1 >= 3` is free, so Proposition 2.3 gives the solution.
+position `a + 1 >= 3` is free, so Proposition 2.3 gives the solution. An
+earlier version assumed that `a` is not a perfect power; the proof does not
+need it (the Lean proof `theorem15_9` checks this).
 
 So the literal question has the answer no. The real question is whether the
 swaps are the only infinite source.

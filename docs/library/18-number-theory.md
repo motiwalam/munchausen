@@ -484,8 +484,10 @@ at least 1.
 - So `d = a`. Two copies of `a` weigh `2 a^a >= N`, which allows only
   `c = a` with nothing else: the string `(a, a)`. Otherwise `a` occurs once
   and the other digits `R` have weights adding up to `w(c)`.
-- The largest digit `d'` of `R` is at most `c`. If `d' = c`, the rest of `R`
-  has weight 0, so `R = (c)` and `k = 2`. So for `k >= 3`, `d' < c`.
+- The largest digit `d'` of `R` has `w(d') <= w(c)`. (Not always
+  `d' <= c`: for `c = 0`, `R` can be the digit 1, since `w(1) = w(0)`.) If
+  `w(d') = w(c)`, the rest of `R` has weight 0, so `R` is one digit and
+  `k = 2`. So for `k >= 3`, `w(d') < w(c)`; then `c >= 2`, and `d' < c`.
 - If `c <= 1`, `w(c) = 1` forces `|R| = 1`. If `c = a`, the bound below
   gives `|R| > a` and `|R| <= a` at once. If `2 <= c < a`:
   `|R| >= c^c / (c-1)^(c-1) > c`, and `(a+1)^|R| <= N < 2 a^a` gives

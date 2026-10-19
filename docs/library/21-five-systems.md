@@ -650,9 +650,12 @@ Proposition 21.15 (self-paying digits, proven). A digit `a` at position `i`
 pays for itself when `a * i! = a^a`, that is `a^(a-1) = i!`. The only cases
 are `(a, i) = (1, 1)` and `(2, 2)`.
 
-Proof. For `i >= 3`, Bertrand's postulate gives a prime `p` with
-`i/2 < p <= i`, which divides `i!` exactly once. Then `p | a`, and
-`a^(a-1)` holds `p` at least `a - 1 >= p - 1 >= 2` times. For `i <= 2`,
+Proof. For `i >= 3`, take a prime `p >= 3` with `i/2 < p <= i`: for
+`i = 3` take `p = 3`, and for `i >= 4` Bertrand's postulate gives a prime in
+that range, and every prime above `i/2 >= 2` is at least 3. It divides `i!`
+exactly once. Then `p | a`, and `a^(a-1)` holds `p` at least
+`a - 1 >= p - 1 >= 2` times. (An earlier version allowed `p = 2` for
+`i = 3`, where the last step fails; the Lean formalization found this.) For `i <= 2`,
 `i!` is 1 or 2, so `a = 1` or `a = 2`.
 
 Under `0^0 = 0` the solutions 1 = `(1)`, 4 = `(2,0)` and 5 = `(2,1)` are the
