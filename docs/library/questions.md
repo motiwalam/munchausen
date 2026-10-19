@@ -296,11 +296,11 @@ their motivation and a first attack, are in
 72. (Answered in chapter 26: 284 against 297 to 304; the worlds disagree, driven by odd-base factorions and Pisot bases.) A pooled test of `D = 0` against the near-solutions.
 73. (Answered in chapter 26: the swap lemma; design effect 1.5 to 3.5; no verdict about `D = 0` changes.) Near-solutions at different offsets are not independent.
 74. (Partly answered in chapter 26: a class mod `2x` in even `x`; the excess shrinks to P about 0.05.) Why the Pisot bases exceed their near-solutions.
-75. The entropy bound for other orders.
-76. Certificates of emptiness in an oracle model.
-77. A constraint solver as a search that is not a tree.
-78. The law of subtree sizes.
-79. Bottom-up information in bases with a small radical.
+75. (Answered in chapter 27: every order needs at least the top-down entropy, so 1.638^b holds for all orders (Theorem 27.2).) The entropy bound for other orders.
+76. (Answered in chapter 27 in the oracle model: the exact tree is optimal up to a factor about linear in `b`, up to base 21.) Certificates of emptiness in an oracle model.
+77. (Answered in chapter 27: CP-SAT and CaDiCaL grow 1.95 to 2.3 per base, worse than the engine.) A constraint solver as a search that is not a tree.
+78. (Answered in chapter 27: unit sizes are explained by their type; deeper units balance shards; `--unit-stats`.) The law of subtree sizes.
+79. (Answered in chapter 27: no; bottom digits make the tree 2.5 to 13 times larger in bases 16 and 32.) Bottom-up information in bases with a small radical.
 80. Assumption R when `b - 1` is prime.
 81. The length shares as a theorem in the model.
 82. Is `k(B)` always the number of factors of `B - 1`?

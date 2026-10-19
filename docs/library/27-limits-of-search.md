@@ -1,13 +1,13 @@
-# Round 5: limits of search
+# 27. Limits of search
 
-DRAFT. This draft answers questions 77, 75, 76, 79 and 78 of
+This chapter answers questions 77, 75, 76, 79 and 78 of
 `questions-round5.md` (workload 2, directions A2 and A3). It asks whether
 any method can beat the top-down tree of `fast`, and how the work of an
 exact run is spread over its work units.
 
 Each statement carries one mark:
 
-- proven: a proof is in this draft;
+- proven: a proof is in this chapter;
 - computed: an exact enumeration or a measurement, with its range;
 - heuristic: an estimate with a stated assumption, usually the model of
   chapter 5 in the form of section 10.1.
@@ -24,16 +24,16 @@ leave the default output unchanged:
 | section | question | result | status |
 |---|---|---|---|
 | 1 | 77, a constraint solver | CP-SAT and CaDiCaL list all solutions with `b - 1` digits correctly for bases 8 to 20 and 8 to 18. Their conflicts grow 1.95 and 1.96 per base, as fast as the engine's nodes (1.89), at 2 to 5 (CP-SAT, with the interval made visible) and 57 to 153 (CaDiCaL) conflicts per engine node, and `10^4` to `10^5` times the engine's time. Without the interval, CP-SAT grows 4 times per base. Learned clauses do not cut across branches. | computed; heuristic (why) |
-| 2 | 75, other orders | In the model, every order of revealing counts, fixed or chosen node by node, has at each level `m` at least the entropy of the top-down order at level `m` (Theorem 2.2). So the floor `1.638^b` of Theorem 10.1 covers all of them, and top-down is the only order that reaches it. Bottom-up, middle-out and random orders peak near `1.30 b` nats, that is `3.6^b`; the best order by residue mod 2 peaks at `0.70 b`. | proven (in the model); computed |
-| 3 | 76, certificates | In an oracle model where a query reveals the interval of `S` for a partial assignment of counts, every certificate of emptiness needs at least `N_k` queries for every level `k` (Theorem 3.3, a fooling-set bound that needs no model). For bases 5 to 21, `max_k N_k` is at least 0.86 times the widest level of the exact tree. So no oracle method beats the exact tree by more than a polynomial factor: the smallest certificate for `b = 10` has 414 queries, the top-down tree uses 794. | proven; computed |
-| 4 | 79, bottom digits in base `2^k` | The bottom `L` digits of `S` are fixed only once the counts of all odd values, of 0 and of a few small even values are known: at least `b/2 + 2` values (Proposition 4.1). A top-down tree learns them only at its leaves, so a bottom check prunes nothing there (Corollary 4.2). Orders that reveal the odd counts early lose more than they gain: in base 16 the hybrid tree is 2.5 times and the odd-first tree 307 times the plain tree; in base 32 the hybrid tree is 13.3 times the plain tree (`3.4 * 10^9` against `2.5 * 10^8` nodes, exact) and the odd-first tree about `10^11` to `10^12` (estimate). The answer is no. | proven; computed |
+| 2 | 75, other orders | In the model, every order of revealing counts, fixed or chosen node by node, has at each level `m` at least the entropy of the top-down order at level `m` (Theorem 27.2). So the floor `1.638^b` of Theorem 10.1 covers all of them, and top-down is the only order that reaches it. Bottom-up, middle-out and random orders peak near `1.30 b` nats, that is `3.6^b`; the best order by residue mod 2 peaks at `0.70 b`. | proven (in the model); computed |
+| 3 | 76, certificates | In an oracle model where a query reveals the interval of `S` for a partial assignment of counts, every certificate of emptiness needs at least `N_k` queries for every level `k` (Theorem 27.5, a fooling-set bound that needs no model). For bases 5 to 21, `max_k N_k` is at least 0.86 times the widest level of the exact tree. So no oracle method beats the exact tree by more than a polynomial factor: the smallest certificate for `b = 10` has 414 queries, the top-down tree uses 794. | proven; computed |
+| 4 | 79, bottom digits in base `2^k` | The bottom `L` digits of `S` are fixed only once the counts of all odd values, of 0 and of a few small even values are known: at least `b/2 + 2` values (Proposition 27.8). A top-down tree learns them only at its leaves, so a bottom check prunes nothing there (Corollary 27.9). Orders that reveal the odd counts early lose more than they gain: in base 16 the hybrid tree is 2.5 times and the odd-first tree 307 times the plain tree; in base 32 the hybrid tree is 13.3 times the plain tree (`3.4 * 10^9` against `2.5 * 10^8` nodes, exact) and the odd-first tree about `10^11` to `10^12` (estimate). The answer is no. | proven; computed |
 | 5 | 78, work units | With `--unit-stats` (new), bases 24 to 34: the largest 1% of the units hold 47% to 81% of the work, and the pooled law has a power-like tail. The type of a unit (digits, free slots, known digits) explains 93% to 97% of the variance of `ln(nodes)`; within a type the law is light-tailed, and each free slot multiplies the size by 1.93. Scheduling on 8 threads is within 0.1% of ideal; shards of 64 are up to 2.6 times unbalanced at depth 4. A weighted progress estimate (new in `--progress`) is off by at most 0.10 against 0.49 for the unit count. | computed; heuristic |
 
 Scripts: `analysis/r5l_cpsat.py`, `analysis/r5l_sat.py` and
-`analysis/r5l_engine_baseline.py` (section 1), `analysis/r5l_orders.py` and
-`analysis/r5l_optchoice.py` (section 2), `analysis/r5l_cert.py`
-(section 3), `analysis/r5l_bottom.py` and `fast/src/bin/r5l_bottom.rs`
-(section 4), `analysis/r5l_units.py` (section 5). Data:
+`analysis/r5l_engine_baseline.py` (section 27.1), `analysis/r5l_orders.py` and
+`analysis/r5l_optchoice.py` (section 27.2), `analysis/r5l_cert.py`
+(section 27.3), `analysis/r5l_bottom.py` and `fast/src/bin/r5l_bottom.rs`
+(section 27.4), `analysis/r5l_units.py` (section 27.5). Data:
 `analysis/data/r5l_*`.
 
 Software. The solvers come from PyPI, installed in a virtual environment
@@ -47,9 +47,9 @@ all runs. Wall times are therefore 2 to 4 times the CPU times. The tables
 give CPU seconds of one thread and machine-independent counts (nodes,
 branches, conflicts).
 
-## 1. A constraint solver as a search that is not a tree (question 77)
+## 27.1 A constraint solver as a search that is not a tree (question 77)
 
-### 1.1 Encodings
+### 27.1.1 Encodings
 
 The problem is "list every solution with `d = b - 1` digits under
 `0^0 = 1`". A solver that ends with no further solution has proven that
@@ -83,7 +83,7 @@ was slower in both solvers (`r5l_cpsat_direct.txt`, `r5l_sat_direct.txt`).
 Every run found exactly the solutions of `output/b2-41-1.txt` with
 `b - 1` digits. All runs used one thread.
 
-### 1.2 Growth (computed)
+### 27.1.2 Growth (computed)
 
 Table 1.1. `d = b - 1`, `0^0 = 1`. The engine column is
 `fast search b --min-digits b-1 --max-digits b-1 -j 1`, which also covers
@@ -127,7 +127,7 @@ At base 18 the engine needs 0.006 s on one thread, CP-SAT with windows
 136 s and CaDiCaL 605 s. No solver comes near the floor of 1.64 per base
 that question 77 asks about, and none beats the engine's 1.89.
 
-### 1.3 Why the solvers lose
+### 27.1.3 Why the solvers lose
 
 The conflicts track the engine's nodes. CP-SAT with windows needs 2.0 to
 5.1 conflicts per engine node at every base from 8 to 20. CaDiCaL needs 57
@@ -144,9 +144,9 @@ There are two reasons.
    a few large counts already fix the leading digits. Without the windows,
    CP-SAT grows about 4 times per base. CaDiCaL's conflicts still grow like
    the tree, but it needs about 100 of them per node of the tree.
-2. Once the interval is visible, a solver can learn only what section 3
+2. Once the interval is visible, a solver can learn only what section 27.3
    allows. A learned clause states that a set of partial assignments fails.
-   If it comes from the interval, Theorem 3.3 bounds how many such sets an
+   If it comes from the interval, Theorem 27.5 bounds how many such sets an
    exact proof needs, and the bound is of the order of the widest level of
    the tree. If it comes from the low columns, it uses the low digits of
    `S`, which the model treats as random. Then it excludes one combination
@@ -156,9 +156,9 @@ So clause learning is not the "search that is not a tree" that beats
 the floor. With the interval made visible, it is a top-down tree with a
 cost per node about `10^4` times that of `fast`.
 
-## 2. The entropy bound for other orders (question 75)
+## 27.2 The entropy bound for other orders (question 75)
 
-### 2.1 Any set of revealed values
+### 27.2.1 Any set of revealed values
 
 A tree that reveals counts has, at level `m`, the counts of a set `R` of `m`
 digit values. In section 10.1 `R` holds the `m` largest values. Here `R` is
@@ -181,7 +181,7 @@ assumption of Theorem 10.1. The node law then has the entropy
 
     H(R) = m h(L(u) / b),     h(lambda) = entropy of Poisson(lambda).
 
-Lemma 2.1 (proven). For every set `R` of `m` values, `H(R) >= H(top m)`.
+Lemma 27.1 (proven). For every set `R` of `m` values, `H(R) >= H(top m)`.
 Equality holds only if `L(u)` is the same as for the top `m` values, in
 particular for `R` = the top `m` values.
 
@@ -194,7 +194,7 @@ the law of `X + Y` with independent `X ~ Poisson(lambda)` and
 
 Write `H_m = H(top m)` for the entropy of the top-down tree at level `m`.
 
-Theorem 2.2 (proven, in the model). Take a tree that reveals one count per
+Theorem 27.2 (proven, in the model). Take a tree that reveals one count per
 level, in an order that can depend on the node. Let `S` be a set of nodes of
 level `m` that it tries, and `p` the probability that `S` contains the node
 above the solution. Then for every `t > 0`
@@ -207,7 +207,7 @@ size `m`.
 Proof. Let `X` be the node above the solution and `R(X)` its revealed set.
 The path from the root determines `R(X)`, so `R(X)` is a function of `X`,
 and `P(X = x) <= P(X = x | R = R(x))`. Put `Y = -ln P(X | R(X))`. Given
-`R = r`, `Y` has mean `H(r) >= H_m` by Lemma 2.1 and variance at most `V`.
+`R = r`, `Y` has mean `H(r) >= H_m` by Lemma 27.1 and variance at most `V`.
 By Chebyshev's inequality, `P(Y <= H_m - t) <= V / t^2`. A node `x` with
 `P(x) >= e^(-H_m + t)` has `Y <= H_m - t`, so these nodes hold probability
 at most `V / t^2`. Every other node of `S` has probability below
@@ -220,10 +220,10 @@ fixed or chosen node by node: every tree that reveals counts needs about
 `1.638^b` nodes, and the top-down order is the only one that can reach this
 floor.
 
-### 2.2 The peak entropy of some orders (computed)
+### 27.2.2 The peak entropy of some orders (computed)
 
 `analysis/r5l_orders.py` evaluates `max_m H(R_m)` for `d = b - 1`. It also
-checks Lemma 2.1 by brute force over all sets `R` for `b = 4` to 14.
+checks Lemma 27.1 by brute force over all sets `R` for `b = 4` to 14.
 
 | order | `b = 40` | `b = 100` | `b = 1000` |
 |---|---:|---:|---:|
@@ -244,23 +244,23 @@ order reveals `b - 1` at a random level. Orders by residue keep a large
 value unrevealed for a whole class. The upper half bottom-up keeps `b - 1`
 unrevealed for `b/2` levels.
 
-### 2.3 The best adaptive tree in small bases (computed)
+### 27.2.3 The best adaptive tree in small bases (computed)
 
-Section 3 computes, for small bases, the smallest exact tree that chooses the
+Section 27.3 computes, for small bases, the smallest exact tree that chooses the
 value to branch on node by node (column "best adaptive tree" of Table 3.1).
 It is 0.83 to 0.91 times the top-down tree for `b = 5` to 10.
 `analysis/r5l_optchoice.py` walks this optimal tree: it branches on the
 largest unrevealed value at 78% to 86% of its internal nodes. So in small
 bases the best order is top-down up to small local changes, as
-Lemma 2.1 predicts.
+Lemma 27.1 predicts.
 
-Theorem 2.2 is a statement about the model and about trees whose nodes are
-partial assignments of counts. Section 3 proves a statement for exact
+Theorem 27.2 is a statement about the model and about trees whose nodes are
+partial assignments of counts. Section 27.3 proves a statement for exact
 searches without the model and without the tree.
 
-## 3. Certificates of emptiness in an oracle model (question 76)
+## 27.3 Certificates of emptiness in an oracle model (question 76)
 
-### 3.1 The model and the bound
+### 27.3.1 The model and the bound
 
 Fix `b`, `d` and the weights `w`. `C_d` is the set of count vectors with
 sum `d`. A query is a cylinder `x = (R, c_R)`: a set `R` of values with
@@ -277,7 +277,7 @@ than `rf` digits outside `R`. A cylinder with `rf = 0` or with one value
 outside `R` is a single vector, and the oracle then says whether it is a
 solution (a leaf check).
 
-Lemma 3.1 (proven). A failing cylinder contains no solution.
+Lemma 27.3 (proven). A failing cylinder contains no solution.
 
 Proof. If `c` in `x` is a solution, then `S(c)` lies in `I(x)` and starts
 with `P(x)`, so `P(x)` holds each value `v` at most `c_v` times. For `v` in
@@ -288,13 +288,13 @@ A certificate of emptiness is a set of failing cylinders whose union is
 `C_d`. To list all solutions, a certificate covers `C_d` minus the
 solutions.
 
-Proposition 3.2 (proven). In the oracle model, every algorithm that
+Proposition 27.4 (proven). In the oracle model, every algorithm that
 correctly reports that there is no solution with `d` digits has queried a
 certificate. This holds for any order, for trees, for searches that are
 not trees, and for randomized algorithms.
 
 Proof. The model makes the instance a pair (weights, solution set), where
-the solution set can be any set that meets no failing cylinder. Lemma 3.1
+the solution set can be any set that meets no failing cylinder. Lemma 27.3
 says that the true set is one of them. If some `c` lies in no failing
 queried cylinder, then `c` was never checked as a leaf, and the instance
 with solution set `{c}` gives the same answers to every query. The
@@ -313,7 +313,7 @@ for every `u >= t`. For a level `k`, let `V_k` be the values `>= k`, and
 `N_k` the number of distinct restrictions `c|V_k` over the `c` in `G` with
 `theta(c) <= k`.
 
-Theorem 3.3 (proven). Every certificate of emptiness has at least `N_k`
+Theorem 27.5 (proven). Every certificate of emptiness has at least `N_k`
 cylinders, for every `k`.
 
 Proof. First a claim. Let a failing cylinder `x` contain `c` in `G`, and
@@ -331,7 +331,7 @@ digit at position `d - lambda - 1` or above, and `P(x)` has at most
 `b-1, b-1, ...`. `S(c)` starts with neither pair, so `P(x)` has at most one
 digit. In both cases `P(x)` is a prefix of the top `lambda(c)` digits of
 `S(c)`. So it holds each `v` at most `c_v` times, and `x` passes as in
-Lemma 3.1. This contradicts the assumption that `x` fails.
+Lemma 27.3. This contradicts the assumption that `x` fails.
 
 Now take `c != c'` in `G` with `theta(c), theta(c') <= k` and
 `c|V_k != c'|V_k`. A failing cylinder that contains both is not a single
@@ -341,7 +341,7 @@ This is a contradiction. One vector per restriction gives `N_k` vectors, no
 two of them in one failing cylinder, so a certificate needs `N_k`
 cylinders.
 
-Remark 3.4 (proven). The engine's test also forces the leading digits below
+Remark 27.6 (proven). The engine's test also forces the leading digits below
 `k` and checks the first unknown digit (`docs/algorithm.md`). The theorem
 holds for that test too, with `b^(d - lambda)` in place of
 `b^(d - lambda - 1)` and `lambda >= 2`. Two vectors `c != c'` in one
@@ -352,16 +352,16 @@ stays open, every interval of the forcing loop keeps the width `g(u)`, and
 unknown digit is then a digit of `S(c)` within its top `lambda` digits, and
 it has a copy left in `c`.
 
-Corollary 3.5 (proven). `N_k` is at least the number of surviving nodes `y`
+Corollary 27.7 (proven). `N_k` is at least the number of surviving nodes `y`
 of level `k` of the top-down tree that have a witness. A witness is the
 completion of `y` that adds the forced digits of `P(y)` and puts the other
 free copies on one value, if it lies in `G`, is not a solution and has
 `theta <= k`. Distinct nodes give distinct restrictions to `V_k`.
 
 The corollary needs only a walk of the top-down tree, so it reaches larger
-bases than Theorem 3.3 itself.
+bases than Theorem 27.5 itself.
 
-### 3.2 Smallest certificates in small bases (computed)
+### 27.3.2 Smallest certificates in small bases (computed)
 
 `analysis/r5l_cert.py` builds every cylinder for `d = b - 1` under
 `0^0 = 1` and tests it. It keeps the maximal failing cylinders and solves
@@ -369,7 +369,7 @@ the set cover exactly with CP-SAT. It also computes the smallest
 certificate of a tree that chooses its branching value node by node (by
 dynamic programming over all cylinders), the top-down certificate (the
 failing cylinders that the top-down tree evaluates, with the same test), and
-`max_k N_k` from Theorem 3.3.
+`max_k N_k` from Theorem 27.5.
 
 Table 3.1. True weights `x^x`. All covers are proven optimal by CP-SAT.
 
@@ -388,9 +388,9 @@ and 490; smallest certificates 165, 314 and 365; `max_k N_k` 22, 53 and 57.
 
 So in these bases a certificate that is not a tree saves a factor 1.6 to 1.9
 over the top-down tree, and an adaptive tree saves 9% to 20%. The bound of
-Theorem 3.3 is 0.18 times the optimum for `b = 8` to 10, with no trend.
+Theorem 27.5 is 0.18 times the optimum for `b = 8` to 10, with no trend.
 
-Table 3.2. The bound of Corollary 3.5 against the top-down tree, true
+Table 3.2. The bound of Corollary 27.7 against the top-down tree, true
 weights, `d = b - 1` (`r5l_cert.py --tree-only`).
 
 | `b` | top-down nodes | widest level | witness bound on `N_k` | bound / widest level | certificate / bound |
@@ -408,7 +408,7 @@ and its certificate 1.98 per base. The ratio of the certificate to the bound
 grows about linearly in `b`, as it must: a tree has at most `b` levels, and
 a node has at most `d + 1` children.
 
-### 3.3 What this says
+### 27.3.3 What this says
 
 Every exact method that learns about `S` only through interval queries on
 partial assignments of counts needs at least `max_k N_k` queries. For
@@ -421,15 +421,15 @@ exact tree, up to a polynomial factor. Section 9.1 argued this; Theorem
 3.3 proves it for the oracle model.
 
 A faster exact method must therefore use what the oracle hides: the low
-digits of `S`, that is the arithmetic of `x^x`. Section 1 tests a solver
-that sees the low digits through column sums, and section 4 tests the only
+digits of `S`, that is the arithmetic of `x^x`. Section 27.1 tests a solver
+that sees the low digits through column sums, and section 27.4 tests the only
 exact low-digit structure known, in bases `2^k`.
 
-## 4. Bottom digits in bases with a small radical (question 79)
+## 27.4 Bottom digits in bases with a small radical (question 79)
 
-### 4.1 Which counts fix the bottom digits
+### 27.4.1 Which counts fix the bottom digits
 
-Proposition 4.1 (proven). In base `b`, `w(v) = v^v` is divisible by
+Proposition 27.8 (proven). In base `b`, `w(v) = v^v` is divisible by
 `b^L` if and only if `v * v_p(v) >= L v_p(b)` for every prime `p | b`. If
 every value outside `R` has this property, the bottom `L` digits of `S` are
 `sum over R of c_v w(v) mod b^L`, known exactly. Every value prime to `b`,
@@ -452,20 +452,20 @@ For example in base 32 the counts of the odd values, of 0 and of 2 fix the
 last digit; adding 4 and 6 fixes the last two digits. Bases `2^k` need the
 fewest values: in a base with a larger radical fewer weights vanish.
 
-Corollary 4.2 (proven). In the top-down order the values 1 and 0 come
+Corollary 27.9 (proven). In the top-down order the values 1 and 0 come
 last. The bottom digits are known only when at most the value 0 is
 unrevealed, and then the node is a single vector, which the leaf check
 tests exactly anyway. So a bottom check never prunes a top-down tree.
 
 To use bottom digits early, a tree must reveal the small odd counts before
-the large counts, and Theorem 2.2 says what that costs.
+the large counts, and Theorem 27.2 says what that costs.
 
-### 4.2 Toy trees (computed)
+### 27.4.2 Toy trees (computed)
 
 `analysis/r5l_bottom.py` and its exact Rust port `fast/src/bin/r5l_bottom.rs`
 (the two agree on bases 8 and 16 and on the top five levels of base 32) count
 the nodes of four trees for `d = b - 1` under `0^0 = 1`. All use the
-interval test of section 3. The trees with bottom checks also test, at
+interval test of section 27.3. The trees with bottom checks also test, at
 every node where the revealed counts fix `L >= 1` bottom digits, that the
 leading and the bottom digits together fit the counts.
 
@@ -493,11 +493,11 @@ standard error as large as the estimate. The same probes give
 `1.7 * 10^7` for the plain tree, 15 times too low, so they are only a rough
 guide.
 
-### 4.3 Why bottom digits do not pay (heuristic)
+### 27.4.3 Why bottom digits do not pay (heuristic)
 
 To read even one bottom digit, the tree must know the counts of at least
 `b/2 + 2` values, including every small odd value. Before the value `b - 1`
-is revealed, each count costs about 1.30 nats of entropy (section 2.2).
+is revealed, each count costs about 1.30 nats of entropy (section 27.2.2).
 Revealing the 16 odd counts of base 32 first costs about `e^21 = 10^9`
 nodes; the plain toy tree has `2.5 * 10^8` nodes in all. One bottom digit
 then removes a node only when its value has no copy left, which in the
@@ -508,9 +508,9 @@ the base. In base 32, 64 and 128 the radical is 2, the
 smallest possible, and the bottom digits still cost more than they prune. I
 expect the same in every base. The answer to question 79 is no.
 
-## 5. The law of the work-unit sizes (question 78)
+## 27.5 The law of the work-unit sizes (question 78)
 
-### 5.1 Measurements (computed)
+### 27.5.1 Measurements (computed)
 
 `fast search` has a new option `--unit-stats <file>`. It writes one line per
 finished work unit: its index, its digit count `d`, the next digit `k`, the
@@ -545,7 +545,7 @@ law has a heavy tail. The Hill estimate of its tail index, from the largest
 Pareto law with infinite mean. The largest single unit stays near 1% of
 the work.
 
-### 5.2 Type and branching (computed; heuristic)
+### 27.5.2 Type and branching (computed; heuristic)
 
 The type of a unit is its digit count `d`, its free slots `rf` and its known
 digits. The type explains 93% to 97% of the variance of `ln(nodes)` in
@@ -575,7 +575,7 @@ depth 4. A spread of `rf` turns into a spread of `ln(nodes)` with the
 factor 0.656, which is why the pooled tail looks like a power law and why
 its standard deviation grows with `b`.
 
-### 5.3 Scheduling and unit depth (computed)
+### 27.5.3 Scheduling and unit depth (computed)
 
 Table 5.2. Base 30 at every unit depth from 2 to 7.
 
@@ -616,7 +616,7 @@ by predicted size (longest first, with the size predicted from the type)
 helps less than the deeper units: for 64 shards at depth 4 it gives 1.40 to
 1.47 instead of 1.85 to 2.56, in bases 28 to 33.
 
-### 5.4 Time estimates (computed)
+### 27.5.4 Time estimates (computed)
 
 Before a run. The node count of the previous base times 1.9 is the best
 estimate. From base 26 to 34 the ratio of consecutive bases is 1.77 to
@@ -637,7 +637,7 @@ threads it said 55% when 47% of the nodes were done. The weights are fitted
 to the exact search with the weights `x^x`; with other options they are
 only a rough guide. The option changes nothing but the progress lines.
 
-### 5.5 Answer
+### 27.5.5 Answer
 
 The unit sizes follow a mixture of light-tailed laws, one per type, whose
 means grow like `1.93^rf`. The pooled law has a power-like tail and grows
@@ -647,18 +647,18 @@ shards and for time estimates. For time estimates, use the previous base
 times 1.9 before the run, and the weighted progress during it. No constant
 factor in speed is available from scheduling on one machine.
 
-## 6. Status
+## 27.6 Status
 
 | question | answer | status |
 |---|---|---|
-| 77, a solver that is not a tree | CP-SAT and CaDiCaL are exact but grow 1.95 to 2.3 per base against 1.89 for `fast`, at `10^4` to `10^5` times its cost; learned clauses do not cut across branches (section 1) | computed |
-| 75, other orders | every order, fixed or adaptive, has at each level at least the entropy of top-down; top-down is optimal, others peak at `0.6 b` to `1.30 b` nats (Theorem 2.2) | proven in the model; computed |
-| 76, certificates | every certificate in the interval oracle model has at least `max_k N_k` queries (Theorem 3.3), at least 0.86 of the widest level for bases 5 to 21; the smallest certificate is 0.52 to 0.62 of the top-down one in bases 8 to 10 | proven; computed; the asymptotic `2^(b - O(log b))` is heuristic |
-| 79, bottom digits in base `2^k` | useless for top-down trees (Corollary 4.2), and a loss for every order that reveals the odd counts early | proven; computed |
+| 77, a solver that is not a tree | CP-SAT and CaDiCaL are exact but grow 1.95 to 2.3 per base against 1.89 for `fast`, at `10^4` to `10^5` times its cost; learned clauses do not cut across branches (section 27.1) | computed |
+| 75, other orders | every order, fixed or adaptive, has at each level at least the entropy of top-down; top-down is optimal, others peak at `0.6 b` to `1.30 b` nats (Theorem 27.2) | proven in the model; computed |
+| 76, certificates | every certificate in the interval oracle model has at least `max_k N_k` queries (Theorem 27.5), at least 0.86 of the widest level for bases 5 to 21; the smallest certificate is 0.52 to 0.62 of the top-down one in bases 8 to 10 | proven; computed; the asymptotic `2^(b - O(log b))` is heuristic |
+| 79, bottom digits in base `2^k` | useless for top-down trees (Corollary 27.9), and a loss for every order that reveals the odd counts early | proven; computed |
 | 78, work units | type-determined, light-tailed within a type, heavy-tailed overall; scheduling on one machine is already ideal; deeper units for many shards; previous base times 1.9 and the new weighted progress for time estimates | computed; heuristic |
 
-Open: a proof that the witness share of Corollary 3.5 stays bounded below
+Open: a proof that the witness share of Corollary 27.7 stays bounded below
 as `b` grows, which would make the `2^(b - O(log b))` bound of question 76 a
 theorem in the oracle model. And an oracle that also reveals low digits:
-Theorem 3.3 says nothing about methods that use them, and sections 1 and 4
+Theorem 27.5 says nothing about methods that use them, and sections 27.1 and 4
 only show that the two natural ones lose.

@@ -274,6 +274,11 @@ up to `B` grows like a power of `ln B`. Conjecture 10.3 says that, apart from
 finitely many and from algebraic families, they all lie in a window of width
 `ln k + ln ln k` above `k`.
 
+Update (chapter 27). Constraint solvers (CP-SAT, CaDiCaL) grow 1.95 to 2.3
+per base, worse than the tree. Theorem 27.2 extends Theorem 10.1 to every
+order of revealing counts, and bottom digits do not help even in bases
+`2^k`. See chapter 27.
+
 ## 10.6 Status
 
 | question | status |

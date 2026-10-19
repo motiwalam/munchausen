@@ -38,6 +38,7 @@ statement is marked by its source:
 | [24. Why the model misses in F_q[T]](24-ffield-gap.md) | Frobenius blocks make the digits of `F` far from uniform; the exact channel under `0^0 = 1`; short solutions counted for every degree; small effects on the integer model |
 | [25. Identity families and 3-digit solutions](25-identity-families.md) | where the large digits of an identity sit; a second infinite family `(c^j, 0, ..., 0, x)`; no other 3-digit solution up to `10^3301`; at most 30 three-digit solutions in almost every base |
 | [26. Near-solutions as evidence](26-near-solutions-evidence.md) | the swap lemma: near-solutions cluster across offsets; a corrected calibration; every chance verdict revisited; a pooled test across worlds |
+| [27. Limits of search](27-limits-of-search.md) | constraint solvers lose to the tree; the entropy floor holds for every order; certificates of emptiness; bottom digits do not pay; the law of work-unit sizes |
 | [Open questions](questions.md) | 89 research questions in five rounds, with priorities and answers; [round 5 directions](questions-round5.md) |
 
 ## Main results
@@ -112,6 +113,10 @@ Proven:
 - Infinitely many digit strings are excluded in every base by covering
   congruences with moduli `3^e` and `2^e`; `(2,1,x)` is never a solution
   (chapter 15).
+- In the model, every order of revealing digit counts, fixed or adaptive,
+  needs at least the top-down entropy, so the `1.638^b` floor holds for all
+  orders (Theorem 27.2). In an oracle model the exact tree is optimal up to
+  a factor about linear in `b`, computed up to base 21 (section 27.3).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).

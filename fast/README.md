@@ -54,7 +54,8 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`) |
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
-| `--progress` | `search` only. Print progress every 10 seconds. |
+| `--progress` | `search` only. Print progress every 10 seconds, with the node count and an estimate of the share of the work done (fitted on bases 26 to 33 under the `x^x` weights, so rough for other weights). |
+| `--unit-stats <file>` | `search` only. Write one line per finished work unit: index, digits, `k`, free slots, known digits, start and end seconds, and the node count of the run at the end of the unit (a per-unit count only with `-j 1`). See section 27.5 of the library. |
 | `--shard <i>/<n>` | `search` only. Search only the work units whose index is `i` modulo `n`, for `0 <= i < n`. `{shard}` in the journal name becomes `<i>of<n>`. |
 | `--max-digits <n>` | `search` only. Look only for numbers with at most `n` digits. Bases above 62 need `n <= 62`. |
 | `--min-digits <n>` | `search` only. Look only for numbers with at least `n` digits. |
