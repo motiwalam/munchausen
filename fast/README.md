@@ -58,6 +58,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `--progress` | `search` only. Print progress every 10 seconds, with the node count and an estimate of the share of the work done (fitted on bases 26 to 33 under the `x^x` weights, so rough for other weights). |
 | `--unit-stats <file>` | `search` only. Write one line per finished work unit: index, digits, `k`, free slots, known digits, start and end seconds, and the node count of the run at the end of the unit (a per-unit count only with `-j 1`). See section 27.5 of the library. |
 | `--shard <i>/<n>` | `search` only. Search only the work units whose index is `i` modulo `n`, for `0 <= i < n`. `{shard}` in the journal name becomes `<i>of<n>`. |
+| `--shard-by <index\|size>` | `search` only, with `--shard`. `index` (default) is the rule above. `size` deals the units out largest first by their predicted size, each to the shard with the least predicted work. See "Split a base over processes". |
 | `--max-digits <n>` | `search` only. Look only for numbers with at most `n` digits. Bases above 62 need `n <= 62`. |
 | `--min-digits <n>` | `search` only. Look only for numbers with at least `n` digits. |
 | `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
@@ -115,6 +116,29 @@ single run.
 A shard has its own journal, and its header names the shard. Use
 `{shard}` in the journal name to keep the files apart. A shard refuses a
 journal of another shard.
+
+The units differ in size by factors of 1000 and more, so every `n`-th unit
+is a poor split for many shards. `--shard-by size` predicts the size of
+each unit from its free slots `rf` and unknown digits `L`, as
+`2^((15 rf - 10 L) / 16)` (about `e^(0.656 rf - 0.44 L)`, the fit of
+section 27.5 of the library), scaled to the share of its digit count. It
+then gives the largest unit to the least loaded shard, and so on down. The
+arithmetic is in integers, so every machine computes the same split. All
+shards and `merge` must use the same rule; `merge` refuses a mix. The
+largest shard over the mean, base 30, from the measured unit sizes
+(`analysis/r6s_shards.py`):
+
+| unit depth | shards | `index` | `size` | best possible |
+|---:|---:|---:|---:|---:|
+| 4 | 16 | 1.33 | 1.15 | 1.00 |
+| 4 | 64 | 2.12 | 1.35 | 1.00 |
+| 6 | 16 | 1.07 | 1.04 | 1.00 |
+| 6 | 64 | 1.21 | 1.14 | 1.00 |
+| 6 | 256 | 1.57 | 1.36 | 1.00 |
+
+The best possible split knows the true sizes. For 16 shards or more, use
+`--unit-depth 6 --shard-by size`. Building the units of depth 6 costs 0.4%
+of the run in base 30.
 
 On one machine, more processes do not help. Base 32 on the test laptop
 (4 P-cores and 4 E-cores, other jobs running), median of 5 alternating runs:

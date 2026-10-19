@@ -38,6 +38,9 @@ options:
                           i modulo n; \"{shard}\" in the journal name becomes
                           <i>of<n>; merge the outputs of all n shards with
                           fast merge
+  --shard-by <index|size> (search) with --shard: give each shard every n-th
+                          unit (index, the default), or deal the units out
+                          largest first by their predicted size (size)
   --max-digits <n>        (search) only look for numbers with at most n digits
   --min-digits <n>        (search) only look for numbers with at least n digits
   --cap <c>               (search, inexact) skip numbers in which a digit 2 or more
@@ -130,6 +133,8 @@ struct Opts {
     #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     gpu_subgroups: u32,
     shard: (u32, u32),
+    // whether --shard assigns the units by predicted size instead of index
+    shard_by_size: bool,
     zhist: Option<String>,
     tree_stats: Option<String>,
 }
@@ -155,6 +160,7 @@ fn parse_args() -> Opts {
     let mut hybrid = false;
     let mut gpu_subgroups = 2048;
     let mut shard = (0, 1);
+    let mut shard_by_size = false;
     let mut zhist = None;
     let mut tree_stats = None;
     let mut no_residue = false;
@@ -245,6 +251,13 @@ fn parse_args() -> Opts {
                     _ => die(&format!("bad shard {v}: write i/n with 0 <= i < n")),
                 }
             }
+            "--shard-by" => {
+                shard_by_size = match val().as_str() {
+                    "index" => false,
+                    "size" => true,
+                    v => die(&format!("bad shard rule {v}: use index or size")),
+                }
+            }
             _ => pos.push(a.to_string()),
         }
         i += 1;
@@ -281,7 +294,7 @@ fn parse_args() -> Opts {
     if gpu_subgroups == 0 {
         die("--gpu-subgroups must be positive");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, unit_stats, progress, shard, gpu, hybrid, gpu_subgroups, zhist, tree_stats }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, unit_stats, progress, shard, shard_by_size, gpu, hybrid, gpu_subgroups, zhist, tree_stats }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -338,6 +351,51 @@ fn unit_weights<const N: usize>(b: u32, sr: &search::Search<N>, units: &[search:
     raw.iter().map(|&(j, w)| SHARE.get(j as usize).copied().unwrap_or(1e-4) * w / by_j[&j]).collect()
 }
 
+// The shard of each unit for --shard-by size: longest first by the
+// predicted size of unit_weights, each unit to the shard with the least
+// predicted work so far. The arithmetic is in integers, so every machine
+// computes the same assignment. A unit with rf free slots and L unknown
+// digits weighs 2^((15 rf - 10 L) / 16) (about exp(0.656 rf - 0.44 L)),
+// scaled to the share of its digit count.
+fn shards_by_size<const N: usize>(b: u32, sr: &search::Search<N>, units: &[search::Unit<N>], n: u32) -> Vec<u32> {
+    // SHARE of unit_weights in parts per million
+    const SHARE: [u128; 10] = [205_000, 480_000, 210_000, 68_000, 14_000, 13_000, 5_000, 3_000, 1_000, 300];
+    // 2^(j/16) * 2^20
+    const FRAC: [u128; 16] = [1048576, 1095000, 1143480, 1194106, 1246974, 1302182, 1359835, 1420040, 1482910, 1548564, 1617125, 1688722, 1763488, 1841564, 1923097, 2008240];
+    let exps: Vec<(u32, i64)> = units
+        .iter()
+        .map(|u| {
+            let (d, _, rf, known) = sr.unit_info(u);
+            (b.saturating_sub(d), 15 * rf as i64 - 10 * (d - known) as i64)
+        })
+        .collect();
+    // 2^((e - emax) / 16) = 2^(f / 16) / 2^c with c = ceil((emax - e) / 16)
+    let emax = exps.iter().map(|x| x.1).max().unwrap_or(0);
+    let raw: Vec<(u32, u128)> = exps
+        .iter()
+        .map(|&(j, e)| {
+            let c = (emax - e + 15) / 16;
+            let f = 16 * c - (emax - e);
+            (j, (FRAC[f as usize] << 40) >> c.min(127))
+        })
+        .collect();
+    let mut by_j = std::collections::HashMap::new();
+    for &(j, w) in &raw {
+        *by_j.entry(j).or_insert(0u128) += w;
+    }
+    let weight: Vec<u128> = raw.iter().map(|&(j, w)| SHARE.get(j as usize).copied().unwrap_or(100) * (w << 20) / by_j[&j].max(1)).collect();
+    let mut order: Vec<usize> = (0..units.len()).collect();
+    order.sort_by_key(|&i| (std::cmp::Reverse(weight[i]), i));
+    let mut heap: std::collections::BinaryHeap<std::cmp::Reverse<(u128, u32)>> = (0..n).map(|s| std::cmp::Reverse((0, s))).collect();
+    let mut out = vec![0; units.len()];
+    for i in order {
+        let std::cmp::Reverse((w, s)) = heap.pop().unwrap();
+        out[i] = s;
+        heap.push(std::cmp::Reverse((w + weight[i], s)));
+    }
+    out
+}
+
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     let (shard, shards) = o.shard;
     // one-digit numbers: w(x) == x, which for x^x holds for x = 1, and for
@@ -357,12 +415,13 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
         eprintln!("  base {b}: {:.3} s for the tables, {:.3} s for {} units", (t1 - t0).as_secs_f64(), t1.elapsed().as_secs_f64(), units.len());
     }
     let total = units.len();
-    let mine = |i: usize| i % shards as usize == shard as usize;
+    let owner = if o.shard_by_size && shards > 1 { shards_by_size(b, &sr, &units, shards) } else { vec![] };
+    let mine = |i: usize| owner.get(i).map_or(i % shards as usize == shard as usize, |&s| s == shard);
     let my_total = (0..total).filter(|&i| mine(i)).count();
 
     let journal = o.journal.as_ref().map(|path| {
         let path = path.replace("{base}", &b.to_string()).replace("{shard}", &format!("{shard}of{shards}"));
-        journal::Journal::open(&path, b, total, o.unit_depth, o.shard, o.prune.residue)
+        journal::Journal::open(&path, b, total, o.unit_depth, o.shard, o.shard_by_size, o.prune.residue)
     });
     let skip: Vec<bool> = match &journal {
         Some(j) => {
@@ -556,7 +615,7 @@ fn main() {
         };
         let secs = t.elapsed().as_secs_f64();
         if o.shard.1 > 1 {
-            println!("{}", merge::shard_line(b, o.shard));
+            println!("{}", merge::shard_line(b, o.shard, o.shard_by_size));
         }
         for &mode in &o.modes {
             let res = &mut res[mode as usize];
@@ -596,6 +655,7 @@ mod tests {
             unit_stats: None,
             progress: false,
             shard: (0, 1),
+            shard_by_size: false,
             gpu: false,
             hybrid: false,
             gpu_subgroups: 2048,
@@ -791,10 +851,10 @@ mod tests {
     fn shards_cover_the_search() {
         for b in [12, 17, 21] {
             let full = run_search_n::<1>(b, &test_opts());
-            for n in [2, 3, 7] {
+            for (n, shard_by_size) in [(2, false), (3, false), (7, false), (3, true), (7, true)] {
                 let mut union: Found = [vec![], vec![]];
                 for i in 0..n {
-                    let part = run_search_n::<1>(b, &Opts { shard: (i, n), ..test_opts() });
+                    let part = run_search_n::<1>(b, &Opts { shard: (i, n), shard_by_size, ..test_opts() });
                     for m in 0..2 {
                         union[m].extend(part[m].iter().cloned());
                     }
