@@ -13,7 +13,7 @@
 //! forced copy of u otherwise. A digit u can only sit at a position >= u, so
 //! the counts must satisfy #(digits >= u) <= L - u + 1.
 //!
-//! usage: r3t_factorial <m> <Lmin> <Lmax> [--offsets J]
+//! usage: r3t_factorial <m> <Lmin> <Lmax> [--offsets J] [--step S]   (offsets j S)
 //! Arithmetic is u128, enough for L <= 33.
 
 use rayon::prelude::*;
@@ -238,8 +238,18 @@ fn main() {
     let m: u128 = a[1].parse().unwrap();
     let lmin: usize = a[2].parse().unwrap();
     let lmax: usize = a[3].parse().unwrap();
-    let jmax: u128 = if a.len() > 5 && a[4] == "--offsets" { a[5].parse().unwrap() } else { 0 };
-    println!("# factorial number system, 0^0 = {m}, lengths {lmin}..{lmax}, offsets 1..{jmax}");
+    let mut jmax: u128 = 0;
+    let mut step: u128 = 1;
+    let mut i = 4;
+    while i + 1 < a.len() {
+        match a[i].as_str() {
+            "--offsets" => jmax = a[i + 1].parse().unwrap(),
+            "--step" => step = a[i + 1].parse().unwrap(),
+            o => panic!("unknown option {o}"),
+        }
+        i += 2;
+    }
+    println!("# factorial number system, 0^0 = {m}, lengths {lmin}..{lmax}, offsets j * {step}, j = 1..{jmax}");
     for l in lmin..=lmax {
         let t0 = Instant::now();
         let (s, nodes) = run(m, l, 0);
@@ -250,7 +260,7 @@ fn main() {
         let mut near = vec![];
         let mut nn = 0;
         for j in 1..=jmax {
-            let (sj, nd) = run(m, l, j);
+            let (sj, nd) = run(m, l, j * step);
             near.push(sj.len().to_string());
             nn += nd;
         }

@@ -5,12 +5,12 @@ independent digits d_i uniform on [0, i] (i < L) and d_L uniform on [1, L].
 The largest digit v decides the size of F: F >= v^v, and F <= L v^v. So only
 the few v with v^v < (L+1)! and L v^v >= L! contribute. For each such v the
 script computes P(max digit = v) exactly and P(F in window | max = v) by
-sampling (rejection on max = v), with F in floating point.
+sampling (rejection on max = v), with F scaled by v^v.
 usage: python3 r3t_factorial_model.py [Lmax] [samples]
 """
 import sys
 import numpy as np
-from math import lgamma, log
+from math import lgamma, log, exp
 
 Lmax = int(sys.argv[1]) if len(sys.argv) > 1 else 120
 S = int(sys.argv[2]) if len(sys.argv) > 2 else 200000
@@ -31,7 +31,9 @@ def sample(L, v, m, n):
     """n strings with every digit <= v and at least one digit = v; returns F."""
     out = []
     caps = np.array([min(i, v) for i in range(1, L)], dtype=np.int64)
-    w = np.array([float(m)] + [float(d) ** d for d in range(1, v + 1)])
+    # weights scaled by v^v, so that F / v^v stays in floating range
+    lv = v * log(v)
+    w = np.array([m * exp(-lv)] + [exp(d * log(d) - lv) for d in range(1, v + 1)])
     while sum(len(o) for o in out) < n:
         k = 2 * n
         low = (rng.random((k, L - 1)) * (caps + 1)).astype(np.int64)
@@ -40,7 +42,7 @@ def sample(L, v, m, n):
         keep = mx == v
         f = w[low[keep]].sum(axis=1) + w[top[keep]]
         out.append(f)
-    return np.concatenate(out)[:n]
+    return np.concatenate(out)[:n], lv
 
 
 print(f"# model E_L for the factorial number system, {S} samples per (L, v)")
@@ -58,8 +60,8 @@ for L in range(2, Lmax + 1):
             pv = pmax_le(L, v) - pmax_le(L, v - 1)
             if pv <= 0:
                 continue
-            f = sample(L, v, m, S)
-            lf = np.log(f)
+            f, lv0 = sample(L, v, m, S)
+            lf = np.log(f) + lv0
             e += pv * np.mean((lf >= lo) & (lf < hi))
         row[m] = e
         tot[m] += e

@@ -23,7 +23,13 @@
 //! In mode brute the same numbers come from all digit multisets with the
 //! weights computed by real powering, which checks mode frob.
 //!
-//! usage: r3t_ffield frob  <q> <e> <m> <B|all>
+//! With --offdeg K, mode frob also counts the near-solutions n = F(n) + (B-1) g
+//! for every nonzero g of degree < K (section 11.1); the digits of F + (B-1) g
+//! are the sums of the digits, since base-B expansion is linear.
+//!
+//! --minlen L counts only solutions (and model mass) with at least L digits.
+//!
+//! usage: r3t_ffield frob  <q> <e> <m> <B|all> [--offdeg K] [--minlen L]
 //!        r3t_ffield brute <q> <e> <m> <frob|deg> <B|all> [--lmax L]
 //! B is written in base q: coefficient of T^t is the t-th base-q digit.
 
@@ -221,6 +227,7 @@ struct Layout {
     q: usize,
     e: usize,
     m: usize,
+    minlen: usize,     // count solutions with at least this many digits
     ncoord: usize,     // number of base-q coordinates (incl. z)
     coord_jt: Vec<(usize, usize)>, // (j, t); j = e means the z coordinate
     n: usize,
@@ -238,7 +245,7 @@ impl Layout {
             coord_jt.push((e, 0));
         }
         let ncoord = coord_jt.len();
-        Layout { q, e, m, ncoord, coord_jt, n: q.pow(ncoord as u32) }
+        Layout { q, e, m, minlen: 2, ncoord, coord_jt, n: q.pow(ncoord as u32) }
     }
     /// the coordinate index of (j, t)
     fn ci(&self, j: usize, t: usize) -> usize {
@@ -248,15 +255,29 @@ impl Layout {
 
 struct FrobBase {
     sols: Vec<String>,
+    near: Vec<u64>, // per offset (B - 1) g
+    noff: usize,
     cond: Vec<u64>, // bitset over idx: the identity mod B - 1 holds
     roots: usize,
     irred: bool,
 }
 
-fn frob_base(lay: &Layout, b: &P, lmax: usize) -> FrobBase {
+fn frob_base(lay: &Layout, b: &P, lmax0: usize, offdeg: usize) -> FrobBase {
     let q = lay.q;
     let e = lay.e;
     let qq = q as u8;
+    // offsets (B - 1) g for the nonzero g of degree < offdeg
+    let bm1o = add(b, &vec![qq - 1], qq);
+    let offs: Vec<P> = (1..q.pow(offdeg as u32)).map(|c| mul(&bm1o, &decode(c, qq, offdeg), qq)).collect();
+    let lmax = offs.iter().map(|o| deg(o) as usize / e + 1).max().unwrap_or(0).max(lmax0);
+    let mut oimg = vec![vec![0u8; lmax * e]; offs.len()];
+    for (k, o) in offs.iter().enumerate() {
+        for (i, d) in digits(o, b, qq, e).iter().enumerate() {
+            oimg[k][i * e..i * e + e].copy_from_slice(d);
+        }
+    }
+    let mut near = vec![0u64; offs.len()];
+    let mut tmp = vec![0u8; lmax * e];
     // images of the coordinates: digits of F and residue mod B-1
     let bm1 = add(b, &vec![qq - 1], qq);
     let mut img = vec![vec![0u8; lmax * e]; lay.ncoord];
@@ -284,6 +305,11 @@ fn frob_base(lay: &Layout, b: &P, lmax: usize) -> FrobBase {
     let mut sols = vec![];
     let mut coord = vec![0usize; lay.ncoord];
     let mut dv = vec![0u8; lmax * e];
+    let mut img2 = img.clone();
+    for v in img2.iter_mut() {
+        v.resize(lmax * e, 0);
+    }
+    let img = img2;
     let mut rv = vec![0u8; e];
     let mut cls = vec![0u8; (e + 1) * e];
     for idx in 0..lay.n {
@@ -309,46 +335,58 @@ fn frob_base(lay: &Layout, b: &P, lmax: usize) -> FrobBase {
         if rv.iter().all(|&x| x == 0) {
             cond[idx / 64] |= 1 << (idx % 64);
         }
-        // length of F
-        let mut len = 0;
-        for i in (0..lmax).rev() {
-            if dv[i * e..i * e + e].iter().any(|&c| c != 0) {
-                len = i + 1;
-                break;
+        if let Some(sl) = fixed(&dv, &coord, lay, lmax, &mut cls) {
+            sols.push(sl);
+        }
+        for (k, o) in oimg.iter().enumerate() {
+            for ((t, &x), &y) in tmp.iter_mut().zip(&dv).zip(o) {
+                *t = (x + y) % qq;
             }
-        }
-        if len < 2 {
-            continue;
-        }
-        // class sums of the digits of F
-        cls.iter_mut().for_each(|x| *x = 0);
-        let mut z = 0usize;
-        for i in 0..len {
-            let d = &dv[i * e..i * e + e];
-            match d.iter().rposition(|&c| c != 0) {
-                None => z += 1,
-                Some(j) => {
-                    for t in 0..=j {
-                        cls[j * e + t] = (cls[j * e + t] + d[t]) % qq;
-                    }
-                }
+            if fixed(&tmp, &coord, lay, lmax, &mut cls).is_some() {
+                near[k] += 1;
             }
-        }
-        let mut ok = true;
-        for (k, &(j, t)) in lay.coord_jt.iter().enumerate() {
-            let v = if j == e { z % q } else { cls[j * e + t] as usize };
-            if v != coord[k] {
-                ok = false;
-                break;
-            }
-        }
-        if ok {
-            let s: Vec<String> = (0..len).rev().map(|i| code(&dv[i * e..i * e + e], qq).to_string()).collect();
-            sols.push(s.join(","));
         }
     }
     sols.sort();
-    FrobBase { sols, cond, roots: roots_of_bm1(b, qq), irred: irreducible(b, qq) }
+    FrobBase { sols, near, noff: offs.len(), cond, roots: roots_of_bm1(b, qq), irred: irreducible(b, qq) }
+}
+
+/// if the digit vector dv (at least 2 digits) has class sums coord, its digits
+fn fixed(dv: &[u8], coord: &[usize], lay: &Layout, lmax: usize, cls: &mut [u8]) -> Option<String> {
+    let e = lay.e;
+    let q = lay.q;
+    let qq = q as u8;
+    let mut len = 0;
+    for i in (0..lmax).rev() {
+        if dv[i * e..i * e + e].iter().any(|&c| c != 0) {
+            len = i + 1;
+            break;
+        }
+    }
+    if len < lay.minlen {
+        return None;
+    }
+    cls.iter_mut().for_each(|x| *x = 0);
+    let mut z = 0usize;
+    for i in 0..len {
+        let d = &dv[i * e..i * e + e];
+        match d.iter().rposition(|&c| c != 0) {
+            None => z += 1,
+            Some(j) => {
+                for t in 0..=j {
+                    cls[j * e + t] = (cls[j * e + t] + d[t]) % qq;
+                }
+            }
+        }
+    }
+    for (k, &(j, t)) in lay.coord_jt.iter().enumerate() {
+        let v = if j == e { z % q } else { cls[j * e + t] as usize };
+        if v != coord[k] {
+            return None;
+        }
+    }
+    let s: Vec<String> = (0..len).rev().map(|i| code(&dv[i * e..i * e + e], qq).to_string()).collect();
+    Some(s.join(","))
 }
 
 /// lengths of F over G (independent of B), and the model values v[idx] = P_L(idx)
@@ -439,20 +477,21 @@ fn frob_model(lay: &Layout, lmax: usize) -> (Vec<u8>, Vec<f64>) {
     (lens, vals)
 }
 
-fn run_frob(q: usize, e: usize, m: usize, spec: &str) {
-    let lay = Layout::new(q, e, m);
+fn run_frob(q: usize, e: usize, m: usize, spec: &str, offdeg: usize, minlen: usize) {
+    let mut lay = Layout::new(q, e, m);
+    lay.minlen = minlen;
     let maxdeg = (e - 1) * q.pow(e as u32 - 1);
     let lmax = maxdeg / e + 1;
-    println!("# frob q {q} e {e} m {m}: |G| = {}, max deg F = {maxdeg}, max length {lmax}", lay.n);
+    println!("# frob q {q} e {e} m {m}: |G| = {}, max deg F = {maxdeg}, max length {lmax}, min length {minlen}, offsets of degree < {offdeg}", lay.n);
     let t0 = Instant::now();
     let (lens, vals) = frob_model(&lay, lmax);
-    let basic: f64 = (0..lay.n).filter(|&i| lens[i] >= 2).map(|i| vals[i]).sum();
+    let basic: f64 = (0..lay.n).filter(|&i| lens[i] as usize >= minlen).map(|i| vals[i]).sum();
     println!("# model computed in {:.1} s: basic {basic:.6}", t0.elapsed().as_secs_f64());
     let bs = bases(q as u8, e, spec);
-    let res: Vec<(P, FrobBase)> = bs.par_iter().map(|b| (b.clone(), frob_base(&lay, b, lmax))).collect();
+    let res: Vec<(P, FrobBase)> = bs.par_iter().map(|b| (b.clone(), frob_base(&lay, b, lmax, offdeg))).collect();
     let qe = q.pow(e as u32) as f64;
     for (b, fb) in &res {
-        let refined: f64 = (0..lay.n).filter(|&i| lens[i] >= 2 && fb.cond[i / 64] >> (i % 64) & 1 == 1).map(|i| vals[i]).sum::<f64>() * qe;
+        let refined: f64 = (0..lay.n).filter(|&i| lens[i] as usize >= minlen && fb.cond[i / 64] >> (i % 64) & 1 == 1).map(|i| vals[i]).sum::<f64>() * qe;
         println!(
             "base {} code {} irred {} roots {} sols {} basic {:.4} refined {:.4}",
             fmt_poly(b),
@@ -463,6 +502,10 @@ fn run_frob(q: usize, e: usize, m: usize, spec: &str) {
             basic,
             refined
         );
+        if fb.noff > 0 {
+            let v: Vec<String> = fb.near.iter().map(|x| x.to_string()).collect();
+            println!("near base {} m {m} offsets {} total {} counts {}", code(b, q as u8), fb.noff, fb.near.iter().sum::<u64>(), v.join(","));
+        }
         for s in &fb.sols {
             println!("sol base {} m {m} digits {s}", code(b, q as u8));
         }
@@ -564,7 +607,20 @@ fn rec(w: &[P], b: &P, bm1: &P, q: u8, e: usize, l: usize, x: usize, r: usize, f
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
-        "frob" => run_frob(a[2].parse().unwrap(), a[3].parse().unwrap(), a[4].parse().unwrap(), &a[5]),
+        "frob" => {
+            let mut offdeg = 0;
+            let mut minlen = 2;
+            let mut i = 6;
+            while i + 1 < a.len() {
+                match a[i].as_str() {
+                    "--offdeg" => offdeg = a[i + 1].parse().unwrap(),
+                    "--minlen" => minlen = a[i + 1].parse().unwrap(),
+                    o => panic!("unknown option {o}"),
+                }
+                i += 2;
+            }
+            run_frob(a[2].parse().unwrap(), a[3].parse().unwrap(), a[4].parse().unwrap(), &a[5], offdeg, minlen)
+        }
         "brute" => {
             let lmax = if a.len() > 8 && a[7] == "--lmax" { Some(a[8].parse().unwrap()) } else { None };
             run_brute(a[2].parse().unwrap(), a[3].parse().unwrap(), a[4].parse().unwrap(), &a[5], &a[6], lmax)

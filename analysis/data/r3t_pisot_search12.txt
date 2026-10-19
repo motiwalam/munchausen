@@ -1,0 +1,21 @@
+# search x 12: eps = 12.082763, total length at most 28, offsets 10
+len x 12 T 2 window 1..147 leaves 10 sols 0 secs 0.0
+len x 12 T 3 window 1..1766 leaves 35 sols 0 secs 0.0
+len x 12 T 4 window 10..21315 leaves 126 sols 0 secs 0.0
+len x 12 T 5 window 40..257534 leaves 462 sols 0 secs 0.0
+len x 12 T 6 window 143..3111699 leaves 1653 sols 0 secs 0.0
+len x 12 T 7 window 505..37597910 leaves 5739 sols 0 secs 0.0
+len x 12 T 8 window 1762..454286595 leaves 18650 sols 0 secs 0.0
+len x 12 T 9 window 6129..5489037037 leaves 47410 sols 0 secs 0.1
+len x 12 T 10 window 21311..66322731027 leaves 181523 sols 0 secs 0.2
+len x 12 T 11 window 74086..801361809349 leaves 622485 sols 0 secs 0.8
+len x 12 T 12 window 257530..9682664443203 leaves 1964288 sols 0 secs 2.1
+len x 12 T 13 window 895186..116993335127773 leaves 5162668 sols 0 secs 4.1
+len x 12 T 14 window 3111695..1413602685976467 leaves 9560868 sols 0 secs 8.3
+len x 12 T 15 window 10816343..17080225566845363 leaves 17213324 sols 0 secs 15.4
+len x 12 T 16 window 37597906..206376309488120801 leaves 29901214 sols 0 secs 27.9
+len x 12 T 17 window 130691334..2493595939424295425 leaves 50838670 sols 0 secs 50.1
+len x 12 T 18 window 454286591..30129527582579658753 leaves 84052865 sols 0 secs 87.6
+len x 12 T 19 window 1579112387..364047926930380226561 leaves 135234305 sols 0 secs 147.7
+len x 12 T 20 window 5489037033..4398704650747142209537 leaves 215779882 sols 0 secs 228.3
+len x 12 T 21 window 19080040011..53148503735896090083329 leaves 330495165 sols 0 secs 336.9

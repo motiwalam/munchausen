@@ -1,0 +1,28 @@
+# base -3+w, 0^0 = 1: R0 = 4.606, L0 = 4, length bound 30, modulus 21, offsets 30
+len base -3+w m 1 d 2 sols 0 leaves 10 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.03
+len base -3+w m 1 d 3 sols 0 leaves 20 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.03
+len base -3+w m 1 d 4 sols 0 leaves 68 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.03
+len base -3+w m 1 d 5 sols 0 leaves 126 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.00
+len base -3+w m 1 d 6 sols 0 leaves 440 basic 1.346645e-6 refined 2.827955e-5 refined_zerofree 2.827955e-5 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.02
+len base -3+w m 1 d 7 sols 0 leaves 792 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.02
+len base -3+w m 1 d 8 sols 0 leaves 2541 basic 8.317859e-5 refined 1.746750e-3 refined_zerofree 3.819413e-4 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.00
+len base -3+w m 1 d 9 sols 0 leaves 5005 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.02
+len base -3+w m 1 d 10 sols 0 leaves 15086 basic 4.813419e-5 refined 1.010818e-3 refined_zerofree 2.046978e-4 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.02
+len base -3+w m 1 d 11 sols 0 leaves 30444 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.08
+len base -3+w m 1 d 12 sols 0 leaves 77884 basic 9.050981e-5 refined 1.900706e-3 refined_zerofree 4.259777e-4 near 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0 secs 0.09
+len base -3+w m 1 d 13 sols 0 leaves 182178 basic 4.768574e-7 refined 1.001400e-5 refined_zerofree 1.974742e-6 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.04
+len base -3+w m 1 d 14 sols 0 leaves 295388 basic 2.209233e-4 refined 4.639389e-3 refined_zerofree 1.064623e-3 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 0.04
+len base -3+w m 1 d 15 sols 0 leaves 961026 basic 5.077577e-6 refined 1.066291e-4 refined_zerofree 2.367893e-5 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 1.01
+len base -3+w m 1 d 16 sols 0 leaves 1909233 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 2.19
+len base -3+w m 1 d 17 sols 0 leaves 4848075 basic 2.593488e-4 refined 5.446325e-3 refined_zerofree 9.216211e-4 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 4.72
+len base -3+w m 1 d 18 sols 0 leaves 11397481 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 7.35
+len base -3+w m 1 d 19 sols 0 leaves 18300239 basic 2.269893e-4 refined 4.766775e-3 refined_zerofree 7.610282e-4 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 9.12
+len base -3+w m 1 d 20 sols 0 leaves 59740316 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 70.29
+len base -3+w m 1 d 21 sols 0 leaves 118147337 basic 1.168669e-3 refined 2.454204e-2 refined_zerofree 3.799777e-3 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 119.87
+len base -3+w m 1 d 22 sols 0 leaves 174193844 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 138.48
+sol base -3+w m 1 d 23 digits 1,5,8,6,0,5,2,7,4,2,8,11,9,4,9,6,7,10,4,5,10,9,7
+len base -3+w m 1 d 23 sols 1 leaves 654982315 basic 6.294336e-3 refined 1.321810e-1 refined_zerofree 1.978008e-2 near 2,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,2,0 secs 417.55
+len base -3+w m 1 d 24 sols 0 leaves 1148845803 basic 0.000000e0 refined 0.000000e0 refined_zerofree 0.000000e0 near 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 secs 505.21
+sol base -3+w m 1 d 25 digits 2,5,2,6,1,3,2,8,0,12,12,1,4,4,7,2,5,5,1,9,7,0,6,1,11
+len base -3+w m 1 d 25 sols 1 leaves 1669256316 basic 3.702881e-2 refined 7.776051e-1 refined_zerofree 1.145960e-1 near 2,0,0,1,2,1,0,0,0,0,0,0,1,2,1,2,1,1,1,0,0,1,0,1,1,4,0,0,0,1 secs 580.21
+total base -3+w m 1 d 2..25 sols 2 near 5,0,0,1,2,2,0,0,0,0,1,0,1,2,1,2,1,2,2,1,1,1,0,1,1,4,0,0,2,1 secs 1856.43
