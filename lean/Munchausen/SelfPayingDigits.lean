@@ -10,7 +10,8 @@ import Munchausen.Constructions
   root; so `C < log2 b` (Proposition 8.5) and the base is an `r^t` with `t ≥ C + 1`
   (Proposition 9.3, corrected form);
 * Proposition 15.8: `r^t`, with `r` not a perfect power, has a self-paying digit exactly when
-  `t` has a prime factor that does not divide `r`.
+  `t` has a prime factor that does not divide `r`;
+* Propositions 15.4 and 15.5: cycles under both conventions, and shifted cycles.
 -/
 
 namespace Munchausen
@@ -167,11 +168,10 @@ lemma F_zero_eq_sum {b n L : ℕ} (hb : 2 ≤ b) (hn : n < b ^ L) :
   rw [h1, Fs_map_range] at h2
   exact h2
 
-/-- **Proposition 2.3**, one move (section 2.2). Under `0^0 = 0`, if `n` has the digit 0 at
-position `k` and `a` is self-paying at `k`, then `n` is a solution exactly when `n + a b^k`
-is. Self-paying digits can be added to and removed from zero positions freely. -/
-theorem isMunchausen_add_selfPaying {b n a k : ℕ} (hb : 2 ≤ b) (hk : digitAt b n k = 0)
-    (h : SelfPaying b a k) : IsMunchausen b 0 n ↔ IsMunchausen b 0 (n + a * b ^ k) := by
+/-- Placing a self-paying digit `a` at a zero position `k` adds `a b^k = a^a` to both `n` and
+`F(n)` (under `0^0 = 0`, proof of Proposition 2.3). -/
+lemma F_add_selfPaying {b n a k : ℕ} (hb : 2 ≤ b) (hk : digitAt b n k = 0)
+    (h : SelfPaying b a k) : F b 0 (n + a * b ^ k) = F b 0 n + a * b ^ k := by
   classical
   -- a common length `L` for both numbers
   obtain ⟨L, hL, hkL⟩ : ∃ L, n + a * b ^ k < b ^ L ∧ k < L := by
@@ -207,14 +207,62 @@ theorem isMunchausen_add_selfPaying {b n a k : ℕ} (hb : 2 ≤ b) (hk : digitAt
         simp only [f, Function.update_of_ne (Finset.ne_of_mem_erase hi)]
     rw [this, hk]
     simp [f]; ring
-  have hF : F b 0 (n + a * b ^ k) = F b 0 n + a * b ^ k := by
-    have h2 := F_ofDigits_zero (b := b) (by omega) ((List.range L).map f)
-      (fun d hd => by obtain ⟨i, -, rfl⟩ := List.mem_map.1 hd; exact hf i)
-    rw [ofDigits_map_range, hval, Fs_map_range, hw, ← h.balance] at h2
-    exact h2
+  have h2 := F_ofDigits_zero (b := b) (by omega) ((List.range L).map f)
+    (fun d hd => by obtain ⟨i, -, rfl⟩ := List.mem_map.1 hd; exact hf i)
+  rw [ofDigits_map_range, hval, Fs_map_range, hw, ← h.balance] at h2
+  exact h2
+
+/-- **Proposition 2.3**, one move (section 2.2). Under `0^0 = 0`, if `n` has the digit 0 at
+position `k` and `a` is self-paying at `k`, then `n` is a solution exactly when `n + a b^k`
+is. Self-paying digits can be added to and removed from zero positions freely. -/
+theorem isMunchausen_add_selfPaying {b n a k : ℕ} (hb : 2 ≤ b) (hk : digitAt b n k = 0)
+    (h : SelfPaying b a k) : IsMunchausen b 0 n ↔ IsMunchausen b 0 (n + a * b ^ k) := by
   unfold IsMunchausen
-  rw [hF]
+  rw [F_add_selfPaying hb hk h]
   omega
+
+/-! ### Propositions 15.4 and 15.5: cycles under both conventions -/
+
+/-- **Proposition 15.4** (section 15.1.4). On numbers without the digit 0 the two conventions
+give the same map `F`, so a cycle whose members have no digit 0 is a cycle under both
+conventions. -/
+theorem prop15_4 {b : ℕ} {c : ℕ → ℕ} (h0 : ∀ i, 0 ∉ Nat.digits b (c i))
+    (hc : ∀ i, F b 0 (c i) = c (i + 1)) : ∀ i, F b 1 (c i) = c (i + 1) := by
+  intro i
+  rw [F_one_eq, List.count_eq_zero_of_not_mem (h0 i), add_zero, hc i]
+
+/-- Under `0^0 = 0`, a number ending in 0 has `F(n + 1) = F(n) + 1` (proof of
+Proposition 2.1). -/
+lemma F_succ_of_mod_eq_zero {b n : ℕ} (hb : 2 ≤ b) (h0 : n % b = 0) :
+    F b 0 (n + 1) = F b 0 n + 1 := by
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · simp [F, show 1 < b by omega]
+  have hd1 : Nat.digits b n = 0 :: Nat.digits b (n / b) := by
+    rw [Nat.digits_def' (by omega) hn, h0]
+  have hd2 : Nat.digits b (n + 1) = 1 :: Nat.digits b (n / b) := by
+    rw [Nat.digits_def' (by omega) (by omega)]
+    have e1 : (n + 1) % b = 1 := by
+      rw [Nat.add_mod, h0, Nat.zero_add, Nat.mod_mod, Nat.mod_eq_of_lt (by omega)]
+    have e2 : (n + 1) / b = n / b := by
+      apply Nat.succ_div_of_not_dvd
+      intro hdvd
+      have := Nat.mod_eq_zero_of_dvd hdvd
+      omega
+    rw [e1, e2]
+  simp only [F, hd1, hd2, Fs_cons, w_zero, w_one]
+  omega
+
+/-- **Proposition 15.5** (section 15.1.4). Under `0^0 = 0`: if every member of a cycle ends in
+0, adding 1 to every member gives a cycle of the same length; if every member has the digit 0
+at position `k` and `a` is self-paying at `k`, adding `a b^k` to every member gives a cycle of
+the same length (the shift is injective, so the length is kept). -/
+theorem prop15_5 {b : ℕ} (hb : 2 ≤ b) {c : ℕ → ℕ} (hc : ∀ i, F b 0 (c i) = c (i + 1)) :
+    ((∀ i, c i % b = 0) → ∀ i, F b 0 (c i + 1) = c (i + 1) + 1) ∧
+      ∀ {a k : ℕ}, SelfPaying b a k → (∀ i, digitAt b (c i) k = 0) →
+        ∀ i, F b 0 (c i + a * b ^ k) = c (i + 1) + a * b ^ k := by
+  refine ⟨fun h0 i => ?_, fun hsp hk i => ?_⟩
+  · rw [F_succ_of_mod_eq_zero hb (h0 i), hc i]
+  · rw [F_add_selfPaying hb (hk i) hsp, hc i]
 
 /-- **Proposition 2.3**, the core (section 2.2). Under `0^0 = 0`, let `S` be a set of
 positions below `L` (with `n < b^L`) that hold self-paying digits of `n`. Removing them all
