@@ -1198,4 +1198,34 @@ theorem theorem25_5_conditions {j a : ℕ} (hj : 3 ≤ j) (ha : 1 ≤ a) :
     rw [ZMod.natCast_eq_natCast_iff'] at h1
     rw [h1, Nat.mod_eq_of_lt (by omega)]
 
+/-! ### Proposition 15.15: one integer in many bases -/
+
+/-- **Proposition 15.15** (section 15.6). Under `0^0 = 0`, let `c = r^u` with `r ≥ 2`, `u ≥ 1`.
+In every base `r^t` with `u < t` and `t ∣ u (c - 1)` the string `(c, 0, ..., 0, 1)` with `c` at
+the self-paying position `k = u (c - 1)/t` is a solution, of value `c^c + 1`; and `(1, c)` is a
+solution of the same value in base `c^c - c + 1`. -/
+theorem prop15_15 {r u t : ℕ} (hr : 2 ≤ r) (hu : 1 ≤ u) (hut : u < t)
+    (hdvd : t ∣ u * (r ^ u - 1)) :
+    IsSolution (r ^ t) 0 (r ^ u :: (List.replicate (u * (r ^ u - 1) / t - 1) 0 ++ [1])) ∧
+      P (r ^ t) (r ^ u :: (List.replicate (u * (r ^ u - 1) / t - 1) 0 ++ [1])) =
+        (r ^ u) ^ (r ^ u) + 1 ∧
+      IsSolution ((r ^ u) ^ (r ^ u) - r ^ u + 1) 0 [1, r ^ u] := by
+  have hsp := selfPaying_of_dvd hr hu hut hdvd
+  set c := r ^ u
+  set k := u * (c - 1) / t
+  obtain ⟨hc2, hk1, hcb, hbal⟩ := hsp
+  have hb : 2 ≤ r ^ t := by omega
+  have hlen : (List.replicate (k - 1) 0 ++ [1]).length = k := by simp; omega
+  have hP : P (r ^ t) (c :: (List.replicate (k - 1) 0 ++ [1])) = c ^ c + 1 := by
+    rw [P_cons, hlen, P_replicate_zero_append, P_singleton, Nat.cast_id, Nat.cast_one, hbal]
+  refine ⟨⟨?_, fun _ => by simp; omega, ?_⟩, hP, isSolution_one_c hc2⟩
+  · intro d hd
+    rcases List.mem_cons.1 hd with rfl | hd
+    · exact hcb
+    rcases List.mem_append.1 hd with hd | hd
+    · rw [List.eq_of_mem_replicate hd]; omega
+    · rw [List.mem_singleton.1 hd]; omega
+  · rw [hP]
+    simp [Fs_append, w_of_ne_zero 0 (show c ≠ 0 by omega)]
+
 end Munchausen

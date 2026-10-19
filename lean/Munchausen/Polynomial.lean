@@ -172,4 +172,79 @@ theorem IsSolution.negPartner {b m s₁ s₂ s₃ : ℕ} (h : IsSolution b m [s�
   simp [P_cons]
   ring
 
+/-- **Proposition 16.15**, the algebra (section 16.4). Let `a r^2 + b r + c` have `a > 0`,
+`c < 0` and a rational root `p/q` in lowest terms (`q > 0`). Then it factors over `ℤ` as
+`(q r - p)(q' r - p')` with `q q' = a`, so the other root `p'/q'` is rational, and `p p' = c < 0`:
+the roots have opposite signs. -/
+theorem prop16_15_quadratic {a b c p q : ℤ} (ha : 0 < a) (hc : c < 0) (hq : 0 < q)
+    (hcop : IsCoprime p q) (hroot : a * p ^ 2 + b * p * q + c * q ^ 2 = 0) :
+    ∃ p' q' : ℤ, q * q' = a ∧ p * p' = c ∧ 0 < q' ∧
+      ∀ r : ℤ, a * r ^ 2 + b * r + c = (q * r - p) * (q' * r - p') := by
+  have hp0 : p ≠ 0 := by
+    rintro rfl
+    have : c * q ^ 2 = 0 := by linear_combination hroot
+    rcases mul_eq_zero.1 this with h | h
+    · omega
+    · exact absurd (pow_eq_zero_iff (n := 2) (by norm_num) |>.1 h) hq.ne'
+  -- `q ∣ a p^2` and `p ∣ c q^2`
+  have hqa : q ∣ a := by
+    have h1 : q ∣ a * p ^ 2 := ⟨-(b * p + c * q), by linear_combination hroot⟩
+    exact (hcop.symm.pow_right (n := 2)).dvd_of_dvd_mul_right h1
+  have hpc : p ∣ c := by
+    have h1 : p ∣ c * q ^ 2 := ⟨-(a * p + b * q), by linear_combination hroot⟩
+    exact (hcop.pow_right (n := 2)).dvd_of_dvd_mul_right h1
+  obtain ⟨q', hq'⟩ := hqa
+  obtain ⟨p', hp'⟩ := hpc
+  refine ⟨p', q', hq'.symm, hp'.symm, ?_, ?_⟩
+  · by_contra h
+    push Not at h
+    have : q * q' ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hq.le h
+    omega
+  · -- `b = -(q p' + p q')`
+    have hb : b = -(q * p' + p * q') := by
+      have : p * q * (b + (q * p' + p * q')) = 0 := by
+        rw [hq', hp'] at hroot; linear_combination hroot
+      rcases mul_eq_zero.1 this with h | h
+      · exact absurd h (mul_ne_zero hp0 hq.ne')
+      · linarith
+    intro r
+    rw [hb, hq', hp']; ring
+
+/-- **Proposition 16.15** (section 16.4). If `Q_s` of a 3-digit string `(s₁, s₂, s₃)` with
+`s₁ ≥ 1` has a rational root `p/q` in lowest terms, then `Q_s(r) = (q r - p)(q' r - p')` over
+`ℤ` with `q q' = s₁`, and the two roots have opposite signs. -/
+theorem prop16_15 {m s₁ s₂ s₃ : ℕ} (hs : 1 ≤ s₁) {p q : ℤ} (hq : 0 < q) (hcop : IsCoprime p q)
+    (hroot : ((Q m [s₁, s₂, s₃]).map (Int.castRingHom ℚ)).eval ((p : ℚ) / q) = 0) :
+    ∃ p' q' : ℤ, q * q' = s₁ ∧ p * p' < 0 ∧ 0 < q' ∧
+      ∀ r : ℤ, (Q m [s₁, s₂, s₃]).eval r = (q * r - p) * (q' * r - p') := by
+  have hQ : ∀ r : ℤ, (Q m [s₁, s₂, s₃]).eval r =
+      s₁ * r ^ 2 + s₂ * r + ((s₃ : ℤ) - Fs m [s₁, s₂, s₃]) := by
+    intro r; rw [eval_Q_int]; simp [P_cons]; ring
+  set c : ℤ := (s₃ : ℤ) - Fs m [s₁, s₂, s₃]
+  have hc : c < 0 := by
+    have h1 := one_le_w (m := m) (show s₁ ≠ 0 by omega)
+    have h2 := le_w' m s₃
+    simp only [c, Fs_cons, Fs_nil]
+    push_cast
+    omega
+  have hqQ : (q : ℚ) ≠ 0 := by exact_mod_cast hq.ne'
+  have hroot' : (s₁ : ℤ) * p ^ 2 + s₂ * p * q + c * q ^ 2 = 0 := by
+    have h := hroot
+    rw [eval_Q] at h
+    simp only [P_cons, P_nil, List.length_cons, List.length_nil, Fs_cons, Fs_nil] at h
+    have : ((s₁ * p ^ 2 + s₂ * p * q + c * q ^ 2 : ℤ) : ℚ) = 0 := by
+      calc ((s₁ * p ^ 2 + s₂ * p * q + c * q ^ 2 : ℤ) : ℚ)
+          = (q : ℚ) ^ 2 * ((s₁ : ℚ) * ((p : ℚ) / q) ^ (0 + 1 + 1) +
+              ((s₂ : ℚ) * ((p : ℚ) / q) ^ (0 + 1) + ((s₃ : ℚ) * ((p : ℚ) / q) ^ 0 + 0)) -
+              ((w m s₁ + (w m s₂ + (w m s₃ + 0)) : ℕ) : ℚ)) := by
+            simp only [c, Fs_cons, Fs_nil]
+            push_cast
+            field_simp
+            ring
+        _ = 0 := by rw [h, mul_zero]
+    exact_mod_cast this
+  obtain ⟨p', q', h1, h2, h3, h4⟩ :=
+    prop16_15_quadratic (by exact_mod_cast hs) hc hq hcop hroot'
+  exact ⟨p', q', h1, h2 ▸ hc, h3, fun r => (hQ r).trans (h4 r)⟩
+
 end Munchausen

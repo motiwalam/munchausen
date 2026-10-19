@@ -19,11 +19,12 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
-(Examples), Conj (Conjectures).
+(Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
+(SearchRules).
 
-Counts of table rows at the time of writing: 109 formalized (one of them a
-list of computed solutions checked by `decide`), 8 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 62 not formalized and 2 not
+Counts of table rows at the time of writing: 133 formalized (one of them a
+list of computed solutions checked by `decide`), 19 partial, 11 rows of open
+problems (14 `Prop`s), 4 refuted conjectures, 67 not formalized and 4 not
 stated.
 
 ## Chapter 1. Basics
@@ -87,7 +88,7 @@ stated.
 | Corollary 8.4 and its correction | none | not formalized (depends on a computation; the correction is Proposition 22.8) |
 | Proposition 8.5 (self-paying digits not adjacent, fewer than `log2 b`) | `SelfPaying.position_gt`, `prop8_5_ineq` [Cons], `card_selfPaying_lt_log` [SPD] | formalized (positions `k' ≥ 2k + 1`; the proof shows `k' > r k`) |
 | 8.3: under `0^0 = 1` only `(a,1)` from zero-balance placements | `zero_balance_solution`, `selfPaying_of_balance` [Cons] | formalized |
-| Proposition 8.6 | none | not formalized (bookkeeping of near-solutions; elementary) |
+| Proposition 8.6 | `prop8_6`, `prop8_6_iff`, `SPFill` [SPD] | formalized (each self-paying digit placed on a 0 lowers the defect by 1; a filled string satisfies the equation exactly when the zeroed string has defect `j`) |
 
 ## Chapters 9 and 10
 
@@ -131,7 +132,7 @@ stated.
 | Proposition 14.4 | `neg_residue_invariant_iff` [Other] | formalized |
 | Proposition 14.5 | `IsNegSolution.dvd` [Other] | formalized |
 | 14.1.1: odd `b`, `0^0 = 1`, even zeros | `IsNegSolution.even_count_zero` [Other] | formalized |
-| Proposition 14.6 (length at most `b+1`) | none | not formalized (odd length is Proposition 12.2; the bound is an inequality like 1.1) |
+| Proposition 14.6 (length at most `b+1`) | `prop14_6`, `prop14_6_ineq`, `neg_base_odd_lower`, `IsNegSolution.odd_length` [Other, Poly] | formalized (with odd length this gives `d ≤ b` for odd `b`) |
 | Propositions 14.8, 14.9, 14.10 (imaginary and Gaussian bases) | none | not formalized |
 | Propositions 14.7, 14.11 | none | not formalized (model) |
 
@@ -155,7 +156,7 @@ stated.
 | Theorem 15.13 | `covering_27` [Res] | formalized |
 | example `(2,1,x)` | `not_isSolution_two_one` [Res] | formalized |
 | Theorem 15.14 (chains and cycles) | none | not formalized |
-| Proposition 15.15 | none | not formalized |
+| Proposition 15.15 | `prop15_15` [Cons] | partial: `c^c + 1` is a solution in every base `r^t` with `u < t`, `t ∣ u (c - 1)`, and in base `c^c - c + 1`; that the number of such `t` is unbounded is not formalized |
 | Proposition 15.16 (needs `c ≥ 3` for the pair `(c,1)`) | `prop15_16`, `pow_self_pair`, `pow_self_injective` [Short] | formalized |
 | Proposition 15.17 | `prop15_17` [Window] | formalized |
 
@@ -171,7 +172,7 @@ stated.
 | Proposition 16.8 (3 and 5 never exclude; no finite set of primes suffices) | `prop16_8_a`, `prop16_8_b`, `prop16_8_finite` [Local] | formalized |
 | Proposition 16.9 (abc triple) | none | not formalized |
 | Propositions 16.10, 16.11, Theorem 16.12, Corollary 16.13, Theorem 16.14 | none | not formalized (Chebotarev, Galois groups) |
-| Proposition 16.15 (rational roots for `k = 3`) | none | not formalized (Gauss's lemma; possible) |
+| Proposition 16.15 (rational roots for `k = 3`) | `prop16_15`, `prop16_15_quadratic` [Poly] | formalized (`Q_s = (q r - p)(q' r - p')` over `ℤ` with `q q' = s_1`, roots of opposite signs; the proof divides out the root instead of citing Gauss's lemma) |
 | Proposition 16.16 (no twins for `q > 1`) | none | not formalized (needs the AFS number system) |
 | Theorem 16.17 | none | not formalized |
 
@@ -214,7 +215,9 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Lemma 20.1 | `lemma20_1`, `lemma20_1_root` [Window] | formalized |
-| Propositions 20.2, 20.5, Lemma 20.4, Theorem 20.3 | none | not formalized (counting; Lemma 20.4 is elementary) |
+| Proposition 20.2 | `prop20_2`, `card_multisets_le`, `sum_inv_le_harmonic`, `card_le_of_window` [Window] | formalized |
+| Lemma 20.4 | `lemma20_4`, `prod_le_lcm_mul_pow` [Window] | formalized (for `r ≥ 1`; see problem 7) |
+| Theorem 20.3, Proposition 20.5 | none | not formalized (asymptotics of the counts of Proposition 20.2 and Lemma 20.4) |
 | Lemma 20.6 | `multiple_mem_T` [Res] | formalized |
 | Lemma 20.7 | `lemma20_7`, `step_lemma20_7` [Res] | formalized (for every prime `p`; the library's "odd" is not needed) |
 | Theorem 20.8 | `theorem20_8`, `exists_start`, `exists_generator_avoiding` [Res] | formalized (`p = 7` by a finite check, `p ≥ 11` with three generators) |
@@ -226,7 +229,7 @@ stated.
 | Proposition 20.14 | none | not formalized |
 | Lemmas 20.15, 20.16, Proposition 20.17, Theorem 20.18 | none | not formalized (orders in quadratic fields; cites Matveev) |
 | Proposition 20.20 | `prop20_20` [Short] | formalized |
-| Lemma 20.21 | `lemma20_21_a`, `lemma20_21_a_even`, `lemma20_21_b_three`, `lemma20_21_b_even`, `lemma20_21_b_prime`, `lemma20_21_c_even`, `lemma20_21_c_five`, `lemma20_21_d` [Local] | partial: all four parts; the direct check of `x ≤ 5` for `c = 25` in (a) is not formalized (the exception `(3, 6, 26)` is checked) |
+| Lemma 20.21 | `lemma20_21_a`, `lemma20_21_a_even`, `lemma20_21_a_25`, `lemma20_21_b_three`, `lemma20_21_b_even`, `lemma20_21_b_prime`, `lemma20_21_c_even`, `lemma20_21_c_five`, `lemma20_21_d` [Local] | formalized (all four parts; for `c = 25` the direct check of `x ≤ 5` leaves only `(3, 6, 26)`) |
 | Lemma 20.22, Propositions 20.23, 20.24, 20.25, 20.29, Theorems 20.26, 20.27, Corollary 20.28 | none | not formalized (quadratic orders and Laurent) |
 | Theorems 20.19, 20.30 | none | not formalized (computation) |
 | Question 51 | `Question51_two`, `Question51_three` [Conj] | conjecture |
@@ -241,7 +244,7 @@ stated.
 | Proposition 21.3 | `ffWeight_add_C` [Other], `IsFFSolution.add_C` [FF] | formalized |
 | Proposition 21.4 | `ffWeight_eq_mul_pow_iff`, `ffWeight_C_mul_X_pow_iff`, `IsFFSolution.add_selfPaying` [FF] | formalized |
 | Proposition 21.5 | `sub_one_dvd_ringVal_sub_sum` [Other] | formalized (in any commutative ring) |
-| Theorem 21.6 | none | not formalized (traces) |
+| Theorem 21.6 (`k(B) ≥ ω(B - 1)`) | `theorem21_6`, `kDim`, `Jsum`, `finrank_ker_frobR`, `finrank_ker_le_kDim` [MT] | formalized (via Lemma 29.8 (4) and Berlekamp's count `dim R^φ = ω`, in place of traces) |
 | Theorem 21.7 | `theorem21_7`, `theorem21_7_card`, `theorem21_7_necessary` [FF] | formalized (the proof is shorter than the library's: once `B - 1 ∣ T^p - T`, the digit sum is `c + βT` and every `c` works) |
 | Proposition 21.8 | none | not formalized (cites the AFS representation theorem) |
 | Proposition 21.9 | none | not formalized |
@@ -278,11 +281,16 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Lemma 24.1 (Frobenius blocks) | `lemma24_1`, `lemma24_1_zero`, `frobBlock` [FF], `expand_ringVal` [Other] | formalized |
-| Proposition 24.2, Corollaries 24.3, 24.4, Lemma 24.5, Proposition 24.6 | none | not formalized (now within reach of `lemma24_1`) |
+| Proposition 24.2 (Horner form) | `prop24_2` [FF] | formalized |
+| Corollary 24.3 | none | not formalized (the assembly of all digits from `p_0, ..., p_(e-1)`) |
+| Corollary 24.4 (forced zeros) | `corollary24_4`, `corollary24_4_ffF` [FF] | formalized (for every Horner sum of digits, and for `F(n)`) |
+| Lemma 24.5 | `lemma24_5`, `lemma24_5_zero_block` [FF] | formalized |
+| Proposition 24.6 | `prop24_6_one`, `ffDigit_add`, `ffDigit_C_mul` [FF] | partial: (1) (`β_r(d) = d_(e-1) τ_r`, from the `F_p`-linearity of the digits); (2) not formalized |
 | Lemma 24.7 | `IsFFSolution.comp` [FF] | formalized |
 | Lemma 24.8 | `IsFFSolution.C_mul_add_C`, `C_mul_add_C_injective` [FF] | formalized |
 | Lemmas 24.9, 24.10 | none | not formalized |
-| Proposition 24.11, Corollary 24.12 | none | not formalized (traces) |
+| Proposition 24.11 | `prop24_11`, `ffF_one_eq`, `sub_pow_eq_sub_frob` [FF] | formalized for `q = p` prime (as all of [FF]); the proof iterates `y ↦ y^p` in `F_p[T]/(P)` in place of the trace |
+| Corollary 24.12 | none | not formalized ((1) needs the digits of the solutions of Theorem 21.7; (2) is computed) |
 | Proposition 24.13, Theorem 24.15, Corollary 24.16 | none | not formalized |
 
 ## Chapter 25. Identity families and 3-digit solutions
@@ -290,11 +298,11 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Definition 25.1, Theorem 25.2 (the last digit is large) | `theorem25_2` [Three] | formalized (core form: `P_s(r) - E` is not `lam A(r)^j` when `E ≥` the last digit, with the next digit nonzero if equal; this is exactly the situation when the last digit is not large; the proof uses the intermediate value theorem and a derivative instead of Descartes' rule) |
-| Corollary 25.3 | none | not formalized (depends on 25.2) |
+| Corollary 25.3 | `corollary25_3` [Three] | formalized (the form `r P_t(r) + C = lam A^j` and the solution criterion `x^x = lam A(b)^j`; that `x` is last is Theorem 25.2; the normalization of `A` by Gauss's lemma is not stated) |
 | Theorem 25.4 | none | not formalized ((a) is Theorem 22.6 and 25.5 after rescaling; (b), (c) need valuations) |
 | Theorem 25.5 | `theorem25_5`, `theorem25_5_conditions` [Cons] | formalized (the prime condition is stated as `c ∣ (j-1)^c`, which is equivalent; the conditions hold for `c = (j-1)^a`) |
 | Proposition 25.6 | none | not formalized |
-| Theorem 25.7 | `theorem25_7_i`, `theorem25_7_i_parity` [TDB], `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading`, `prop22_8`, `R_pos_middle`, `R_pos_leading` [Three] | partial: case (i) for every `x` (with `lam = 1` for even `x` and `x / lam` a square for odd `x`) and case (ii) in all three positions; case (iii) (no power identity, the Pell form) is not formalized |
+| Theorem 25.7 | `theorem25_7_i`, `theorem25_7_i_parity` [TDB], `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading`, `theorem25_7_iii_last`, `theorem25_7_iii_middle`, `theorem25_7_iii_leading`, `complete_square`, `prop22_8`, `R_pos_middle`, `R_pos_leading` [Three]; `pell_last`, `pell_middle` [SR] | formalized: case (i) for every `x` (with `lam = 1` for even `x` and `x / lam` a square for odd `x`), case (ii) in all three positions, and case (iii): a square identity forces `R = 0` (large digit last), and there is none with the large digit in the middle or leading (via Theorem 25.2); the Pell form is `complete_square` |
 | Conjecture 25.8 | none | not stated (it refers to "the two linear families"; could be stated with Theorems 22.6 and 25.5) |
 | Proposition 25.9, Theorem 25.10 | `prop25_9`, `theorem25_10` [TDB] | formalized |
 | Theorem 25.11, Heuristic 25.12 | none | not formalized (computation, heuristic) |
@@ -311,7 +319,7 @@ stated.
 |---|---|---|
 | Lemma 26.1 (the swap lemma) | `swap_lemma_perm`, `swap_lemma`, `swap_last_two` [Search] | formalized |
 | Corollary 26.2 (the class of the moved offset) | `corollary26_2`, `corollary26_2_odd`, `repunit_identity` [Search] | formalized (general and odd bases; the even-base case is the same identity) |
-| Lemma 26.3 (the fibre) | none | not formalized (bookkeeping on near-solutions) |
+| Lemma 26.3 (the fibre) | `lemma26_3`, `lemma26_3_unique` [Search] | formalized |
 | Lemma 26.4 (other systems) | `swap_lemma`, `swap_last_two` [Search] | partial: base `-b` (the ring identity at `r = -b`); factorial, Pisot and `F_q[T]` not formalized |
 | Proposition 26.5, Heuristic 26.6, Proposition 26.9 | none | not formalized (statements about the probabilistic model, computed) |
 | Proposition 26.10 | `prop26_10_one`, `prop26_10_two`, `ImageSet` [Search] | formalized |
@@ -326,6 +334,62 @@ stated.
 | Proposition 27.8 | `prop27_8`, `not_dvd_w_of_coprime` [Search] | formalized |
 | Corollary 27.9 | `corollary27_9` [Search] | formalized (as: if every unrevealed value below `k` has `b^L ∣ w(v)`, then `k ≤ 1`, and `k = 0` under `0^0 = 1`) |
 
+## Chapter 29. Theorems about the model
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 29.1, Lemmas 29.3, 29.4, Theorem 29.5, Corollary 29.6, Proposition 29.7 | none | not formalized (theorems about the probabilistic model; Lemma 29.3 cites the Barbour-Hall bound) |
+| Lemma 29.2 (weights) | `lemma29_2` [MT] | formalized |
+| Lemma 29.8 | `finrank_ker_frobR`, `natCard_fixed_local`, `exists_C_of_dvd_pow_card_sub` (1); `range_pow_sub_one_le`, `Jsum_le_range` (4) [MT] | partial: (1) for `j = 1` (Berlekamp's count `dim R^φ = ω(B - 1)`, by the Chinese remainder theorem) and (4); (1) for `j ≥ 2`, (2) and (3) (traces) not formalized |
+| Theorem 29.9 | none | not formalized (needs Lemma 29.8 (3)) |
+| Corollary 29.10 | `exists_good_factor`, `exists_coprime_of_sum` [MT] | partial: a good factor exists when `e - 1` is a prime power; the conclusion `k = ω` needs Theorem 29.9 |
+| Theorem 29.11 | `theorem29_11_one`, `kDim_le`, `codim_le_finrank_ker_add_one`, `comp_pow_eq_of_codim_gt`, `theorem29_11_three`, `topCoeff`, `exists_topCoeff_mul_ne_zero` [MT] | partial: (1) and (3) in full; of (2), the necessity of (a) (`Λ_(e-2) = 0`, hence `ℓ ∘ φ^(e-1) = ℓ`); (b), (c), the converse of (2), and (4) are not formalized |
+| Remark 29.12 | none | not formalized |
+| Conjecture 29.13 (`k(B) = ω(B - 1)`) | `Conjecture29_13` [MT] | conjecture (proved for non-squarefree `B - 1` by `theorem29_11_three`) |
+| Lemma 29.14 (Assumption R fails at `b = 10`, `d = 2`) | `lemma29_14` [MT] | formalized (the digit 3 is the only 1-digit string with a 2-digit weight) |
+| Theorem 29.15, Corollary 29.16, Propositions 29.17, 29.19 | none | not formalized (model, computation, exponential sums) |
+| Conjecture 29.18 | none | not stated (exponential sums) |
+| Heuristic 29.20, Lemma 29.21 | none | not formalized (model) |
+
+## Chapter 30. Connections to other fields
+
+| result | Lean name | status |
+|---|---|---|
+| Lemma 30.1 (`g(z) ≥ 2 z g(z-1)`) | `lemma30_1`, `g`, `g_mono` [App] | formalized |
+| Lemma 30.2 (dissociation) | `lemma30_2`, `lemma30_2_mod` [App] | formalized |
+| Theorem 30.3 | none | not formalized (probability with Chernoff bounds; its counting core is Lemma 30.2) |
+| Lemma 30.4 | `lemma30_4`, `lemma30_4_allowed` [App] | formalized (`x^x < b^d` with `b ≤ 2d`, `b ≥ 12` forces `x ≤ 2d - 5`; every `x < b`, `x ≤ d` is allowed) |
+| Theorem 30.5, Corollary 30.8 | none | not formalized (model) |
+| Proposition 30.6 | `prop30_6_forced`, `prop30_6_step` [App] | partial: `x^d ≡ x (mod p)` for all `x` iff `p - 1 ∣ d - 1`, and `p^d - p ≡ -p (mod p^2)`; the limit law not formalized |
+| Proposition 30.7 | `prop30_7` [App] | partial: the two-step count (pairs with `f x + f y = r` are at most the collisions); the `k`-step form and the probability language not formalized |
+| Conjecture 30.9 | none | not stated |
+| Proposition 30.10 | `prop30_10`, `pow_self_modEq_self_iff`, `card_pow_modEq_self`, `sum_div_orderOf` [App] | formalized (the count `(p-1) + ∑_(d ∣ p-1) φ(d) (p-1)/d` over one period `1 ≤ c ≤ p(p-1)`) |
+| Corollary 30.11 | `corollary30_11_two`, `corollary30_11_two_solution`, `dvd_g_iff_modEq` [App] | partial: (2); (1) and (3) cite Kurlberg, Luca and Shparlinski |
+| correction: 7 has a fixed point (`4^4 ≡ 4 (mod 7)`) | example [App] | formalized |
+| Theorem 30.12 | `IsNarc2`, `isNarc2_iff`, `IsNarc2.swap` [App] | partial: the bijection with the representations `b^2 + 1 = A^2 + B^2`, `B ≥ 3` odd, and the pairing `s1 ↔ b - s1`; the count `τ(b^2 + 1) - 2` needs `r_2(N) = 4 ∑ χ(d)`, which is not in Mathlib |
+| Corollary 30.13 | `corollary30_13_one`, `corollary30_13_two`, `not_dvd_of_prime_sq_add_sq` [App] | partial: (1) with the two explicit numbers, and (2) in the direction "`b` even, `b^2 + 1` prime ⟹ none"; the converse, (3) and (4) (Iwaniec, Hooley) not formalized |
+| Proposition 30.14 | `card_divisors_sq_add_one` [App] | partial: the divisor pairing `τ(n^2 + 1) = 2 #{d ≤ n : d ∣ n^2 + 1}`; the asymptotics not formalized |
+
+## Chapter 31. Pruning by the residue
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 31.1 (the residue rule) | `theorem31_1`, `IsSolution.sum_g_modEq_zero`, `Fs_eq_sum_g_add_sum` [SR] | formalized |
+| Corollary 31.2 | none | not formalized (a statement about the engine; the rule it applies is Theorem 31.1) |
+| Lemma 31.4 (the interval is the hull) | `lemma31_4`, `lemma31_4_attained` [SR] | formalized |
+| Proposition 31.5 | `prop31_5_hi`, `prop31_5_lo` [SR] | formalized (the two interval inequalities; the claim about the nodes of the engine is about code) |
+| Heuristics 31.3, 31.6 | none | not formalized (heuristic) |
+
+## Chapter 32. The basic questions revisited
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 32.1 (Bugeaud and Laurent) | none | not formalized (cited) |
+| Theorem 32.2 | `pell_last`, `pell_middle`, `pell_last_R_ne_zero`, `pell_middle_R_ne_zero`, `two_pow_dvd_V` [SR] | partial: the reduction to `U^2 - n V^2 = R` with `V = 2 f x^(x/2)`, `R ≠ 0` for non-square `n`, and `2^(x/2+2) ∣ 2V`; the Baker step (heights, 2-adic logarithms, Theorem 32.1) is not formalized |
+| Theorem 32.3 | `isSolution_last_iff_disc`, `isSolution_mid_iff_disc`, `sieve_last`, `sieve_mid` [SR] | partial: the test `D = U^2` and the soundness of the sieve (`D` is a square modulo every `l`); the bound `X0` and the run are computations |
+| Corollary 32.4, Proposition 32.7 | none | not formalized (computation) |
+| Theorem 32.5, Proposition 32.6 | none | not formalized (Baker and Matveev bounds, class number formula) |
+
 ## Open questions stated as `Prop`s
 
 `FinitenessConjecture` (refuted), `MissingLengthsConjecture` (refuted),
@@ -333,8 +397,9 @@ stated.
 `NoFullLengthConjecture_one`, `BoundedCountOne`, `InfinitelyManyEmptyBases`,
 `EveryCountOccurs`, `Conjecture_10_3_lower`, `Question65`, `Question50`,
 `Question36`, `Question39`, `Question12`, `Question32`, `Question51_two`,
-`Question51_three`. All are in `Conjectures.lean`. The round 5 questions (72
-to 89) are research directions and are not stated.
+`Question51_three`, `Conjecture29_13`. All are in `Conjectures.lean`, except
+`Conjecture29_13`, which is in `ModelTheorems.lean`. The round 5 questions (72 to 89)
+are research directions and are not stated.
 
 ## Problems found
 
@@ -372,6 +437,15 @@ Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
    proof of Theorem 25.10: with `e = 0` the last digit is `x = p^p + 1`,
    prime to `p`, so `x^x = p b^2` forces `p = 1`, `x = 2` and `b = 2`, which
    is not a valid base. The Lean proof adds this step (`member_e_pos`).
+6. **Corollary 29.10** (section 29.2.2), a small gap. The list of covered
+   degrees starts at `e = 2`, where `e - 1 = 1` is not a prime power `r^s`
+   with `s >= 1`, and the proof ("`r` divides every `f_i`, hence `e`, but `r`
+   divides `e - 1`") needs a prime `r`. The case `e = 2` holds for the
+   trivial reason that every degree is prime to 1. The Lean statement
+   (`exists_good_factor`) assumes `s >= 1`.
+7. **Lemma 20.4** (section 20.1.4), an edge case. For `r = 0` the claim reads
+   `m > 1`, false for `m = 1`. The lemma needs `r >= 1`, which holds wherever
+   it is used. The Lean statement (`lemma20_4`) assumes a nonempty set.
 
 The library corrections that landed during this work (Proposition 9.3, the
 pair `(c, 1)` in Proposition 15.16 needs `c >= 3`, the negative-base family
@@ -387,12 +461,19 @@ In order of value and effort:
    elementary congruence for `f` near `x = i` in the spirit of
    `step_three_adic` (the derivative vanishes there, so the step is of
    second order).
-2. Theorem 25.7 (iii): no power identity `Q_s = lam A^2 - x^x` when `R != 0`
-   (a polynomial identity over `Q`), and Corollary 25.3.
-3. Chapter 24 with the expansions now in place: Proposition 24.2,
-   Corollaries 24.3 and 24.4, Lemma 24.5, Proposition 24.6, and the traces of
-   Theorem 21.6 and Proposition 24.11.
-4. The claim inside Theorem 27.5 (the interval test of the oracle), which
+2. Chapter 29 with traces: Lemma 29.8 (1) for `j >= 2`, (2) and (3) (the
+   subfields and trace kernels of `F_(q^f)`, Hensel lifting), then
+   Theorem 29.9, the conclusion of Corollary 29.10, Theorem 29.11 (2)
+   (sufficiency, (b), (c)) and (4), and Remark 29.12. The Chinese remainder
+   setup of `finrank_ker_frobR` and the dual argument of
+   `comp_pow_eq_of_codim_gt` are in place.
+3. Theorem 30.12, the count `tau(b^2 + 1) - 2`: needs `r_2(N) = 4 sum chi(d)`
+   (Gaussian integers), which is not in Mathlib; with it, the converse of
+   Corollary 30.13 (2).
+4. Chapter 24: Corollary 24.3 (the assembly of all digits of `F(x)` from
+   `p_0, ..., p_(e-1)`), Proposition 24.6 (2), Corollary 24.12 (1).
+5. The claim inside Theorem 27.5 (the interval test of the oracle), which
    would make the fooling-set bound unconditional.
-5. Lemma 20.4 and Proposition 20.2 (elementary counting), and the check of
-   `x <= 5` in Lemma 20.21 (a).
+6. Smaller items: Theorem 15.14 (chains and cycles of `phi`), Theorem 15.10
+   with abc as a hypothesis, the `k`-step form of Proposition 30.7, and the
+   unbounded number of bases in Proposition 15.15.

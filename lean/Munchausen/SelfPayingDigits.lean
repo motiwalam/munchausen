@@ -408,4 +408,59 @@ theorem prop9_3 (X c : ℕ) (hc : 1 ≤ c) :
       exact_mod_cast (by omega : L + 1 - (c + 2) ≤ L)
     linarith
 
+/-! ### Proposition 8.6: self-paying digits and near-solutions under `0^0 = 1` -/
+
+/-- `SPFill b s s' j`: the string `s'` arises from `s` by replacing `j` zeros with digits that
+are self-paying at their positions (section 8.4). -/
+inductive SPFill (b : ℕ) : List ℕ → List ℕ → ℕ → Prop
+  | nil : SPFill b [] [] 0
+  | keep {x : ℕ} {t t' : List ℕ} {j : ℕ} : SPFill b t t' j → SPFill b (x :: t) (x :: t') j
+  | place {a : ℕ} {t t' : List ℕ} {j : ℕ} :
+      SelfPaying b a t.length → SPFill b t t' j → SPFill b (0 :: t) (a :: t') (j + 1)
+
+lemma SPFill.length_eq {b : ℕ} {s s' : List ℕ} {j : ℕ} (h : SPFill b s s' j) :
+    s.length = s'.length := by
+  induction h with
+  | nil => rfl
+  | keep _ ih => simp [ih]
+  | place _ _ ih => simp [ih]
+
+/-- **Proposition 8.6** (section 8.4). Under `0^0 = 1`, each self-paying digit placed on a 0
+lowers the defect `F(s) - s` by exactly 1. -/
+theorem prop8_6 {b : ℕ} {s s' : List ℕ} {j : ℕ} (h : SPFill b s s' j) :
+    (Fs 1 s' : ℤ) - P (b : ℤ) s' = ((Fs 1 s : ℤ) - P (b : ℤ) s) - j := by
+  induction h with
+  | nil => simp
+  | @keep x t t' j hf ih =>
+    have hl := hf.length_eq
+    simp only [Fs_cons, P_cons, ← hl]
+    push_cast
+    linarith
+  | @place a t t' j hsp hf ih =>
+    have hl := hf.length_eq
+    have hbal : ((a : ℤ) * (b : ℤ) ^ t.length) = ((a ^ a : ℕ) : ℤ) := by
+      exact_mod_cast hsp.2.2.2
+    simp only [Fs_cons, P_cons, ← hl, w_zero, w_of_ne_zero 1 (show a ≠ 0 by have := hsp.1; omega)]
+    push_cast at hbal ⊢
+    linarith
+
+/-- **Proposition 8.6**, the correspondence: if `s'` arises from `s` by placing `j` self-paying
+digits on zeros, then `s'` satisfies the solution equation `P(s') = F(s')` under `0^0 = 1`
+exactly when `s` is a near-solution with defect `j`, `F(s) = P(s) + j`. -/
+theorem prop8_6_iff {b : ℕ} {s s' : List ℕ} {j : ℕ} (h : SPFill b s s' j) :
+    P b s' = Fs 1 s' ↔ Fs 1 s = P b s + j := by
+  have key := prop8_6 h
+  have e1 : ((P b s : ℕ) : ℤ) = P (b : ℤ) s := cast_P b s
+  have e2 : ((P b s' : ℕ) : ℤ) = P (b : ℤ) s' := cast_P b s'
+  constructor
+  · intro hs
+    have h1 : ((P b s' : ℕ) : ℤ) = ((Fs 1 s' : ℕ) : ℤ) := by rw [hs]
+    have h2 : ((Fs 1 s : ℕ) : ℤ) = ((P b s + j : ℕ) : ℤ) := by push_cast; linarith
+    exact_mod_cast h2
+  · intro hs
+    have h1 : ((Fs 1 s : ℕ) : ℤ) = ((P b s + j : ℕ) : ℤ) := by rw [hs]
+    push_cast at h1
+    have h2 : ((P b s' : ℕ) : ℤ) = ((Fs 1 s' : ℕ) : ℤ) := by linarith
+    exact_mod_cast h2
+
 end Munchausen

@@ -235,4 +235,29 @@ theorem theorem27_5 {b : ℕ} (k : ℕ) (G : Finset (Fin b → ℕ)) (θ : (Fin 
     simp only [Set.mem_ofPred_eq] at hxc hxc'
     rw [hxc v hv, hxc' v hv]
 
+/-! ### Lemma 26.3: the fibre of a multiset -/
+
+/-- **Lemma 26.3** (the fibre, section 26.1.2). A rearrangement `s` of the multiset `c` is a
+near-solution at offset `D` exactly when its value is `S(c) + D`, where `S(c) = F(c)`
+depends only on the multiset. -/
+theorem lemma26_3 {b m D : ℕ} {c s : List ℕ} (h : s.Perm c) :
+    P b s = Fs m s + D ↔ P b s = Fs m c + D := by
+  rw [show Fs m s = Fs m c from (h.map (w m)).sum_eq]
+
+/-- **Lemma 26.3**, uniqueness: each pair `(c, D)` gives at most one near-solution. Two
+rearrangements of `c` with digits below `b` that are near-solutions at the same offset are
+equal. -/
+theorem lemma26_3_unique {b m D : ℕ} (hb : 2 ≤ b) {c s s' : List ℕ} (hs : s.Perm c)
+    (hs' : s'.Perm c) (hdig : ∀ d ∈ c, d < b) (h1 : P b s = Fs m s + D)
+    (h2 : P b s' = Fs m s' + D) : s = s' := by
+  rw [lemma26_3 hs] at h1
+  rw [lemma26_3 hs'] at h2
+  have hval : Nat.ofDigits b s.reverse = Nat.ofDigits b s'.reverse := by
+    rw [← P_eq_ofDigits, ← P_eq_ofDigits, h1, h2]
+  have := Nat.ofDigits_inj_of_len_eq (by omega)
+    (by rw [List.length_reverse, List.length_reverse, hs.length_eq, hs'.length_eq])
+    (fun d hd => hdig d (hs.mem_iff.1 (List.mem_reverse.1 hd)))
+    (fun d hd => hdig d (hs'.mem_iff.1 (List.mem_reverse.1 hd))) hval
+  exact List.reverse_injective this
+
 end Munchausen

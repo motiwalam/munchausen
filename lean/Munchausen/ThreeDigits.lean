@@ -511,6 +511,99 @@ theorem theorem25_2 {u : List ℕ} {y z E : ℕ} (hhead : ∀ h : u ++ [y, z] �
     rw [this] at hcoeff
     exact hy (by exact_mod_cast hcoeff)
 
+/-- **Theorem 25.7 (iii)**, large digit last (section 25.1.4). If `(p, q, x)` with `p ≥ 1` has a
+power identity `P_s(r) - w(p) - w(q) = lam A(r)^2` over `ℝ`, then
+`R = q^2 + 4 p (w(p) + w(q) - x) = 0`. So when `R ≠ 0` there is no power identity, and the
+string is a solution exactly when the Pell-type equation `U^2 = N + R` holds. -/
+theorem theorem25_7_iii_last {m p q x : ℕ} (hp : 1 ≤ p) {lam : ℝ} (A : ℝ[X])
+    (hid : P (X : ℝ[X]) [p, q, x] - C ((w m p + w m q : ℕ) : ℝ) = C lam * A ^ 2) :
+    (q : ℝ) ^ 2 + 4 * p * ((w m p : ℝ) + w m q - x) = 0 := by
+  set E : ℝ := ((w m p + w m q : ℕ) : ℝ)
+  have hP : P (X : ℝ[X]) [p, q, x] - C E = C (p : ℝ) * X ^ 2 + C (q : ℝ) * X + C ((x : ℝ) - E) := by
+    simp only [P_cons, P_nil, List.length_cons, List.length_nil, map_sub]
+    simp only [C_eq_natCast]
+    ring
+  rw [hP] at hid
+  have hpR : (p : ℝ) ≠ 0 := by exact_mod_cast (show p ≠ 0 by omega)
+  have hp0 : p ≠ 0 := by omega
+  have hc2 := congrArg (fun f => coeff f 2) hid
+  have hlam : lam ≠ 0 := by
+    rintro rfl
+    simp at hc2
+    exact hp0 hc2
+  -- `A` has degree 1
+  have hdeg : A.natDegree = 1 := by
+    have h1 : (C (p : ℝ) * X ^ 2 + C (q : ℝ) * X + C ((x : ℝ) - E)).natDegree = 2 := by
+      compute_degree!
+    rw [hid, natDegree_C_mul hlam, natDegree_pow] at h1
+    omega
+  have hA := eq_X_add_C_of_natDegree_le_one hdeg.le
+  set a := A.coeff 1
+  set c := A.coeff 0
+  rw [hA] at hid
+  have hev : ∀ r : ℝ, p * r ^ 2 + q * r + (x - E) = lam * (a * r + c) ^ 2 := fun r => by
+    have := congrArg (eval r) hid
+    simpa using this
+  have e0 := hev 0
+  have e1 := hev 1
+  have e2 := hev (-1)
+  have hpa : (p : ℝ) = lam * a ^ 2 := by linear_combination (e1 + e2 - 2 * e0) / 2
+  have hqa : (q : ℝ) = 2 * lam * a * c := by linear_combination (e1 - e2) / 2
+  have hE : (E : ℝ) = w m p + w m q := by simp [E]
+  rw [← hE]
+  linear_combination (2 * lam * a * c + q) * hqa - 4 * lam * a ^ 2 * e0 + 4 * (E - x) * hpa
+
+/-- **Theorem 25.7 (iii)** with the large digit in the middle, by Theorem 25.2: `(p, x, q)` with
+`x ≠ 0` has no power identity `P_s(r) - w(p) - w(q) = lam A(r)^j`. -/
+theorem theorem25_7_iii_middle {m p q x : ℕ} (hp : p ≠ 0) (hx : x ≠ 0) {lam : ℝ} (hlam : 0 < lam)
+    {j : ℕ} (hj : 2 ≤ j) (A : ℝ[X]) :
+    P (X : ℝ[X]) [p, x, q] - C ((w m p + w m q : ℕ) : ℝ) ≠ C lam * A ^ j := fun hid =>
+  theorem25_2 (u := [p]) (y := x) (z := q) (fun _ => by simpa using hp)
+    ((le_w' m q).trans (Nat.le_add_left _ _)) (fun _ => hx) hlam hj A hid
+
+/-- **Theorem 25.7 (iii)** with the large digit leading, by Theorem 25.2: under `0^0 = 1`,
+`(x, q, r)` with `x ≠ 0` has no power identity `P_s(r) - w(q) - w(r) = lam A(r)^j`. -/
+theorem theorem25_7_iii_leading {q r x : ℕ} (hx : x ≠ 0) {lam : ℝ} (hlam : 0 < lam)
+    {j : ℕ} (hj : 2 ≤ j) (A : ℝ[X]) :
+    P (X : ℝ[X]) [x, q, r] - C ((w 1 q + w 1 r : ℕ) : ℝ) ≠ C lam * A ^ j := fun hid => by
+  have hq : 1 ≤ w 1 q := by
+    rcases Nat.eq_zero_or_pos q with rfl | hq0
+    · simp
+    · exact one_le_w hq0.ne'
+  have hr := le_w' 1 r
+  exact theorem25_2 (u := [x]) (y := q) (z := r) (fun _ => by simpa using hx)
+    (hr.trans (Nat.le_add_left _ _)) (fun h => by omega) hlam hj A hid
+
+/-- **Corollary 25.3** (section 25.1.1). Let `s = (t, x)` with `x ≥ 1` last, and let
+`P_s(r) - F(t) = lam A(r)^j` over `ℝ`. Then `r P_t(r) + C = lam A(r)^j` with `C = x - F(t)`,
+and for a base `b` above every digit, `s` is a solution exactly when `x^x = lam A(b)^j`. -/
+theorem corollary25_3 {b m x : ℕ} {t : List ℕ} (hx : x ≠ 0) {lam : ℝ} {j : ℕ} {A : ℝ[X]}
+    (hid : P (X : ℝ[X]) (t ++ [x]) - C ((Fs m t : ℕ) : ℝ) = C lam * A ^ j)
+    (hdig : ∀ d ∈ t ++ [x], d < b) (hhead : ∀ h : t ++ [x] ≠ [], (t ++ [x]).head h ≠ 0) :
+    (X * P (X : ℝ[X]) t + C ((x : ℝ) - Fs m t) = C lam * A ^ j) ∧
+      (IsSolution b m (t ++ [x]) ↔ ((x ^ x : ℕ) : ℝ) = lam * (A.eval (b : ℝ)) ^ j) := by
+  constructor
+  · rw [← hid, P_append_singleton, map_sub]
+    simp only [C_eq_natCast]
+    ring
+  · have hev := congrArg (eval (b : ℝ)) hid
+    simp only [eval_sub, eval_C, eval_mul, eval_pow] at hev
+    rw [eval_P_X] at hev
+    constructor
+    · intro hs
+      have heq := hs.eq
+      rw [Fs_append, Fs_singleton, w_of_ne_zero m hx] at heq
+      have : (P (b : ℝ) (t ++ [x])) = (Fs m t : ℝ) + ((x ^ x : ℕ) : ℝ) := by
+        rw [← cast_P, heq]; push_cast; ring
+      rw [this] at hev
+      linarith
+    · intro h
+      refine ⟨hdig, hhead, ?_⟩
+      rw [Fs_append, Fs_singleton, w_of_ne_zero m hx]
+      have : (P (b : ℝ) (t ++ [x])) = (Fs m t : ℝ) + ((x ^ x : ℕ) : ℝ) := by linarith
+      rw [← cast_P] at this
+      exact_mod_cast this
+
 end PowerIdentity
 
 /-! ### Lemma 25.13 and Corollary 25.14: the largest digit in one base -/

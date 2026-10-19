@@ -983,6 +983,338 @@ theorem lemma24_1_zero {B d : (ZMod p)[X]} (hB : 0 < B.degree) (hd : d.degree < 
   have h4 : d.natDegree * p ≤ (B.natDegree - 1) * p := Nat.mul_le_mul_right _ (by omega)
   omega
 
+/-- **Proposition 24.2** (Horner form, section 24.2.1): `∑_j Φ^j(D_j) = D_0 + Φ(∑_j Φ^j(D_(j+1)))`
+with `Φ(n) = n(T^p)`. Iterating gives `F(x) = D_0 + m z + Φ(D_1 + Φ(D_2 + ...))`. -/
+theorem prop24_2 (e : ℕ) (D : ℕ → (ZMod p)[X]) :
+    ∑ j ∈ Finset.range (e + 1), expand (ZMod p) (p ^ j) (D j) =
+      D 0 + expand (ZMod p) p (∑ j ∈ Finset.range e, expand (ZMod p) (p ^ j) (D (j + 1))) := by
+  rw [Finset.sum_range_succ', map_sum]
+  simp only [pow_zero, expand_one, ← expand_mul, pow_succ']
+  ring
+
+/-- The `i`-th base-`B` digit of `n`. -/
+noncomputable def ffDigit (B n : (ZMod p)[X]) (i : ℕ) : (ZMod p)[X] := (polyDigits B n).getD i 0
+
+lemma ffDigit_zero_right {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X]) :
+    ffDigit B n 0 = n % B := by
+  by_cases hn : n = 0
+  · simp [ffDigit, hn]
+  have hB0 : B ≠ 0 := by rintro rfl; simp at hB
+  have h : n % B ≠ 0 ∨ n / B ≠ 0 := by
+    by_contra hc
+    push Not at hc
+    apply hn
+    rw [← EuclideanDomain.mod_add_div n B, hc.1, hc.2, mul_zero, add_zero]
+  have := polyDigits_add_mul hB (degree_mod_lt n hB0) h
+  rw [EuclideanDomain.mod_add_div] at this
+  simp [ffDigit, this]
+
+lemma ffDigit_succ {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X]) (i : ℕ) :
+    ffDigit B n (i + 1) = ffDigit B (n / B) i := by
+  by_cases hn : n = 0
+  · simp [ffDigit, hn]
+  have hB0 : B ≠ 0 := by rintro rfl; simp at hB
+  have h : n % B ≠ 0 ∨ n / B ≠ 0 := by
+    by_contra hc
+    push Not at hc
+    apply hn
+    rw [← EuclideanDomain.mod_add_div n B, hc.1, hc.2, mul_zero, add_zero]
+  have := polyDigits_add_mul hB (degree_mod_lt n hB0) h
+  rw [EuclideanDomain.mod_add_div] at this
+  simp [ffDigit, this]
+
+lemma add_div' (f g B : (ZMod p)[X]) : (f + g) / B = f / B + g / B := by
+  simp [div_def, add_divByMonic, mul_add]
+
+lemma C_mul_div' (c : ZMod p) (f B : (ZMod p)[X]) : (C c * f) / B = C c * (f / B) := by
+  rw [div_def, div_def, show C c * f = c • f from (smul_eq_C_mul c).symm, smul_divByMonic,
+    smul_eq_C_mul]
+  ring
+
+lemma C_mul_mod' (c : ZMod p) (f B : (ZMod p)[X]) : (C c * f) % B = C c * (f % B) := by
+  rw [mod_def, mod_def, show C c * f = c • f from (smul_eq_C_mul c).symm, smul_modByMonic,
+    smul_eq_C_mul]
+
+/-- Base-`B` digits are additive (the expansion is `F_p`-linear). -/
+lemma ffDigit_add {B : (ZMod p)[X]} (hB : 0 < B.degree) (f g : (ZMod p)[X]) (i : ℕ) :
+    ffDigit B (f + g) i = ffDigit B f i + ffDigit B g i := by
+  induction i generalizing f g with
+  | zero => simp only [ffDigit_zero_right hB, add_mod]
+  | succ i ih => simp only [ffDigit_succ hB, add_div', ih]
+
+lemma ffDigit_C_mul {B : (ZMod p)[X]} (hB : 0 < B.degree) (c : ZMod p) (f : (ZMod p)[X])
+    (i : ℕ) : ffDigit B (C c * f) i = C c * ffDigit B f i := by
+  induction i generalizing f with
+  | zero => simp only [ffDigit_zero_right hB, C_mul_mod']
+  | succ i ih => simp only [ffDigit_succ hB, C_mul_div', ih]
+
+lemma ffDigit_sum {B : (ZMod p)[X]} (hB : 0 < B.degree) (s : Finset ℕ)
+    (f : ℕ → (ZMod p)[X]) (i : ℕ) : ffDigit B (∑ t ∈ s, f t) i = ∑ t ∈ s, ffDigit B (f t) i := by
+  induction s using Finset.induction_on with
+  | empty => simp [ffDigit]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, ffDigit_add hB, ih]
+
+/-- A polynomial of degree below `r deg B` has digit 0 at position `r`. -/
+lemma ffDigit_eq_zero_of_natDegree_lt {B f : (ZMod p)[X]} (hB : 0 < B.degree) {r : ℕ}
+    (hr : f.natDegree < r * B.natDegree) : ffDigit B f r = 0 := by
+  obtain ⟨hv, hexp⟩ := polyDigits_spec hB f
+  have h1 := hexp.natDegree_ge hB
+  rw [hv] at h1
+  apply List.getD_eq_default
+  by_contra hc
+  have : r * B.natDegree ≤ ((polyDigits B f).length - 1) * B.natDegree :=
+    Nat.mul_le_mul_right _ (by omega)
+  omega
+
+/-- **Lemma 24.5** (section 24.2.2). For a digit `d` of degree `j`, the digit `β_r(d)` of
+`d(T^p)` vanishes for `r > j p / e`, `e = deg B`. -/
+theorem lemma24_5 {B d : (ZMod p)[X]} (hB : 0 < B.degree) {r : ℕ}
+    (hr : d.natDegree * p < r * B.natDegree) : ffDigit B (expand (ZMod p) p d) r = 0 := by
+  apply ffDigit_eq_zero_of_natDegree_lt hB
+  rwa [natDegree_expand]
+
+/-- **Lemma 24.5**, the zero blocks: a zero digit at position `s` of `n` gives `p` zero digits at
+the positions `p s, ..., p s + p - 1` of `n(T^p)`. -/
+theorem lemma24_5_zero_block {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X]) {s r : ℕ}
+    (hr : r < p) (hs : ffDigit B n s = 0) : ffDigit B (expand (ZMod p) p n) (p * s + r) = 0 := by
+  unfold ffDigit at hs ⊢
+  rw [lemma24_1 hB n s hr, hs, map_zero, polyDigits_zero, List.getD_nil]
+
+/-- **Proposition 24.6 (1)** (rank one, section 24.2.2). Let `e = deg B` and
+`(e - 2) p < r e` (that is `r > ⌊(e-2) p / e⌋`). For every digit `d`,
+`β_r(d) = d_(e-1) τ_r`, where `d_(e-1)` is the coefficient of `T^(e-1)` in `d` and `τ_r` is the
+digit at position `r` of `T^((e-1) p)`. -/
+theorem prop24_6_one {B d : (ZMod p)[X]} (hB : 0 < B.degree) (hd : d.degree < B.degree)
+    {r : ℕ} (hr : (B.natDegree - 2) * p < r * B.natDegree) :
+    ffDigit B (expand (ZMod p) p d) r =
+      C (d.coeff (B.natDegree - 1)) * ffDigit B (X ^ ((B.natDegree - 1) * p)) r := by
+  set e := B.natDegree
+  have he : 1 ≤ e := by
+    have := natDegree_pos_iff_degree_pos.2 hB; omega
+  have hde : d.natDegree < e := natDegree_lt_of_digit hd hB
+  have hsum : expand (ZMod p) p d =
+      ∑ t ∈ Finset.range e, C (d.coeff t) * X ^ (t * p) := by
+    conv_lhs => rw [d.as_sum_range' e hde]
+    simp only [map_sum, ← C_mul_X_pow_eq_monomial]
+    refine Finset.sum_congr rfl fun t _ => ?_
+    rw [map_mul, expand_C, map_pow, expand_X, ← pow_mul, mul_comm p]
+  rw [hsum, ffDigit_sum hB, show e = e - 1 + 1 by omega, Finset.sum_range_succ,
+    Finset.sum_eq_zero, zero_add, ffDigit_C_mul hB]
+  · rw [show e - 1 + 1 - 1 = e - 1 by omega]
+  intro t ht
+  rw [Finset.mem_range] at ht
+  rw [ffDigit_C_mul hB, ffDigit_eq_zero_of_natDegree_lt hB, mul_zero]
+  rw [natDegree_X_pow]
+  calc t * p ≤ (e - 2) * p := Nat.mul_le_mul_right _ (by omega)
+    _ < r * e := hr
+
+lemma degree_ffDigit_lt {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X]) (i : ℕ) :
+    (ffDigit B n i).degree < B.degree := by
+  unfold ffDigit
+  by_cases h : i < (polyDigits B n).length
+  · rw [List.getD_eq_getElem _ _ h]
+    exact (polyDigits_spec hB n).2.1 _ (List.getElem_mem h)
+  · rw [List.getD_eq_default _ _ (by omega)]
+    exact lt_of_le_of_lt bot_le hB
+
+/-- **Corollary 24.4** (forced zeros, section 24.2.2), for any digits `D_j`: the digit of
+`∑_j D_j(T^(p^j))` at a position `i ≥ 1` is 0 whenever some base-`p` digit `r` of `i` exceeds
+`R = ⌊(e-1) p / e⌋`, that is `(e - 1) p < r e`. -/
+theorem corollary24_4 {B : (ZMod p)[X]} (hB : 0 < B.degree) (i : ℕ) (hi : 1 ≤ i)
+    (hdig : ∃ r ∈ Nat.digits p i, (B.natDegree - 1) * p < r * B.natDegree) :
+    ∀ (n : ℕ) (D : ℕ → (ZMod p)[X]), (∀ j, (D j).degree < B.degree) →
+      ffDigit B (∑ j ∈ Finset.range n, expand (ZMod p) (p ^ j) (D j)) i = 0 := by
+  have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
+  induction i using Nat.strong_induction_on with
+  | _ i ih =>
+  intro n D hD
+  rcases n with _ | n
+  · simp [ffDigit]
+  rw [prop24_2, ffDigit_add hB]
+  have h0 : ffDigit B (D 0) i = 0 := by
+    apply ffDigit_eq_zero_of_natDegree_lt hB
+    have := natDegree_lt_of_digit (hD 0) hB
+    nlinarith
+  rw [h0, zero_add]
+  set G := ∑ j ∈ Finset.range n, expand (ZMod p) (p ^ j) (D (j + 1))
+  have hi' : i = p * (i / p) + i % p := (Nat.div_add_mod i p).symm
+  have hr : i % p < p := Nat.mod_lt _ (by omega)
+  rw [hi']
+  unfold ffDigit
+  rw [lemma24_1 hB G (i / p) hr]
+  obtain ⟨r, hr_mem, hrR⟩ := hdig
+  rw [Nat.digits_def' hp1 (by omega), List.mem_cons] at hr_mem
+  rcases hr_mem with rfl | hmem
+  · exact lemma24_1_zero hB (degree_ffDigit_lt hB G (i / p)) hrR
+  · have hs1 : 1 ≤ i / p := by
+      rcases Nat.eq_zero_or_pos (i / p) with h | h
+      · rw [h, Nat.digits_zero] at hmem; simp at hmem
+      · exact h
+    have hlt : i / p < i := Nat.div_lt_self (by omega) hp1
+    have := ih (i / p) hlt hs1 ⟨r, hmem, hrR⟩ n (fun j => D (j + 1)) (fun j => hD (j + 1))
+    unfold ffDigit at this
+    rw [this, map_zero, polyDigits_zero, List.getD_nil]
+
+/-- **Corollary 24.4** for `F`: the digit of `F(n)` at a position `i ≥ 1` is 0 whenever some
+base-`p` digit `r` of `i` has `(e - 1) p < r e`. -/
+theorem corollary24_4_ffF {m : ZMod p} {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X])
+    {i : ℕ} (hi : 1 ≤ i) (hdig : ∃ r ∈ Nat.digits p i, (B.natDegree - 1) * p < r * B.natDegree) :
+    ffDigit B (ffF m B n) i = 0 := by
+  set e := B.natDegree
+  have he : 1 ≤ e := by have := natDegree_pos_iff_degree_pos.2 hB; omega
+  set L := polyDigits B n
+  have hL : ∀ d ∈ L, d.natDegree < e := fun d hd =>
+    natDegree_lt_of_digit ((polyDigits_spec hB n).2.1 d hd) hB
+  set D : ℕ → (ZMod p)[X] := fun j =>
+    if j = 0 then classSum L 0 + C (m * L.count 0) else if j < e then classSum L j else 0
+  have hB0 : B ≠ 0 := by rintro rfl; simp at hB
+  have key : ∀ f : (ZMod p)[X], f.natDegree < e → f.degree < B.degree := fun f hf => by
+    rw [degree_eq_natDegree hB0]; exact degree_le_natDegree.trans_lt (by exact_mod_cast hf)
+  have hD : ∀ j, (D j).degree < B.degree := by
+    intro j
+    apply key
+    simp only [D]
+    split_ifs with h1 h2
+    · subst h1
+      refine (natDegree_add_le _ _).trans_lt (max_lt ?_ ?_)
+      · exact (natDegree_classSum_le L 0).trans_lt he
+      · rw [natDegree_C]; exact he
+    · exact (natDegree_classSum_le L j).trans_lt h2
+    · rw [natDegree_zero]; exact he
+  have hF : ffF m B n = ∑ j ∈ Finset.range e, expand (ZMod p) (p ^ j) (D j) := by
+    rw [ffF, sum_ffw_eq m e L hL, show e = e - 1 + 1 by omega, Finset.sum_range_succ',
+      Finset.sum_range_succ']
+    have h1 : ∀ j ∈ Finset.range (e - 1), expand (ZMod p) (p ^ (j + 1)) (D (j + 1)) =
+        expand (ZMod p) (p ^ (j + 1)) (classSum L (j + 1)) := by
+      intro j hj
+      rw [Finset.mem_range] at hj
+      simp only [D, Nat.succ_ne_zero, ↓reduceIte, show j + 1 < e by omega]
+    rw [Finset.sum_congr rfl h1]
+    simp only [D, ↓reduceIte, pow_zero, expand_one]
+    ring
+  rw [hF]
+  exact corollary24_4 hB i hi hdig e D hD
+
+/-! ### Proposition 24.11: the zero count under `0^0 = 1` -/
+
+/-- `F_1(n) = F_0(n) + z(n)`, with `z(n)` the number of zero digits. -/
+lemma ffF_one_eq (B n : (ZMod p)[X]) :
+    ffF 1 B n = ffF 0 B n + C (((polyDigits B n).count 0 : ℕ) : ZMod p) := by
+  unfold ffF
+  induction polyDigits B n with
+  | nil => simp
+  | cons d t ih =>
+    by_cases hd : d = 0
+    · subst hd
+      simp only [List.map_cons, List.sum_cons, ih, List.count_cons_self, ffw, ite_true]
+      push_cast
+      rw [map_add, C_0, C_1]; ring
+    · simp only [List.map_cons, List.sum_cons, ih, List.count_cons_of_ne hd, ffw, hd, ite_false]
+      ring
+
+lemma list_sum_map_sub {α R : Type*} [AddCommGroup R] (L : List α) (f g : α → R) :
+    (L.map fun a => f a - g a).sum = (L.map f).sum - (L.map g).sum := by
+  induction L with
+  | nil => simp
+  | cons a t ih => simp only [List.map_cons, List.sum_cons, ih]; abel
+
+/-- In characteristic `p`, `x - x^(p^j) = Y - Y^p` with `Y = ∑_(k<j) x^(p^k)`. -/
+lemma sub_pow_eq_sub_frob {L : Type*} [CommRing L] [CharP L p] (x : L) (j : ℕ) :
+    x - x ^ (p ^ j) = (∑ k ∈ Finset.range j, x ^ (p ^ k)) -
+      (∑ k ∈ Finset.range j, x ^ (p ^ k)) ^ p := by
+  rw [sum_pow_char, ← Finset.sum_sub_distrib]
+  have := Finset.sum_range_sub' (fun k => x ^ (p ^ k)) j
+  simp only [pow_zero, pow_one] at this
+  rw [← this]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  rw [← pow_mul, ← pow_succ]
+
+/-- **Proposition 24.11** (section 24.4.4). If `B - 1` has an irreducible factor `P` whose degree
+is prime to `p`, the solutions in base `B` under `0^0 = 1` are exactly the solutions under
+`0^0 = 0` whose number of zero digits is divisible by `p`. The proof iterates `y ↦ y^p` in the
+field `F_p[T]/(P)` in place of the trace. -/
+theorem prop24_11 {B n P : (ZMod p)[X]} (hB : 0 < B.degree) (hP : Irreducible P)
+    (hPB : P ∣ B - 1) (hdeg : ¬ p ∣ P.natDegree) :
+    IsFFSolution 1 B n ↔ IsFFSolution 0 B n ∧ p ∣ (polyDigits B n).count 0 := by
+  set z := (polyDigits B n).count 0
+  have hF := ffF_one_eq B n
+  constructor
+  · intro h
+    have hz : ((z : ℕ) : ZMod p) = 0 := by
+      have : Fact (Irreducible P) := ⟨hP⟩
+      set K := AdjoinRoot P
+      set φ := AdjoinRoot.mk P
+      have : CharP K p := charP_of_injective_algebraMap (algebraMap (ZMod p) K).injective p
+      have hφB : φ B = 1 := by
+        have := AdjoinRoot.mk_eq_zero.2 hPB
+        rw [map_sub, map_one, sub_eq_zero] at this; exact this
+      set Ls := polyDigits B n
+      have hval : ∀ L : List (ZMod p)[X], φ (ringVal B L) = (L.map φ).sum := by
+        intro L
+        induction L with
+        | nil => simp [ringVal]
+        | cons d t ih => simp [ringVal, ih, hφB]
+      have hn : φ n = (Ls.map φ).sum := by
+        conv_lhs => rw [← (polyDigits_spec hB n).1]
+        exact hval Ls
+      have hF0 : φ (ffF 0 B n) = (Ls.map fun d => φ d ^ (p ^ d.natDegree)).sum := by
+        unfold ffF
+        rw [map_list_sum, List.map_map]
+        congr 1
+        refine List.map_congr_left fun d _ => ?_
+        simp [ffw_zero_eq, ffWeight, map_pow]
+      -- `z = Y - Y^p` in `K`
+      have hc : (z : K) = (Ls.map fun d => φ d - φ d ^ (p ^ d.natDegree)).sum := by
+        have h1 := congrArg φ h
+        rw [IsFFSolution] at h
+        rw [hF, map_add, hF0, hn, AdjoinRoot.mk_C] at h1
+        rw [list_sum_map_sub]
+        simp only [map_natCast] at h1
+        linear_combination h1
+      set Y : K := (Ls.map fun d => ∑ k ∈ Finset.range d.natDegree, φ d ^ (p ^ k)).sum
+      have hY : (z : K) = Y - Y ^ p := by
+        rw [hc]
+        simp only [Y]
+        rw [list_sum_pow_char, List.map_map, ← list_sum_map_sub]
+        congr 1
+        refine List.map_congr_left fun d _ => ?_
+        exact sub_pow_eq_sub_frob (φ d) d.natDegree
+      -- iterate the Frobenius: `Y^(p^k) = Y - k z`
+      have hnat : ∀ m : ℕ, ((m : K)) ^ p = m := fun m => by
+        have := map_natCast (frobenius K p) m
+        rwa [frobenius_def] at this
+      have hiter : ∀ k : ℕ, Y ^ (p ^ k) = Y - ((k * z : ℕ) : K) := by
+        intro k
+        induction k with
+        | zero => simp
+        | succ k ih =>
+          rw [pow_succ, pow_mul, ih, sub_pow_char, hnat]
+          rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
+          linear_combination hY
+      -- `K` has `p^f` elements
+      have hfin : Module.Finite (ZMod p) K := (AdjoinRoot.powerBasis hP.ne_zero).finite
+      have : Finite K := Module.finite_of_finite (ZMod p)
+      let : Fintype K := Fintype.ofFinite K
+      have hcard : Fintype.card K = p ^ P.natDegree := by
+        rw [← Nat.card_eq_fintype_card, Module.natCard_eq_pow_finrank (K := ZMod p),
+          Nat.card_zmod, (AdjoinRoot.powerBasis hP.ne_zero).finrank, AdjoinRoot.powerBasis_dim]
+      have hfix := FiniteField.pow_card Y
+      rw [hcard, hiter] at hfix
+      have h0 : ((P.natDegree * z : ℕ) : K) = 0 := by linear_combination -hfix
+      have h0' : ((P.natDegree * z : ℕ) : ZMod p) = 0 := by
+        apply (algebraMap (ZMod p) K).injective
+        rw [map_natCast, map_zero]; exact h0
+      push_cast at h0'
+      rcases mul_eq_zero.1 h0' with h1 | h1
+      · exact absurd ((ZMod.natCast_eq_zero_iff _ p).1 h1) hdeg
+      · exact h1
+    refine ⟨?_, (ZMod.natCast_eq_zero_iff z p).1 hz⟩
+    rw [IsFFSolution] at h ⊢
+    rw [hF, hz, C_0, add_zero] at h
+    exact h
+  · rintro ⟨h, hz⟩
+    rw [IsFFSolution, hF, h, (ZMod.natCast_eq_zero_iff z p).2 hz, C_0, add_zero]
+
 end Solutions
 
 end Munchausen
