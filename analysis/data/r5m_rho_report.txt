@@ -1,0 +1,23 @@
+bases 4..6000
+b >= 5: max rho 0.8324 at b 6 (L 3, h 2);  min (1 - Re psi) 0.1875 at b 10
+b >= 10: max rho 0.8197 at b 10 (L 8, h 3);  min (1 - Re psi) 0.1875 at b 10
+b >= 20: max rho 0.7954 at b 22 (L 14, h 7);  min (1 - Re psi) 0.2143 at b 22
+b >= 50: max rho 0.7807 at b 52 (L 26, h 17);  min (1 - Re psi) 0.2308 at b 52
+b >= 100: max rho 0.7725 at b 100 (L 50, h 33);  min (1 - Re psi) 0.2400 at b 100
+b >= 1000: max rho 0.7646 at b 1000 (L 500, h 333);  min (1 - Re psi) 0.2490 at b 1000
+b >= 3000: max rho 0.7641 at b 3001 (L 1502, h 500);  min (1 - Re psi) 0.2497 at b 3001
+
+kappa bound |H_0| + (b-1) rho^n, n = ceil(b/2) - 2:
+  b in [5, 9]: max extra 4.16
+  b in [10, 19]: max extra 4.96
+  b in [20, 49]: max extra 2.68
+  b in [50, 99]: max extra 0.134
+  b in [100, 999]: max extra 0.000413
+  b in [1000, 6000]: max extra 9.12e-56
+  bases >= 10 with extra >= 1e-3: 47, largest 91
+  b 10: |H_0| 1 extra 4.96
+  b 20: |H_0| 1 extra 0.292
+  b 30: |H_0| 1 extra 0.00056
+  b 50: |H_0| 1 extra 0.000349
+  b 100: |H_0| 1 extra 0.000413
+  bases >= 12 with extra > 5: []

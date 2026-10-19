@@ -1,0 +1,72 @@
+# q 7 e 3 0^0 = 0, per orbit representative: census refined block block_x_q^k block_res block_res_self block_id
+# block: degrees kept; block_x_q^k: block times q^k(B); block_res: degrees and F mod (B-1) kept, block_res_self: the part of block_res from the exact solutions; block_id: block with the identity factor q^e
+orbit 343 size 14 k 3 type [[1, 1], [1, 1], [1, 1]] census 336.000 refined 339.053 block 4.000 block_x_q^k 1372.000 block_res 336.000 block_res_self 12.857 block_id 1372.000
+orbit 344 size 14 k 1 type [[1, 3]] census 0.000 refined 5.564 block 0.000 block_x_q^k 0.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 345 size 14 k 3 type [[1, 1], [1, 1], [1, 1]] census 336.000 refined 339.053 block 2.000 block_x_q^k 686.000 block_res 336.000 block_res_self 6.857 block_id 686.000
+orbit 346 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 347 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 348 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 349 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 350 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 0.857 block_x_q^k 6.000 block_res 7.000 block_res_self 0.000 block_id 7.000
+orbit 351 size 42 k 2 type [[1, 1], [2, 1]] census 42.000 refined 52.174 block 1.750 block_x_q^k 85.750 block_res 21.000 block_res_self 0.143 block_id 76.222
+orbit 352 size 42 k 1 type [[3, 1]] census 42.000 refined 5.963 block 1.083 block_x_q^k 7.583 block_res 42.000 block_res_self 0.857 block_id 114.333
+orbit 353 size 42 k 2 type [[1, 1], [1, 2]] census 0.000 refined 47.564 block 0.861 block_x_q^k 42.194 block_res 41.413 block_res_self 0.000 block_id 295.361
+orbit 354 size 42 k 2 type [[1, 1], [2, 1]] census 84.000 refined 52.174 block 0.972 block_x_q^k 47.639 block_res 102.900 block_res_self 0.386 block_id 104.806
+orbit 355 size 42 k 2 type [[1, 1], [2, 1]] census 42.000 refined 52.174 block 0.944 block_x_q^k 46.278 block_res 42.000 block_res_self 0.214 block_id 38.111
+orbit 356 size 42 k 2 type [[1, 1], [1, 2]] census 42.000 refined 47.564 block 0.778 block_x_q^k 38.111 block_res 36.806 block_res_self 0.143 block_id 266.778
+orbit 364 size 42 k 2 type [[1, 1], [2, 1]] census 84.000 refined 52.174 block 0.857 block_x_q^k 42.000 block_res 49.000 block_res_self 0.286 block_id 49.000
+orbit 365 size 42 k 3 type [[1, 1], [1, 1], [1, 1]] census 294.000 refined 339.053 block 2.167 block_x_q^k 743.167 block_res 336.000 block_res_self 3.400 block_id 743.167
+orbit 366 size 42 k 2 type [[1, 1], [2, 1]] census 126.000 refined 52.174 block 0.889 block_x_q^k 43.556 block_res 105.000 block_res_self 1.243 block_id 123.861
+orbit 367 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 1.167 block_x_q^k 8.167 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 368 size 42 k 2 type [[1, 1], [2, 1]] census 42.000 refined 52.174 block 0.639 block_x_q^k 31.306 block_res 33.600 block_res_self 0.171 block_id 38.111
+orbit 369 size 42 k 2 type [[1, 1], [2, 1]] census 168.000 refined 52.174 block 1.556 block_x_q^k 76.222 block_res 117.600 block_res_self 1.371 block_id 238.194
+orbit 370 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 0.806 block_x_q^k 5.639 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 686 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 4.000 block_x_q^k 28.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 687 size 14 k 1 type [[1, 3]] census 0.000 refined 5.564 block 0.000 block_x_q^k 0.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 688 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 689 size 14 k 3 type [[1, 1], [1, 1], [1, 1]] census 336.000 refined 339.053 block 2.000 block_x_q^k 686.000 block_res 336.000 block_res_self 6.857 block_id 686.000
+orbit 690 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 691 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 692 size 14 k 3 type [[1, 1], [1, 1], [1, 1]] census 336.000 refined 339.053 block 2.000 block_x_q^k 686.000 block_res 336.000 block_res_self 6.857 block_id 686.000
+orbit 693 size 42 k 2 type [[1, 1], [2, 1]] census 84.000 refined 52.174 block 0.857 block_x_q^k 42.000 block_res 49.000 block_res_self 0.286 block_id 49.000
+orbit 694 size 42 k 2 type [[1, 1], [2, 1]] census 84.000 refined 52.174 block 1.444 block_x_q^k 70.778 block_res 105.000 block_res_self 0.314 block_id 123.861
+orbit 695 size 42 k 2 type [[1, 1], [2, 1]] census 84.000 refined 52.174 block 0.861 block_x_q^k 42.194 block_res 50.400 block_res_self 1.029 block_id 66.694
+orbit 696 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 1.306 block_x_q^k 9.139 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 697 size 42 k 2 type [[1, 1], [1, 2]] census 42.000 refined 47.564 block 2.889 block_x_q^k 141.556 block_res 51.800 block_res_self 0.171 block_id 990.889
+orbit 698 size 42 k 2 type [[1, 1], [1, 2]] census 42.000 refined 47.564 block 0.694 block_x_q^k 34.028 block_res 33.871 block_res_self 0.028 block_id 238.194
+orbit 699 size 42 k 1 type [[3, 1]] census 42.000 refined 5.963 block 1.167 block_x_q^k 8.167 block_res 8.400 block_res_self 0.171 block_id 9.528
+orbit 707 size 42 k 2 type [[1, 1], [2, 1]] census 84.000 refined 52.174 block 0.857 block_x_q^k 42.000 block_res 49.000 block_res_self 0.286 block_id 49.000
+orbit 708 size 42 k 3 type [[1, 1], [1, 1], [1, 1]] census 378.000 refined 339.053 block 2.056 block_x_q^k 705.056 block_res 385.000 block_res_self 2.886 block_id 705.056
+orbit 709 size 42 k 2 type [[1, 1], [2, 1]] census 126.000 refined 52.174 block 0.833 block_x_q^k 40.833 block_res 153.300 block_res_self 0.600 block_id 152.444
+orbit 710 size 42 k 2 type [[1, 1], [2, 1]] census 126.000 refined 52.174 block 0.750 block_x_q^k 36.750 block_res 98.700 block_res_self 1.286 block_id 114.333
+orbit 711 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 2.028 block_x_q^k 14.194 block_res 10.500 block_res_self 0.000 block_id 9.528
+orbit 712 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 1.000 block_x_q^k 7.000 block_res 8.400 block_res_self 0.000 block_id 9.528
+orbit 713 size 42 k 2 type [[1, 1], [2, 1]] census 0.000 refined 52.174 block 0.917 block_x_q^k 44.917 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1029 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 4.000 block_x_q^k 28.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1030 size 14 k 1 type [[1, 3]] census 0.000 refined 5.564 block 0.000 block_x_q^k 0.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1031 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1032 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1033 size 14 k 3 type [[1, 1], [1, 1], [1, 1]] census 336.000 refined 339.053 block 2.000 block_x_q^k 686.000 block_res 336.000 block_res_self 6.857 block_id 686.000
+orbit 1034 size 14 k 3 type [[1, 1], [1, 1], [1, 1]] census 336.000 refined 339.053 block 2.000 block_x_q^k 686.000 block_res 336.000 block_res_self 6.857 block_id 686.000
+orbit 1035 size 14 k 1 type [[3, 1]] census 0.000 refined 5.564 block 2.000 block_x_q^k 14.000 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1036 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 0.857 block_x_q^k 6.000 block_res 7.000 block_res_self 0.000 block_id 7.000
+orbit 1037 size 42 k 3 type [[1, 1], [1, 1], [1, 1]] census 420.000 refined 339.053 block 2.694 block_x_q^k 924.194 block_res 361.200 block_res_self 3.686 block_id 924.194
+orbit 1038 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 0.972 block_x_q^k 6.806 block_res 0.000 block_res_self 0.000 block_id 0.000
+orbit 1039 size 42 k 2 type [[1, 1], [2, 1]] census 126.000 refined 52.174 block 0.667 block_x_q^k 32.667 block_res 132.300 block_res_self 0.600 block_id 133.389
+orbit 1040 size 42 k 2 type [[1, 1], [2, 1]] census 126.000 refined 52.174 block 0.694 block_x_q^k 34.028 block_res 142.800 block_res_self 0.600 block_id 142.917
+orbit 1041 size 42 k 2 type [[1, 1], [2, 1]] census 0.000 refined 52.174 block 1.000 block_x_q^k 49.000 block_res 8.400 block_res_self 0.000 block_id 9.528
+orbit 1042 size 42 k 2 type [[1, 1], [2, 1]] census 126.000 refined 52.174 block 1.000 block_x_q^k 49.000 block_res 119.700 block_res_self 1.286 block_id 133.389
+orbit 1050 size 42 k 2 type [[1, 1], [1, 2]] census 42.000 refined 47.564 block 0.857 block_x_q^k 42.000 block_res 42.000 block_res_self 0.020 block_id 294.000
+orbit 1051 size 42 k 2 type [[1, 1], [2, 1]] census 42.000 refined 52.174 block 1.694 block_x_q^k 83.028 block_res 42.000 block_res_self 0.171 block_id 47.639
+orbit 1052 size 42 k 2 type [[1, 1], [1, 2]] census 42.000 refined 47.564 block 1.000 block_x_q^k 49.000 block_res 47.916 block_res_self 0.028 block_id 343.000
+orbit 1053 size 42 k 2 type [[1, 1], [2, 1]] census 0.000 refined 52.174 block 0.611 block_x_q^k 29.944 block_res 29.400 block_res_self 0.000 block_id 28.583
+orbit 1054 size 42 k 1 type [[3, 1]] census 0.000 refined 5.963 block 0.861 block_x_q^k 6.028 block_res 8.400 block_res_self 0.000 block_id 9.528
+orbit 1055 size 42 k 1 type [[3, 1]] census 42.000 refined 5.963 block 1.222 block_x_q^k 8.556 block_res 8.400 block_res_self 0.171 block_id 9.528
+orbit 1056 size 42 k 2 type [[1, 1], [2, 1]] census 42.000 refined 52.174 block 0.750 block_x_q^k 36.750 block_res 42.000 block_res_self 0.214 block_id 38.111
+# per type of B - 1, mean per base
+type [[1, 1], [1, 1], [1, 1]] bases 210 census 352.80 refined 339.05 block 2.32 block_x_q^k 794.62 block_res 350.84 block_res_self 5.14 block_id 794.62
+type [[1, 1], [1, 2]] bases 252 census 35.00 refined 47.56 block 1.18 block_x_q^k 57.81 block_res 42.30 block_res_self 0.06 block_id 404.70
+type [[1, 1], [2, 1]] bases 882 census 78.00 refined 52.17 block 0.98 block_x_q^k 47.94 block_res 71.10 block_res_self 0.50 block_id 83.68
+type [[1, 3]] bases 42 census 0.00 refined 5.56 block 0.00 block_x_q^k 0.00 block_res 0.00 block_res_self 0.00 block_id 0.00
+type [[3, 1]] bases 672 census 7.88 refined 5.86 block 1.42 block_x_q^k 9.91 block_res 6.26 block_res_self 0.08 block_id 11.00
+all bases 2058 census 76.286 refined 64.810 block 1.263 block_x_q^k 111.943 block_res 73.494 block_res_self 0.771 block_id 170.091

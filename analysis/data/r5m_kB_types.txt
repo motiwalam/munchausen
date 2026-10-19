@@ -1,0 +1,444 @@
+# q 2 e 11: 5 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (4, 1), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 3), (5, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(5, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+# total k - omega counts {0: 78}
+# q 2 e 13: 29 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (3, 1), (4, 1), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 1), (3, 1), (4, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 1), (3, 1), (8, 1)]: 60 polynomials, k - omega counts {0: 60}
+  type [(2, 2), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 2)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 2), (3, 1), (6, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 2), (3, 3)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 2), (9, 1)]: 56 polynomials, k - omega counts {0: 56}
+  type [(2, 3), (3, 1), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 5), (3, 1)]: 2 polynomials, k - omega counts {0: 2}
+  type [(3, 1), (3, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 2), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 1), (4, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(3, 1), (10, 1)]: 198 polynomials, k - omega counts {0: 198}
+  type [(3, 3), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(4, 1), (9, 1)]: 168 polynomials, k - omega counts {0: 168}
+# total k - omega counts {0: 590}
+# q 2 e 15: 11 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (4, 1), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (6, 1), (7, 1)]: 162 polynomials, k - omega counts {0: 162}
+  type [(2, 2), (2, 2), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (4, 1), (7, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(2, 4), (7, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(4, 1), (4, 1), (7, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(4, 2), (7, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(7, 1), (8, 1)]: 540 polynomials, k - omega counts {0: 540}
+# total k - omega counts {0: 882}
+# q 2 e 16: 9 all-bad factor types
+  type [(3, 1), (3, 1), (5, 1), (5, 1)]: 15 polynomials, k - omega counts {0: 15}
+  type [(3, 1), (3, 1), (5, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 1), (3, 1), (10, 1)]: 99 polynomials, k - omega counts {0: 99}
+  type [(3, 2), (5, 1), (5, 1)]: 30 polynomials, k - omega counts {0: 30}
+  type [(3, 2), (5, 2)]: 12 polynomials, k - omega counts {0: 12}
+  type [(3, 2), (10, 1)]: 198 polynomials, k - omega counts {0: 198}
+  type [(5, 1), (5, 1), (6, 1)]: 135 polynomials, k - omega counts {0: 135}
+  type [(5, 2), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(6, 1), (10, 1)]: 891 polynomials, k - omega counts {0: 891}
+# total k - omega counts {0: 1440}
+# q 2 e 19: 192 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 2), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 2), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 4), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (4, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (3, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 3), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 5), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 1), (3, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 1), (3, 2), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 1), (4, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 1), (10, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 3), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (4, 1), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (2, 2), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (2, 2), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (2, 4), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (3, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (3, 1), (4, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (3, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 4), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 6), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 2), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 2), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (3, 4)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (4, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (4, 1), (4, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (4, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (4, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (6, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (6, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 1), (12, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 2), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 2), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 3), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (3, 5)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (6, 1), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (15, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 3), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 5), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (3, 1), (3, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (3, 1), (3, 2), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (3, 1), (4, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (3, 1), (10, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (3, 3), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (4, 1), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (2, 4), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (3, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (3, 1), (4, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (3, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 5), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 7), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (3, 1), (3, 1), (3, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (3, 1), (3, 1), (3, 1), (4, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (3, 1), (3, 1), (3, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (3, 1), (3, 2), (4, 1), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 1), (3, 1), (3, 2), (4, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 1), (3, 1), (3, 2), (8, 1)]: 60 polynomials, k - omega counts {0: 60}
+  type [(2, 1), (3, 1), (4, 1), (4, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(2, 1), (3, 1), (4, 1), (10, 1)]: 594 polynomials, k - omega counts {0: 594}
+  type [(2, 1), (3, 1), (4, 2), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(2, 1), (3, 1), (6, 1), (8, 1)]: 540 polynomials, k - omega counts {0: 540}
+  type [(2, 1), (3, 1), (14, 1)]: 2322 polynomials, k - omega counts {0: 2322}
+  type [(2, 1), (3, 3), (4, 1), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 1), (3, 3), (4, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 1), (3, 3), (8, 1)]: 60 polynomials, k - omega counts {0: 60}
+  type [(2, 1), (4, 1), (4, 1), (9, 1)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 1), (4, 2), (9, 1)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 1), (8, 1), (9, 1)]: 1680 polynomials, k - omega counts {0: 1680}
+  type [(2, 2), (2, 2), (2, 2), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (2, 2), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (2, 4), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (3, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (3, 1), (4, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (3, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (2, 3), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (9, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 4), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 6), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 1), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 1), (3, 1), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 1), (3, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 1), (3, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 1), (9, 1)]: 56 polynomials, k - omega counts {0: 56}
+  type [(2, 2), (3, 1), (3, 2), (3, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (3, 1), (3, 2), (6, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 2), (3, 1), (3, 4)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 2), (3, 1), (4, 1), (4, 1), (4, 1)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 2), (3, 1), (4, 1), (4, 2)]: 12 polynomials, k - omega counts {0: 12}
+  type [(2, 2), (3, 1), (4, 1), (8, 1)]: 180 polynomials, k - omega counts {0: 180}
+  type [(2, 2), (3, 1), (4, 3)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 2), (3, 1), (6, 1), (6, 1)]: 72 polynomials, k - omega counts {0: 72}
+  type [(2, 2), (3, 1), (6, 2)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 2), (3, 1), (12, 1)]: 670 polynomials, k - omega counts {0: 670}
+  type [(2, 2), (3, 2), (3, 3)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 2), (3, 2), (9, 1)]: 112 polynomials, k - omega counts {0: 112}
+  type [(2, 2), (3, 3), (6, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 2), (3, 5)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 2), (6, 1), (9, 1)]: 504 polynomials, k - omega counts {0: 504}
+  type [(2, 2), (15, 1)]: 2182 polynomials, k - omega counts {0: 2182}
+  type [(2, 3), (2, 3), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 3), (2, 5), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 3), (3, 1), (3, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 3), (3, 1), (3, 2), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 3), (3, 1), (4, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(2, 3), (3, 1), (10, 1)]: 198 polynomials, k - omega counts {0: 198}
+  type [(2, 3), (3, 3), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 3), (4, 1), (9, 1)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 4), (2, 4), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 4), (3, 1), (4, 1), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 4), (3, 1), (4, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 4), (3, 1), (8, 1)]: 60 polynomials, k - omega counts {0: 60}
+  type [(2, 5), (3, 1), (3, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 5), (3, 1), (3, 2)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 5), (3, 1), (6, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 5), (3, 3)]: 2 polynomials, k - omega counts {0: 2}
+  type [(2, 5), (9, 1)]: 56 polynomials, k - omega counts {0: 56}
+  type [(2, 6), (3, 1), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 8), (3, 1)]: 2 polynomials, k - omega counts {0: 2}
+  type [(3, 1), (3, 1), (3, 1), (3, 1), (3, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 1), (3, 2), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 1), (4, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 1), (10, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 3), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (4, 1), (9, 1)]: 168 polynomials, k - omega counts {0: 168}
+  type [(3, 1), (3, 2), (3, 2), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 2), (4, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(3, 1), (3, 2), (10, 1)]: 198 polynomials, k - omega counts {0: 198}
+  type [(3, 1), (3, 4), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 1), (4, 1), (4, 1), (4, 1), (4, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (4, 1), (4, 1), (4, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 1), (4, 1), (4, 1), (8, 1)]: 180 polynomials, k - omega counts {0: 180}
+  type [(3, 1), (4, 1), (4, 3)]: 12 polynomials, k - omega counts {0: 12}
+  type [(3, 1), (4, 1), (6, 1), (6, 1)]: 216 polynomials, k - omega counts {0: 216}
+  type [(3, 1), (4, 1), (6, 2)]: 54 polynomials, k - omega counts {0: 54}
+  type [(3, 1), (4, 1), (12, 1)]: 2010 polynomials, k - omega counts {0: 2010}
+  type [(3, 1), (4, 2), (4, 2)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 1), (4, 2), (8, 1)]: 180 polynomials, k - omega counts {0: 180}
+  type [(3, 1), (4, 4)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 1), (6, 1), (10, 1)]: 1782 polynomials, k - omega counts {0: 1782}
+  type [(3, 1), (8, 1), (8, 1)]: 870 polynomials, k - omega counts {0: 870}
+  type [(3, 1), (8, 2)]: 60 polynomials, k - omega counts {0: 60}
+  type [(3, 1), (16, 1)]: 8160 polynomials, k - omega counts {0: 8160}
+  type [(3, 2), (3, 3), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(3, 2), (4, 1), (9, 1)]: 336 polynomials, k - omega counts {0: 336}
+  type [(3, 3), (4, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(3, 3), (10, 1)]: 198 polynomials, k - omega counts {0: 198}
+  type [(3, 5), (4, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(4, 1), (6, 1), (9, 1)]: 1512 polynomials, k - omega counts {0: 1512}
+  type [(4, 1), (15, 1)]: 6546 polynomials, k - omega counts {0: 6546}
+  type [(9, 1), (10, 1)]: 5544 polynomials, k - omega counts {0: 5544}
+# total k - omega counts {0: 38340}
+# q 2 e 21: 114 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 3), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 2), (2, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 2), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 4), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (4, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (4, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (5, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (2, 3), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 3), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 5), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (4, 1), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (5, 1), (5, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (5, 1), (5, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (5, 1), (10, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (5, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (15, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (2, 2), (2, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (2, 2), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (2, 4), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (4, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (4, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 2), (5, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (2, 3), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 3), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 4), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 6), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (4, 1), (4, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (4, 1), (4, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (4, 1), (5, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (4, 3), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (5, 1), (6, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (5, 1), (6, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (5, 1), (12, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (2, 3), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 2), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 3), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (2, 5), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (4, 1), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (5, 1), (5, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (5, 1), (5, 2)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (5, 1), (10, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (5, 3)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 2), (15, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (2, 4), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (4, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (4, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 3), (5, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 4), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 5), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 7), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (4, 1), (4, 1), (5, 1), (6, 1)]: 162 polynomials, k - omega counts {0: 162}
+  type [(2, 1), (4, 1), (5, 1), (5, 1), (5, 1)]: 60 polynomials, k - omega counts {0: 60}
+  type [(2, 1), (4, 1), (5, 1), (5, 2)]: 90 polynomials, k - omega counts {0: 90}
+  type [(2, 1), (4, 1), (5, 1), (10, 1)]: 1782 polynomials, k - omega counts {0: 1782}
+  type [(2, 1), (4, 1), (5, 3)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 1), (4, 1), (15, 1)]: 6546 polynomials, k - omega counts {0: 6546}
+  type [(2, 1), (4, 2), (5, 1), (6, 1)]: 162 polynomials, k - omega counts {0: 162}
+  type [(2, 1), (5, 1), (6, 1), (8, 1)]: 1620 polynomials, k - omega counts {0: 1620}
+  type [(2, 1), (5, 1), (14, 1)]: 6966 polynomials, k - omega counts {0: 6966}
+  type [(2, 2), (2, 2), (2, 2), (2, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (2, 2), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (2, 4), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (4, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (4, 2), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 2), (5, 1), (8, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (2, 3), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 3), (5, 1), (6, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 4), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (2, 6), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 2), (4, 1), (4, 1), (4, 1), (5, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 2), (4, 1), (4, 2), (5, 1)]: 36 polynomials, k - omega counts {0: 36}
+  type [(2, 2), (4, 1), (5, 1), (8, 1)]: 540 polynomials, k - omega counts {0: 540}
+  type [(2, 2), (4, 3), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 2), (5, 1), (6, 1), (6, 1)]: 216 polynomials, k - omega counts {0: 216}
+  type [(2, 2), (5, 1), (6, 2)]: 54 polynomials, k - omega counts {0: 54}
+  type [(2, 2), (5, 1), (12, 1)]: 2010 polynomials, k - omega counts {0: 2010}
+  type [(2, 3), (2, 3), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 3), (2, 5), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 3), (4, 1), (5, 1), (6, 1)]: 162 polynomials, k - omega counts {0: 162}
+  type [(2, 3), (5, 1), (5, 1), (5, 1)]: 20 polynomials, k - omega counts {0: 20}
+  type [(2, 3), (5, 1), (5, 2)]: 30 polynomials, k - omega counts {0: 30}
+  type [(2, 3), (5, 1), (10, 1)]: 594 polynomials, k - omega counts {0: 594}
+  type [(2, 3), (5, 3)]: 6 polynomials, k - omega counts {0: 6}
+  type [(2, 3), (15, 1)]: 2182 polynomials, k - omega counts {0: 2182}
+  type [(2, 4), (2, 4), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 4), (4, 1), (4, 1), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 4), (4, 2), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 4), (5, 1), (8, 1)]: 180 polynomials, k - omega counts {0: 180}
+  type [(2, 5), (5, 1), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(2, 6), (4, 1), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(2, 8), (5, 1)]: 6 polynomials, k - omega counts {0: 6}
+  type [(4, 1), (4, 1), (4, 1), (4, 1), (5, 1)]: 0 polynomials, k - omega counts {}
+  type [(4, 1), (4, 1), (4, 2), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(4, 1), (4, 1), (5, 1), (8, 1)]: 540 polynomials, k - omega counts {0: 540}
+  type [(4, 1), (4, 3), (5, 1)]: 36 polynomials, k - omega counts {0: 36}
+  type [(4, 1), (5, 1), (6, 1), (6, 1)]: 648 polynomials, k - omega counts {0: 648}
+  type [(4, 1), (5, 1), (6, 2)]: 162 polynomials, k - omega counts {0: 162}
+  type [(4, 1), (5, 1), (12, 1)]: 6030 polynomials, k - omega counts {0: 6030}
+  type [(4, 2), (4, 2), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(4, 2), (5, 1), (8, 1)]: 540 polynomials, k - omega counts {0: 540}
+  type [(4, 4), (5, 1)]: 18 polynomials, k - omega counts {0: 18}
+  type [(5, 1), (5, 1), (5, 1), (6, 1)]: 180 polynomials, k - omega counts {0: 180}
+  type [(5, 1), (5, 2), (6, 1)]: 270 polynomials, k - omega counts {0: 270}
+  type [(5, 1), (6, 1), (10, 1)]: 5346 polynomials, k - omega counts {0: 5346}
+  type [(5, 1), (8, 1), (8, 1)]: 2610 polynomials, k - omega counts {0: 2610}
+  type [(5, 1), (8, 2)]: 180 polynomials, k - omega counts {0: 180}
+  type [(5, 1), (16, 1)]: 20000 polynomials, k - omega counts {0: 20000}
+  type [(5, 3), (6, 1)]: 54 polynomials, k - omega counts {0: 54}
+  type [(6, 1), (15, 1)]: 19638 polynomials, k - omega counts {0: 19638}
+# total k - omega counts {0: 79862}
+# q 2 e 22: 17 all-bad factor types
+  type [(3, 1), (3, 1), (3, 1), (3, 1), (3, 1), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 1), (3, 2), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 1), (6, 1), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (3, 3), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 1), (7, 1), (9, 1)]: 1008 polynomials, k - omega counts {0: 1008}
+  type [(3, 1), (3, 2), (3, 2), (7, 1)]: 0 polynomials, k - omega counts {}
+  type [(3, 1), (3, 2), (6, 1), (7, 1)]: 324 polynomials, k - omega counts {0: 324}
+  type [(3, 1), (3, 4), (7, 1)]: 36 polynomials, k - omega counts {0: 36}
+  type [(3, 1), (6, 1), (6, 1), (7, 1)]: 1296 polynomials, k - omega counts {0: 1296}
+  type [(3, 1), (6, 2), (7, 1)]: 324 polynomials, k - omega counts {0: 324}
+  type [(3, 1), (7, 1), (12, 1)]: 12060 polynomials, k - omega counts {0: 12060}
+  type [(3, 2), (3, 3), (7, 1)]: 36 polynomials, k - omega counts {0: 36}
+  type [(3, 2), (7, 1), (9, 1)]: 2016 polynomials, k - omega counts {0: 2016}
+  type [(3, 3), (6, 1), (7, 1)]: 324 polynomials, k - omega counts {0: 324}
+  type [(3, 5), (7, 1)]: 36 polynomials, k - omega counts {0: 36}
+  type [(6, 1), (7, 1), (9, 1)]: 9072 polynomials, k - omega counts {0: 9072}
+  type [(7, 1), (15, 1)]: 20000 polynomials, k - omega counts {0: 20000}
+# total k - omega counts {0: 46532}
+# q 3 e 11: 5 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (5, 1)]: 48 polynomials, k - omega counts {0: 48}
+  type [(2, 1), (2, 2), (5, 1)]: 288 polynomials, k - omega counts {0: 288}
+  type [(2, 1), (4, 1), (5, 1)]: 2592 polynomials, k - omega counts {0: 2592}
+  type [(2, 3), (5, 1)]: 144 polynomials, k - omega counts {0: 144}
+  type [(5, 1), (6, 1)]: 5568 polynomials, k - omega counts {0: 5568}
+# total k - omega counts {0: 8640}
+# q 3 e 13: 29 all-bad factor types
+  type [(2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (2, 2), (3, 1)]: 0 polynomials, k - omega counts {}
+  type [(2, 1), (2, 1), (2, 1), (3, 1), (4, 1)]: 144 polynomials, k - omega counts {0: 144}
+  type [(2, 1), (2, 1), (2, 3), (3, 1)]: 24 polynomials, k - omega counts {0: 24}
+  type [(2, 1), (2, 1), (3, 1), (3, 1), (3, 1)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 1), (2, 1), (3, 1), (3, 2)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 1), (2, 1), (3, 1), (6, 1)]: 2784 polynomials, k - omega counts {0: 2784}
+  type [(2, 1), (2, 1), (3, 3)]: 24 polynomials, k - omega counts {0: 24}
+  type [(2, 1), (2, 1), (9, 1)]: 6552 polynomials, k - omega counts {0: 6552}
+  type [(2, 1), (2, 2), (2, 2), (3, 1)]: 24 polynomials, k - omega counts {0: 24}
+  type [(2, 1), (2, 2), (3, 1), (4, 1)]: 864 polynomials, k - omega counts {0: 864}
+  type [(2, 1), (2, 4), (3, 1)]: 48 polynomials, k - omega counts {0: 48}
+  type [(2, 1), (3, 1), (4, 1), (4, 1)]: 3672 polynomials, k - omega counts {0: 3672}
+  type [(2, 1), (3, 1), (4, 2)]: 432 polynomials, k - omega counts {0: 432}
+  type [(2, 1), (3, 1), (8, 1)]: 19440 polynomials, k - omega counts {0: 19440}
+  type [(2, 2), (2, 3), (3, 1)]: 48 polynomials, k - omega counts {0: 48}
+  type [(2, 2), (3, 1), (3, 1), (3, 1)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 2), (3, 1), (3, 2)]: 168 polynomials, k - omega counts {0: 168}
+  type [(2, 2), (3, 1), (6, 1)]: 2784 polynomials, k - omega counts {0: 2784}
+  type [(2, 2), (3, 3)]: 24 polynomials, k - omega counts {0: 24}
+  type [(2, 2), (9, 1)]: 6552 polynomials, k - omega counts {0: 6552}
+  type [(2, 3), (3, 1), (4, 1)]: 432 polynomials, k - omega counts {0: 432}
+  type [(2, 5), (3, 1)]: 24 polynomials, k - omega counts {0: 24}
+  type [(3, 1), (3, 1), (3, 1), (4, 1)]: 1008 polynomials, k - omega counts {0: 1008}
+  type [(3, 1), (3, 2), (4, 1)]: 1008 polynomials, k - omega counts {0: 1008}
+  type [(3, 1), (4, 1), (6, 1)]: 16704 polynomials, k - omega counts {0: 16704}
+  type [(3, 1), (10, 1)]: 20000 polynomials, k - omega counts {0: 20000}
+  type [(3, 3), (4, 1)]: 144 polynomials, k - omega counts {0: 144}
+  type [(4, 1), (9, 1)]: 20000 polynomials, k - omega counts {0: 20000}
+# total k - omega counts {0: 103408}
+# q 5 e 7: 3 all-bad factor types
+  type [(2, 1), (2, 1), (3, 1)]: 1800 polynomials, k - omega counts {0: 1800}
+  type [(2, 2), (3, 1)]: 400 polynomials, k - omega counts {0: 400}
+  type [(3, 1), (4, 1)]: 6000 polynomials, k - omega counts {0: 6000}
+# total k - omega counts {0: 8200}
+# q 7 e 7: 3 all-bad factor types
+  type [(2, 1), (2, 1), (3, 1)]: 20000 polynomials, k - omega counts {0: 20000}
+  type [(2, 2), (3, 1)]: 2352 polynomials, k - omega counts {0: 2352}
+  type [(3, 1), (4, 1)]: 20000 polynomials, k - omega counts {0: 20000}
+# total k - omega counts {0: 42352}
+# q 7 e 7 (full run, no cap): 3 all-bad factor types
+  type [(2, 1), (2, 1), (3, 1)]: 23520 polynomials, k - omega counts {0: 23520}, deg D counts {3: 294, 4: 2982, 5: 20244}
+  type [(2, 2), (3, 1)]: 2352 polynomials, k - omega counts {0: 2352}, deg D counts {}
+  type [(3, 1), (4, 1)]: 65856 polynomials, k - omega counts {0: 65856}, deg D counts {1: 42, 2: 210, 3: 1512, 4: 8064, 5: 56028}
+# total k - omega counts {0: 91728}
