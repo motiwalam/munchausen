@@ -18,7 +18,7 @@ an idle machine. Each comparison of two programs alternated their runs.
 | question | answer | status |
 |---|---|---|
 | 47, the sieve | Any modulus up to 128 works; only one power of each prime adds information. 32 removes 22 to 34% of the candidates where 2 removes 1 to 9%, and 27 removes 35 to 42% where 3 removes 20 to 28%. A rewritten `kdigit` (byte residues without division, masks built only while a last digit is alive, bit-set filters) is about 11 times faster and passes 300 to 800 times fewer strings to the exact step. The output is unchanged on all lists. | proven (method), computed |
-| 47, longer lists | 7 digits complete for bases up to `10^7.2` (was `10^5.5`), 8 digits up to 8,220 (was 127). No new solution under `0^0 = 1`. | computed |
+| 47, longer lists | 7 digits complete for bases up to `10^7.2` (was `10^5.5`), 8 digits up to 23,364 (was 127). No new solution under `0^0 = 1`. | computed |
 | 49 | `kdigit --offset D`. For 4 digits, 200 offsets `D = j` are Poisson draws that match the root heuristic within 7% (primes) or 1% (p-adic), and the two 4-digit solutions are an ordinary draw. For 5 digits the heuristic fits in bases below 13. In bases 13 to 99 the far offsets `D = j L` fall below it (10 against 16), so the three 5-digit solutions there are an excess of about 17 times (P about 0.005 after the choice of range). Near offsets show algebraic families, self-paying blocks and clusters. | computed against heuristic |
 | 48 | The right factor is the number of roots mod `p^e`; it averages exactly 1. It is stable from `2^4, 3^3, 5^2` on. It moves the predictions for 3, 4 and 5 digits from 5.09, 1.39, 2.42 to 5.59, 0.75, 3.32. It fits the 4-digit offsets better, but it does not explain the 5-digit excess. | proven (factor), heuristic |
 | 58 | `fast search --power d` finds all narcissistic numbers; bases 3 to 13 match OEIS. The refined model predicts 671 against 760 observed (basic model 253). In the cells with `x^d == x (mod b-1)` for all digits, `d >= 6`, it predicts 208.5 against 207 (basic model 24). | computed against heuristic |
@@ -180,24 +180,26 @@ first: 32, 27, 25, 49, then the primes 11 to 127.
 
 ### 47.5 Longer lists (computed)
 
-The speedup pays for longer lists. Two new runs, on 3 threads at load
-average about 40 (data `r3c_k7_M32.txt`, `r3c_k8_M22.txt`):
+The speedup pays for longer lists. Three new runs, on 3 threads at load
+average 35 to 40 (data `r3c_k7_M32.txt`, `r3c_k8_M22.txt`,
+`r3c_k8_M24.txt`):
 
 | length | digits up to | complete for bases up to | time | strings | survivors | new solutions |
 |---:|---:|---:|---:|---:|---:|---|
 | 7 | 32 | `10^7.2` (was `10^5.5`) | 565 s | `4.1 * 10^10` | 36,309 | under `0^0 = 0`: `(27,0,0,0,0,0,0)` and `(27,0,0,0,0,0,1)` in base `3^13`, `(31,0,...,0)` and `(31,0,...,0,1)` in base `31^5`; none under `0^0 = 1` |
 | 8 | 22 | `10^3.9` (was 127) | 1,244 s | `7.5 * 10^10` | 68,750 | none beyond the known `(1,8,4,5,3,2,7,8)` and `(1,8,4,5,3,4,8,7)` in base 11 under both conventions, `(3,4,6,6,4,0,8,4)` in base 9, and the self-paying `(15,0,...,0)` in base 225 and `(22,0,...,0)` in base 10648 with their twins under `0^0 = 0` |
+| 8 | 24 | `10^4.4` | 2,059 s | `1.5 * 10^11` | 133,240 | the same 9 lines as for 22 |
 
-Before this run, 8-digit solutions were known to be complete only for bases
-up to 127 (`fast search`, chapter 3). Now the list is complete for bases up
-to 8,220 (`23^(23/8)`). This is a first step for question 29.
+Before these runs, 8-digit solutions were known to be complete only for
+bases up to 127 (`fast search`, chapter 3). Now the list is complete for
+bases up to 23,364 (`25^(25/8)`). This is a first step for question 29.
 
 The new 7-digit solutions are the self-paying family `(x, 0, ..., 0)` and
 its twin, with `x^(x-1)` a sixth power (chapter 2). Under `0^0 = 1` the only
 7-digit solution in all bases up to `10^7.2` is still `(1,6,5,6,5,4,7)` in
 base 9. By the tail estimate of section 11.4 (`analysis/list_tails.py`),
 the expected number of 7-digit solutions with a larger digit is
-`1.7 * 10^-33`, and `4.2 * 10^-18` for 8 digits.
+`1.7 * 10^-33`, and `5.7 * 10^-21` for 8 digits.
 
 ## 49. A defect spectrum for short strings
 
@@ -453,7 +455,7 @@ The offsets of section 49 calibrate both versions on hundreds of pairs
 | 5 | `D = j`, bases 10 to 99 | 2.13 | 1.65 |
 | 5 | `D = j L`, `0^0 = 1` | 0.63 | 0.54 |
 
-The p-adic factor does what it should for 4 digits: it removes the 7%
+The p-adic factor does its job for 4 digits: it removes the 7%
 excess of the prediction, and it fixes the parity of `D`, which the 2-adic
 factor controls (373 observed for even `j`, against 414 with primes and
 377 p-adic). For 5 digits it moves every prediction up by 10 to 25%. That
@@ -659,8 +661,8 @@ only test left. Bases 43 and 45 (section 17.4) fit both readings.
   `r3c_kdigit_stats_k5_40.txt`.
 - `analysis/r3c_kdigit_speed.py`: old against new; data
   `r3c_kdigit_speed.txt`.
-- `analysis/data/r3c_k7_M32.txt`, `r3c_k8_M22.txt`K8FILE: the longer lists, in the
-  format of `k7.txt`.
+- `analysis/data/r3c_k7_M32.txt`, `r3c_k8_M22.txt`, `r3c_k8_M24.txt`: the
+  longer lists, in the format of `k7.txt`.
 - `analysis/r3c_offsets.py`, `analysis/r3c_root_spectrum.py`,
   `analysis/r3c_spectrum_report.py`: questions 49 and 48; data
   `r3c_offsets_k<k>_j.txt`, `r3c_offsets_k<k>_jL.txt`,
