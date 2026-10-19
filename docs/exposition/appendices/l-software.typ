@@ -153,6 +153,8 @@ them. Each library chapter ends with a table of its scripts and data files.
     [`r5e_`], [near-solutions as evidence], [L26],
     [`r5l_`], [limits of search: solvers, orders, certificates, work units], [L27],
     [`r5p_`], [the z-score law, length windows and the GPU], [L28],
+    [`r5m_`], [theorems about the model: length shares, $k(B)$, $rho(b)$, block and top-digit models], [L29],
+    [`r6a_`], [anti-concentration, collisions of $x^x - x$, fixed points, 2-digit narcissistic numbers], [L30],
   ),
 )
 

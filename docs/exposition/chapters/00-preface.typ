@@ -79,6 +79,9 @@ coincidences and blind to identities. @ch-constructions tells this story.
   linear forms in logarithms and the abc conjecture (@ch-diophantine).
 - Negative, complex, rational, Pisot, factorial and function-field bases
   show which laws are universal (@ch-worlds).
+- Some of the questions connect to other fields: anti-concentration in
+  probability, the map $x |-> x^x$ modulo a prime, and sums of two squares
+  (@sec-open-connections).
 - @ch-open lists the open problems.
 
 == A living document

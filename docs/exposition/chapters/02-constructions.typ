@@ -253,6 +253,38 @@ Infinite families follow at once.
   600.
 ]
 
+For $c >= 1$ the condition $a | c^c - c$ says that $c$ is a _fixed point_ of the map $x |-> x^x$ modulo $a$. This map has a literature of its own, mostly for a prime modulus, and it describes the last digits that go with a given leading digit.
+
+#proposition(id: "cons-prop-fixed-density", title: "Density of the last digits", src: "30.2")[
+  Let $p$ be prime. The integers $c >= 1$ with $c^c equiv c med (mod p)$ are periodic modulo $p (p - 1)$, with density
+  $ f(p) = 1 / p (1 + sum_(d | p - 1) phi(d) / d) . $
+]
+#proof[
+  By Fermat's little theorem, $c^c mod p$ depends only on $u = c mod p$ and $v = c mod (p - 1)$. Since $p$ and $p - 1$ are coprime, $(u, v)$ runs over all pairs as $c$ runs over one period. If $u = 0$, both sides are 0: that gives $p - 1$ pairs. If $u != 0$, the condition is $u^(v - 1) equiv 1$, that is, the order of $u$ divides $v - 1$. This holds for $(p - 1) slash "ord"(u)$ values of $v$, and there are $phi(d)$ units of order $d$. So the count is $(p - 1)(1 + sum_(d | p - 1) phi(d) slash d)$. Divide by $p (p - 1)$.
+]
+
+For $p = 3$ the density is $5 slash 6$. On average over primes, $f(p)$ is about $ln p slash p$. For a digit pair $(p, c)$ with $2 <= c <= p - 1$ the base $(p^p + c^c - c) slash p$ is larger than both digits. So such a pair is a solution exactly when $c$ is a fixed point modulo $p$, and the theorems on fixed points apply directly.
+
+#corollary(id: "cons-cor-kls", title: "Small last digits", src: "30.2", status: "cited")[
+  Call $(p, c)$, with $p$ prime and $2 <= c <= p - 1$, a small pair. Under both conventions:
+  + For almost all primes $p$ some small pair $(p, c)$ is a 2-digit solution.
+  + If $p equiv 3 med (mod 8)$ and $(p - 1) slash 2$ is prime, no small pair $(p, c)$ is a solution.
+  + At most $p^(1 slash 3 + o(1))$ small pairs $(p, c)$ are solutions.
+]
+
+These are theorems of Kurlberg, Luca and Shparlinski on the fixed points of $x |-> x^x$ modulo $p$ @kurlberg-luca-shparlinski2015, and Felix and Kurlberg sharpen the count of the exceptional primes @felix-kurlberg2017. Part 2 has a short proof. A fixed point has $c^(c - 1) equiv 1$, so the order of $c$ divides both $p - 1 = 2 q$ and $c - 1$. Order 1 gives $c = 1$. Order 2 gives $c = p - 1$, but then $c - 1$ is odd. Order $2 q$ needs $c - 1 >= p - 1$. Order $q$ forces $c = q + 1 = (p + 1) slash 2$, which is $1 slash 2$ modulo $p$. Then $c^(c - 1) equiv 2^(-q)$, which is the Legendre symbol $(2 slash p) = -1$, not 1.
+
+#computation(id: "cons-comp-fixed", title: "Fixed points and the census", src: "30.2")[
+  Of the 2,261 odd primes below 20,000, 146 have no small pair that is a solution, and 90 of these are of the form in part 2. (The list of such primes printed by Kurlberg, Luca and Shparlinski starts with 7 by mistake: $4^4 equiv 4 med (mod 7)$.) Under $0^0 = 1$, the share of the pairs $1 <= a <= Y$, $0 <= c <= Y$ that are solutions, against the mean density of the fixed points modulo $a <= Y$:
+  #align(center, btable(columns: 4, align: (right,) * 4,
+    [$Y$], [20], [60], [200],
+    [census share], [0.524], [0.353], [0.212],
+    [mean density], [0.576], [0.374], [0.217],
+  ))
+]
+
+So the census of @cons-two-digit-count is a mean-value problem for the fixed points of $x |-> x^x$. Its asymptotic is open (#q(121)).
+
 So two-digit solutions are plentiful: the condition $a divides g(c)$ holds
 with probability about $1 slash a$, and $sum 1 slash a$ diverges. But each base
 has very few. The next theorem, proven in #lib("15.2"), settles the question

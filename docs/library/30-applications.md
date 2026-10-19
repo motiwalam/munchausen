@@ -756,9 +756,12 @@ third, which concerns a paper.
 | `analysis/r6a_twodigit.py` | Proposition 30.10 check, Table 30.2.2, primes without small partners; data `r6a_twodigit.txt` |
 | `analysis/r6a_narc2.py` | Theorem 30.12 check and Table 30.3.1; data `r6a_narc2.txt` |
 
-The draft is not yet in `lean/` or `docs/exposition/`. Lemma 30.1, Lemma 30.2,
-Lemma 30.4, Proposition 30.10 and Theorem 30.12 are elementary and natural
-candidates for formalization.
+The exposition covers sections 30.1 and 30.2.2 to 30.2.3 in its model
+chapter, section 30.2.4 in its chapter on constructions, section 30.3 in
+its chapter on other weights, and section 30.4 in its chapter on open
+problems, with primers on anti-concentration and on sums of two squares.
+Lemma 30.1, Lemma 30.2, Lemma 30.4, Proposition 30.10 and Theorem 30.12
+are elementary and natural candidates for formalization in `lean/`.
 
 ## New questions
 

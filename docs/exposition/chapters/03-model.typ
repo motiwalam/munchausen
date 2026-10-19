@@ -170,7 +170,7 @@ A multiset that meets the identity becomes $b - 1$ times as likely to be a solut
 
 So a large odd base expects two solutions under $0^0 = 0$ and about 1.135 under $0^0 = 1$, and a large even base expects one under each. Averaged over all bases, the model predicts 1.5 solutions per base under $0^0 = 0$ and about 1.07 under $0^0 = 1$ #lib("7.4").
 
-The factor 1 for odd primes is the one assumption of this section that is not obvious. It says that the residues of $x^x$ modulo the odd prime powers in $b - 1$ spread evenly over the multisets whose weight has the right length. @sec-model-poisson calls it Assumption R. It reduces to one exponential sum per base, which a computation bounds for every base up to 6000; beyond that it is open (@sec-model-assumption-r).
+The factor 1 for odd primes is the one assumption of this section that is not obvious. It says that the residues of $x^x$ modulo the odd prime powers in $b - 1$ spread evenly over the multisets whose weight has the right length. @sec-model-poisson calls it Assumption R. It reduces to one exponential sum per base, which a computation bounds for every base up to 6000; beyond that it is open (@sec-model-assumption-r). A weaker form, enough for the Poisson law in the limit, holds in every base (@sec-model-anticonc). For 2-digit narcissistic numbers the doubling of odd bases is a theorem (@worlds-narc-parity).
 
 === The model against the data
 
@@ -430,7 +430,7 @@ Fix a minimal length $ell >= 6$. An index $alpha$ is a multiset with $ell <= k <
   $ d_"TV" ((N_0, N_1), (Z_s + Z_0, Z_s + Z_1)) <= 2 b_1 + b_2, $
   where $b_1 = sum_u sigma_u^2$ is the sum over clusters of the squared expected cluster counts, and $b_2 = 2 E[T]$ with $T$ the number of model solutions under convention 0 that end in 0. For $ell = ceil(b slash 2)$ and $b >= 12$, the basic coupled model gives
   $ d_"TV" <= 14.2 slash b + 16 b^2 (b + 1) ell! slash b^ell = O(1 slash b). $
-  The refined model gives the same with $14.2 kappa slash b$ in the first term and an extra factor $b - 1$ in the second term, under Assumption R below. For $12 <= b <= 6000$ the refined case holds without the assumption (@model-cor-r-small).
+  The refined model gives the same with $14.2 kappa slash b$ in the first term and an extra factor $b - 1$ in the second term, under Assumption R below. For $12 <= b <= 6000$ the refined case holds without the assumption (@model-cor-r-small). In every base it holds without the assumption with a weaker error term, which still tends to 0 (@model-thm-anticonc).
 ]
 #sketch[
   Compare the family of indicators $X_alpha$ with independent Poisson variables $Z_alpha$ of the same means; the counts $(N_0, N_1)$ are sums of these. Clusters are independent in both families, and total variation is subadditive over independent blocks, so it suffices to bound one cluster. Inside a cluster, compare $X$ first with independent Bernoulli variables $B_alpha$, then $B$ with $Z$. Le Cam's inequality gives $d_"TV" (B, Z) <= sum p_alpha^2 <= sigma_u^2$. For $X$ against $B$, split the probabilities by the number of ones in the outcome vector: the outcomes with at least two ones have probability at most $P(K >= 2) + sigma_u^2 slash 2$, where $K$ is the number of solutions in the cluster, and the outcomes with zero or one ones differ by at most $E[K(K - 1)] + sigma_u^2$ in total. Summing over clusters, $sum E[K(K-1)]$ is the expected number of ordered pairs of solutions in one cluster, and by @model-lem-twins these are the twin pairs, so the sum is $2 E[T]$. The error terms come from two estimates. A cluster has at most $2(b + 1)$ relevant shifts $j$, and each has probability at most $2 D! slash b^(D - 1)$ to produce the upper part, which gives $sigma_u <= 4 b (b + 1) ell! slash b^ell$. And a convention-0 solution ending in 0 has its last digit fixed, which costs a factor $1 slash b$, while the chance that the other digits fit is summable over the lengths; this gives $E[T] <= 7.1 slash b$.
@@ -505,6 +505,78 @@ For $b - 1 = p$ prime with $1000 <= p <= 20,000$, the largest sum lies between 0
 ]
 
 This leaves out the joint residue modulo all of $b - 1$ and the case of a prime factor $p > b^(2 slash 3)$; at most one prime factor can be that large. The literature has bounds for the number of solutions of $x^x equiv lambda med (mod p)$ @balog-broughan-shparlinski2011 @cilleruelo-garaev2016, and these bound the sums $sum_(x < p) e(a x^x slash p)$ on average over $a$. No bound below $p$ for a single $a$ seems to be known, and that is what $rho(b)$ needs. The needed statement is weaker than $o(p)$: the sum must stay below $p - 3 ln p$ for every $a$ and every initial segment of length at least $p slash 2$ (#q(112)).
+
+=== Assumption R in the limit: anti-concentration <sec-model-anticonc>
+
+The Poisson limit needs less than Assumption R. Let $rho^*(b)$ be the largest share of one residue class modulo $b - 1$ among the strings that the proof of @thm-poisson uses, over all lengths $k >= b slash 2$. The proof gives $b_2 <= 14.2 rho^*(b)$ in the refined model. Assumption R asks for $rho^*(b) <= kappa slash (b - 1)$, which gives the rate $O(1 slash b)$. For a limit theorem it is enough that $rho^*(b) -> 0$, at any rate. This is an _anti-concentration_ statement: a sum of independent random steps should not sit on one value with large probability. The Littlewood-Offord problem asks exactly this (@sec-app-prob-lo). The weights $x^x$ give a clean case, because the small digits have exact integer weights that grow very fast.
+
+#lemma(id: "model-lem-dissoc", title: "Small digits are dissociated", src: "30.1")[
+  Let $g(x) = x^x - x$. For every $z >= 3$, $g(z) >= 2 z g(z - 1)$. Let $2 <= z_0 <= y$ and $n <= 2 z_0 + 1$. If two multisets of $n$ digits from ${z_0, dots, y}$ have the same sum of $g$, they are equal. If moreover $n g(y) < Q$, the same holds for the sums modulo $Q$.
+]
+#proof[
+  Since $(z slash (z - 1))^(z - 1) >= 2$, we have $z^z >= 2 z (z - 1)^(z - 1)$, and the first claim follows. For the second, suppose the multisets differ, and let $w$ be the largest digit with different counts, $c_w > c'_w$. Remove the common digits above $w$. If $w = z_0$, the sums differ by $(c_w - c'_w) g(w) != 0$. If $w > z_0$, the first sum is at least $(c'_w + 1) g(w)$, and the second is at most $c'_w g(w) + n g(w - 1)$. But $n < 2 w$, so $n g(w - 1) < g(w)$ by the first claim. Modulo $Q$, both sums lie in $[0, n g(y)]$, an interval shorter than $Q$, so congruent sums are equal.
+]
+
+So if only a few digits fall into the window ${z_0, dots, y}$, their sum tells which digits they are. A fixed multiset is unlikely, so the sum is unlikely to hit a given residue. Chernoff bounds for the number of digits in the window make this quantitative.
+
+#theorem(id: "model-thm-lo", title: [Anti-concentration for sums of $x^x - x$], src: "30.1")[
+  Let $Q >= 2$, let $y >= 3$ satisfy $(y + 3) y^y < Q$, and put $z_0 = ceil((y + 1) slash 2)$ and $J = y - z_0 + 1$. Let $X_1, dots, X_k$ be independent and uniform on ${0, dots, M}$ with $M >= y$, and let $mu = k J slash (M + 1)$ be the mean number of them in ${z_0, dots, y}$. If $J >= 11$ and $J slash 2 <= mu <= J$, then for every residue $r$
+  $ P(sum_i g(X_i) equiv r med (mod Q)) <= 2 e^(-J slash 5) . $
+]
+#sketch[
+  Let $N$ be the number of $X_i$ in the window. Condition on which indices these are and on all other values. If $N = n <= 2 z_0 + 1$, the sum over the window lies in $[0, Q)$, so at most one value of it qualifies, and by @model-lem-dissoc at most one multiset. A fixed multiset of $n$ uniform values from $J$ has probability at most $n! slash J^n$. The Chernoff bounds of @app-prob-chernoff cover $N < J slash 8$ and $N > 2 z_0 + 1$, and Stirling's formula bounds $n! slash J^n$ for $n$ in between.
+]
+
+As $Q$ grows, the largest admissible $y$ is about $ln Q slash ln ln Q$, so $J$ is about $ln Q slash (2 ln ln Q)$.
+
+#theorem(id: "model-thm-anticonc", title: "The refined Poisson law in the limit", src: "30.1")[
+  Let $b >= 12$ and $ell = ceil(b slash 2)$. In the refined coupled model,
+  $ d_"TV" ((N_0, N_1), (Z_s + Z_0, Z_s + Z_1)) <= 14.2 rho^*(b) + 16 b^2 (b^2 - 1) ell! slash b^ell, $
+  and $rho^*(b) <= 2 exp(-(1 slash 10 + o(1)) ln b slash ln ln b)$. So the refined coupled model has the bivariate Poisson law in the limit, without Assumption R.
+]
+#sketch[
+  As in @model-thm-rho, replace the length event for $k$ digits by the larger event that every digit is at most $M_k$, the largest digit with $M_k^(M_k) < b^k$. On it the $k - 2$ digits after the leading one are independent and uniform on ${0, dots, M_k}$. For $k >= b slash 2$ and $b >= 12$ one checks $(M_k + 1) slash 2 <= k - 2 <= M_k + 1$, so the mean $mu$ of @model-thm-lo lies in $[J slash 2, J]$. Apply that theorem with $Q = b - 1$.
+]
+
+The rate is very slow (@model-tab-lo). The bound says nothing below $b = 10^(10)$ and little below $10^(30)$. So the two routes to Assumption R meet only in the limit. The computation of @model-comp-rho gives the strong form for bases 12 to 6000. This theorem gives a weak form for very large bases. In between only @model-conj-rho speaks.
+
+#tablefig(caption: [The bound of @model-thm-lo, optimized over the cut-off, for $Q = 10^E$ #lib("30.1").], id: "model-tab-lo")[
+  #btable(columns: 5, align: (right,) * 5,
+    [$E$], [$y$], [$J$], [bound, $mu = J slash 2$], [bound, $mu = J$],
+    [10], [9], [5], [0.90], [0.89],
+    [30], [21], [11], [0.090], [0.036],
+    [100], [56], [28], [$5.7 dot 10^(-4)$], [$8.6 dot 10^(-6)$],
+    [300], [138], [69], [$9.1 dot 10^(-9)$], [$3.2 dot 10^(-13)$],
+    [1000], [385], [193], [$1.1 dot 10^(-23)$], [$2.1 dot 10^(-33)$],
+  )
+]
+
+The theorem never looks at $x^x$ modulo a large prime, and it works for any modulus. So it also covers a composite $b - 1$, whose joint residue @model-prop-small-p leaves open. The same proof works for the weights $x^(x + t)$ and $x!$, whose ratios $g(z) slash g(z - 1)$ also grow. For the weights $x^d$ of narcissistic numbers the residue law is exact for a simpler reason. Modulo a prime $p$, $x^d - x$ depends only on $x mod p$, and the residue factor is $p$ when $(p - 1) | (d - 1)$ and 1 otherwise. For $x^x$ the residue modulo $p$ depends also on $x mod (p - 1)$, which ties the primes of $b - 1$ together. That coupling is what makes Assumption R hard.
+
+=== Assumption R as a collision count
+
+The strong form of Assumption R is needed for the rate $O(1 slash b)$. Already two digits give a bound by collisions.
+
+#proposition(id: "model-prop-collision", title: "Concentration is bounded by collisions", src: "30.2")[
+  Let $X_1, dots, X_k$, $k >= 2$, be independent and uniform on ${0, dots, M}$. For every $Q >= 2$ and every residue $r$,
+  $ P(sum_i g(X_i) equiv r med (mod Q)) <= N_M (Q) / (M + 1)^2, $
+  where $N_M (Q)$ is the number of pairs $(x, y)$ with $0 <= x, y <= M$ and $g(x) equiv g(y) med (mod Q)$.
+]
+#proof[
+  Condition on $X_3, dots, X_k$. Let $nu$ be the law of $g(X_1) mod Q$. The chance that $g(X_1) + g(X_2)$ hits a given class $v$ is $sum_a nu(a) nu(v - a) <= sum_a nu(a)^2$ by the Cauchy-Schwarz inequality, and $sum_a nu(a)^2 = N_M (Q) slash (M + 1)^2$.
+]
+
+So if $N_(b - 1)(b - 1) <= C b$, Assumption R holds with $kappa <= 4 C$, and a bound $b^(2 - delta)$ gives $rho^*(b) <= 4 b^(-delta)$ #lib("30.2"). For $b - 1 = p$ prime this is a question about the map $x |-> x^x - x$ modulo $p$. The map $x |-> x^x$ has a literature of its own. Balog, Broughan and Shparlinski @balog-broughan-shparlinski2011 and Cilleruelo and Garaev @cilleruelo-garaev2016 bound its collisions by $p^(23 slash 12 + o(1))$. Holden and Moree @holden-moree2006 predict their number, and Kurlberg, Luca and Shparlinski @kurlberg-luca-shparlinski2015 count its fixed points. These methods write $x^x equiv a$ as a condition on discrete logarithms. The shift by $x$ mixes addition with multiplication, so they do not transfer.
+
+#computation(id: "model-comp-collide", title: [Collisions of $x^x$ and of $x^x - x$], src: "30.2")[
+  For every prime $11 <= p < 10^5$, with $1 <= x, y <= p - 1$: the pairs with $x^x equiv y^y$ number about $2.64 (p - 1)$, within 1.2% of the Holden-Moree prediction for every $p > 50,000$. The pairs $x != y$ with $x^x - x equiv y^y - y$ number $1.002 (p - 1)$ on average for $50,000 < p < 10^5$, and between $0.981 (p - 1)$ and $1.052 (p - 1)$ for each such prime: the value for a random map. For the 426 bases $12 <= b <= 3000$ with $b - 1$ prime, @model-prop-collision bounds $(b - 1)$ times the largest share by 2.57 to 4.18.
+]
+
+#conjecture(id: "model-conj-collide", title: "Shifted collisions", src: "30.2")[
+  The number of pairs $1 <= x, y <= p - 1$ with $x^x - x equiv y^y - y med (mod p)$ is $(2 + o(1))(p - 1)$ as $p -> infinity$. This gives Assumption R with $kappa <= 8 + o(1)$ for every base with $b - 1$ prime.
+]
+
+A weaker bound $p^(2 - delta)$ would already give a power rate (#q(118)). For composite $b - 1$ two digits do not mix the residues modulo small primes, and the exponential sums of @sec-model-assumption-r are the better tool. A third route would be an inverse Littlewood-Offord theorem for steps drawn from a fixed set of residues (#q(119)).
 
 === The correlation of the two conventions
 

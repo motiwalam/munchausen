@@ -2,7 +2,7 @@
 
 = Probability: Poisson approximation, Borel-Cantelli and entropy <app-prob>
 
-The probabilistic model of @ch-model treats a Munchausen number as a rare coincidence. Rare coincidences are counted with the Poisson law. This appendix collects the facts from probability that the main text uses: the Poisson limit and how good it is, the two Borel-Cantelli lemmas, the digit counts of a random number and their Poisson coupling, the statistics that compare counts with a model, and the entropy argument behind the search bound of @sec-search-entropy. A good general reference is Durrett's textbook @durrett2019. For Poisson approximation the standard book is @barbour1992, and for entropy @cover-thomas2006.
+The probabilistic model of @ch-model treats a Munchausen number as a rare coincidence. Rare coincidences are counted with the Poisson law. This appendix collects the facts from probability that the main text uses: the Poisson limit and how good it is, the two Borel-Cantelli lemmas, the digit counts of a random number and their Poisson coupling, anti-concentration of sums, the statistics that compare counts with a model, and the entropy argument behind the search bound of @sec-search-entropy. A good general reference is Durrett's textbook @durrett2019. For Poisson approximation the standard book is @barbour1992, and for entropy @cover-thomas2006.
 
 == Rare events and the Poisson law <sec-app-prob-poisson>
 
@@ -96,6 +96,30 @@ The table treats the counts of the top values as independent Poisson(1) variable
 ]
 
 This is the bound of Barbour and Hall @barbour-hall1984; Le Cam's inequality gives the weaker $n p^2$. The second fact is a conditioning trick. Let $N_1, dots, N_K$ be the counts of $K$ fixed values in $d$ independent uniform digits. Given their total $M$, the counts are multinomial with $K$ equal cells. Independent Poisson variables with a common mean have the same property: given their total, they are multinomial with equal cells. So the distance between the two vectors equals the distance between their totals. The total $M$ is binomial with $d$ trials and success probability $K slash b$, and the Poisson total has mean $d K slash b$, so the distance is at most $K slash b$. The same trick compares Poisson($d slash b$) counts with Poisson(1) counts. With $d = b - j$ and the leading digit handled separately, the vector of the $K = j + 1$ top counts is within $((j+1)^2 + 1) slash b$ of independent Poisson(1) variables (Lemma 29.3 of #lib("29.1")). @thm-length-shares uses this to turn the table above into a theorem about the model.
+
+== Anti-concentration: the Littlewood-Offord problem <sec-app-prob-lo>
+
+Concentration inequalities, such as Chebyshev's, say that a sum of independent steps stays near its mean. Anti-concentration says the opposite: the sum is spread out, and no single value has a large probability. Littlewood and Offord met this question in 1943, when they counted the real roots of random polynomials. Erdos gave the sharp answer.
+
+#theorem(id: "app-prob-erdos", title: "The Littlewood-Offord bound", status: "cited")[
+  Let $a_1, dots, a_n$ be real numbers with $|a_i| >= 1$, and let $epsilon_1, dots, epsilon_n$ be independent signs, each $plus.minus 1$ with probability $1 slash 2$. Then every open interval of length 2 contains $sum_i epsilon_i a_i$ with probability at most $binom(n, floor(n slash 2)) slash 2^n$, which is about $sqrt(2 slash (pi n))$.
+]
+
+The proof @erdos1945 is a counting argument with Sperner's theorem on antichains of subsets. The bound is attained when every $a_i = 1$: then the sum is a simple random walk, which sits at its most likely value with probability of order $n^(-1 slash 2)$. Steps with more varied sizes spread the sum further. Halasz @halasz1977 gave bounds in terms of the arithmetic structure of the steps. The inverse theorems of Tao and Vu @tao-vu2009 and of Nguyen and Vu @nguyen-vu2011 go the other way: if the sum hits one value with large probability, then most steps lie in a short generalized arithmetic progression.
+
+#example(title: "Dissociated steps")[
+  Take $a_i = 2^i$. Different choices of signs give different sums, because the binary expansion of $sum_i (epsilon_i + 1) 2^(i - 1)$ shows the signs. So each value has probability $2^(-n)$, the extreme case of anti-concentration. Steps with this property are called _dissociated_. The weights $x^x - x$ behave the same way on a window of small digits: a sum of a few of them shows which digits were used (@model-lem-dissoc). @model-thm-lo turns this into a bound that holds modulo any integer $Q$.
+]
+
+Anti-concentration is weaker than equidistribution. Equidistribution modulo $q$ says that each residue class has probability close to $1 slash q$. Anti-concentration says only that no class has probability above some small $rho$. In @sec-model-poisson, $rho -> 0$ is enough for the Poisson law in the limit, while the rate $O(1 slash b)$ needs $rho <= kappa slash q$, which is Assumption R.
+
+The proof of @model-thm-lo also needs a tail bound for the number of steps that land in a window. That number is binomial.
+
+#theorem(id: "app-prob-chernoff", title: "Chernoff bounds", status: "cited")[
+  Let $N$ be a sum of independent indicators with mean $mu$, and let $h(t) = t ln t - t + 1$. Then $P(N <= a) <= exp(-mu h(a slash mu))$ for $a <= mu$, and $P(N >= a) <= exp(-mu h(a slash mu))$ for $a >= mu$.
+]
+
+See @janson-luczak-rucinski2000[Theorem 2.1]. The proof applies Markov's inequality to $e^(t N)$ and optimizes over $t$.
 
 == Comparing counts with a model <sec-app-prob-stats>
 
