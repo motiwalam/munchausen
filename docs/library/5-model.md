@@ -77,6 +77,12 @@ Limits for large bases:
 | `0^0 = 0` | 1 | 2 |
 | `0^0 = 1` | 1 | 1.135 |
 
+Update (chapter 30). For the weights `x^2` and 2 digits the doubling is a
+theorem. Base `b` has exactly `tau(b^2 + 1) - 2` two-digit narcissistic
+numbers (Theorem 30.12). Their mean over odd bases is `(4/pi) ln X`, twice
+the mean `(2/pi) ln X` over even bases (Proposition 30.14). The factor 2
+is the prime 2 dividing `b^2 + 1` exactly when `b` is odd.
+
 ## 5.4 Comparison with the data
 
 Bases 10 to 38, nontrivial solutions, summed over all digit lengths:

@@ -549,6 +549,23 @@ refined case holds with `kappa = |H_0| + (b - 1) rho(b)^(ell - 2)`, where
 `kappa <= |H_0| + 0.0005` from base 100 on (Corollary 29.16). For larger
 bases it is still open (Conjecture 29.18).
 
+Correction (chapter 30). In the proof of Lemma 13.10, "each value has
+probability at most `1 / b^(d-2)`" should read `1 / b^(d-1)`. The refined
+`Y_u` is uniform on a residue class of `b^(d-1)` numbers, and `1 / b^(d-1)`
+is `b - 1` times the basic `1 / ((b-1) b^(d-1))`. The conclusion
+`7.1 kappa / b` is unchanged.
+
+Update (chapter 30). The refined case of Corollary 13.11 now holds in the
+limit for every base, without Assumption R. Theorem 30.5 gives the same
+bound with `14.2 rho*(b)` in place of `14.2 kappa / b`, where `rho*(b)` is
+the largest share of one residue class, and
+`rho*(b) <= 2 exp(-(1/10 + o(1)) ln b / ln ln b)`. The proof uses only the
+small digits, whose weights grow so fast that their sum fixes their counts
+(section 30.1). The rate is weak: the bound says nothing below `b = 10^10`.
+So the refined model has its bivariate Poisson law in the limit, but the
+rate `O(1/b)` still needs Assumption R. Corollary 30.8 reduces R for prime
+`b - 1` to a collision count for `x^x - x` (Conjecture 30.9).
+
 The constant 14.2 is crude. `analysis/thy_poisson.py` computes `b_2` in the
 refined model by sampling, with every partner checked by brute force over all
 shifts `|delta| <= 2b + 2`. It finds no partner other than twins, as
@@ -647,3 +664,6 @@ Update (chapter 29). The limits of the means are now a theorem:
 all lengths tends to 1 (Corollary 29.6). Assumption R is proven for
 `12 <= b <= 6000` by computation and reduced to one number `rho(b)` per
 base in general (section 29.3).
+
+Update (chapter 30). Assumption R is no longer needed for the Poisson law
+in the limit (Theorem 30.5). It is still needed for the rate `O(1/b)`.

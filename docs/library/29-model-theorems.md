@@ -619,6 +619,12 @@ below `p - 3 ln p` (in the normalization of Theorem 29.15), uniformly in `a`
 and for every initial segment of length at least `p/2`. I found no result
 of that kind either.
 
+Correction (chapter 30). The uniform bound `p^(12/13 + o(1))` is in the
+paper of Balog, Broughan and Shparlinski (arXiv 1003.1997, bound (2)),
+with the collision bound `p^(48/25 + o(1))` (section 30.2.1). Corollary
+30.8 uses the collisions directly: a bound `O(p)` for the collisions of
+`x^x - x` modulo `p` gives Assumption R for prime `b - 1`.
+
 ## 29.4 A model that keeps the Frobenius blocks (question 83)
 
 ### 29.4.1 The model
