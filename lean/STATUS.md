@@ -332,7 +332,7 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Theorem 29.1, Lemmas 29.3, 29.4, Theorem 29.5, Corollary 29.6, Proposition 29.7 | none | not formalized (theorems about the probabilistic model; Lemma 29.3 cites the Barbour-Hall bound) |
-| Lemma 29.2 (weights) | none | not formalized (a real inequality; elementary) |
+| Lemma 29.2 (weights) | `lemma29_2` [MT] | formalized |
 | Lemma 29.8 | `finrank_ker_frobR`, `natCard_fixed_local`, `exists_C_of_dvd_pow_card_sub` (1); `range_pow_sub_one_le`, `Jsum_le_range` (4) [MT] | partial: (1) for `j = 1` (Berlekamp's count `dim R^φ = ω(B - 1)`, by the Chinese remainder theorem) and (4); (1) for `j ≥ 2`, (2) and (3) (traces) not formalized |
 | Theorem 29.9 | none | not formalized (needs Lemma 29.8 (3)) |
 | Corollary 29.10 | `exists_good_factor`, `exists_coprime_of_sum` [MT] | partial: a good factor exists when `e - 1` is a prime power; the conclusion `k = ω` needs Theorem 29.9 |

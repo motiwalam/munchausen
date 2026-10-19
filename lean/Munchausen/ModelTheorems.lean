@@ -31,6 +31,45 @@ open Polynomial Module
 
 namespace Munchausen
 
+/-! ### Lemma 29.2: the weights near the top -/
+
+/-- **Lemma 29.2** (section 29.1.2). For `0 ≤ y < b`,
+`e^(-y) b^(b-y) ≤ w(b - y) ≤ e^(-y) b^(b-y) exp(y^2 / (2 (b - y)))`. -/
+theorem lemma29_2 {b y : ℕ} (hy : y < b) :
+    Real.exp (-(y : ℝ)) * (b : ℝ) ^ (b - y) ≤ ((b - y : ℕ) : ℝ) ^ (b - y) ∧
+      ((b - y : ℕ) : ℝ) ^ (b - y) ≤
+        Real.exp (-(y : ℝ)) * (b : ℝ) ^ (b - y) * Real.exp ((y : ℝ) ^ 2 / (2 * (b - y : ℕ))) := by
+  set n := b - y with hn
+  have hn0 : (0 : ℝ) < n := by exact_mod_cast (show 0 < n by omega)
+  have hb : (b : ℝ) = n + y := by rw [hn]; push_cast [Nat.cast_sub hy.le]; ring
+  have hb0 : (0 : ℝ) < b := by rw [hb]; positivity
+  have hpow : ∀ x : ℝ, 0 < x → x ^ n = Real.exp (n * Real.log x) := by
+    intro x hx; rw [Real.exp_nat_mul, Real.exp_log hx]
+  rw [hpow b hb0, hpow n hn0, ← Real.exp_add, ← Real.exp_add]
+  have hlog : Real.log b - Real.log n = Real.log (1 + y / n) := by
+    rw [← Real.log_div hb0.ne' hn0.ne', hb, add_div, div_self hn0.ne']
+  have hs : (0 : ℝ) ≤ y / n := by positivity
+  constructor
+  · apply Real.exp_le_exp.2
+    have h1 := Real.log_le_sub_one_of_pos (show (0 : ℝ) < 1 + y / n by positivity)
+    have : (n : ℝ) * (Real.log b - Real.log n) ≤ y := by
+      rw [hlog]
+      calc (n : ℝ) * Real.log (1 + y / n) ≤ n * (1 + y / n - 1) :=
+            mul_le_mul_of_nonneg_left h1 hn0.le
+        _ = y := by field_simp; ring
+    linarith
+  · apply Real.exp_le_exp.2
+    have h1 := Real.le_log_one_add_of_nonneg hs
+    have h2 : (y : ℝ) / n - (y / n) ^ 2 / 2 ≤ 2 * (y / n) / (y / n + 2) := by
+      rw [le_div_iff₀ (by positivity)]
+      nlinarith [pow_nonneg hs 3]
+    have : (y : ℝ) - y ^ 2 / (2 * n) ≤ n * (Real.log b - Real.log n) := by
+      rw [hlog]
+      calc (y : ℝ) - y ^ 2 / (2 * n) = n * (y / n - (y / n) ^ 2 / 2) := by
+            field_simp
+        _ ≤ n * Real.log (1 + y / n) := mul_le_mul_of_nonneg_left (h2.trans h1) hn0.le
+    linarith
+
 /-! ### The abstract statement -/
 
 section Abstract
