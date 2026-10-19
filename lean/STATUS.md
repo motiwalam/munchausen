@@ -282,15 +282,15 @@ stated.
 |---|---|---|
 | Lemma 24.1 (Frobenius blocks) | `lemma24_1`, `lemma24_1_zero`, `frobBlock` [FF], `expand_ringVal` [Other] | formalized |
 | Proposition 24.2 (Horner form) | `prop24_2` [FF] | formalized |
-| Corollary 24.3 | none | not formalized (the assembly of all digits from `p_0, ..., p_(e-1)`) |
+| Corollary 24.3 | `corollary24_3`, `corollary24_3_ffF`, `hornerDigit`, `ffF_eq_sum_expand` [FF] | formalized (for any digits `D_0, ..., D_(n-1)`, and for `F(n)` with `D_0` including `m z`) |
 | Corollary 24.4 (forced zeros) | `corollary24_4`, `corollary24_4_ffF` [FF] | formalized (for every Horner sum of digits, and for `F(n)`) |
 | Lemma 24.5 | `lemma24_5`, `lemma24_5_zero_block` [FF] | formalized |
-| Proposition 24.6 | `prop24_6_one`, `ffDigit_add`, `ffDigit_C_mul` [FF] | partial: (1) (`β_r(d) = d_(e-1) τ_r`, from the `F_p`-linearity of the digits); (2) not formalized |
+| Proposition 24.6 | `prop24_6_one`, `prop24_6_two`, `ffDigit_add`, `ffDigit_C_mul` [FF] | formalized ((1) from the `F_p`-linearity of the digits; (2) for any digits `D_j`, with `c` the coefficient of `T^(e-1)` in `sum (D_j(T^(p^(j-1))) mod (B - 1))`, which is `sum sigma'^(j-1)(D_j)`) |
 | Lemma 24.7 | `IsFFSolution.comp` [FF] | formalized |
 | Lemma 24.8 | `IsFFSolution.C_mul_add_C`, `C_mul_add_C_injective` [FF] | formalized |
 | Lemmas 24.9, 24.10 | none | not formalized |
 | Proposition 24.11 | `prop24_11`, `ffF_one_eq`, `sub_pow_eq_sub_frob` [FF] | formalized for `q = p` prime (as all of [FF]); the proof iterates `y ↦ y^p` in `F_p[T]/(P)` in place of the trace |
-| Corollary 24.12 | none | not formalized ((1) needs the digits of the solutions of Theorem 21.7; (2) is computed) |
+| Corollary 24.12 | `corollary24_12_one`, `theorem21_7_card` [FF] | partial: (1), with one root of `B - 1` in place of two (the digits of `c' + β T^p` are `c' + β c`, `(p-3)/2` zeros and `β lam^(-(p-1)/2) (T - c)`); (2) is computed |
 | Proposition 24.13, Theorem 24.15, Corollary 24.16 | none | not formalized |
 
 ## Chapter 25. Identity families and 3-digit solutions
