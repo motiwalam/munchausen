@@ -318,7 +318,7 @@ stated.
 |---|---|---|
 | Lemma 26.1 (the swap lemma) | `swap_lemma_perm`, `swap_lemma`, `swap_last_two` [Search] | formalized |
 | Corollary 26.2 (the class of the moved offset) | `corollary26_2`, `corollary26_2_odd`, `repunit_identity` [Search] | formalized (general and odd bases; the even-base case is the same identity) |
-| Lemma 26.3 (the fibre) | none | not formalized (bookkeeping on near-solutions) |
+| Lemma 26.3 (the fibre) | `lemma26_3`, `lemma26_3_unique` [Search] | formalized |
 | Lemma 26.4 (other systems) | `swap_lemma`, `swap_last_two` [Search] | partial: base `-b` (the ring identity at `r = -b`); factorial, Pisot and `F_q[T]` not formalized |
 | Proposition 26.5, Heuristic 26.6, Proposition 26.9 | none | not formalized (statements about the probabilistic model, computed) |
 | Proposition 26.10 | `prop26_10_one`, `prop26_10_two`, `ImageSet` [Search] | formalized |
