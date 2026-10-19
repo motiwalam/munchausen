@@ -288,6 +288,190 @@ theorem corollary30_11_two_solution {p c b m : ℕ} [Fact p.Prime] (h8 : p % 8 =
     exact (Nat.dvd_add_right hpp).1 (h ▸ dvd_mul_right p b)
   exact corollary30_11_two h8 hq hc2 hcp ((dvd_g_iff_modEq m (by omega)).1 hdvd)
 
+/-- The units of `ZMod p` with order `t` contribute `(p - 1)/t` exponents: for `1 ≤ u < p`,
+the `v < p - 1` with `u^v ≡ u (mod p)` are the `v ≡ 1` modulo the order of `u`. -/
+lemma card_pow_modEq_self {p u : ℕ} [hp : Fact p.Prime] (hu1 : 1 ≤ u) (hup : u < p) :
+    ((Finset.range (p - 1)).filter (fun v => u ^ v ≡ u [MOD p])).card =
+      (p - 1) / orderOf (u : ZMod p) := by
+  have hu0 : (u : ZMod p) ≠ 0 := by
+    rw [Ne, ZMod.natCast_eq_zero_iff]
+    exact fun h => absurd (Nat.le_of_dvd (by omega) h) (by omega)
+  set t := orderOf (u : ZMod p)
+  have htd : t ∣ p - 1 := orderOf_dvd_of_pow_eq_one (ZMod.pow_card_sub_one_eq_one hu0)
+  have ht0 : 0 < t := Nat.pos_of_ne_zero fun h => by
+    have := Nat.eq_zero_of_zero_dvd (h ▸ htd)
+    have := hp.out.two_le
+    omega
+  obtain ⟨g, hg⟩ := hu0.isUnit
+  have ht : t = orderOf g := by simp only [t, ← hg, orderOf_units]
+  have hiff : ∀ v, u ^ v ≡ u [MOD p] ↔ v ≡ 1 [MOD t] := by
+    intro v
+    rw [← ZMod.natCast_eq_natCast_iff, Nat.cast_pow, ← hg, ht, ← pow_eq_pow_iff_modEq,
+      ← Units.val_inj, Units.val_pow_eq_pow_val, Units.val_pow_eq_pow_val, pow_one]
+  simp_rw [hiff]
+  rw [← Nat.count_eq_card_filter_range, Nat.count_modEq_card _ ht0, Nat.mod_eq_zero_of_dvd htd]
+  simp
+
+/-- The units of `ZMod p`, grouped by their order: `∑_{1 ≤ u < p} (p-1)/ord(u)` is
+`∑_{d ∣ p-1} φ(d) (p-1)/d`. -/
+lemma sum_div_orderOf {p : ℕ} [hp : Fact p.Prime] :
+    ∑ u ∈ Finset.Ico 1 p, (p - 1) / orderOf (u : ZMod p) =
+      ∑ d ∈ (p - 1).divisors, d.totient * ((p - 1) / d) := by
+  have hcard : Fintype.card (ZMod p)ˣ = p - 1 := ZMod.card_units p
+  -- reindex by the units
+  have h1 : ∑ u ∈ Finset.Ico 1 p, (p - 1) / orderOf (u : ZMod p) =
+      ∑ g : (ZMod p)ˣ, (p - 1) / orderOf g := by
+    refine Finset.sum_nbij' (fun u => if h : (u : ZMod p) = 0 then 1 else Units.mk0 _ h)
+      (fun g => (g : ZMod p).val) ?_ ?_ ?_ ?_ ?_
+    · intro u _; exact Finset.mem_univ _
+    · intro g _
+      rw [Finset.mem_Ico]
+      refine ⟨Nat.pos_of_ne_zero fun h => g.ne_zero ?_, ZMod.val_lt _⟩
+      rwa [ZMod.val_eq_zero] at h
+    · intro u hu
+      rw [Finset.mem_Ico] at hu
+      have hu0 : (u : ZMod p) ≠ 0 := by
+        rw [Ne, ZMod.natCast_eq_zero_iff]
+        exact fun h => absurd (Nat.le_of_dvd (by omega) h) (by omega)
+      simp only [hu0, dite_false, Units.val_mk0, ZMod.val_natCast]
+      exact Nat.mod_eq_of_lt hu.2
+    · intro g _
+      have : ((g : ZMod p).val : ZMod p) ≠ 0 := by rw [ZMod.natCast_zmod_val]; exact g.ne_zero
+      simp only [this, dite_false]
+      ext; simp
+    · intro u hu
+      rw [Finset.mem_Ico] at hu
+      have hu0 : (u : ZMod p) ≠ 0 := by
+        rw [Ne, ZMod.natCast_eq_zero_iff]
+        exact fun h => absurd (Nat.le_of_dvd (by omega) h) (by omega)
+      simp only [hu0, dite_false]
+      rw [← orderOf_units, Units.val_mk0]
+  rw [h1]
+  -- group by the order
+  rw [← Finset.sum_fiberwise_of_maps_to (s := Finset.univ) (t := (p - 1).divisors)
+    (g := fun g : (ZMod p)ˣ => orderOf g)]
+  · refine Finset.sum_congr rfl fun d hd => ?_
+    rw [Finset.sum_congr rfl (fun g hg => by rw [(Finset.mem_filter.1 hg).2]), Finset.sum_const,
+      smul_eq_mul]
+    congr 1
+    exact IsCyclic.card_orderOf_eq_totient (hcard ▸ Nat.dvd_of_mem_divisors hd)
+  · intro g _
+    rw [Nat.mem_divisors]
+    exact ⟨hcard ▸ orderOf_dvd_card, by have := hp.out.two_le; omega⟩
+
+/-- Section 30.2.4: for `c ≥ 1`, whether `c^c ≡ c (mod p)` depends only on `u = c mod p` and
+`c mod (p - 1)`: it holds when `u = 0`, and otherwise exactly when `u^(c mod (p-1)) ≡ u`. So
+the solutions are periodic modulo `p (p - 1)`. -/
+lemma pow_self_modEq_self_iff {p c : ℕ} [hp : Fact p.Prime] (hc : 1 ≤ c) :
+    c ^ c ≡ c [MOD p] ↔ c % p = 0 ∨ (c % p) ^ (c % (p - 1)) ≡ c % p [MOD p] := by
+  have hp2 := hp.out.two_le
+  rcases Nat.eq_zero_or_pos (c % p) with h0 | hpos
+  · simp only [h0, true_or, iff_true]
+    have hdvd : p ∣ c := Nat.dvd_of_mod_eq_zero h0
+    exact ((Nat.modEq_zero_iff_dvd.2 (hdvd.trans (dvd_pow_self c (by omega)))).trans
+      (Nat.modEq_zero_iff_dvd.2 hdvd).symm)
+  · simp only [hpos.ne', false_or]
+    have hcop' : Nat.Coprime (c % p) p := by
+      rw [Nat.coprime_comm]
+      exact (Nat.Prime.coprime_iff_not_dvd hp.out).2 fun h =>
+        absurd (Nat.le_of_dvd hpos h) (by have := Nat.mod_lt c (show p > 0 by omega); omega)
+    -- `u^(p-1) ≡ 1`, so `u^c ≡ u^(c mod (p-1))`
+    have hferm : (c % p) ^ (p - 1) ≡ 1 [MOD p] := by
+      have := Nat.ModEq.pow_totient hcop'
+      rwa [Nat.totient_prime hp.out] at this
+    have hpow : (c % p) ^ c ≡ (c % p) ^ (c % (p - 1)) [MOD p] := by
+      have e : (c % p) ^ c = ((c % p) ^ (p - 1)) ^ (c / (p - 1)) * (c % p) ^ (c % (p - 1)) := by
+        rw [← pow_mul, ← pow_add, Nat.div_add_mod]
+      rw [e]
+      have := (hferm.pow (c / (p - 1))).mul_right ((c % p) ^ (c % (p - 1)))
+      rwa [one_pow, one_mul] at this
+    have hcc : c ^ c ≡ (c % p) ^ c [MOD p] := ((Nat.mod_modEq c p).symm).pow c
+    have hcu : c ≡ c % p [MOD p] := (Nat.mod_modEq c p).symm
+    constructor
+    · intro h
+      exact (hpow.symm.trans hcc.symm).trans (h.trans hcu)
+    · intro h
+      exact (hcc.trans hpow).trans (h.trans hcu.symm)
+
+/-- **Proposition 30.10** (section 30.2.4). Let `p` be prime. Among `1 ≤ c ≤ p (p - 1)`, one
+period, the number of `c` with `c^c ≡ c (mod p)` is `(p - 1) (1 + ∑_{d ∣ p-1} φ(d)/d)`. -/
+theorem prop30_10 (p : ℕ) [hp : Fact p.Prime] :
+    ((Finset.Icc 1 (p * (p - 1))).filter (fun c => c ^ c ≡ c [MOD p])).card =
+      (p - 1) + ∑ d ∈ (p - 1).divisors, d.totient * ((p - 1) / d) := by
+  have hp2 := hp.out.two_le
+  have hcop : Nat.Coprime p (p - 1) := by
+    have : Nat.Coprime (p - 1) p := by
+      have := Nat.coprime_self_add_right.2 (Nat.coprime_one_right (p - 1))
+      rwa [show p - 1 + 1 = p by omega] at this
+    exact this.symm
+  -- a residue condition: `c^c ≡ c` depends on `c mod p` and `c mod (p - 1)`
+  set R : ℕ × ℕ → Prop := fun uv => uv.1 = 0 ∨ uv.1 ^ uv.2 ≡ uv.1 [MOD p]
+  have hR : ∀ c, 1 ≤ c → (c ^ c ≡ c [MOD p] ↔ R (c % p, c % (p - 1))) :=
+    fun c hc => pow_self_modEq_self_iff hc
+  -- count the pairs `(u, v)`
+  set N := p * (p - 1)
+  have hN : 0 < N := Nat.mul_pos (by omega) (by omega)
+  have hpairs : ((Finset.Icc 1 N).filter (fun c => c ^ c ≡ c [MOD p])).card =
+      ((Finset.range p ×ˢ Finset.range (p - 1)).filter R).card := by
+    have hmodN : ∀ c, 1 ≤ c → c ≤ N → (c % N = c ∧ c < N) ∨ (c = N ∧ c % N = 0) := by
+      intro c h1 h2
+      rcases Nat.lt_or_ge c N with h | h
+      · exact Or.inl ⟨Nat.mod_eq_of_lt h, h⟩
+      · exact Or.inr ⟨by omega, by rw [show c = N by omega, Nat.mod_self]⟩
+    refine Finset.card_bij (fun c _ => (c % p, c % (p - 1))) ?_ ?_ ?_
+    · intro c hc
+      rw [Finset.mem_filter, Finset.mem_Icc] at hc
+      rw [Finset.mem_filter, Finset.mem_product, Finset.mem_range, Finset.mem_range]
+      exact ⟨⟨Nat.mod_lt _ (by omega), Nat.mod_lt _ (by omega)⟩, (hR c hc.1.1).1 hc.2⟩
+    · intro c hc c' hc' h
+      rw [Finset.mem_filter, Finset.mem_Icc] at hc hc'
+      simp only [Prod.mk.injEq] at h
+      have hN' : c ≡ c' [MOD N] := (Nat.modEq_and_modEq_iff_modEq_mul hcop).1 ⟨h.1, h.2⟩
+      unfold Nat.ModEq at hN'
+      rcases hmodN c hc.1.1 hc.1.2 with h1 | h1 <;> rcases hmodN c' hc'.1.1 hc'.1.2 with h2 | h2 <;>
+        omega
+    · rintro ⟨u, v⟩ huv
+      rw [Finset.mem_filter, Finset.mem_product, Finset.mem_range, Finset.mem_range] at huv
+      set k := Nat.chineseRemainder hcop u v
+      have hk : (k : ℕ) < N := Nat.chineseRemainder_lt_mul hcop u v (by omega) (by omega)
+      set c := if (k : ℕ) = 0 then N else (k : ℕ)
+      have hck : c ≡ k [MOD N] := by
+        simp only [c]
+        split_ifs with h0
+        · rw [h0]; exact Nat.modEq_zero_iff_dvd.2 (dvd_refl N)
+        · rfl
+      have hcp : c % p = u := by
+        have := ((Nat.modEq_and_modEq_iff_modEq_mul hcop).2 hck).1.trans k.2.1
+        rw [Nat.ModEq, Nat.mod_eq_of_lt huv.1.1] at this
+        exact this
+      have hcq : c % (p - 1) = v := by
+        have := ((Nat.modEq_and_modEq_iff_modEq_mul hcop).2 hck).2.trans k.2.2
+        rw [Nat.ModEq, Nat.mod_eq_of_lt huv.1.2] at this
+        exact this
+      have hc1 : 1 ≤ c := by simp only [c]; split_ifs <;> omega
+      have hcN : c ≤ N := by simp only [c]; split_ifs <;> omega
+      refine ⟨c, ?_, by rw [hcp, hcq]⟩
+      rw [Finset.mem_filter, Finset.mem_Icc]
+      exact ⟨⟨hc1, hcN⟩, (hR c hc1).2 (by rw [hcp, hcq]; exact huv.2)⟩
+  rw [hpairs]
+  -- sum over `u`
+  have hrow : ((Finset.range p ×ˢ Finset.range (p - 1)).filter R).card =
+      ∑ u ∈ Finset.range p, ((Finset.range (p - 1)).filter (fun v => R (u, v))).card := by
+    rw [Finset.card_filter, Finset.sum_product]
+    simp only [Finset.card_filter]
+    rfl
+  rw [hrow, Finset.range_eq_Ico, Finset.sum_eq_sum_Ico_succ_bot (by omega)]
+  have h0 : ((Finset.range (p - 1)).filter (fun v => R (0, v))).card = p - 1 := by
+    simp [R]
+  rw [h0, ← sum_div_orderOf]
+  congr 1
+  refine Finset.sum_congr rfl fun u hu => ?_
+  rw [Finset.mem_Ico] at hu
+  rw [← card_pow_modEq_self hu.1 hu.2]
+  congr 1
+  have hu0 : u ≠ 0 := by omega
+  exact Finset.filter_congr fun v _ => by simp only [R, hu0, false_or]
+
 /-- The list of section 30.2.4 printed by Kurlberg, Luca and Shparlinski includes 7, but
 `4^4 ≡ 4 (mod 7)`, so 7 has a small partner: `(7, 4)` is a solution in base
 `(7^7 + 4^4 - 4)/7 = 117685`. -/
