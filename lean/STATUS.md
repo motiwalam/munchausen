@@ -293,11 +293,11 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Definition 25.1, Theorem 25.2 (the last digit is large) | `theorem25_2` [Three] | formalized (core form: `P_s(r) - E` is not `lam A(r)^j` when `E ≥` the last digit, with the next digit nonzero if equal; this is exactly the situation when the last digit is not large; the proof uses the intermediate value theorem and a derivative instead of Descartes' rule) |
-| Corollary 25.3 | none | not formalized (depends on 25.2) |
+| Corollary 25.3 | `corollary25_3` [Three] | formalized (the form `r P_t(r) + C = lam A^j` and the solution criterion `x^x = lam A(b)^j`; that `x` is last is Theorem 25.2; the normalization of `A` by Gauss's lemma is not stated) |
 | Theorem 25.4 | none | not formalized ((a) is Theorem 22.6 and 25.5 after rescaling; (b), (c) need valuations) |
 | Theorem 25.5 | `theorem25_5`, `theorem25_5_conditions` [Cons] | formalized (the prime condition is stated as `c ∣ (j-1)^c`, which is equivalent; the conditions hold for `c = (j-1)^a`) |
 | Proposition 25.6 | none | not formalized |
-| Theorem 25.7 | `theorem25_7_i`, `theorem25_7_i_parity` [TDB], `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading`, `prop22_8`, `R_pos_middle`, `R_pos_leading` [Three] | partial: case (i) for every `x` (with `lam = 1` for even `x` and `x / lam` a square for odd `x`) and case (ii) in all three positions; case (iii) (no power identity, the Pell form) is not formalized |
+| Theorem 25.7 | `theorem25_7_i`, `theorem25_7_i_parity` [TDB], `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading`, `theorem25_7_iii_last`, `theorem25_7_iii_middle`, `theorem25_7_iii_leading`, `complete_square`, `prop22_8`, `R_pos_middle`, `R_pos_leading` [Three]; `pell_last`, `pell_middle` [SR] | formalized: case (i) for every `x` (with `lam = 1` for even `x` and `x / lam` a square for odd `x`), case (ii) in all three positions, and case (iii): a square identity forces `R = 0` (large digit last), and there is none with the large digit in the middle or leading (via Theorem 25.2); the Pell form is `complete_square` |
 | Conjecture 25.8 | none | not stated (it refers to "the two linear families"; could be stated with Theorems 22.6 and 25.5) |
 | Proposition 25.9, Theorem 25.10 | `prop25_9`, `theorem25_10` [TDB] | formalized |
 | Theorem 25.11, Heuristic 25.12 | none | not formalized (computation, heuristic) |
