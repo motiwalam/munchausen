@@ -229,7 +229,7 @@ stated.
 | Proposition 20.14 | none | not formalized |
 | Lemmas 20.15, 20.16, Proposition 20.17, Theorem 20.18 | none | not formalized (orders in quadratic fields; cites Matveev) |
 | Proposition 20.20 | `prop20_20` [Short] | formalized |
-| Lemma 20.21 | `lemma20_21_a`, `lemma20_21_a_even`, `lemma20_21_b_three`, `lemma20_21_b_even`, `lemma20_21_b_prime`, `lemma20_21_c_even`, `lemma20_21_c_five`, `lemma20_21_d` [Local] | partial: all four parts; the direct check of `x ≤ 5` for `c = 25` in (a) is not formalized (the exception `(3, 6, 26)` is checked) |
+| Lemma 20.21 | `lemma20_21_a`, `lemma20_21_a_even`, `lemma20_21_a_25`, `lemma20_21_b_three`, `lemma20_21_b_even`, `lemma20_21_b_prime`, `lemma20_21_c_even`, `lemma20_21_c_five`, `lemma20_21_d` [Local] | formalized (all four parts; for `c = 25` the direct check of `x ≤ 5` leaves only `(3, 6, 26)`) |
 | Lemma 20.22, Propositions 20.23, 20.24, 20.25, 20.29, Theorems 20.26, 20.27, Corollary 20.28 | none | not formalized (quadratic orders and Laurent) |
 | Theorems 20.19, 20.30 | none | not formalized (computation) |
 | Question 51 | `Question51_two`, `Question51_three` [Conj] | conjecture |

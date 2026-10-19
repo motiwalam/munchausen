@@ -224,6 +224,43 @@ theorem lemma20_21_a_even {b x n c : ℕ} (hc : c = 3 ∧ 2 ≤ x ∨ c = 25 ∧
   refine lemma20_21_a (Y := x ^ k) (by omega) (by ring) ?_
   rcases hc with ⟨rfl, -⟩ | ⟨rfl, h6⟩ <;> nlinarith
 
+/-- The finite part of **Lemma 20.21 (a)** for `c = 25`: the only solution of
+`b (b + x) = x^n + 25` with `2 ≤ x ≤ 5`, `4 ≤ n ≤ 9` and `b ≤ 31` is `(x, n, b) = (3, 6, 26)`.
+-/
+lemma lemma20_21_a_check :
+    ∀ x ∈ Finset.range 6, ∀ n ∈ Finset.range 10, ∀ b ∈ Finset.range 32,
+      (2 ≤ x ∧ 4 ≤ n ∧ b * (b + x) = x ^ n + 25) → x = 3 ∧ n = 6 ∧ b = 26 := by
+  decide
+
+/-- **Lemma 20.21 (a)** for `c = 25`, including the direct check of `x ≤ 5`. If `x ≥ 2`,
+`n ≥ 4` and `x^n = Y^2` (`n` even, or `x` a square), then `b (b + x) = x^n + 25` forces
+`(x, n, b) = (3, 6, 26)`. -/
+theorem lemma20_21_a_25 {b x n Y : ℕ} (hx : 2 ≤ x) (hn : 4 ≤ n) (hY : x ^ n = Y ^ 2)
+    (heq : b * (b + x) = x ^ n + 25) : x = 3 ∧ n = 6 ∧ b = 26 := by
+  by_cases h : x ^ 2 + 4 * 25 < 4 * Y + 1
+  · exact absurd heq (lemma20_21_a (by norm_num) hY h)
+  -- `Y ≥ x^2`, so `x ≤ 5`, `Y ≤ 31`, `n ≤ 9` and `b ≤ 31`
+  have hYx : x ^ 2 ≤ Y := by
+    have : (x ^ 2) ^ 2 ≤ Y ^ 2 := by
+      rw [← hY, ← pow_mul]; exact Nat.pow_le_pow_right (by omega) (by omega)
+    exact (Nat.pow_le_pow_iff_left (by norm_num)).1 this
+  have hx5 : x < 6 := by nlinarith
+  have hx25 : x ^ 2 ≤ 25 := by nlinarith
+  have hY31 : Y ≤ 31 := by omega
+  have hxn : x ^ n ≤ 961 := by rw [hY]; nlinarith
+  have hn9 : n < 10 := by
+    by_contra hn10
+    have : 2 ^ 10 ≤ x ^ n :=
+      (Nat.pow_le_pow_left hx 10).trans (Nat.pow_le_pow_right (by omega) (by omega))
+    omega
+  have hb : b < 32 := by
+    by_contra hb
+    have : 32 * 32 ≤ b * (b + x) := Nat.mul_le_mul (by omega) (by omega)
+    omega
+  exact lemma20_21_a_check x (Finset.mem_range.2 hx5) n (Finset.mem_range.2 hn9) b
+    (Finset.mem_range.2 hb) ⟨hx, hn, heq⟩
+
+
 /-- The exception of Lemma 20.21 (a): `(x, n, b) = (3, 6, 26)` solves `b (b + x) = x^n + 25`. -/
 example : 26 * (26 + 3) = 3 ^ 6 + 25 := by norm_num
 
