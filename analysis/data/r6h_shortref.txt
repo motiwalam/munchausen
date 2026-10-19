@@ -1,0 +1,24 @@
+# short exceptions of section 10.5: 3..5 digits, b - d >= threshold(b), bases 10..41, 43
+0^0=1: basic 0.962 refined 1.346 observed 5
+0^0=0: basic 0.962 refined 1.857 observed 9
+# per length d, bases max(9, d)..41: basic, refined, ratio, observed
+0^0=1 d=3: basic 0.463 refined 0.715 ratio 1.544 observed 1
+0^0=1 d=4: basic 0.392 refined 0.559 ratio 1.426 observed 2
+0^0=1 d=5: basic 0.396 refined 0.447 ratio 1.127 observed 2
+0^0=1 d=6: basic 0.376 refined 0.472 ratio 1.255 observed 1
+0^0=1 d=7: basic 0.607 refined 0.698 ratio 1.149 observed 1
+0^0=1 d=8: basic 1.129 refined 1.231 ratio 1.091 observed 2
+0^0=1 d=9: basic 1.162 refined 1.241 ratio 1.069 observed 0
+0^0=1 d=10: basic 1.119 refined 1.238 ratio 1.106 observed 2
+0^0=1 d=11: basic 1.097 refined 1.150 ratio 1.048 observed 1
+0^0=1 d=12: basic 1.117 refined 1.199 ratio 1.073 observed 3
+0^0=0 d=3: basic 0.463 refined 0.968 ratio 2.091 observed 3
+0^0=0 d=4: basic 0.392 refined 0.827 ratio 2.110 observed 2
+0^0=0 d=5: basic 0.396 refined 0.609 ratio 1.536 observed 4
+0^0=0 d=6: basic 0.376 refined 0.660 ratio 1.757 observed 2
+0^0=0 d=7: basic 0.607 refined 1.025 ratio 1.689 observed 2
+0^0=0 d=8: basic 1.129 refined 1.738 ratio 1.539 observed 3
+0^0=0 d=9: basic 1.162 refined 1.566 ratio 1.348 observed 1
+0^0=0 d=10: basic 1.119 refined 1.804 ratio 1.613 observed 2
+0^0=0 d=11: basic 1.097 refined 1.459 ratio 1.329 observed 0
+0^0=0 d=12: basic 1.117 refined 1.788 ratio 1.600 observed 2

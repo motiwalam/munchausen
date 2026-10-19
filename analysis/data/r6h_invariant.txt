@@ -1,0 +1,68 @@
+# system parameter: gcd of N - N' over equal digit multisets, groups, prediction
+base b=3: 2 (23 groups), predicted b-1 = 2
+base b=4: 3 (53 groups), predicted b-1 = 3
+base b=5: 4 (103 groups), predicted b-1 = 4
+base b=6: 5 (180 groups), predicted b-1 = 5
+base b=7: 6 (292 groups), predicted b-1 = 6
+base b=8: 7 (448 groups), predicted b-1 = 7
+base b=9: 8 (658 groups), predicted b-1 = 8
+base b=10: 9 (933 groups), predicted b-1 = 9
+base b=11: 10 (1285 groups), predicted b-1 = 10
+base b=12: 11 (1727 groups), predicted b-1 = 11
+base -b, b=2: 3 (15 groups), predicted b+1 = 3
+base -b, b=3: 4 (47 groups), predicted b+1 = 4
+base -b, b=4: 5 (107 groups), predicted b+1 = 5
+base -b, b=5: 6 (207 groups), predicted b+1 = 6
+base -b, b=6: 7 (361 groups), predicted b+1 = 7
+base -b, b=7: 8 (585 groups), predicted b+1 = 8
+base -b, b=8: 9 (897 groups), predicted b+1 = 9
+base -b, b=9: 10 (1317 groups), predicted b+1 = 10
+base -b, b=10: 11 (1867 groups), predicted b+1 = 11
+bijective base b=2: 1 (8 groups), predicted b-1 = 1
+bijective base b=3: 2 (27 groups), predicted b-1 = 2
+bijective base b=4: 3 (61 groups), predicted b-1 = 3
+bijective base b=5: 4 (116 groups), predicted b-1 = 4
+bijective base b=6: 5 (199 groups), predicted b-1 = 5
+bijective base b=7: 6 (318 groups), predicted b-1 = 6
+bijective base b=8: 7 (482 groups), predicted b-1 = 7
+bijective base b=9: 8 (701 groups), predicted b-1 = 8
+bijective base b=10: 9 (986 groups), predicted b-1 = 9
+balanced base b=3: 2 (34 groups), predicted b-1 = 2
+balanced base b=5: 4 (179 groups), predicted b-1 = 4
+balanced base b=7: 6 (559 groups), predicted b-1 = 6
+balanced base b=9: 8 (1344 groups), predicted b-1 = 8
+factorial system: 1 (2582 groups), predicted 1
+base 3/2: 1 (1123 groups), predicted p-q = 1
+base 5/2: 3 (2417 groups), predicted p-q = 3
+base 5/3: 2 (6998 groups), predicted p-q = 2
+base 7/2: 5 (4014 groups), predicted p-q = 5
+base 7/3: 4 (10053 groups), predicted p-q = 4
+base 7/4: 3 (15108 groups), predicted p-q = 3
+base 7/5: 2 (18711 groups), predicted p-q = 2
+base 8/3: 5 (10672 groups), predicted p-q = 5
+base 9/4: 5 (16520 groups), predicted p-q = 5
+base 10/3: 7 (12563 groups), predicted p-q = 7
+base -3/2: 5 (932 groups, 0 without a finite expansion), predicted p+q = 5
+base -5/2: 7 (2077 groups, 0 without a finite expansion), predicted p+q = 7
+base -5/3: 8 (4676 groups, 0 without a finite expansion), predicted p+q = 8
+base -7/2: 9 (3080 groups, 0 without a finite expansion), predicted p+q = 9
+base -7/3: 10 (6135 groups, 0 without a finite expansion), predicted p+q = 10
+base -4/3: 7 (4171 groups, 0 without a finite expansion), predicted p+q = 7
+base -5/4: 9 (8211 groups, 0 without a finite expansion), predicted p+q = 9
+Gaussian base -1+i, rational integers: 5 (124 groups), predicted (n+1)^2+1 = 5
+Gaussian base -2+i, rational integers: 10 (1635 groups), predicted (n+1)^2+1 = 10
+Gaussian base -3+i, rational integers: 17 (5332 groups), predicted (n+1)^2+1 = 17
+Gaussian base -4+i, rational integers: 26 (5890 groups), predicted (n+1)^2+1 = 26
+Gaussian base -5+i, rational integers: 37 (5939 groups), predicted (n+1)^2+1 = 37
+Eisenstein base -1+omega, rational integers: 7 (434 groups), predicted n^2+3n+3 = 7
+Eisenstein base -2+omega, rational integers: 13 (3890 groups), predicted n^2+3n+3 = 13
+Eisenstein base -3+omega, rational integers: 21 (5762 groups), predicted n^2+3n+3 = 21
+Eisenstein base -4+omega, rational integers: 31 (5920 groups), predicted n^2+3n+3 = 31
+Pisot base eps_1: 1 (143 groups), predicted x = 1; gcds within one length: [1]
+Pisot base eps_2: 2 (365 groups), predicted x = 2; gcds within one length: [2]
+Pisot base eps_3: 3 (550 groups), predicted x = 3; gcds within one length: [3]
+Pisot base eps_4: 4 (943 groups), predicted x = 4; gcds within one length: [4, 8]
+Pisot base eps_5: 5 (1192 groups), predicted x = 5; gcds within one length: [5]
+Pisot base eps_6: 6 (1517 groups), predicted x = 6; gcds within one length: [6, 12]
+Pisot base eps_7: 7 (1515 groups), predicted x = 7; gcds within one length: [7]
+Pisot base eps_8: 8 (2061 groups), predicted x = 8; gcds within one length: [8, 16]
