@@ -241,7 +241,7 @@ attack, in [questions-round3.md](questions-round3.md).
     (computation; Theorem 15.13)
 48. (Answered in chapter 19: the right factor is the root count mod `p^e`; it does not explain the 5-digit excess.) Do 2-, 3- and 5-adic root densities in the root heuristic explain the
     5-digit excess, 6 found against 2.42 predicted? (computation; section 11.4)
-49. (Answered in chapter 19: 4-digit counts are Poisson and fit; 5-digit solutions in bases 13 to 99 are a 17-fold excess against far offsets.) A defect spectrum for short solutions: the test of section 11.1 at 4 and
+49. (Answered in chapter 19: 4-digit counts are Poisson and fit; 5-digit solutions in bases 13 to 99 are an excess of about 9 times (recalibrated in chapter 22).) A defect spectrum for short solutions: the test of section 11.1 at 4 and
     5 digits, with a `kdigit` offset. (computation)
 50. Does every base have at most two 3-digit solutions under `0^0 = 1`?
     (proof; Theorems 15.7 and section 18.2)
@@ -264,3 +264,14 @@ attack, in [questions-round3.md](questions-round3.md).
 61. (Answered in chapter 21: the problem is linear and finite; exact count for degree 2; a free factor `q` per factor of `B - 1`.) A function-field analogue in `F_q[T]` with weights `d^|d|`. (twist)
 62. (Partly answered in chapter 21: only 1, 2, 4, 5 up to `34!`; the model fails; finiteness open.) Are there finitely many solutions in the factorial number system? (twist)
 63. (Answered in chapter 21: no doubling, as predicted.) Eisenstein bases `-n + omega`: no parity doubling predicted. (twist)
+
+## Round 4: questions raised by chapter 22
+
+64. Is every short solution under `0^0 = 1` beyond some size a member of an
+    algebraic family, such as the binomial families of Theorem 22.6? Do other
+    identity families exist, for example with `p x^x` a `j`-th power for `p`
+    not a `j`-th power, or with two large digits? (chapter 22)
+65. Is `(1,6,46666)` in base `46666^23333 - 3` the next 3-digit solution under
+    `0^0 = 1` after `(1,7,1)` in base 904? (chapter 22)
+66. Apply the base-by-base calibration of section 22.4.1 to the 4-digit list
+    and to the long solutions of bases 12 to 40, as a check on section 11.1.

@@ -377,6 +377,12 @@ in bases up to 904. Conjecture 9.4 implies the finiteness conjecture of chapter
 3 for each fixed `k`: the bases for length `k` lie in a window of width about
 `ln k` above `k`, plus finitely many exceptions.
 
+Correction. Conjecture 9.4 is false as stated. The binomial families of
+chapter 22 give infinitely many solutions of every length `k >= 3` in bases
+far above `k` (Corollary 22.7). The model describes random coincidences, and
+these solutions come from an algebraic identity. Whether the conjecture holds
+for all solutions outside such families is question 64.
+
 Under `0^0 = 0` the window does not hold, because of the families. Proposition
 2.7 puts a `k`-digit solution in base `(2k-1)^2`, so the smallest base with a
 `k`-digit solution is at most `(2k-1)^2`. In bases up to 41 the smallest base

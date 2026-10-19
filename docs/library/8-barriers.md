@@ -37,9 +37,10 @@ reasons to expect that the answer is no.
 
 ## 8.2 Short solutions: a partial finiteness theorem
 
-Chapter 3 conjectures that under `0^0 = 1`, each length `k >= 3` has only
-finitely many solutions in all bases together. This section proves the
-conjecture for a large part of the problem and shows what blocks the rest.
+Chapter 3 conjectured that under `0^0 = 1`, each length `k >= 3` has only
+finitely many solutions in all bases together. Chapter 22 refutes this with
+the binomial families (Corollary 22.7). This section proves finiteness for the
+strings with a large leading digit, and shows what blocks the rest.
 
 Theorem 8.3 (leading digit). Fix `k >= 2` and `k-1` digits below a bound `B`.
 Consider the `k`-digit strings whose leading digit is `x` and whose other
@@ -85,6 +86,13 @@ the 3-digit solutions in which two digits are at most 20 and the third digit
 (`analysis/square_class_bound.py`). The scan in `analysis/patterns.py` covers
 `x` up to 2500, so it finds all of them: they are the known solutions of
 section 3.2.
+
+Correction. This corollary is wrong as stated. Write the right side as
+`4 p x^x + R`. The bound assumes `R != 0`. When the large digit is last,
+`R = 0` is possible, and then the right side is exactly a square. Section 22.3.3 shows that `R = 0` happens exactly for the
+binomial families of Theorem 22.6. With two digits at most 20 they add 8
+solutions, such as `(1,6,46666)` in base `46666^23333 - 3`, all in bases above
+`10^108942`. With those 8 added, the corollary holds (section 22.3.3).
 
 The rest of the problem. Outside the square class, the equation asks whether
 `4 p x^x + R(x)` is a perfect square while `4 p x^x` is not. Writing
@@ -206,7 +214,7 @@ Bases 44 and 45 have no `b`-digit solution either (computed with
 | problem | status |
 |---|---|
 | fast exact search | equivalent in difficulty to P vs NP; neither a lower bound nor NP-hardness can be shown without settling it (8.1) |
-| finitely many short solutions under `0^0 = 1` | proven in the square classes and when one digit is large (8.2); the rest is a family of Pell-type equations with prescribed coordinates |
+| finitely many short solutions under `0^0 = 1` | false: infinitely many for every `k >= 3` (Corollary 22.7); finiteness holds with a large leading digit (8.2) |
 | lengths without solutions | same barrier as the finiteness question; verified up to base 100,000 for 9 digits and 10,000 for the others |
 | is `N_1(b)` bounded | open; reduces to near-solutions with small defects (8.4) |
 | `N_0(b)` unbounded | proven (Proposition 4.2) |

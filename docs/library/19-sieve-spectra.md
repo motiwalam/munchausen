@@ -369,7 +369,8 @@ Is the count of short solutions a Poisson draw with the mean of its offsets?
   inflated by clusters and families, and the offsets `D = j L` say the
   heuristic is if anything too high there (10 against 16). Against that
   calibration, the 3 solutions of `D = 0` in bases 13, 14 and 48 are an
-  excess of about 17 times, with P about 0.001, or 0.005 after the choice
+  excess of about 17 times (chapter 22 recalibrates this to about 9 times,
+  with P about 0.005), with P about 0.001, or 0.005 after the choice
   of the range.
 
 So the 5-digit excess (6 against 2.42) is not a missing local factor that

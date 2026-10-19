@@ -1,20 +1,16 @@
-# Round 4: self-paying blocks, binomial families and the 5-digit excess
+# 22. Self-paying blocks and binomial families
 
-This draft answers the first new question of chapter 19: count the
+This chapter answers the first new question of chapter 19: count the
 self-paying blocks, and test whether they explain the 5-digit solutions in
 bases 13 to 99. It also asks what blocks mean for the long solutions.
 
 Each statement carries one mark:
 
-- proven: a proof is in this draft;
+- proven: a proof is in this chapter;
 - computed: an exact computation, with its range;
 - heuristic: the root heuristic of section 11.4, the basic model of
-  chapter 5, or the base-by-base calibration of section 4.1 below. None
+  chapter 5, or the base-by-base calibration of section 22.4.1 below. None
   of these is a proof.
-
-Section numbers 1 to 5 with one decimal refer to this draft. References to
-the library chapters 1 to 5 name the chapter, as in "chapter 3, section
-3.5".
 
 Scripts are in `analysis/` with names starting `r4b_`. Their output is in
 `analysis/data/r4b_*`. The runs used 2 to 4 threads of the shared 8-thread
@@ -36,11 +32,11 @@ is written `s = (t, u)`.
 | 3, completeness, 6 and 7 digits | The lists stay complete in their computed ranges. Beyond them the families give infinitely many solutions of every length, the nearest in base `10^108942` (3 digits) and `10^(3.9 * 10^13)` (4 digits). For 6 and 7 digits the calibrated expectation in bases 3 to 99 is 1.4 and 1.2, against 1 and 1 observed. | proven, heuristic |
 | 4, long solutions | In bases 2 to 43, 2 solutions under `0^0 = 1` have an exact split, against 3.4 expected from random digits. Blocks are a share of about `1/b` of the solutions, which the model of chapter 5 already counts. A search that assembles solutions from blocks finds that share at the full cost. No correction, no shortcut. | computed against heuristic |
 
-## 1. The three 5-digit solutions in bases 13 to 99
+## 22.1 The three 5-digit solutions in bases 13 to 99
 
-### 1.1 Splits and remainders
+### 22.1.1 Splits and remainders
 
-Lemma 1.1 (proven). Let `s = (t, u)` with `u` of `m` digits. Put
+Lemma 22.1 (proven). Let `s = (t, u)` with `u` of `m` digits. Put
 
     R_m = b^m P_t(b) - F(t).
 
@@ -57,7 +53,7 @@ digit that pay for themselves are only `(1)`. A 0 costs 1, so `R_1 = 1`
 for a solution that ends in 0. A tail of two digits pays for itself only if
 it is a 2-digit solution of the base.
 
-### 1.2 The data (computed)
+### 22.1.2 The data (computed)
 
 `r4b_solutions.py` prints every split of every short solution under both
 conventions (`data/r4b_solutions.txt`). For the three solutions:
@@ -84,11 +80,11 @@ What this shows:
   ordinary size.
 - `(2,6,0,3,6)` in base 14 has no exact split and no small remainder. Its
   remainders are `6^6 - 6` and its neighbours, the weight of the last 6.
-- None of them has a binomial prefix in the sense of section 3, and none
+- None of them has a binomial prefix in the sense of section 22.3, and none
   has a self-paying digit, since 13, 14 and 48 are not perfect powers.
 
 So one solution is block plus digit, one is block with remainder 1 plus
-digit, and one has no structure. By Lemma 1.1, the second pattern is the
+digit, and one has no structure. By Lemma 22.1, the second pattern is the
 same as the first with the last digit 0 in place of 1. Under the root
 heuristic the last digit of a 5-digit solution is close to uniform over the
 about 9 usable digits, so two of three in `{0, 1}` has probability about
@@ -99,13 +95,13 @@ and 8 of the 16 solutions under `0^0 = 1` with 3 to 7 digits contain a 6.
 This is where the mass of the heuristic lies: `6^6 = 46656` is the weight
 that lands among the 5-digit numbers of bases 9 to 14, and `2 * 6^6` does
 so in bases 10 to 17. It is not a mechanism beyond the per-base counts of
-section 4.
+section 22.4.
 
-## 2. Self-paying blocks
+## 22.2 Self-paying blocks
 
-### 2.1 Definition
+### 22.2.1 Definition
 
-Definition 2.1. A self-paying block is a triple `(t, b, m)`: a string
+Definition 22.2. A self-paying block is a triple `(t, b, m)`: a string
 `t = (t_1, ..., t_L)` with `t_1 >= 1` and `t_L >= 1`, a shift `m >= 1`, and
 a base `b > max(t)`, with
 
@@ -118,28 +114,28 @@ The condition `t_L >= 1` makes the shift unique: under `0^0 = 0` a block
 ending in 0 is the same equation as the shorter block at the next shift.
 `L = 1` gives the self-paying digits of chapter 2 (section 2.2).
 
-Lemma 2.2 (proven). Under `0^0 = 0`, `(t, b, m)` is a block exactly when
+Lemma 22.3 (proven). Under `0^0 = 0`, `(t, b, m)` is a block exactly when
 `(t, 0, ..., 0)` with `m` zeros is a solution in base `b`. Under `0^0 = 1`
 it is a block exactly when `(t, 0, ..., 0)` has `P - F = -m`, because each
 trailing zero weighs 1.
 
 Proof. The trailing zeros add nothing to `P` and `m w(0)` to `F`.
 
-Lemma 2.3 (proven). If `(t, b, m)` is a block and `u` is a tail of `m`
+Lemma 22.4 (proven). If `(t, b, m)` is a block and `u` is a tail of `m`
 digits with `P_u(b) = F(u)`, then `(t, u)` is a solution of `L + m` digits.
 If `(t, b, m)` is a partial block with remainder `r`, then `(t, u)` is a
 solution exactly when `F(u) - P_u(b) = r`.
 
-Proof. Lemma 1.1.
+Proof. Lemma 22.1.
 
 So a block is one equation in `L + 1` unknowns, the `L` digits and the
 base, where a solution of `L + m` digits is one equation in `L + m + 1`
 unknowns.
 
-### 2.2 The count (computed)
+### 22.2.2 The count (computed)
 
 `r4b_blocks.py` runs `kdigit` with `--offset 0` and `--offset -m` and keeps
-the strings that end in `m` zeros (Lemma 2.2). It is complete for the bases
+the strings that end in `m` zeros (Lemma 22.3). It is complete for the bases
 with `b^(L+m) <= (M+1)^(M+1)`, `M` the digit bound (`data/r4b_blocks.txt`):
 
 | `L + m` | digits up to | complete for bases up to | `L = 1` (self-paying digits) | `L >= 2` |
@@ -158,14 +154,14 @@ and the twins `(1,3,0)`, `(1,7,0)`, `(6,6,5,0,0)`, `(6,6,5,0,1)`,
 `(3,3,6,6,0)` under `0^0 = 0`. `(6,6,5)` gives no solution under `0^0 = 1`:
 base 11 has no 2-digit solution.
 
-### 2.3 The rate (heuristic)
+### 22.2.3 The rate (heuristic)
 
 The basic model of chapter 5 (section 5.1) applies to a block as to a
 solution. The number `F(t) / b^m` must be an integer (chance `b^(-m)`) whose
 digits are `t` (chance `1 / (b^(L-1) (b-1))` for a random value). Summed
 over `t`:
 
-Heuristic 2.4. The expected number of blocks with `L` digits at shift `m`
+Heuristic 22.5. The expected number of blocks with `L` digits at shift `m`
 in base `b` is
 
     E_b(L, m) = N_L(b) / (b^(k-1) (b - 1)),    k = L + m,
@@ -199,7 +195,7 @@ bases 13 to 99:
 
 The ratio follows `(L/k) X^(-m)` within a factor 1.5.
 
-### 2.4 The test (computed against heuristic)
+### 22.2.4 The test (computed against heuristic)
 
 `r4b_spectrum.c` takes one base at a time and computes
 `V = b^m P_t(b) - F(t)` for every `t` with digits up to `X_b` whose `|V|`
@@ -207,7 +203,7 @@ can be at most `W = 0.05 b^(k-1)`. It prunes prefixes whose lower digits
 cannot bring `V` into the window. It counts `N_0`, the exact blocks, and
 the strings with `V = D` for every offset `D` with `b <= |D| <= W` in the
 class of 0 modulo `2(b-1)`. The mean count per offset in the class is the
-expected `N_0` of that base, measured on the true weights. Section 4.1
+expected `N_0` of that base, measured on the true weights. Section 22.4.1
 describes the method for solutions. For blocks under `0^0 = 1`
 (`data/r4b_spectrum.txt`):
 
@@ -237,20 +233,20 @@ They come from `t = (a, 0, ..., 0)` with `a` self-paying: the `L - 1` zeros
 cost 1 each.
 
 Answer (heuristic, tested). Blocks are coincidences of one equation in
-fewer unknowns. They occur at the rate of Heuristic 2.4, which makes them
+fewer unknowns. They occur at the rate of Heuristic 22.5, which makes them
 about `(k/L) X^m` times rarer than solutions of the same length. The 2
 exact blocks in bases from 13 on match 0.73 expected. The 5-digit block
 `(3,3,6,6)` in base 13 is a 0.04 event on its own.
 
-## 3. Binomial families: infinitely many solutions of every length
+## 22.3 Binomial families: infinitely many solutions of every length
 
 The near offsets of section 19.2 showed the families `(1, 0, 0, x)` and
 `(1, 3, 3, x)` with `x^x` a cube. They sit at `D = x - 3` and `D = x - 56`
 and miss `D = 0`. The general version of this family reaches `D = 0`.
 
-### 3.1 The construction
+### 22.3.1 The construction
 
-Theorem 3.1 (proven). Let `j >= 2`, `c >= 1`, `e >= 1`, and
+Theorem 22.6 (proven). Let `j >= 2`, `c >= 1`, `e >= 1`, and
 
     t_i = c^(j-i) C(j, i) e^i    (i = 0, ..., j-1),
     x = e^j + t_0^(t_0) + ... + t_(j-1)^(t_(j-1)).
@@ -265,7 +261,7 @@ term, so `P(b) = (c b + e)^j - e^j + x = y^j - e^j + x = x^x - e^j + x`.
 All digits are positive, so `F = sum t_i^(t_i) + x^x` under both
 conventions. `P = F` is the definition of `x`.
 
-Corollary 3.2 (proven). For every `k >= 3` there are infinitely many
+Corollary 22.7 (proven). For every `k >= 3` there are infinitely many
 `k`-digit solutions under `0^0 = 1`, and under `0^0 = 0`.
 
 Proof. Let `j = k - 1`, `c = j` and `e = j u` with `u >= 1`. Every `t_i` is
@@ -281,13 +277,13 @@ For `j = 2` the condition on `x` is that `x` is even (or a square). With
 `(1,2,6)` in base `6^3 - 1 = 215`. For `j = 3` and `c = 1` it holds for
 `e == 2 (mod 3)`.
 
-### 3.2 The smallest members (computed)
+### 22.3.2 The smallest members (computed)
 
 `r4b_families.py` (`data/r4b_families.txt`) lists the members with
 `c <= 6` and `e <= 12` for `k = 3` to 9. It checks `(1,2,6)` and
 `(1,6,46666)` with exact integers, and the 58 members whose `x` can be
 written down modulo 20 large primes. For the others it decides `j | x` and
-`c | y - e` from residues, which suffices by Theorem 3.1. The smallest
+`c | y - e` from residues, which suffices by Theorem 22.6. The smallest
 member of each length, after `(1,2,6)`:
 
 | `k` | `(c, e)` | digits | `x` | base `b` |
@@ -308,7 +304,7 @@ The 3-digit example is short enough to state in full:
 `P = b^2 + 6b + 46666 = (b + 3)^2 - 9 + 46666 = 46666^46666 + 46657`, and
 `F = 1 + 6^6 + 46666^46666 = 46666^46666 + 46657`.
 
-### 3.3 The 3-digit case and Corollary 8.4
+### 22.3.3 The 3-digit case and Corollary 8.4
 
 Section 8.2 completes the square: a 3-digit string `(p, q, r)` is a
 solution when `(2pb + q)^2 = 4pF + q^2 - 4pr`. Corollary 8.4 bounds `x`
@@ -317,10 +313,10 @@ remainder `R` then has `|R| >= 2Y - 1`
 (`analysis/square_class_bound.py`). That claim needs `R != 0`, and
 `R = 0` can happen.
 
-Proposition 3.3 (proven). Let one digit `x` vary and the other two be
+Proposition 22.8 (proven). Let one digit `x` vary and the other two be
 fixed, under `0^0 = 1`. Then `R = 0` only if `x` is the last digit and
 `x = p^p + q^q + q^2/(4p)`. If moreover `x` is even, then `p = c^2` is a
-square, `q = 2ce`, and the solutions are exactly the members of Theorem 3.1
+square, `q = 2ce`, and the solutions are exactly the members of Theorem 22.6
 with `j = 2`.
 
 Proof. If `x` leads, `R = 4x(q^q + r^r - r) + q^2 > 0`, since
@@ -330,12 +326,12 @@ the middle, `R = 4p(p^p + r^r - r) + x^2 > 0`. If `x` is last,
 `x`, `p x^x` is a square exactly when `p` is, say `p = c^2`. Then
 `q^2/(4c^2)` must be an integer, so `q = 2ce`, and the equation becomes
 `(2c^2 b + 2ce)^2 = 4c^2 x^x`, that is `c b + e = x^(x/2)`, the equation of
-Theorem 3.1. For `q = 0` (`e = 0`) the digit `x = c^(2c^2) + 1` is prime to
+Theorem 22.6. For `q = 0` (`e = 0`) the digit `x = c^(2c^2) + 1` is prime to
 `c`, so `c | x^(x/2)` forces `c = 1`, and `(1, 0, 2)` in base 2 is not
 valid.
 
 Computed (`r4b_families.py`, `p, q <= 60`). Every 3-digit solution with
-`R = 0` is a member of Theorem 3.1; no odd `x` occurs. With both fixed
+`R = 0` is a member of Theorem 22.6; no odd `x` occurs. With both fixed
 digits at most 20, the setting of Corollary 8.4, there are 9:
 `(1,2,6)`, `(1,6,x)`, `(1,10,x)`, `(1,14,x)`, `(1,18,x)`, `(4,8,x)`,
 `(4,16,x)`, `(9,6,x)` and `(9,18,x)`, with `x` = 6, 46666, 10000000026,
@@ -345,7 +341,7 @@ form of Corollary 8.4 is: the square class with two digits at most 20 holds
 the known solutions with `x <= 35` and these 8 more, in bases from
 `10^108942` up.
 
-Consequences for other chapters (proven by Corollary 3.2):
+Consequences for other chapters (proven by Corollary 22.7):
 
 - Chapter 3, section 3.5: under `0^0 = 1` the number of `k`-digit
   solutions is infinite for every `k >= 3`, not finite.
@@ -356,9 +352,9 @@ Consequences for other chapters (proven by Corollary 3.2):
   solutions and those with 18, 21, 22, 24, 26 and 28 digits exist, in
   bases far above the searched ones.
 
-## 4. A refined heuristic for short solutions
+## 22.4 A refined heuristic for short solutions
 
-### 4.1 A base-by-base calibration (computed)
+### 22.4.1 A base-by-base calibration (computed)
 
 The offsets of section 19.2 calibrate all bases at once. The far offsets
 `D = j * 75600` change `n` by up to `1.5 * 10^7`, which is more than `n`
@@ -399,22 +395,22 @@ strings against 6.1 expected. The excess of section 19.2 at small `D`
 comes from offsets outside this class, from the self-paying digits of
 bases 25, 49, 64 and 81, and from the clusters of section 19.2.
 
-### 4.2 Where blocks and families enter
+### 22.4.2 Where blocks and families enter
 
-Lemma 4.1 (proven). Under `0^0 = 1`, the polynomial of the 5-digit string
+Lemma 22.9 (proven). Under `0^0 = 1`, the polynomial of the 5-digit string
 `(t, 1)` is `r P_t(r) - F(t)`, the polynomial of the block `(t, r, 1)`.
 Under `0^0 = 0` the same holds for `(t, 0)` and `(t, 1)`.
 
 Proof. `P_(t,1)(r) - F(t, 1) = r P_t(r) + 1 - F(t) - 1`.
 
 So the root heuristic already gives the block route its weight. In bases
-13 to 99 that route is the line `(4, 1)` of section 2.4: 0.039 of the
+13 to 99 that route is the line `(4, 1)` of section 22.2.4: 0.039 of the
 0.33. Tails of 2 digits need a 2-digit solution of the base and add below
 0.002. Concatenations of two blocks need two coincidences in the same base;
-by Heuristic 2.4 they add less still.
+by Heuristic 22.5 they add less still.
 
 The structures that the root heuristic cannot see are the identities:
-self-paying digits, the families of Theorem 3.1, and the families
+self-paying digits, the families of Theorem 22.6, and the families
 `(1, 0, 0, x)` and `(1, 3, 3, x)` of section 19.2. Each holds with
 probability 1 where it holds, and the heuristic gives it a weight near 0.
 At `D = 0` under `0^0 = 1` none of them has a 5-digit member in a base up
@@ -423,21 +419,21 @@ to 99:
 - a self-paying digit (bases 25, 49, 64 and 81 for 5 digits) needs a tail
   that pays for itself while its zeros cost 1, and the complete 5-digit
   list has no solution in these bases;
-- the binomial families have bases above `10^108942` (section 3.2);
+- the binomial families have bases above `10^108942` (section 22.3.2);
 - the families `(1, 0, ..., 0, x)` and `(1, 3, 3, x)` of section 19.2 miss
   `D = 0`.
 
 Refined heuristic 4.2. The expected number of `k`-digit solutions in a
-range of bases is the base-by-base class mean of section 4.1, which
+range of bases is the base-by-base class mean of section 22.4.1, which
 contains the generic coincidences and the block routes, plus the number of
 family members in the range, which is computed exactly. For 5 digits in
 bases 13 to 99 under `0^0 = 1` this is `0.33 + 0 = 0.33`.
 
-### 4.3 The 5-digit excess (heuristic)
+### 22.4.3 The 5-digit excess (heuristic)
 
 Three solutions against 0.33 is an excess of about 9 times. Under a
 Poisson law, P(at least 3) = 0.0047, and 0.0024 to 0.014 over the window
-and class choices of section 4.1. Ten cells of section 4.1 have bases from
+and class choices of section 22.4.1. Ten cells of section 22.4.1 have bases from
 13 on (4 to 8 digits, two base ranges). The chance that one of them is as
 extreme is 0.015.
 
@@ -455,13 +451,13 @@ choice of the cell. Fresh data cannot come from more bases, since the
 5-digit list is complete up to `10^30.9` and the expectation above base 99
 is 0.002.
 
-### 4.4 Completeness and the counts for 6 and 7 digits
+### 22.4.4 Completeness and the counts for 6 and 7 digits
 
 Within their ranges the lists are exhaustive computations, so they do not
 change (computed). The tail estimates of section 11.4, such as `10^-74`
 missing 3-digit solutions, hold for generic strings only (heuristic). By
-Corollary 3.2 every length has infinitely many solutions in larger bases.
-The smallest known ones beyond the lists are in section 3.2. Whether
+Corollary 22.7 every length has infinitely many solutions in larger bases.
+The smallest known ones beyond the lists are in section 22.3.2. Whether
 generic solutions exist between the list bounds and these bases is the
 question that the tail estimates answer, and they say no.
 
@@ -473,11 +469,11 @@ The calibrated expectations in bases 3 to 99 are 1.41 (6 digits) and 1.19
 and 7-digit counts fit, and so does the 8-digit count (1.35 against the 2
 solutions in base 11).
 
-## 5. Blocks and long solutions
+## 22.5 Blocks and long solutions
 
-### 5.1 Exact splits in the known solutions (computed against heuristic)
+### 22.5.1 Exact splits in the known solutions (computed against heuristic)
 
-By Lemma 1.1, a solution has an exact split at `m` exactly when its tail
+By Lemma 22.1, a solution has an exact split at `m` exactly when its tail
 of `m` digits pays for itself. The model of chapter 5 treats the digits of
 a solution as random, so this happens with probability `T_m(b) / b^m`,
 where `T_m(b)` counts the tails of `m` digits, leading zeros allowed, with
@@ -503,39 +499,39 @@ are chance events, against 0.42 pairs expected, and the third is an
 identity. The 32 exact substrings of length at least 2 found inside these
 solutions are the same structures seen at several shifts.
 
-### 5.2 No correction to the model (heuristic)
+### 22.5.2 No correction to the model (heuristic)
 
 A solution of `k` digits with an exact split at `m` is a block of `k - m`
 digits with a self-paying tail. Under `0^0 = 1`, `T_1(b) = 1` and
 `T_2(b)` is the number of 2-digit solutions of the base, usually 0. So the
 block route is a share of about `1/b` of the solutions, 1% in base 100. The
 model of chapter 5 counts these solutions with the right weight already,
-as Lemma 4.1 says for short strings. Section 5.1 above confirms this in
+as Lemma 22.9 says for short strings. Section 22.5.1 above confirms this in
 the data. Blocks therefore do not explain the excess of `(b-1)`-digit
 solutions in chapter 5 (section 5.5) either: an exact split is a property
 of a few low digits, and those digits are random in the model.
 
-The families of Theorem 3.1 do not touch the long solutions. A member with
+The families of Theorem 22.6 do not touch the long solutions. A member with
 `k` digits lives in a base above `x^(x/(k-1))/c`, with `x >= (j^j)^(j^j)`
 for `c = e = j`, far above `k`.
 
-### 5.3 No search shortcut (heuristic)
+### 22.5.3 No search shortcut (heuristic)
 
 A search that assembles solutions from blocks has two parts: find the
 blocks of `k - m` digits, then append the self-paying tails. The first part
-is the search for `(t, 0, ..., 0)` under `0^0 = 0` (Lemma 2.2). It is the
+is the search for `(t, 0, ..., 0)` under `0^0 = 0` (Lemma 22.3). It is the
 same tree of chapter 10 with `m` digits fixed to 0, about `1.64^b` nodes.
 It returns only the share `T_m(b) / b^m` of the solutions, about `1/b`.
 
-The general split of Lemma 1.1 is a meet in the middle: match tops and tails
+The general split of Lemma 22.1 is a meet in the middle: match tops and tails
 by `R_m = F(u) - P_u(b)`. The tables hold strings, `b^(k-m)` tops and `b^m`
 tails. For `b = 100` and `k = 99` the larger table has at least `100^50`
 entries, against `1.64^100`, about `10^21.5`, nodes for the multiset tree.
 Strings cost more than multisets, so the split loses.
 
 Answer to question 4. Blocks are a real mechanism for short strings in
-the sense of Lemma 2.3, but they are coincidences at the rate of
-Heuristic 2.4, already inside both models. They change no prediction for
+the sense of Lemma 22.4, but they are coincidences at the rate of
+Heuristic 22.5, already inside both models. They change no prediction for
 long solutions and give no faster search. The real new structure is the
 binomial family, and it lives only in astronomically large bases.
 
@@ -545,20 +541,20 @@ binomial family, and it lives only in astronomically large bases.
   short solutions; data `r4b_solutions.txt`.
 - `analysis/r4b_blocks.py`: every exact block from `kdigit`; data
   `r4b_blocks.txt`.
-- `analysis/r4b_rates.py`: the basic rate of Heuristic 2.4; data
+- `analysis/r4b_rates.py`: the basic rate of Heuristic 22.5; data
   `r4b_rates.txt`.
 - `analysis/r4b_spectrum.c`, `analysis/r4b_spectrum.py`: base-by-base
   spectra of solutions and blocks; data `r4b_spectrum.txt` and
   `r4b_spectrum_windows.txt`. The raw runs go to `fast/target/r4b/`; all
   of them take about 10 minutes on 4 threads.
-- `analysis/r4b_families.py`: Theorem 3.1, its members and the 3-digit
+- `analysis/r4b_families.py`: Theorem 22.6, its members and the 3-digit
   case; data `r4b_families.txt`.
 - `analysis/r4b_long.py`: exact splits in the solutions of bases 2 to 43;
   data `r4b_long.txt`.
 
 ## New questions
 
-- Classify the identity families of short solutions. Theorem 3.1 covers
+- Classify the identity families of short solutions. Theorem 22.6 covers
   leading digits that are `j`-th powers. Are there others, for example with
   `p x^x` a `j`-th power for `p` not a `j`-th power, or with two large
   digits?
@@ -566,6 +562,6 @@ binomial family, and it lives only in astronomically large bases.
   under `0^0 = 1` after `(1,7,1)` in base 904? The tail estimate says yes for
   generic strings. A proof would need a bound for the Pell-type case of
   section 8.2 up to `10^108942`.
-- The base-by-base calibration of section 4.1 is cheap. Apply it to the
+- The base-by-base calibration of section 22.4.1 is cheap. Apply it to the
   4-digit list with larger windows, and to the bulk of long solutions in
   bases 12 to 40, as a check on section 11.1.

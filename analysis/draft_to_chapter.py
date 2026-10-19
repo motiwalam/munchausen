@@ -10,7 +10,7 @@ usage: draft_to_chapter.py draft.md N "Title" out.md [--internal line,line,...]
 import re
 import sys
 
-KINDS = r"(Lemma|Theorem|Proposition|Corollary|Assumption|Remark|Conjecture)"
+KINDS = r"(Lemma|Theorem|Proposition|Corollary|Assumption|Remark|Conjecture|Heuristic|Definition)"
 
 
 def convert(text, N, title, internal_lines, single=False):
@@ -38,17 +38,13 @@ def convert(text, N, title, internal_lines, single=False):
         out.append(l)
     lines = out
     # definitions of results, in order. A definition is numbered inside the
-    # draft (its first part is a draft section) and is followed by a status in
-    # parentheses; library results and forward references can also start a
-    # line. Results without a status are numbered after those with one.
+    # draft (its first part is a draft section) and is followed by a status
+    # in parentheses or a period; library results and forward references can
+    # also start a line.
     ids, k = {}, 0
-    for strict in (True, False):
-        for l in lines:
-            m = re.match(r'^(\*\*)?' + KINDS + r' (\d+\.\d+)(\*\*)?(\s*\()?', l)
-            if not m or m.group(3) in ids or m.group(3).split('.')[0] not in hmap:
-                continue
-            if strict and not m.group(5):
-                continue
+    for l in lines:
+        m = re.match(r'^(\*\*)?' + KINDS + r' (\d+\.\d+)(\*\*)?(\s*\(|\.(\s|$))', l)
+        if m and m.group(3) not in ids and m.group(3).split('.')[0] in hmap:
             k += 1
             ids[m.group(3)] = f'{N}.{k}'
     def rep_id(m):

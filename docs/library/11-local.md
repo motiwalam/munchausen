@@ -204,9 +204,13 @@ log-space version for large digits):
 | 9 | `10^5` (section 3.4) | `10^-29` |
 | 18, 21, 22, 24, 26, 28 | `10^4` (section 3.4) | `10^-40` or less |
 
-So under this heuristic the lists of chapter 3 are the final answer, and the
-missing lengths are missing everywhere. The heuristic is not a proof. A proof
-would have to exclude coincidences of the kind discussed in section 8.2.
+So under this heuristic the lists of chapter 3 are complete beyond their
+ranges, and the missing lengths are missing everywhere. That is false.
+The binomial families of chapter 22 give solutions of every length `k >= 3`,
+including 9, 18, 21, 22, 24, 26 and 28 digits, in bases far above the searched
+ones (Corollary 22.7). Their roots are integers by an algebraic identity,
+which the heuristic does not model. The table is right about strings without
+such an identity, in the ranges stated.
 
 ## 11.5 A search for short solutions that is 150 times faster
 

@@ -109,9 +109,10 @@ question is about a fixed length across all bases.
 |---|---|---|
 | 1 | only 0 and 1 | only 1 |
 | 2 | infinitely many (section 2.4) | infinitely many (section 2.4) |
-| `k >= 3` | infinitely many (Proposition 2.7) | finitely many, conjecturally |
+| `k >= 3` | infinitely many (Proposition 2.7) | infinitely many (Corollary 22.7) |
 
-The evidence for the last entry is the lists in section 3.2, and a heuristic.
+This library first conjectured that the last entry was finite. The evidence
+was the lists in section 3.2, and a heuristic.
 Take a digit string `s` whose largest digit is `x`. Its base, if any, is the
 root of `P_s(b) = F(s)`, which is about `x^(x/(k-1))`. The chance that this
 root is an integer is about `1 / P_s'(b)`, roughly `x^(-x(k-2)/(k-1))`. There
@@ -120,8 +121,17 @@ expected number of solutions is finite for every `k >= 3`. For `k = 2` the
 chance is about `1/a` for the leading digit `a`, the sum diverges, and indeed
 there are infinitely many.
 
-For `k = 3` and digits above 80 the tail of that sum is below `10^-70`. So the
-six 3-digit solutions under `m = 1` are almost certainly all of them.
+For `k = 3` and digits above 80 the tail of that sum is below `10^-70`. So
+the heuristic says the six 3-digit solutions under `m = 1` are all of them.
+
+That conclusion is false. Chapter 22 builds infinitely many solutions of every
+length `k >= 3` from the binomial coefficients of `(c r + e)^(k-1)`
+(Corollary 22.7). For these strings `Q_s(r) = (c r + e)^(k-1) - x^x` exactly,
+so the root is an integer whenever `x^x` is a `(k-1)`-th power. The heuristic
+treats the root as a random number and cannot see such identities. The first
+3-digit member beyond `(1,2,6)` is `(1,6,46666)` in base
+`46666^23333 - 3`, about `10^108942`, far above the range of section 3.2. So
+the 3-digit list is complete for bases up to `10^51.5`, not for all bases.
 
 Under `m = 0` the self-paying and swap families escape the heuristic. They
 come from exact identities between powers, not from chance.

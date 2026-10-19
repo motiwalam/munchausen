@@ -33,7 +33,8 @@ statement is marked by its source:
 | [19. A faster sieve and short-string spectra](19-sieve-spectra.md) | prime powers in the `kdigit` sieve (11x faster); defect spectra for 4 and 5 digits; p-adic local factors; narcissistic numbers as a model test; the factorion shortfall is chance |
 | [20. Multisets and the residues of x^x - x](20-multisets-residues.md) | almost all bases have no solution with up to about `ln b / ln ln b` digits; the 3-adic and 5-adic laws of `x^x - x`; `b(b+x) = x^n + c` for `x == 0 (mod 8)` and `c = 3, 25`; mixed ideal classes |
 | [21. Five more number systems](21-five-systems.md) | function fields `F_q[T]`, rational bases, Eisenstein bases, a Pisot base, the factorial system; the residue factor follows the identity modulus everywhere; the model fails in the factorial system |
-| [Open questions](questions.md) | 63 research questions in three rounds, with priorities and answers |
+| [22. Self-paying blocks and binomial families](22-blocks-families.md) | infinitely many solutions of every length under `0^0 = 1`; self-paying blocks; the 5-digit excess recalibrated to about 9x and still unexplained |
+| [Open questions](questions.md) | 66 research questions in four rounds, with priorities and answers |
 
 ## Main results
 
@@ -56,8 +57,14 @@ Proven:
   (section 1.6).
 - Self-paying digits never occupy adjacent positions, and under `0^0 = 1` the
   only solutions made of zero-balance placements are `(a, 1)` (section 8.3).
-- Short solutions under `0^0 = 1` with one large digit are finite in the
-  square class, with an explicit bound (Theorem 8.3).
+- Under `0^0 = 1`, every length `k >= 3` has infinitely many solutions
+  (Corollary 22.7). The digits are the coefficients of `(c r + e)^(k-1)`
+  without the constant term, then one digit `x` with `x^x` a `(k-1)`-th
+  power. The smallest is `(1,2,6)` in base 215; the next 3-digit one is
+  `(1,6,46666)` in base `46666^23333 - 3`. This refutes the finiteness
+  conjecture of chapters 3 and 7 and corrects Corollary 8.4.
+- Short solutions under `0^0 = 1` with a large leading digit are finite in
+  the square class, with an explicit bound (Theorem 8.3).
 - Base `n^(n-1)` has at least `2^(n-1) - 2` solutions under `0^0 = 0`, and
   at most `X^(1/(c+1))` bases up to `X` have `c` self-paying digits
   (section 9.8).
@@ -138,7 +145,7 @@ Model:
   near 2% from base 30 to 300 (section 10.3).
 - The exact tree grows like `2^b` in the limit (section 10.1).
 - Under `0^0 = 1`, long solutions lie within `ln k + ln ln k` of their length
-  `k` (Conjecture 10.3).
+  `k`, apart from algebraic families (Conjecture 10.3).
 - Narcissistic numbers (weights `x^d`) fit the refined model where residues
   are forced: 207 found against 208.5 predicted (section 19.4).
 - In every number system with a residue identity, the count factor follows

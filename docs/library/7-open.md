@@ -22,10 +22,15 @@ Conjecture (original). For `b > 2` no base has a `b`-digit solution.
   the time under the model. I expect the conjecture to fail under `0^0 = 1`
   too.
 
-## 7.2 Finitely many short solutions under `0^0 = 1`
+## 7.2 Finitely many short solutions under `0^0 = 1` (refuted)
 
-Conjecture. Under `0^0 = 1`, for each `k >= 3`, only finitely many bases have
-a `k`-digit solution.
+Conjecture (refuted). Under `0^0 = 1`, for each `k >= 3`, only finitely many
+bases have a `k`-digit solution.
+
+Chapter 22 refutes it: the binomial families give infinitely many solutions of
+every length `k >= 3`, in bases from about `10^108942` up (Corollary 22.7).
+The evidence below still holds in its ranges. The open question is now whether
+every solution beyond some size belongs to such a family (question 64).
 
 - For `k = 2` there are infinitely many (proven, section 2.4).
 - Under `0^0 = 0` there are infinitely many for every `k` (proven,
@@ -37,7 +42,9 @@ a `k`-digit solution.
 - A heuristic count of integer roots gives a finite expectation for every
   `k >= 3` (section 3.5).
 - Proven when one digit is large and lies in its square class, with an
-  explicit bound (Theorem 8.3, Corollary 8.4). The remaining cases are
+  explicit bound, when that digit leads (Theorem 8.3). Corollary 8.4, for a
+  large digit in another place, missed the binomial families (section 22.3.3).
+  The remaining cases are
   Pell-type equations with a prescribed coordinate, beyond current methods
   (section 8.2).
 

@@ -220,7 +220,8 @@ conjecture.
 Conjecture 10.3 (length window, `0^0 = 1`). For every `eps > 0`:
 
 - only finitely many solutions with `k >= 3` digits have
-  `b > k + ln k + (1 + eps) ln ln k`;
+  `b > k + ln k + (1 + eps) ln ln k`, apart from algebraic families such as
+  those of chapter 22;
 - infinitely many have `b > k + ln k + (1 - eps) ln ln k`.
 
 Reason. The expected number of solutions in base `b` with
@@ -248,8 +249,10 @@ model of chapter 5 treats each base separately. For a short digit string the
 base is the root of a polynomial (section 3.5), and the right heuristic is the
 chance that this root is an integer. That heuristic gives a finite total for
 each `k >= 3`, and the searches of chapter 3 have found every short solution
-up to very large bases. So the short exceptions are a finite list, already
-known if chapter 3 is right, and the long ones follow Conjecture 10.3.
+up to very large bases. But the heuristic misses algebraic identities: the
+binomial families of chapter 22 give infinitely many short exceptions, in
+bases above `10^108942`. So the short exceptions are not a finite list. The
+long ones follow Conjecture 10.3.
 
 Fixed length. For a large `k`, the bases with a `k`-digit solution are
 `b = k` with probability 8%, `k+1` with 55%, `k+2` with 23%, `k+3` with 9%, and
@@ -268,7 +271,8 @@ each digit string is a solution in at most one base.
 
 So the bases with a solution of a fixed length are very sparse: their number
 up to `B` grows like a power of `ln B`. Conjecture 10.3 says that, apart from
-finitely many, they all lie in a window of width `ln k + ln ln k` above `k`.
+finitely many and from algebraic families, they all lie in a window of width
+`ln k + ln ln k` above `k`.
 
 ## 10.6 Status
 
@@ -279,5 +283,5 @@ finitely many, they all lie in a window of width `ln k + ln ln k` above `k`.
 | a rule that reaches it | `--zscore`: 1.75 per base now at a 1-3% miss rate that does not grow with `b` (10.3) |
 | a larger classical speedup | none found; iteration, splits, representations and residues all fail (10.4) |
 | quantum search | square root of the tree, about `1.41^b` exact (10.4) |
-| length window under `0^0 = 1` | sharpened to `ln k + ln ln k` (Conjecture 10.3); long exceptions match the model, short ones are a finite list |
+| length window under `0^0 = 1` | sharpened to `ln k + ln ln k` (Conjecture 10.3); long exceptions match the model; short ones include the infinite binomial families (chapter 22) |
 | bases with a `k`-digit solution | at most a power of `ln B` up to `B` (Proposition 10.4) |
