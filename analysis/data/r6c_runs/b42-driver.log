@@ -1,0 +1,33 @@
+2026-10-19 10:55:41 base 42 shard 0/16 start
+2026-10-19 10:57:06 base 42 shard 0/16 exit 0 base 42 done in 84.690s
+2026-10-19 10:57:06 base 42 shard 1/16 start
+2026-10-19 10:59:09 base 42 shard 1/16 exit 0 base 42 done in 123.111s
+2026-10-19 10:59:09 base 42 shard 2/16 start
+2026-10-19 11:01:39 base 42 shard 2/16 exit 0 base 42 done in 150.521s
+2026-10-19 11:01:39 base 42 shard 3/16 start
+2026-10-19 11:03:39 base 42 shard 3/16 exit 0 base 42 done in 119.560s
+2026-10-19 11:03:39 base 42 shard 4/16 start
+2026-10-19 11:06:10 base 42 shard 4/16 exit 0 base 42 done in 150.873s
+2026-10-19 11:06:10 base 42 shard 5/16 start
+2026-10-19 11:08:11 base 42 shard 5/16 exit 0 base 42 done in 121.102s
+2026-10-19 11:08:11 base 42 shard 6/16 start
+2026-10-19 11:10:22 base 42 shard 6/16 exit 0 base 42 done in 130.573s
+2026-10-19 11:10:22 base 42 shard 7/16 start
+2026-10-19 11:12:39 base 42 shard 7/16 exit 0 base 42 done in 137.393s
+2026-10-19 11:12:39 base 42 shard 8/16 start
+2026-10-19 11:14:30 base 42 shard 8/16 exit 0 base 42 done in 110.526s
+2026-10-19 11:14:30 base 42 shard 9/16 start
+2026-10-19 11:16:33 base 42 shard 9/16 exit 0 base 42 done in 123.269s
+2026-10-19 11:16:33 base 42 shard 10/16 start
+2026-10-19 11:18:39 base 42 shard 10/16 exit 0 base 42 done in 126.478s
+2026-10-19 11:18:39 base 42 shard 11/16 start
+2026-10-19 11:20:58 base 42 shard 11/16 exit 0 base 42 done in 138.458s
+2026-10-19 11:20:58 base 42 shard 12/16 start
+2026-10-19 11:23:00 base 42 shard 12/16 exit 0 base 42 done in 122.022s
+2026-10-19 11:23:00 base 42 shard 13/16 start
+2026-10-19 11:25:14 base 42 shard 13/16 exit 0 base 42 done in 134.334s
+2026-10-19 11:25:14 base 42 shard 14/16 start
+2026-10-19 11:27:41 base 42 shard 14/16 exit 0 base 42 done in 146.931s
+2026-10-19 11:27:41 base 42 shard 15/16 start
+2026-10-19 11:30:01 base 42 shard 15/16 exit 0 base 42 done in 140.006s
+2026-10-19 11:30:01 base 42 merged, exit 0
