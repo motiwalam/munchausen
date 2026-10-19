@@ -5,3 +5,4 @@ import Munchausen.Constructions
 import Munchausen.Polynomial
 import Munchausen.Examples
 import Munchausen.Conjectures
+import Munchausen.Residues
