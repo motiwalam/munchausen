@@ -24,6 +24,9 @@ model. So the shortfall belongs to the offset 0 alone, and I have no
 explanation. Sections 19.5 and 23.1 test it further. The latest assessment,
 in section 23.1, is a combined P of about 0.05.
 
+Correction (chapter 34). Chapters 23 and 26 revise this to about 0.09
+(section 23.5, update, and Table 26.4.1).
+
 ## 17.1 The engine (question 26)
 
 `fast search` accepts four new options (`fast/README.md`):
@@ -323,6 +326,9 @@ P of 0.002 worth about 0.03. Section 19.5 calibrates the count with
 near-factorions instead of the model (P = 0.006 and 0.02, about 0.1 after the
 same correction). Section 23.1 adds fresh bases and gives the latest
 assessment: a combined P of about 0.05.
+
+Correction (chapter 34). Chapters 23 and 26 revise this to about 0.09
+(section 23.5, update, and Table 26.4.1).
 
 Fresh odd bases, searched after the shortfall was found (computed, 290 s
 and 1148 s on 3 threads): base 43 has one long factorion, 30 digits long and

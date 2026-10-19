@@ -182,6 +182,11 @@ basic model expects one nontrivial-length solution per base and convention
 in the limit, as section 5.2 says, and the shares of the lengths are the
 `s_j`.
 
+Update (chapter 34). Theorem 34.6 separates the row and the column of this
+argument: the law of the length of `F` for a string of `b - j` digits tends
+to `(s_j')` for every fixed `j`. The shares `s_j` are the diagonal of this
+limit, and Corollary 34.7 states question 81 in that form.
+
 Proof. `F(n) < b^b` always, so only `d <= b` count. The events `A_j`,
 `j >= 0`, partition the Poisson outcomes with `y_0` finite: an outcome with
 `y_0 = y` and `N_(b-y) = k` lies in `A_y` if `k < e^y` and in `A_(y-1)` if
@@ -231,6 +236,13 @@ So the shares are a theorem about random strings. Every later use of
 "about one per base" in the basic model rests on Corollary 29.6. The
 refined model adds the residue factor of section 5.3; section 29.3 below
 deals with that.
+
+Update (chapter 34). `c_j = (j+1) sigma_j + a_j` with the two sums of
+Proposition 34.8, and `sum over j of c_j = C` has the closed form
+`e/(e-1)^2 + 1/(2e)` plus a series that adds `2.2 * 10^-5`, so
+`C = 1.104636`. It is minus the derivative in the Poisson mean of the mean
+distance of the length of `F` from `b`. The sum over all `j` is proved only
+for a partial trace; Table 34.3.3.1 computes the rest.
 
 ## 29.2 The free residue dimension `k(B)` (question 82)
 

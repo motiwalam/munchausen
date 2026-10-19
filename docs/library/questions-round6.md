@@ -46,6 +46,14 @@ under `0^0 = 1` (section 23.5, z = 3.0 after chapter 26) is either the first
 example of a third kind or a flaw in the model. Question 93 is the cheapest
 way to decide.
 
+Correction (chapter 34). The "second eigenvalue near `3 / b`" is the
+length-1 entry `E_1 = N_1(b)/(b-1)` (Proposition 34.5). Length 1 is an
+artefact of the model, since only `n = 1` is a 1-digit solution. Over the
+lengths 2 to `b`, the count the library uses, the trace is
+`1 + C/b + o(1/b)` with `C = 1.105`, and `C/b` is one eigenvalue
+(Proposition 34.8, Heuristic 34.9). Question 93 found no third kind of
+correction at the present precision (Heuristic 34.4).
+
 ### A2. Local and global corrections: one heuristic for every length
 
 Short solutions follow the root heuristic of section 11.4: a spacing term
@@ -185,6 +193,16 @@ of question 80.
 
 Kind: proof and computation.
 
+Correction (chapter 34). The lead uses the lengths 1 to `b`. The length-1
+entry is `N_1(b)/(b-1)` with `N_1(b) = #{x : x^x < b}`, so `3/(b-1)` for
+`28 <= b <= 256` (Proposition 34.5). It is the second eigenvalue of the
+lead, and it makes `b (tr M - 1)` grow like `ln b / ln ln b`. Over the
+lengths 2 to `b`, the count of `analysis/model.py`, `b (tr M_b - 1)` tends
+to `C = 1.105` (Proposition 34.8, Table 34.3.3.1). Chapter 34 answers the
+question: the rows converge (Theorem 34.6), question 81 becomes Corollary
+34.7, and the refined count is a sum over the characters of `Z/(b-1)`
+(Proposition 34.10).
+
 ### 91. Arrangements and the local factor
 
 For a digit multiset `c` of length `k` in base `b`, and a prime power `q`
@@ -267,6 +285,13 @@ zeros, and see which offsets carry the surplus.
 
 Kind: computation.
 
+Correction (chapter 34). The lead's counts of multisets with zeros, 177
+under `0^0 = 0` and 217 under `0^0 = 1`, do not count the same events. By
+Lemma 34.3 a near-solution under `0^0 = 1` with `c` zeros is a
+near-solution under `0^0 = 0` at the offset `D + c`. The comparison needs
+the model per zero class (Table 34.1.3.1). Chapter 34 finds that the excess
+does not sit in the zeros (Heuristic 34.4).
+
 ### 94. Do near-solutions share the zero deficit of question 71?
 
 The long solutions under `0^0 = 0` in bases 12 to 41 have 29 zeros against
@@ -291,6 +316,13 @@ Compare it per multiset with the near-solutions, using the clustered
 variance of chapter 26. Do the same for the solutions of bases 12 to 43.
 
 Kind: computation.
+
+Correction (chapter 34). The forced top digits do not lower the expected
+zeros by about 10%. With the top 3 digits forced, the zeros per
+near-solution rise by 5% in even bases and fall by 1% in odd bases
+(section 34.2.1). Chapter 34 answers the question: the near-solutions show
+no deficit in even bases, and the deficit in odd bases is the zero-free
+surplus of question 93.
 
 ### 95. Bijective numeration: no zero, and a self-paying digit in every base
 

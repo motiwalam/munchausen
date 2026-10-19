@@ -17,6 +17,16 @@ over all `c` whose sum has `d` digits gives a simple formula:
 `E_d` is the expected number of `d`-digit solutions. It is easy to estimate by
 sampling.
 
+Update (chapter 34). `E_d` is the diagonal entry `d` of the length matrix
+`M_b`, whose entry `(d, d')` is the chance that `F` of a random `d`-digit
+string has `d'` digits. So the expected count over the lengths 2 to `b` is
+`tr M_b - E_1` (Proposition 34.5). It is `1 + C/b + o(1/b)` with
+`C = 1.1046` (Proposition 34.8, the tail computed), and `C/b` is one
+eigenvalue (Heuristic 34.9). `E_1 = N_1(b)/(b-1)`, with
+`N_1(b) = #{x : x^x < b}`, is an artefact: only `n = 1` is a 1-digit
+solution. Proposition 34.1 computes the refined model exactly, without
+sampling.
+
 ## 5.2 The large-base limit
 
 Let `b` grow with `j = b - d` fixed. The digit counts of a random string become
@@ -82,6 +92,14 @@ theorem. Base `b` has exactly `tau(b^2 + 1) - 2` two-digit narcissistic
 numbers (Theorem 30.12). Their mean over odd bases is `(4/pi) ln X`, twice
 the mean `(2/pi) ln X` over even bases (Proposition 30.14). The factor 2
 is the prime 2 dividing `b^2 + 1` exactly when `b` is odd.
+
+Update (chapter 34). The refined count is a sum over the characters of
+`Z/(b-1)` (Proposition 34.10). The trivial character gives the basic count.
+For odd `b` the character of order 2 gives the basic count again under
+`0^0 = 0` (Corollary 34.11) and tends to `e^-2` times it under `0^0 = 1`
+(Theorem 34.12). So the factors 2 and `1 + e^-2` of the table follow if
+the other characters vanish in the limit (Conjecture 34.13). At
+`25 < b <= 128` they add at most 0.11 (Table 34.3.4.1).
 
 ## 5.4 Comparison with the data
 

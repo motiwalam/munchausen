@@ -243,6 +243,15 @@ needs the events in different bases to be independent. The model assumes
 this, but no test of it exists (question 106 of `questions-round6.md`). The
 first half needs no independence.
 
+Update (chapter 34). Question 106 is now tested. In the model the only
+link between two bases is a multiset that is a candidate in both, and its
+share is negligible (Heuristic 34.15). In the data no near-solution
+multiset of bases 12 to 26 is a near-solution in a second base, the forced
+top digits of one multiset in bases `b` and `b + 1` are uncorrelated, and
+the residuals of neighbouring bases show no correlation once the top digits
+are forced (Table 34.5.1.1). This tests the model's assumption. It is not a
+proof for the true weights.
+
 The data split into two kinds of exceptions. Count the solutions with `k >= 3`
 and `J > ln b + 2` (`analysis/length_window2.py`):
 

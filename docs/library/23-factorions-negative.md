@@ -377,6 +377,17 @@ variance the chi-squares become 41 and 43 (P 0.005, 0.003) at `t = 0` and
 excess under `0^0 = 1` survives at `z = 3.0`. The factorion P values of
 section 23.1 move from about 0.05 to about 0.09 combined. See section 26.4.
 
+Update (chapter 34). The 12% excess under `0^0 = 1` has two parts. In odd
+bases the zero-free near-solutions run 26% above the model under both
+conventions (base 13 carries almost half), and they weigh more under
+`0^0 = 1`. In even bases one cell, the near-solutions with one zero under
+`0^0 = 1`, is 30% high, and other cells are as high at the shifted offsets.
+Perturbed worlds show no gap between the conventions, and their ratios
+scatter 1.3 to 1.5 times more than the clustered error allows. So the
+excess is about 2 standard deviations and is not a third kind of
+correction (Heuristic 34.4). The residuals of neighbouring bases are
+uncorrelated once the top digits are forced (Table 34.5.1.1).
+
 ## New questions
 
 - 23.a. Is there any arithmetic difference between `n = F(n)` and

@@ -579,6 +579,10 @@ Brocard type (Theorem 33.6).
   base and convention, a Poisson count, and empty bases at rate
   `exp(-E)`. Section 5.2 explains why: the length of the sum barely depends on
   the length of the string, so the expectations over all lengths add to 1.
+
+  Update (chapter 34): for `x^x` this is now a theorem in the model. The
+  law of the length of `F` for a string of `b - j` digits tends to the same
+  limit for every fixed `j` (Theorem 34.6, Corollary 34.7).
 - Universal: the identity modulo the "digit-sum modulus" (`b-1`, `b+1`,
   `(n+1)^2 + 1`) and the parity factor 2 whenever that modulus is even and
   `w(x) == x (mod 2)`.

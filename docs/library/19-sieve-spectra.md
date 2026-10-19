@@ -22,7 +22,7 @@ an idle machine. Each comparison of two programs alternated their runs.
 | 49 | `kdigit --offset D`. For 4 digits, 200 offsets `D = j` are Poisson draws that match the root heuristic within 7% (primes) or 1% (p-adic), and the two 4-digit solutions are an ordinary draw. For 5 digits the heuristic fits in bases below 10. In bases 10 to 99 the far offsets `D = j L` fall below it (10 against 16), so the three 5-digit solutions in bases 13 to 99 are an excess of about 17 times (P about 0.005 after the choice of range; chapter 22 recalibrates this to about 9 times). Near offsets show algebraic families, self-paying blocks and clusters. | computed against heuristic |
 | 48 | The right factor is the number of roots mod `p^e`; it averages exactly 1. It is stable from `2^4, 3^3, 5^2` on. It moves the predictions for 3, 4 and 5 digits from 5.09, 1.39, 2.42 to 5.59, 0.75, 3.32. It fits the 4-digit offsets better, but it does not explain the 5-digit excess. | proven (factor), heuristic |
 | 58 | `fast search --power d` finds all narcissistic numbers; bases 3 to 13 match OEIS. The refined model predicts 671 against 760 observed (basic model 253). In the cells with `x^d == x (mod b-1)` for all digits, `d >= 6`, it predicts 208.5 against 207 (basic model 24). | computed against heuristic |
-| 57 | The offsets `D = j b (b-1)` keep the last digit and have the normal count, 0.91 times the model. The factorion shortfall at `D = 0` (3 and 4 against about 11) is not a last-digit effect. It stays a fluctuation of P = 0.006 to 0.02 per convention against the near-factorion mean, about 0.1 after the look-elsewhere factor. Section 23.1 adds fresh bases: combined P about 0.05. | computed against heuristic |
+| 57 | The offsets `D = j b (b-1)` keep the last digit and have the normal count, 0.91 times the model. The factorion shortfall at `D = 0` (3 and 4 against about 11) is not a last-digit effect. It stays a fluctuation of P = 0.006 to 0.02 per convention against the near-factorion mean, about 0.1 after the look-elsewhere factor. Section 23.1 adds fresh bases: combined P about 0.05 (correction, chapter 34: about 0.09 after chapters 23 and 26). | computed against heuristic |
 
 ## 19.1 Prime powers in the sieve of `kdigit`
 
@@ -666,6 +666,9 @@ These P values use the mean of the narrow offsets as the expected count. The
 P = 0.002 of section 17.4 uses the refined model's mean instead, which is a
 little higher. Section 23.1 adds the fresh bases 37 to 47 and gives the
 latest assessment, a combined P of about 0.05.
+
+Correction (chapter 34). Chapters 23 and 26 revise this to about 0.09
+(section 23.5, update, and Table 26.4.1).
 
 ## Files
 

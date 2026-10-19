@@ -15,7 +15,7 @@ model, or a judgment from data).
 |---|---|---|
 | 73, offsets are not independent | A rearrangement of the digits keeps `F` and moves `D` by `n' - n`, a multiple of `b-1` (Lemma 26.1). So the near-solutions of one multiset form a cluster across offsets. In bases 12 to 26, 43% to 88% of the near-solutions share their multiset with another offset; the variance of a sum over offsets is 1.5 to 3.5 times the Poisson value, and 60 offsets are worth 26 to 29 independent ones. The swap lemma predicts the design effect within a few percent (Heuristic 26.6). Offsets with no two a transposition apart cut the sharing to 15% (Table 26.2.2). The P values of `D = 0` against the offsets barely move, because the noise of the single count `N_0` dominates. The per-base precision of the offset means changes a lot: the chi-square of `lambda / model` drops from 97 to 41 on 21 bases, and base 19 goes from 4.6 to 2.9 standard errors. | proven (lemma); computed |
 | 72, a pooled test | 284 solutions against 297 to 304 expected in eight worlds. The worlds disagree more than chance allows: heterogeneity `Q = 23.3` on 7 degrees of freedom with the library's Pisot calibration (P = 0.002), and 17.2 (P = 0.016) with the Pisot offsets in the class of 0 modulo `2x`. Two worlds drive it: the odd-base factorions (ratio 0.33) and the Pisot bases (1.34 to 1.56). Without these two, the other six fit one common ratio, 0.91 (P = 0.60 for heterogeneity). | computed, heuristic |
-| 74, the Pisot excess | No pairing move other than the twins links solutions; twins are as common among near-solutions. Two calibration faults explain part of the excess: for even `x` the offsets `j x` with odd `j` carry 1.4 to 2.4 times fewer near-solutions under `0^0 = 0` than those with even `j`, and the defect spectrum is higher near `D = 0` than at the far offsets (14.8 against 9.7 per offset). Against a local calibration in the class of 0 modulo `2x`, the even bases have 25 solutions against 14.8 (P = 0.05 with the calibration error). | computed; the class effect is unexplained |
+| 74, the Pisot excess | No pairing move other than the twins links solutions; twins are as common among near-solutions. Two calibration faults explain part of the excess: for even `x` the offsets `j x` with odd `j` carry 1.5 to 2.4 times fewer near-solutions under `0^0 = 0` than those with even `j` (corrected in chapter 34 from "1.4"; see section 26.6.2), and the defect spectrum is higher near `D = 0` than at the far offsets (14.8 against 9.7 per offset). Against a local calibration in the class of 0 modulo `2x`, the even bases have 25 solutions against 14.8 (P = 0.05 with the calibration error). | computed; the class effect is unexplained |
 | 85, image and in-degrees | The image shares are 0.21 (base 10) to 0.14 (base 16), against 0.50 for the formula of question 85 and 0.31 to 0.38 for the weighted random mapping. Exact coincidences of the sums `S(c)` explain part of the gap (Proposition 26.10), and the forced top digits of `S` explain about two thirds of the rest (Table 26.7.3). The in-degrees of distinct sums are overdispersed: variance / mean 3.6 to 6.3 against 2.3 to 3.8. | proven; computed |
 | 86, a mixing statistic | The low digits of `F(c)` agree with `c` at the rate of random digits within 1.6% in the integers, base -20, the factorions and the factorial system, and within 3.7% in the Pisot base 6. `F_q[T]` is the one world with a clear excess, 2.2% to 3.4% per value over 125 values. The statistic does not follow the model error: it flags `F_q[T]` with the same sign under both conventions, where the model error changes sign, and it misses the factorial failure, which sits in the top digits. A top-digit factor is lowest in the factorial system (0.53 to 0.55), but also below 1 in the Pisot base, where the count is 3 times the model. | computed; negative answer |
 
@@ -374,6 +374,13 @@ What changes:
 - The 12% excess of the refined model under `0^0 = 1` survives at 3.0
   standard deviations.
 
+Update (chapter 34). Perturbed worlds show that a world-level ratio
+scatters 1.3 to 1.5 times more than the clustered standard error allows,
+even with the top digits forced (section 34.1.5). With that factor the 12%
+excess falls to about 2.0 to 2.3 standard deviations. It does not sit in
+the zeros (Heuristic 34.4). The P values of the tests named before the data
+were seen look uniform (Heuristic 34.14).
+
 What does not change: every verdict about `D = 0` itself. The factorion
 shortfall (P 0.006 to 0.025 per family and convention, 0.13 after the
 choice among 16 groups), the 5-digit excess (0.0055), the negative bases,
@@ -411,6 +418,12 @@ summed over the bases. z corrected uses
 | Pisot, even `j` for even `x` | `x = 2..12` | 62 | 46.1 | +2.34 | +2.03 | 2.6 | 1.2 |
 | Eisenstein | -2+w, -3+w | 6 | 4.5 | +0.71 | +0.68 | 2.0 | 1.0 |
 | 2-cycles | 4 to 18 | 16 | 22.4 | -1.36 | -1.33 | 1.4 | 1.0 |
+
+Correction (chapter 34). The row "integers, 12 to 32, both conventions"
+adds the two conventions as independent counts. Their residuals in one base
+correlate at +0.78 (Table 34.5.1.1), because the zero-free near-solutions
+count under both (Lemma 34.2). The `z` of that row is too large by a factor
+of about 1.3. The conclusion of section 26.5 does not change.
 
 ### 26.5.2 Results
 

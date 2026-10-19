@@ -646,7 +646,9 @@ must be even (Proposition 21.12), as in section 5.3. The first non-integer
 base of the library therefore follows both universal laws.
 
 Update (chapter 26). For even `x` under `0^0 = 0` the offsets `j x` mix two
-classes: even `j` carry 1.4 to 2.4 times as many near-solutions as odd `j`.
+classes: even `j` carry 1.5 to 2.4 times as many near-solutions as odd `j`
+(corrected in chapter 34 from "1.4"; the table of section 26.6.2 gives
+1.68, 1.48, 1.49 and 2.36).
 Calibrated in the class of 0 modulo `2x`, even `x` have 25 solutions against
 14.8 expected (P about 0.05). See section 26.6.
 

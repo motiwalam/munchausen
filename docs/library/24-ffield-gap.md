@@ -746,6 +746,18 @@ fewer zeros, 29 against 42.5 (2.1 standard deviations). The forced top digits
 account for 2 to 4 of the 13.5. I count the rest as chance, but it is the one
 place where the integer data lean the way the toy world does.
 
+Correction (chapter 34). The claim that the forced top digits account for
+2 to 4 of the 13.5 is not supported. With the top 3 digits forced, the
+expected zeros per near-solution rise by 5% in even bases and fall by 1%
+in odd bases (section 34.2.1), so they account for none of the gap. The
+estimate seems to use Heuristic 24.17, which is about the zeros of `S(c)`
+for a random `c`. That is a different quantity from the zeros of `c` given
+that `c` is a solution. Under `0^0 = 0` the exact model of Proposition 34.1
+gives 43.1 zeros against 29 for bases 12 to 43 (`z = -2.2`, Table 34.2.1.1). The
+near-solutions show no deficit in even bases. In odd bases they are short
+of zeros because zero-free near-solutions are too common (Table 34.2.2.1),
+which is the surplus of section 34.1.3.
+
 ### 24.6.3 The lesson for chapter 11
 
 The near-solution test of section 11.1 uses offsets `D = j (b-1)` with even
