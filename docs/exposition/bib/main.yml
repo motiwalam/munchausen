@@ -12,39 +12,54 @@ vanberkel2009:
 
 kures2021:
   type: article
-  title: Münchhausen numbers
+  title: On Münchhausen numbers
   author: Kureš, Miroslav
   date: 2021
+  page-range: 14-21
+  serial-number:
+    doi: 10.7546/nntdm.2021.27.1.14-21
+  parent:
+    type: periodical
+    title: Notes on Number Theory and Discrete Mathematics
+    volume: 27
+    issue: 1
 
 oeis-a166623:
   type: web
-  title: "Sequence A166623: Munchausen numbers in base n"
+  title: "Sequence A166623: Irregular triangle read by rows, in which row n lists the Münchhausen numbers in base n, for 2 <= n"
   author: OEIS Foundation
   url: https://oeis.org/A166623
 
 oeis-a014080:
   type: web
-  title: "Sequence A014080: Factorions"
+  title: "Sequence A014080: Factorions: equal to the sum of the factorials of their digits in base 10"
   author: OEIS Foundation
   url: https://oeis.org/A014080
 
 oeis-a193163:
   type: web
-  title: "Sequence A193163: Number of factorions in base n"
+  title: "Sequence A193163: Irregular table read by rows, in which row n lists the factorions in base n, for n >= 2"
   author: OEIS Foundation
   url: https://oeis.org/A193163
 
+oeis-a260651:
+  type: web
+  title: "Sequence A260651: Number of factorions in base n"
+  author: OEIS Foundation
+  url: https://oeis.org/A260651
+
 oeis-a005188:
   type: web
-  title: "Sequence A005188: Armstrong (or pluperfect, or narcissistic) numbers"
+  title: "Sequence A005188: Armstrong (or pluperfect, or Plus Perfect, or narcissistic) numbers"
   author: OEIS Foundation
   url: https://oeis.org/A005188
 
 knuth-backpdi:
   type: web
-  title: "BACK-PDI: perfect digital invariants by backtracking (CWEB program)"
+  title: "BACK-PDI: a backtrack program to find perfect digital invariants (CWEB program)"
   author: Knuth, Donald E.
-  url: https://www-cs-faculty.stanford.edu/~knuth/programs.html
+  date: 2015-09
+  url: https://www-cs-faculty.stanford.edu/~knuth/programs/back-pdi.w
 
 knuth1997:
   type: book
@@ -91,6 +106,7 @@ book1974:
     type: periodical
     title: Information and Control
     volume: 26
+    issue: 2
 
 valiant1979:
   type: article
@@ -174,6 +190,7 @@ montanaro2018:
   author: Montanaro, Ashley
   date: 2018
   page-range: 1-24
+  note: Article 15
   parent:
     type: periodical
     title: Theory of Computing
@@ -261,7 +278,7 @@ jordan1872:
   page-range: 351-367
   parent:
     type: periodical
-    title: Journal de Mathématiques Pures et Appliquées
+    title: Journal de Mathématiques Pures et Appliquées (2e série)
     volume: 17
 
 serre2003:
@@ -383,10 +400,13 @@ stevenhagen1987:
   author: Stevenhagen, Peter
   date: 1987
   page-range: 451-468
+  serial-number:
+    doi: 10.1016/1385-7258(87)90009-6
   parent:
     type: periodical
-    title: Indagationes Mathematicae
-    volume: 49
+    title: Indagationes Mathematicae (Proceedings)
+    volume: 90
+    issue: 4
 
 baker1966:
   type: article
@@ -398,6 +418,7 @@ baker1966:
     type: periodical
     title: Mathematika
     volume: 13
+    issue: 2
 
 baker-wustholz2007:
   type: book
@@ -412,11 +433,24 @@ laurent2008:
   author: Laurent, Michel
   date: 2008
   page-range: 325-348
+  serial-number:
+    doi: 10.4064/aa133-4-3
+  note: "Corollary 2: for multiplicatively independent alpha_1, alpha_2 with alpha_i and log alpha_i real and positive, log|Lambda| >= -C_2 D^4 (max{log b' + 0.38, m/D, 1})^2 log A_1 log A_2, with (m, C_2) = (10, 25.2), (12, 23.4), (14, 22.1), (16, 21.1), (18, 20.3), (20, 19.7), (22, 19.2), (24, 18.8), (26, 18.4), (28, 18.1), (30, 17.9)"
   parent:
     type: periodical
     title: Acta Arithmetica
     volume: 133
     issue: 4
+
+hilgart-premstaller-ziegler2026:
+  type: article
+  title: Complete resolution of a family of twisted Thue equations
+  author: ["Hilgart, Tobias", "Premstaller, Carina", "Ziegler, Volker"]
+  date: 2026
+  note: "Table 1 and Corollary 2.8 restate Laurent's (2008) Corollary 2 with the full (m, C_2) table"
+  serial-number:
+    arxiv: "2608.20995"
+  url: https://arxiv.org/abs/2608.20995
 
 matveev2000:
   type: article
@@ -493,18 +527,38 @@ bilu-hanrot-voutier2001:
 
 szalay2000:
   type: article
-  title: "On the Diophantine equation 2^a + 2^b + 1 = x^2"
+  title: "The equations 2^N ± 2^M ± 2^L = z^2"
   author: Szalay, László
-  date: 2000
+  date: 2002
+  page-range: 131-142
+  serial-number:
+    doi: 10.1016/S0019-3577(02)90011-X
   parent:
     type: periodical
-    title: Publicationes Mathematicae Debrecen
+    title: Indagationes Mathematicae (New Series)
+    volume: 13
+    issue: 1
+
+luca2004:
+  type: article
+  title: "The Diophantine equation x^2 = p^a ± p^b + 1"
+  author: Luca, Florian
+  date: 2004
+  page-range: 87-101
+  serial-number:
+    doi: 10.4064/aa112-1-6
+  parent:
+    type: periodical
+    title: Acta Arithmetica
+    volume: 112
+    issue: 1
 
 scott2006:
   type: article
-  title: "On the equation 2^a + 2^b + 1 = x^2"
+  title: "Elementary treatment of p^a ± p^b + 1 = x^2"
   author: Scott, Reese
   date: 2006
+  note: arXiv preprint, v1 2006, revised v3 2023
   serial-number:
     arxiv: math/0608796
   url: https://arxiv.org/abs/math/0608796
@@ -514,9 +568,14 @@ le-soydan2020:
   title: A brief survey on the generalized Lebesgue-Ramanujan-Nagell equation
   author: ["Le, Maohua", "Soydan, Gökhan"]
   date: 2020
+  page-range: 473-523
   serial-number:
     arxiv: "2001.09617"
   url: https://arxiv.org/abs/2001.09617
+  parent:
+    type: periodical
+    title: Surveys in Mathematics and its Applications
+    volume: 15
 
 granville-tucker2002:
   type: article
@@ -529,6 +588,24 @@ granville-tucker2002:
     title: Notices of the American Mathematical Society
     volume: 49
     issue: 10
+
+waldschmidt2015:
+  type: article
+  title: Lecture on the abc conjecture and some of its consequences
+  author: Waldschmidt, Michel
+  date: 2015
+  page-range: 211-230
+  serial-number:
+    doi: 10.1007/978-3-0348-0859-0_13
+  note: "Section 1 records Reyssat's abc triple 2 + 3^10 * 109 = 23^5, of quality 1.62991"
+  parent:
+    type: proceedings
+    title: "Mathematics in the 21st Century (6th World Conference, Lahore, 2013)"
+    publisher: Springer
+    parent:
+      type: book
+      title: Springer Proceedings in Mathematics & Statistics
+      volume: 98
 
 overholt1993:
   type: article
@@ -635,6 +712,20 @@ ko1940:
     title: Journal of the Chinese Mathematical Society
     volume: 2
 
+cipu2019:
+  type: article
+  title: "Complete solution of the Diophantine equation x^y + y^x = z^z"
+  author: Cipu, Mihai
+  date: 2019
+  page-range: 479-484
+  serial-number:
+    doi: 10.21136/CMJ.2018.0395-17
+  parent:
+    type: periodical
+    title: Czechoslovak Mathematical Journal
+    volume: 69
+    issue: 2
+
 akiyama-frougny-sakarovitch2008:
   type: article
   title: Powers of rationals modulo 1 and rational base number systems
@@ -678,6 +769,7 @@ gilbert1981:
     type: periodical
     title: Journal of Mathematical Analysis and Applications
     volume: 83
+    issue: 1
 
 parry1960:
   type: article
@@ -689,6 +781,7 @@ parry1960:
     type: periodical
     title: Acta Mathematica Academiae Scientiarum Hungaricae
     volume: 11
+    issue: 3-4
 
 frougny-solomyak1992:
   type: article

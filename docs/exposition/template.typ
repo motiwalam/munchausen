@@ -287,8 +287,26 @@
   }
   show link: set text(fill: col-link)
   show ref: set text(fill: col-link)
+  // Numbers of figures, statements and equations carry the chapter of the
+  // element, not of the reference, so build them at the element.
+  show ref: it => {
+    let el = it.element
+    if el == none { return it }
+    if el.func() == figure {
+      let loc = el.location()
+      let n = counter(figure.where(kind: el.kind)).at(loc).last()
+      let num = chapter-prefix(loc) + "." + str(n)
+      let sup = if it.supplement == auto { el.supplement } else { it.supplement }
+      link(loc, [#sup~#num])
+    } else if el.func() == math.equation and el.numbering != none {
+      let loc = el.location()
+      let n = counter(math.equation).at(loc).last()
+      link(loc, "(" + chapter-prefix(loc) + "." + str(n) + ")")
+    } else { it }
+  }
 
-  set heading(numbering: "1.1")
+  set heading(numbering: "1.1", supplement: [Section])
+  show heading.where(level: 1): set heading(supplement: [Chapter])
   show heading: set text(weight: "bold")
   show heading.where(level: 2): set text(size: 13pt)
   show heading.where(level: 3): set text(size: 11pt)
@@ -315,6 +333,7 @@
   set figure.caption(separator: [. ])
   show figure.caption: set text(size: 9pt)
   show figure.where(kind: table): set figure.caption(position: top)
+  show figure.where(kind: table): set block(breakable: true)
   show figure.where(kind: stmt-kind): set block(breakable: true)
   show figure.where(kind: stmt-kind): it => {
     set align(left)
@@ -375,6 +394,7 @@
   appendix-state.update(true)
   counter(heading).update(0)
   set heading(numbering: "A.1")
+  show heading.where(level: 1): set heading(supplement: [Appendix])
   body
 }
 
