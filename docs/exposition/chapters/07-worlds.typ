@@ -376,7 +376,7 @@ against 52. Why the last digit matters here is open (@sec-open-list).
   digits $0, dots, c^2 - 1$, exactly when its digits at odd positions are
   all 0 and its digits at even positions form a string $t$ of odd length
   $d$ with
-  $ "value of" t "in base" -c^2 = F_m(t) + m (d - 1). $
+  $ "value of" t "in base" -c^2 = F_m (t) + m (d - 1). $
   So $S$ has $2d - 1 equiv 1 med (mod 4)$ digits, and under $0^0 = 0$ the
   Munchausen numbers of base $c i$ and base $-c^2$ correspond one to one.
 ]

@@ -61,7 +61,7 @@ costs about 1.9 times more.
 `fast/target/release/kdigit k M` lists every $k$-digit solution in every base
 $b$ with $b^k <= (M+1)^(M+1)$. It enumerates digit strings, tests the
 polynomial $Q_s$ for a root modulo a list of prime powers (default 32, 27,
-25, 49 and the primes 11 to 127), and solves $P_s(b) = F(s)$ exactly for the
+25, 49 and the primes 11 to 127), and solves $P_s (b) = F(s)$ exactly for the
 few strings that pass (@sec-search-short, @sec-short-local). Options:
 `--offset D`, `--moduli`, `--stats`, `--survivors`. The Python version
 `analysis/kdigit.py` is the slow reference.
