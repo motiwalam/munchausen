@@ -1,0 +1,29 @@
+# r5e_nega_report.py: negative bases, offsets j step and j step b, j = 1..20
+# counts checked against r2c_nega_offsets.txt: 1200 offsets, 0 differ
+multiples of 3 m=0 step: events 183, shared 0.61, phi 2.15, psi 1.19, J_eff 11.0
+multiples of 3 m=0 stepb: events 164, shared 0.63, phi 2.02, psi 1.15, J_eff 11.3
+multiples of 3 m=0: step 9.15 vs stepb 8.20 (bases -10 to -24), difference 0.95, z naive 1.02, clustered 0.76
+multiples of 3 m=1 step: events 133, shared 0.54, phi 1.69, psi 1.00, J_eff 11.8
+multiples of 3 m=1 stepb: events 130, shared 0.53, phi 1.68, psi 1.00, J_eff 11.9
+multiples of 3 m=1: step 6.65 vs stepb 6.50 (bases -10 to -24), difference 0.15, z naive 0.18, clustered 0.16
+others m=0 step: events 416, shared 0.70, phi 2.41, psi 1.19, J_eff 9.9
+others m=0 stepb: events 332, shared 0.63, phi 1.94, psi 1.11, J_eff 11.4
+others m=0: step 20.80 vs stepb 16.60 (bases -10 to -24), difference 4.20, z naive 3.07, clustered 2.26
+others m=1 step: events 312, shared 0.62, phi 1.78, psi 1.00, J_eff 11.3
+others m=1 stepb: events 276, shared 0.58, phi 1.72, psi 1.00, J_eff 11.6
+others m=1: step 15.60 vs stepb 13.80 (bases -10 to -24), difference 1.80, z naive 1.48, clustered 1.22
+all m=0 step: events 599, shared 0.67, phi 2.33, psi 1.19, J_eff 10.2
+all m=0 stepb: events 496, shared 0.63, phi 1.97, psi 1.12, J_eff 11.4
+all m=0: step 29.95 vs stepb 24.80 (bases -10 to -24), difference 5.15, z naive 3.11, clustered 2.30
+all m=1 step: events 445, shared 0.60, phi 1.75, psi 1.00, J_eff 11.4
+all m=1 stepb: events 406, shared 0.57, phi 1.70, psi 1.00, J_eff 11.7
+all m=1: step 22.25 vs stepb 20.30 (bases -10 to -24), difference 1.95, z naive 1.34, clustered 1.12
+D=0 vs j step b, multiples of 3, m=0, bases -10 to -27: N_0 6, mean 9.85; P(N <= N_0) fixed 0.140, independent 0.145, clustered 0.166
+D=0 vs j step b, multiples of 3, m=1, bases -10 to -27: N_0 4, mean 7.40; P(N <= N_0) fixed 0.140, independent 0.144, clustered 0.147
+D=0 vs j step b, multiples of 3, both conventions: N_0 10, mean 17.25; P fixed 0.044, clustered 0.056
+D=0 vs j step b, others, m=0, bases -10 to -27: N_0 20, mean 19.15; P(N <= N_0) fixed 0.634, independent 0.630, clustered 0.624
+D=0 vs j step b, others, m=1, bases -10 to -27: N_0 12, mean 15.55; P(N <= N_0) fixed 0.225, independent 0.229, clustered 0.232
+D=0 vs j step b, others, both conventions: N_0 32, mean 34.70; P fixed 0.364, clustered 0.373
+D=0 vs j step b, all, m=0, bases -10 to -27: N_0 26, mean 29.00; P(N <= N_0) fixed 0.330, independent 0.333, clustered 0.346
+D=0 vs j step b, all, m=1, bases -10 to -27: N_0 16, mean 22.95; P(N <= N_0) fixed 0.084, independent 0.088, clustered 0.091
+D=0 vs j step b, all, both conventions: N_0 42, mean 51.95; P fixed 0.092, clustered 0.108

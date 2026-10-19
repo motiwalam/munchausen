@@ -1,0 +1,23 @@
+# r5e_scatter.py: per-base tests with the clustered variance of the offset means
+# phi(b) = swap model x 1.207 (0^0 = 0), x 1.045 (0^0 = 1); psi = 1.110, 1.000
+11.1 dispersion of N_0 over 42 cases: naive 48.8 (P upper 0.217, lower 0.783); clustered 44.6 (P upper 0.361, lower 0.639)
+ratio of clustered to naive variance of lambda: median 2.09, range 1.28 to 3.52
+lambda vs model 0^0=0 t=0: chi2 naive 97.0, clustered 41.4 on 21 bases (P 9.9e-12 -> 0.0049)
+lambda vs model 0^0=0 t=1: chi2 naive 98.3, clustered 42.5 on 21 bases (P 5.9e-12 -> 0.0036)
+lambda vs model 0^0=0 t=2: chi2 naive 76.3, clustered 33.3 on 21 bases (P 3.3e-08 -> 0.043)
+lambda vs model 0^0=0 t=3: chi2 naive 68.2, clustered 30.2 on 21 bases (P 6.7e-07 -> 0.089)
+lambda vs model 0^0=0 t=4: chi2 naive 59.6, clustered 28.0 on 21 bases (P 1.4e-05 -> 0.14)
+lambda vs model 0^0=1 t=0: chi2 naive 95.7, clustered 43.3 on 21 bases (P 1.6e-11 -> 0.0029)
+lambda vs model 0^0=1 t=1: chi2 naive 94.0, clustered 43.3 on 21 bases (P 3.2e-11 -> 0.0029)
+lambda vs model 0^0=1 t=2: chi2 naive 81.9, clustered 37.2 on 21 bases (P 3.8e-09 -> 0.016)
+lambda vs model 0^0=1 t=3: chi2 naive 75.7, clustered 34.7 on 21 bases (P 4.1e-08 -> 0.03)
+lambda vs model 0^0=1 t=4: chi2 naive 72.4, clustered 34.5 on 21 bases (P 1.4e-07 -> 0.032)
+total 0^0=0 t=0: lambda 33.10, model 32.66, ratio 1.014; z naive 0.56, clustered 0.39
+total 0^0=0 t=3: lambda 33.10, model 32.84, ratio 1.008; z naive 0.33, clustered 0.23
+total 0^0=1 t=0: lambda 26.80, model 23.95, ratio 1.119; z naive 4.36, clustered 2.99
+total 0^0=1 t=3: lambda 26.80, model 23.78, ratio 1.127; z naive 4.57, clustered 3.15
+base 19, 0^0=0, t=3: lambda 1.350, model 2.015; z naive -4.57, clustered -2.85; se naive 0.142, clustered 0.231
+11.2 empty bases even 0^0=0: expected 4.13 (fixed lambda), 4.21 (lambda with its clustered error); observed 3
+11.2 empty bases odd 0^0=0: expected 1.27 (fixed lambda), 1.31 (lambda with its clustered error); observed 2
+11.2 empty bases even 0^0=1: expected 3.56 (fixed lambda), 3.63 (lambda with its clustered error); observed 1
+11.2 empty bases odd 0^0=1: expected 2.61 (fixed lambda), 2.67 (lambda with its clustered error); observed 5

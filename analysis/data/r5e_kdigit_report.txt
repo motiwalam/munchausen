@@ -1,0 +1,23 @@
+# r5e_kdigit_report.py: clusters among the kdigit offsets of section 19.2
+# k mode family hits clusters(multiset) shared phi_ms | clusters(+prefix) phi_pre
+4 0 j 682 228 0.88 5.27 | 51 84.93
+4 1 j 682 228 0.88 5.27 | 51 84.93
+4 0 jL 6 6 0.00 1.00 | 5 1.33
+4 1 jL 4 4 0.00 1.00 | 4 1.00
+5 0 j 532 211 0.83 5.42 | 67 49.42
+5 1 j 531 211 0.83 5.42 | 67 49.58
+5 0 jL 16 16 0.00 1.00 | 15 1.12
+5 1 jL 10 10 0.00 1.00 | 10 1.00
+# calibrated P(N_0 >= obs): fixed lambda (as in 19.2) | with calibration error, independent | multiset clusters | multiset+prefix clusters
+k=4 0^0=1 D=j primes: obs 2, lambda 1.29, T 682: 0.370 | 0.370 | 0.371 | 0.388
+k=4 0^0=1 D=j p-adic: obs 2, lambda 0.74, T 682: 0.170 | 0.170 | 0.171 | 0.189
+k=4 0^0=1 D=jL primes: obs 2, lambda 1.44, T 4: 0.422 | 0.451 | 0.451 | 0.451
+k=4 0^0=1 D=jL p-adic: obs 2, lambda 0.63, T 4: 0.132 | 0.165 | 0.165 | 0.165
+k=4 0^0=0 D=j primes: obs 5, lambda 2.41, T 682: 0.097 | 0.098 | 0.100 | 0.141
+k=4 0^0=0 D=j p-adic: obs 5, lambda 2.11, T 682: 0.063 | 0.064 | 0.065 | 0.099
+k=4 0^0=0 D=jL primes: obs 5, lambda 2.81, T 6: 0.154 | 0.218 | 0.218 | 0.235
+k=4 0^0=0 D=jL p-adic: obs 5, lambda 1.76, T 6: 0.034 | 0.067 | 0.067 | 0.077
+k=5 0^0=1 D=j primes: obs 6, lambda 2.95, T 531: 0.079 | 0.080 | 0.083 | 0.117
+k=5 0^0=1 D=j p-adic: obs 6, lambda 3.53, T 531: 0.146 | 0.147 | 0.152 | 0.193
+k=5 0^0=1 D=jL primes: obs 6, lambda 1.55, T 10: 0.005 | 0.012 | 0.012 | 0.012
+k=5 0^0=1 D=jL p-adic: obs 6, lambda 1.82, T 10: 0.011 | 0.023 | 0.023 | 0.023
