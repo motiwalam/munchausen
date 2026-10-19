@@ -1,0 +1,28 @@
+  base 20: 151874 nodes, 403676 interval evaluations
+base 20 done in 0.082s
+  base 21: 272522 nodes, 720871 interval evaluations
+base 21 done in 0.127s
+  base 22: 559191 nodes, 1482902 interval evaluations
+base 22 done in 0.190s
+  base 23: 1049480 nodes, 2782099 interval evaluations
+base 23 done in 0.450s
+  base 24: 2094323 nodes, 5535489 interval evaluations
+base 24 done in 0.873s
+  base 25: 3655633 nodes, 9611434 interval evaluations
+base 25 done in 0.897s
+  base 26: 7259392 nodes, 18883103 interval evaluations
+base 26 done in 1.260s
+  base 27: 13907993 nodes, 35978793 interval evaluations
+base 27 done in 5.423s
+  base 28: 26286789 nodes, 67859857 interval evaluations
+base 28 done in 9.250s
+  base 29: 49061189 nodes, 126474490 interval evaluations
+base 29 done in 20.510s
+  base 30: 97030094 nodes, 250705157 interval evaluations
+base 30 done in 45.130s
+  base 31: 178140597 nodes, 460949983 interval evaluations
+base 31 done in 70.906s
+  base 32: 315888504 nodes, 818881560 interval evaluations
+base 32 done in 118.120s
+  base 33: 681998250 nodes, 1775785889 interval evaluations
+base 33 done in 247.586s

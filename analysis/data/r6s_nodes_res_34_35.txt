@@ -1,0 +1,4 @@
+  base 34: 616527547 nodes, 2307351409 interval evaluations
+base 34 done in 28.077s
+  base 35: 1219355059 nodes, 4409160098 interval evaluations
+base 35 done in 60.887s

@@ -51,7 +51,7 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 
 | option | meaning |
 |---|---|
-| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`). With one convention, the residue rule keeps only its solutions, so the search visits 13% to 30% fewer nodes than for `both` |
+| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`). With one convention, the residue rule keeps only its solutions, so the search visits 13% to 30% fewer nodes than without the rule, and up to 10% fewer than for `both` |
 | `--no-residue` | `search` only. Turn off the residue rule (see "Third round" below), for comparisons |
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
@@ -322,10 +322,13 @@ below `k`, so the congruence leaves only the `y` with the right residue.
 The search drops the node if no `y < k` has it, under both conventions.
 `docs/algorithm.md` ("The residue rule") gives the details, and
 `docs/library/drafts/round6-search.md` the measurements. The output is the
-same as before for every base from 2 to 35.
+same as before for every base from 2 to 35. The rule also removes some of
+the work units, so a journal written by an older build lists a different
+number of units and the new build refuses it. Resume such a journal with
+`--no-residue`, which builds the old units.
 
-43% of the nodes of the old tree had one free slot. The rule removes 13% to
-25% of all nodes in bases 15 to 33, more where `b - 1` has the factors 2, 3
+43% of the nodes of the old tree had one free slot. The rule removes 12% to
+25% of all nodes in bases 15 to 35, more where `b - 1` has the factors 2, 3
 and 5. User-mode cycles of `search b -j 1` on one P-core, median of 2 or 3
 alternating runs, other jobs on the machine:
 
@@ -337,6 +340,12 @@ alternating runs, other jobs on the machine:
 | 28 | 18,025,432 | 13,596,926 | 4.830 G | 4.075 G | -15.6% |
 | 29 | 33,546,007 | 26,908,928 | 9.090 G | 8.002 G | -12.0% |
 | 30 | 66,246,690 | 53,636,804 | 18.15 G | 15.93 G | -12.3% |
+| 31 | 121,387,604 | 92,205,006 | 41.37 G | 34.00 G | -17.8% |
+| 31, `-m 1` | 121,387,604 | 86,091,750 | 41.53 G | 32.29 G | -22.3% |
+
+On 8 threads, base 32 took 6.45 s against 7.27 s, and base 33 15.1 s
+against 17.2 s (`-m 1`: 14.4 s against 17.6 s), median of 2 or 3
+alternating runs with other jobs running.
 
 Every node now carries its residue per convention. That costs about 10% more
 instructions, so the cycles fall by less than the nodes. The GPU search
