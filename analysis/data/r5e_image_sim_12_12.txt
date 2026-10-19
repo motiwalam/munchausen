@@ -1,0 +1,3 @@
+# r5e_image_sim.py: true image against values randomized below the top t digits
+# b values true_image | t=0 t=1 t=2 t=3 (mean of 5 seeds)
+12 1271841 487882 | 667215 616364 578805 555889
