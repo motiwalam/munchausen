@@ -25,6 +25,7 @@ keeping in mind when judging which problems are realistic.
     [Does every base have finitely many solutions?], st("proven"), [yes: at most $b$ digits], [@thm-length],
     [Finitely many $k$-digit solutions under $0^0 = 1$, $k >= 3$?], st("proven"), [no: binomial families give infinitely many], [@thm-every-length-m1],
     [Are large short solutions family members?], st("conjecture"), [positions and linear families classified; the rest needs one more coincidence], [@open-families],
+    [3-digit strings with an even large digit behind a non-square leading digit], st("proven"), [finitely many for each pair of small digits; none with both at most 20], [@sec-short-regimes],
     [Is $(1, 6, 46666)$ the next 3-digit solution?], st("open"), [next family member (proven); none in bases 905 to $10^(3301)$], [@open-next-three],
     [At most two 3-digit solutions per base?], st("open"), [at most 30 outside a sparse set of bases (proven); at most two up to $10^(3301)$], [@open-two-three-digit],
     [Does every length occur?], st("proven"), [yes, under both conventions], [@sec-cons-binomial],
@@ -47,7 +48,7 @@ keeping in mind when judging which problems are realistic.
     [Excess of solutions in Pisot bases], st("heuristic"), [mostly calibration: a class modulo $2x$; $P approx 0.05$ after recalibration], [@open-pisot-class],
     [Are near-solutions at different offsets independent?], st("proven"), [no: rearrangements link them; means stay unbiased, variances grow 1.5 to 3.5 times], [@sec-model-defects],
     [Do all worlds share one rate of solutions to near-solutions?], st("computed"), [six of eight do (ratio 0.91); odd-base factorions and Pisot bases differ], [@sec-worlds-universal],
-    [A search faster than $1.9^b$], st("heuristic"), [exact: open; with a 1 to 3% miss rate about $1.75^b$; tree searches need $1.638^b$ in the model], [@sec-search-entropy],
+    [A search faster than $1.9^b$], st("heuristic"), [exact: open, with constant factors such as the residue rule (1.1 to 1.3); with a 1 to 3% miss rate about $1.75^b$; tree searches need $1.638^b$ in the model], [@sec-search-entropy],
     [Can another order of the tree beat $1.638^b$?], st("proven"), [no: every order, fixed or adaptive, in the model], [@open-fast-search],
     [Certificates of emptiness], st("proven"), [in an interval oracle model, at least the widest level of the exact tree, up to a small factor], [@open-certificates],
     [Constraint solvers], st("computed"), [exact but grow 1.95 to 2.3 per base, worse than the tree], [@open-fast-search],
@@ -92,7 +93,10 @@ products, Aurifeuillian factors, several large digits and self-paying
 digits with a paying tail each need one more Diophantine coincidence
 (Proposition 25.6), and a census of all small prefixes finds no member of
 any of them. For 3 digits with two digits at most $B$ and the third at least
-$2B + 4$ the classification is complete (Theorem 25.7). The evidence for
+$2B + 4$ the classification is complete (Theorem 25.7). With an even
+large digit that does not lead, two digits at most 20 and either
+convention, the conjecture holds in every base (@short-cor-even), by a
+2-adic form of Baker's theorem and a sieve (@sec-short-regimes). The evidence for
 the conjecture is the complete lists of @sec-short-lists, which hold no
 solution above these bases up to $10^(51)$, $10^(186)$, $10^(30.9)$ and
 $10^(11)$ for 3 to 6 digits, extended to $10^(3301)$ for 3 digits, and the
@@ -122,7 +126,10 @@ What is known (#lib("25.2")):
   and below $46666^23333 - 3$ every other 3-digit solution has two digits
   above 200 and one above 2000 (Theorem 25.11, a sieve with 108 primes over
   $1.36 dot 10^10$ strings);
-- heuristic: the strings left open add an expected $10^(-3294)$ solutions.
+- heuristic: the strings left open add an expected $10^(-3294)$ solutions;
+- proven and computed, in every base: a solution with two digits at most
+  20 and an even large digit that does not lead is in the lists or a
+  family member (@short-cor-even).
 
 The open part is the strings with two digits in $[201, 46666]$ and one
 above 2000. They are generic Pell-type equations with two large digits
@@ -200,6 +207,11 @@ have to exclude a coincidence in infinitely many bases at once. Congruences
 remove only a fixed share of the candidates, and constructions only show that
 bases have solutions. The opposite statement, that every large base has a
 solution, is equally out of reach and false in the model.
+Counting cannot help beyond @thm-almost-all: past that length there are
+more digit strings than bases. The only residue the multiset fixes is the
+one modulo $b - 1$ (@thm-only-residue), which removes a share $1 slash (b - 1)$
+at best. So a proof would have to use the size and the digits together, as
+@short-three-digit-class does for 3 digits #lib("32.2").
 The analogue for 2-digit narcissistic numbers shows how hard such questions
 are: there it is equivalent to Landau's problem whether $n^2 + 1$ is prime
 infinitely often (@worlds-narc-two-cor).
@@ -359,6 +371,12 @@ Several routes are now closed (#lib("27"), #lib("28")):
 - the constraint solvers CP-SAT and CaDiCaL are exact but grow 1.95 to 2.3
   per base, as fast as the tree or faster, at $10^4$ to $10^5$ times its
   cost (computed, bases 8 to 20);
+- the exact search gains constant factors only: the forcing loop, run to
+  its fixed point, saves 1.46 times the nodes, and the interval it reaches
+  is the exact hull of the possible sums (@search-lem-hull); the residue
+  rule saves 1.1 to 1.3 times more (@search-thm-residue); the other count
+  and residue results of the library are implied by the interval test or
+  cost more than they save (#lib("31.4"));
 - the inexact search gains a constant factor: a corrected law for the
   z-score rule visits 1.1 to 1.3 times fewer nodes at the same miss rate,
   and a GPU runs it 2.6 to 2.9 times faster than 8 CPU threads.
@@ -403,6 +421,20 @@ the explicit digits of $(b - c)^e$.
     23,364 and the 7-digit list up to $10^(7.2)$ (#lib("19.1")).
 ]
 
+#problem(id: "open-constant-factors", title: [Constant factors in the exact search], src: "31")[
+  Is there a cheap exact test for nodes with two free slots, which must
+  combine the residue with the interval (a 2-sum problem over the digits
+  below $v$)? Can a mask of the digits still available make the last-digit
+  check pay? Is the law of the free slots over the exact tree a fixed
+  geometric law? (#q(124), #q(127), #q(128))
+]
+
+The residue rule removes a share of the nodes with one free slot, 43% of
+the tree. With two free slots the residue alone reaches almost every class,
+but the two digits must also put the sum in the interval. A test that uses
+both could act on another quarter of the nodes. The answer changes only
+the constant, not the growth rate.
+
 === The Munchausen polynomial
 
 #problem(id: "open-decomposition", title: [Reducibility comes from decompositions], src: "16.3")[
@@ -439,6 +471,21 @@ hypothesis, so the class group alone cannot close the case
 (#lib("20.5")). The weak abc inequality $c < K "rad"(a b c)^(2 - delta)$
 implies that there are finitely many solutions; an effective form of it,
 together with the sieve, would finish the proof (@app-abc).
+
+#problem(id: "open-field-family", title: [Three digits when the field changes], src: "32.1")[
+  Find a bound for the solutions of $U^2 - n V^2 = R$, with $V$ a power such
+  as $x^(x slash 2)$, that is uniform over the fields $QQ(sqrt(p x))$ with
+  $x$ odd. Close the other square classes $x = lambda t^2$ with
+  $lambda > 1$, and carry the method to 4 digits with a binomial prefix.
+  (#q(129), #q(130), #q(131))
+]
+
+This is the last row of @tab-short-regimes. In a fixed field, Baker's
+method bounds the large digit (@short-thm-2adic, @short-prop-class). When
+the field changes with $x$, its regulator can be as large as
+$sqrt(x) ln x$, and the known bounds are too weak by a power of $ln x$.
+A result on $y^2 = a x^n + c$ that is uniform in $n$ would be the natural
+tool. Under abc every regime is closed (#q(102)).
 
 #problem(id: "open-n5", title: [The exponent $n = 5$], src: "18.1")[
   Find all integer points on the genus 2 curve $b^2 + x b = x^5 + 1$.

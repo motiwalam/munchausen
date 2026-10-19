@@ -47,7 +47,12 @@ estimate weights each unit by the size its type predicts and is off by at
 most 0.10, against 0.49 for a plain count of units (#lib("27.5")).
 `--unit-stats <file>` writes one line per finished unit, for studies of the
 work law: a few unit types hold most of the work, and scheduling on one
-machine is within 0.1% of ideal.
+machine is within 0.1% of ideal. `--shard-by size` gives each shard units of
+about equal predicted size instead of every $n$-th unit (#lib("31.5")).
+The search drops a node with one free slot when no digit completes its
+residue modulo $b - 1$ (@search-thm-residue); `--no-residue` turns this
+off, to compare or to resume a journal of an older build. With `-m 0` or
+`-m 1` the search reports one convention, and the rule tests only that one.
 
 With `--features gpu` the program also runs on a GPU through Vulkan 1.3.
 `--gpu` runs every unit on the GPU, and `--hybrid` shares the units between
@@ -82,7 +87,8 @@ near-solutions $n - F(n) = D$ (@sec-model-defects).
     [miss about 1% of solutions], [`--zscore 3.8 --zlaw cond`],
     [exact search], [no inexact rule; `--journal` for long runs],
     [a machine with a GPU], [add `--hybrid` (2.6 to 2.9 times faster); not above base 64],
-    [several machines], [`--shard i/n` on each, then `fast merge`],
+    [several machines], [`--shard i/n` on each, then `fast merge`; for 16 shards or more add `--unit-depth 6 --shard-by size`],
+    [one convention only], [`-m 0` or `-m 1`; the residue rule then removes more],
     [length], [do not restrict the length; windows do not pay (#lib("28.2"))],
   ),
 )
@@ -155,6 +161,8 @@ them. Each library chapter ends with a table of its scripts and data files.
     [`r5p_`], [the z-score law, length windows and the GPU], [L28],
     [`r5m_`], [theorems about the model: length shares, $k(B)$, $rho(b)$, block and top-digit models], [L29],
     [`r6a_`], [anti-concentration, collisions of $x^x - x$, fixed points, 2-digit narcissistic numbers], [L30],
+    [`r6s_`], [the residue rule, nodes by free slots, cycle counts, shard balance], [L31],
+    [`r6b_`], [the 2-adic bound for 3-digit families and the sieve below it], [L32],
   ),
 )
 

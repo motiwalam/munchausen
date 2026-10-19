@@ -948,8 +948,10 @@ $(3 slash 2)^n$ it is unknown whether the fractional parts are dense in
 $[0, 1]$. Mahler @mahler1957 proved that $(3 slash 2)^k$ stays at
 distance more than $c^k$ from the nearest integer for every $c < 1$ and
 large $k$, without an effective bound, and Zudilin @zudilin2007 gave the
-effective constant 0.5803. No published result handles equations where
-the base and the exponent of $x^x$ vary together #lib("8.2", "9.10").
+effective constant 0.5803. Until chapter 32 of the library, no result there
+handled equations where the base and the exponent of $x^x$ vary together
+#lib("8.2", "9.10"). @sec-short-regimes does it when the quadratic field
+stays fixed, with a $p$-adic form of Baker's theorem.
 
 #computation(id: "short-near-integer", title: "The near-integer law", src: "12.5")[
   Fix two digits of a 3-digit string and let the third, $x$, run over odd
@@ -967,6 +969,198 @@ behaves like a random number. That is what the spacing heuristic assumes,
 but a solution needs $b^*(x)$ to be an integer to within $x^(-x slash 2)$,
 far below what such a test can resolve. The family $(1, x, 1)$ leads to the
 equation $b(b + x) = x^x + 1$, the subject of @ch-diophantine.
+
+== Three regimes for three digits <sec-short-regimes>
+
+@short-three-digit-class turns every 3-digit string with one large digit
+$x$ into a Pell-type equation $U^2 - n V^2 = R$, where $n$ is the
+squarefree part of $N = 4 ell x^x$. Whether this equation can be handled
+for all $x$ at once depends on one thing: how $n$ changes with $x$. The
+parity of $x$ decides most of it. If $x$ is even, $x^x = (x^(x slash 2))^2$
+is a square. If $x$ is odd, $x^x = x dot (x^((x-1) slash 2))^2$ is $x$ times
+a square. So $n$ is the squarefree part of $ell$ (for even $x$ that does not
+lead), of $p x$ (for odd $x$ that does not lead, with leading digit $p$), or
+of $x$ itself (for even $x$ that leads); for odd $x$ that leads, $N$ is a
+square. This gives three regimes and an open remainder #lib("32.1").
+
+#tablefig(caption: [The regimes for 3-digit strings with one large digit $x$ #lib("32.1").], id: "tab-short-regimes")[
+  #btable(columns: 4, align: (left, left, left, left),
+    [regime], [when], [method], [result],
+    [$N$ a square], [$x$ odd and leading; $x$ even behind a square leading digit], [the gap of @short-three-digit-class (ii)], [no solution outside the binomial family],
+    [$n$ fixed], [$x$ even, not leading, leading digit not a square], [2-adic Baker (@short-thm-2adic)], [finitely many, explicit bound],
+    [$n$ fixed on a class], [$x = lambda t^2$ with $lambda$ fixed: odd and not leading, or even and leading], [real Baker (@short-prop-class)], [finitely many in each class],
+    [$n$ varies], [the rest: odd $x$ not leading, even $x$ leading], [none known], [open],
+  )
+]
+
+The first regime is elementary: two squares cannot be close unless they
+are equal. The other two use linear forms in logarithms, explained in
+@app-baker.
+
+=== When the field does not change
+
+Fix the digits $p >= 1$ and $q >= 0$, and let $x >= 2$ be even. Consider
+the two strings
+$ "last:" (p, q, x), quad p b^2 + q b + x = w(p) + w(q) + x^x, $
+$ "middle:" (p, x, q), quad p b^2 + x b + q = w(p) + x^x + w(q). $
+Write $p = n f^2$ with $n$ squarefree and assume $n > 1$, that is, $p$ is
+not a square. Multiply by $4p$ and complete the square. Since $x$ is even,
+both equations take the form
+$ U^2 - n V^2 = R, quad V = 2 f x^(x slash 2), $
+with $U = 2 p b + q$ and $R = q^2 + 4p(w(p) + w(q) - x)$ for the last
+position, and $U = 2 p b + x$ and $R = x^2 + 4p(w(p) + w(q) - q)$ for the
+middle one. $R$ is not 0, since otherwise $n$ would be a square.
+
+The point is that $n$ does not depend on $x$. All these equations, for
+every even $x$, live in one quadratic field $K = QQ(sqrt(n))$, with one
+fundamental unit $eta > 1$ (@app-quadratic).
+
+#theorem(id: "short-thm-2adic", title: "A 2-adic bound", src: "32.1")[
+  Let $p$ be a positive integer that is not a square, $q >= 0$, and $x$
+  even. If $(p, q, x)$ or $(p, x, q)$ is a solution in some base, under
+  either convention, then $x <= X_0 (p, q)$, an explicit bound. It comes
+  from an inequality whose left side is about $x slash 2$ and whose right
+  side grows like $(ln x)^3$.
+]
+#sketch[
+  Put $beta = U - V sqrt(n)$ and $beta' = U + V sqrt(n)$, the two conjugates.
+  Then $beta beta' = R$, and $beta' - beta = 2 V sqrt(n)$.
+
+  + The difference is 2-adically tiny. $V = 2 f x^(x slash 2)$ and $x$ is
+    even, so $2^(x slash 2 + 1)$ divides $V$ and
+    $v(beta' - beta) >= x slash 2 + 2$, where $v$ is the 2-adic valuation,
+    extended to $K$ (@sec-app-baker-padic). Since $beta$ divides $R$,
+    $v(beta) <= log_2 abs(R)$, and so
+    $v(beta' slash beta - 1) >= x slash 2 + 2 - log_2 abs(R)$.
+  + Make the height small. $beta'$ is huge, so $beta$ has a large height.
+    Multiply by a power of the unit: $delta = beta eta^(-m)$, with $m$ chosen
+    so that both conjugates of $delta$ have size about $sqrt(abs(R))$. Then
+    $h(delta) <= (1 slash 2) ln(abs(R) eta)$, and $m$ is about
+    $ln V slash ln eta$, of order $x ln x$.
+  + A 2-adic linear form. Since $eta eta' = plus.minus 1$, the ratio
+    $beta' slash beta$ equals $alpha_1 eta^(-2m)$ with
+    $alpha_1 = plus.minus delta' slash delta$. So step 1 says that
+    $alpha_1 - eta^(2m)$ has 2-adic valuation at least
+    $x slash 2 + 2 - log_2 abs(R)$.
+  + Bugeaud and Laurent (@app-baker-bl) bound the same valuation from above
+    by a constant times $(ln m)^2 ln(abs(R) eta) ln eta$. With $m$ of order
+    $x ln x$ and $ln abs(R)$ of order $ln x$, the right side grows like
+    $(ln x)^3$, while the left side grows like $x slash 2$. So $x$ is bounded.
+
+  The cases where the theorem of Bugeaud and Laurent does not apply give
+  smaller bounds: if $alpha_1$ is not a 2-adic unit, then
+  $x slash 2 + 2 <= log_2 abs(R)$; if $alpha_1 = plus.minus 1$, a direct
+  computation of $v(eta^(12 m) - 1)$ works; and $m = 0$ forces $x$ to be
+  tiny.
+]
+
+The argument is the one Bennett and Bugeaud use for approximation by
+quadratic irrationals @bennett-bugeaud2012. What is new is that the base
+of the power, $x$, moves together with the exponent. That costs nothing:
+only the 2-adic valuation of $V$ enters, and the height of $delta$ grows
+only like $ln x$.
+
+#computation(id: "short-comp-2adic", title: "No such string with small digits", src: "32.1")[
+  For every non-square $p <= 20$, every $q <= 20$ and every even $x$,
+  neither $(p, q, x)$ nor $(p, x, q)$ is a solution in any base, under
+  either convention. The bounds $X_0 (p, q)$ for the 704 cases (family,
+  position, and convention when $q = 0$) reach $2.45 dot 10^9$, for
+  $n = 19$, whose unit $170 + 39 sqrt(19)$ is large. A sieve tested all
+  $1.98 dot 10^(11)$ values of $x$ below the bounds. The string is a
+  solution exactly when $D = U^2$ is a perfect square, and $D$ must then
+  be a square modulo each of 150 odd primes. The only values that passed
+  every prime are $(3, 1, 2)$, $(3, 2, 2)$ and $(3, 2, 2)$ with $x$ in the
+  middle, and their root is $b = 3$, too small for the digit 3.
+]
+
+#corollary(id: "short-cor-even", title: "Even large digits", src: "32.1")[
+  Let $s$ be a 3-digit solution in some base, under either convention,
+  whose leading digit and one other digit are at most 20, and whose third
+  digit is even and does not lead. Then $s$ is in the complete lists of
+  @sec-short-lists, or it is a member $(c^2, 2 c e, x)$ of the binomial
+  family (@thm-binomial with $j = 2$).
+]
+#proof[
+  If the leading digit is not a square, use @short-comp-2adic. If it is a
+  square and $x < 44$, then $p b^2 <= F < 2 dot 20^20 + 42^42$, so
+  $b < 2 dot 10^(34)$, inside the lists. If $x >= 44 = 2 dot 20 + 4$,
+  @short-three-digit-class applies with $B = 20$: $N = 4 p x^x$ is a
+  square, so case (iii) is empty, case (ii) has no solution, and case (i)
+  is the family. That theorem is stated under $0^0 = 1$, but for $x$ in the
+  middle or last position its proof works under $0^0 = 0$ as well.
+]
+
+Of the known 3-digit solutions only $(1, 2, 6)$ in base 215 has this shape,
+and it is the first member of the family.
+
+The bound can be made uniform in the small digits. If $p, q <= B$, the
+regulator $ln eta$ is at most $sqrt(B)(ln 4B + 2)$ by the class number
+formula, and the same inequality gives $x <= C B^(3 slash 2) (ln 3B)^4$ for
+an effective constant $C$ (Theorem 32.5 of #lib("32.1")). So the large
+digit of such a solution cannot be much larger than the small ones, unless
+the solution is a family member.
+
+These families have no known covering (@sec-short-coverings). Each odd
+prime $l$ leaves about $(l + 1) slash (2 l)$ of the residues of $x$, and
+the first five primes leave about 7% of the even $x$. Every single member
+fails modulo some prime, but a finite set of primes has a fixed period,
+while $x$ is unbounded. The bound from transcendence theory replaces the
+covering, and a finite sieve does the rest.
+
+=== A fixed square class
+
+When $x$ is odd and does not lead, $n$ is the squarefree part of $p x$, so
+the field changes with $x$. It stays fixed if $x$ runs through one square
+class $x = lambda t^2$ with $lambda$ fixed. The same holds for an even $x$
+that leads.
+
+#proposition(id: "short-prop-class", title: "One square class", src: "32.1")[
+  Fix $p$, $q$, the position of $x$ and a squarefree $lambda$. Then only
+  finitely many $x$ with squarefree part $lambda$ make the string a
+  solution, and their number is effectively bounded.
+]
+#sketch[
+  The field is fixed, $V$ is a constant times a power of $t$ and $lambda$,
+  and the associate $delta$ of the previous proof has height $O(ln x)$. Now
+  the real absolute value does the work: the real linear form
+  $ln(2 sqrt(n) V) - ln delta - m ln eta$ is at most about
+  $abs(R) slash V^2$, roughly $x^(-x)$. It has four logarithms, and
+  Matveev's theorem (@app-baker-matveev) bounds it below by
+  $exp(-c (ln x)^3)$. For large $x$ this contradicts $x^(-x)$. There is no
+  2-adic shortcut here, because $V$ is odd.
+]
+
+#computation(id: "short-comp-oddsq", title: "Odd squares", src: "32.1")[
+  For every non-square $p <= 10$, every $q <= 10$ and every odd $t >= 3$,
+  neither $(p, q, t^2)$ nor $(p, t^2, q)$ is a solution in any base, under
+  either convention. Matveev's bound gives $t <= 2.4 dot 10^9$ in these
+  cases, and the sieve tested all $1.18 dot 10^(11)$ values of $t$. So
+  @short-cor-even holds for digits at most 10 with "even" replaced by
+  "even or an odd square".
+]
+
+=== Where the frontier is
+
+What is left of the 3-digit problem with one large digit is the last row
+of @tab-short-regimes: Pell equations in which the field $QQ(sqrt(p x))$ or
+$QQ(sqrt(x))$ changes with $x$. The regulator of such a field can be as
+large as $sqrt(x) ln x$, and then every known form of Baker's theorem is too
+weak by a power of $ln x$. A treatment of a whole family of real quadratic
+fields at once, for example through results on $y^2 = a x^n + c$ that are
+uniform in $n$, would settle the case up to a finite computation (#q(129),
+#q(130)).
+
+The abc conjecture (@app-abc) would close every regime at once, in the
+completed-square form. In $U^2 = N + R$ the radical of the three terms is
+at most about $abs(R) dot 4 ell x dot U$, about $x^(x slash 2 + 3) B^B$,
+while $U^2$ is about $x^x$. The quality tends to 2, so abc bounds $x$ for
+each $B$, in every position and for both parities (#q(102)).
+
+For four or more digits the method needs the polynomial to be a perfect
+power up to a small remainder in a fixed field. That happens only for
+special prefixes, for example $q^2 = 3 p r$ for $(p, q, r, x)$, which
+gives a Thue equation in $QQ(p^(1 slash 3))$ (#q(131)). Otherwise the
+equation defines a curve of genus at least 1 that changes with $x$.
 
 == Almost all bases have no short solution <sec-short-almost-all>
 

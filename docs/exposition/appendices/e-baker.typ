@@ -2,7 +2,17 @@
 
 = Linear forms in logarithms <app-baker>
 
-The strongest results of @ch-diophantine bound the exponent $n$ in $b(b + x) = x^n + 1$. They follow one pattern, due to Baker. The equation forces a linear combination of logarithms of algebraic numbers to be extremely small. A deep theorem says that such a combination, if it is not zero, cannot be too small. Comparing the two bounds bounds $n$. A computer then checks the remaining range, with continued fractions. This appendix explains the pattern. The book of Baker and Wustholz @baker-wustholz2007 is the standard reference, and Smart @smart1998 explains the computational side.
+The strongest results of @ch-diophantine bound the exponent $n$ in $b(b + x) = x^n + 1$, and @sec-short-regimes uses the same tool to exclude whole families of 3-digit strings. They follow one pattern, due to Baker. The equation forces a linear combination of logarithms of algebraic numbers to be extremely small. A deep theorem says that such a combination, if it is not zero, cannot be too small. Comparing the two bounds bounds the unknown. A computer then checks the remaining range, with continued fractions or a sieve. This appendix explains the pattern, first for the ordinary absolute value and then for the $p$-adic one. The book of Baker and Wustholz @baker-wustholz2007 is the standard reference, and Smart @smart1998 explains the computational side.
+
+== Two powers that come close <sec-app-baker-intro>
+
+Start with a question that needs no algebraic numbers. How close can a power of 2 come to a power of 3? If $2^a$ and $3^c$ are close, then their ratio is near 1, so
+$ Lambda = a ln 2 - c ln 3 = ln(2^a slash 3^c) $
+is near 0. This $Lambda$ is a _linear form in logarithms_: integers times logarithms of fixed numbers. It is never 0, because $2^a != 3^c$ for $a, c >= 1$. The question is how small it can be.
+
+A trivial bound is easy. $abs(2^a - 3^c) >= 1$, so $abs(Lambda)$ is at least about $3^(-c)$, which is exponentially small in the exponents. That bound is useless for equations, because the equations we meet also make $Lambda$ exponentially small. Baker's theorem replaces it with a bound that is only polynomially small in the exponents. So if an equation forces $Lambda$ to be exponentially small, the exponents cannot be large.
+
+For 2 and 3 the answer is known in a strong form: $abs(2^a - 3^c)$ tends to infinity, and the solutions of $abs(2^a - 3^c) = 1$ are $(a, c) = (1, 1), (2, 1), (3, 2)$. The proofs of such statements for other numbers all go through a lower bound for $Lambda$. To state it for algebraic numbers we need a way to say how complicated a number is.
 
 == Heights <sec-app-baker-height>
 
@@ -13,7 +23,14 @@ Lower bounds for linear forms depend on how complicated the algebraic numbers ar
   $ h(alpha) = 1/d (ln abs(a_0) + sum_(i=1)^d ln max(1, abs(alpha_i))) . $
 ]
 
-For a rational number $p slash q$ in lowest terms, $h(p slash q) = ln max(abs(p), abs(q))$. For a unit $epsilon > 1$ of a real quadratic field, $h(epsilon) = (ln epsilon) slash 2$. For the number $z$ of @sec-dio-baker, a root of $x T^2 - 4T - x$, the height is $(ln(x z)) slash 2$ (#lib("18.1")).
+Think of the height as the number of digits needed to write the number down, measured with natural logarithms. For a rational number $p slash q$ in lowest terms, $h(p slash q) = ln max(abs(p), abs(q))$. So $h(2) = ln 2$ and $h(1000 slash 7) = ln 1000$: the height grows with the size of the numerator and the denominator, not with the size of the number. For a unit $epsilon > 1$ of a real quadratic field, $h(epsilon) = (ln epsilon) slash 2$.
+
+Three rules make heights easy to bound:
+- $h(alpha beta) <= h(alpha) + h(beta)$ and $h(alpha + beta) <= h(alpha) + h(beta) + ln 2$;
+- $h(alpha^n) = abs(n) h(alpha)$, so in particular $h(1 slash alpha) = h(alpha)$;
+- for an algebraic integer, $a_0 = 1$, so the height is the average of $ln max(1, abs(alpha_i))$ over the conjugates. If every conjugate of an integer of a quadratic field has absolute value at most $Y$, its height is at most $ln Y$.
+
+The last rule is how the 3-digit argument of @sec-short-regimes keeps heights small: it replaces a large number by one of the same norm whose two conjugates are both of moderate size. For the number $z$ of @sec-dio-baker, a root of $x T^2 - 4T - x$, the height is $(ln(x z)) slash 2$ (#lib("18.1")).
 
 == Baker's theorem and its explicit forms <sec-app-baker-theorem>
 
@@ -39,6 +56,23 @@ $ ln abs(Lambda) >= -C D^4 (max(ln b' + 0.38, 10 slash D, 1))^2 ln A_1 ln A_2, q
 with $ln A_i >= max(h(alpha_i), (ln alpha_i) slash D, 1 slash D)$, for $Lambda = b_2 ln alpha_2 - b_1 ln alpha_1$ with positive $b_i$. The library uses $C = 25.2$, Corollary 2 of @laurent2008 with the parameter $m = 10$. The library took these constants from a secondary source and notes that they must be checked against the paper (#lib("18.1")). The structure of the argument does not depend on the exact constants, but the numerical ranges do.
 
 The important feature of both bounds: the dependence on $B$ is through $ln B$ (Matveev) or $(ln B)^2$ (Laurent). An equation that makes $Lambda$ exponentially small in $B$ therefore bounds $B$.
+
+== The $p$-adic version <sec-app-baker-padic>
+
+The $p$-adic absolute value of @app-padic measures a different kind of closeness: two integers are 2-adically close when their difference is divisible by a high power of 2. For example, $3^(2^k) - 1$ is divisible by $2^(k+2)$, so the powers $3^(2^k)$ come 2-adically close to 1. The analogue of Baker's question asks how large the valuation $v_p (alpha_1^(b_1) - alpha_2^(b_2))$ can be. The trivial answer is again useless: nothing obvious stops it from being as large as the size of the numbers. Kunrui Yu proved $p$-adic analogues of Baker's theorem, and for two numbers Bugeaud and Laurent @bugeaud-laurent1996 gave a sharp explicit form.
+
+To use valuations on algebraic numbers, extend $v_p$ from $QQ$ to a number field $K$. For a quadratic field this is concrete: choose a root of the defining polynomial in an extension of the $p$-adic numbers, and measure each element of $K$ there. The extension keeps the rules $v(alpha beta) = v(alpha) + v(beta)$ and $v(alpha + beta) >= min(v(alpha), v(beta))$, with $v(p) = 1$. An algebraic integer has $v >= 0$. A unit has $v = 0$.
+
+#theorem(id: "app-baker-bl", title: "Bugeaud and Laurent", status: "cited", src: "32.1")[
+  Let $p$ be a prime and let $alpha_1, alpha_2$ be multiplicatively independent algebraic numbers with $v_p (alpha_1) = v_p (alpha_2) = 0$. Let $D = [QQ(alpha_1, alpha_2) : QQ]$, and let $g$ be the least positive integer with $v_p (alpha_i^g - 1) > 0$ for both $i$. Let $ln A_i >= max(h(alpha_i), (ln p) slash D)$ and $b' = b_1 slash (D ln A_2) + b_2 slash (D ln A_1)$. Then for positive integers $b_1, b_2$,
+  $ v_p (alpha_1^(b_1) - alpha_2^(b_2)) <= (24 p g) / ((p - 1)(ln p)^4) D^4 (max(ln b' + ln ln p + 0.4, 10 (ln p) slash D, 10))^2 ln A_1 ln A_2 . $
+]
+
+This is Theoreme 3 of @bugeaud-laurent1996, in the simpler form of Bennett and Bugeaud @bennett-bugeaud2012[Theorem 2.1]. The shape is the same as in Laurent's real bound: the exponents enter only through $(ln b')^2$, and the heights through the product $ln A_1 ln A_2$. So if an equation makes $alpha_1^(b_1) - alpha_2^(b_2)$ divisible by a power of $p$ that grows linearly in the exponents, the exponents are bounded.
+
+The number $g$ is small. In a quadratic field the residues modulo the prime above $p$ form a field with at most $p^2$ elements, so $alpha^(p^2 - 1) equiv 1$ for every $alpha$ with $v(alpha) = 0$, and $g <= p^2 - 1$. For $p = 2$ this gives $g <= 3$, and the constant in front becomes $24 dot 2 dot 3 dot 2^4 slash (ln 2)^4 approx 9991$.
+
+Why use the 2-adic form at all? In the 3-digit families of @sec-short-regimes the equation says that two conjugate numbers differ by $2 V sqrt(n)$, where $V$ contains the factor $x^(x slash 2)$. If $x$ is even, this difference is divisible by $2^(x slash 2)$, a power of 2 that grows linearly in $x$. The real size of the difference is huge, so the real form of Baker's theorem has nothing to say about it; its 2-adic size is tiny, and that is what the 2-adic theorem measures.
 
 == The method on an example <sec-app-baker-method>
 
@@ -70,7 +104,7 @@ One application of the lemma usually reduces a bound of $10^(19)$ to a few hundr
 
 == Where the method stops <sec-app-baker-limits>
 
-Baker's method needs a fixed number field, or a family of fields with uniformly controlled units. In @ch-diophantine the field $QQ(sqrt(x^2 + 4))$ changes with $x$. The method still works for pure solutions, because the generator $epsilon + 1$ is explicit for every $x$ and $mu_0 <= ln epsilon approx ln x$. It stops at mixed solutions with a non-principal ideal (@cor-x-x), and for $b(b + x) = x^n + 3$, where the regulator is not bounded by $ln x$ (#lib("20.4")).
+Baker's method needs a fixed number field, or a family of fields with uniformly controlled units. The same limit appears for 3 digits: the method settles the families in which the field $QQ(sqrt n)$ does not change with the large digit, and stops where it does (@sec-short-regimes). In @ch-diophantine the field $QQ(sqrt(x^2 + 4))$ changes with $x$. The method still works for pure solutions, because the generator $epsilon + 1$ is explicit for every $x$ and $mu_0 <= ln epsilon approx ln x$. It stops at mixed solutions with a non-principal ideal (@cor-x-x), and for $b(b + x) = x^n + 3$, where the regulator is not bounded by $ln x$ (#lib("20.4")).
 
 Related questions about powers are open even in the simplest case. Mahler @mahler1957 proved that the distance from $(3 slash 2)^k$ to the nearest integer exceeds $c^k$ for every $c < 1$ and large $k$, without an effective bound; Zudilin @zudilin2007 gave the effective constant 0.5803. Whether the fractional parts of $(3 slash 2)^k$ are dense in $[0, 1]$ is unknown. The finiteness problems for short solutions (@sec-short-square) ask how close $x^((x-1) slash (k-1))$ comes to an integer, a question of the same kind with base and exponent moving together.
 

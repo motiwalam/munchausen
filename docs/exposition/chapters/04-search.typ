@@ -27,7 +27,7 @@ All numbers in $["lo", "hi"]$ start with the same digits, up to the first positi
 - If $x >= v$, its count is already fixed. If the prefix holds more copies of $x$ than $c_x$, the node fails.
 - If $x < v$, its count is still open, and the digit uses up one free position. If no free position is left, the node fails.
 
-A leading digit $x < v$ must be in the multiset even though $c_x$ is not fixed yet. The search counts it as placed: it adds $w(x)$ to $t$ at once. This narrows the interval, because lo grows by $w(x)$ and the bound for hi loses a free position worth $(v - 1)^(v - 1)$. A narrower interval can expose more leading digits, which can force more digits, and the search repeats the test until nothing new appears. A last test looks at the first unknown digit: it lies between the digits of lo and hi at that position, and if every value in that range is at least $v$ and already used up, the node fails. Knuth's program for perfect digital invariants uses the same test #cite(<knuth-backpdi>); it removes about 7% of the nodes.
+A leading digit $x < v$ must be in the multiset even though $c_x$ is not fixed yet. The search counts it as placed: it adds $w(x)$ to $t$ at once. This narrows the interval, because lo grows by $w(x)$ and the bound for hi loses a free position worth $(v - 1)^(v - 1)$. A narrower interval can expose more leading digits, which can force more digits, and the search repeats the test until nothing new appears. This repetition pays: a build that stops after the first round visits 1.46 to 1.47 times as many nodes in every base from 20 to 33 #lib("31.3"). A last test looks at the first unknown digit: it lies between the digits of lo and hi at that position, and if every value in that range is at least $v$ and already used up, the node fails. Knuth's program for perfect digital invariants uses the same test #cite(<knuth-backpdi>); it removes about 7% of the nodes.
 
 At a node for digit $v$, the children try $c_v = p + e$ for $e = 0, 1, dots, r$, where $p$ is the number of copies of $v$ already in the prefix. At $v = 1$ the free positions hold ones and zeros, and the leaf tries every number of extra ones and checks the exact sum against the count vector.
 
@@ -87,10 +87,46 @@ The conventions differ only in what a zero adds to the sum. The interval above i
   The prefix-pruned search finds every solution of every length in base $b$, under both conventions.
 ]
 #proof[
-  Each rule removes only count vectors that cannot be solutions. The interval contains every sum that a completion of the node can reach. Every leading digit of the interval is a digit of every reachable sum, so a solution contains it. Forcing a digit removes only completions that leave it out. The first unknown digit of every reachable sum lies in the range the last test checks. A count vector reaches a leaf only if it passed every check, and the leaf compares the exact sum with the vector.
+  Each rule removes only count vectors that cannot be solutions. The interval contains every sum that a completion of the node can reach. Every leading digit of the interval is a digit of every reachable sum, so a solution contains it. Forcing a digit removes only completions that leave it out. The first unknown digit of every reachable sum lies in the range the last test checks. A count vector reaches a leaf only if it passed every check, and the leaf compares the exact sum with the vector. The residue rule of @sec-search-residue removes a node only when no completion can satisfy the digit-sum identity.
 ]
 
 The implementation in Rust stores each number as one byte per base-$b$ digit in 256-bit vector registers, so addition in base $b$ needs no conversion and no bignum library. Carries resolve with a carry-lookahead identity on 64-bit masks, and one addition costs about 15 instructions. Two registers cover 62 digits and bases up to 127. The tree splits into about $10^5$ work units in a fixed order, which threads share by work stealing and a journal records, so long runs survive interruptions. Before a solution is printed, the program recomputes its sum with arbitrary-precision integers. The same engine accepts other weight tables, which @sec-model-tests and @sec-worlds-weights use. @app-software has the details.
+
+=== The interval is as narrow as it can be
+
+Could a cleverer bound on the free positions shrink the interval further? Not without looking at the digits of the completions. Let $r$ be the number of free positions and $v$ the current digit value, as above, with $v >= 2$.
+
+#lemma(id: "search-lem-hull", title: "The interval is exact", src: "31.3")[
+  Both ends of the interval are sums of completions of the node. The low end $t$ is the sum when every free position holds 0 under $0^0 = 0$. The high end $t + z + r (v - 1)^(v - 1)$ is the sum when every free position holds $v - 1$ under $0^0 = 1$.
+]
+#proof[
+  Under $0^0 = 0$ a zero adds nothing, so the first completion has sum $t$. In the second, each of the $z$ known zeros adds 1 and each free position adds $(v - 1)^(v - 1)$.
+]
+
+So the interval is the smallest one that contains every sum the known counts allow. The forcing loop of the leading-digit test already iterates it to a fixed point. A narrower range must use more than the counts: the digits of the completions, which the levels below test one count at a time, or a residue, which the next rule uses #lib("31.3").
+
+=== The residue rule <sec-search-residue>
+
+The interval looks only at the size of $S$. The digit-sum identity (@thm-digit-sum) gives a test of a different kind: the sum of $w(x) - x$ over the digits of a solution is divisible by $b - 1$. The identity involves every digit, so at most nodes it says nothing: the unknown digits can make up any residue. But many nodes know almost everything.
+
+Call a free position a _free slot_. A node with exactly one free slot knows its whole multiset except one digit $y < v$. In base 28, 43% of the nodes of the exact tree have one free slot and 25% have two #lib("31.1"). Their subtrees are tiny: a node with one free slot has 0.23 descendants on average. So the tree does most of its work in the middle levels, not at the leaves, and a test that needs all but one digit can still act on almost half of the nodes.
+
+#theorem(id: "search-thm-residue", title: "The residue rule", src: "31.2")[
+  Write $q = b - 1$ and let $R$ be the sum of $w(x) - x$ over the known digits of a node, modulo $q$, under the convention $0^0 = m$. If the node has exactly one free slot and no digit $y < v$ satisfies $R + w(y) - y equiv 0 med (mod q)$, then no completion of the node is a solution under $0^0 = m$.
+]
+#proof[
+  A completion is the known multiset plus one digit $y < v$. By @thm-digit-sum a solution has $R + w(y) - y equiv 0 med (mod q)$.
+]
+
+The engine keeps $R$ for both conventions in every node and updates it as digits are added. For each level a table of 128 bits lists the residues $-(w(y) - y)$ for $y < v$, so the test is two shifts and an "or". A node is dropped only when it fails under every convention the run reports. The rule removes nodes only by the theorem, so the search still misses nothing (@search-prop-exact).
+
+How much does it remove? The values $w(y) - y$ for $y$ below the typical level $0.57 b$ fill only 20% to 48% of the residue classes. The reason is the residue laws of @sec-short-coverings: $x^x equiv x$ modulo 2 always, and modulo 3 and 5 the values of $x^x - x$ miss whole classes. So the rule removes most when $b - 1$ has the factors 2, 3 and 5 (bases 25, 31, 37), and least when $b - 1$ is prime (bases 24, 30, 32).
+
+#computation(id: "search-comp-residue", title: "What the residue rule saves", src: ("31.2", "31.6"))[
+  With both conventions in one run, the rule removes 12% to 25% of the nodes in every base from 15 to 35, with no trend in the base: base 28 drops from 18.0 to 13.6 million nodes, base 35 from 1.51 to 1.22 billion. With one convention (`-m 0` or `-m 1`) it removes 13% to 30%. The solutions found are the same. The time falls less than the nodes, because each node now carries two residues: 1.11 to 1.22 times fewer cycles in bases 24 to 31 with both conventions, 1.22 to 1.29 times with one, and 1.18 times on the GPU at base 30. Under `--zscore 3.4 --zlaw cond` the rule removes 9% to 13% of the nodes, since the z-score rule already drops many of the same nodes.
+]
+
+The gain is a constant factor, as @thm-only-residue predicts: the residue modulo $b - 1$ is the only one the multiset fixes, and it can only remove a share of the nodes with one free slot. The same test with two free slots removes almost nothing, because two digits reach 87% to 100% of the classes. With no free slot the test only repeats what the interval says. Both versions cost more cycles than they save #lib("31.4").
 
 == The cost of the exact search <sec-search-cost>
 
@@ -117,7 +153,7 @@ At the level where the counts of the $m$ largest digit values are fixed, let $L$
 
 The engine cuts the tree into work units at depth 4. Their sizes are very uneven: in bases 24 to 34 the largest 1% of the units hold 47% to 81% of the work, and the pooled size law has a tail like a power law. The type of a unit, its length, free slots and known digits, explains 93% to 97% of the variance of the log of its size. Within a type the law is light-tailed, and each free slot multiplies the size by about 1.93, the growth of the whole search per base. So the heavy tail comes from mixing the types #lib("27.5").
 
-On one machine this costs nothing: on 8 threads the scheduling finishes within 0.1% of the ideal time. It matters for many shards, where a shard of 64 can get 2.6 times the mean work at depth 4; deeper units fix that. The best estimate of a run's cost before it starts is the previous base times 1.9 (the ratio of consecutive bases from 26 to 34 is 1.77 to 2.16). During a run the progress line weights each unit by its type, which is off by at most 0.10 where the plain fraction of finished units was off by up to 0.49.
+On one machine this costs nothing: on 8 threads the scheduling finishes within 0.1% of the ideal time. It matters for many shards, where a shard of 64 can get 2.6 times the mean work at depth 4; deeper units fix that. So does a better deal: `--shard-by size` predicts the size of each unit from its type and gives the largest units out first, each to the shard with the least predicted work. In base 30 the largest of 64 shards drops from 2.12 to 1.35 times the mean at depth 4, and from 1.21 to 1.14 at depth 6 #lib("31.5"). The prediction error within a type, a factor of about 1.6, is what is left. The best estimate of a run's cost before it starts is the previous base times 1.9 (the ratio of consecutive bases from 26 to 34 is 1.77 to 2.16). During a run the progress line weights each unit by its type, which is off by at most 0.10 where the plain fraction of finished units was off by up to 0.49.
 
 === The limit
 
@@ -262,11 +298,12 @@ The gain of this rule is speed at a fixed miss rate. At the thresholds that miss
 / Meet in the middle on digit values: Split the digits into large and small values. The small digits only change the low part of $S = A + L$, where $A$ comes from the large counts and $L$ from the small ones. But the digits of a sum are not a function of $A$ plus a function of $L$, so there is no key on which to join two lists. An exact join exists if the bottom digits of $n$ are enumerated as a string, but they must cover the weights of the small digits, about half of $n$, which needs about $b^(b slash 2)$ strings. Keying on the residue $A mod b^L$ instead costs a recomputation of the small side for each residue.
 / Meet in the middle on positions: Splitting $n$ into a top string $T$ and a bottom string $B$ gives the exact equation $T b^q - F(T) = F(B) - B$. Each side has $b^(k slash 2)$ strings. Strings cost far more than multisets: for $b = 100$ and $k = 99$ a table of at least $100^50$ entries, against $1.64^100 approx 10^(21.5)$ tree nodes #lib("22.5").
 / Lattice reduction: The equation $sum (w(s_i) - s_i b^i) = 0$ is a subset-sum problem of density about $b slash log_2 b > 1$. At that density lattice methods fail, because the relaxed problem has many solutions #cite(<lagarias-odlyzko1985>).
-/ Congruences: $n$ is linear in the counts modulo $b^j$, and $n equiv "digit sum" med (mod b - 1)$. Both constraints involve every count, so they prune only near the leaves. By @thm-only-residue, $b - 1$ is the only modulus whose residue the multiset determines, and it removes a factor $b - 1$, which does not change the rate.
+/ Congruences: $n$ is linear in the counts modulo $b^j$, and $n equiv "digit sum" med (mod b - 1)$. Both constraints involve every count. By @thm-only-residue, $b - 1$ is the only modulus whose residue the multiset determines. It pays at the nodes with one free slot (@search-thm-residue), but only as a constant factor of 1.1 to 1.3. The other results of the library that restrict digit counts, such as the bound on the copies of $b - 1$ in a $b$-digit solution, are already implied by the interval test #lib("31.4").
+/ Sharing work across bases: A multiset could be built once and tested in every base where its sum has the right length. That window holds about $ln b$ bases for a short multiset and one base for a full-length one, and the pruning differs from base to base, so the trees of two bases overlap only near the root. A sweep of bases costs about $1 slash (1 - 1 slash 1.89) approx 2.1$ times its largest base, so even perfect sharing saves at most a factor 2.1 on a sweep and nothing on one base #lib("32.3"). The short-string engine of @sec-search-short already works across all bases, which is where the idea pays.
 / Iterating $F$: Solutions are the fixed points of $n |-> F(n)$. From random starting points the orbits run for about $1.85^b$ steps before they repeat, and in bases 14 to 22 none of 600 orbits ended at a solution. A random map on the $4^b$ multisets has orbits of length about $2^b$, and a fixed point attracts a vanishing share of starting points (@sec-model-cycles).
 / The representation technique: The best algorithms for random subset sum split a solution into two halves in many ways and filter by a residue #cite(<howgrave-graham-joux2010>) #cite(<becker-coron-joux2011>). Here the target $n$ is not fixed; it is the unknown itself. Guessing its residue costs as much as the filter saves, and the library's estimate for a full multiset search is $e^(1.28 b)$, worse than the tree.
 / Constraint solvers: A SAT or constraint solver that ends with "no further solution" has proven it, so it is an exact search that need not be a tree, and its learned clauses could in principle cut across branches. The library encoded the problem column by column for CP-SAT and as a circuit for the SAT solver CaDiCaL. Both list the solutions with $b - 1$ digits correctly, in bases 8 to 20 and 8 to 18. Their conflicts grow 1.95 to 1.96 per base, as fast as the tree, at 2 to 5 (CP-SAT) and 57 to 153 (CaDiCaL) conflicts per node of the tree, and $10^4$ to $10^5$ times the time. Without redundant constraints that expose the interval, CP-SAT grows about 4 times per base. A learned clause excludes about one subtree of the tree, no more #lib("27.1").
-/ Bottom digits in bases $2^k$: In base $b$, $v^v$ is divisible by $b^L$ when $v dot v_p (v) >= L v_p (b)$ for every prime $p | b$. So in bases $2^k$ the even digits contribute nothing to the last few digits of $S$, and those digits are known once the counts of the odd values, of 0 and of a few small even values are known: at least $b slash 2 + 2$ values. The top-down tree learns them only at its leaves, so a check of the bottom digits never prunes it. Orders that reveal the odd counts early pay for it: in base 32 a hybrid tree visits 13.3 times as many nodes as the plain tree, and an odd-first tree about $10^11$ to $10^12$ against $2.5 dot 10^8$ #lib("27.4").
+/ Bottom digits in bases $2^k$: In base $b$, $v^v$ is divisible by $b^L$ when $v dot v_p (v) >= L v_p (b)$ for every prime $p | b$. So in bases $2^k$ the even digits contribute nothing to the last few digits of $S$, and those digits are known once the counts of the odd values, of 0 and of a few small even values are known: at least $b slash 2 + 2$ values. The top-down tree learns them only at its leaves, so a check of the bottom digits never prunes it. Orders that reveal the odd counts early pay for it: in base 32 a hybrid tree visits 13.3 times as many nodes as the plain tree, and an odd-first tree about $10^11$ to $10^12$ against $2.5 dot 10^8$ #lib("27.4"). There is one place where a top-down node knows its low digits: a node with one free slot, where each choice of the last digit gives the exact sum. Checking that the last digits of that sum are still available removes another 17% of the nodes at base 26, but costs 2% more cycles, because these nodes are already cheap #lib("31.4").
 / Quantum backtracking: A quantum computer can search a backtracking tree of $T$ nodes in about $sqrt(T)$ steps #cite(<montanaro2018>). That gives about $1.41^b$ for the exact tree and $1.28^b$ for its likely part. It is the only known way past @thm-entropy-bound.
 
 In short, the leading digits are the only information that a partial assignment of counts reveals cheaply, and the entropy bound and its extension to every order say what that information is worth. A large classical speedup would need a new source of information about the low digits of $n$. The library's view, which it marks as an argument and not a proof, is that a polynomial-time exact search would have to rule out large groups of multisets without looking at them, and nothing in the data hints at a structure that allows this #lib("6.4").
@@ -287,12 +324,12 @@ In tests on bases 10 to 26 and runs at bases 28 to 33 the node counts agree exac
 #tablefig(caption: [Recommended settings for a large base #lib("28.2", "28.3").], id: "tab-search-settings")[
   #btable(columns: 2, align: (left, left),
     [goal], [setting],
-    [exact answer], [`fast search b`, with `--journal` for long runs],
+    [exact answer], [`fast search b`, with `--journal` for long runs; both conventions in one run, which visits fewer nodes than two runs with `-m 0` and `-m 1`],
     [miss rate about 2% per solution], [`--zscore 3.4 --zlaw cond`],
     [miss rate about 1% per solution], [`--zscore 3.8 --zlaw cond`],
     [length window], [none: a lower threshold saves more at the same miss rate],
     [a machine with a GPU, base at most 64], [add `--hybrid`; a GPU run cannot use `--journal`],
-    [several machines], [`--shard i/n` on each, then `fast merge`; for many shards use deeper work units],
+    [several machines], [`--shard i/n` on each, then `fast merge`; for 16 shards or more add `--unit-depth 6 --shard-by size`],
   )
 ]
 

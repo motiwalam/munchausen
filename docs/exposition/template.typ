@@ -51,6 +51,7 @@
   "25": "25-identity-families.md", "26": "26-near-solutions-evidence.md",
   "27": "27-limits-of-search.md", "28": "28-zscore-gpu.md",
   "29": "29-model-theorems.md", "30": "30-applications.md",
+  "31": "31-search-rules.md", "32": "32-basic-questions.md",
 )
 
 #let lib(..secs) = {
