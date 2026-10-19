@@ -1,0 +1,48 @@
+base 42 m 0 b      t0 0.0796 t3 0.0650 zerofree_t3 0.0260 se_t3 0.0040
+base 42 m 0 b-1    t0 0.5553 t3 0.5655 zerofree_t3 0.2316 se_t3 0.0131
+base 42 m 0 b-2    t0 0.2353 t3 0.2126 zerofree_t3 0.0617 se_t3 0.0079
+base 42 m 0 b-3    t0 0.0920 t3 0.0773 zerofree_t3 0.0238 se_t3 0.0057
+base 42 m 0 <=b-4  t0 0.0678 t3 0.0512 zerofree_t3 0.0182 se_t3 0.0044
+base 42 m 0 total  t0 1.0300 t1 1.0038 t2 0.9615 t3 0.9716 zerofree_t3 0.3613 meanzeros_t3 0.972 se_t3 0.0174
+base 42 m 1 b      t0 0.0792 t3 0.0708 zerofree_t3 0.0260 se_t3 0.0049
+base 42 m 1 b-1    t0 0.5503 t3 0.5574 zerofree_t3 0.2316 se_t3 0.0131
+base 42 m 1 b-2    t0 0.2385 t3 0.2160 zerofree_t3 0.0617 se_t3 0.0080
+base 42 m 1 b-3    t0 0.0904 t3 0.0755 zerofree_t3 0.0238 se_t3 0.0052
+base 42 m 1 <=b-4  t0 0.0699 t3 0.0564 zerofree_t3 0.0182 se_t3 0.0049
+base 42 m 1 total  t0 1.0283 t1 1.0036 t2 0.9745 t3 0.9761 zerofree_t3 0.3613 meanzeros_t3 0.993 se_t3 0.0176
+base 44 m 0 b      t0 0.0813 t3 0.0660 zerofree_t3 0.0264 se_t3 0.0048
+base 44 m 0 b-1    t0 0.5628 t3 0.5663 zerofree_t3 0.2268 se_t3 0.0150
+base 44 m 0 b-2    t0 0.2446 t3 0.2482 zerofree_t3 0.0900 se_t3 0.0093
+base 44 m 0 b-3    t0 0.0925 t3 0.0913 zerofree_t3 0.0276 se_t3 0.0063
+base 44 m 0 <=b-4  t0 0.0656 t3 0.0506 zerofree_t3 0.0223 se_t3 0.0053
+base 44 m 0 total  t0 1.0467 t1 1.0278 t2 1.0305 t3 1.0225 zerofree_t3 0.3930 meanzeros_t3 0.937 se_t3 0.0201
+base 44 m 1 b      t0 0.0773 t3 0.0663 zerofree_t3 0.0264 se_t3 0.0051
+base 44 m 1 b-1    t0 0.5656 t3 0.5482 zerofree_t3 0.2268 se_t3 0.0148
+base 44 m 1 b-2    t0 0.2418 t3 0.2390 zerofree_t3 0.0900 se_t3 0.0094
+base 44 m 1 b-3    t0 0.0944 t3 0.0854 zerofree_t3 0.0276 se_t3 0.0055
+base 44 m 1 <=b-4  t0 0.0701 t3 0.0622 zerofree_t3 0.0223 se_t3 0.0065
+base 44 m 1 total  t0 1.0493 t1 1.0207 t2 1.0252 t3 1.0010 zerofree_t3 0.3930 meanzeros_t3 0.927 se_t3 0.0201
+base 45 m 0 b      t0 0.1586 t3 0.1397 zerofree_t3 0.0569 se_t3 0.0075
+base 45 m 0 b-1    t0 1.1061 t3 1.0847 zerofree_t3 0.4450 se_t3 0.0199
+base 45 m 0 b-2    t0 0.4751 t3 0.4928 zerofree_t3 0.1965 se_t3 0.0132
+base 45 m 0 b-3    t0 0.1870 t3 0.1715 zerofree_t3 0.0682 se_t3 0.0086
+base 45 m 0 <=b-4  t0 0.1405 t3 0.0820 zerofree_t3 0.0210 se_t3 0.0059
+base 45 m 0 total  t0 2.0673 t1 2.0387 t2 1.9635 t3 1.9707 zerofree_t3 0.7875 meanzeros_t3 0.896 se_t3 0.0271
+base 45 m 1 b      t0 0.0919 t3 0.0774 zerofree_t3 0.0569 se_t3 0.0053
+base 45 m 1 b-1    t0 0.6359 t3 0.6362 zerofree_t3 0.4450 se_t3 0.0146
+base 45 m 1 b-2    t0 0.2718 t3 0.2877 zerofree_t3 0.1965 se_t3 0.0104
+base 45 m 1 b-3    t0 0.1077 t3 0.1022 zerofree_t3 0.0682 se_t3 0.0063
+base 45 m 1 <=b-4  t0 0.0799 t3 0.0371 zerofree_t3 0.0210 se_t3 0.0035
+base 45 m 1 total  t0 1.1872 t1 1.1639 t2 1.1119 t3 1.1406 zerofree_t3 0.7875 meanzeros_t3 0.662 se_t3 0.0200
+base 46 m 0 b      t0 0.0783 t3 0.0708 zerofree_t3 0.0281 se_t3 0.0048
+base 46 m 0 b-1    t0 0.5563 t3 0.5715 zerofree_t3 0.1926 se_t3 0.0148
+base 46 m 0 b-2    t0 0.2332 t3 0.2494 zerofree_t3 0.0874 se_t3 0.0101
+base 46 m 0 b-3    t0 0.0943 t3 0.0957 zerofree_t3 0.0323 se_t3 0.0060
+base 46 m 0 <=b-4  t0 0.0652 t3 0.0729 zerofree_t3 0.0222 se_t3 0.0061
+base 46 m 0 total  t0 1.0273 t1 1.0312 t2 1.0375 t3 1.0603 zerofree_t3 0.3626 meanzeros_t3 1.048 se_t3 0.0204
+base 46 m 1 b      t0 0.0757 t3 0.0684 zerofree_t3 0.0281 se_t3 0.0044
+base 46 m 1 b-1    t0 0.5613 t3 0.5663 zerofree_t3 0.1926 se_t3 0.0146
+base 46 m 1 b-2    t0 0.2313 t3 0.2482 zerofree_t3 0.0874 se_t3 0.0101
+base 46 m 1 b-3    t0 0.0925 t3 0.0963 zerofree_t3 0.0323 se_t3 0.0059
+base 46 m 1 <=b-4  t0 0.0630 t3 0.0808 zerofree_t3 0.0222 se_t3 0.0073
+base 46 m 1 total  t0 1.0238 t1 1.0230 t2 1.0469 t3 1.0600 zerofree_t3 0.3626 meanzeros_t3 1.033 se_t3 0.0206
