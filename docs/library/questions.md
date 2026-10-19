@@ -320,24 +320,24 @@ problems found in the library are in
 [questions-round6.md](questions-round6.md).
 
 90. (Answered in chapter 34: the count over lengths 2 to `b` is the trace without the first entry (Proposition 34.5); the rows converge (Theorem 34.6); `tr = 1 + C/b` with `C = 1.104636`, one eigenvalue (Proposition 34.8, Heuristic 34.9); the refined count is a sum over characters (Proposition 34.10), with `e^-2` for the order-2 character under `0^0 = 1` (Theorem 34.12); the lead's `3/b` is the length-1 entry.) The expected count is the trace of a stochastic matrix.
-91. Arrangements and the local factor.
-92. The two heuristics at medium lengths.
+91. (Answered in chapter 35: for `q` prime to `b (b - 1)` the error is at most `(q - 1) e^(1/8) exp(-(1 - gamma)^2 (k - 1)/64)`, independent of `ord_q(b)` (Theorem 35.1, Corollary 35.2); the measured crossover is 10 digits for `q` = 3, 5, 7 and 12 for `q = 9`; the arrangement factors have mean 1 and do not explain the short-solution excess (section 35.1.4); the moduli 4 and 8 never qualify.) Arrangements and the local factor.
+92. (Answered in chapter 35: the two heuristics agree on totals at lengths 6 to 12; per base only the refined model with the top digit forced matches the window calibration, because the root heuristic averages the parity factor; no missing factor (section 35.2).) The two heuristics at medium lengths.
 93. (Answered in chapter 34: zero-free near-solutions in odd bases (1.26) and one zero under `0^0 = 1` in even bases (1.30); perturbed worlds show no gap between the conventions; with the between-world scatter the excess is about 2 standard deviations and not a third kind of correction (Heuristic 34.4).) Where the 12% excess under `0^0 = 1` sits.
 94. (Answered in chapter 34, negatively: no deficit in even bases; in odd bases the deficit is the zero-free surplus of question 93; the forced top digits do not lower the expected zeros (section 34.2).) Do near-solutions share the zero deficit of question 71?
-95. Bijective numeration: no zero, and a self-paying digit in every base.
+95. (Advanced in chapter 35: the identity modulus is `b - 1`, and odd bases get the factor 2 with no convention (Propositions 35.5 and 35.7); the census is open.) Bijective numeration: no zero, and a self-paying digit in every base.
 96. (Answered in chapter 33: a sufficient condition for every weight (Theorem 33.12); under abc exact for solutions with one dominant digit (Corollary 33.15); `x!` never meets it (Proposition 33.13).) A criterion for identity families.
 97. (Answered in chapter 33: finite for a large last or middle digit, with explicit bounds (Theorems 33.4, 33.5); a leading digit reduces to `4x x! + s^2 = U^2`; complete for the other digits up to 10 except that case (Theorem 33.6); two large digits reduce to Brocard type under GRH (Proposition 33.8).) Three-digit factorions are finite, except for a Brocard case.
 98. (Answered in chapter 33: no for `k = 2`, infinitely many (Proposition 33.9); under GRH a large last digit leaves only `x` with `G_x` intersective, rational roots for `k <= 5` (Theorem 33.10); GRH alone does not give finiteness for `k >= 4`; abc does for each prefix (Theorem 33.19).) Factorions of every length under GRH.
 99. (Partly answered in chapter 33: none found up to `t = 10^5`; one-step chains give only base 64 (Proposition 33.22); the length is `c + O(log b)` (Proposition 33.21); longer chains need a coincidence (Heuristic 33.23).) Long structured solutions under `0^0 = 1` (speculative).
-100. Near-solutions that provably exist (speculative).
-101. Beyond `ln b / ln ln b` by averaging over bases.
+100. (Answered in chapter 35: every base `b >= 27` has `0 < |n - F(n)| < b^(b-1-T)` with `T = sqrt(b / e) - O(1)` explicit (Theorem 35.13); `t >= 2` for every `b >= 77` (Corollary 35.14).) Near-solutions that provably exist (speculative).
+101. (Answered in chapter 35, negatively for this route: the averaged bound is at least `e^(-2A - o(1))` times that of Proposition 20.2 (Proposition 35.9, Corollary 35.10); averaging excludes solutions of length up to `(ln b)^C` with few digits of weight at least `sqrt(b)` (Theorem 35.12).) Beyond `ln b / ln ln b` by averaging over bases.
 102. (Partly answered in chapter 32: abc bounds `x` for one large digit in every position and parity (section 32.1.6); unconditional for an even large digit behind a non-square leading digit (Theorem 32.2) and for a fixed square class (Proposition 32.6); two large digits open. Answered in chapter 33 for one large digit: under abc `x <= (2 + O(eps)) B + C_eps` when `R != 0` (Theorem 33.16), every length in Theorem 33.19; with `c < rad^(7/4)` the list is complete for two digits up to 200 (Corollary 33.18); two large digits `u >= v` remain only for `v` above about `u/2` (Proposition 33.20).) The abc conjecture and the 3-digit list.
 103. (Answered in chapter 34: 241 rows, 56 groups; far from uniform as a whole (Fisher P `2 * 10^-9`) because of selection; the 12 groups named in advance look uniform (Fisher P = 0.74); no lean toward deficits (Heuristic 34.14).) A ledger of P values.
 104. A pre-registered census of bases 42 to 46.
 105. The first `b`-digit solution under `0^0 = 1`.
 106. (Answered in chapter 34: no correlation of neighbouring residuals once the top digits are forced; no shared near-solution multisets; uncorrelated top digits; but the two conventions in one base correlate at +0.78 (section 34.5, Heuristic 34.15).) Are neighbouring bases independent?
-107. The class modulo `2x` in even Pisot bases.
-108. One invariant-residue proposition for every positional system.
+107. (Narrowed in chapter 35: the class is not an invariant of the multiset; the gcd within multiset groups is `2x` only at length 4 (section 35.3.3).) The class modulo `2x` in even Pisot bases.
+108. (Answered in chapter 35: the ideal of `(x - y)(beta_i - beta_j)` over the exchanges, `(beta - 1)` for geometric place values, with rational integers `|f(1)| Z` and the residue factor an index (Propositions 35.5 to 35.7); checked in 67 systems; the question's "exactly when" needs the digit differences and connectivity.) One invariant-residue proposition for every positional system.
 109. Is anything about the middle digits cheap? (speculative)
 110. A last-digit factor in negative bases?
 
@@ -510,3 +510,31 @@ problems found in the library are in
      the model's prediction and a two-sided test for every group of Table
      34.4.2.1 that extends to fresh bases. Add the results to the set named
      in advance. (computation; section 34.4)
+
+## Round 13: questions raised by chapter 35
+
+144. Linear `t`. Can near-solutions with `t >= c b` be proved in every
+     base? The obstacle in Theorem 35.13 is the zone of values that the
+     matched digits must avoid. A fixed-point version that lets matched
+     digits be large and feeds their weights back into the steering might
+     remove it. The construction, run exactly, already reaches 0.13 `b` to
+     0.5 `b`. (proof; section 35.5)
+145. The identity factor at short lengths, in closed form. Table 35.1.4.1
+     computes `(b - 1) P(b - 1 | G(c))` by the exact walk. Is there a
+     formula in the small primes of `b - 1` and the length, as in
+     Proposition 35.7 but for the digits up to `X_k(b)`, that gives the
+     short-solution rates of all worlds (Munchausen, factorions,
+     narcissistic) at once? (proof and computation; section 35.1.4)
+146. Equidistribution on average over windows. Prove, for some
+     `theta > 0`, that sums of `K` weights `x^x` with `z < x <= X` hit
+     `0 (mod b - 1)` for at most a share `B^(-theta)` of the pairs
+     (multiset, window base). By Proposition 35.8 this would extend
+     Theorem 20.3 to `alpha = 1 + theta`. (proof; section 35.4)
+147. Sharper arrangement bounds. Replace `gamma` in Theorem 35.1 by a
+     quantity that uses the varying units `b^(2j)(1 - b)`, so that strings
+     with small digits and large `q` are covered, and compare with the
+     measured `e^(-0.35 k)`. (proof and computation; section 35.1)
+148. Theorem 35.12 with the congruence. Combine the window count of
+     Theorem 35.12 with the condition `b - 1 | G(c)` for solutions whose
+     small part is long and dissociated. Does it give a range beyond
+     `(ln b)^C` for strings with few large digits? (proof; section 35.4.3)
