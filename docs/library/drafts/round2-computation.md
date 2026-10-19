@@ -9,7 +9,7 @@ model, or a judgment from data).
 | question | answer | status |
 |---|---|---|
 | 41, factorions in odd bases | Base 47 has one long factorion per convention against 1.05 expected. Fresh odd bases 37 to 47 have 3 per convention against 6.2. Near-factorions at offsets that keep every residue up to `b+1` and mod `b^3` are normal (7.8 to 8.3 against 8.5 in bases 21 to 35), while `D = 0` has 1 and 2. No mechanism found; the census is confirmed by a second engine and by brute force. | computed; verdict open, likely chance |
-| 42, empty negative bases | -36 and -37 are not empty. Multiples of 3 from -12 to -36: 3 empty of 9 against 1.15 expected (P = 0.095). Their near-solution rates are normal, also at offsets that keep `n mod 3`, and the last-digit factor mod 3 is 1.000. | computed, heuristic: chance |
+| 42, empty negative bases | -36 and -37 have solutions, -38 is empty. Multiples of 3 from -12 to -36: 3 empty of 9 against 1.15 expected (P = 0.095); other bases 3 of 20 against 2.44. Near-solution rates of the multiples of 3 are normal, also at offsets that keep `n mod 3`, and the last-digit factor mod 3 is 1.000. | computed, heuristic: chance |
 | 35, 2-cycles in even bases | Base 18 has one 2-cycle under `0^0 = 0`. Even bases 4 to 18: 2 against 4.0. Near-2-cycles `F(F(n)) = n - j(b-1)` give 5.3 per offset, so these bases have the normal rate of the coincidence. No second invariant. | computed, heuristic: chance |
 | 43, lengths in base -1+i | Positive integers have exactly the lengths `== 1, 4 (mod 8)`: integers are base -4 numbers written in blocks of four digits. The census of base -1+i is complete. | proven |
 | 44, per-base scatter | Forcing the top 3 or 4 digits of `F` lowers the chi-square of `lambda / model` from 97 to 60 (`0^0 = 0`) and from 96 to 72 (`0^0 = 1`) on 21 bases. The rest sits in a few bases (13, 19, 16, 20) and in a uniform 12% excess under `0^0 = 1`. | computed, heuristic |
@@ -135,7 +135,7 @@ run survives interruptions. Shards were checked against full runs for -20,
 |---:|---:|---|---:|---:|---|---:|---:|
 | -36 | 3 | 33, 35, 35 | 1.06 | 1 | 35 | 1.06 | 1087 s |
 | -37 | 1 | 37 | 1.18 | 1 | 37 | 2.08 | 1679 s |
-| -38 | NEG38 | | | | | | |
+| -38 | 0 | | 1.04 | 0 | | 1.04 | 4498 s; 4932 s (2 and 1 to 3 threads) |
 
 (`analysis/data/r2c_negabase_census_36_41.txt`; models for -37 to -41 in
 `analysis/data/r2c_negamodel_37_41.txt`.) The 37-digit solution of -37 has
@@ -150,11 +150,17 @@ n - 1`.
 
 ### Multiples of 3 (computed, then heuristic)
 
-`analysis/r2c_nega_compare.py`. Bases -2 to -37 (-38 pending): 8 empty
-bases, as before, against 4.4 expected (P = 0.065). Leaving out the named
-bases -3, -6, -9: the multiples of 3 from -12 to -36 have 3 empty bases
-of 9 (-15, -18, -30) against 1.15 expected, P = 0.095. The other bases
-from -10 have 2 of 19 against 2.25.
+`analysis/r2c_nega_compare.py`. Base -38 is empty in both conventions, so
+bases -2 to -38 have 9 empty bases against 4.63 expected (P = 0.033).
+Leaving out the named bases -3, -6, -9: the multiples of 3 from -12 to -36
+have 3 empty bases of 9 (-15, -18, -30) against 1.15 expected, P = 0.095.
+The other bases from -10 have 3 of 20 (-20, -34, -38) against 2.44,
+P = 0.45. So the new bases weaken the multiples-of-3 cluster (-36 is not
+empty, -38 is) and leave a general excess of empty negative bases. Over
+bases -10 to -38 the solutions number 72 against 83.2 in the refined
+model (P = 0.12). For bases -10 to -27 the offsets that keep the last digit
+(below) give 52.0 against the model's 53.9, while `D = 0` has 42 (P = 0.09).
+The shortfall is mild and is shared by all bases, not by the multiples of 3.
 
 Mechanisms tested:
 

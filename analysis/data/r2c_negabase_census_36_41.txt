@@ -8,3 +8,5 @@ sol base -37 w pow0 d 37 digits 1,24,35,5,34,28,25,23,5,22,14,9,11,3,11,4,30,31,
 total base -37 w pow0 sols 1 nodes 5801513079 secs 3797.0
 sol base -37 w pow1 d 37 digits 1,24,35,5,34,28,25,23,5,22,14,9,11,3,11,4,30,31,17,25,17,5,5,15,15,36,15,4,12,12,15,22,29,11,8,21,14
 total base -37 w pow1 sols 1 nodes 5801513071 secs 1678.9
+total base -38 w pow0 sols 0 nodes 13075509814 secs 4497.6
+total base -38 w pow1 sols 0 nodes 13075509801 secs 4932.4
