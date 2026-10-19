@@ -31,6 +31,9 @@
   [$D$], [an offset: near-solutions satisfy $n - F(n) = D$], [@sec-model-defects],
   [$lambda_m (b)$], [the mean number of near-solutions per offset, an estimate of the expected $N_m (b)$], [@sec-model-defects],
   [$s_j$], [the limit share of the length $b - j$ in the basic model], [@sec-model-shares],
+  [$M_b$], [the length matrix: entry $(d, d')$ is the chance that $F$ of a uniform $d$-digit string has $d'$ digits], [@sec-model-trace],
+  [$C$], [the first-order constant of the trace, $"tr" M_b - E_1 = 1 + C slash b + o(1 slash b)$, $C = 1.104636$], [@sec-model-trace],
+  [$tau_t (b)$], [the part of the refined count that comes from the character $t$ modulo $b - 1$], [@sec-model-characters],
   [$d_"TV"$], [total variation distance between two laws], [@sec-app-prob-poisson],
   [$e(t)$], [$e^(2 pi i t)$, an additive character], [@sec-model-assumption-r],
   [$rho(b)$], [the largest normalized exponential sum of $x^x - x$ modulo $b - 1$; Assumption R holds when it is below $1 - 3 ln b slash b$], [@sec-model-assumption-r],
@@ -102,6 +105,12 @@
 #term[Inexact search][A search that skips nodes the model calls unlikely, with a measured miss rate.][@sec-search-inexact]
 
 #term[Tally language][A set of words over a one-letter alphabet, such as the bases written in unary that have a solution.][@sec-search-complexity]
+
+#term[Stochastic matrix][A square matrix with nonnegative entries whose rows sum to 1, the transition matrix of a random process on finitely many states. Its trace is 1 plus the eigenvalues other than 1.][@sec-app-prob-stochastic]
+
+#term[Fisher's method][A way to combine independent P values: $-2 sum ln p_i$ has the chi-square law with $2k$ degrees of freedom when all null hypotheses hold.][@sec-app-prob-ledger]
+
+#term[Named in advance][A test whose hypothesis was written down before its data were seen. Its P value needs no correction for selection.][@sec-model-ledger]
 
 #term[Factorion][A number equal to the sum of the factorials of its digits.][@sec-worlds-weights]
 

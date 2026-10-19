@@ -88,6 +88,12 @@ coincidences and blind to identities. @ch-constructions tells this story.
   never a power, factorials have no identity families (@sec-cons-weights).
   Under abc, every 3-digit solution of $x^x$ with one dominant digit is a
   family member (@short-abc-three).
+- In the model the expected count is the trace of a stochastic matrix,
+  $1 + C slash b$ with $C = 1.1046$, and the parity factors come from one
+  character modulo $b - 1$ (@sec-model-trace, @sec-model-characters). The
+  largest remaining deviation, 12% under $0^0 = 1$, is not a new kind of
+  correction. Taken together, the P values of the library show selection,
+  and the tests named in advance agree with the model (@sec-model-ledger).
 - Some of the questions connect to other fields: anti-concentration in
   probability, the map $x |-> x^x$ modulo a prime, and sums of two squares
   (@sec-open-connections).

@@ -97,6 +97,63 @@ The table treats the counts of the top values as independent Poisson(1) variable
 
 This is the bound of Barbour and Hall @barbour-hall1984; Le Cam's inequality gives the weaker $n p^2$. The second fact is a conditioning trick. Let $N_1, dots, N_K$ be the counts of $K$ fixed values in $d$ independent uniform digits. Given their total $M$, the counts are multinomial with $K$ equal cells. Independent Poisson variables with a common mean have the same property: given their total, they are multinomial with equal cells. So the distance between the two vectors equals the distance between their totals. The total $M$ is binomial with $d$ trials and success probability $K slash b$, and the Poisson total has mean $d K slash b$, so the distance is at most $K slash b$. The same trick compares Poisson($d slash b$) counts with Poisson(1) counts. With $d = b - j$ and the leading digit handled separately, the vector of the $K = j + 1$ top counts is within $((j+1)^2 + 1) slash b$ of independent Poisson(1) variables (Lemma 29.3 of #lib("29.1")). @thm-length-shares uses this to turn the table above into a theorem about the model.
 
+== Stochastic matrices, trace and eigenvalues <sec-app-prob-stochastic>
+
+A process that moves between finitely many states $1, dots, n$ at random is
+described by its transition matrix $M$: the entry $M_(i j)$ is the chance to
+move from state $i$ to state $j$.
+
+#definition(id: "app-prob-def-stochastic", title: "Stochastic matrix")[
+  A square matrix $M$ is _stochastic_ if its entries are nonnegative and
+  each row sums to 1. Row $i$ is then a probability law on the states. The
+  _trace_ $"tr" M = sum_i M_(i i)$ is the sum of the chances to stay put.
+]
+
+Three facts from linear algebra are all that @sec-model-trace needs.
+
+- The vector $bold(1) = (1, dots, 1)$ satisfies $M bold(1) = bold(1)$,
+  because the rows sum to 1. So 1 is an eigenvalue.
+- Every eigenvalue $lambda$ has $|lambda| <= 1$. If $M v = lambda v$ and
+  $|v_i|$ is the largest coordinate, then
+  $|lambda| |v_i| = |sum_j M_(i j) v_j| <= sum_j M_(i j) |v_i| = |v_i|$.
+- The trace is the sum of all eigenvalues, counted with multiplicity. This
+  holds for every square matrix: both are the coefficient of $t^(n-1)$ in
+  the characteristic polynomial $det(t I - M)$, up to sign.
+
+So $"tr" M = 1 + (lambda_2 + dots + lambda_n)$: one plus the other
+eigenvalues. When these are small, the trace is close to 1.
+
+#example(title: "Two states")[
+  Let
+  $ M = mat(1 - p, p; q, 1 - q) . $
+  The eigenvalues are 1 and $1 - p - q$, and $"tr" M = 2 - p - q$, which is
+  indeed $1 + (1 - p - q)$. The second eigenvalue measures how much the
+  next state depends on the present one. If the two rows are equal, so
+  $q = 1 - p$, the next state does not depend on the present one at all.
+  Then the second eigenvalue is 0 and the trace is exactly 1.
+]
+
+The same holds in any size. If all rows equal one probability law $s$,
+then $M = bold(1) s^T$ has rank one. Its eigenvalues are $s dot bold(1) = 1$
+and 0, and its trace is $sum_i s_i = 1$. A small change of the rows moves
+the eigenvalues a little, and the trace follows. For example, let
+$M = bold(1) u^T + epsilon v sigma^T$ with $u dot bold(1) = 1$ and
+$sigma dot bold(1) = 0$. Then $M bold(1) = bold(1)$ and
+$M v = (u dot v) bold(1) + epsilon (sigma dot v) v$. A vector orthogonal
+to both $u$ and $sigma$ is sent to 0. So $M$ maps the plane spanned by
+$bold(1)$ and $v$ into itself, and in the basis $(bold(1), v)$ it acts by
+the matrix
+$ mat(1, u dot v; 0, epsilon sigma dot v) , $
+so the eigenvalues are 1 and $epsilon (sigma dot v)$. Every other
+eigenvalue is 0. This is the computation behind @model-heur-one-eigen.
+
+A last fact concerns blocks. If the states split into groups and the
+process never leaves a group, $M$ is block diagonal, and each block is a
+stochastic matrix with its own eigenvalue 1. So the eigenvalue 1 has one
+copy per closed group. In @sec-model-refined the parities of odd bases
+under $0^0 = 0$ are two such groups, and this is the doubling of the
+expected count (@model-cor-two-blocks).
+
 == Anti-concentration: the Littlewood-Offord problem <sec-app-prob-lo>
 
 Concentration inequalities, such as Chebyshev's, say that a sum of independent steps stays near its mean. Anti-concentration says the opposite: the sum is spread out, and no single value has a large probability. Littlewood and Offord met this question in 1943, when they counted the real roots of random polynomials. Erdos gave the sharp answer.
@@ -157,6 +214,46 @@ Two tools combine evidence across groups.
 
 - Fisher's method. If $p_1, dots, p_k$ are independent P values, then under the null hypothesis $-2 sum_i ln p_i$ has the chi-square law with $2k$ degrees of freedom. The library uses it to combine an in-sample P value, after the look-elsewhere correction, with the P value of fresh bases; for the factorion shortfall the combined value moved from about 0.05 to about 0.09 with the clustered calibration (#lib("23.1", "26.4")).
 - Pooled ratios and heterogeneity. Each group $i$ gives an observed count $O_i$ and an offset estimate $E_i$, with a variance $v_i$ that includes the design effect. A common ratio $theta = O slash E$ is estimated by weighting each group by $1 slash v_i$. Cochran's statistic $Q = sum_i (O_i - hat(theta) E_i)^2 slash v_i$ has about the chi-square law with $k - 1$ degrees of freedom if all groups share one ratio. Over eight number systems the library finds $Q = 23.3$ on 7 degrees of freedom (P about 0.002). Without the odd-base factorions and the Pisot bases, the other six worlds fit one ratio, 0.91, with $Q = 3.6$ on 5 degrees of freedom (P = 0.60) (#lib("26.5")). So outside two named worlds the solutions behave like their near-solutions, which is the claim of @ch-model.
+
+== Many P values at once <sec-app-prob-ledger>
+
+A P value is the chance, computed under the null hypothesis, of a result at
+least as extreme as the one observed. If the null hypothesis is true and
+the statistic is continuous, the P value is a uniform random number in
+$[0, 1]$: $P(p <= a) = a$ for every $a$. For counts the law is a little
+lumpy, but close to uniform. So a list of P values from tests of a correct
+model should look like a list of uniform random numbers. About 5% fall below
+0.05, about 1% below 0.01, and the median is near $1 slash 2$. The
+Kolmogorov-Smirnov test compares the whole list with the uniform law: it
+measures the largest gap between the share of P values below $a$ and $a$
+itself.
+
+Fisher's method combines independent P values into one. Under the null
+hypothesis $-ln p$ is exponential with mean 1, so $-2 ln p$ has the
+chi-square law with 2 degrees of freedom. A sum of $k$ independent ones has
+the chi-square law with $2k$ degrees of freedom, and its upper tail is the
+combined P value.
+
+#example(title: "Fisher's method")[
+  Three independent tests give $p = 0.10, 0.20, 0.30$. Then
+  $-2(ln 0.1 + ln 0.2 + ln 0.3) = 10.23$. For $2k$ degrees of freedom the
+  tail is $P(chi^2_(2k) >= x) = e^(-x slash 2) sum_(i < k) (x slash 2)^i slash i!$,
+  which gives 0.115 here. No single test is striking, and neither is the
+  combination.
+]
+
+Two things break this picture. The first is dependence. If two tests reuse
+the same data, their P values move together, and Fisher's sum treats one
+piece of evidence as two. The combined P value is then too small. The
+second is selection. If a reported group is the most extreme of $k$
+groups that were looked at, its P value is the smallest of $k$ uniform
+numbers, with $P(min <= a) = 1 - (1 - a)^k$. The Sidak correction reports
+$1 - (1 - p)^k$ in place of $p$. A list of such minima is far from uniform.
+With $k = 3$ the median is $1 - 2^(-1 slash 3) = 0.21$. With $k = 6$ the
+share below 0.05 is $1 - 0.95^6 = 0.26$. Tests whose hypothesis was written
+down before the data were seen avoid selection, which is why fresh bases
+and pre-registered predictions count for more. @sec-model-ledger applies
+all of this to the P values of the library.
 
 == Entropy and the asymptotic equipartition property <sec-app-prob-entropy>
 

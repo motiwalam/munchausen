@@ -145,6 +145,147 @@ The constant $b_0(j)$ is crude: $b_0(0) = 919$ and $b_0(1) = 23,000$. It only ke
 
 The last column converges, so the error is $c_j slash b$ to first order. The library computes the constants exactly: $E_(b-j)(b) = s_j + c_j slash b + O(1 slash b^2)$ with $c_0 = -1 slash (4 e) = -0.092$ and $c_1, dots, c_5 = 0.092, 0.281, 0.317, 0.227, 0.136$ (Proposition 29.7 of #lib("29.1")). The base-100 numbers of @model-heur-base100 are these values. Every later use of "about one solution per base" in the basic model rests on @model-cor-total.
 
+=== The expected count is a trace <sec-model-trace>
+
+The shares and their total of 1 have a compact form in the language of
+matrices. Let $M_b$ be the $b times b$ matrix whose entry $M_b (d, d')$ is
+the chance that $F(n)$ has $d'$ digits when $n$ is a uniform $d$-digit
+string. A multiset with at most $b$ digits has $F < b^b$
+(@model-prop-cycles), so $F(n)$ has between 1 and $b$ digits, and every row
+of $M_b$ is a probability law. So $M_b$ is a stochastic matrix
+(@sec-app-prob-stochastic). Its diagonal entry $M_b (d, d)$ is $E_d$ of
+@model-prop-ek.
+
+#proposition(id: "model-prop-trace", title: "The count is a trace", src: "34.3")[
+  The expected count of the basic model over the lengths 2 to $b$ is
+  $"tr" M_b - M_b (1, 1)$. The first entry is
+  $M_b (1, 1) = E_1 = N_1 (b) slash (b - 1)$, where $N_1 (b)$ is the number
+  of digits $x >= 1$ with $x^x < b$. So $N_1 (b) = 2$ for
+  $5 <= b <= 27$, 3 for $28 <= b <= 256$ and 4 for $257 <= b <= 3125$.
+]
+#proof[
+  The diagonal entries are the $E_d$, and the count over the lengths 2 to
+  $b$ is their sum without $E_1$. A 1-digit string $x$ has $F = x^x$, which
+  has one digit exactly when $x^x < b$, and $x$ is uniform on
+  $1, dots, b - 1$.
+]
+
+Length 1 is an artefact of the model: whatever $E_1$ says, the only
+1-digit number with $n = F(n)$ is the trivial $n = 1$. So the library
+counts from length 2. The entry $E_1$ is also almost an
+eigenvalue of $M_b$, because a string of length $d >= 2$ has $F < b$ only
+if all its digits are tiny. At $b = 100$ the eigenvalue is 0.0312 against
+$E_1 = 0.0303$. A first computation that kept length 1 found a second
+eigenvalue "about $3 slash b$". That was this entry, with $N_1 = 3$
+#lib("34.3").
+
+The theorem on the shares separates into rows and columns.
+
+#theorem(id: "model-thm-rows", title: "The rows converge", src: "34.3")[
+  Fix $j, j' >= 0$. For every base $b >= b_0 (j')$, the constant of
+  @thm-length-shares,
+  $ |M_b (b - j, b - j') - s_(j')| <= ((j + 1)(j' + 1) + 1) / b + (j' + 2) / (floor(sqrt(b)))! . $
+  So for each fixed $J$, the $J times J$ corner of $M_b$ at the longest
+  lengths tends to the matrix whose rows all equal $(s_0, dots, s_(J-1))$.
+]
+#sketch[
+  This is the proof of @thm-length-shares with the row and the column kept
+  apart. The column $b - j'$ decides which event counts: on the event $H$
+  the length $b - j'$ depends only on the top $j' + 1$ counts. The row
+  $b - j$ enters only through the coupling of @model-lem-coupling, applied
+  to the top $K = j' + 1$ counts of a string of $b - j$ digits, which costs
+  $(1 + K + K j) slash b$. Under the Poisson law the chance of the event is
+  $s_(j')$, whatever $j$ is.
+]
+
+#corollary(id: "model-cor-rows", title: "One law for every row", src: "34.3")[
+  For each fixed $j$, the law of the length of $F(n)$, for $n$ a uniform
+  string of $b - j$ digits, tends to the law $(s_0, s_1, dots)$ at the
+  distances $0, 1, dots$ from $b$. The shares $s_j$ of @thm-length-shares
+  are the diagonal of this limit, and they add to 1 because the limit is a
+  probability law.
+]
+
+In the language of @sec-app-prob-stochastic, the corner of $M_b$ is close
+to a matrix with equal rows, whose trace is 1. That is the reason behind
+"about one solution per base" (@model-rem-universal-one): the length of
+$F(n)$ barely depends on the length of $n$.
+
+How far is the trace from 1 at a finite base? A string with $b - j$ digits
+has on average $(b - j - 1) slash b$ copies of each value among its free
+digits, a little fewer than 1, and fewer for shorter strings. So its top
+counts behave like Poisson variables with mean $mu approx 1 - (j + 1) slash b$
+in place of 1. Write $s_(j') (mu)$ for the share of the length $b - j'$
+when the top counts are independent Poisson($mu$) variables, and
+$sigma_(j') = -s'_(j') (1)$ for minus its derivative at $mu = 1$.
+
+#proposition(id: "model-prop-first-order", title: "The first correction to the trace", src: "34.3")[
+  For fixed $j$ and $j'$,
+  $ M_b (b - j, b - j') = s_(j') + ((j + 1) sigma_(j') + a_(j')) / b + O(1 / b^2), $
+  where $a_(j')$ does not depend on $j$. Both $sigma_(j')$ and $a_(j')$ sum
+  to 0 over $j'$. For every fixed $J$, the diagonal satisfies
+  $ sum_(j < J) M_b (b - j, b - j) = sum_(j < J) s_j + 1 / b sum_(j < J) c_j + O_J (1 / b^2), quad c_j = (j + 1) sigma_j + a_j . $
+  The sum of all the $c_j$ is
+  $ C = sum_j c_j = - d / (d mu) E_mu [J'] |_(mu = 1) = e / (e - 1)^2 + 1 / (2 e) + 2.2 dot 10^(-5) = 1.104636, $
+  where $J'$ is the distance of the length of $F$ from $b$ when the top
+  counts are independent Poisson($mu$) variables.
+]
+#sketch[
+  The term $(j + 1) sigma_(j') slash b$ is the first-order change of
+  $s_(j') (mu)$ when $mu$ moves from 1 to $1 - (j + 1) slash b$. The term
+  $a_(j') slash b$ collects the leading digit, the step from binomial to
+  Poisson counts and the correction of @model-lem-weights, none of which
+  depends on $j$. Since $sum_(j') s_(j') (mu) = 1$ for every $mu$, the
+  $sigma_(j')$ sum to 0, and since the rows of $M_b$ sum to 1, so do the
+  $a_(j')$. Summing the diagonal over all $j$ gives
+  $sum_j ((j + 1) sigma_j + a_j) = sum_j j sigma_j = -d slash d mu sum_j j s_j (mu)$,
+  minus the derivative of the mean of $J'$. For the closed form, the
+  distance $y_0$ of the largest digit from $b$ has
+  $P(y_0 = y) = e^(-mu (y - 1)) (1 - e^(-mu))$, so
+  $E_mu [y_0] = 1 slash (1 - e^(-mu))$, whose derivative at 1 is
+  $-e slash (e - 1)^2$. The length is one more than $b - y_0$ when the
+  largest digit has more than $e^(y_0)$ copies, and this adds the small
+  terms $1 slash (2 e)$ (from $y_0 = 1$) and $2.2 dot 10^(-5)$.
+]
+
+The proposition is proved for each fixed $J$. Letting $J$ grow with $b$
+needs a bound on $E_(b-j) - s_j - c_j slash b$ that is uniform in $j$,
+which is open (#q(141)). The tail bound in the proof of @model-cor-total
+is not small enough. A computation closes the gap. It also shows that the
+whole first-order excess is a single eigenvalue.
+
+#heuristic(id: "model-heur-one-eigen", title: "One eigenvalue carries the excess", src: "34.3")[
+  To first order the corner of $M_b$ is $bold(1) u^T + (1 slash b) v sigma^T$
+  with $u = s + a slash b$ and $v_j = j + 1$. By @sec-app-prob-stochastic its
+  eigenvalues are 1, $(sigma dot v) slash b = C slash b$ and zeros. So
+  $"tr" M_b - E_1 = 1 + C slash b + o(1 slash b)$, and the excess over 1 is
+  one eigenvalue, $lambda_2 approx C slash b$.
+]
+
+#computation(id: "model-comp-trace", title: "Trace and second eigenvalue", src: "34.3")[
+  The exact length matrix (both conventions agree to 6 digits). The last
+  column is $b lambda_2$ for the matrix restricted to the lengths
+  $2, dots, b$:
+  #align(center, btable(columns: 5, align: (right,) * 5,
+    [$b$], [$"tr" M_b$], [$E_1$], [$b("tr" M_b - E_1 - 1)$], [$b lambda_2$],
+    [10], [1.5417], [0.2222], [3.195], [2.30],
+    [20], [1.2676], [0.1053], [3.246], [1.52],
+    [40], [1.1236], [0.0769], [1.869], [1.34],
+    [100], [1.0448], [0.0303], [1.446], [1.20],
+    [200], [1.0214], [0.0151], [1.260], [1.14],
+    [300], [1.0175], [0.0134], [1.229], [1.14],
+  ))
+]
+
+Both columns approach $C = 1.105$. At small bases the shorter lengths add
+more, which is why the excess at base 20 is about 3 times $C slash b$. The
+constant has a plain meaning: it measures how much the length of $F$
+follows the length of the string. A string with one digit fewer has fewer
+large digits, so its $F$ tends to be a little shorter too, and the diagonal
+gains. With length 1 included, the trace is
+$1 + (N_1 (b) b slash (b - 1) + C) slash b + o(1 slash b)$, so
+$b ("tr" M_b - 1)$ grows like $ln b slash ln ln b$ and has no limit.
+
 == The digit-sum identity and the parity effect <sec-model-refined>
 
 The basic model forgets one fact. Every integer satisfies $n equiv (text("digit sum of") n) med (mod b - 1)$, because $b equiv 1$. For a solution this becomes the identity of @thm-digit-sum: the multiset must satisfy $sum_x c_x (w(x) - x) equiv 0 med (mod b - 1)$.
@@ -171,6 +312,106 @@ A multiset that meets the identity becomes $b - 1$ times as likely to be a solut
 So a large odd base expects two solutions under $0^0 = 0$ and about 1.135 under $0^0 = 1$, and a large even base expects one under each. Averaged over all bases, the model predicts 1.5 solutions per base under $0^0 = 0$ and about 1.07 under $0^0 = 1$ #lib("7.4").
 
 The factor 1 for odd primes is the one assumption of this section that is not obvious. It says that the residues of $x^x$ modulo the odd prime powers in $b - 1$ spread evenly over the multisets whose weight has the right length. @sec-model-poisson calls it Assumption R. It reduces to one exponential sum per base, which a computation bounds for every base up to 6000; beyond that it is open (@sec-model-assumption-r). A weaker form, enough for the Poisson law in the limit, holds in every base (@sec-model-anticonc). For 2-digit narcissistic numbers the doubling of odd bases is a theorem (@worlds-narc-parity).
+
+=== The refined count as a sum over characters <sec-model-characters>
+
+The refined model has a trace form too, and it shows where the parity
+factors come from. Put $q = b - 1$ and use the additive characters
+$e(t) = e^(2 pi i t)$ of @sec-model-assumption-r. For a residue $t$ modulo
+$q$ let
+$ tau_t (b) = sum_(d = 2)^b E[bold(1){F(n) "has" d "digits"} e(t (F(n) - n) / q)], $
+with $n$ a uniform $d$-digit string in each term.
+
+#proposition(id: "model-prop-characters", title: "A sum over characters", src: "34.3")[
+  The expected count of the refined model over the lengths 2 to $b$ is
+  $sum_(t mod q) tau_t (b)$. The term $t = 0$ is the basic count
+  $"tr" M_b - E_1$.
+]
+#proof[
+  The $d$-digit numbers are $q b^(d - 1)$ consecutive integers, so $n$ is
+  exactly uniform modulo $q$. Since $n$ is congruent to its digit sum, a
+  multiset meets the identity of @thm-digit-sum exactly when
+  $F(n) equiv n med (mod q)$, and the refined model makes such a multiset
+  $q$ times as likely. So the refined count of length $d$ is
+  $q P(F(n) "has" d "digits and" F(n) equiv n)$. The indicator of
+  $F(n) - n equiv 0$ is $(1 slash q) sum_t e(t (F(n) - n) slash q)$. Take
+  expectations and sum over $d$.
+]
+
+The term $t = 0$ counts every multiset with the right length, as the basic
+model does. The other terms correct for the residue. For odd $b$ the
+character with $t = q slash 2$ is $e(m slash 2) = (-1)^m$, a parity, and
+there the prime 2 acts exactly.
+
+#corollary(id: "model-cor-two-blocks", title: "Two closed classes", src: ("34.3", "15.1"))[
+  For odd $b$ under $0^0 = 0$, $tau_(q slash 2) (b) = tau_0 (b)$ exactly.
+  The matrix of the classes (length, residue modulo $q$) splits into two
+  closed blocks, the even and the odd numbers, so its eigenvalue 1 has
+  multiplicity 2. The refined count is $2 tau_0$ plus the other
+  characters. This is the only case in which a character other than
+  $t = 0$ is constant on $F(n) - n$.
+]
+#proof[
+  For odd $b$, $n$ is congruent to its digit sum modulo 2, and
+  $x^x equiv x med (mod 2)$ for $x >= 1$. So under $0^0 = 0$ the number
+  $F(n) - n$ is always even, and $(-1)^(F(n) - n) = 1$. The last sentence
+  is the theorem of the library on invariant residues #lib("15.1").
+]
+
+#theorem(id: "model-thm-e2", title: [The character of order 2 under $0^0 = 1$], src: "34.3")[
+  For odd $b$ under $0^0 = 1$, $tau_(q slash 2) (b) -> e^(-2)$ as
+  $b -> infinity$.
+]
+#sketch[
+  Now $F(n) - n equiv z(n) med (mod 2)$, where $z(n)$ is the number of
+  zeros, so $tau_(q slash 2) = sum_d E[bold(1){F "has" d "digits"} (-1)^(z(n))]$.
+  For $d = b - j$ with $j$ fixed, the length event depends only on the top
+  counts (@thm-length-shares). The coupling of @model-lem-coupling, with
+  the count of zeros as one more coordinate, makes all these counts
+  independent Poisson(1) variables up to an error $O(1 slash b)$. Under
+  that law the zeros are independent of the length, and
+  $E[(-1)^Z] = e^(-2)$ for $Z$ Poisson(1). So the term of length $b - j$
+  tends to $e^(-2) s_j$. The tail bound of @model-cor-total handles the
+  other lengths, and $sum_j s_j = 1$.
+]
+
+So the factor $1 + e^(-2)$ of @model-heur-parity is, in the model, a
+theorem about one character. The factor 2 is @model-cor-two-blocks, and an
+even base has no character of order 2. What is left is the claim that the remaining characters
+contribute nothing in the limit.
+
+#conjecture(id: "model-conj-characters", title: "The other characters vanish", src: "34.3")[
+  $sum_(t in.not {0, q slash 2}) tau_t (b) -> 0$ as $b -> infinity$. Then
+  the refined count tends to 1 in even bases, to 2 in odd bases under
+  $0^0 = 0$ and to $1 + e^(-2)$ in odd bases under $0^0 = 1$.
+]
+
+This needs the sums $sum (x^x - x)$ to be equidistributed modulo $q$ with a
+small relative error, a strong form of Assumption R. The anti-concentration
+of @sec-model-anticonc gives only an upper bound for each residue, which is
+not enough.
+
+#computation(id: "model-comp-characters", title: "The characters at finite bases", src: "34.3")[
+  The refined count over the lengths 2 to $b$, split by characters:
+  #align(center, btable(columns: 6, align: (right,) * 6,
+    [$b$], [$0^0$], [refined], [$tau_0$], [$tau_(q slash 2)$], [other characters],
+    [13], [0], [2.892], [1.265], [1.265], [$+0.362$],
+    [13], [1], [1.731], [1.265], [0.267], [$+0.200$],
+    [25], [0], [2.404], [1.107], [1.107], [$+0.191$],
+    [31], [1], [1.228], [1.071], [0.172], [$-0.015$],
+    [63], [1], [1.166], [1.026], [0.149], [$-0.009$],
+    [64], [0], [1.087], [1.025], [], [$+0.062$],
+    [100], [0], [1.014], [1.015], [], [$-0.001$],
+  ))
+  Over the bases 10 to 64 the other characters add $-0.23$ to $+0.36$,
+  and at most 0.11 in absolute value for $25 < b <= 128$. Under
+  $0^0 = 1$ the ratio $tau_(q slash 2) slash tau_0$ is 0.211 at $b = 13$
+  and 0.145 at $b = 63$, close to $(1 - 2 slash b)^(b - 2)$, which tends to
+  $e^(-2) = 0.135$.
+]
+
+The largest contributions of the other characters come at $b$ = 13, 11,
+25, 22, 29, 14, 37 and 43, with no simple rule yet (#q(142)).
 
 === The model against the data
 
@@ -312,7 +553,141 @@ The ratio $lambda slash "model"$ averages 0.98 under $0^0 = 0$ and 1.12 under $0
   ))
 ]
 
-With the clustered variance and the top three or four digits forced, the remaining scatter under $0^0 = 0$ is noise, and under $0^0 = 1$ it is marginal. Two items remain. Under $0^0 = 1$ the model is 12% low on average in both parities, at 3.0 standard deviations. Under $0^0 = 0$ base 19 has 0.67 times the model's rate of near-solutions; this looked like 4.6 standard errors with the naive variance and is 2.9 with the clustered one, one case among 42, so it is no longer a separate anomaly. Base 13 is high because its lengths are short and local factors of the kind in @sec-short-heuristic raise the count. @sec-model-anomalies collects the verdicts.
+With the clustered variance and the top three or four digits forced, the remaining scatter under $0^0 = 0$ is noise, and under $0^0 = 1$ it is marginal. Two items remain. Under $0^0 = 1$ the model is 12% low on average in both parities, at 3.0 standard deviations; @sec-model-excess finds that this does not sit in the zeros and is about 2 standard deviations once the scatter between worlds is counted. Under $0^0 = 0$ base 19 has 0.67 times the model's rate of near-solutions; this looked like 4.6 standard errors with the naive variance and is 2.9 with the clustered one, one case among 42, so it is no longer a separate anomaly. Base 13 is high because its lengths are short and local factors of the kind in @sec-short-heuristic raise the count. @sec-model-anomalies collects the verdicts.
+
+=== Where the 12% excess sits <sec-model-excess>
+
+The library knows two corrections to the coincidence model: the residues
+modulo $b - 1$ and the forced top digits. The 12% excess under $0^0 = 1$
+could be a third one. Two exact facts help to locate it.
+
+#lemma(id: "model-lem-zero-free", title: "Zeros and the two conventions", src: "34.1")[
+  + A string without the digit 0 has the same $F$ under both conventions.
+  + $F_1 (n) = F_0 (n) + z(n)$. So $n$ is a near-solution at offset $D$
+    under $0^0 = 1$ with $z$ zeros exactly when it is a near-solution at
+    offset $D + z$ under $0^0 = 0$ with $z$ zeros.
+]
+#proof[
+  A zero weighs $m$, so the two sums differ by $z(n)$. And
+  $n - F_1 (n) = D$ is the same as $n - F_0 (n) = D + z(n)$.
+]
+
+So the zero-free near-solutions are the same events under both
+conventions, and so is their expectation in the model. The library
+computes the refined model exactly, split by the number of zeros. It walks
+over the digit values from $b - 1$ down, stops as soon as the length of $F$
+is fixed, and handles the residue with the characters of
+@sec-model-characters (Proposition 34.1 of #lib("34.1")). This replaces the
+sampling of earlier chapters, and it agrees with it within the sampling
+error.
+
+#computation(id: "model-comp-zero-classes", title: "The excess by number of zeros", src: "34.1")[
+  Bases 12 to 26, offsets $2 j (b - 1)$ with $j = 1, dots, 60$, numbers
+  with at least $b - 6$ digits, model with the top 3 digits forced. Ratio
+  of near-solutions to the model, by the number of zeros of the string:
+  #align(center, btable(columns: 7, align: (left, right, right, right, right, right, right),
+    [bases], [$0^0$], [zero-free], [1 zero], [2 zeros], [3 or more], [all],
+    [even], [0], [0.99], [0.93], [0.80], [0.90], [0.93],
+    [even], [1], [1.00], [1.30], [1.07], [0.39], [1.09],
+    [odd], [0], [1.26], [1.06], [0.79], [1.01], [1.10],
+    [odd], [1], [1.26], [none], [0.94], [0.64], [1.16],
+  ))
+  The cells 1.26 have $z = +3.4$ and the cell 1.30 has $z = +2.9$, with the
+  clustered variance of @sec-model-evidence.
+]
+
+The excess is two different things. In odd bases it is a surplus of
+zero-free near-solutions, the same events under both conventions. Under
+$0^0 = 1$ the parity rule removes the strings with an odd number of zeros,
+so 72% of the expectation is zero-free, against 42% under $0^0 = 0$. The
+same surplus therefore lifts the $0^0 = 1$ ratio more, to 1.16 against
+1.10. Base 13, whose lengths are short, carries almost half of it. In even
+bases the zero-free class fits, and the gap between the conventions sits in
+one cell, the strings with one zero under $0^0 = 1$. By the lemma these are
+the near-solutions of $0^0 = 0$ at the offsets $2 j (b - 1) + 1$. A second
+search at the offsets $2 j (b - 1) + 1$ and $+ 2$ shows cells of the same
+size elsewhere, in other zero classes and under both conventions. So the
+one-zero cell is one cell of a general scatter, not a property of the zeros.
+
+Perturbed worlds give a control. Replace each weight $w(x)$, $x >= 2$, by
+$w(x)$ plus a random amount below $w(x) slash 4$. This keeps the lengths
+and destroys every residue structure. Then compare the near-solutions of
+that world with the exact refined model of the same weights.
+
+#computation(id: "model-comp-perturbed-gap", title: "The two conventions in perturbed worlds", src: "34.1")[
+  Five perturbed worlds, bases 12 to 26. The gap between the pooled ratios
+  under $0^0 = 1$ and $0^0 = 0$ is $-0.039$, $-0.022$, $-0.021$, $-0.032$
+  and $-0.039$, with mean $-0.031 plus.minus 0.022$. With the true weights
+  it is $+0.09 plus.minus 0.04$. The odd zero-free cell takes the values 0.79
+  to 1.23 across the five worlds, against 1.26 for the true weights. With
+  the top digits forced, one cell of the table above varies between worlds
+  with a standard deviation of 0.08 to 0.09, while its clustered sampling
+  error is 0.065.
+]
+
+So the clustered variance of @sec-model-evidence understates how much a
+whole world can deviate from the model, by a factor of about 1.3 to 1.5 in
+standard deviation. The cause of this extra variance is open (#q(139)).
+
+#heuristic(id: "model-heur-excess", title: "No third correction", src: "34.1")[
+  The 12% excess under $0^0 = 1$ is not a correction tied to the zeros.
+  + In odd bases it is a surplus of zero-free near-solutions, common to
+    both conventions, which weighs more under $0^0 = 1$.
+  + In even bases it is one cell, and the shifted offsets show cells of
+    the same size in other places.
+  + Perturbed worlds show no gap between the conventions, so the model
+    treats the zeros correctly. The gap of the true weights is 2.5
+    standard errors above theirs, so a small effect of $x^x$ is not
+    excluded.
+  + With the extra variance between worlds, the $z = 3.0$ of the excess
+    becomes about 2.0 to 2.3.
+]
+
+Fresh odd bases would decide whether the zero-free surplus is real
+(#q(140)).
+
+=== The zeros of the long solutions <sec-model-zeros>
+
+The long solutions under $0^0 = 0$ seemed to have too few zero digits
+(#q(71)). The exact model gives the law of the number of zeros of a
+solution of given base and length, with the residue condition in place.
+
+#computation(id: "model-comp-zeros-solutions", title: "Zero digits of the long solutions", src: "34.2")[
+  Solutions with at least $b - 6$ digits in bases 12 to 43, and the zeros
+  expected by the exact model:
+  #align(center, btable(columns: 5, align: (right, left, right, right, right),
+    [$0^0$], [bases], [solutions], [zeros], [model],
+    [0], [even], [19], [10], [$16.7 plus.minus 4.0$],
+    [0], [odd], [30], [19], [$26.4 plus.minus 5.0$],
+    [1], [even], [21], [17], [$18.6 plus.minus 4.2$],
+    [1], [odd], [25], [18], [$15.7 plus.minus 5.0$],
+  ))
+  Under $0^0 = 0$ that is 29 zeros against $43.1 plus.minus 6.4$, $z = -2.2$.
+  Forcing the top three digits raises the expected zeros by 5% in even
+  bases and lowers them by 1% in odd bases, so it does not close the gap.
+]
+
+#computation(id: "model-comp-zeros-near", title: "Zero digits of the near-solutions", src: "34.2")[
+  Bases 12 to 26, the offsets of @model-comp-zero-classes. Mean number of
+  zeros per near-solution, against the model:
+  #align(center, btable(columns: 5, align: (right, left, right, right, right),
+    [$0^0$], [bases], [observed], [model], [$z$],
+    [0], [even], [0.823], [0.840], [$-0.33$],
+    [0], [odd], [0.720], [0.849], [$-3.11$],
+    [1], [even], [0.842], [0.842], [$-0.09$],
+    [1], [odd], [0.451], [0.594], [$-2.62$],
+  ))
+]
+
+The near-solutions supply thousands of digits. In even bases they have
+exactly the zero rate of the model, so the even-base shortfall of the
+solutions (10 against 16.7) is chance. In odd bases they are short of
+zeros, but the zero classes of @model-comp-zero-classes show why: there are
+too many zero-free near-solutions, not too few zeros in the others. This
+is the surplus found above, seen from the other side. So the zeros do not
+follow a law of their own.#footnote[Library section 24.6.2 says that the
+forced top digits account for 2 to 4 of the 13.5 missing zeros. The exact
+model does not support this; see #lib("34.2").]
 
 === Why the integer digits are almost uniform
 
@@ -391,6 +766,106 @@ Each world of @ch-worlds with a near-solution calibration gives one comparison o
 ]
 
 So outside two named worlds there is no sign that $D = 0$ is special. The odd-base factorions are the shortfall found after looking at 16 groups (@sec-model-anomalies). The Pisot excess is mostly a calibration fault: for even $x$ the offsets $j x$ mix two classes modulo $2x$, and the defect spectrum peaks near $D = 0$; against a local calibration in the right class, 25 solutions against 14.8 expected has $P approx 0.05$ (@sec-worlds-pisot) #lib("26.6").
+
+=== A ledger of P values <sec-model-ledger>
+
+Each verdict above was judged on its own. A ledger judges them together
+(@sec-app-prob-ledger). The library lists 241 statements of its chapters 3
+to 32 that compare data with the model. For each one it records the test,
+the P value, the data used, and whether the hypothesis was named before the
+data were seen. Of the 221 statements that are still current, 133 have a P
+value. Tests that share data are merged into 56 groups, each with the
+smallest P value of the group after the Sidak correction.
+
+#computation(id: "model-comp-ledger", title: "The P values of the library", src: "34.4")[
+  #align(center, btable(columns: 6, align: (left, right, right, right, right, right),
+    [groups], [number], [below 0.05], [expected], [median], [Fisher $P$],
+    [all], [56], [14], [2.8], [0.23], [$2 dot 10^(-9)$],
+    [named in advance], [12], [0], [0.6], [0.59], [0.74],
+    [all others], [44], [14], [2.2], [0.18], [$3 dot 10^(-11)$],
+    [without $FF_q [T]$ and the factorial system], [40], [8], [2.0], [0.24], [$2 dot 10^(-4)$],
+    [integers only], [9], [3], [0.45], [0.23], [0.005],
+  ))
+  The 14 groups below 0.05 are the census of $FF_q [T]$ (6 groups), the
+  empty bases $equiv 3 med (mod 8)$, the negative-base offsets that keep
+  the last digit, the 6-digit narcissistic numbers in even bases, the
+  5-digit excess, the odd-base factorions, the zeros of the long
+  solutions, the $(b - 1)$-digit excess, the Pisot class and the 12% excess.
+]
+
+Every one of the 14 is already named in this document as an anomaly, a
+pattern chosen after the data, or a known failure of the model.
+
+#heuristic(id: "model-heur-ledger", title: "Selection, not a hidden flaw", src: "34.4")[
+  The P values of the library are not uniform, and the cause is selection.
+  + The 12 groups named in advance (fresh bases, the forced and shifted
+    weights, fresh factorion bases, base 18 for 2-cycles) look like uniform
+    draws: none below 0.1, Kolmogorov-Smirnov $P = 0.56$. Twelve groups
+    rule out only gross flaws, such as a model that is 30% off in every
+    world.
+  + If each group were the smallest of $k$ looks, 14 of 56 below 0.05 would
+    need $k$ about 6, and the median 0.23 would need $k$ about 3. The lower
+    tail is heavier than any single $k$ gives: a few groups are real
+    failures ($FF_q [T]$, the factorial system), and the rest look like
+    modest selection.
+  + There is no lean toward too few solutions. Among the 25 groups with
+    $P < 0.2$, 17 are excesses and 8 deficits.
+  + Several groups share data, for example the two conventions of one
+    base. So the Fisher values overstate the evidence. The conclusion does
+    not rest on them.
+]
+
+So the "chance" verdicts cannot all be closed at once by a test of
+uniformity, because most tests were chosen after their data. The tests
+named in advance agree with the model. More of them, written down before
+fresh bases are searched, are the cheapest way to strengthen the case
+(#q(104), #q(143)).
+
+=== Are neighbouring bases independent? <sec-model-neighbours>
+
+The model treats different bases as independent. The second
+Borel-Cantelli lemma behind @conj-window needs this, and so does every
+variance of a count pooled over bases. But the weights $S(c)$ are the same
+numbers in every base, and only their digits change. A multiset with
+largest digit $X$ is a candidate in every base above $X$.
+
+#computation(id: "model-comp-neighbours", title: "Neighbouring bases", src: "34.5")[
+  For bases 12 to 32, the residual $(lambda - "model") slash "se"$ of each
+  base, with the mean of each parity removed. Correlation of neighbouring
+  bases, with a P value from 20,000 permutations within each parity:
+  #align(center, btable(columns: 4, align: (left, right, right, right),
+    [model], [$0^0$], [lag-1 correlation], [$P$],
+    [refined], [0], [$-0.31$], [0.060],
+    [refined], [1], [$-0.41$], [0.067],
+    [top 3 digits forced], [0], [$-0.09$], [0.65],
+    [top 3 digits forced], [1], [$-0.17$], [0.46],
+  ))
+  The two conventions of one base correlate at $+0.85$ (refined) and
+  $+0.78$ (top digits forced). No near-solution multiset of bases 12 to 26
+  is a near-solution in a second base, against 0.02 expected. The forced
+  top digits of one multiset in bases $b$ and $b + 1$ have correlation
+  between $-0.033$ and $+0.044$.
+]
+
+The negative correlation of the refined model disappears once the top
+digits are forced: it was the top-digit factor, which changes smoothly with
+$b$. With 20 pairs the test excludes only correlations above about 0.4.
+The strong correlation of the two conventions is @model-lem-zero-free
+again: the zero-free near-solutions count under both. A pooled test must
+not add the two conventions as independent counts. The library's pooled
+test of @model-comp-pooled did, which makes the $z$ of its integer row too
+large by a factor of about 1.3; its conclusion stands #lib("34.5").
+
+#heuristic(id: "model-heur-independent", title: "Independence across bases", src: "34.5")[
+  For the second Borel-Cantelli lemma it is enough, by a theorem of Kochen
+  and Stone, that the chances of solutions in two different bases $b, b'$
+  add up to at most $(1 + o(1))$ times the square of the sum of the single
+  chances. In the model the only link between two bases is a multiset that
+  is a candidate in both. A single multiset of $d$ digits is a solution
+  with chance at most about $d! slash b^(d - 1)$, of order $b^(3 slash 2) e^(-b)$
+  for $d = b$, so the link is negligible. @conj-window needs no more
+  independence than the model already has, and the data show none.
+]
 
 === Do the low digits of $F$ mix?
 
@@ -639,7 +1114,7 @@ The limit law says that the expected number with $J >= j$ falls like $e^(-(j-1))
   - infinitely many lie in a base $b > k + ln k + (1 - epsilon) ln ln k$.
 ]
 
-The reason is the pair of Borel-Cantelli lemmas (@app-prob). The expected number of solutions in base $b$ with $J > ln b + a ln ln b$ is about $C slash (b (ln b)^a)$. The sum over $b$ is finite for $a > 1$, so by the first lemma only finitely many bases have such a solution. It is infinite for $a <= 1$, and in the model the bases are independent, so by the second lemma infinitely many do. That independence is an assumption of the model; no test of it exists yet. This is the same law as for the longest run of heads in $n$ coin flips, which is $log_2 n + O(log log n)$.
+The reason is the pair of Borel-Cantelli lemmas (@app-prob). The expected number of solutions in base $b$ with $J > ln b + a ln ln b$ is about $C slash (b (ln b)^a)$. The sum over $b$ is finite for $a > 1$, so by the first lemma only finitely many bases have such a solution. It is infinite for $a <= 1$, and in the model the bases are independent, so by the second lemma infinitely many do. That independence is an assumption of the model. @sec-model-neighbours tests it and finds no dependence between neighbouring bases. This is the same law as for the longest run of heads in $n$ coin flips, which is $log_2 n + O(log log n)$.
 
 The library first stated a cruder window, $b <= k + (1 + epsilon) ln k$, and drew from it that each length has only finitely many solutions under $0^0 = 1$. The binomial families of @thm-every-length-m1 refute that: they give infinitely many solutions of every length $k >= 3$, in bases far above $k$, for an algebraic reason the model cannot see. Hence the exception for algebraic families in the conjecture.
 
@@ -738,8 +1213,8 @@ A model tested on many groups of data will show a few deviations by chance. The 
 
 Some deviations remain open. Each is a question in @sec-open-list.
 
-- Under $0^0 = 1$ the per-base rate of near-solutions is 12% above the refined model, in odd and even bases alike. It survives the clustered calibration at 3.0 standard deviations #q(70).
+- Under $0^0 = 1$ the per-base rate of near-solutions is 12% above the refined model, in odd and even bases alike. It survives the clustered calibration at 3.0 standard deviations #q(70). It is a zero-free surplus in odd bases and one cell in even bases, and perturbed worlds scatter enough to bring it to about 2 standard deviations (@model-heur-excess).
 - Base 19 is low in its near-solutions, now 2.9 standard errors #q(68). The question has lost most of its basis.
-- The long solutions under $0^0 = 0$ in bases 12 to 41 contain fewer zero digits than the model predicts: 29 against 42.5, about 2.1 standard deviations. The forced top digits account for 2 to 4 of the 13.5. This is the one place where the integer data lean the way the function-field world does (@sec-worlds-ffield) #q(71).
+- The long solutions under $0^0 = 0$ in bases 12 to 43 contain fewer zero digits than the model predicts: 29 against 43.1, about 2.2 standard deviations #q(71). The forced top digits do not explain this. The near-solutions show no deficit in even bases, and in odd bases their deficit is the zero-free surplus (@sec-model-zeros). So the parallel with the function-field world (@sec-worlds-ffield) is weak.
 - The model's per-base predictions seemed to scatter about 20% beyond sampling error. With the clustered variance and the top digits forced, the scatter is noise under $0^0 = 0$ and marginal under $0^0 = 1$ ($P = 0.03$) #q(44).
-- In even Pisot bases, offsets $j x$ with even $j$ carry 1.4 to 2.4 times as many near-solutions as those with odd $j$ under $0^0 = 0$. The identity behind this class factor modulo $2x$ is unknown #lib("26.6").
+- In even Pisot bases, offsets $j x$ with even $j$ carry 1.5 to 2.4 times as many near-solutions as those with odd $j$ under $0^0 = 0$. The identity behind this class factor modulo $2x$ is unknown #lib("26.6").

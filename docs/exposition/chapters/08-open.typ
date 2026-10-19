@@ -42,6 +42,11 @@ keeping in mind when judging which problems are realistic.
     [$b(b + x) = x^n + 1$ with $n >= 4$], st("open"), [only $(7, 7)$ known; finite under abc], [@sec-dio-exponents],
     [Count of solutions per base], st("heuristic"), [Poisson with mean about 1 per convention, doubled in odd bases under $0^0 = 0$], [@sec-model-poisson],
     [Length shares in the basic model], st("proven"), [8.0%, 55.2%, 23.3%, ... with error $O(1 slash b)$], [@thm-length-shares],
+    [Is the expected count a trace?], st("proven"), [yes: the count over lengths 2 to $b$ is $"tr" M_b - E_1 = 1 + C slash b$, $C = 1.1046$, one eigenvalue; the uniform sum over all lengths is computed, not proved], [@sec-model-trace],
+    [Do the parity factors follow from the characters?], st("proven"), [the order-2 character gives 2 and $1 + e^(-2)$; the other characters are open], [@sec-model-characters],
+    [The 12% excess under $0^0 = 1$], st("heuristic"), [not a third correction: zero-free surplus in odd bases, one cell in even bases, about 2 standard deviations], [@model-heur-excess],
+    [Are the P values of the library uniform?], st("computed"), [no, through selection; the 12 groups named in advance look uniform], [@sec-model-ledger],
+    [Are neighbouring bases independent?], st("computed"), [no dependence found once the top digits are forced; the two conventions of one base correlate at 0.78], [@sec-model-neighbours],
     [Assumption R], st("open"), [false for short lengths as first stated; proven by computation for bases 12 to 6000; not needed for the Poisson law in the limit], [@open-assumption-r],
     [Infinitely many bases without 2-digit narcissistic numbers?], st("open"), [equivalent to Landau's problem on primes $n^2 + 1$], [@worlds-narc-two-cor],
     [$k(B) = omega(B - 1)$ in $FF_q [T]$?], st("open"), [proven with a good factor, for $e <= 10$ and every census base; at most one more always], [@open-ffield],
@@ -274,8 +279,29 @@ Poisson limit of a coupled model for factorions, which is not yet written
 out (#q(123)).
 
 The length shares of the basic model, once listed here, are now a theorem
-(@thm-length-shares). Its first-order correction $c_j slash b$ is known in
-the basic model but not in the refined one (#q(114)).
+(@thm-length-shares), and so is the trace form of the count
+(@sec-model-trace). The first-order correction $c_j slash b$ is known in
+the basic model, and its sum is $C = 1.104636$ in closed form
+(@model-prop-first-order). In the refined model it is not known (#q(114)).
+
+#problem(id: "open-model-complete", title: [Is the refined model complete?], src: "34")[
+  + What carries the extra variance between perturbed worlds, 1.3 to 1.5
+    times the clustered sampling error? Short lengths, the fourth and later
+    top digits, and the low digits of $F$ are candidates. (#q(139))
+  + Do fresh odd bases 27 to 41 repeat the surplus of zero-free
+    near-solutions, 1.26 times the model? (#q(140))
+  + Prove $"tr" M_b - E_1 = 1 + C slash b + o(1 slash b)$ with a bound
+    uniform in the length. (#q(141))
+  + Which property of $b - 1$ makes the characters other than 0 and
+    $q slash 2$ large, and do they vanish in the limit? (#q(142),
+    @model-conj-characters)
+  + Pre-register the prediction of every group of the ledger that extends
+    to fresh bases. (#q(143))
+]
+
+The answers decide how much of the remaining scatter is a property of
+$x^x$. So far the data need no correction beyond the residues and the top
+digits (@sec-model-excess).
 
 #problem(id: "open-length-tail", title: [The length tail], src: "10.5")[
   Does the tail of the length law beyond $J = ln b + 1$, which supports
@@ -295,9 +321,11 @@ the basic model but not in the refined one (#q(114)).
     so this is no longer a separate anomaly.
   + Why is the model about 12% low under $0^0 = 1$ in both parities of the
     base? (#q(70)) The excess survives the corrected variance at 3.0
-    standard deviations.
+    standard deviations. It is not tied to the zeros, and the scatter
+    between perturbed worlds brings it to about 2 (@model-heur-excess).
   + Do the long solutions under $0^0 = 0$ really have fewer zero digits than
-    the model, 29 against 42.5 in bases 12 to 41? (#q(71))
+    the model, 29 against 43.1 in bases 12 to 43? (#q(71)) The
+    near-solutions show no such law (@sec-model-zeros).
   + In negative bases, offsets that keep the last digit give 6% to 23%
     fewer near-solutions, about 2.9 standard deviations with clustering.
     Which digits of $F mod b$ cause this?
@@ -331,7 +359,7 @@ small numbers, avoid the clusters and keep the mean.
 
 #problem(id: "open-pisot-class", title: [The class modulo $2x$ in Pisot bases], src: "26.6")[
   In the Pisot bases $epsilon_x$ with even $x$, under $0^0 = 0$, offsets
-  $j x$ with even $j$ carry 1.4 to 2.4 times as many near-solutions as
+  $j x$ with even $j$ carry 1.5 to 2.4 times as many near-solutions as
   offsets with odd $j$. Which identity causes this? (#q(74))
 ]
 

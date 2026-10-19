@@ -701,7 +701,7 @@ twin pairs at least as often as solutions do.
 
 The calibration explains part of the excess. For even $x$ under
 $0^0 = 0$ the offsets $j x$ are not all in the class of 0: offsets with even
-$j$ carry 1.4 to 2.4 times as many near-solutions as offsets with odd $j$,
+$j$ carry 1.5 to 2.4 times as many near-solutions as offsets with odd $j$,
 much as the class of 0 is taken modulo $2(b - 1)$ in odd integer bases. So
 for even $x$ the class of 0 is, at least in part, the class modulo $2x$, and
 the library's offsets $j x$ mixed two classes.
