@@ -1,1 +1,3 @@
 __pycache__/
+# planted search paths, rebuilt by analysis/r5p_trace.py (see the round 5 performance draft)
+analysis/data/r5p_trace_b*

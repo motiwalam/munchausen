@@ -1,0 +1,12 @@
+86 distinct solutions with >= 3 digits in bases 10-41 and 43, 75 with >= b-6 digits
+poisson zfrom 0.75 zslope 0 c 2.5: cuts 3, 3 of them with >= b-6 digits: [(31, 30), (37, 36), (41, 40)]
+poisson zfrom 0.75 zslope 0 c 2.94: cuts 1, 1 of them with >= b-6 digits: [(41, 40)]
+poisson zfrom 0.75 zslope 0 c 3.0: cuts 1, 1 of them with >= b-6 digits: [(41, 40)]
+poisson zfrom 0.75 zslope 0 c 3.33: cuts 0, 0 of them with >= b-6 digits: []
+cond zfrom 0.75 zslope 0 c 2.75: cuts 5, 5 of them with >= b-6 digits: [(31, 30), (31, 30), (37, 36), (41, 40), (31, 30)]
+cond zfrom 0.75 zslope 0 c 3.0: cuts 2, 2 of them with >= b-6 digits: [(31, 30), (41, 40)]
+cond zfrom 0.75 zslope 0 c 3.37: cuts 0, 0 of them with >= b-6 digits: []
+cond zfrom 0.75 zslope 0 c 3.82: cuts 0, 0 of them with >= b-6 digits: []
+cond zfrom 1 zslope 2 c 3.1: cuts 0, 0 of them with >= b-6 digits: []
+cond zfrom 1 zslope 2 c 3.42: cuts 0, 0 of them with >= b-6 digits: []
+cond zfrom 1 zslope 2 c 3.83: cuts 0, 0 of them with >= b-6 digits: []

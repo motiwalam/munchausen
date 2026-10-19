@@ -146,9 +146,34 @@ model calls unlikely. The search is then faster but can miss solutions.
 
 With any of these, the program prints the expected number of solutions in the
 skipped subtrees. Only `--ratio` and `--zscore` add to this number.
-`--zscore 3` is the best setting so far. It grows about 1.75x per base, found
-all 112 solutions in bases 10 to 38, and misses 1 to 3% of model solutions in
-every base from 30 to 300. `docs/library/10-limits.md` explains the rule.
+`docs/library/10-limits.md` explains the `--zscore` rule.
+
+These options change the `--zscore` rule:
+
+| option | meaning |
+|---|---|
+| `--zlaw <poisson\|cond>` | the law of `ln E` that the rule compares with. `poisson` (default) is the law of chapter 10, whose standard deviation is up to 4x too large at the low levels. `cond` conditions the Poisson cells on their total and gets the mean and the standard deviation right. |
+| `--zfrom <f>` | the rule applies at the levels `k <= f (kmax + 1)` (default 0.75) |
+| `--zslope <s>` | the threshold at level `k` is `z + s (k / (kmax + 1) - 1/2)` (default 0) |
+| `--ztable <file>` | replace the law in the cells listed in `<file>`, one line `d k pp mean sd` per cell |
+
+`--zscore 3.4 --zlaw cond` is the best setting so far. It misses about 2%
+of model solutions in every base from 30 to 200, and found all 122
+solutions of bases 10 to 41. At the same miss rate it visits 1.2x to 1.3x
+fewer nodes than `--zscore 2.94` in bases 34 to 42, and takes about 1.1x
+less time. For a 1% miss rate, use `--zscore 3.8 --zlaw cond`. Under the
+default law, `--zscore 3` misses about 2% at base 30 but only 0.7% at
+base 200, so its miss rate depends on the base. A window on the length `d`
+does not pay: it saves 1.03x to 1.45x for 2 to 21 points of miss rate,
+where a lower threshold saves 1.3x to 6x for the same miss rate.
+`docs/library/drafts/round5-performance.md` has the measurements.
+
+Two options measure the tree for these experiments:
+
+| option | output |
+|---|---|
+| `--zhist <file>` | with `--zscore z`: per length `d`, the nodes and interval evaluations by the smallest z-score on their path. The nodes of `--zscore c` for every `c <= z` are the bins with `z >= -c`, so one run gives the whole curve. |
+| `--tree-stats <file>` | per length `d`, level `k` and number `pp` of unknown positions, the number of nodes and their total subtree size |
 
 ### Other weights
 
@@ -263,7 +288,7 @@ What did not help, in cycles at base 26 on a P-core:
 
 ## GPU search
 
-With `--features gpu`, the program can run the exact search on a GPU
+With `--features gpu`, the program can run the search on a GPU
 through Vulkan 1.3. The build needs `glslc` (from shaderc) to compile
 `shaders/search.comp`. The default build does not use the GPU.
 
@@ -275,8 +300,15 @@ cargo build --release --features gpu
 
 `--gpu` runs every unit on the GPU. `--hybrid` also runs units on the CPU
 threads. Both give the same solutions and the same node counts as the CPU
-search. A test checks this for bases 2 to 26. The GPU path supports only
-the exact search, without `--journal`.
+search. A test checks this for bases 2 to 26. The GPU path runs the exact
+search and the `--zscore` rule, with `--zlaw`, `--zfrom`, `--zslope` and
+`--ztable`. It accepts `--shard` and `--min-digits`/`--max-digits`, but not
+`--journal`, the other inexact rules, or other weights. It handles bases
+up to 64. The GPU tests the rule in fixed point with 20 fractional bits.
+A test checks that it visits the same nodes as the CPU for bases 10 to 26,
+and runs at bases 28, 30 and 33 gave the same node counts too. The
+expected number of solutions in skipped subtrees counts only the nodes that
+the CPU skipped.
 
 ### How it works
 
@@ -311,6 +343,19 @@ the CPU speedups, base 26 took 0.25 s on the GPU and 0.22 s on the CPU.
 Above 30 digits, each lane holds two digits, and the GPU visits about 48
 million nodes per second instead of 62 million. `--hybrid` is the fastest
 mode in every base measured from 30 up.
+
+With the `--zscore` rule, a later round measured base 38 under a load of 7
+to 14 from other jobs (median of 2 or 3 alternating runs):
+
+| run | CPU, 8 threads | `--gpu` | `--hybrid` |
+|---|---:|---:|---:|
+| `search 34` (exact) | 34.1 s | 20.3 s | 13.2 s |
+| `search 38 --zscore 3` | 74.4 s | 43.9 s | 28.3 s |
+| `search 38 --zscore 3.4 --zlaw cond` | 70.5 s | 37.0 s | 24.7 s |
+
+The load slows the CPU threads more than the GPU, so these ratios are
+larger than on an idle machine. With the rule the GPU visits 24 to 27
+million nodes per second.
 
 What limits it: not divergence, and not memory. Each subgroup runs a long
 chain of dependent instructions. Values that are the same in all lanes

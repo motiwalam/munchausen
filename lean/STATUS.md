@@ -19,9 +19,9 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 77 formalized (one of them a
-list of computed solutions checked by `decide`), 9 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 75 not formalized and 2 not
+Counts of table rows at the time of writing: 78 formalized (one of them a
+list of computed solutions checked by `decide`), 10 partial, 10 rows of open
+problems (13 `Prop`s), 4 refuted conjectures, 74 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -254,7 +254,7 @@ stated.
 | Theorem 22.6 | `isSolution_binomial`, `binomDigits`, `mul_P_binomDigits` [Cons] | formalized |
 | Corollary 22.7 | `isSolution_corollary_22_7`, `infinite_solutions_of_length` [Cons] | formalized |
 | `(1,2,6)` in base 215, `(1,6,46666)` in base `46666^23333 - 3` | examples, `isSolution_1_6_46666` [Ex] | formalized |
-| Proposition 22.8 | none | not formalized (elementary; good next step) |
+| Proposition 22.8 | `prop22_8`, `R_pos_middle`, `R_pos_leading` [Three] | formalized (`R = 0` needs the large digit last; for even `x` the members are those of Theorem 22.6 with `j = 2`) |
 | Lemma 22.9 | `P_sub_Fs_append_one`, `P_sub_Fs_append_zero` [Cons] | formalized |
 | Heuristic 22.5, refined heuristic | none | not formalized (heuristic) |
 | Question 65 | `Question65` [Conj] | conjecture |
@@ -286,13 +286,14 @@ stated.
 | Theorem 25.4 | none | not formalized ((a) is Theorem 22.6 and 25.5 after rescaling; (b), (c) need valuations) |
 | Theorem 25.5 | `theorem25_5`, `theorem25_5_conditions` [Cons] | formalized (the prime condition is stated as `c ∣ (j-1)^c`, which is equivalent; the conditions hold for `c = (j-1)^a`) |
 | Proposition 25.6 | none | not formalized |
-| Theorem 25.7 | `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading` [Three] | partial: case (ii) (`N` a square, `R ≠ 0`: no solution) in all three positions; in the middle and in front `R > 0`; cases (i) (the shape `p = lam c^2`, `q = 2 lam c e`) and (iii) are not formalized |
+| Theorem 25.7 | `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading`, `prop22_8`, `R_pos_middle`, `R_pos_leading` [Three] | partial: case (ii) in all three positions, and case (i) for even `x` (`lam = 1`); case (i) for odd `x` (squarefree `lam`) and case (iii) are not formalized |
 | Conjecture 25.8 | none | not stated (it refers to "the two linear families"; could be stated with Theorems 22.6 and 25.5) |
 | Proposition 25.9, Theorem 25.10 | none | not formalized (elementary, needs Theorem 25.7) |
 | Theorem 25.11, Heuristic 25.12 | none | not formalized (computation, heuristic) |
 | Lemma 25.13, Corollary 25.14 | `lemma25_13`, `corollary25_14` [Three] | formalized |
 | Theorem 25.15 | none | not formalized |
-| Propositions 25.16, 25.17 | none | not formalized (elementary given the family shape) |
+| Proposition 25.16 | `prop25_16_even` [Three] | partial: members with even `x` (`lam = 1`); odd `x` needs the squarefree part `lam` |
+| Proposition 25.17 | none | not formalized |
 | Question 50 (at most two 3-digit solutions per base) | `Question50` [Conj] | conjecture |
 | Question 65 (the next 3-digit solution) | `Question65` [Conj] | conjecture (the family part is Theorem 25.10, not formalized) |
 

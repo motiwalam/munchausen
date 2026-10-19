@@ -93,6 +93,35 @@ impl<const N: usize> Search<N> {
             row[7] = put(&mut tab, &p.pow_lo);
             row[8] = put(&mut tab, &p.max_v);
             debug_assert_eq!(p.w.len(), kmax + 1);
+            if self.inexact {
+                // The typical-set test in fixed point (2^-20): a child fails
+                // if lneed + G[k][rf] > A[k][pp], where lneed is the sum of
+                // LF[need_x] = ln(need_x!) over the decided digits, and
+                // ln E < thr is the same inequality. A cell that is not
+                // tested holds i32::MAX.
+                let fix = |x: f64| (x * (1u64 << 20) as f64).round() as i32;
+                let words = |tab: &mut Vec<u8>, v: &[i32]| -> u32 {
+                    let i = tab.len() / 4;
+                    v.iter().for_each(|x| tab.extend_from_slice(&x.to_le_bytes()));
+                    i as u32
+                };
+                let lf: Vec<i32> = (0..=64).map(|n| fix((1..=n).map(|j| (j as f64).ln()).sum())).collect();
+                let mut g = vec![0i32; (kmax + 1) * (d + 1)];
+                let mut a = vec![i32::MAX; (kmax + 1) * (d + 1)];
+                for k in 1..=kmax {
+                    for m in 0..=d {
+                        g[k * (d + 1) + m] = fix(p.ln_fact[m] - m as f64 * p.ln_k[k]);
+                        if p.zscore.is_finite() && k <= p.zk {
+                            a[k * (d + 1) + m] = fix(p.ln_fact[m] - m as f64 * p.ln_b - p.lik_thr[k * (d + 1) + m]);
+                        }
+                    }
+                }
+                row[9] = words(&mut tab, &lf);
+                row[10] = words(&mut tab, &g);
+                row[11] = words(&mut tab, &a);
+                // keep the next digit vectors aligned
+                tab.resize(tab.len().next_multiple_of(vb), 0);
+            }
             par.extend_from_slice(&row);
         }
         (par, tab)
@@ -136,7 +165,7 @@ impl<const N: usize> Search<N> {
         let stats = gpu.buffer(2 * sg * 8)?;
         let found = gpu.buffer(MAXFOUND * FOUND)?;
         let ctl = gpu.buffer(16)?;
-        let kernel = gpu.kernel(if N == 1 { SPIRV1 } else { SPIRV2 }, 7, 20, LANES as u32)?;
+        let kernel = gpu.kernel(if N == 1 { SPIRV1 } else { SPIRV2 }, 7, 24, LANES as u32)?;
         gpu.bind(&kernel, &[&parb, &tabb, &items, &out, &stats, &found, &ctl]);
         let _ = b;
         if o.verbose {
@@ -154,8 +183,8 @@ impl<const N: usize> Search<N> {
         if b as usize > 32 * N {
             return Err(format!("--gpu handles bases up to {} for numbers of this width", 32 * N));
         }
-        if self.inexact {
-            return Err("--gpu runs only the exact search".into());
+        if self.inexact && !self.zscore_only {
+            return Err("--gpu runs only the exact search and --zscore (with --zlaw, --zfrom, --zslope, --ztable)".into());
         }
         let item = HEADER + 5 * 32 * N;
         let sh = Shared { next: AtomicUsize::new(0), pending: Mutex::new(vec![]), gpu_done: AtomicBool::new(false) };
@@ -177,7 +206,11 @@ impl<const N: usize> Search<N> {
                                 if i < units.len() {
                                     let u = &units[i];
                                     let p = &self.params[u.pi];
-                                    rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+                                    if self.inexact {
+                                        rayon::scope(|s| self.rec::<true>(s, p, u.k, u.n, u.cnt, 0));
+                                    } else {
+                                        rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+                                    }
                                     on_cpu.fetch_add(1, Ordering::Relaxed);
                                     continue;
                                 }
@@ -231,10 +264,25 @@ impl<const N: usize> Search<N> {
         let (pi, k, e, occk, pp, rf, root) = (it[0] as usize, it[1] as usize, it[2] as u32, it[3] as u32, it[4] as u32, it[5] as u32, it[6] != 0);
         let mut cnt = [0u8; 128];
         cnt[..64].copy_from_slice(&dv(HEADER + 4 * vb));
-        let n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0 };
+        let mut n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0, zmin: f32::INFINITY };
         let p = &self.params[pi];
+        if self.inexact {
+            // The item does not carry the model's bookkeeping. The node has
+            // decided the digits above k; rebuild m and lneed from the counts
+            // and the known leading digits.
+            let lo = p.clip_lo(&n.t);
+            let known = p.known(pp);
+            for x in k + 1..=p.kmax {
+                n.m += cnt[x] as u32;
+                n.lneed += p.ln_fact[(cnt[x] as u32 - lo.count(x as u8, known)) as usize];
+            }
+        }
         if root {
-            rayon::scope(|s| self.rec::<false>(s, p, k, n, cnt, 0));
+            if self.inexact {
+                rayon::scope(|s| self.rec::<true>(s, p, k, n, cnt, 0));
+            } else {
+                rayon::scope(|s| self.rec::<false>(s, p, k, n, cnt, 0));
+            }
             return;
         }
         // A GPU cursor holds the sums of the last e it tried, e - 1; a CPU
@@ -244,11 +292,17 @@ impl<const N: usize> Search<N> {
             te = te.add(&p.w[k], &p.base);
             hi = hi.add(&p.dhi[k], &p.base);
         }
-        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: 0, lneed: 0.0, ln_e: 0.0 }, k, e, occk };
-        let mut l = Local::default();
+        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: n.m, lneed: n.lneed, ln_e: 0.0, zmin: f32::INFINITY }, k, e, occk };
+        let mut l = Local::for_params(p);
         rayon::scope(|s| {
-            while let Some(c) = self.next_child::<false>(p, &mut cur, &mut cnt, &mut l) {
-                self.rec_seq::<false>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
+            if self.inexact {
+                while let Some(c) = self.next_child::<true>(p, &mut cur, &mut cnt, &mut l) {
+                    self.rec_seq::<true>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
+                }
+            } else {
+                while let Some(c) = self.next_child::<false>(p, &mut cur, &mut cnt, &mut l) {
+                    self.rec_seq::<false>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
+                }
             }
         });
         self.flush(&l);
@@ -290,7 +344,7 @@ impl<const N: usize> Search<N> {
             c.ctl.u32s_mut()[..4].fill(0);
             // with few items, split them sooner so that every subgroup gets work
             let eff = if n < sg { ((budget as usize * n / sg) as u32).max(256) } else { budget };
-            let push: Vec<u8> = [n as u32, eff, (MAXLEV * sg) as u32, MAXFOUND as u32, b].iter().flat_map(|v| v.to_le_bytes()).collect();
+            let push: Vec<u8> = [n as u32, eff, (MAXLEV * sg) as u32, MAXFOUND as u32, b, self.inexact as u32].iter().flat_map(|v| v.to_le_bytes()).collect();
             let t = Instant::now();
             let per_group = GROUP / LANES;
             c.gpu.run(&c.kernel, &push, sg.div_ceil(per_group) as u32)?;
@@ -328,7 +382,7 @@ impl<const N: usize> Search<N> {
         }
         let st = c.stats.bytes();
         let word = |i: usize| u64::from_le_bytes(st[8 * i..8 * i + 8].try_into().unwrap());
-        let l = Local { nodes: (0..sg).map(|i| word(2 * i)).sum(), evals: (0..sg).map(|i| word(2 * i + 1)).sum(), skipped: 0.0 };
+        let l = Local { nodes: (0..sg).map(|i| word(2 * i)).sum(), evals: (0..sg).map(|i| word(2 * i + 1)).sum(), ..Local::default() };
         {
             eprintln!(
                 "  gpu: {rounds} dispatches, {:.3} s on the GPU, {:.3} s in all, {:.1} M nodes/s",

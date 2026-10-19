@@ -1,0 +1,108 @@
+base 30, poisson zfrom 0.75 c 3.0: 14264501 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.132/0.136/0.080 J1:0.554/0.540/0.553 J2:0.208/0.212/0.231 J3:0.068/0.070/0.085 J4:0.009/0.010/0.032 J5:0.016/0.017/0.012 J6:0.005/0.006/0.006 J7:0.006/0.006/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.15x nodes, 1.16x evals; planted miss 0.0202 -> 0.0972; threshold c=1.95 at the same miss rate saves 2.15x
+  window J in [0, 3]: saves 1.04x nodes, 1.04x evals; planted miss 0.0202 -> 0.0699; threshold c=2.14 at the same miss rate saves 1.82x
+  window J in [1, 3]: saves 1.21x nodes, 1.22x evals; planted miss 0.0202 -> 0.1469; threshold c=1.65 at the same miss rate saves 2.75x
+  window J in [0, 2]: saves 1.12x nodes, 1.13x evals; planted miss 0.0202 -> 0.1532; threshold c=1.62 at the same miss rate saves 2.82x
+  window J in [1, 2]: saves 1.31x nodes, 1.33x evals; planted miss 0.0202 -> 0.2302; threshold c=1.31 at the same miss rate saves 3.67x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0202 -> 0.0382; threshold c=2.59 at the same miss rate saves 1.31x
+base 30, cond zfrom 0.75 c 3.35: 12257049 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.135/0.139/0.080 J1:0.542/0.531/0.553 J2:0.209/0.213/0.231 J3:0.071/0.073/0.085 J4:0.010/0.011/0.032 J5:0.018/0.018/0.012 J6:0.006/0.006/0.006 J7:0.006/0.007/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.16x nodes, 1.16x evals; planted miss 0.0212 -> 0.0975; threshold c=2.19 at the same miss rate saves 2.00x
+  window J in [0, 3]: saves 1.04x nodes, 1.05x evals; planted miss 0.0212 -> 0.0711; threshold c=2.47 at the same miss rate saves 1.69x
+  window J in [1, 3]: saves 1.22x nodes, 1.22x evals; planted miss 0.0212 -> 0.1474; threshold c=1.90 at the same miss rate saves 2.46x
+  window J in [0, 2]: saves 1.13x nodes, 1.13x evals; planted miss 0.0212 -> 0.1544; threshold c=1.85 at the same miss rate saves 2.53x
+  window J in [1, 2]: saves 1.33x nodes, 1.35x evals; planted miss 0.0212 -> 0.2307; threshold c=1.51 at the same miss rate saves 3.16x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0212 -> 0.0392; threshold c=2.92 at the same miss rate saves 1.26x
+base 32, poisson zfrom 0.75 c 3.0: 35278337 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.160/0.164/0.084 J1:0.440/0.427/0.552 J2:0.256/0.258/0.224 J3:0.087/0.090/0.088 J4:0.019/0.021/0.035 J5:0.018/0.019/0.011 J6:0.011/0.011/0.006 J7:0.005/0.005/0.000 J8:0.002/0.002/0.000
+  window J in [1, 99]: saves 1.19x nodes, 1.20x evals; planted miss 0.0172 -> 0.0982; threshold c=1.94 at the same miss rate saves 2.41x
+  window J in [0, 3]: saves 1.06x nodes, 1.06x evals; planted miss 0.0172 -> 0.0684; threshold c=2.19 at the same miss rate saves 1.91x
+  window J in [1, 3]: saves 1.28x nodes, 1.29x evals; planted miss 0.0172 -> 0.1494; threshold c=1.66 at the same miss rate saves 3.15x
+  window J in [0, 2]: saves 1.17x nodes, 1.18x evals; planted miss 0.0172 -> 0.1544; threshold c=1.64 at the same miss rate saves 3.22x
+  window J in [1, 2]: saves 1.44x nodes, 1.46x evals; planted miss 0.0172 -> 0.2354; threshold c=1.33 at the same miss rate saves 4.33x
+  window J in [0, 4]: saves 1.04x nodes, 1.04x evals; planted miss 0.0172 -> 0.0340; threshold c=2.60 at the same miss rate saves 1.35x
+base 32, cond zfrom 0.75 c 3.35: 29608338 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.160/0.165/0.084 J1:0.423/0.414/0.552 J2:0.265/0.265/0.224 J3:0.091/0.092/0.088 J4:0.021/0.022/0.035 J5:0.019/0.020/0.011 J6:0.011/0.012/0.006 J7:0.005/0.006/0.000 J8:0.002/0.003/0.000
+  window J in [1, 99]: saves 1.19x nodes, 1.20x evals; planted miss 0.0183 -> 0.0990; threshold c=2.24 at the same miss rate saves 2.15x
+  window J in [0, 3]: saves 1.07x nodes, 1.07x evals; planted miss 0.0183 -> 0.0690; threshold c=2.51 at the same miss rate saves 1.77x
+  window J in [1, 3]: saves 1.28x nodes, 1.30x evals; planted miss 0.0183 -> 0.1497; threshold c=1.90 at the same miss rate saves 2.76x
+  window J in [0, 2]: saves 1.18x nodes, 1.19x evals; planted miss 0.0183 -> 0.1553; threshold c=1.88 at the same miss rate saves 2.81x
+  window J in [1, 2]: saves 1.45x nodes, 1.47x evals; planted miss 0.0183 -> 0.2360; threshold c=1.54 at the same miss rate saves 3.60x
+  window J in [0, 4]: saves 1.04x nodes, 1.04x evals; planted miss 0.0183 -> 0.0351; threshold c=2.95 at the same miss rate saves 1.29x
+base 34, poisson zfrom 0.75 c 3.0: 125660757 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.114/0.118/0.073 J1:0.582/0.569/0.556 J2:0.227/0.232/0.226 J3:0.034/0.035/0.091 J4:0.014/0.015/0.034 J5:0.014/0.015/0.013 J6:0.007/0.007/0.007 J7:0.005/0.005/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.13x nodes, 1.13x evals; planted miss 0.0175 -> 0.0879; threshold c=1.99 at the same miss rate saves 2.31x
+  window J in [0, 3]: saves 1.04x nodes, 1.05x evals; planted miss 0.0175 -> 0.0696; threshold c=2.14 at the same miss rate saves 2.01x
+  window J in [1, 3]: saves 1.19x nodes, 1.20x evals; planted miss 0.0175 -> 0.1400; threshold c=1.68 at the same miss rate saves 3.09x
+  window J in [0, 2]: saves 1.08x nodes, 1.09x evals; planted miss 0.0175 -> 0.1591; threshold c=1.60 at the same miss rate saves 3.37x
+  window J in [1, 2]: saves 1.24x nodes, 1.25x evals; planted miss 0.0175 -> 0.2295; threshold c=1.34 at the same miss rate saves 4.23x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0175 -> 0.0366; threshold c=2.54 at the same miss rate saves 1.42x
+base 34, cond zfrom 0.75 c 3.35: 102356546 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.120/0.123/0.073 J1:0.567/0.556/0.556 J2:0.231/0.235/0.226 J3:0.035/0.037/0.091 J4:0.016/0.017/0.034 J5:0.015/0.016/0.013 J6:0.008/0.008/0.007 J7:0.005/0.006/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.14x nodes, 1.14x evals; planted miss 0.0190 -> 0.0893; threshold c=2.36 at the same miss rate saves 2.00x
+  window J in [0, 3]: saves 1.05x nodes, 1.05x evals; planted miss 0.0190 -> 0.0708; threshold c=2.51 at the same miss rate saves 1.79x
+  window J in [1, 3]: saves 1.20x nodes, 1.21x evals; planted miss 0.0190 -> 0.1411; threshold c=2.00 at the same miss rate saves 2.61x
+  window J in [0, 2]: saves 1.09x nodes, 1.09x evals; planted miss 0.0190 -> 0.1600; threshold c=1.88 at the same miss rate saves 2.81x
+  window J in [1, 2]: saves 1.25x nodes, 1.26x evals; planted miss 0.0190 -> 0.2303; threshold c=1.56 at the same miss rate saves 3.50x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0190 -> 0.0379; threshold c=2.92 at the same miss rate saves 1.34x
+base 36, poisson zfrom 0.75 c 3.0: 383050525 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.112/0.116/0.080 J1:0.543/0.531/0.550 J2:0.220/0.221/0.233 J3:0.081/0.084/0.088 J4:0.014/0.015/0.029 J5:0.016/0.017/0.014 J6:0.009/0.010/0.006 J7:0.003/0.003/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.13x nodes, 1.13x evals; planted miss 0.0178 -> 0.0946; threshold c=1.98 at the same miss rate saves 2.66x
+  window J in [0, 3]: saves 1.05x nodes, 1.05x evals; planted miss 0.0178 -> 0.0657; threshold c=2.22 at the same miss rate saves 2.06x
+  window J in [1, 3]: saves 1.18x nodes, 1.19x evals; planted miss 0.0178 -> 0.1425; threshold c=1.71 at the same miss rate saves 3.62x
+  window J in [0, 2]: saves 1.14x nodes, 1.15x evals; planted miss 0.0178 -> 0.1520; threshold c=1.65 at the same miss rate saves 3.80x
+  window J in [1, 2]: saves 1.31x nodes, 1.33x evals; planted miss 0.0178 -> 0.2288; threshold c=1.35 at the same miss rate saves 5.30x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0178 -> 0.0370; threshold c=2.57 at the same miss rate saves 1.46x
+base 36, cond zfrom 0.75 c 3.35: 292582999 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.115/0.119/0.080 J1:0.528/0.519/0.550 J2:0.220/0.222/0.233 J3:0.087/0.088/0.088 J4:0.016/0.016/0.029 J5:0.017/0.018/0.014 J6:0.010/0.011/0.006 J7:0.003/0.003/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.13x nodes, 1.14x evals; planted miss 0.0204 -> 0.0973; threshold c=2.29 at the same miss rate saves 2.33x
+  window J in [0, 3]: saves 1.05x nodes, 1.05x evals; planted miss 0.0204 -> 0.0682; threshold c=2.54 at the same miss rate saves 1.90x
+  window J in [1, 3]: saves 1.20x nodes, 1.21x evals; planted miss 0.0204 -> 0.1451; threshold c=1.97 at the same miss rate saves 3.03x
+  window J in [0, 2]: saves 1.16x nodes, 1.16x evals; planted miss 0.0204 -> 0.1546; threshold c=1.93 at the same miss rate saves 3.14x
+  window J in [1, 2]: saves 1.34x nodes, 1.35x evals; planted miss 0.0204 -> 0.2315; threshold c=1.60 at the same miss rate saves 4.09x
+  window J in [0, 4]: saves 1.04x nodes, 1.04x evals; planted miss 0.0204 -> 0.0395; threshold c=2.92 at the same miss rate saves 1.38x
+base 38, poisson zfrom 0.75 c 3.0: 1169641079 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.124/0.130/0.081 J1:0.521/0.509/0.551 J2:0.249/0.251/0.232 J3:0.065/0.067/0.088 J4:0.013/0.014/0.030 J5:0.015/0.016/0.013 J6:0.009/0.009/0.006 J7:0.002/0.002/0.000 J8:0.002/0.002/0.000
+  window J in [1, 99]: saves 1.14x nodes, 1.15x evals; planted miss 0.0167 -> 0.0938; threshold c=1.96 at the same miss rate saves 2.74x
+  window J in [0, 3]: saves 1.04x nodes, 1.05x evals; planted miss 0.0167 -> 0.0645; threshold c=2.21 at the same miss rate saves 2.11x
+  window J in [1, 3]: saves 1.20x nodes, 1.21x evals; planted miss 0.0167 -> 0.1416; threshold c=1.67 at the same miss rate saves 3.70x
+  window J in [0, 2]: saves 1.12x nodes, 1.12x evals; planted miss 0.0167 -> 0.1505; threshold c=1.64 at the same miss rate saves 3.84x
+  window J in [1, 2]: saves 1.30x nodes, 1.32x evals; planted miss 0.0167 -> 0.2276; threshold c=1.36 at the same miss rate saves 5.03x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0167 -> 0.0356; threshold c=2.55 at the same miss rate saves 1.50x
+base 38, cond zfrom 0.75 c 3.35: 860793618 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.131/0.134/0.081 J1:0.502/0.494/0.551 J2:0.254/0.254/0.232 J3:0.068/0.070/0.088 J4:0.015/0.015/0.030 J5:0.016/0.016/0.013 J6:0.010/0.010/0.006 J7:0.002/0.002/0.000 J8:0.002/0.002/0.000
+  window J in [1, 99]: saves 1.15x nodes, 1.16x evals; planted miss 0.0210 -> 0.0980; threshold c=2.27 at the same miss rate saves 2.34x
+  window J in [0, 3]: saves 1.05x nodes, 1.05x evals; planted miss 0.0210 -> 0.0689; threshold c=2.52 at the same miss rate saves 1.91x
+  window J in [1, 3]: saves 1.21x nodes, 1.22x evals; planted miss 0.0210 -> 0.1459; threshold c=1.98 at the same miss rate saves 2.91x
+  window J in [0, 2]: saves 1.13x nodes, 1.13x evals; planted miss 0.0210 -> 0.1547; threshold c=1.93 at the same miss rate saves 3.02x
+  window J in [1, 2]: saves 1.32x nodes, 1.34x evals; planted miss 0.0210 -> 0.2317; threshold c=1.61 at the same miss rate saves 3.77x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0210 -> 0.0398; threshold c=2.89 at the same miss rate saves 1.41x
+base 40, poisson zfrom 0.75 c 3.0: 3464859398 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.143/0.147/0.080 J1:0.523/0.511/0.550 J2:0.216/0.218/0.232 J3:0.078/0.080/0.085 J4:0.015/0.016/0.033 J5:0.013/0.013/0.013 J6:0.007/0.008/0.006 J7:0.003/0.003/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.17x nodes, 1.17x evals; planted miss 0.0178 -> 0.0935; threshold c=2.01 at the same miss rate saves 2.91x
+  window J in [0, 3]: saves 1.04x nodes, 1.04x evals; planted miss 0.0178 -> 0.0686; threshold c=2.21 at the same miss rate saves 2.30x
+  window J in [1, 3]: saves 1.22x nodes, 1.23x evals; planted miss 0.0178 -> 0.1443; threshold c=1.71 at the same miss rate saves 4.20x
+  window J in [0, 2]: saves 1.13x nodes, 1.14x evals; planted miss 0.0178 -> 0.1527; threshold c=1.67 at the same miss rate saves 4.39x
+  window J in [1, 2]: saves 1.35x nodes, 1.37x evals; planted miss 0.0178 -> 0.2284; threshold c=1.39 at the same miss rate saves 6.06x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0178 -> 0.0366; threshold c=2.59 at the same miss rate saves 1.49x
+base 40, cond zfrom 0.75 c 3.35: 2428875856 nodes
+  J: share of nodes / evals / planted solutions
+   J0:0.145/0.149/0.080 J1:0.506/0.498/0.550 J2:0.221/0.222/0.232 J3:0.083/0.084/0.085 J4:0.018/0.018/0.033 J5:0.014/0.014/0.013 J6:0.008/0.008/0.006 J7:0.003/0.004/0.000 J8:0.001/0.001/0.000
+  window J in [1, 99]: saves 1.17x nodes, 1.17x evals; planted miss 0.0221 -> 0.0974; threshold c=2.35 at the same miss rate saves 2.45x
+  window J in [0, 3]: saves 1.05x nodes, 1.05x evals; planted miss 0.0221 -> 0.0729; threshold c=2.54 at the same miss rate saves 2.03x
+  window J in [1, 3]: saves 1.24x nodes, 1.24x evals; planted miss 0.0221 -> 0.1482; threshold c=2.04 at the same miss rate saves 3.23x
+  window J in [0, 2]: saves 1.15x nodes, 1.15x evals; planted miss 0.0221 -> 0.1564; threshold c=2.01 at the same miss rate saves 3.32x
+  window J in [1, 2]: saves 1.38x nodes, 1.39x evals; planted miss 0.0221 -> 0.2317; threshold c=1.68 at the same miss rate saves 4.35x
+  window J in [0, 4]: saves 1.03x nodes, 1.03x evals; planted miss 0.0221 -> 0.0408; threshold c=2.93 at the same miss rate saves 1.43x

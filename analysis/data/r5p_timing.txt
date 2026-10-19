@@ -1,0 +1,65 @@
+run base 34 [-j 1 --zscore 2.93] 81.59 s wall, 55.25 s CPU, 119691027 nodes, load 21.9, output 36e8f297
+run base 34 [-j 1 --zscore 3.32 --zlaw cond] 55.24 s wall, 44.48 s CPU, 99846888 nodes, load 20.0, output 36e8f297
+run base 34 [-j 1 --zscore 3.33] 99.37 s wall, 68.85 s CPU, 157484767 nodes, load 20.2, output 36e8f297
+run base 34 [-j 1 --zscore 3.82 --zlaw cond] 75.04 s wall, 60.25 s CPU, 135529505 nodes, load 19.0, output 36e8f297
+run base 34 [-j 1 --zscore 2.93] 62.07 s wall, 49.64 s CPU, 119691027 nodes, load 17.5, output 36e8f297
+run base 34 [-j 1 --zscore 3.32 --zlaw cond] 53.90 s wall, 51.56 s CPU, 99846888 nodes, load 17.8, output 36e8f297
+run base 34 [-j 1 --zscore 3.33] 74.26 s wall, 70.84 s CPU, 157484767 nodes, load 15.4, output 36e8f297
+run base 34 [-j 1 --zscore 3.82 --zlaw cond] 62.92 s wall, 59.79 s CPU, 135529505 nodes, load 13.2, output 36e8f297
+run base 34 [-j 1 --zscore 2.93] 49.34 s wall, 46.29 s CPU, 119691027 nodes, load 13.4, output 36e8f297
+run base 34 [-j 1 --zscore 3.32 --zlaw cond] 53.55 s wall, 50.74 s CPU, 99846888 nodes, load 12.8, output 36e8f297
+run base 34 [-j 1 --zscore 3.33] 74.23 s wall, 71.67 s CPU, 157484767 nodes, load 13.4, output 36e8f297
+run base 34 [-j 1 --zscore 3.82 --zlaw cond] 69.38 s wall, 65.50 s CPU, 135529505 nodes, load 11.9, output 36e8f297
+run base 34 [-j 1 --zscore 2.93] 53.46 s wall, 52.47 s CPU, 119691027 nodes, load 10.8, output 36e8f297
+run base 34 [-j 1 --zscore 3.32 --zlaw cond] 47.10 s wall, 46.34 s CPU, 99846888 nodes, load 9.9, output 36e8f297
+run base 34 [-j 1 --zscore 3.33] 74.29 s wall, 71.93 s CPU, 157484767 nodes, load 8.6, output 36e8f297
+run base 34 [-j 1 --zscore 3.82 --zlaw cond] 56.43 s wall, 54.97 s CPU, 135529505 nodes, load 8.6, output 36e8f297
+run base 34 [-j 1 --zscore 2.93] 49.11 s wall, 46.88 s CPU, 119691027 nodes, load 7.9, output 36e8f297
+run base 34 [-j 1 --zscore 3.32 --zlaw cond] 45.97 s wall, 43.64 s CPU, 99846888 nodes, load 8.6, output 36e8f297
+run base 34 [-j 1 --zscore 3.33] 61.93 s wall, 59.95 s CPU, 157484767 nodes, load 9.0, output 36e8f297
+run base 34 [-j 1 --zscore 3.82 --zlaw cond] 63.19 s wall, 60.29 s CPU, 135529505 nodes, load 8.9, output 36e8f297
+median base 34 [-j 1 --zscore 2.93] 53.46 s wall, 49.64 s CPU over 5 runs
+median base 34 [-j 1 --zscore 3.32 --zlaw cond] 53.55 s wall, 46.34 s CPU over 5 runs
+median base 34 [-j 1 --zscore 3.33] 74.26 s wall, 70.84 s CPU over 5 runs
+median base 34 [-j 1 --zscore 3.82 --zlaw cond] 63.19 s wall, 60.25 s CPU over 5 runs
+run base 36 [--zscore 2.94] 33.67 s wall, 157.99 s CPU, 364550317 nodes, load 8.9, output 54e004a0
+run base 36 [--zscore 3.37 --zlaw cond] 36.14 s wall, 146.89 s CPU, 296300483 nodes, load 12.6, output 54e004a0
+run base 36 [--zscore 2.94] 26.96 s wall, 156.32 s CPU, 364550317 nodes, load 14.3, output 54e004a0
+run base 36 [--zscore 3.37 --zlaw cond] 24.21 s wall, 145.28 s CPU, 296300483 nodes, load 14.6, output 54e004a0
+run base 36 [--zscore 2.94] 26.47 s wall, 157.12 s CPU, 364550317 nodes, load 14.1, output 54e004a0
+run base 36 [--zscore 3.37 --zlaw cond] 22.70 s wall, 143.72 s CPU, 296300483 nodes, load 13.9, output 54e004a0
+median base 36 [--zscore 2.94] 26.96 s wall, 157.12 s CPU over 3 runs
+median base 36 [--zscore 3.37 --zlaw cond] 24.21 s wall, 145.28 s CPU over 3 runs
+run base 34 [] 37.44 s wall, 219.10 s CPU, 824063470 nodes, load 13.0, output 36e8f297
+run base 34 [--gpu] 20.43 s wall, 1.03 s CPU, 824063470 nodes, load 12.8, output 36e8f297
+run base 34 [--hybrid] 13.40 s wall, 70.64 s CPU, 824063470 nodes, load 10.8, output 36e8f297
+run base 34 [] 33.70 s wall, 212.30 s CPU, 824063470 nodes, load 11.0, output 36e8f297
+run base 34 [--gpu] 20.32 s wall, 0.97 s CPU, 824063470 nodes, load 11.6, output 36e8f297
+run base 34 [--hybrid] 13.10 s wall, 73.71 s CPU, 824063470 nodes, load 9.6, output 36e8f297
+run base 34 [] 34.06 s wall, 213.09 s CPU, 824063470 nodes, load 10.1, output 36e8f297
+run base 34 [--gpu] 20.26 s wall, 0.94 s CPU, 824063470 nodes, load 11.0, output 36e8f297
+run base 34 [--hybrid] 13.15 s wall, 72.66 s CPU, 824063470 nodes, load 9.3, output 36e8f297
+median base 34 [] 34.06 s wall, 213.09 s CPU over 3 runs
+median base 34 [--gpu] 20.32 s wall, 0.97 s CPU over 3 runs
+median base 34 [--hybrid] 13.15 s wall, 72.66 s CPU over 3 runs
+run base 38 [--zscore 3] 76.40 s wall, 492.31 s CPU, 1169641079 nodes, load 9.8, output b46dd500
+run base 38 [--zscore 3 --gpu] 43.88 s wall, 2.15 s CPU, 1169641079 nodes, load 11.7, output b46dd500
+run base 38 [--zscore 3 --hybrid] 30.39 s wall, 155.73 s CPU, 1169641079 nodes, load 7.5, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond] 65.18 s wall, 430.12 s CPU, 888209023 nodes, load 9.2, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --hybrid] 23.58 s wall, 151.61 s CPU, 888209023 nodes, load 11.4, output b46dd500
+run base 38 [--zscore 3] 74.37 s wall, 492.35 s CPU, 1169641079 nodes, load 11.7, output b46dd500
+run base 38 [--zscore 3 --gpu] 43.99 s wall, 2.18 s CPU, 1169641079 nodes, load 11.3, output b46dd500
+run base 38 [--zscore 3 --hybrid] 27.79 s wall, 176.88 s CPU, 1169641079 nodes, load 7.8, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond] 66.55 s wall, 430.68 s CPU, 888209023 nodes, load 9.0, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --hybrid] 24.33 s wall, 144.34 s CPU, 888209023 nodes, load 10.5, output b46dd500
+run base 38 [--zscore 3] 72.56 s wall, 489.21 s CPU, 1169641079 nodes, load 10.8, output b46dd500
+run base 38 [--zscore 3 --gpu] 43.86 s wall, 1.97 s CPU, 1169641079 nodes, load 11.1, output b46dd500
+run base 38 [--zscore 3 --hybrid] 28.26 s wall, 170.50 s CPU, 1169641079 nodes, load 7.4, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond] 66.49 s wall, 428.14 s CPU, 888209023 nodes, load 9.1, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --hybrid] 24.20 s wall, 145.47 s CPU, 888209023 nodes, load 10.2, output b46dd500
+median base 38 [--zscore 3] 74.37 s wall, 492.31 s CPU over 3 runs
+median base 38 [--zscore 3 --gpu] 43.88 s wall, 2.15 s CPU over 3 runs
+median base 38 [--zscore 3 --hybrid] 28.26 s wall, 170.50 s CPU over 3 runs
+median base 38 [--zscore 3.4 --zlaw cond] 66.49 s wall, 430.12 s CPU over 3 runs
+median base 38 [--zscore 3.4 --zlaw cond --hybrid] 24.20 s wall, 145.47 s CPU over 3 runs
+TIMINGDONE
