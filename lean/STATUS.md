@@ -88,7 +88,7 @@ stated.
 | Corollary 8.4 and its correction | none | not formalized (depends on a computation; the correction is Proposition 22.8) |
 | Proposition 8.5 (self-paying digits not adjacent, fewer than `log2 b`) | `SelfPaying.position_gt`, `prop8_5_ineq` [Cons], `card_selfPaying_lt_log` [SPD] | formalized (positions `k' ≥ 2k + 1`; the proof shows `k' > r k`) |
 | 8.3: under `0^0 = 1` only `(a,1)` from zero-balance placements | `zero_balance_solution`, `selfPaying_of_balance` [Cons] | formalized |
-| Proposition 8.6 | none | not formalized (bookkeeping of near-solutions; elementary) |
+| Proposition 8.6 | `prop8_6`, `prop8_6_iff`, `SPFill` [SPD] | formalized (each self-paying digit placed on a 0 lowers the defect by 1; a filled string satisfies the equation exactly when the zeroed string has defect `j`) |
 
 ## Chapters 9 and 10
 
