@@ -22,9 +22,9 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules).
 
-Counts of table rows at the time of writing: 109 formalized (one of them a
-list of computed solutions checked by `decide`), 8 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 62 not formalized and 2 not
+Counts of table rows at the time of writing: 133 formalized (one of them a
+list of computed solutions checked by `decide`), 19 partial, 11 rows of open
+problems (14 `Prop`s), 4 refuted conjectures, 67 not formalized and 4 not
 stated.
 
 ## Chapter 1. Basics
@@ -437,6 +437,15 @@ Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
    proof of Theorem 25.10: with `e = 0` the last digit is `x = p^p + 1`,
    prime to `p`, so `x^x = p b^2` forces `p = 1`, `x = 2` and `b = 2`, which
    is not a valid base. The Lean proof adds this step (`member_e_pos`).
+6. **Corollary 29.10** (section 29.2.2), a small gap. The list of covered
+   degrees starts at `e = 2`, where `e - 1 = 1` is not a prime power `r^s`
+   with `s >= 1`, and the proof ("`r` divides every `f_i`, hence `e`, but `r`
+   divides `e - 1`") needs a prime `r`. The case `e = 2` holds for the
+   trivial reason that every degree is prime to 1. The Lean statement
+   (`exists_good_factor`) assumes `s >= 1`.
+7. **Lemma 20.4** (section 20.1.4), an edge case. For `r = 0` the claim reads
+   `m > 1`, false for `m = 1`. The lemma needs `r >= 1`, which holds wherever
+   it is used. The Lean statement (`lemma20_4`) assumes a nonempty set.
 
 The library corrections that landed during this work (Proposition 9.3, the
 pair `(c, 1)` in Proposition 15.16 needs `c >= 3`, the negative-base family
@@ -452,12 +461,19 @@ In order of value and effort:
    elementary congruence for `f` near `x = i` in the spirit of
    `step_three_adic` (the derivative vanishes there, so the step is of
    second order).
-2. Theorem 25.7 (iii): no power identity `Q_s = lam A^2 - x^x` when `R != 0`
-   (a polynomial identity over `Q`), and Corollary 25.3.
-3. Chapter 24 with the expansions now in place: Proposition 24.2,
-   Corollaries 24.3 and 24.4, Lemma 24.5, Proposition 24.6, and the traces of
-   Theorem 21.6 and Proposition 24.11.
-4. The claim inside Theorem 27.5 (the interval test of the oracle), which
+2. Chapter 29 with traces: Lemma 29.8 (1) for `j >= 2`, (2) and (3) (the
+   subfields and trace kernels of `F_(q^f)`, Hensel lifting), then
+   Theorem 29.9, the conclusion of Corollary 29.10, Theorem 29.11 (2)
+   (sufficiency, (b), (c)) and (4), and Remark 29.12. The Chinese remainder
+   setup of `finrank_ker_frobR` and the dual argument of
+   `comp_pow_eq_of_codim_gt` are in place.
+3. Theorem 30.12, the count `tau(b^2 + 1) - 2`: needs `r_2(N) = 4 sum chi(d)`
+   (Gaussian integers), which is not in Mathlib; with it, the converse of
+   Corollary 30.13 (2).
+4. Chapter 24: Corollary 24.3 (the assembly of all digits of `F(x)` from
+   `p_0, ..., p_(e-1)`), Proposition 24.6 (2), Corollary 24.12 (1).
+5. The claim inside Theorem 27.5 (the interval test of the oracle), which
    would make the fooling-set bound unconditional.
-5. Lemma 20.4 and Proposition 20.2 (elementary counting), and the check of
-   `x <= 5` in Lemma 20.21 (a).
+6. Smaller items: Theorem 15.14 (chains and cycles of `phi`), Theorem 15.10
+   with abc as a hypothesis, the `k`-step form of Proposition 30.7, and the
+   unbounded number of bases in Proposition 15.15.
