@@ -186,7 +186,9 @@ solution in its base (@short-member-base). It is computed that no other
 $46666^(23333) - 3$ with at most one digit above 200. It is heuristic that
 no string with two digits above 200 and one above 2000 fills the rest of the
 gap. An exhaustive run over all strings with digits up to 46,700 would need
-about $10^(14)$ tests and has not been done.
+about $10^(14)$ tests and has not been done. Under an explicit form of the
+abc conjecture, the strings with two digits at most 200 are settled in
+every base (@short-abc-explicit).
 
 === Which lengths occur
 
@@ -989,7 +991,7 @@ square. This gives three regimes and an open remainder #lib("32.1").
     [$N$ a square], [$x$ odd and leading; $x$ even behind a square leading digit], [the gap of @short-three-digit-class (ii)], [no solution outside the binomial family],
     [$n$ fixed], [$x$ even, not leading, leading digit not a square], [2-adic Baker (@short-thm-2adic)], [finitely many, explicit bound],
     [$n$ fixed on a class], [$x = lambda t^2$ with $lambda$ fixed: odd and not leading, or even and leading], [real Baker (@short-prop-class)], [finitely many in each class],
-    [$n$ varies], [the rest: odd $x$ not leading, even $x$ leading], [none known], [open],
+    [$n$ varies], [the rest: odd $x$ not leading, even $x$ leading], [none known; abc (@short-abc-three)], [open; finite under abc],
   )
 ]
 
@@ -1150,11 +1152,76 @@ fields at once, for example through results on $y^2 = a x^n + c$ that are
 uniform in $n$, would settle the case up to a finite computation (#q(129),
 #q(130)).
 
-The abc conjecture (@app-abc) would close every regime at once, in the
-completed-square form. In $U^2 = N + R$ the radical of the three terms is
-at most about $abs(R) dot 4 ell x dot U$, about $x^(x slash 2 + 3) B^B$,
-while $U^2$ is about $x^x$. The quality tends to 2, so abc bounds $x$ for
-each $B$, in every position and for both parities (#q(102)).
+The abc conjecture (@app-abc) closes every regime at once, in the
+completed-square form #lib("33.4"). In $U^2 = N + R$ the radical of the
+three terms is at most about $abs(R) dot 4 ell x dot U$, about
+$x^(x slash 2 + 3) B^B$, while $U^2$ is about $x^x$. The quality tends
+to 2. Written as $x^x = p b^2 + q b + (x - C)$ instead, the radical contains
+$b$, about $x^(x slash 2)$, and abc says nothing. The completed square is
+what makes it work.
+
+#theorem(id: "short-abc-three", title: "Three digits under abc", status: "conditional", src: "33.4")[
+  Assume the abc conjecture. For every $epsilon > 0$ there is a constant
+  $C_epsilon$ with the following property. Let $s$ be a 3-digit string,
+  under either convention, with two digits at most $B$ and a third digit
+  $x >= 2B + 4$, in any position and of any parity, and write
+  $U^2 = N + R$ as in @short-three-digit-class. If $R != 0$ and $s$ is a
+  solution, then $x <= (2 + epsilon) B + C_epsilon$. The same holds for
+  factorions.
+]
+#sketch[
+  Let $g = gcd(N, R)$. If $R > 0$, the triple $N slash g + R slash g = U^2 slash g$
+  is coprime; if $R < 0$, use $U^2 slash g + abs(R) slash g = N slash g$.
+  Its radical is at most $"rad"(N) dot U dot abs(R) slash g$, and
+  $"rad"(N) <= 2 ell x$. abc gives
+  $N <= K_epsilon ("rad"(N) U abs(R))^(1 + epsilon)$. Since
+  $abs(R) < sqrt(N)$, $U^2 <= 2 N$. With $ln N >= x ln x$ and
+  $abs(R) <= 9 x^2 B^B$ this becomes
+  $x ln x <= (2 + O(epsilon)) (B ln B + 5 ln x) + O_epsilon (1)$, so
+  $x <= (2 + O(epsilon)) B + C_epsilon$. For factorials the radical of
+  $N$ is about $e^x$ instead, and the same steps give a bound.
+]
+
+So under abc every 3-digit solution with one dominant digit, a digit larger
+than about twice the others, is a member of the binomial family, case (i)
+of @short-three-digit-class. Up to finitely many exceptions this proves
+@cons-families-conj for 3 digits in that range. With an explicit form of
+abc the constant is explicit (@sec-app-abc-explicit).
+
+#tablefig(caption: [The largest $x$ that the explicit form $c < "rad"(a b c)^(7 slash 4)$ allows when the other two digits are at most $B$ and $R != 0$ #lib("33.4").], id: "tab-short-abc")[
+  #btable(columns: 7, align: (left, right, right, right, right, right, right),
+    [$B$], [1], [10], [100], [200], [500], [1000],
+    [$x^x$, last], [37], [105], [974], [1,991], [5,130], [10,484],
+    [$x^x$, middle], [45], [105], [974], [1,991], [5,130], [10,484],
+    [$x^x$, leading], [38], [105], [970], [1,986], [5,124], [10,478],
+    [$x!$, all], [$4.10 dot 10^6$], [$4.10 dot 10^6$], [$4.11 dot 10^6$], [$4.12 dot 10^6$], [], [$4.19 dot 10^6$],
+  )
+]
+
+For $x^x$ the ratio $x slash B$ is about 10 in this range and tends to 14
+slowly. For $x!$ the bound hardly depends on $B$: the radical of $x!$ is
+about $e^x$, so abc beats $x!$ only once $ln x$ exceeds about 15.
+
+#corollary(id: "short-abc-explicit", title: "The 3-digit list under the explicit abc", status: "conditional", src: "33.4")[
+  Assume $c < "rad"(a b c)^(7 slash 4)$ for all coprime $a + b = c$. Then
+  every 3-digit solution under $0^0 = 1$ with two digits at most 200 is one
+  of the six known ones or a binomial member, case (i) of
+  @short-three-digit-class.
+]
+#proof[
+  By @tab-short-abc, $x <= 1991$ when $R != 0$. Part 1 of
+  @short-3digit-range decided every string with digits up to 2000.
+]
+
+This removes the restriction to bases below $46666^(23333) - 3$ from
+part 2 of @short-3digit-range, at the price of the hypothesis. What abc leaves is two large digits $u >= v$. Moving the
+second large term into $R$ and applying abc again leaves only
+$v ln v >= (1 slash 2 - epsilon) u ln u$, about $v >= u slash 2$ (with
+the exponent $7 slash 4$, about $v >= u slash 14$). In that range the
+equation $U^2 = 4 ell (u^u + v^v) + R$ has four large terms. abc does not
+apply to four terms, its $n$-term generalization @browkin-brzezinski1994
+is too weak here, and $u^u + v^v$ is not a perfect power, so Fermat-Catalan
+statements do not apply either (#q(136)).
 
 For four or more digits the method needs the polynomial to be a perfect
 power up to a small remainder in a fixed field. That happens only for

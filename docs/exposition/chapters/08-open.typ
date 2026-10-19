@@ -24,8 +24,12 @@ keeping in mind when judging which problems are realistic.
     [question], [status], [answer], [where],
     [Does every base have finitely many solutions?], st("proven"), [yes: at most $b$ digits], [@thm-length],
     [Finitely many $k$-digit solutions under $0^0 = 1$, $k >= 3$?], st("proven"), [no: binomial families give infinitely many], [@thm-every-length-m1],
-    [Are large short solutions family members?], st("conjecture"), [positions and linear families classified; the rest needs one more coincidence], [@open-families],
+    [Are large short solutions family members?], st("conjecture"), [positions and linear families classified; the rest needs one more coincidence; true under abc for one dominant digit], [@open-families],
     [3-digit strings with an even large digit behind a non-square leading digit], st("proven"), [finitely many for each pair of small digits; none with both at most 20], [@sec-short-regimes],
+    [3-digit strings under abc], st("conditional"), [one large digit: at most about twice the others unless a family member; two large digits $u >= v$ open for $v$ above about $u slash 2$], [@short-abc-three],
+    [Which weights have identity families?], st("proven"), [a sufficient condition for every weight; factorials never meet it; exact under abc for one dominant digit], [@sec-cons-weights],
+    [3-digit factorions with one large digit], st("proven"), [finitely many, except a leading case of Brocard type; complete apart from it when the other digits are at most 10], [@worlds-fact-three],
+    [Finitely many $k$-digit factorions, $k >= 3$?], st("conjecture"), [2 digits: infinitely many; GRH reduces a large last digit to Brocard-type equations; abc gives finiteness with one dominant digit], [@worlds-fact-finite],
     [Is $(1, 6, 46666)$ the next 3-digit solution?], st("open"), [next family member (proven); none in bases 905 to $10^(3301)$], [@open-next-three],
     [At most two 3-digit solutions per base?], st("open"), [at most 30 outside a sparse set of bases (proven); at most two up to $10^(3301)$], [@open-two-three-digit],
     [Does every length occur?], st("proven"), [yes, under both conventions], [@sec-cons-binomial],
@@ -101,7 +105,11 @@ the conjecture is the complete lists of @sec-short-lists, which hold no
 solution above these bases up to $10^(51)$, $10^(186)$, $10^(30.9)$ and
 $10^(11)$ for 3 to 6 digits, extended to $10^(3301)$ for 3 digits, and the
 root heuristic of @sec-short-heuristic, which leaves less than $10^(-74)$
-expected generic 3-digit solutions beyond the list. Under $0^0 = 0$ the
+expected generic 3-digit solutions beyond the list. Under the abc
+conjecture the first part holds for every length in the range of one
+dominant digit, a digit larger than a constant times the others
+(@cons-abc-dominant), and for 3 digits the constant is about 2
+(@short-abc-three). Under $0^0 = 0$ the
 conjecture fails: self-paying digits and swaps give further families.
 
 #problem(id: "open-nonlinear", title: [Nonlinear identity families], src: "25.1")[
@@ -152,7 +160,11 @@ variable with mean about 1, which has no bound, but a large count would be
 a chance event in a single base. A chain whose top lands within the number
 of available self-paying digits of the zero count it needs would give three
 or more solutions; bases $r^t$ with $r$ in ${2, 3, 5, 6}$ and $t$ up to
-$10^4$ with many divisors are the natural place to look (#q(88)).
+$10^4$ with many divisors are the natural place to look (#q(88)). The
+same construction gives no infinite family of long solutions: chains of one
+step give only base 64 (@cons-chain-one-step), and a search up to
+$t = 10^5$ finds nothing new. Whether swaps, the 2-cycles of the
+construction, allow a family with a one-step chain is open (#q(138)).
 
 #problem(id: "open-three-bases", title: [Three bases], src: ("15.6", "18.3"))[
   Is there an integer that is a solution under $0^0 = 1$ in three
@@ -485,7 +497,35 @@ method bounds the large digit (@short-thm-2adic, @short-prop-class). When
 the field changes with $x$, its regulator can be as large as
 $sqrt(x) ln x$, and the known bounds are too weak by a power of $ln x$.
 A result on $y^2 = a x^n + c$ that is uniform in $n$ would be the natural
-tool. Under abc every regime is closed (#q(102)).
+tool. Under abc every regime is closed (@short-abc-three).
+
+#problem(id: "open-comparable", title: [Two comparable large digits], src: "33.4")[
+  Under abc, a 3-digit string with two large digits $u >= v$ and $R != 0$
+  is bounded unless $v$ is at least about $u slash 2$. Is there a
+  conditional statement that covers the comparable range, for the equation
+  $U^2 = 4 ell (u^u + v^v) + R$ with four large terms? (#q(136))
+]
+
+The $n$-term generalization of abc has exponent 3 for four terms
+@browkin-brzezinski1994, too weak here, and $u^u + v^v$ is not a perfect
+power. This is the 3-digit form of the case $a^a approx c^c$ that
+@sec-dio-cores leaves open for 2 digits.
+
+#problem(id: "open-brocard", title: [The leading Brocard case of 3-digit factorions], src: ("33.1", "33.2"))[
+  Is $4 x dot x! + s^2 = U^2$, with $s^2 = q^2 + 4 A x$ as in
+  @worlds-fact-three, solvable for any $x > 10$? Does the reduction for two
+  large digits leave any solution? For $k >= 6$, are there prefixes for
+  which $G_x$ has a root modulo every prime without a rational root, for
+  infinitely many $x$? (#q(133), #q(135), #q(137))
+]
+
+The sieve of @worlds-fact-list reaches $x = 4","103","641$, the bound that the
+explicit abc inequality gives for digits up to 10. Pushing it to $10^9$,
+as Berndt and Galway did for Brocard's equation @berndt-galway2000, would
+cover the explicit bound for digits up to about $10^6$. An explicit
+Burgess bound for imaginary quadratic characters would cut the
+unconditional bound $X_0 (B)$ of @tab-worlds-fact-x0 from a power of $B!$
+to about $(B!)^(1 slash 4)$ (#q(134)).
 
 #problem(id: "open-n5", title: [The exponent $n = 5$], src: "18.1")[
   Find all integer points on the genus 2 curve $b^2 + x b = x^5 + 1$.

@@ -81,6 +81,13 @@ coincidences and blind to identities. @ch-constructions tells this story.
   linear forms in logarithms and the abc conjecture (@ch-diophantine).
 - Negative, complex, rational, Pisot, factorial and function-field bases
   show which laws are universal (@ch-worlds).
+- Factorials behave differently from $x^x$. Since $x!$ is divisible by
+  every prime up to $x$, congruences prove that 3-digit factorions with one
+  large digit are finite, except for a case of Brocard's problem
+  $n! + 1 = m^2$ (@sec-worlds-short-factorions). Since $x!$ is almost
+  never a power, factorials have no identity families (@sec-cons-weights).
+  Under abc, every 3-digit solution of $x^x$ with one dominant digit is a
+  family member (@short-abc-three).
 - Some of the questions connect to other fields: anti-concentration in
   probability, the map $x |-> x^x$ modulo a prime, and sums of two squares
   (@sec-open-connections).

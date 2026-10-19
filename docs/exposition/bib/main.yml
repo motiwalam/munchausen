@@ -1039,3 +1039,125 @@ kushilevitz-nisan1997:
   author: ["Kushilevitz, Eyal", "Nisan, Noam"]
   publisher: Cambridge University Press
   date: 1997
+
+trevino2012:
+  type: article
+  title: The least inert prime in a real quadratic field
+  author: Trevino, Enrique
+  date: 2012
+  page-range: 1777-1797
+  parent:
+    type: periodical
+    title: Mathematics of Computation
+    volume: 81
+
+granville-mollin-williams2000:
+  type: article
+  title: An upper bound on the least inert prime in a real quadratic field
+  author: ["Granville, Andrew", "Mollin, Richard A.", "Williams, Hugh C."]
+  date: 2000
+  page-range: 369-380
+  parent:
+    type: periodical
+    title: Canadian Journal of Mathematics
+    volume: 52
+
+pomerance2011:
+  type: article
+  title: Remarks on the Polya-Vinogradov inequality
+  author: Pomerance, Carl
+  date: 2011
+  note: "Article 19"
+  parent:
+    type: periodical
+    title: Integers
+    volume: 11A
+
+bach1990:
+  type: article
+  title: Explicit bounds for primality testing and related problems
+  author: Bach, Eric
+  date: 1990
+  page-range: 355-380
+  parent:
+    type: periodical
+    title: Mathematics of Computation
+    volume: 55
+
+bach-sorenson1996:
+  type: article
+  title: Explicit bounds for primes in residue classes
+  author: ["Bach, Eric", "Sorenson, Jonathan"]
+  date: 1996
+  page-range: 1717-1735
+  parent:
+    type: periodical
+    title: Mathematics of Computation
+    volume: 65
+
+lagarias-odlyzko1977:
+  type: chapter
+  title: Effective versions of the Chebotarev density theorem
+  author: ["Lagarias, Jeffrey C.", "Odlyzko, Andrew M."]
+  date: 1977
+  page-range: 409-464
+  parent:
+    type: book
+    title: "Algebraic Number Fields: L-functions and Galois Properties"
+    editor: Frohlich, Albrecht
+    publisher: Academic Press
+
+rosser-schoenfeld1962:
+  type: article
+  title: Approximate formulas for some functions of prime numbers
+  author: ["Rosser, J. Barkley", "Schoenfeld, Lowell"]
+  date: 1962
+  page-range: 64-94
+  parent:
+    type: periodical
+    title: Illinois Journal of Mathematics
+    volume: 6
+
+dabrowski1996:
+  type: article
+  title: "On the Diophantine equation x! + A = y^2"
+  author: Dabrowski, Andrzej
+  date: 1996
+  page-range: 321-324
+  parent:
+    type: periodical
+    title: "Nieuw Archief voor Wiskunde (4)"
+    volume: 14
+
+berndt-galway2000:
+  type: article
+  title: "On the Brocard-Ramanujan Diophantine equation n! + 1 = m^2"
+  author: ["Berndt, Bruce C.", "Galway, William F."]
+  date: 2000
+  page-range: 41-42
+  parent:
+    type: periodical
+    title: The Ramanujan Journal
+    volume: 4
+
+laishram-shorey2012:
+  type: article
+  title: "Baker's explicit abc-conjecture and applications"
+  author: ["Laishram, Shanta", "Shorey, Tarlok N."]
+  date: 2012
+  page-range: 419-429
+  parent:
+    type: periodical
+    title: Acta Arithmetica
+    volume: 155
+
+browkin-brzezinski1994:
+  type: article
+  title: Some remarks on the abc-conjecture
+  author: ["Browkin, Jerzy", "Brzezinski, Juliusz"]
+  date: 1994
+  page-range: 931-939
+  parent:
+    type: periodical
+    title: Mathematics of Computation
+    volume: 62
