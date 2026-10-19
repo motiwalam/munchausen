@@ -20,7 +20,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
-(SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence).
+(SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
 Counts of table rows at the time of writing: 133 formalized (one of them a
 list of computed solutions checked by `decide`), 19 partial, 11 rows of open
@@ -366,8 +366,8 @@ stated.
 | Proposition 30.10 | `prop30_10`, `pow_self_modEq_self_iff`, `card_pow_modEq_self`, `sum_div_orderOf` [App] | formalized (the count `(p-1) + ∑_(d ∣ p-1) φ(d) (p-1)/d` over one period `1 ≤ c ≤ p(p-1)`) |
 | Corollary 30.11 | `corollary30_11_two`, `corollary30_11_two_solution`, `dvd_g_iff_modEq` [App] | partial: (2); (1) and (3) cite Kurlberg, Luca and Shparlinski |
 | correction: 7 has a fixed point (`4^4 ≡ 4 (mod 7)`) | example [App] | formalized |
-| Theorem 30.12 | `IsNarc2`, `isNarc2_iff`, `IsNarc2.swap` [App] | partial: the bijection with the representations `b^2 + 1 = A^2 + B^2`, `B ≥ 3` odd, and the pairing `s1 ↔ b - s1`; the count `τ(b^2 + 1) - 2` needs `r_2(N) = 4 ∑ χ(d)`, which is not in Mathlib |
-| Corollary 30.13 | `corollary30_13_one`, `corollary30_13_two`, `not_dvd_of_prime_sq_add_sq` [App] | partial: (1) with the two explicit numbers, and (2) in the direction "`b` even, `b^2 + 1` prime ⟹ none"; the converse, (3) and (4) (Iwaniec, Hooley) not formalized |
+| Theorem 30.12 | `theorem30_12`, `narcSet`, `IsNarc2`, `isNarc2_iff`, `IsNarc2.swap` [App, TS]; `card_oddPos_sq_add_one`, `card_repG_mul`, `card_repG_prime_pow`, `card_repG_odd` [TS] | formalized (the count `tau(b^2 + 1) - 2` for every `b >= 2`; in place of `r_2(N) = 4 sum chi(d)` the proof counts Gaussian integers of norm `n`: `r(m) r(n) = 4 r(m n)` for coprime `m, n` via `gcd(z, m)`, and `r(p^k) = 4 (k + 1)` for `p = 1 (mod 4)`) |
+| Corollary 30.13 | `corollary30_13_one`, `corollary30_13_two`, `corollary30_13_two_iff`, `not_dvd_of_prime_sq_add_sq` [App, TS] | partial: (1) with the two explicit numbers, and (2) in both directions (an even base `b >= 2` has a 2-digit narcissistic number exactly when `b^2 + 1` is composite); (3) and (4) (Iwaniec, Hooley) are cited |
 | Proposition 30.14 | `card_divisors_sq_add_one` [App] | partial: the divisor pairing `τ(n^2 + 1) = 2 #{d ≤ n : d ∣ n^2 + 1}`; the asymptotics not formalized |
 
 ## Chapter 31. Pruning by the residue

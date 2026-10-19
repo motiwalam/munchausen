@@ -60,6 +60,7 @@ use `decide`, which the kernel checks.
 | `Munchausen/FunctionField.lean` | base-`B` expansions in `F_p[T]`: Corollary 21.2, Propositions 21.3, 21.4, Theorem 21.7, chapter 24 (Lemmas 24.1, 24.5, 24.7, 24.8, Propositions 24.2, 24.6, 24.11, Corollaries 24.3, 24.4, 24.12 (1)) |
 | `Munchausen/Search.lean` | chapters 26 and 27: the swap lemma, the fibre (26.3), the image of `F`, bottom digits, Theorem 27.5 (abstract form) |
 | `Munchausen/Applications.lean` | chapter 30: Lemmas 30.1, 30.2, 30.4, Propositions 30.6, 30.7, 30.10, Corollaries 30.11, 30.13, Theorem 30.12 (the completed square), Proposition 30.14 (the divisor pairing) |
+| `Munchausen/TwoSquares.lean` | the count of Theorem 30.12 (`tau(b^2 + 1) - 2` two-digit narcissistic numbers) with Gaussian integers, and both directions of Corollary 30.13 (2) |
 | `Munchausen/ModelTheorems.lean` | chapter 29: Lemma 29.2, `k(B)` and Berlekamp's count, Theorems 21.6 and 29.11 (1), (3), Corollary 29.10 (the factor), Lemma 29.14 |
 | `Munchausen/SearchRules.lean` | chapters 31 and 32: the residue rule (31.1), the interval (31.4, 31.5), the Pell form of `(p, q, x)` and `(p, x, q)`, the sieve |
 | `Munchausen/Factorials.lean` | chapter 33: factorions and other weights (33.9, 33.12, 33.13), the completed square, Lemmas 33.1, 33.2, Theorem 33.4 (b), (d), Proposition 33.21, and the abc step of Theorem 33.16 with abc as a hypothesis |

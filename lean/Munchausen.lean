@@ -24,3 +24,4 @@ import Munchausen.SearchRules
 import Munchausen.Factorials
 import Munchausen.ModelComplete
 import Munchausen.Existence
+import Munchausen.TwoSquares
