@@ -18,3 +18,4 @@ import Munchausen.FunctionField
 import Munchausen.ThreeDigits
 import Munchausen.ThreeDigitBases
 import Munchausen.Search
+import Munchausen.Applications
