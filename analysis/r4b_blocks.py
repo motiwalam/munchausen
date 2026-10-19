@@ -16,9 +16,11 @@ blocks with digits up to M, complete for b^(L+m) <= (M+1)^(M+1).
     python3 r4b_blocks.py > data/r4b_blocks.txt
 """
 import os
+import sys
 import subprocess
 from collections import defaultdict
 
+sys.set_int_max_str_digits(0)
 HERE = os.path.dirname(os.path.abspath(__file__))
 KDIGIT = os.path.join(HERE, '..', 'fast', 'target', 'release', 'kdigit')
 THREADS = os.environ.get('RAYON_NUM_THREADS', '4')
@@ -76,7 +78,8 @@ def main():
         print(f"## L={L} m={m} 0^0={mode}: {len(s)} blocks")
         for b, t in s:
             tag = 'self-paying digit' if L == 1 else ''
-            print(f"{b} {','.join(map(str, t))} {tag}".rstrip())
+            bs = str(b) if b < 10 ** 30 else f"~10^{len(str(b)) - 1}"
+            print(f"{bs} {','.join(map(str, t))} {tag}".rstrip())
 
 
 if __name__ == '__main__':

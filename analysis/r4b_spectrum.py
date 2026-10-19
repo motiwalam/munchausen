@@ -183,6 +183,30 @@ def report():
             shown = sols if len(sols) <= 40 else sols[:40] + [('...', f'{len(sols) - 40} more')]
             pr(f"L={L} m={m} mode={mode} bases {lo}-{hi}: " + '; '.join(f"{s} in {b}" for b, s in shown))
     pr("")
+    # partial blocks: counts of small remainders R, bases from 13 on
+    pr("# partial blocks and near solutions, bases from 13 to the run limit, 0^0 = 1: counts N_R for R = -5..5;")
+    pr("# then all 0 < |R| <= 300 against the density-only expectation 600 * density")
+    for L, m, mode in configs():
+        if mode != 1 or L == 1:
+            continue
+        path = raw_path(L, m, mode)
+        if not os.path.exists(path):
+            continue
+        bases = parse(path)
+        N = defaultdict(int)
+        dens = 0.0
+        for b, d in bases.items():
+            if b < 13:
+                continue
+            for v, c in d['hist'].items():
+                N[v] += c
+            e = estimates(d)
+            if not math.isnan(e['dens']):
+                dens += e['dens']
+        small = ' '.join(f"{v}:{N[v]}" for v in range(-5, 6))
+        tot = sum(c for v, c in N.items() if v != 0)
+        pr(f"L={L} m={m}: {small} | 0 < |R| <= {H}: {tot} against {2 * H * dens:.1f}")
+    pr("")
     # per base detail for the 5-digit solutions, bases 3 to 99
     for mode in (1, 0):
         path = raw_path(5, 0, mode)
