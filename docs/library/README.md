@@ -41,7 +41,8 @@ statement is marked by its source:
 | [27. Limits of search](27-limits-of-search.md) | constraint solvers lose to the tree; the entropy floor holds for every order; certificates of emptiness; bottom digits do not pay; the law of work-unit sizes |
 | [28. A sharper z-score rule, length windows and the GPU](28-zscore-gpu.md) | `--zlaw cond` fixes the variance of the z-score test (1.1 to 1.3x fewer nodes at equal miss rate); length windows do not pay; the GPU runs the inexact search and shards |
 | [29. Theorems about the model](29-model-theorems.md) | the length shares of the basic model proven; `k(B) = omega(B - 1)` in `F_q[T]` for every `e <= 10`; Assumption R reduced to one number per base and checked up to base 6000; a block model for `F_q[T]`; open lengths in the factorial system |
-| [Open questions](questions.md) | 117 research questions in seven rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [30. Connections to other fields](30-applications.md) | anti-concentration proves the refined Poisson law in the limit; Assumption R as a collision bound for `x^x - x`; 2-digit solutions as fixed points of `x -> x^x mod p`; `tau(b^2 + 1) - 2` two-digit narcissistic numbers, so empty bases are Landau's problem; analogies |
+| [Open questions](questions.md) | 123 research questions in eight rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -132,6 +133,23 @@ Proven:
 - Assumption R of chapter 13 is false as stated for short strings. The
   refined Poisson theorem needs only one number per base, an exponential sum
   `rho(b)` of `x^x - x` modulo `b - 1` (Theorem 29.15).
+- The refined coupled model of chapter 13 has its bivariate Poisson law in
+  the limit for every base, without Assumption R (Theorem 30.5). The proof
+  is a Littlewood-Offord argument: the weights of the small digits grow so
+  fast that their sum fixes their counts (Lemma 30.2, Theorem 30.3). The
+  rate is weak, `exp(-c ln b / ln ln b)`.
+- Assumption R for prime `b - 1` follows from a bound `O(p)` on the
+  collisions `x^x - x == y^y - y (mod p)` (Corollary 30.8).
+- A 2-digit string `(a, c)` with `c >= 1` is a solution exactly when `c` is
+  a fixed point of `x -> x^x` modulo `a`. So for almost all primes `p` some
+  `(p, c)` with `2 <= c < p` is a solution, and none is when
+  `p == 3 (mod 8)` and `(p-1)/2` is prime (Corollary 30.11, from Kurlberg,
+  Luca and Shparlinski).
+- Base `b` has exactly `tau(b^2 + 1) - 2` two-digit narcissistic numbers
+  (Theorem 30.12). Every odd base has some. An even base has none exactly
+  when `b^2 + 1` is prime, so whether infinitely many bases have none is
+  Landau's problem. The mean over odd bases is twice the mean over even
+  bases, `(4/pi) ln X` against `(2/pi) ln X` (Proposition 30.14).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -164,6 +182,9 @@ Computed:
 - `k(B) = omega(B - 1)` in all 110,654 monic bases of the scanned degrees and in
   379,700 polynomials of the factor types that the proofs leave open
   (section 29.2.4).
+- For every prime `11 <= p < 10^5`, the shifted map `x^x - x` has about
+  `2 (p - 1)` collisions, like a random map, while `x^x` follows the
+  Holden-Moree prediction, about `2.64 (p - 1)` (Table 30.2.1).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 
@@ -211,6 +232,10 @@ Model:
   without near-solutions. Open below `34!`: lengths 8, 10, 13, 14, 15, 18,
   19, 20, 24, 26, 28, 29, 30, 32. The empty census has probability 0.22 to
   0.39 after a cluster calibration (section 29.5).
+- At length 2 the coincidence model is short by a factor of order `ln b`
+  for narcissistic numbers: it misses the local factors at the primes of
+  `b^2 + 1` (section 30.3.4). The shifted collisions should be
+  `(2 + o(1)) (p - 1)` (Conjecture 30.9).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data
