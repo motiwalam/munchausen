@@ -18,7 +18,10 @@ Both bounds below are linear algebra over `F_q`. The lower bound is the inclusio
 
 With Berlekamp's count `dim R^φ = ω(B - 1)` (Lemma 29.8 (1) for `j = 1`, proved with the
 Chinese remainder theorem and the fixed points of `x ↦ x^q` modulo a prime power), these are
-Theorem 21.6 and Theorem 29.11 (1): `ω(B - 1) ≤ k(B) ≤ ω(B - 1) + 1`.
+Theorem 21.6 and Theorem 29.11 (1): `ω(B - 1) ≤ k(B) ≤ ω(B - 1) + 1`. The dual argument also
+gives condition (a) of Theorem 29.11 (2) (`comp_pow_eq_of_codim_gt`), and with the
+nondegenerate pairing `(x, y) ↦ ℓ(x y)` this proves Theorem 29.11 (3): `k(B) = ω(B - 1)` when
+`B - 1` is not squarefree.
 
 Corollary 29.10 rests on a counting fact about the degrees of the factors of `B - 1`, proved
 here as `exists_good_factor`. The example of Lemma 29.14 is checked by `decide`.
@@ -105,6 +108,78 @@ theorem finrank_ker_le_codim (φ : V →ₗ[K] V) (J : Submodule K V)
   have h2 := LinearMap.finrank_range_add_finrank_ker (φ - 1)
   omega
 
+/-- **Theorem 29.11 (2)**, condition (a) and its consequence, abstract form (section 29.2.3).
+Let `ℓ` be a functional such that every functional vanishing on `W` is a multiple of `ℓ`, and
+let `J` contain `(φ^(n+1) - 1) V` and `(φ^n - 1) W`. If the codimension of `J` exceeds
+`dim ker(φ - 1)`, then `Λ_n = ∑_{i ≤ n} ℓ ∘ φ^i = 0`, and so `ℓ ∘ φ^(n+1) = ℓ`. -/
+theorem comp_pow_eq_of_codim_gt (φ : V →ₗ[K] V) (W J : Submodule K V) (ℓ : Dual K V) (n : ℕ)
+    (hℓ : ∀ μ ∈ W.dualAnnihilator, ∃ c : K, μ = c • ℓ)
+    (htop : LinearMap.range (φ ^ (n + 1) - 1) ≤ J) (hWJ : W.map (φ ^ n - 1) ≤ J)
+    (hgt : finrank K (LinearMap.ker (φ - 1)) < finrank K V - finrank K J) :
+    ∀ v, ℓ ((φ ^ (n + 1)) v) = ℓ v := by
+  -- a functional on `J` that is not `φ`-invariant
+  obtain ⟨l, hl, hne⟩ : ∃ l ∈ J.dualAnnihilator, ∃ v, l (φ v - v) ≠ 0 := by
+    by_contra hcon
+    push Not at hcon
+    have hle : J.dualAnnihilator ≤ (LinearMap.range (φ - 1)).dualAnnihilator := by
+      intro l hl
+      rw [Submodule.mem_dualAnnihilator]
+      rintro _ ⟨v, rfl⟩
+      simpa using hcon l hl v
+    have h1 := Submodule.finrank_mono hle
+    rw [finrank_dualAnnihilator, finrank_dualAnnihilator] at h1
+    have h2 := LinearMap.finrank_range_add_finrank_ker (φ - 1)
+    have h3 := Submodule.finrank_le J
+    omega
+  have hl' : ∀ v ∈ J, l v = 0 := (Submodule.mem_dualAnnihilator l).1 hl
+  -- `δ_n = c ℓ`
+  obtain ⟨c, hc⟩ := hℓ ((φ ^ n - 1).dualMap l) (by
+    rw [Submodule.mem_dualAnnihilator]
+    intro w hw
+    exact hl' _ (hWJ ⟨w, hw, rfl⟩))
+  have hδ : ∀ v, l ((φ ^ n) v) - l v = c * ℓ v := by
+    intro v
+    have := congrArg (fun f => f v) hc
+    simpa [LinearMap.dualMap_apply, map_sub] using this
+  -- `δ_1 = -c ℓ ∘ φ`
+  have hkey : ∀ v, l (φ v) - l v = -(c * ℓ (φ v)) := by
+    intro v
+    have h0 : l ((φ ^ (n + 1) - 1) v) = 0 := hl' _ (htop ⟨v, rfl⟩)
+    have h1 := hδ (φ v)
+    simp only [LinearMap.sub_apply, Module.End.one_apply, map_sub, pow_succ,
+      Module.End.mul_apply] at h0
+    linear_combination h0 - h1
+  have hc0 : c ≠ 0 := by
+    rintro rfl
+    obtain ⟨v, hv⟩ := hne
+    apply hv
+    rw [map_sub, hkey v]; ring
+  -- telescoping: `δ_n = ∑_{i<n} δ_1 ∘ φ^i`
+  have htel : ∀ v, l ((φ ^ n) v) - l v = ∑ i ∈ Finset.range n, -(c * ℓ ((φ ^ (i + 1)) v)) := by
+    intro v
+    have := Finset.sum_range_sub (fun i => l ((φ ^ i) v)) n
+    simp only [pow_zero, Module.End.one_apply] at this
+    rw [← this]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [pow_succ', Module.End.mul_apply]
+    exact hkey _
+  have hΛ : ∀ v, ∑ i ∈ Finset.range (n + 1), ℓ ((φ ^ i) v) = 0 := by
+    intro v
+    have h := (hδ v).symm.trans (htel v)
+    rw [Finset.sum_range_succ', pow_zero, Module.End.one_apply]
+    have : c * (∑ i ∈ Finset.range n, ℓ ((φ ^ (i + 1)) v) + ℓ v) = 0 := by
+      rw [Finset.sum_neg_distrib, ← Finset.mul_sum] at h
+      linear_combination h
+    exact (mul_eq_zero.1 this).resolve_left hc0
+  intro v
+  have h1 := hΛ v
+  have h2 := hΛ (φ v)
+  rw [Finset.sum_range_succ'] at h1
+  rw [Finset.sum_range_succ] at h2
+  simp only [← Module.End.mul_apply, ← pow_succ] at h2
+  simp only [pow_zero, Module.End.one_apply] at h1
+  linear_combination h2 - h1
+
 end Abstract
 
 /-! ### The residue ring `F_q[T]/(B - 1)` -/
@@ -181,24 +256,32 @@ theorem finrank_ker_le_kDim (hB : 1 ≤ B.natDegree) :
   have := finrank_ker_le_codim (frobR B) (Jsum B) Jsum_le_range
   rwa [finrank_residue hB] at this
 
+lemma Jsum_top_le (hB : 2 ≤ B.natDegree) :
+    LinearMap.range (frobR B ^ (B.natDegree - 2 + 1) - 1) ≤ Jsum B := by
+  have h1 : 1 ≤ B.natDegree := by omega
+  have := le_iSup₂ (f := fun j (_ : j ∈ Finset.Icc 1 (B.natDegree - 1)) =>
+    (Wj B j).map (frobR B ^ j - 1)) (B.natDegree - 1) (Finset.mem_Icc.2 ⟨by omega, le_rfl⟩)
+  rw [show B.natDegree - 2 + 1 = B.natDegree - 1 by omega]
+  rwa [Wj_top h1, Submodule.map_top] at this
+
+lemma Jsum_W_le (hB : 2 ≤ B.natDegree) :
+    (Wj B (B.natDegree - 2)).map (frobR B ^ (B.natDegree - 2) - 1) ≤ Jsum B := by
+  rcases Nat.eq_zero_or_pos (B.natDegree - 2) with h0 | hpos
+  · rw [h0, pow_zero, sub_self, Submodule.map_zero]
+    exact bot_le
+  · exact le_iSup₂ (f := fun j (_ : j ∈ Finset.Icc 1 (B.natDegree - 1)) =>
+      (Wj B j).map (frobR B ^ j - 1)) (B.natDegree - 2) (Finset.mem_Icc.2 ⟨hpos, by omega⟩)
+
 /-- **Theorem 29.11 (1)** (section 29.2.3), with `dim R^φ` in place of `ω(B - 1)`: for `B` of
 degree `e ≥ 2`, `k(B) ≤ dim ker(φ - 1) + 1`. -/
 theorem kDim_le (hB : 2 ≤ B.natDegree) :
     kDim B ≤ finrank K (LinearMap.ker (frobR B - 1)) + 1 := by
   have := (AdjoinRoot.powerBasis (sub_one_ne_zero (B := B) (by omega))).finite
   have h1 : 1 ≤ B.natDegree := by omega
-  set e := B.natDegree with he
-  have hJ : ∀ j ∈ Finset.Icc 1 (e - 1), (Wj B j).map (frobR B ^ j - 1) ≤ Jsum B :=
-    fun j hj => le_iSup₂ (f := fun j _ => (Wj B j).map (frobR B ^ j - 1)) j hj
-  have := codim_le_finrank_ker_add_one (frobR B) (Wj B (e - 2)) (Jsum B) (e - 2) ?_ ?_ ?_
-  · rwa [finrank_residue h1] at this
-  · rw [finrank_Wj h1 (by omega), finrank_residue h1]; omega
-  · have := hJ (e - 1) (Finset.mem_Icc.2 ⟨by omega, le_rfl⟩)
-    rwa [Wj_top h1, Submodule.map_top, ← show e - 2 + 1 = e - 1 by omega] at this
-  · rcases Nat.eq_zero_or_pos (e - 2) with h0 | hpos
-    · rw [h0, pow_zero, sub_self, Submodule.map_zero]
-      exact bot_le
-    · exact hJ (e - 2) (Finset.mem_Icc.2 ⟨hpos, by omega⟩)
+  have := codim_le_finrank_ker_add_one (frobR B) (Wj B (B.natDegree - 2)) (Jsum B)
+    (B.natDegree - 2) (by rw [finrank_Wj h1 (by omega), finrank_residue h1]; omega)
+    (Jsum_top_le hB) (Jsum_W_le hB)
+  rwa [finrank_residue h1] at this
 
 end Residue
 
@@ -355,6 +438,150 @@ theorem theorem29_11_one {B : K[X]} (hB : 2 ≤ B.natDegree) : kDim B ≤ omegaF
   finrank_ker_frobR (B := B) (by omega) ▸ kDim_le hB
 
 end Berlekamp
+
+/-! ### Theorem 29.11 (3): no extra dimension when `B - 1` is not squarefree -/
+
+section NotSquarefree
+
+variable {K : Type*} [Field K] {B : K[X]}
+
+/-- In the basis `1, t, ..., t^(e-1)`, the coordinates of the class of a polynomial of degree
+below `e` are its coefficients. -/
+lemma repr_mk (hB : 1 ≤ B.natDegree) {f : K[X]}
+    (hf : f.natDegree < (AdjoinRoot.powerBasis (sub_one_ne_zero hB)).dim)
+    (i : Fin (AdjoinRoot.powerBasis (sub_one_ne_zero hB)).dim) :
+    (AdjoinRoot.powerBasis (sub_one_ne_zero hB)).basis.repr (AdjoinRoot.mk (B - 1) f) i =
+      f.coeff i := by
+  set pb := AdjoinRoot.powerBasis (sub_one_ne_zero hB)
+  have : AdjoinRoot.mk (B - 1) f = pb.basis.equivFun.symm (fun j => f.coeff j) := by
+    rw [Basis.equivFun_symm_apply, ← AdjoinRoot.aeval_eq, aeval_eq_sum_range' hf,
+      ← Fin.sum_univ_eq_sum_range (fun j => f.coeff j • AdjoinRoot.root (B - 1) ^ j)]
+    simp [pb, PowerBasis.coe_basis, AdjoinRoot.powerBasis_gen]
+  rw [this, ← Basis.equivFun_apply, LinearEquiv.apply_symm_apply]
+
+lemma dim_powerBasis (hB : 1 ≤ B.natDegree) :
+    (AdjoinRoot.powerBasis (sub_one_ne_zero hB)).dim = B.natDegree := by
+  rw [AdjoinRoot.powerBasis_dim, natDegree_sub_one]
+
+/-- The functional `ℓ`, the coefficient of `t^(e-1)` (section 29.2.3). -/
+noncomputable def topCoeff (hB : 1 ≤ B.natDegree) : Dual K (AdjoinRoot (B - 1)) :=
+  (AdjoinRoot.powerBasis (sub_one_ne_zero hB)).basis.coord
+    ⟨B.natDegree - 1, by rw [dim_powerBasis hB]; omega⟩
+
+lemma topCoeff_mk (hB : 1 ≤ B.natDegree) {f : K[X]} (hf : f.natDegree < B.natDegree) :
+    topCoeff hB (AdjoinRoot.mk (B - 1) f) = f.coeff (B.natDegree - 1) := by
+  rw [topCoeff, Basis.coord_apply, repr_mk hB (by rwa [dim_powerBasis hB])]
+
+/-- The pairing `(x, y) ↦ ℓ(x y)` is nondegenerate (section 29.2.3). -/
+lemma exists_topCoeff_mul_ne_zero (hB : 1 ≤ B.natDegree) {x : AdjoinRoot (B - 1)}
+    (hx : x ≠ 0) : ∃ y, topCoeff hB (x * y) ≠ 0 := by
+  have hne := sub_one_ne_zero hB
+  obtain ⟨g, rfl⟩ := AdjoinRoot.mk_surjective x
+  set f := g % (B - 1)
+  have hfg : AdjoinRoot.mk (B - 1) g = AdjoinRoot.mk (B - 1) f := by
+    rw [AdjoinRoot.mk_eq_mk]
+    have := EuclideanDomain.div_add_mod g (B - 1)
+    exact ⟨g / (B - 1), by simp only [f]; linear_combination (-1 : K[X]) * this⟩
+  rw [hfg] at hx ⊢
+  have hf0 : f ≠ 0 := fun h => hx (by rw [h, map_zero])
+  have hfd : f.natDegree < B.natDegree := by
+    have := degree_mod_lt g hne
+    rw [degree_eq_natDegree hf0, degree_eq_natDegree hne, natDegree_sub_one] at this
+    exact_mod_cast this
+  refine ⟨AdjoinRoot.mk (B - 1) (X ^ (B.natDegree - 1 - f.natDegree)), ?_⟩
+  rw [← map_mul, topCoeff_mk hB]
+  · have key := coeff_mul_X_pow f (B.natDegree - 1 - f.natDegree) f.natDegree
+    rw [show f.natDegree + (B.natDegree - 1 - f.natDegree) = B.natDegree - 1 by omega] at key
+    rw [key]
+    exact leadingCoeff_ne_zero.2 hf0
+  · exact natDegree_mul_le.trans_lt (by rw [natDegree_X_pow]; omega)
+
+/-- The iterates of the Frobenius: `φ^k(x) = x^(q^k)`. -/
+lemma frobR_pow_apply [Fintype K] (k : ℕ) (x : AdjoinRoot (B - 1)) :
+    (frobR B ^ k) x = x ^ (Fintype.card K ^ k) := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    rw [pow_succ', Module.End.mul_apply, ih, frobR, AlgHom.toLinearMap_apply,
+      FiniteField.coe_frobeniusAlgHom]
+    beta_reduce
+    rw [← pow_mul, pow_succ]
+
+/-- If `B - 1` is not squarefree, `R` has a nonzero element of square zero. -/
+lemma exists_sq_eq_zero (hB : 1 ≤ B.natDegree) (hsq : ¬ Squarefree (B - 1)) :
+    ∃ x : AdjoinRoot (B - 1), x ≠ 0 ∧ x * x = 0 := by
+  have hne := sub_one_ne_zero hB
+  unfold Squarefree at hsq
+  push Not at hsq
+  obtain ⟨P, ⟨Q, hQ⟩, hP⟩ := hsq
+  have hQ0 : Q ≠ 0 := by rintro rfl; exact hne (by rw [hQ, mul_zero])
+  have hP0 : P ≠ 0 := by rintro rfl; exact hne (by rw [hQ, zero_mul, zero_mul])
+  refine ⟨AdjoinRoot.mk (B - 1) (P * Q), ?_, ?_⟩
+  · rw [Ne, AdjoinRoot.mk_eq_zero, hQ]
+    intro h
+    apply hP
+    have h' : P * (P * Q) ∣ 1 * (P * Q) := by rw [one_mul]; convert h using 1; ring
+    exact isUnit_of_dvd_one ((mul_dvd_mul_iff_right (mul_ne_zero hP0 hQ0)).1 h')
+  · rw [← map_mul, AdjoinRoot.mk_eq_zero, hQ]
+    exact ⟨Q, by ring⟩
+
+variable [Fintype K] [DecidableEq K]
+
+/-- **Theorem 29.11 (3)** (section 29.2.3). If `B - 1` is not squarefree, then
+`k(B) = ω(B - 1)`. -/
+theorem theorem29_11_three (hB : 2 ≤ B.natDegree) (hsq : ¬ Squarefree (B - 1)) :
+    kDim B = omegaF (B - 1) := by
+  have h1 : 1 ≤ B.natDegree := by omega
+  have := (AdjoinRoot.powerBasis (sub_one_ne_zero h1)).finite
+  have hlo := theorem21_6 h1
+  have hhi := theorem29_11_one hB
+  by_contra hne
+  have hgt : finrank K (LinearMap.ker (frobR B - 1)) <
+      finrank K (AdjoinRoot (B - 1)) - finrank K (Jsum B) := by
+    rw [finrank_ker_frobR h1, finrank_residue h1]
+    rw [kDim] at hlo hhi hne
+    omega
+  -- `ℓ` spans the annihilator of `W_(e-2)`
+  set W := Wj B (B.natDegree - 2)
+  have hℓW : topCoeff h1 ∈ W.dualAnnihilator := by
+    rw [Submodule.mem_dualAnnihilator]
+    rintro _ ⟨⟨f, hf⟩, rfl⟩
+    rw [mem_degreeLT] at hf
+    have hfd : f.natDegree < B.natDegree - 1 := by
+      rcases eq_or_ne f 0 with rfl | hf0
+      · simp; omega
+      · have := (natDegree_lt_iff_degree_lt hf0).2 hf
+        omega
+    change topCoeff h1 (AdjoinRoot.mk (B - 1) f) = 0
+    rw [topCoeff_mk h1 (by omega)]
+    exact coeff_eq_zero_of_natDegree_lt hfd
+  have hℓ0 : topCoeff h1 ≠ 0 := by
+    intro h
+    have := congrArg (fun l => l (AdjoinRoot.mk (B - 1) (X ^ (B.natDegree - 1)))) h
+    simp only [LinearMap.zero_apply] at this
+    rw [topCoeff_mk h1 (by rw [natDegree_X_pow]; omega), coeff_X_pow_self] at this
+    exact one_ne_zero this
+  have hdimW : finrank K W.dualAnnihilator = 1 := by
+    rw [finrank_dualAnnihilator, finrank_Wj h1 (by omega), finrank_residue h1]; omega
+  have hspan : ∀ μ ∈ W.dualAnnihilator, ∃ c : K, μ = c • topCoeff h1 := by
+    intro μ hμ
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨topCoeff h1, hℓW⟩ : W.dualAnnihilator)
+      (by simpa using hℓ0)).1 hdimW ⟨μ, hμ⟩
+    exact ⟨c, by simpa using (congrArg Subtype.val hc).symm⟩
+  have hinv := comp_pow_eq_of_codim_gt (frobR B) W (Jsum B) (topCoeff h1) (B.natDegree - 2)
+    hspan (Jsum_top_le hB) (Jsum_W_le hB) hgt
+  -- a nonzero `x` with `x^2 = 0` is killed by `φ^(e-1)`, so `ℓ(x y) = 0` for all `y`
+  obtain ⟨x, hx0, hxx⟩ := exists_sq_eq_zero h1 hsq
+  obtain ⟨y, hy⟩ := exists_topCoeff_mul_ne_zero h1 hx0
+  apply hy
+  rw [← hinv, frobR_pow_apply, mul_pow]
+  have h2 : 2 ≤ Fintype.card K ^ (B.natDegree - 2 + 1) :=
+    (Fintype.one_lt_card (α := K)).trans_le (Nat.le_self_pow (by omega) _)
+  rw [show Fintype.card K ^ (B.natDegree - 2 + 1) =
+    2 + (Fintype.card K ^ (B.natDegree - 2 + 1) - 2) by omega, pow_add, sq, hxx]
+  simp
+
+end NotSquarefree
 
 /-! ### Corollary 29.10: a good factor exists when `e - 1` is a prime power -/
 
