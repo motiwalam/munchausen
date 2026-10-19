@@ -8,8 +8,8 @@ maps every proven result of the library to a Lean declaration or gives the
 reason why it is not formalized: usually a heuristic statement, a large
 computation, or a deep cited theorem such as Chebotarev's or Laurent's. A statement of this document
 that has a formal proof carries a green Lean badge, and its box ends with the
-name of the Lean declaration. The index of results (@app-index) lists all of
-them.
+name of the Lean declaration. The table below lists all of them, and the
+index of results (@app-index) marks them.
 
 == Status <sec-app-lean-status>
 
@@ -20,8 +20,9 @@ them.
   ] else [
     #metas.len() statements of this document are formalized, some of them in part; the table names what a partial formalization covers. All Lean names live in the namespace `Munchausen`. The formalization also states several conjectures of the library as propositions and proves the negation of four refuted ones, among them the finiteness conjecture for short solutions under $0^0 = 1$ (@thm-every-length-m1).
 
+    #set par(justify: false)
     #table(
-      columns: (auto, 1fr, auto),
+      columns: (auto, 1fr, 1.6fr),
       stroke: none,
       inset: (x: 4pt, y: 2.6pt),
       table.hline(stroke: 0.8pt),
@@ -33,7 +34,7 @@ them.
         (
           if v.id != none { link(label(v.id), [#v.kind #num]) } else [#v.kind #num],
           if v.title != none { v.title } else [],
-          raw(v.lean),
+          text(font: font-mono, size: 7.5pt, v.lean),
         )
       }).flatten(),
       table.hline(stroke: 0.8pt),

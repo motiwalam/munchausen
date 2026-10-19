@@ -169,7 +169,7 @@
         body
         if lean-name != none {
           v(3pt, weak: true)
-          align(right, text(size: 7.5pt, fill: col-lean)[Lean: #raw(lean-name)])
+          align(right, text(size: 7.5pt, fill: col-lean)[Lean: #text(font: font-mono, size: 7pt, lean-name)])
         }
       },
     )
@@ -419,10 +419,11 @@
       status-badge(v.status),
       v.src.map(s => [L#s]).join(", "),
       link(loc, str(loc.page())),
-      if v.lean != none { raw(v.lean) } else [],
+      if v.lean != none { badge("Lean", col-lean) } else [],
     ))
   }
   set text(size: 8.5pt)
+  set par(justify: false)
   table(
     columns: (auto, 1fr, auto, auto, auto, auto),
     align: (left, left, left, left, right, left),
