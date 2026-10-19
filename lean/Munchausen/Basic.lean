@@ -26,6 +26,13 @@ lemma digits_P {b : ℕ} (hb : 1 < b) {s : List ℕ} (hlt : ∀ d ∈ s, d < b)
     rw [List.getLast_reverse]
     exact hhead _
 
+/-- A string is valid in base `b`: its digits lie below `b` and its leading digit is not 0. -/
+def Valid (b : ℕ) (s : List ℕ) : Prop := (∀ d ∈ s, d < b) ∧ ∀ h : s ≠ [], s.head h ≠ 0
+
+/-- The Munchausen sum of the value of a valid string is the weight sum of the string. -/
+lemma F_P {b m : ℕ} (hb : 1 < b) {s : List ℕ} (hv : Valid b s) : F b m (P b s) = Fs m s := by
+  rw [F, digits_P hb hv.1 hv.2, Fs_reverse]
+
 /-- A valid string that is a solution gives a Munchausen number (section 1.1). -/
 lemma IsSolution.isMunchausen {b m : ℕ} (hb : 1 < b) {s : List ℕ} (h : IsSolution b m s) :
     IsMunchausen b m (P b s) := by
