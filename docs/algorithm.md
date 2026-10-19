@@ -259,7 +259,7 @@ free slot before its forced digits, and forcing only names the digit `y`.
 Two thirds of the nodes have one or two free slots, and the nodes with one
 free slot are 43% of the tree, so this one test removes 12% to 25% of the
 nodes in bases 15 to 35. The same test for two free slots, or for none,
-costs more than it saves (`docs/library/drafts/round6-search.md`).
+costs more than it saves (`docs/library/31-search-rules.md`, section 31.4.2).
 
 With `-m 0` or `-m 1` the test uses only that convention, and removes up to
 30% of the nodes. The search then may miss solutions of the other
