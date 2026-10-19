@@ -8,7 +8,8 @@ import Munchausen.Congruences
   Lemma 26.4);
 * Corollary 26.2: when a transposition keeps the offset class modulo `2(b-1)`;
 * Proposition 26.10: the image of `c ↦ S(c)` is the same under both conventions;
-* Proposition 27.8 and Corollary 27.9: which digit values fix the bottom digits of `S`.
+* Proposition 27.8 and Corollary 27.9: which digit values fix the bottom digits of `S`;
+* Theorem 27.5 in abstract form: the fooling-set bound for certificates of emptiness.
 -/
 
 namespace Munchausen
@@ -172,5 +173,66 @@ theorem corollary27_9 {b L m k : ℕ} (hb : 2 ≤ b) (hL : 1 ≤ L)
     have : b ^ L ≤ 1 := Nat.le_of_dvd one_pos h0
     have : b ≤ b ^ L := Nat.le_self_pow (by omega) b
     omega
+
+/-! ### Theorem 27.5: certificates of emptiness, abstract form -/
+
+/-- A cylinder `(R, c_R)` of count vectors over the digit values `Fin b` (section 27.3.1): the
+vectors whose counts on `R` are the given ones. -/
+structure Cylinder (b : ℕ) where
+  /-- the revealed values -/
+  R : Finset (Fin b)
+  /-- their counts -/
+  cR : Fin b → ℕ
+
+/-- A count vector lies in a cylinder when it has the cylinder's counts on `R`. -/
+def Cylinder.Mem {b : ℕ} (x : Cylinder b) (c : Fin b → ℕ) : Prop := ∀ v ∈ x.R, c v = x.cR v
+
+/-- The fooling-set bound: if every set of a cover meets the elements of `G` only within one
+class of `κ`, the cover has at least as many sets as `κ` takes values on `G`. -/
+theorem card_image_le_of_fooling {X K ι : Type*} [DecidableEq K] (κ : X → K) (G : Finset X)
+    (A : ι → Set X) (cover : Finset ι) (hcover : ∀ c ∈ G, ∃ i ∈ cover, c ∈ A i)
+    (hfool : ∀ i ∈ cover, ∀ c ∈ G, ∀ c' ∈ G, c ∈ A i → c' ∈ A i → κ c = κ c') :
+    (G.image κ).card ≤ cover.card := by
+  classical
+  rcases G.eq_empty_or_nonempty with rfl | ⟨c₀, hc₀⟩
+  · simp
+  obtain ⟨i₀, -, -⟩ := hcover c₀ hc₀
+  have : Nonempty X := ⟨c₀⟩
+  have : Nonempty ι := ⟨i₀⟩
+  -- a representative of each class, and a set of the cover that contains it
+  have hrep : ∀ k ∈ G.image κ, ∃ c ∈ G, κ c = k := fun k hk => by simpa using hk
+  choose! rep hrepG hrepκ using hrep
+  have hset : ∀ k ∈ G.image κ, ∃ i ∈ cover, rep k ∈ A i := fun k hk =>
+    hcover (rep k) (hrepG k hk)
+  choose! sel hselC hselA using hset
+  refine Finset.card_le_card_of_injOn sel (fun k hk => hselC k hk) ?_
+  intro k hk k' hk' h
+  have := hfool (sel k) (hselC k hk) (rep k) (hrepG k hk) (rep k') (hrepG k' hk')
+    (hselA k hk) (h ▸ hselA k' hk')
+  rw [← hrepκ k hk, ← hrepκ k' hk', this]
+
+/-- **Theorem 27.5** (section 27.3.1), abstract form. Let `G` be a finite set of count vectors
+and `θ` a threshold on them. Assume the claim of the proof: a cylinder of the certificate that
+contains `c ∈ G` and another vector reveals every value `≥ θ(c)`. Then a certificate covering
+`G` has at least `N_k` cylinders, where `N_k` counts the restrictions `c|V_k` to the values
+`≥ k` of the `c ∈ G` with `θ(c) ≤ k`. -/
+theorem theorem27_5 {b : ℕ} (k : ℕ) (G : Finset (Fin b → ℕ)) (θ : (Fin b → ℕ) → ℕ)
+    (cert : Finset (Cylinder b)) (hcover : ∀ c ∈ G, ∃ x ∈ cert, x.Mem c)
+    (hclaim : ∀ x ∈ cert, ∀ c ∈ G, ∀ c', x.Mem c → x.Mem c' → c' ≠ c →
+      ∀ v : Fin b, θ c ≤ v → v ∈ x.R) :
+    ((G.filter fun c => θ c ≤ k).image fun c (v : {v : Fin b // k ≤ (v : ℕ)}) => c v).card ≤
+      cert.card := by
+  classical
+  apply card_image_le_of_fooling _ _ (fun x => {c | x.Mem c}) cert
+  · intro c hc
+    exact hcover c (Finset.mem_filter.1 hc).1
+  · intro x hx c hc c' hc' hxc hxc'
+    obtain ⟨hcG, hck⟩ := Finset.mem_filter.1 hc
+    funext v
+    by_cases hcc : c' = c
+    · rw [hcc]
+    have hv : (v : Fin b) ∈ x.R := hclaim x hx c hcG c' hxc hxc' hcc v (hck.trans v.2)
+    simp only [Set.mem_ofPred_eq] at hxc hxc'
+    rw [hxc v hv, hxc' v hv]
 
 end Munchausen
