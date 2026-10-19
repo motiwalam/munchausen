@@ -1,7 +1,7 @@
 import Munchausen.Residues
 
 /-!
-# The 3-adic law (Theorem 20.11)
+# The 3-adic law (Theorem 20.11) and part of the 5-adic law (Theorem 20.12)
 
 For `e ≥ 4` the residues of `f(x) = x^x - x` modulo `3^e` are the multiples of 3 and the
 `v ≡ 2 (mod 27)` with `v ≢ 56 (mod 81)`. The inclusion is the check modulo 81 of
@@ -13,6 +13,10 @@ file replaces the series by a direct congruence: on `x ≡ 2 (mod 6)`, for `k �
 where `B(x) = x^x (2 + a) - 2` and `x^54 = 1 + 27 a`. A finite check over one period shows
 `B(x) = 9 c` with `3 ∤ c` unless `x ≡ 8 (mod 9)`. So `t ↦ f(x + 2·3^k t)` runs through the three
 lifts of `f(x) mod 3^(k+2)`, which is Hensel's lemma for the series `G` of the library.
+
+For the 5-adic law, the residues `v ≢ 3 (mod 5)` are values modulo every `5^e` by Lemmas 20.6
+and 20.7. The class `3 (mod 5)` is checked modulo 25, 125 and 625 (1, 3 and 11 values, the
+numbers `A (1 - 25 s / 2)`); the law for every `e` needs the 5-adic power series.
 -/
 
 namespace Munchausen
@@ -189,23 +193,25 @@ lemma lift_three_adic {x0 : ℕ} (h6 : x0 % 6 = 2) (h9 : x0 % 9 ≠ 8) {v : ℤ}
     rw [hc] at hM
     linear_combination hM + hm + 3 ^ (k + 2) * hq
 
-/-- Every multiple of 3 is a value of `f` modulo `3^e` (Lemma 20.6, in `ℤ`). -/
-lemma exists_of_three_dvd {e : ℕ} {v : ℤ} (hv : (3 : ℤ) ∣ v) :
-    ∃ x : ℕ, 1 ≤ x ∧ (3 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - v := by
+/-- Every multiple of `p` is a value of `f` modulo `p^e` (Lemma 20.6, in `ℤ`). -/
+lemma exists_of_dvd {p e : ℕ} (hp : 2 ≤ p) {v : ℤ} (hv : (p : ℤ) ∣ v) :
+    ∃ x : ℕ, 1 ≤ x ∧ (p : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - v := by
   obtain ⟨w, hw⟩ := hv
-  obtain ⟨x, hx, hxw⟩ := multiple_mem_T (p := 3) (e := e) (by norm_num) (w % (3 : ℤ) ^ e).toNat
+  obtain ⟨x, hx, hxw⟩ := multiple_mem_T (p := p) (e := e) hp (w % (p : ℤ) ^ e).toNat
   refine ⟨x, hx, ?_⟩
-  rw [show ((3 : ℤ)) ^ e = ((3 ^ e : ℕ) : ℤ) by push_cast; rfl,
+  rw [show ((p : ℤ)) ^ e = ((p ^ e : ℕ) : ℤ) by push_cast; rfl,
     ← ZMod.intCast_zmod_eq_zero_iff_dvd]
   push_cast
   rw [hxw, hw]
-  have hnn : 0 ≤ w % (3 : ℤ) ^ e := Int.emod_nonneg _ (by positivity)
-  have h1 : (((w % (3 : ℤ) ^ e).toNat : ℕ) : ZMod (3 ^ e)) =
-      ((w % (3 : ℤ) ^ e : ℤ) : ZMod (3 ^ e)) := by
+  have hp0 : (0 : ℤ) < (p : ℤ) ^ e := by have : (0 : ℤ) < p := by omega
+                                         positivity
+  have hnn : 0 ≤ w % (p : ℤ) ^ e := Int.emod_nonneg _ hp0.ne'
+  have h1 : (((w % (p : ℤ) ^ e).toNat : ℕ) : ZMod (p ^ e)) =
+      ((w % (p : ℤ) ^ e : ℤ) : ZMod (p ^ e)) := by
     rw [← Int.cast_natCast, Int.toNat_of_nonneg hnn]
-  have h2 : ((w % (3 : ℤ) ^ e : ℤ) : ZMod (3 ^ e)) = (w : ZMod (3 ^ e)) := by
+  have h2 : ((w % (p : ℤ) ^ e : ℤ) : ZMod (p ^ e)) = (w : ZMod (p ^ e)) := by
     rw [ZMod.intCast_eq_intCast_iff_dvd_sub]
-    exact ⟨w / (3 : ℤ) ^ e, by rw [Int.emod_def]; push_cast; ring⟩
+    exact ⟨w / (p : ℤ) ^ e, by rw [Int.emod_def]; push_cast; ring⟩
   push_cast
   rw [h1, h2]; ring
 
@@ -230,7 +236,7 @@ theorem theorem20_11 {e : ℕ} (he : 4 ≤ e) (v : ℤ) :
       push_cast at this
       omega
   · rintro (h3 | ⟨h27, h56⟩)
-    · exact exists_of_three_dvd h3
+    · exact exists_of_dvd (p := 3) (by norm_num) h3
     -- `v mod 243` is one of six classes; a witness for each, then lift
     have key : ∃ x0 : ℕ, x0 % 6 = 2 ∧ x0 % 9 ≠ 8 ∧
         (3 : ℤ) ^ 5 ∣ ((x0 : ℤ) ^ x0 - x0) - v := by
@@ -246,5 +252,127 @@ theorem theorem20_11 {e : ℕ} (he : 4 ≤ e) (v : ℤ) :
     obtain ⟨x0, h6, h9, h5⟩ := key
     obtain ⟨t, ht⟩ := lift_three_adic h6 h9 h5 (max e 5) (le_max_right _ _)
     exact ⟨x0 + 18 * t, by omega, (pow_dvd_pow 3 (le_max_left _ _)).trans ht⟩
+
+/-! ### Theorem 20.12: the 5-adic law, in part -/
+
+/-- **Theorem 20.12**, the residues prime to the class 3 (section 20.2.2). For every `e`, each
+`v ≢ 3 (mod 5)` is a value of `x^x - x` modulo `5^e`: the multiples of 5 by Lemma 20.6, and
+1, 2, 4 by lifting from `x₀ = 18, 2, 3` with Lemma 20.7. -/
+theorem theorem20_12_good {e : ℕ} (he : 1 ≤ e) {v : ℤ} (hv : ¬ (5 : ℤ) ∣ v - 3) :
+    ∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - v := by
+  have hp : Nat.Prime 5 := by norm_num
+  by_cases h5 : (5 : ℤ) ∣ v
+  · exact_mod_cast exists_of_dvd (p := 5) (e := e) (by norm_num) (by exact_mod_cast h5)
+  -- a starting point `x₀` with `x₀^x₀ ≢ 1 (mod 5)` and `f(x₀) ≡ v (mod 5)`
+  obtain ⟨x0, hx0, hx0p, hg, hv0⟩ : ∃ x0 : ℕ, 1 ≤ x0 ∧ ¬ ((5 : ℕ) : ℤ) ∣ x0 ∧
+      ¬ ((5 : ℕ) : ℤ) ∣ (x0 : ℤ) ^ x0 - 1 ∧ ((5 : ℕ) : ℤ) ∣ v - ((x0 : ℤ) ^ x0 - x0) := by
+    have : v % 5 = 1 ∨ v % 5 = 2 ∨ v % 5 = 4 := by omega
+    rcases this with h | h | h
+    · exact ⟨18, by norm_num, by norm_num, by norm_num, by norm_num; omega⟩
+    · exact ⟨2, by norm_num, by norm_num, by norm_num, by norm_num; omega⟩
+    · exact ⟨3, by norm_num, by norm_num, by norm_num, by norm_num; omega⟩
+  obtain ⟨t, ht⟩ := lemma20_7 hp hx0 hx0p hg v hv0 e he
+  exact ⟨x0 + 5 * (5 - 1) * t, by omega, by exact_mod_cast ht⟩
+
+set_option maxRecDepth 100000 in
+set_option exponentiation.threshold 600 in
+/-- **Theorem 20.12** for `e = 3` (section 20.2.2). The values of `x^x - x` modulo 125 in the
+class `3 (mod 5)` are exactly 33, 58 and 83, the three numbers `A (1 - 25 s / 2)` with `s` a
+square modulo 5 (`A = 1 - i ≡ 58`). -/
+theorem theorem20_12_three {v : ℤ} (hv : v % 5 = 3) :
+    (∃ x : ℕ, 1 ≤ x ∧ (125 : ℤ) ∣ ((x : ℤ) ^ x - x) - v) ↔
+      v % 125 = 33 ∨ v % 125 = 58 ∨ v % 125 = 83 := by
+  constructor
+  · rintro ⟨x, hx, hdvd⟩
+    have hle : x ≤ x ^ x := by
+      calc x = x ^ 1 := (pow_one x).symm
+        _ ≤ x ^ x := Nat.pow_le_pow_right hx hx
+    have hcast : ((x ^ x - x : ℕ) : ℤ) = (x : ℤ) ^ x - x := by push_cast [hle]; ring
+    have h20 : x % 20 = 8 := lemma20_9_five hx (by omega)
+    have hcop5 : x.Coprime 5 := Nat.coprime_comm.1
+      ((Nat.Prime.coprime_iff_not_dvd (by norm_num : Nat.Prime 5)).2 (by omega))
+    have hcop : x.Coprime 125 := by simpa using Nat.Coprime.pow_right 3 hcop5
+    have hper := pow_self_modEq_mod (L := 500) hcop (by norm_num) (by decide)
+    have hcheck : ∀ r < 500, r % 20 = 8 → (r ^ r - r) % 125 = 33 ∨ (r ^ r - r) % 125 = 58 ∨
+        (r ^ r - r) % 125 = 83 := by decide
+    set r := x % 500 with hr
+    have hrle : r ≤ r ^ r := by
+      calc r = r ^ 1 := (pow_one r).symm
+        _ ≤ r ^ r := Nat.pow_le_pow_right (by omega) (by omega)
+    have hrc : ((r ^ r - r : ℕ) : ℤ) = (r : ℤ) ^ r - r := by push_cast [hrle]; ring
+    have h1 := hcheck r (Nat.mod_lt _ (by norm_num)) (by omega)
+    have h2 := hper.dvd
+    push_cast at h2
+    have h3 : (r : ℤ) ^ r - r = ((r ^ r - r : ℕ) : ℤ) := hrc.symm
+    have h4 : (x : ℤ) - r = 500 * (x / 500 : ℕ) := by
+      have := Nat.mod_add_div x 500; push_cast; omega
+    omega
+  · rintro (h | h | h)
+    · exact ⟨48, by norm_num, by norm_num; omega⟩
+    · exact ⟨68, by norm_num, by norm_num; omega⟩
+    · exact ⟨8, by norm_num, by norm_num; omega⟩
+
+/-- **Theorem 20.12** for `e = 2` (section 20.2.2). The only value of `x^x - x` modulo 25 in the
+class `3 (mod 5)` is `8 ≡ A`. -/
+theorem theorem20_12_two {v : ℤ} (hv : v % 5 = 3) :
+    (∃ x : ℕ, 1 ≤ x ∧ (25 : ℤ) ∣ ((x : ℤ) ^ x - x) - v) ↔ v % 25 = 8 := by
+  constructor
+  · rintro ⟨x, hx, hdvd⟩
+    have h := (theorem20_12_three (v := (x : ℤ) ^ x - x) (by omega)).1 ⟨x, hx, by simp⟩
+    omega
+  · intro h
+    exact ⟨8, by norm_num, by norm_num; omega⟩
+
+set_option maxRecDepth 100000 in
+set_option exponentiation.threshold 3000 in
+/-- **Theorem 20.12** for `e = 4` (section 20.2.2). The values of `x^x - x` modulo 625 in the
+class `3 (mod 5)` are the 11 numbers `A (1 - 25 s / 2)` with `s` a square modulo 25
+(`A ≡ 183`). -/
+theorem theorem20_12_four {v : ℤ} (hv : v % 5 = 3) :
+    (∃ x : ℕ, 1 ≤ x ∧ (625 : ℤ) ∣ ((x : ℤ) ^ x - x) - v) ↔
+      v % 625 ∈ ({33, 83, 158, 183, 208, 283, 333, 408, 458, 533, 583} : Finset ℤ) := by
+  constructor
+  · rintro ⟨x, hx, hdvd⟩
+    have hle : x ≤ x ^ x := by
+      calc x = x ^ 1 := (pow_one x).symm
+        _ ≤ x ^ x := Nat.pow_le_pow_right hx hx
+    have hcast : ((x ^ x - x : ℕ) : ℤ) = (x : ℤ) ^ x - x := by push_cast [hle]; ring
+    have h20 : x % 20 = 8 := lemma20_9_five hx (by omega)
+    have hcop5 : x.Coprime 5 := Nat.coprime_comm.1
+      ((Nat.Prime.coprime_iff_not_dvd (by norm_num : Nat.Prime 5)).2 (by omega))
+    have hcop : x.Coprime 625 := by simpa using Nat.Coprime.pow_right 4 hcop5
+    have hper := pow_self_modEq_mod (L := 2500) hcop (by norm_num) (by decide)
+    have hcheck : ∀ r < 2500, r % 20 = 8 → (r ^ r - r) % 625 = 33 ∨ (r ^ r - r) % 625 = 83 ∨
+        (r ^ r - r) % 625 = 158 ∨ (r ^ r - r) % 625 = 183 ∨ (r ^ r - r) % 625 = 208 ∨
+        (r ^ r - r) % 625 = 283 ∨ (r ^ r - r) % 625 = 333 ∨ (r ^ r - r) % 625 = 408 ∨
+        (r ^ r - r) % 625 = 458 ∨ (r ^ r - r) % 625 = 533 ∨ (r ^ r - r) % 625 = 583 := by
+      decide
+    set r := x % 2500 with hr
+    have hrle : r ≤ r ^ r := by
+      calc r = r ^ 1 := (pow_one r).symm
+        _ ≤ r ^ r := Nat.pow_le_pow_right (by omega) (by omega)
+    have hrc : ((r ^ r - r : ℕ) : ℤ) = (r : ℤ) ^ r - r := by push_cast [hrle]; ring
+    have h1 := hcheck r (Nat.mod_lt _ (by norm_num)) (by omega)
+    have h2 := hper.dvd
+    push_cast at h2
+    have h3 : (r : ℤ) ^ r - r = ((r ^ r - r : ℕ) : ℤ) := hrc.symm
+    have h4 : (x : ℤ) - r = 2500 * (x / 2500 : ℕ) := by
+      have := Nat.mod_add_div x 2500; push_cast; omega
+    simp only [Finset.mem_insert, Finset.mem_singleton]
+    omega
+  · intro h
+    simp only [Finset.mem_insert, Finset.mem_singleton] at h
+    rcases h with h | h | h | h | h | h | h | h | h | h | h
+    · exact ⟨388, by norm_num, by norm_num; omega⟩
+    · exact ⟨128, by norm_num, by norm_num; omega⟩
+    · exact ⟨88, by norm_num, by norm_num; omega⟩
+    · exact ⟨68, by norm_num, by norm_num; omega⟩
+    · exact ⟨28, by norm_num, by norm_num; omega⟩
+    · exact ⟨48, by norm_num, by norm_num; omega⟩
+    · exact ⟨8, by norm_num, by norm_num; omega⟩
+    · exact ⟨348, by norm_num, by norm_num; omega⟩
+    · exact ⟨108, by norm_num, by norm_num; omega⟩
+    · exact ⟨148, by norm_num, by norm_num; omega⟩
+    · exact ⟨208, by norm_num, by norm_num; omega⟩
 
 end Munchausen

@@ -10,7 +10,7 @@ import Munchausen.BaseWindow
 import Munchausen.SelfPayingDigits
 import Munchausen.Conjectures
 import Munchausen.Residues
-import Munchausen.ThreeAdic
+import Munchausen.AdicLaws
 import Munchausen.ShortEquations
 import Munchausen.LocalTests
 import Munchausen.OtherSystems
