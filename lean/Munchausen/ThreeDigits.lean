@@ -1,7 +1,7 @@
 import Munchausen.ShortEquations
 
 /-!
-# Three-digit strings with one large digit (Theorem 25.7, Proposition 22.8)
+# Large digits: Theorems 8.3, 25.2, 25.7 and Lemma 25.13
 
 Completing the square turns a 3-digit solution `(p, q, r)` in base `b` into
 `(2 p b + q)^2 = N + R` with `N = 4 l x^x`, where `x` is the large digit and `l` the leading
@@ -379,5 +379,221 @@ theorem theorem8_3_one {b k x Z B : ℕ} {t : List ℕ} (hk : 2 ≤ k) (hlen : t
       have : e ^ 1 < e ^ e := Nat.pow_lt_pow_right (by omega) h
       simp at this; omega
   exact ⟨rfl, by rw [he1]; rfl, hb⟩
+
+/-! ### Theorem 25.2: the last digit of a power identity is large -/
+
+section PowerIdentity
+
+open Polynomial
+
+lemma eval_P_X (ρ : ℝ) (s : List ℕ) : (P (X : ℝ[X]) s).eval ρ = P ρ s := by
+  have := map_P (Polynomial.evalRingHom ρ) (X : ℝ[X]) s
+  simpa using this
+
+lemma P_nonneg {ρ : ℝ} (hρ : 0 ≤ ρ) (s : List ℕ) : 0 ≤ P ρ s := by
+  induction s with
+  | nil => simp
+  | cons d t ih => rw [P_cons]; positivity
+
+lemma derivative_P_nonneg {ρ : ℝ} (hρ : 0 ≤ ρ) (s : List ℕ) :
+    0 ≤ (derivative (P (X : ℝ[X]) s)).eval ρ := by
+  induction s with
+  | nil => simp
+  | cons d t ih =>
+    rw [P_cons, derivative_add, eval_add]
+    have : 0 ≤ (derivative ((d : ℝ[X]) * X ^ t.length)).eval ρ := by
+      rw [← C_eq_natCast, derivative_C_mul_X_pow]; simp only [eval_mul, eval_C, eval_pow, eval_X]
+      positivity
+    linarith
+
+lemma derivative_P_pos {ρ : ℝ} (hρ : 0 < ρ) {d : ℕ} (hd : 1 ≤ d) {t : List ℕ} (ht : t ≠ []) :
+    0 < (derivative (P (X : ℝ[X]) (d :: t))).eval ρ := by
+  rw [P_cons, derivative_add, eval_add, ← C_eq_natCast, derivative_C_mul_X_pow]
+  simp only [eval_mul, eval_C, eval_pow, eval_X]
+  have h1 := derivative_P_nonneg hρ.le t
+  have hl : (1 : ℝ) ≤ (t.length : ℝ) := by
+    exact_mod_cast List.length_pos_of_ne_nil ht
+  have : 0 < (d : ℝ) * (t.length : ℝ) * ρ ^ (t.length - 1) := by
+    have : (1 : ℝ) ≤ d := by exact_mod_cast hd
+    positivity
+  push_cast at this ⊢
+  linarith
+
+lemma P_ge_self {R : ℝ} (hR : 1 ≤ R) {d : ℕ} (hd : 1 ≤ d) {t : List ℕ} (ht : t ≠ []) :
+    R ≤ P R (d :: t) := by
+  rw [P_cons]
+  have h1 := P_nonneg (by linarith : (0 : ℝ) ≤ R) t
+  have hl : 1 ≤ t.length := List.length_pos_of_ne_nil ht
+  have h2 : R ≤ R ^ t.length := by
+    calc R = R ^ 1 := (pow_one R).symm
+      _ ≤ R ^ t.length := pow_le_pow_right₀ hR hl
+  have : (1 : ℝ) ≤ d := by exact_mod_cast hd
+  nlinarith
+
+/-- **Theorem 25.2** (section 25.1.1), core form. Let `s = (u, y, z)` have a nonzero leading
+digit, and let `E ≥ z` be an integer, with `y ≠ 0` when `E = z`. Then `P_s(r) - E` is not of
+the form `lam A(r)^j` with `lam > 0`, `j ≥ 2`, `A ∈ ℝ[X]`.
+
+In a power identity `Q_s = lam A^j - W` whose set `L` of large digits misses the last
+position, `E = F(t) ≥ w(z) ≥ z`, and `E = z` forces `t = (z)`, so `y` is large. Hence the last
+position always belongs to `L`. -/
+theorem theorem25_2 {u : List ℕ} {y z E : ℕ} (hhead : ∀ h : u ++ [y, z] ≠ [],
+    (u ++ [y, z]).head h ≠ 0) (hE : z ≤ E) (hE2 : E = z → y ≠ 0) {lam : ℝ} (hlam : 0 < lam)
+    {j : ℕ} (hj : 2 ≤ j) (A : ℝ[X])
+    (hid : P (X : ℝ[X]) (u ++ [y, z]) - C (E : ℝ) = C lam * A ^ j) : False := by
+  set f := P (X : ℝ[X]) (u ++ [y, z]) - C (E : ℝ) with hf
+  have hfeval : ∀ ρ : ℝ, f.eval ρ = P ρ (u ++ [y, z]) - E := fun ρ => by
+    rw [hf, eval_sub, eval_P_X, eval_C]
+  have hAeval : ∀ ρ : ℝ, f.eval ρ = 0 → A.eval ρ = 0 := fun ρ h => by
+    rw [hid, eval_mul, eval_C, eval_pow] at h
+    exact pow_eq_zero_iff (by omega) |>.1 ((mul_eq_zero.1 h).resolve_left hlam.ne')
+  -- the leading digit and the tail
+  obtain ⟨d, t, hdt⟩ : ∃ d t, u ++ [y, z] = d :: t := by
+    cases u <;> exact ⟨_, _, rfl⟩
+  have hd1 : 1 ≤ d := by
+    have := hhead (by simp)
+    simp only [hdt, List.head_cons] at this
+    omega
+  have ht : t ≠ [] := by
+    rintro rfl
+    have := congrArg List.length hdt
+    simp at this
+  rcases Nat.lt_or_ge z E with hzE | hzE
+  · -- a positive root `ρ` of `f`
+    have h0 : f.eval 0 < 0 := by
+      rw [hfeval]
+      have : P (0 : ℝ) (u ++ [y, z]) = z := by
+        rw [show u ++ [y, z] = (u ++ [y]) ++ [z] by simp, P_append_singleton]; simp
+      rw [this]
+      have : (z : ℝ) < E := by exact_mod_cast hzE
+      linarith
+    set R : ℝ := (E : ℝ) + 1
+    have hR : 0 < f.eval R := by
+      rw [hfeval, hdt]
+      have hR1 : (1 : ℝ) ≤ R := by
+        have : (0 : ℝ) ≤ E := by positivity
+        simp only [R]; linarith
+      have := P_ge_self hR1 hd1 ht
+      simp only [R] at this ⊢; linarith
+    obtain ⟨ρ, hρ, hρ0⟩ := intermediate_value_Icc (by positivity : (0 : ℝ) ≤ R)
+      (f.continuous.continuousOn) ⟨h0.le, hR.le⟩
+    have hρpos : 0 < ρ := by
+      rcases eq_or_lt_of_le hρ.1 with h | h
+      · rw [← h] at hρ0; linarith
+      · exact h
+    have hA := hAeval ρ hρ0
+    have hder : (derivative f).eval ρ = 0 := by
+      rw [hid, derivative_mul, derivative_C, zero_mul, zero_add, derivative_pow, eval_mul,
+        eval_mul, eval_mul, eval_pow, hA, zero_pow (by omega)]
+      simp
+    have hpos := derivative_P_pos hρpos hd1 ht
+    rw [← hdt, hf, derivative_sub, derivative_C, sub_zero] at *
+    linarith
+  · -- `E = z`: then `f(0) = 0`, so `X^2 ∣ f`, but the coefficient of `X` is `y ≠ 0`
+    have hEz : E = z := le_antisymm (by omega) hE
+    have hy := hE2 hEz
+    have h0 : f.eval 0 = 0 := by
+      rw [hfeval]
+      have : P (0 : ℝ) (u ++ [y, z]) = z := by
+        rw [show u ++ [y, z] = (u ++ [y]) ++ [z] by simp, P_append_singleton]; simp
+      rw [this, hEz]; ring
+    have hA0 := hAeval 0 h0
+    have hXA : X ∣ A := by rw [X_dvd_iff, coeff_zero_eq_eval_zero, hA0]
+    have hX2 : X ^ 2 ∣ f := by
+      rw [hid]
+      exact Dvd.dvd.mul_left ((pow_dvd_pow X hj).trans (pow_dvd_pow_of_dvd hXA j)) _
+    have hcoeff := (X_pow_dvd_iff.1 hX2) 1 (by norm_num)
+    have : f.coeff 1 = y := by
+      rw [hf, coeff_sub, coeff_C, P_append]
+      simp [P_cons, coeff_X]
+      rw [coeff_X_pow_mul']
+      simp
+    rw [this] at hcoeff
+    exact hy (by exact_mod_cast hcoeff)
+
+end PowerIdentity
+
+/-! ### Lemma 25.13 and Corollary 25.14: the largest digit in one base -/
+
+/-- `(Y + c)^(n+1) ≥ Y^(n+1) + (n+1) c Y^n`. -/
+lemma add_pow_succ_ge (Y c n : ℕ) : Y ^ (n + 1) + (n + 1) * c * Y ^ n ≤ (Y + c) ^ (n + 1) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    have h : (Y + c) ^ (n + 2) = (Y + c) ^ (n + 1) * (Y + c) := pow_succ _ _
+    rw [h]
+    have h2 : Y ^ (n + 1 + 1) + (n + 1 + 1) * c * Y ^ (n + 1) ≤
+        (Y ^ (n + 1) + (n + 1) * c * Y ^ n) * (Y + c) := by
+      have : (Y ^ (n + 1) + (n + 1) * c * Y ^ n) * (Y + c) =
+          Y ^ (n + 1 + 1) + (n + 1 + 1) * c * Y ^ (n + 1) + (n + 1) * c * Y ^ n * c := by ring
+      omega
+    exact h2.trans (Nat.mul_le_mul_right _ ih)
+
+/-- **Lemma 25.13** (section 25.3.1). For a 3-digit solution `(p, q, r)` in base `b` with
+largest digit `M` (under `0^0 = m`, `m ≤ 1`): `b^2 ≤ 3 w(M)` and `w(M) < (M + 1) b^2`. -/
+theorem lemma25_13 {b m p q r M : ℕ} (hm : m ≤ 1) (hs : IsSolution b m [p, q, r])
+    (hM : M ∈ [p, q, r]) (hmax : ∀ d ∈ [p, q, r], d ≤ M) :
+    b ^ 2 ≤ 3 * w m M ∧ w m M < (M + 1) * b ^ 2 := by
+  have hp1 : 1 ≤ p := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
+  have hqb := hs.lt_base q (by simp)
+  have hrb := hs.lt_base r (by simp)
+  have heq := hs.eq
+  simp only [P_cons, P_nil, List.length_cons, List.length_nil, Nat.cast_id, Fs_cons, Fs_nil,
+    add_zero, zero_add, pow_zero, pow_one, mul_one] at heq
+  have hwp := w_le_of_le hm (hmax p (by simp))
+  have hwq := w_le_of_le hm (hmax q (by simp))
+  have hwr := w_le_of_le hm (hmax r (by simp))
+  have hwM : w m M ≤ w m p + (w m q + w m r) := by
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hM
+    rcases hM with rfl | rfl | rfl <;> omega
+  have hpM : p ≤ M := hmax p (by simp)
+  have hqr : q * b + r < b ^ 2 := by
+    have : q * b + r < (q + 1) * b := by nlinarith
+    have : (q + 1) * b ≤ b * b := Nat.mul_le_mul_right _ (by omega)
+    nlinarith
+  rw [show (1 : ℕ) + 1 = 2 from rfl] at heq
+  have hpb : b ^ 2 ≤ p * b ^ 2 := Nat.le_mul_of_pos_left _ (by omega)
+  constructor
+  · omega
+  · have h1 : (p + 1) * b ^ 2 ≤ (M + 1) * b ^ 2 := Nat.mul_le_mul_right _ (by omega)
+    have h2 : (p + 1) * b ^ 2 = p * b ^ 2 + b ^ 2 := by ring
+    omega
+
+/-- `3 n^n ≤ (n + 2)^n` for `n ≥ 1` (Bernoulli). -/
+lemma three_mul_pow_le (n : ℕ) (hn : 1 ≤ n) : 3 * n ^ n ≤ (n + 2) ^ n := by
+  obtain ⟨k, rfl⟩ : ∃ k, n = k + 1 := ⟨n - 1, by omega⟩
+  have := add_pow_succ_ge (k + 1) 2 k
+  have e : (k + 1) ^ (k + 1) = (k + 1) * (k + 1) ^ k := by ring
+  nlinarith [Nat.zero_le ((k + 1) ^ k)]
+
+/-- **Corollary 25.14** (section 25.3.1). The largest digits of two 3-digit solutions in one
+base differ by at most 1. -/
+theorem corollary25_14 {b m p q r p' q' r' M M' : ℕ} (hm : m ≤ 1)
+    (hs : IsSolution b m [p, q, r]) (hM : M ∈ [p, q, r]) (hmax : ∀ d ∈ [p, q, r], d ≤ M)
+    (hs' : IsSolution b m [p', q', r']) (hM' : M' ∈ [p', q', r'])
+    (hmax' : ∀ d ∈ [p', q', r'], d ≤ M') (hle : M ≤ M') : M' ≤ M + 1 := by
+  by_contra hc
+  have hM1 : 1 ≤ M := by
+    have := hmax p (by simp); have := hs.head_ne_zero (by simp); simp at this; omega
+  obtain ⟨n, rfl⟩ : ∃ n, M' = n + 2 := ⟨M' - 2, by omega⟩
+  have h1 := (lemma25_13 hm hs hM hmax).1
+  have h2 := (lemma25_13 hm hs' hM' hmax').2
+  have hwM : w m M ≤ w m n := w_le_of_le hm (by omega)
+  rw [w_of_ne_zero m (by omega : n + 2 ≠ 0)] at h2
+  rw [w_of_ne_zero m (by omega : n ≠ 0)] at hwM
+  have h3 := three_mul_pow_le n (by omega)
+  have e : (n + 2) ^ (n + 2) = (n + 2) ^ 2 * (n + 2) ^ n := by ring
+  -- `3 (n+2)^2 n^n ≤ (n+2)^(n+2) < (n+3) b^2 ≤ 3 (n+3) w(M) ≤ 3 (n+3) n^n`
+  have h4 : 3 * (n + 2) ^ 2 * n ^ n ≤ (n + 2) ^ (n + 2) := by
+    rw [e]; nlinarith [Nat.zero_le ((n + 2) ^ 2)]
+  have h5 : (n + 2 + 1) * b ^ 2 ≤ (n + 3) * (3 * n ^ n) := by
+    have := Nat.mul_le_mul_left (n + 3) (h1.trans (Nat.mul_le_mul_left 3 hwM))
+    simpa using this
+  have h6 : (n + 2) ^ 2 * (3 * n ^ n) < (n + 3) * (3 * n ^ n) := by
+    have := lt_of_le_of_lt h4 (h2.trans_le h5)
+    calc (n + 2) ^ 2 * (3 * n ^ n) = 3 * (n + 2) ^ 2 * n ^ n := by ring
+      _ < (n + 3) * (3 * n ^ n) := this
+  have h7 := Nat.lt_of_mul_lt_mul_right h6
+  nlinarith
 
 end Munchausen

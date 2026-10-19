@@ -19,9 +19,9 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 70 formalized (one of them a
+Counts of table rows at the time of writing: 72 formalized (one of them a
 list of computed solutions checked by `decide`), 9 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 80 not formalized and 2 not
+problems (13 `Prop`s), 4 refuted conjectures, 78 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -279,7 +279,7 @@ stated.
 
 | result | Lean name | status |
 |---|---|---|
-| Definition 25.1, Theorem 25.2 (the last digit is large) | none | not formalized (needs a real root of `A` and a derivative argument, or Descartes' rule; next step) |
+| Definition 25.1, Theorem 25.2 (the last digit is large) | `theorem25_2` [Three] | formalized (core form: `P_s(r) - E` is not `lam A(r)^j` when `E ≥` the last digit, with the next digit nonzero if equal; this is exactly the situation when the last digit is not large; the proof uses the intermediate value theorem and a derivative instead of Descartes' rule) |
 | Corollary 25.3 | none | not formalized (depends on 25.2) |
 | Theorem 25.4 | none | not formalized ((a) is Theorem 22.6 and 25.5 after rescaling; (b), (c) need valuations) |
 | Theorem 25.5 | `theorem25_5`, `theorem25_5_conditions` [Cons] | formalized (the prime condition is stated as `c ∣ (j-1)^c`, which is equivalent; the conditions hold for `c = (j-1)^a`) |
@@ -288,7 +288,7 @@ stated.
 | Conjecture 25.8 | none | not stated (it refers to "the two linear families"; could be stated with Theorems 22.6 and 25.5) |
 | Proposition 25.9, Theorem 25.10 | none | not formalized (elementary, needs Theorem 25.7) |
 | Theorem 25.11, Heuristic 25.12 | none | not formalized (computation, heuristic) |
-| Lemma 25.13, Corollary 25.14 | none | not formalized (elementary; good next step) |
+| Lemma 25.13, Corollary 25.14 | `lemma25_13`, `corollary25_14` [Three] | formalized |
 | Theorem 25.15 | none | not formalized |
 | Propositions 25.16, 25.17 | none | not formalized (elementary given the family shape) |
 | Question 50 (at most two 3-digit solutions per base) | `Question50` [Conj] | conjecture |
@@ -338,10 +338,9 @@ the new numbers.
 
 In order of value and effort:
 
-1. Theorem 25.2 (the last digit of a power identity is large), then
-   Theorem 25.7 (i) and Proposition 22.8.
-2. Lemma 25.13 and Corollary 25.14 (the largest digit of 3-digit solutions in
-   one base), then Propositions 25.16 and 25.17.
+1. Theorem 25.7 (i) and Proposition 22.8 (the shape `p = lam c^2`,
+   `q = 2 lam c e` when `R = 0`), then Propositions 25.16 and 25.17.
+2. Theorem 25.15 (at most 30 three-digit solutions per base).
 3. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
 4. Lemma 15.12 (2) and Theorem 20.8 (primitive roots, lifting).
 5. Theorem 15.7 under `0^0 = 0`, Propositions 15.16 and 18.16 / 18.17.
