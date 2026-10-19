@@ -8,7 +8,8 @@ import Munchausen.Defs
 * the digit bound, Proposition 1.2;
 * one base per digit string, Proposition 1.3;
 * the two conventions, Proposition 1.4;
-* the top digit `b - 1` occurs at most twice in a `(b-1)`-digit solution (section 1.7).
+* the top digit `b - 1` occurs at most twice in a `(b-1)`-digit solution (section 1.7);
+* Proposition 1.6: a `b`-digit solution has the digit `b - 1` at least three times.
 -/
 
 namespace Munchausen
@@ -261,5 +262,150 @@ theorem count_top_digit_le_two {b m n : ℕ} (hb : 2 ≤ b) (h : IsMunchausen b 
   have := pow_lt_three_mul b hb
   rw [h] at hF
   nlinarith
+
+/-! ### Proposition 1.6: `b`-digit solutions -/
+
+open Real in
+/-- The real inequality behind Proposition 1.6 for `b ≥ 61`:
+`2 n^n + (n+1)(n-1)^(n-1) < (n+1)^n` for `n ≥ 60`. -/
+lemma large_case (n : ℕ) (hn : 60 ≤ n) :
+    2 * (n : ℝ) ^ n + ((n : ℝ) + 1) * ((n : ℝ) - 1) ^ (n - 1) < ((n : ℝ) + 1) ^ n := by
+  have ht : (60 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hpos : (0 : ℝ) < (n : ℝ) := by linarith
+  -- `A = ((n+1)/n)^n ≥ exp(n/(n+1)) ≥ 1 + x + x^2/2`
+  set x : ℝ := (n : ℝ) / ((n : ℝ) + 1) with hx
+  have hlog : x ≤ (n : ℝ) * Real.log (1 + 1 / (n : ℝ)) := by
+    have := Real.one_sub_inv_le_log_of_pos (show (0 : ℝ) < 1 + 1 / (n : ℝ) by positivity)
+    have e : 1 - (1 + 1 / (n : ℝ))⁻¹ = 1 / ((n : ℝ) + 1) := by field_simp; ring
+    rw [e] at this
+    have := mul_le_mul_of_nonneg_left this hpos.le
+    calc x = (n : ℝ) * (1 / ((n : ℝ) + 1)) := by rw [hx]; ring
+      _ ≤ _ := this
+  have hA : 1 + x + x ^ 2 / 2 ≤ (1 + 1 / (n : ℝ)) ^ n := by
+    have h1 : (1 + 1 / (n : ℝ)) ^ n = Real.exp ((n : ℝ) * Real.log (1 + 1 / (n : ℝ))) := by
+      rw [← Real.log_pow, Real.exp_log (by positivity)]
+    rw [h1]
+    have hx0 : 0 ≤ x := by rw [hx]; positivity
+    calc 1 + x + x ^ 2 / 2 ≤ Real.exp x := Real.quadratic_le_exp_of_nonneg hx0
+      _ ≤ _ := Real.exp_le_exp.2 hlog
+  -- `B = (1 - 1/n)^(n-1) ≤ exp(-(n-1)/n) ≤ 1/(1 + y + y^2/2)`
+  set y : ℝ := ((n - 1 : ℕ) : ℝ) / (n : ℝ) with hy
+  have hB : (1 - 1 / (n : ℝ)) ^ (n - 1) ≤ 1 / (1 + y + y ^ 2 / 2) := by
+    have h0 : 0 ≤ 1 - 1 / (n : ℝ) := by
+      have : 1 / (n : ℝ) ≤ 1 := by rw [div_le_one hpos]; linarith
+      linarith
+    have h1 : 1 - 1 / (n : ℝ) ≤ Real.exp (-(1 / (n : ℝ))) := by
+      have := Real.add_one_le_exp (-(1 / (n : ℝ))); linarith
+    have h2 : (1 - 1 / (n : ℝ)) ^ (n - 1) ≤ Real.exp (-(1 / (n : ℝ))) ^ (n - 1) :=
+      pow_le_pow_left₀ h0 h1 _
+    have h3 : Real.exp (-(1 / (n : ℝ))) ^ (n - 1) = (Real.exp y)⁻¹ := by
+      rw [← Real.exp_nat_mul, ← Real.exp_neg, hy]; congr 1; ring
+    have hy0 : 0 ≤ y := by rw [hy]; positivity
+    have h4 : 1 + y + y ^ 2 / 2 ≤ Real.exp y := Real.quadratic_le_exp_of_nonneg hy0
+    have h5 : (Real.exp y)⁻¹ ≤ 1 / (1 + y + y ^ 2 / 2) := by
+      rw [one_div]; exact inv_anti₀ (by positivity) h4
+    linarith [h2, h3 ▸ h5]
+  -- numerical bounds
+  have hx60 : 60 / 61 ≤ x := by
+    rw [hx, div_le_div_iff₀ (by norm_num) (by positivity)]; linarith
+  have hy60 : 59 / 60 ≤ y := by
+    rw [hy, Nat.cast_sub (by omega), Nat.cast_one, le_div_iff₀ hpos]; linarith
+  have hA' : 1 + 60 / 61 + (60 / 61) ^ 2 / 2 ≤ (1 + 1 / (n : ℝ)) ^ n := by
+    have : (60 / 61 : ℝ) ^ 2 ≤ x ^ 2 := pow_le_pow_left₀ (by norm_num) hx60 2
+    linarith
+  have hB' : (1 - 1 / (n : ℝ)) ^ (n - 1) ≤ 1 / (1 + 59 / 60 + (59 / 60) ^ 2 / 2) := by
+    refine hB.trans ?_
+    apply one_div_le_one_div_of_le (by norm_num)
+    have : (59 / 60 : ℝ) ^ 2 ≤ y ^ 2 := pow_le_pow_left₀ (by norm_num) hy60 2
+    linarith
+  have hn1 : 1 + 1 / (n : ℝ) ≤ 61 / 60 := by
+    have : 1 / (n : ℝ) ≤ 1 / 60 := one_div_le_one_div_of_le (by norm_num) ht
+    linarith
+  set A := (1 + 1 / (n : ℝ)) ^ n
+  set B := (1 - 1 / (n : ℝ)) ^ (n - 1)
+  have hB0 : 0 ≤ B := by
+    have : 1 / (n : ℝ) ≤ 1 := by rw [div_le_one hpos]; linarith
+    exact pow_nonneg (by linarith) _
+  have hkey : 2 + (1 + 1 / (n : ℝ)) * B < A := by
+    have h1 : (1 + 1 / (n : ℝ)) * B ≤ 61 / 60 * (1 / (1 + 59 / 60 + (59 / 60) ^ 2 / 2)) :=
+      mul_le_mul hn1 hB' hB0 (by norm_num)
+    have h2 : (2 : ℝ) + 61 / 60 * (1 / (1 + 59 / 60 + (59 / 60) ^ 2 / 2)) <
+        1 + 60 / 61 + (60 / 61) ^ 2 / 2 := by norm_num
+    linarith
+  -- back to the powers
+  set N := (n : ℝ) ^ (n - 1)
+  have hN : 0 < N := by positivity
+  have e1 : ((n : ℝ) + 1) ^ n = (n : ℝ) * N * A := by
+    have : ((n : ℝ) + 1) = (n : ℝ) * (1 + 1 / (n : ℝ)) := by field_simp
+    rw [this, mul_pow]
+    have : (n : ℝ) ^ n = (n : ℝ) * N := by
+      rw [← pow_succ']; congr 1; omega
+    rw [this]
+  have e2 : ((n : ℝ) - 1) ^ (n - 1) = N * B := by
+    have : ((n : ℝ) - 1) = (n : ℝ) * (1 - 1 / (n : ℝ)) := by field_simp
+    rw [this, mul_pow]
+  have e3 : (n : ℝ) ^ n = (n : ℝ) * N := by
+    rw [← pow_succ']; congr 1; omega
+  rw [e1, e2, e3]
+  have e4 : ((n : ℝ) + 1) = (n : ℝ) * (1 + 1 / (n : ℝ)) := by field_simp
+  rw [e4]
+  have hnN : 0 < (n : ℝ) * N := by positivity
+  nlinarith [mul_lt_mul_of_pos_left hkey hnN]
+
+set_option maxRecDepth 100000 in
+lemma prop1_6_small : ∀ b, b < 61 → 7 ≤ b →
+    2 * (b - 1) ^ (b - 1) + b * (b - 2) ^ (b - 2) < b ^ (b - 1) := by
+  decide
+
+/-- The inequality of Proposition 1.6: `2 (b-1)^(b-1) + b (b-2)^(b-2) < b^(b-1)` for `b ≥ 7`. -/
+lemma prop1_6_ineq {b : ℕ} (hb : 7 ≤ b) :
+    2 * (b - 1) ^ (b - 1) + b * (b - 2) ^ (b - 2) < b ^ (b - 1) := by
+  rcases Nat.lt_or_ge b 61 with h | h
+  · exact prop1_6_small b h hb
+  · obtain ⟨n, rfl⟩ : ∃ n, b = n + 1 := ⟨b - 1, by omega⟩
+    have := large_case n (by omega)
+    simp only [Nat.add_sub_cancel, show n + 1 - 2 = n - 1 by omega]
+    have hc : ((n - 1 : ℕ) : ℝ) = (n : ℝ) - 1 := by rw [Nat.cast_sub (by omega)]; simp
+    have : ((2 * n ^ n + (n + 1) * (n - 1) ^ (n - 1) : ℕ) : ℝ) < (((n + 1) ^ n : ℕ) : ℝ) := by
+      push_cast; rw [hc]; exact this
+    exact_mod_cast this
+
+lemma Fs_le_count {m b : ℕ} (hm : m ≤ 1) (hb : 3 ≤ b) {l : List ℕ} (hl : ∀ d ∈ l, d < b) :
+    Fs m l ≤ l.count (b - 1) * (b - 1) ^ (b - 1) + l.length * (b - 2) ^ (b - 2) := by
+  induction l with
+  | nil => simp
+  | cons d t ih =>
+    have ih' := ih (fun e he => hl e (by simp [he]))
+    have hd := hl d (by simp)
+    rw [Fs_cons, List.count_cons, List.length_cons]
+    by_cases hdb : d = b - 1
+    · subst hdb
+      rw [w_of_ne_zero m (by omega)]
+      simp only [beq_self_eq_true, ite_true]
+      rw [add_mul, add_mul, one_mul, one_mul]
+      omega
+    · have : w m d ≤ (b - 2) ^ (b - 2) := by
+        calc w m d ≤ w m (b - 2) := w_le_of_le hm (by omega)
+          _ = (b - 2) ^ (b - 2) := w_of_ne_zero m (by omega)
+      have : (d == b - 1) = false := by simpa using hdb
+      rw [this]
+      simp only [Bool.false_eq_true, ite_false, add_zero]
+      rw [add_mul, one_mul]
+      omega
+
+/-- **Proposition 1.6** (section 1.8). For `b ≥ 7`, a `b`-digit solution contains the digit
+`b - 1` at least three times. -/
+theorem prop1_6 {b m n : ℕ} (hb : 7 ≤ b) (hm : m ≤ 1) (h : IsMunchausen b m n)
+    (hlen : (Nat.digits b n).length = b) : 3 ≤ (Nat.digits b n).count (b - 1) := by
+  by_contra hc
+  have hF := Fs_le_count hm (by omega) (l := Nat.digits b n)
+    (fun d hd => Nat.digits_lt_base (by omega) hd)
+  rw [hlen] at hF
+  have hn : b ^ (b - 1) ≤ n := (Nat.lt_digits_length_iff (by omega) n).1 (by omega)
+  have hX : (Nat.digits b n).count (b - 1) * (b - 1) ^ (b - 1) ≤ 2 * (b - 1) ^ (b - 1) :=
+    Nat.mul_le_mul_right _ (by omega)
+  have := prop1_6_ineq hb
+  rw [IsMunchausen, F_def] at h
+  omega
 
 end Munchausen

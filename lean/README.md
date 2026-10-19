@@ -52,6 +52,7 @@ use `decide`, which the kernel checks.
 | `Munchausen/ShortEquations.lean` | Propositions 18.1, 16.5, 20.20, Lemma 18.14, Theorem 15.7 |
 | `Munchausen/ThreeDigits.lean` | Theorem 8.3 and Theorem 25.7 (ii): a large digit in the square class |
 | `Munchausen/OtherSystems.lean` | negative bases (14.4, 14.5), the factorial system (21.14, 21.15), `F_p[T]` (21.1, 21.3, 21.5, 24.1), base `-1+i` (23.1) |
+| `Munchausen/Search.lean` | chapters 26 and 27: the swap lemma, the image of `F`, bottom digits |
 | `Munchausen/Examples.lean` | concrete solutions checked by `decide`, and `(1,6,46666)` in base `46666^23333 - 3` |
 | `Munchausen/Conjectures.lean` | open problems as named `Prop`s, and proofs that refuted conjectures are false |
 

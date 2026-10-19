@@ -17,11 +17,11 @@ Status values:
 Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 (Constructions), SPD (SelfPayingDigits), Count (Counting), Poly (Polynomial),
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
-(OtherSystems), Ex (Examples), Conj (Conjectures).
+(OtherSystems), Search, Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 78 formalized (one of them a
-list of computed solutions checked by `decide`), 10 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 74 not formalized and 2 not
+Counts of table rows at the time of writing: 83 formalized (one of them a
+list of computed solutions checked by `decide`), 11 partial, 10 rows of open
+problems (13 `Prop`s), 4 refuted conjectures, 78 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -43,7 +43,7 @@ stated.
 | 1.6: `b ≡ 1 (mod 3)`, `m = 0` | `IsSolution.three_dvd_countP_mod_six`, `pow_self_modEq_three` [Cong] | formalized |
 | 1.6: even base, last digit | `IsMunchausen.last_digit_parity` [Cong] | formalized |
 | 1.7: digit `b-1` at most twice in a `(b-1)`-digit solution | `count_top_digit_le_two`, `pow_lt_three_mul` [Basic] | formalized |
-| Proposition 1.6 (`b ≥ 7`, three copies of `b-1`) | none | not formalized (needs `2(1-1/b)^(b-1) + (1-2/b)^(b-2) < 1` for all `b ≥ 7`; a truncated binomial bound works, see "Next") |
+| Proposition 1.6 (`b ≥ 7`, three copies of `b-1`) | `prop1_6`, `prop1_6_ineq`, `large_case` [Basic] | formalized (`b ≤ 60` by `decide`, `b ≥ 61` with `log` and `exp` bounds) |
 
 ## Chapter 2. Constructions
 
@@ -297,6 +297,26 @@ stated.
 | Question 50 (at most two 3-digit solutions per base) | `Question50` [Conj] | conjecture |
 | Question 65 (the next 3-digit solution) | `Question65` [Conj] | conjecture (the family part is Theorem 25.10, not formalized) |
 
+## Chapter 26. Near-solutions as evidence
+
+| result | Lean name | status |
+|---|---|---|
+| Lemma 26.1 (the swap lemma) | `swap_lemma_perm`, `swap_lemma`, `swap_last_two` [Search] | formalized |
+| Corollary 26.2 (the class of the moved offset) | none | not formalized (parity of repunits; elementary) |
+| Lemma 26.3 (the fibre) | none | not formalized (bookkeeping on near-solutions) |
+| Lemma 26.4 (other systems) | `swap_lemma`, `swap_last_two` [Search] | partial: base `-b` (the ring identity at `r = -b`); factorial, Pisot and `F_q[T]` not formalized |
+| Proposition 26.5, Heuristic 26.6, Proposition 26.9 | none | not formalized (statements about the probabilistic model, computed) |
+| Proposition 26.10 | `prop26_10_one`, `prop26_10_two`, `ImageSet` [Search] | formalized |
+
+## Chapter 27. Limits of search
+
+| result | Lean name | status |
+|---|---|---|
+| Lemma 27.1, Theorem 27.2 | none | not formalized (entropy statements in the model) |
+| Lemma 27.3, Proposition 27.4, Theorem 27.5, Remark 27.6, Corollary 27.7 | none | not formalized (need the oracle model of cylinders and certificates; Theorem 27.5 is a fooling-set bound and would fit an abstract formulation) |
+| Proposition 27.8 | `prop27_8`, `not_dvd_w_of_coprime` [Search] | formalized |
+| Corollary 27.9 | `corollary27_9` [Search] | formalized (as: if every unrevealed value below `k` has `b^L ∣ w(v)`, then `k ≤ 1`, and `k = 0` under `0^0 = 1`) |
+
 ## Open questions stated as `Prop`s
 
 `FinitenessConjecture` (refuted), `MissingLengthsConjecture` (refuted),
@@ -341,14 +361,13 @@ the new numbers.
 
 In order of value and effort:
 
-1. Theorem 25.7 (i) and Proposition 22.8 (the shape `p = lam c^2`,
-   `q = 2 lam c e` when `R = 0`), then Propositions 25.16 and 25.17.
-2. Theorem 25.15 (at most 30 three-digit solutions per base).
-3. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
-4. Theorem 20.12 (the 5-adic law) and the equality part of Theorem 20.11
+1. Theorem 25.7 (i) for odd `x` (squarefree `lam`), Proposition 25.17,
+   Theorem 25.15.
+2. Theorem 20.12 (the 5-adic law) and the equality part of Theorem 20.11
    (`p`-adic power series).
-5. Theorem 15.7 under `0^0 = 0`, Lemma 18.16 and Corollary 18.17.
-6. The real-root count in Proposition 9.3 and the asymptotics of
+3. Theorem 15.7 under `0^0 = 0`, Lemma 18.16 and Corollary 18.17.
+4. The real-root count in Proposition 9.3 and the asymptotics of
    Theorem 11.2.
-7. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
+5. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
    chapter 24.
+6. Corollary 26.2 and an abstract form of Theorem 27.5 (fooling sets).

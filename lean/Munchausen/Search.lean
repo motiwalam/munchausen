@@ -1,0 +1,138 @@
+import Munchausen.Congruences
+
+/-!
+# Near-solutions and search (chapters 26 and 27)
+
+* Lemma 26.1, the swap lemma: rearranging digits keeps `F` and moves the value by a multiple
+  of `b - 1`; a transposition moves it by `(x - y)(b^j - b^i)` (also in base `-b`,
+  Lemma 26.4);
+* Proposition 26.10: the image of `c ↦ S(c)` is the same under both conventions;
+* Proposition 27.8 and Corollary 27.9: which digit values fix the bottom digits of `S`.
+-/
+
+namespace Munchausen
+
+/-! ### Chapter 26: the swap lemma -/
+
+/-- **Lemma 26.1** (section 26.1.2), the multiset part. Rearranging the digits does not change
+the weight sum, and changes the value by a multiple of `b - 1`. -/
+theorem swap_lemma_perm {b m : ℕ} (hb : 1 ≤ b) {s s' : List ℕ} (h : s.Perm s') :
+    Fs m s' = Fs m s ∧ P b s' ≡ P b s [MOD b - 1] := by
+  refine ⟨(h.map (w m)).sum_eq.symm, ?_⟩
+  have h1 := P_modEq_sum hb s
+  have h2 := P_modEq_sum hb s'
+  rw [← h.sum_eq] at h2
+  exact h2.trans h1.symm
+
+/-- **Lemma 26.1** (section 26.1.2), the transposition, in any commutative ring (so also for
+negative bases, Lemma 26.4). Exchanging the digit `y` at position `j` and the digit `x` at
+position `i < j` changes the value by `(x - y)(r^j - r^i)`. -/
+theorem swap_lemma {R : Type*} [CommRing R] (r : R) (A B C : List ℕ) (x y : ℕ) :
+    P r (A ++ x :: (B ++ y :: C)) - P r (A ++ y :: (B ++ x :: C)) =
+      ((x : R) - y) * (r ^ (B.length + 1 + C.length) - r ^ C.length) := by
+  simp only [P_append, P_cons, List.length_cons, List.length_append]
+  ring
+
+/-- The last two digits (Lemma 26.1): exchanging them moves the value by `(x - y)(b - 1)`; in
+base `-b` (Lemma 26.4) by `-(x - y)(b + 1)`. -/
+theorem swap_last_two {R : Type*} [CommRing R] (r : R) (A : List ℕ) (x y : ℕ) :
+    P r (A ++ [x, y]) - P r (A ++ [y, x]) = ((x : R) - y) * (r - 1) := by
+  have := swap_lemma r A [] [] x y
+  simpa using this
+
+/-! ### Proposition 26.10: the image of `F` -/
+
+/-- **Proposition 26.10 (2)** (section 26.7.1). Under `0^0 = 0` zeros weigh nothing; under
+`0^0 = 1` the digits 0 and 1 weigh the same. -/
+theorem prop26_10_two (s : List ℕ) :
+    Fs 0 s = Fs 0 (s.filter (· ≠ 0)) ∧ Fs 1 s = Fs 0 (s.map fun d => if d = 0 then 1 else d) := by
+  constructor
+  · induction s with
+    | nil => rfl
+    | cons d t ih =>
+      by_cases hd : d = 0
+      · subst hd; simp [ih]
+      · simp [List.filter_cons, hd, ih]
+  · induction s with
+    | nil => rfl
+    | cons d t ih =>
+      by_cases hd : d = 0
+      · subst hd; simp [ih]
+      · simp [hd, ih, w_of_ne_zero _ hd]
+
+/-- The multisets of Proposition 15.1: 1 to `b` digits below `b`, with a nonzero digit. -/
+def ImageSet (b m : ℕ) : Set ℕ :=
+  {N | ∃ c : List ℕ, 1 ≤ c.length ∧ c.length ≤ b ∧ (∀ d ∈ c, d < b) ∧ (∃ d ∈ c, d ≠ 0) ∧
+    N = Fs m c}
+
+/-- **Proposition 26.10 (1)** (section 26.7.1). The image of `c ↦ S(c)` is the same under both
+conventions. -/
+theorem prop26_10_one {b : ℕ} (hb : 2 ≤ b) : ImageSet b 0 = ImageSet b 1 := by
+  ext N
+  constructor
+  · rintro ⟨c, h1, h2, h3, ⟨d, hd, hd0⟩, rfl⟩
+    -- drop the zeros: a zero-free multiset weighs the same under both conventions
+    refine ⟨c.filter (· ≠ 0), ?_, ?_, ?_, ?_, ?_⟩
+    · exact List.length_pos_of_mem (List.mem_filter.2 ⟨hd, by simpa using hd0⟩)
+    · exact (List.length_filter_le _ _).trans h2
+    · intro e he; exact h3 e (List.mem_of_mem_filter he)
+    · exact ⟨d, List.mem_filter.2 ⟨hd, by simpa using hd0⟩, hd0⟩
+    · rw [(prop26_10_two c).1, (prop26_10_two (c.filter (· ≠ 0))).2]
+      congr 1
+      have hfix : ∀ e ∈ c.filter (· ≠ 0), (if e = 0 then 1 else e) = e := by
+        intro e he
+        have := (List.mem_filter.1 he).2
+        simp only [ne_eq, decide_eq_true_eq] at this
+        simp [this]
+      rw [List.map_congr_left hfix, List.map_id']
+  · rintro ⟨c, h1, h2, h3, ⟨d, hd, hd0⟩, rfl⟩
+    refine ⟨c.map fun d => if d = 0 then 1 else d, by simpa using h1, by simpa using h2, ?_, ?_,
+      (prop26_10_two c).2⟩
+    · intro e he
+      obtain ⟨d', hd', rfl⟩ := List.mem_map.1 he
+      have := h3 d' hd'
+      split_ifs <;> omega
+    · exact ⟨if d = 0 then 1 else d, List.mem_map.2 ⟨d, hd, rfl⟩, by split_ifs <;> omega⟩
+
+/-! ### Chapter 27: bottom digits -/
+
+/-- **Proposition 27.8** (section 27.4.1). For `b, v ≥ 1`, `b^L` divides `v^v` exactly when
+`L v_p(b) ≤ v v_p(v)` for every prime `p`. -/
+theorem prop27_8 {b v L : ℕ} (hb : 1 ≤ b) (hv : 1 ≤ v) :
+    b ^ L ∣ v ^ v ↔ ∀ p, L * b.factorization p ≤ v * v.factorization p := by
+  rw [← Nat.factorization_le_iff_dvd (by positivity) (by positivity), Nat.factorization_pow,
+    Nat.factorization_pow, Finsupp.le_def]
+  simp
+
+/-- **Proposition 27.8**, the values prime to `b` (section 27.4.1). For `L ≥ 1` and `b ≥ 2`,
+a value `v ≥ 1` prime to `b` never has `b^L ∣ w(v)`, in particular `v = 1`. (`v = 0` under
+`0^0 = 1` weighs 1 and never has it either; see `corollary27_9`.) -/
+theorem not_dvd_w_of_coprime {b v L m : ℕ} (hb : 2 ≤ b) (hL : 1 ≤ L) (hv : Nat.Coprime v b) :
+    ¬ b ^ L ∣ w m v := by
+  intro h
+  rcases Nat.eq_zero_or_pos v with rfl | hv0
+  · simp at hv; omega
+  · rw [w_of_ne_zero m hv0.ne'] at h
+    have hcop : Nat.Coprime (v ^ v) (b ^ L) := Nat.Coprime.pow _ _ hv
+    have := Nat.Coprime.eq_one_of_dvd hcop.symm h
+    have : b ≤ b ^ L := Nat.le_self_pow (by omega) b
+    omega
+
+/-- **Corollary 27.9** (section 27.4.1). In the top-down order the values below `k` are the
+unrevealed ones. The bottom `L ≥ 1` digits of `S` are known only when every unrevealed value
+`v` has `b^L ∣ w(v)`; this forces `k ≤ 1` (the value 1 is revealed), and under `0^0 = 1` even
+`k = 0`. So a bottom check never applies before the leaves of a top-down tree. -/
+theorem corollary27_9 {b L m k : ℕ} (hb : 2 ≤ b) (hL : 1 ≤ L)
+    (h : ∀ v < k, b ^ L ∣ w m v) : k ≤ 1 ∧ (m = 1 → k = 0) := by
+  constructor
+  · by_contra hk
+    exact not_dvd_w_of_coprime hb hL (Nat.coprime_one_left b) (h 1 (by omega))
+  · intro hm
+    by_contra hk
+    have h0 := h 0 (by omega)
+    rw [w_zero, hm] at h0
+    have : b ^ L ≤ 1 := Nat.le_of_dvd one_pos h0
+    have : b ≤ b ^ L := Nat.le_self_pow (by omega) b
+    omega
+
+end Munchausen

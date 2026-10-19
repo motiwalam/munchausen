@@ -11,3 +11,4 @@ import Munchausen.Residues
 import Munchausen.ShortEquations
 import Munchausen.OtherSystems
 import Munchausen.ThreeDigits
+import Munchausen.Search
