@@ -18,9 +18,10 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 (Constructions), Poly (Polynomial), Res (Residues), Short (ShortEquations),
 Other (OtherSystems), Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 62 formalized (one of them a
-list of computed solutions checked by `decide`), 8 partial, 8 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, and 77 not formalized.
+Counts of table rows at the time of writing: 64 formalized (one of them a
+list of computed solutions checked by `decide`), 8 partial, 10 rows of open
+problems (13 `Prop`s), 4 refuted conjectures, 87 not formalized and 2 not
+stated.
 
 ## Chapter 1. Basics
 
@@ -141,7 +142,8 @@ problems (13 `Prop`s), 4 refuted conjectures, and 77 not formalized.
 | Propositions 15.4, 15.5 | none | not formalized (follow from 1.4, 2.1 and 2.3) |
 | Proposition 15.6 | none | not formalized (model) |
 | Theorem 15.7 | `theorem15_7`, `two_two_digit` [Short] | partial: the statement under `0^0 = 1`, proven in full; the `0^0 = 0` variant (twin bases `a^(a-1)`) is not formalized |
-| Propositions 15.8, Theorem 15.9 | none | not formalized (the converse of Proposition 2.2 is now available; next step) |
+| Proposition 15.8 | none | not formalized (the converse of Proposition 2.2 is now available; next step) |
+| Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`; the library's hypothesis that `a` is not a perfect power is not needed for the direct proof) |
 | Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
 | Proposition 15.11 | `exists_root_mod_two_iff` [Poly] | formalized |
 | Lemma 15.12 (1) | `pow_self_modEq_two` [Cong], `multiple_mem_T` [Res] | partial: `x^x - x` is even, and every multiple of 2 occurs modulo `2^e` |
@@ -272,6 +274,25 @@ problems (13 `Prop`s), 4 refuted conjectures, and 77 not formalized.
 | Proposition 24.11, Corollary 24.12 | none | not formalized (traces) |
 | Proposition 24.13, Theorem 24.15, Corollary 24.16 | none | not formalized |
 
+## Chapter 25. Identity families and 3-digit solutions
+
+| result | Lean name | status |
+|---|---|---|
+| Definition 25.1, Theorem 25.2 (the last digit is large) | none | not formalized (needs a real root of `A` and a derivative argument, or Descartes' rule; next step) |
+| Corollary 25.3 | none | not formalized (depends on 25.2) |
+| Theorem 25.4 | none | not formalized ((a) is Theorem 22.6 and 25.5 after rescaling; (b), (c) need valuations) |
+| Theorem 25.5 | `theorem25_5`, `theorem25_5_conditions` [Cons] | formalized (the prime condition is stated as `c ∣ (j-1)^c`, which is equivalent; the conditions hold for `c = (j-1)^a`) |
+| Proposition 25.6 | none | not formalized |
+| Theorem 25.7 | none | not formalized (completing the square; same work as Theorem 8.3 and Proposition 22.8) |
+| Conjecture 25.8 | none | not stated (it refers to "the two linear families"; could be stated with Theorems 22.6 and 25.5) |
+| Proposition 25.9, Theorem 25.10 | none | not formalized (elementary, needs Theorem 25.7) |
+| Theorem 25.11, Heuristic 25.12 | none | not formalized (computation, heuristic) |
+| Lemma 25.13, Corollary 25.14 | none | not formalized (elementary; good next step) |
+| Theorem 25.15 | none | not formalized |
+| Propositions 25.16, 25.17 | none | not formalized (elementary given the family shape) |
+| Question 50 (at most two 3-digit solutions per base) | `Question50` [Conj] | conjecture |
+| Question 65 (the next 3-digit solution) | `Question65` [Conj] | conjecture (the family part is Theorem 25.10, not formalized) |
+
 ## Open questions stated as `Prop`s
 
 `FinitenessConjecture` (refuted), `MissingLengthsConjecture` (refuted),
@@ -319,7 +340,8 @@ In order of value and effort:
    Proposition 8.5, now that the converse of Proposition 2.2 is formalized.
 3. The unique decomposition of Proposition 2.3 (core, self-paying digits,
    final 1).
-4. Proposition 22.8 and Theorem 8.3 (completing the square for 3 digits).
+4. Proposition 22.8, Theorem 8.3 and Theorem 25.7 (completing the square for
+   3 digits), then Theorem 25.2 and Lemma 25.13 / Corollary 25.14.
 5. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
 6. Lemma 15.12 (2) and Theorem 20.8 (primitive roots, lifting).
 7. Theorem 15.7 under `0^0 = 0`, Propositions 15.16 and 18.16/18.17.

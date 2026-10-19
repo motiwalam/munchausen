@@ -10,6 +10,8 @@ import Munchausen.Congruences
 * the complete description of 2-digit solutions, Proposition 2.6, and its four families;
 * solutions of every length under `0^0 = 0`, Proposition 2.7;
 * Corollary 2.4, Proposition 4.2 and Theorem 9.2 (many solutions in one base);
+* Theorem 15.9 (a swap with a self-paying digit on top) and Theorem 25.5 (the identity
+  family `(c^j, 0, ..., 0, x)` under `0^0 = 1`);
 * the converse of Proposition 2.2, Proposition 8.5 and its corollary in section 8.3;
 * splits and blocks (Lemmas 22.1, 22.3, 22.4, 22.9), Theorem 22.6 and Corollary 22.7.
 -/
@@ -1052,5 +1054,148 @@ theorem count_zero_unbounded (C : ℕ) :
   have : C + 2 < 2 ^ (C + 2) := Nat.lt_two_pow_self
   rw [show C + 3 - 1 = C + 2 by omega]
   omega
+
+/-! ### Theorem 15.9 and Theorem 25.5 -/
+
+/-- **Theorem 15.9** (section 15.3). For every `a ≥ 2`, the string
+`(a^(a+1), 0, ..., 0, a, a^a)` with `a + 2` digits is a solution in base `a^(a^(a+1) - 1)`
+under `0^0 = 0`: the swap `(a, a^a)` with the self-paying digit `a^(a+1)` at position `a + 1`
+on top. For `a = 2` it is `(8, 0, 2, 4)` in base 128. The library states it for `a` not a
+perfect power; the direct proof needs no such condition. -/
+theorem theorem15_9 {a : ℕ} (ha : 2 ≤ a) :
+    IsSolution (a ^ (a ^ (a + 1) - 1)) 0
+      (a ^ (a + 1) :: (List.replicate (a - 1) 0 ++ [a, a ^ a])) := by
+  set B := a ^ (a ^ (a + 1) - 1) with hB
+  have hA : a + 3 ≤ a ^ (a + 1) := by
+    have h1 : a ^ 3 ≤ a ^ (a + 1) := Nat.pow_le_pow_right (by omega) (by omega)
+    have h2 : a + 3 ≤ a ^ 3 := by
+      have : a ^ 3 = a * a * a := by ring
+      rw [this]; nlinarith
+    omega
+  have haa : a ^ a < B := Nat.pow_lt_pow_right (by omega) (by omega)
+  have ha1 : a ^ (a + 1) < B := Nat.pow_lt_pow_right (by omega) (by omega)
+  have hlen : (List.replicate (a - 1) 0 ++ [a, a ^ a]).length = a + 1 := by simp; omega
+  have hsp : SelfPaying B (a ^ (a + 1)) (List.replicate (a - 1) 0 ++ [a, a ^ a]).length := by
+    rw [hlen]
+    refine ⟨by omega, by omega, ha1, ?_⟩
+    rw [hB, ← pow_mul, ← pow_add, ← pow_mul]
+    congr 1
+    rw [Nat.sub_mul, one_mul]
+    have : a + 1 ≤ a ^ (a + 1) * (a + 1) := Nat.le_mul_of_pos_left _ (by omega)
+    rw [mul_comm (a + 1) (a ^ (a + 1))]
+    omega
+  rw [isSolution_selfPaying_cons_iff hsp]
+  · simp only [P_replicate_zero_append, P_cons, P_singleton, List.length_cons, List.length_nil,
+      Fs_append, Fs_replicate, w_zero, mul_zero, zero_add, Fs_cons, Fs_nil, add_zero, Nat.cast_id,
+      pow_one]
+    rw [w_of_ne_zero 0 (by omega), w_of_ne_zero 0 (by positivity)]
+    have : a * B = (a ^ a) ^ (a ^ a) := by
+      rw [hB, ← pow_mul, ← pow_succ', ← pow_succ']
+      congr 1
+      have : 1 ≤ a ^ (a + 1) := by omega
+      omega
+    simp only [pow_zero, mul_one, P_nil, add_zero]
+    rw [this]; ring
+  · intro d hd
+    simp at hd
+    rcases hd with ⟨-, rfl⟩ | rfl | rfl <;> omega
+
+/-- **Theorem 25.5** (section 25.1.2). Let `j ≥ 3` and `c ≥ 2` with `c ∣ (j-1)^c` (every prime
+factor of `c` divides `j - 1`) and `c^(j c^j) ≡ 1 (mod j)`. Put `x = c^(j c^j) + j - 1` and
+`y = x^(x/j)`. Then `c ∣ y`, and `(c^j, 0, ..., 0, x)` with `j - 1` zeros is a solution in base
+`y / c` under `0^0 = 1`. -/
+theorem theorem25_5 {j c : ℕ} (hj : 3 ≤ j) (hc : 2 ≤ c) (hcj : c ∣ (j - 1) ^ c)
+    (hmod : c ^ (j * c ^ j) % j = 1) :
+    c ∣ (c ^ (j * c ^ j) + j - 1) ^ ((c ^ (j * c ^ j) + j - 1) / j) ∧
+    IsSolution ((c ^ (j * c ^ j) + j - 1) ^ ((c ^ (j * c ^ j) + j - 1) / j) / c) 1
+      (c ^ j :: (List.replicate (j - 1) 0 ++ [c ^ (j * c ^ j) + j - 1])) := by
+  set N := j * c ^ j with hN
+  set x := c ^ N + j - 1 with hx
+  set y := x ^ (x / j) with hy
+  have hjx : j ∣ x := by
+    have : (c ^ N + (j - 1)) % j = 0 := by
+      rw [Nat.add_mod, hmod, Nat.mod_eq_of_lt (show j - 1 < j by omega)]
+      rw [show 1 + (j - 1) = j by omega, Nat.mod_self]
+    have e : x = c ^ N + (j - 1) := by omega
+    rw [e]; exact Nat.dvd_of_mod_eq_zero this
+  -- size: `x ≥ N = j c^j ≥ j (c + 1)`
+  have hcj1 : c + 1 ≤ c ^ j := by
+    calc c + 1 ≤ c * c := by nlinarith
+      _ = c ^ 2 := (sq c).symm
+      _ ≤ c ^ j := Nat.pow_le_pow_right (by omega) (by omega)
+  have hNx : N < c ^ N := Nat.lt_pow_self (by omega)
+  have hxN : N ≤ x := by omega
+  have hq : c + 1 ≤ x / j := by
+    rw [Nat.le_div_iff_mul_le (by omega)]
+    calc (c + 1) * j ≤ c ^ j * j := Nat.mul_le_mul_right _ hcj1
+      _ = N := by rw [hN]; ring
+      _ ≤ x := hxN
+  -- `c ∣ y`
+  have hN1 : 1 ≤ N := by rw [hN]; nlinarith
+  have hcy : c ∣ y := by
+    have h1 : x ≡ j - 1 [MOD c] := by
+      have e : x = (j - 1) + c * c ^ (N - 1) := by
+        rw [← pow_succ', Nat.sub_add_cancel hN1]; omega
+      show x % c = (j - 1) % c
+      rw [e, Nat.add_mul_mod_self_left]
+    have h2 : x ^ c % c = 0 := by
+      have := h1.pow c
+      unfold Nat.ModEq at this
+      rw [this]; exact Nat.mod_eq_zero_of_dvd hcj
+    exact (Nat.dvd_of_mod_eq_zero h2).trans (pow_dvd_pow x (by omega))
+  refine ⟨hcy, ?_⟩
+  obtain ⟨b, hb⟩ := hcy
+  have hbdiv : y / c = b := by rw [hb, Nat.mul_div_cancel_left _ (by omega)]
+  rw [hbdiv]
+  -- `b > x`
+  have hcx : c < x := by
+    have : c < c ^ j := by omega
+    have : c ^ j ≤ c ^ N :=
+      Nat.pow_le_pow_right (by omega) (by rw [hN]; nlinarith [Nat.one_le_pow j c (by omega)])
+    omega
+  have hyx : x * x ≤ y := by
+    calc x * x = x ^ 2 := (sq x).symm
+      _ ≤ x ^ (x / j) := Nat.pow_le_pow_right (by omega) (by omega)
+  have hbx : x < b := by
+    by_contra h
+    replace h := not_lt.1 h
+    have : c * b ≤ c * x := Nat.mul_le_mul_left _ h
+    nlinarith
+  have hcjN : c ^ j ≤ c ^ N :=
+    Nat.pow_le_pow_right (by omega) (by rw [hN]; nlinarith [Nat.one_le_pow j c (by omega)])
+  refine ⟨fun d hd => ?_, fun _ => by simp; omega, ?_⟩
+  · simp at hd
+    rcases hd with rfl | ⟨-, rfl⟩ | rfl <;> omega
+  · simp only [P_cons, P_append_singleton, P_replicate_zero, mul_zero, add_zero, Nat.cast_id,
+      List.length_append, List.length_replicate, List.length_singleton, Fs_cons, Fs_append,
+      Fs_replicate, w_zero, mul_one]
+    rw [w_of_ne_zero 1 (by positivity), w_of_ne_zero 1 (by omega), show j - 1 + 1 = j by omega,
+      ← pow_mul, ← hN]
+    have hyj : (c * b) ^ j = x ^ x := by
+      rw [← hb, hy, ← pow_mul, Nat.div_mul_cancel hjx]
+    rw [mul_pow] at hyj
+    rw [hyj, Fs_nil]
+    omega
+
+/-- The conditions of Theorem 25.5 hold for `c = (j - 1)^a`, `a ≥ 1` (section 25.1.2). -/
+theorem theorem25_5_conditions {j a : ℕ} (hj : 3 ≤ j) (ha : 1 ≤ a) :
+    (j - 1) ^ a ∣ (j - 1) ^ ((j - 1) ^ a) ∧
+      ((j - 1) ^ a) ^ (j * ((j - 1) ^ a) ^ j) % j = 1 := by
+  constructor
+  · exact pow_dvd_pow _ (Nat.lt_pow_self (by omega)).le
+  · set c := (j - 1) ^ a with hc
+    have heven : Even (a * (j * c ^ j)) := by
+      rcases Nat.even_or_odd j with hje | hjo
+      · exact (hje.mul_right _).mul_left _
+      · have : Even (j - 1) := by
+          obtain ⟨k, hk⟩ := hjo; exact ⟨k, by omega⟩
+        have hce : Even c := by rw [hc]; exact this.pow_of_ne_zero (by omega)
+        exact ((hce.pow_of_ne_zero (by omega)).mul_left _).mul_left _
+    have hneg : ((j - 1 : ℕ) : ZMod j) = -1 := by
+      rw [Nat.cast_sub (by omega), ZMod.natCast_self]; simp
+    have h1 : ((c ^ (j * c ^ j) : ℕ) : ZMod j) = ((1 : ℕ) : ZMod j) := by
+      rw [Nat.cast_pow, hc, Nat.cast_pow, hneg, ← pow_mul, heven.neg_one_pow, Nat.cast_one]
+    rw [ZMod.natCast_eq_natCast_iff'] at h1
+    rw [h1, Nat.mod_eq_of_lt (by omega)]
 
 end Munchausen
