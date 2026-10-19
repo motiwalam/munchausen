@@ -1,0 +1,11 @@
+q 3 e 2: bases 18, agree 18, mismatch 0, bases with short solutions 6
+q 5 e 2: bases 100, agree 100, mismatch 0, bases with short solutions 40
+q 5 e 3: bases 500, agree 500, mismatch 0, bases with short solutions 0
+q 7 e 3: bases 2058, agree 2058, mismatch 0, bases with short solutions 126
+q 5 e 4: bases 2500, agree 2500, mismatch 0, bases with short solutions 20
+q 7 e 3: bases 2058, test agrees with the census in 2058, short solutions per base 2.571
+q 11 e 3: bases 13310, test agrees with the census in 13310, short solutions per base 1.818
+q 13 e 3: bases 26364, test agrees with the census in 26364, short solutions per base 9.231
+q 17 e 3: bases 78608, test agrees with the census in 78608, short solutions per base 4.706
+q 5 e 4: bases 2500, test agrees with the census in 2500, short solutions per base 0.160
+q 3 e 3: bases 54, test agrees with the census in 54, short solutions per base 0.222

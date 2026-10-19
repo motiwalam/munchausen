@@ -1,18 +1,18 @@
 # r4f_ffield q 2 e 5 m 0 max length 13, model in 0.0 s
-orbit 32 size 2 k 2 sols 2 basic 1.0359 refined 4.1707 lengths 13:2
-orbit 33 size 2 k 1 sols 4 basic 1.0359 refined 1.9896 lengths 10:2,13:2
-orbit 34 size 2 k 2 sols 2 basic 1.0359 refined 4.0479 lengths 5:2
-orbit 35 size 2 k 2 sols 4 basic 1.0359 refined 4.0425 lengths 10:2,13:2
-orbit 36 size 2 k 1 sols 4 basic 1.0359 refined 1.9420 lengths 7:2,13:2
-orbit 37 size 2 k 3 sols 8 basic 1.0359 refined 7.9897 lengths 10:2,13:6
-orbit 38 size 2 k 2 sols 4 basic 1.0359 refined 3.9997 lengths 4:2,13:2
-orbit 39 size 2 k 2 sols 6 basic 1.0359 refined 4.3929 lengths 4:2,13:4
-orbit 40 size 2 k 1 sols 0 basic 1.0359 refined 1.8033 lengths 
-orbit 41 size 2 k 2 sols 2 basic 1.0359 refined 4.0425 lengths 13:2
-orbit 42 size 2 k 2 sols 4 basic 1.0359 refined 4.1707 lengths 13:4
-orbit 43 size 2 k 2 sols 4 basic 1.0359 refined 3.8816 lengths 10:2,13:2
-orbit 44 size 2 k 2 sols 0 basic 1.0359 refined 3.9117 lengths 
-orbit 45 size 2 k 2 sols 2 basic 1.0359 refined 3.9962 lengths 13:2
-orbit 46 size 2 k 1 sols 4 basic 1.0359 refined 1.9420 lengths 13:4
-orbit 47 size 2 k 3 sols 10 basic 1.0359 refined 8.8069 lengths 2:2,5:2,10:4,13:2
+orbit 32 size 2 k 2 sols 2 basic 1.0359 refined 4.1707 lengths 13:2 zeros0 1
+orbit 33 size 2 k 1 sols 4 basic 1.0359 refined 1.9896 lengths 10:2,13:2 zeros0 2
+orbit 34 size 2 k 2 sols 2 basic 1.0359 refined 4.0479 lengths 5:2 zeros0 2
+orbit 35 size 2 k 2 sols 4 basic 1.0359 refined 4.0425 lengths 10:2,13:2 zeros0 2
+orbit 36 size 2 k 1 sols 4 basic 1.0359 refined 1.9420 lengths 7:2,13:2 zeros0 4
+orbit 37 size 2 k 3 sols 8 basic 1.0359 refined 7.9897 lengths 10:2,13:6 zeros0 4
+orbit 38 size 2 k 2 sols 4 basic 1.0359 refined 3.9997 lengths 4:2,13:2 zeros0 4
+orbit 39 size 2 k 2 sols 6 basic 1.0359 refined 4.3929 lengths 4:2,13:4 zeros0 3
+orbit 40 size 2 k 1 sols 0 basic 1.0359 refined 1.8033 lengths  zeros0 0
+orbit 41 size 2 k 2 sols 2 basic 1.0359 refined 4.0425 lengths 13:2 zeros0 1
+orbit 42 size 2 k 2 sols 4 basic 1.0359 refined 4.1707 lengths 13:4 zeros0 4
+orbit 43 size 2 k 2 sols 4 basic 1.0359 refined 3.8816 lengths 10:2,13:2 zeros0 2
+orbit 44 size 2 k 2 sols 0 basic 1.0359 refined 3.9117 lengths  zeros0 0
+orbit 45 size 2 k 2 sols 2 basic 1.0359 refined 3.9962 lengths 13:2 zeros0 0
+orbit 46 size 2 k 1 sols 4 basic 1.0359 refined 1.9420 lengths 13:4 zeros0 2
+orbit 47 size 2 k 3 sols 10 basic 1.0359 refined 8.8069 lengths 2:2,5:2,10:4,13:2 zeros0 3
 # total q 2 e 5 m 0: bases 32 solutions 120 per base 3.7500 basic 1.0359 refined 4.0706 time 0.1 s

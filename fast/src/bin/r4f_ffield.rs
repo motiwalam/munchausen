@@ -19,7 +19,9 @@
 //! chapter 5 model (basic and refined, exact sums) and the free residue
 //! dimension k(B).
 //!
-//! usage: r4f_ffield <q> <e> <m> [--list] [--base CODE]
+//! usage: r4f_ffield <q> <e> <m> [--types] [--base CODE]
+//! --types prints the solutions and the refined model per type of x (per class:
+//! D_j = 0, D_j != 0 with zero top coefficient, or top coefficient nonzero).
 //! B is written in base q: coefficient of T^t is the t-th base-q digit.
 
 use rayon::prelude::*;
@@ -398,6 +400,9 @@ fn tables(q: usize, e: usize, b: &P) -> Tables {
 
 struct Res {
     by_len: Vec<u64>,
+    z0: u64, // solutions whose number of zero digits is divisible by q
+    ty_real: Vec<u64>,    // per model type
+    ty_ref: Vec<f64>,
     basic: f64,
     refined: f64,
 }
@@ -455,6 +460,7 @@ fn walk(tb: &Tables, m: usize, lmax: usize, mdl: &[Vec<f64>], j: usize, p_up: us
                 res.basic += pm;
                 if iot3 == 0 {
                     res.refined += pm;
+                    res.ty_ref[ty] += pm;
                 }
                 // class sums
                 let (cj, ref co) = tb.dcls[p0];
@@ -481,6 +487,11 @@ fn walk(tb: &Tables, m: usize, lmax: usize, mdl: &[Vec<f64>], j: usize, p_up: us
                     }
                 }
                 res.by_len[len] += 1;
+                res.ty_real[ty] += 1;
+                let nzt = nz + if p0 != 0 { 1 } else { 0 };
+                if (len as u32 - nzt) as usize % q == 0 {
+                    res.z0 += 1;
+                }
             }
         }
     }
@@ -492,12 +503,17 @@ fn main() {
     let e: usize = a[2].parse().unwrap();
     let m: usize = a[3].parse().unwrap();
     let mut only: Option<usize> = None;
+    let mut types = false;
     let mut i = 4;
     while i < a.len() {
         match a[i].as_str() {
             "--base" => {
                 only = Some(a[i + 1].parse().unwrap());
                 i += 2;
+            }
+            "--types" => {
+                types = true;
+                i += 1;
             }
             o => panic!("unknown option {o}"),
         }
@@ -516,7 +532,8 @@ fn main() {
         .par_iter()
         .map(|(b, w)| {
             let tb = tables(q, e, b);
-            let mut res = Res { by_len: vec![0; lmax + 1], basic: 0.0, refined: 0.0 };
+            let ntype = 3usize.pow(e as u32) * if m == 1 { q } else { 1 };
+            let mut res = Res { by_len: vec![0; lmax + 1], z0: 0, ty_real: vec![0; ntype], ty_ref: vec![0.0; ntype], basic: 0.0, refined: 0.0 };
             let mut acc = vec![0u8; e * (e + 1) / 2];
             let mut x = vec![0u8; e * (e + 1) / 2];
             walk(&tb, m, lmax, &mdl, e - 1, 0, &mut acc, 0, 0, 0, &mut x, 0, &mut res);
@@ -530,11 +547,28 @@ fn main() {
     for (c, w, k, r) in &res {
         let s: u64 = r.by_len.iter().sum();
         let lens: Vec<String> = r.by_len.iter().enumerate().filter(|(_, v)| **v > 0).map(|(l, v)| format!("{l}:{v}")).collect();
-        println!("orbit {c} size {w} k {k} sols {s} basic {:.4} refined {:.4} lengths {}", r.basic, r.refined, lens.join(","));
+        println!("orbit {c} size {w} k {k} sols {s} basic {:.4} refined {:.4} lengths {} zeros0 {}", r.basic, r.refined, lens.join(","), r.z0);
         tot_s += s * *w as u64;
         tot_w += w;
         tb_ += r.basic * *w as f64;
         tr_ += r.refined * *w as f64;
+    }
+    if types {
+        let ntype = res[0].3.ty_real.len();
+        for ty in 0..ntype {
+            let real: f64 = res.iter().map(|(_, w, _, r)| r.ty_real[ty] as f64 * *w as f64).sum::<f64>() / tot_w as f64;
+            let rf: f64 = res.iter().map(|(_, w, _, r)| r.ty_ref[ty] * qe * *w as f64).sum::<f64>() / tot_w as f64;
+            if real > 0.0 || rf > 1e-9 {
+                let mut x = ty;
+                let mut v = vec![];
+                for _ in 0..e {
+                    v.push(["0", "low", "top"][x % 3]);
+                    x /= 3;
+                }
+                let zs = if m == 1 { format!(" z {x}") } else { String::new() };
+                println!("type D_0..D_e-1 {}{zs} real/base {real:.4} refined/base {rf:.4}", v.join(","));
+            }
+        }
     }
     println!(
         "# total q {q} e {e} m {m}: bases {tot_w} solutions {tot_s} per base {:.4} basic {:.4} refined {:.4} time {:.1} s",
