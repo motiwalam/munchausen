@@ -555,4 +555,30 @@ theorem theorem20_8 {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p) {e : ℕ} (he : 1 �
     obtain ⟨t, ht⟩ := lemma20_7 hp hx0 hx0p' hg v hvx e he
     refine ⟨x0 + p * (p - 1) * t, by omega, ht⟩
 
+/-! ### Lemma 20.9: the residue 3 modulo 5 -/
+
+/-- **Lemma 20.9** (section 20.2.1), the prime 5. The residue `x^x - x ≡ 3 (mod 5)` arises only
+from `x ≡ 8 (mod 20)`, where `x^x ≡ 1`. -/
+theorem lemma20_9_five {x : ℕ} (hx : 1 ≤ x) (h0 : (x ^ x - x) % 5 = 3) : x % 20 = 8 := by
+  have hle : x ≤ x ^ x := by
+    calc x = x ^ 1 := (pow_one x).symm
+      _ ≤ x ^ x := Nat.pow_le_pow_right hx hx
+  have h : (x ^ x + 5 * x - x) % 5 = 3 := by omega
+  rcases Nat.eq_zero_or_pos (x % 5) with h5 | h5
+  · -- `5 ∣ x`: then `x^x - x ≡ 0`
+    have : 5 ∣ x ^ x := (Nat.dvd_of_mod_eq_zero h5).trans (dvd_pow_self x (by omega))
+    omega
+  · have hcop : x.Coprime 5 := Nat.coprime_comm.1
+      ((Nat.Prime.coprime_iff_not_dvd (by norm_num)).2 (by omega))
+    have hper := pow_self_modEq_mod (L := 20) hcop (by norm_num) (by decide)
+    have hcheck : ∀ r < 20, r % 5 ≠ 0 → (r ^ r + 5 * r - r) % 5 = 3 → r = 8 := by decide
+    have hr := hcheck (x % 20) (Nat.mod_lt _ (by norm_num)) (by omega)
+    unfold Nat.ModEq at hper
+    apply hr
+    have e1 : (x ^ x + 5 * x - x) % 5 = (x ^ x % 5 + 4 * (x % 5)) % 5 := by omega
+    have e2 : ((x % 20) ^ (x % 20) + 5 * (x % 20) - x % 20) % 5 =
+        ((x % 20) ^ (x % 20) % 5 + 4 * (x % 20 % 5)) % 5 := by omega
+    have e3 : x % 20 % 5 = x % 5 := by omega
+    rw [e2, ← hper, e3, ← e1, h]
+
 end Munchausen
