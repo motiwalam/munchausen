@@ -311,8 +311,8 @@ The probabilistic model of @ch-model at first expected a $b$-digit solution in
 about 8% of large bases, so the empty range 3 to 45 looked suspicious. A finer
 look (@sec-model-defects) shows that the model overestimates this length at
 these sizes, because the forced top digits of a $b$-digit sum use up copies of
-large digits. With that correction the absence is an ordinary event, with
-probability about 0.27.
+large digits. With that correction, calibrated on bases 10 to 30, the absence there is an
+ordinary event, with probability about 0.27.
 
 == The data at a glance <sec-basics-data>
 
@@ -360,7 +360,8 @@ A few features stand out, and later chapters explain them.
 - The longest solution usually has $b - 1$ digits. That is the model's most
   likely length.
 - Bases 19, 27 and 35 have no solution under either convention. They are the
-  only such bases from 3 to 43. The model expects roughly one base in eight
+  only such bases from 3 to 41; base 43 has solutions, and base 42 has not
+  been searched in full. The model expects roughly one base in eight
   to be empty (@sec-model-empty).
 - Perfect powers stand out under $0^0 = 0$. Base 25 has five solutions and
   base 32 has four. They come from self-paying digits (@ch-constructions).
@@ -393,7 +394,8 @@ For Munchausen numbers themselves the published record is short.
   to 35. The table comes from one search by Karl W. Heuer in 2011, with an
   unpublished method. The library's search agrees with it in every base.
   For $0^0 = 0$ no published list beyond about base 17 was found, and no
-  published search of bases 36 to 41 under either convention.
+  published search of bases 36 to 41 under either convention. (These two
+  points come from the repository's top-level `README.md`.)
 - Van Berkel @vanberkel2009 studied 3435 and proved that a solution is below
   $2 b^b$.
 - Kure\u{161} @kures2021 proved the length bound of @thm-length and described the

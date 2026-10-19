@@ -565,13 +565,19 @@ $1 <= j <= 2^L - 2$ (#lib("4.1")).
 These bases are rare.
 
 #proposition(id: "cons-rare", title: "Rich bases are rare", src: "9.8")[
-  At most $X^(1 slash (c + 1))$ bases up to $X$ have $c$ or more self-paying
-  digits.
+  The number of bases up to $X$ with $c$ or more self-paying digits is at
+  most $X^(1 slash (c + 1)) (1 + o(1))$ as $X -> infinity$.#footnote[The
+  library (#lib("9.8"), Proposition 9.3) states the bound $X^(1 slash (c+1))$
+  without the factor $1 + o(1)$, and argues that such a base is a perfect
+  $(c+1)$-th power. That is not true: base $8 = 2^3$ has the self-paying digit
+  4 but is not a square.]
 ]
 #proof[
-  By @thm-self-paying the self-paying digits of $b = r^t$ are $r^s$ with
-  $s < t$. So $c$ of them need $t >= c + 1$, and $b$ is a perfect
-  $(c + 1)$-th power.
+  By @thm-self-paying the self-paying digits of $b = r^t$, with $r$ not a
+  perfect power, are $r^s$ with $s < t$. So $c$ of them need $t >= c + 1$.
+  For each $t$ there are at most $X^(1 slash t)$ numbers $r^t <= X$, and
+  $t <= log_2 X$. So the count is at most
+  $ sum_(t >= c + 1) X^(1 slash t) <= X^(1 slash (c+1)) + (log_2 X) X^(1 slash (c+2)) = X^(1 slash (c+1)) (1 + o(1)). $
 ]
 
 So the structure that produces many solutions lives on a set of density zero.
@@ -650,12 +656,14 @@ Under $0^0 = 1$ the two-digit representations are rigid.
 #proof[
   A 2-digit solution has $N = w(a) + w(c)$. If $X^X + Y^Y = U^U + V^V$ with
   $X >= Y$, $U >= V$ and $X > U$, then $X^X >= (U + 1)^(U+1) > 2 U^U$, which is
-  impossible. So the pair of weights is unique, and its two orders give at
-  most two strings.
+  impossible. So the pair of weights is unique. The weight 1 belongs to both
+  digits 0 and 1, but $(a, 0)$ is a solution only if $a divides w(0) - 0 = 1$,
+  which gives $(1, 0)$ in base 2 with $N = 2$, excluded by $N >= 3$. So the
+  two orders of the pair give at most two strings.
 ]
 
 So $N = c^c + 1$ has the two bases of $(1, c)$ and $(c, 1)$ for every
-$c >= 2$, and a third base needs a representation with three or more digits.
+$c >= 3$ (for $c = 2$ the string $(2, 1)$ would need base 2), and a third base needs a representation with three or more digits.
 To find every base of a given integer, one needs a bound on where its base can
 lie. The leading digit and the second digit pin it down.
 
@@ -680,8 +688,9 @@ constrained longer representations.
 #lemma(id: "cons-rigid", title: "Rigid representations", src: "18.3")[
   Under $0^0 = 1$, let $N = a^a + w(c)$ with $0 <= c <= a$ and $a >= 2$. Every
   representation of $N$ as a solution in some base contains the digit $a$
-  exactly once, unless it is $(a, a)$, and its other digits are below $c$ with
-  weights adding up to $w(c)$. So if $c <= 1$ or $c = a$, every representation
+  exactly once, unless it is $(a, a)$, and its other digits have weights
+  adding up to $w(c)$. In a representation with 3 or more digits these other
+  digits are all below $c$; the 2-digit representation is $(a, c)$ itself. So if $c <= 1$ or $c = a$, every representation
   of $N$ has 2 digits, and if $2 <= c < a$, every longer one has between
   $c + 2$ and $a + 1$ digits.
 ]
