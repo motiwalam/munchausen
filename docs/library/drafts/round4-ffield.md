@@ -20,7 +20,7 @@ Each statement carries one mark:
 | section | statement | result | status |
 |---|---|---|---|
 | 2 | Frobenius blocks (Lemma 2.1, Proposition 2.2) | `n(T^q)` sends each base-`B` digit to its own block of `q` digits, without carries. So the digits of `F(x)` at positions `[q^(j-1), q^j)` are the digits of `Phi^j(p_j)` for one single digit `p_j`. | proven |
-| 2 | Forced zeros and rank one (Corollary 2.4, Propositions 2.5, 2.6) | a digit whose position has a base-`q` digit above `R = floor((e-1)q/e)` is zero. About `1/e` of the positions carry multiples of one fixed digit, and their class sums are one number `c(x)` times a fixed vector. | proven |
+| 2 | Forced zeros and rank one (Corollary 2.4, Lemma 2.5, Proposition 2.6) | a digit whose position has a base-`q` digit above `R = floor((e-1)q/e)` is zero. For `q >= e` about `1/e` of the positions carry multiples of one fixed digit, and their class sums are one number `c(x)` times a fixed vector. | proven |
 | 3 | Census (Table 3.1) | 28 cases, all bases, both conventions, up to `(q, e) = (17, 3)`, `(5, 4)`, `(3, 5)`, `(2, 7)`, with a new engine (`(7, 3)` in 0.2 s against 69 s). The exact `e = 3` averages are erratic in `q`; I found no closed formula. | computed |
 | 4.1, 4.2 | digit law of `F(x)` | the digits are far from uniform: 4 to 700 times more zeros than the model, and whole positions that are always zero or always of one degree | computed |
 | 4.3 | near-solutions (Lemmas 4.1, 4.2) | the offsets of the round 3 check map most solutions to near-solutions one to one: constant offsets always, offsets of degree below `deg d_0 = deg d_1` too. So that check repeated the census. Offsets that perturb 5 low digits bring the count down to the model. | proven; computed |
@@ -196,7 +196,7 @@ digits is divisible by `p`; Proposition 4.3 explains why it matters.
 | 7 | 3 | 2058 | 76.286 | 64.810 | 1.18 | 2.2 | 2.286 | 59.438 | 0.038 | 0.030 |
 | 11 | 3 | 13310 | 240.000 | 233.004 | 1.03 | 0.5 | 17.273 | 220.000 | 0.079 | 0.072 |
 | 13 | 3 | 26364 | 407.077 | 379.118 | 1.07 | 1.8 | 8.923 | 360.982 | 0.025 | 0.022 |
-| 17 | 3 | 78608 | 857.412 | 835.518 | 1.03 | 0.8 | P173M1 |
+| 17 | 3 | 78608 | 857.412 | 835.518 | 1.03 | 0.8 | 30.118 | 804.398 | 0.037 | 0.035 |
 
 The share `p | z` counts only bases where Proposition 4.3 applies: all bases
 except 4 of 16 for `(2, 4)`, 13 of 64 for `(2, 6)` and 16 of 54 for
@@ -386,35 +386,41 @@ Theorem 21.6). With `p` prime to `deg P` this gives `p | z(n)`. So
 `F_0(n) = F_1(n) = n`. Conversely, if `F_0(n) = n` and `p | z(n)`, then
 `F_1(n) = n`.
 
-The census confirms it in every base where the hypothesis holds: 45,649
-bases in 13 cases (computed, `analysis/r4f_conventions.py`). For `e = 3` and
-`q >= 5` every base qualifies, so the `0^0 = 1` count of `(17, 3)` follows
-from the `0^0 = 0` census: P173DERIVED.
+The census confirms it in every base where the hypothesis holds: 124,257
+bases in 14 cases (computed, `analysis/r4f_conventions.py`). For `e = 3` and
+`q >= 5` every base qualifies. So the `0^0 = 1` count of `(17, 3)` follows
+from the `0^0 = 0` census in 2 minutes: 2,367,488 solutions. The direct
+`0^0 = 1` census takes 14 minutes and finds the same number.
 
 So the ratio between the conventions is the share of `0^0 = 0` solutions
 with `p | z`. The refined model gets this share from rare zeros, and its
 ratio of the two conventions is close to its own `P(p | z)`: 0.89 against
 0.88 for `q = 5`, 0.92 against 0.91 for `q = 7`, 0.94 against 0.94 for
-`q = 11`. The true share is the last column of Table 3.1. So
+`q = 11`. The true share is the last column of Table 3.1. Write `r_m` for
+census over refined model under `0^0 = m`, and `M_m` for the refined model.
+Proposition 4.3 gives the exact identity
 
-    (census / model under 0^0 = 1) = (census / model under 0^0 = 0) * (true share p | z) / (model share p | z),
+    r_1 = r_0 * (true share p | z) / (M_1 / M_0),
 
-which is an exact identity once the model ratio equals its own share. For
-`q = 5`, `e = 3`: `1.31 * 0.344 / 0.890 = 0.507`, the observed ratio.
+and `M_1 / M_0` is close to the model's share of `p | z`. For `q = 5`,
+`e = 3`: `1.311 * 0.344 / 0.890 = 0.507`, the observed ratio.
 
 The true share is small because the zero count is mostly forced. For `e = 3`
 and full length, Corollary 2.4 gives `Z` forced zeros, and a solution needs
-`-Z mod p` further zeros. These come only from Lemma 2.5 and from
-coincidences:
+`-Z mod p` further zeros. These come from Lemma 2.5, in batches (a digit of
+`y^(1)` of degree 1 adds `R - floor(q/3)` zeros, a zero digit adds `q`), and
+from coincidences:
 
 | `q` | 5 | 7 | 11 | 13 | 17 | 19 | 23 |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | forced zeros `Z` | 3 | 8 | 21 | 32 | 55 | 72 | 105 |
 | further zeros needed, `-Z mod p` | 2 | 6 | 1 | 7 | 13 | 4 | 10 |
-| full-length solutions under `0^0 = 1` | yes | none | yes | none | Q17FULL | | |
+| full-length solutions under `0^0 = 1`, per base | 11.8 | 0 | 15.5 | 0 | 25.4 | | |
 
-(computed for `q <= 17`). So the `0^0 = 1` count is governed by `Z mod p`, a
-quantity the model cannot see.
+(computed for `q <= 17`). For `q = 7` and `13` no full-length solution
+survives under `0^0 = 1`; for `q = 17` the 13 further zeros come in batches.
+So the `0^0 = 1` count depends on `Z mod p` and on these batches, which the
+model cannot see.
 
 Corollary 4.4 (`e = 2` under `0^0 = 1`). Let `q >= 5` and let `B - 1` have
 two distinct roots in `F_q`.
@@ -490,8 +496,8 @@ In both cases the lower classes are forced: zero, or one multiple of a fixed
 digit.
 
 So in case 1 the fixed-point system on the generic cell collapses to
-`D_j = 0` and the identity restricted to `D_(e-1)`. Its solution space is the kernel of
-`sigma'^(e-1) - 1` on `F_q[T]/(B - 1)`, of dimension `kappa(B)`. For
+`D_j = 0` and the identity restricted to `D_(e-1)`. Its solution space is
+the kernel of `sigma'^(e-1) - 1` on `F_q[T]/(B - 1)`, of dimension `kappa(B)`. For
 squarefree `B - 1` this is `sum gcd(e - 1, deg P)` over its irreducible
 factors `P`, while `k(B)` is the number of factors. So `kappa > k` exactly
 when some factor has degree sharing a divisor with `e - 1`, for `e = 3` a
@@ -546,8 +552,9 @@ independent uniform digits, subject only to the identity. In `F_q[T]` that
 assumption fails at its root:
 
 - Independence across positions fails. `F(x)` has `e(e+1)/2` parameters, and
-  Corollary 2.3 builds its `L` digits from `e` single digits. About `1/e` of
-  the positions are multiples of one fixed digit (Proposition 2.6).
+  Corollary 2.3 builds its `L` digits from `e` single digits. For `q >= e`
+  about `1/e` of the positions are multiples of one fixed digit
+  (Proposition 2.6).
 - Uniformity fails. Whole positions are always zero or always of one degree
   (Table 4.1), and zeros are 4 to 700 times too common (Table 4.2).
 - The identity modulo `B - 1` is exact and the model uses it correctly. The
