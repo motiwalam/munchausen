@@ -792,7 +792,8 @@ def spDigit (S : Finset ι) (d pos : ι → ℕ) (k : ℕ) : ℕ := ∑ i ∈ S 
 def spNum (b : ℕ) (S : Finset ι) (d pos : ι → ℕ) : ℕ := ∑ i ∈ S, d i * b ^ pos i
 
 lemma spDigit_fiber {S : Finset ι} {pos : ι → ℕ} (hinj : Set.InjOn pos S) (k : ℕ) :
-    (S.filter fun i => pos i = k) = ∅ ∨ ∃ i ∈ S, pos i = k ∧ (S.filter fun i => pos i = k) = {i} := by
+    (S.filter fun i => pos i = k) = ∅ ∨
+      ∃ i ∈ S, pos i = k ∧ (S.filter fun i => pos i = k) = {i} := by
   by_cases h : (S.filter fun i => pos i = k) = ∅
   · exact Or.inl h
   · right
@@ -967,7 +968,8 @@ lemma pos_strictMono {r t : ℕ} (hr : 2 ≤ r) (_ht : 1 ≤ t) {pos : ℕ → �
 /-- **Theorem 9.2** (section 9.8). For every `n ≥ 3`, base `n^(n-1)` has at least
 `2^(n-1) - 2` nontrivial solutions under `0^0 = 0`. -/
 theorem theorem9_2 {n : ℕ} (hn : 3 ≤ n) :
-    ∃ T : Finset ℕ, T.card = 2 ^ (n - 1) - 2 ∧ ∀ x ∈ T, 2 ≤ x ∧ IsMunchausen (n ^ (n - 1)) 0 x := by
+    ∃ T : Finset ℕ, T.card = 2 ^ (n - 1) - 2 ∧
+      ∀ x ∈ T, 2 ≤ x ∧ IsMunchausen (n ^ (n - 1)) 0 x := by
   have hdvd : ∀ s, (n - 1) ∣ s * (n ^ s - 1) := fun s =>
     Dvd.dvd.mul_left (by simpa using Nat.sub_dvd_pow_sub_pow n 1 s) s
   let pos : ℕ → ℕ := fun s => s * (n ^ s - 1) / (n - 1)
@@ -992,7 +994,8 @@ theorem theorem9_2 {n : ℕ} (hn : 3 ≤ n) :
   omega
 
 /-- `s ↦ s (r^s - 1)` is strictly increasing. -/
-lemma mul_pow_sub_one_strictMono {r : ℕ} (hr : 2 ≤ r) : StrictMono fun s : ℕ => s * (r ^ s - 1) := by
+lemma mul_pow_sub_one_strictMono {r : ℕ} (hr : 2 ≤ r) :
+    StrictMono fun s : ℕ => s * (r ^ s - 1) := by
   intro s s' hss
   have h1 : r ^ s < r ^ s' := Nat.pow_lt_pow_right (by omega) hss
   have h2 : 1 ≤ r ^ s := Nat.one_le_pow _ _ (by omega)

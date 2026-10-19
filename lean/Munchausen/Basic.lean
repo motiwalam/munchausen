@@ -7,7 +7,8 @@ import Munchausen.Defs
 * the length bound, Proposition 1.1, and finitely many solutions per base;
 * the digit bound, Proposition 1.2;
 * one base per digit string, Proposition 1.3;
-* the two conventions, Proposition 1.4.
+* the two conventions, Proposition 1.4;
+* the top digit `b - 1` occurs at most twice in a `(b-1)`-digit solution (section 1.7).
 -/
 
 namespace Munchausen
@@ -216,5 +217,49 @@ theorem not_both_of_mem {b n : ℕ} (h : 0 ∈ Nat.digits b n) :
   have hc : 0 < (Nat.digits b n).count 0 := List.count_pos_iff.2 h
   simp only [IsMunchausen, F_one_eq] at h1 h0
   omega
+
+/-! ### Section 1.7: the top digit -/
+
+/-- `b^(b-1) < 3 (b-1)^(b-1)` for `b ≥ 2`: `(1 + 1/n)^n < e < 3` (section 1.7). -/
+lemma pow_lt_three_mul (b : ℕ) (hb : 2 ≤ b) : b ^ (b - 1) < 3 * (b - 1) ^ (b - 1) := by
+  obtain ⟨n, rfl⟩ : ∃ n, b = n + 1 := ⟨b - 1, by omega⟩
+  simp only [Nat.add_sub_cancel]
+  have hn : (0 : ℝ) < n := by exact_mod_cast (show 0 < n by omega)
+  have h1 : ((n : ℝ) + 1) / n ≤ Real.exp (1 / n) := by
+    have := Real.add_one_le_exp (1 / (n : ℝ))
+    rw [div_add_one hn.ne', add_comm (1 : ℝ)] at this
+    exact this
+  have h2 : (((n : ℝ) + 1) / n) ^ n ≤ Real.exp 1 := by
+    calc (((n : ℝ) + 1) / n) ^ n ≤ (Real.exp (1 / n)) ^ n :=
+          pow_le_pow_left₀ (by positivity) h1 n
+      _ = Real.exp 1 := by rw [← Real.exp_nat_mul]; congr 1; field_simp
+  have h3 : Real.exp 1 < 3 := lt_trans Real.exp_one_lt_d9 (by norm_num)
+  have h4 : ((n : ℝ) + 1) ^ n < 3 * (n : ℝ) ^ n := by
+    have : (((n : ℝ) + 1) / n) ^ n < 3 := lt_of_le_of_lt h2 h3
+    rw [div_pow, div_lt_iff₀ (by positivity)] at this
+    exact this
+  exact_mod_cast h4
+
+/-- **Section 1.7**. A `(b-1)`-digit solution contains the digit `b-1` at most twice, because
+`3 (b-1)^(b-1) > b^(b-1)`. -/
+theorem count_top_digit_le_two {b m n : ℕ} (hb : 2 ≤ b) (h : IsMunchausen b m n)
+    (hlen : (Nat.digits b n).length = b - 1) : (Nat.digits b n).count (b - 1) ≤ 2 := by
+  by_contra hc
+  replace hc := not_le.1 hc
+  have hlt : n < b ^ (b - 1) := hlen ▸ Nat.lt_base_pow_length_digits (by omega)
+  have hF : (Nat.digits b n).count (b - 1) * w m (b - 1) ≤ F b m n := by
+    rw [F_def]
+    generalize Nat.digits b n = l
+    induction l with
+    | nil => simp
+    | cons x t ih =>
+      rw [Fs_cons, List.count_cons]
+      split_ifs with hx
+      · simp only [beq_iff_eq] at hx; subst hx; nlinarith
+      · simpa using ih.trans (Nat.le_add_left _ _)
+  rw [w_of_ne_zero m (by omega)] at hF
+  have := pow_lt_three_mul b hb
+  rw [h] at hF
+  nlinarith
 
 end Munchausen
