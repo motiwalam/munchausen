@@ -1,0 +1,13 @@
+# linear identities r P_t(r) + C = lam (c r + e)^(k-1), member: w(x) = lam y^j, c | y - e, b > x
+## k = 3, prefix digits <= 60: 239 linear shapes with integral C
+x^x: w(x) = lam y^j for 38 shapes, members 31, first [((1, 2), 6, 1), ((1, 6), 46666, 1), ((1, 10), 10000000026, 1), ((1, 14), '~10^16.0', 1)]
+x^(x+1): w(x) = lam y^j for 73 shapes, members 65, first [((1, 4), 1029, 1), ((1, 8), 134217745, 1), ((1, 12), '~10^14.0', 1), ((1, 16), '~10^20.5', 1)]
+x!: w(x) = lam y^j for 0 shapes, members 0, first []
+x^2: w(x) = lam y^j for 83 shapes, members 0, first []
+x^3: w(x) = lam y^j for 62 shapes, members 62, first [((1, 8), 529, 1), ((2, 0), 8, 2), ((3, 0), 27, 3), ((4, 0), 64, 4)]
+## k = 4, prefix digits <= 20: 28 linear shapes with integral C
+x^x: w(x) = lam y^j for 3 shapes, members 2, first [((1, 6, 12), '~10^13.0', 1), ((8, 0, 0), 16777218, 8)]
+x^(x+1): w(x) = lam y^j for 14 shapes, members 14, first [((1, 3, 3), 164, 1), ((3, 0, 0), 81, 3), ((4, 0, 0), 1024, 4), ((6, 0, 0), 279936, 6)]
+x!: w(x) = lam y^j for 0 shapes, members 0, first []
+x^2: w(x) = lam y^j for 19 shapes, members 0, first []
+x^3: w(x) = lam y^j for 4 shapes, members 0, first []

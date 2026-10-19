@@ -1,0 +1,2 @@
+# 211668 candidates, largest x = 72575899, primes 72575917 .. 72576509
+# survivors: 0 of 211668
