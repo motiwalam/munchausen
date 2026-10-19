@@ -44,7 +44,8 @@ statement is marked by its source:
 | [30. Connections to other fields](30-applications.md) | anti-concentration proves the refined Poisson law in the limit; Assumption R as a collision bound for `x^x - x`; 2-digit solutions as fixed points of `x -> x^x mod p`; `tau(b^2 + 1) - 2` two-digit narcissistic numbers, so empty bases are Landau's problem; analogies |
 | [31. Pruning by the residue and balanced shards](31-search-rules.md) | the congruence mod `b - 1` prunes the nodes with one free slot (12% to 25% fewer nodes, 1.1x to 1.2x faster); the forcing loop already reaches its fixed point, the exact hull of the sums; the other count and residue results do not pay; `--shard-by size` balances shards |
 | [32. The basic questions revisited](32-basic-questions.md) | a 2-adic Baker bound and a sieve exclude 3-digit strings with an even large digit behind a non-square leading digit; the three regimes of 3-digit strings; what can be said about empty bases; searching by multisets across bases saves little |
-| [Open questions](questions.md) | 132 research questions in ten rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [33. Factorials against x^x](33-factorials.md) | 3-digit factorions with one large digit are finite except a leading case of Brocard type, with a complete list for the other digits up to 10; 2-digit factorions are infinite; GRH for a large last digit; a sufficient condition for identity families, which `x!` never meets; abc bounds every 3-digit solution of `x^x` with `R != 0`; one-step chains of Theorem 15.14 give only base 64 |
+| [Open questions](questions.md) | 138 research questions in eleven rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -164,6 +165,31 @@ Proven:
   3-digit solution with two digits at most 20 and an even third digit that
   does not lead is in the lists of chapter 3 or a binomial member
   (Corollary 32.4).
+- For every `x >= 3`, `(1, x)` is a factorion in base `x! - x + 1`
+  (Proposition 33.9). A 3-digit factorion with one large digit `x` in the
+  last or middle position has `x` below an explicit bound (Theorems 33.4
+  and 33.5). The proof uses that `x!` is divisible by every prime up to
+  `x`, with bounds for the least inert prime of a quadratic field. With
+  `x` in front, the open case is `4x x! + s^2 = U^2`, of Brocard type.
+- With a sieve up to the bound: every 3-digit factorion whose other two
+  digits are at most 10 is one of the 7 known ones (8 under `w(0) = 0`), or
+  has a leading digit `x > 4,103,641` of Brocard type (Theorem 33.6,
+  computer-assisted).
+- Suppose that `w(x) = y^j` with `M | y` for all large `x == 0 (mod M)`,
+  that `M` divides `w(d)` whenever `M` divides `d`, and that
+  `y > M (x + x^(1/j)) + 1`. Then length `j + 1`
+  has infinitely many solutions (Theorem 33.12). `x! = lam y^j` forces `x < 2 P(lam)` (Proposition 33.13),
+  so factorials never meet the condition.
+- Under abc, every 3-digit solution of `x^x` or `x!` with two digits at most
+  `B` and `R != 0` has its third digit at most `(2 + O(eps)) B + C_eps`, in
+  every position (Theorem 33.16). Every `k`-digit solution whose largest
+  digit exceeds `C_k max(2, B)` is a power-identity member (Theorem 33.19).
+  Under `c < rad(abc)^(7/4)`, every 3-digit solution under `0^0 = 1` with
+  two digits at most 200 is known or a family member (Corollary 33.18).
+- Under GRH, a factorion with a fixed prefix and a large last digit `x`
+  needs a polynomial `G_x` with a root modulo every prime (Theorem 33.10).
+- The constructions of Theorem 15.14 with a one-step chain give only the
+  11-digit solution of base 64 (Proposition 33.22).
 - A node of the exact search with one free slot can be dropped when no
   digit completes the residue mod `b - 1` (Theorem 31.1). The interval of a
   node is the exact hull of the sums its counts allow (Lemma 31.4).
@@ -206,6 +232,10 @@ Computed:
   bases 15 to 35 and saves 1.11x to 1.22x in cycles, a constant factor.
   The forcing loop, iterated to its fixed point, saves 1.46x in nodes in
   every base from 20 to 33 (chapter 31).
+- No 4-digit factorion has its first three digits at most 6 and a last
+  digit at most 1500 (section 33.2.2). The constructions of Theorem 15.14
+  with `r <= 40` and `t <= 20,000`, or `r <= 7` and `t <= 10^5`, give no
+  solution beyond base 64 and the `(a, 1)` family (section 33.5.1).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 
