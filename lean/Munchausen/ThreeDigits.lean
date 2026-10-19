@@ -1,7 +1,7 @@
 import Munchausen.ShortEquations
 
 /-!
-# Large digits: Theorems 8.3, 25.2, 25.7, Propositions 22.8, 25.16 and Lemma 25.13
+# Large digits: Theorems 8.3, 25.2, 25.7, Proposition 22.8, Lemma 25.13, Corollary 25.14
 
 Completing the square turns a 3-digit solution `(p, q, r)` in base `b` into
 `(2 p b + q)^2 = N + R` with `N = 4 l x^x`, where `x` is the large digit and `l` the leading
@@ -596,7 +596,7 @@ theorem corollary25_14 {b m p q r p' q' r' M M' : ℕ} (hm : m ≤ 1)
   have h7 := Nat.lt_of_mul_lt_mul_right h6
   nlinarith
 
-/-! ### Theorem 25.7 (i), Proposition 22.8 and Proposition 25.16 -/
+/-! ### Theorem 25.7 (i) for even `x` and Proposition 22.8 -/
 
 /-- If `p a^2 = c^2` with `a ≠ 0`, then `p` is a perfect square. -/
 lemma isSquare_of_mul_sq {p a c : ℕ} (ha : a ≠ 0) (h : p * a ^ 2 = c ^ 2) :
@@ -691,107 +691,5 @@ theorem R_pos_leading {q r x : ℕ} (hx : 1 ≤ x) :
   have : (0 : ℤ) < (x : ℤ) * ((w 1 q : ℤ) + w 1 r - r) :=
     mul_pos (by exact_mod_cast hx) (by linarith)
   nlinarith [sq_nonneg (q : ℤ)]
-
-/-- **Proposition 25.16** for even `x` (section 25.3.3). Under `0^0 = 1`, a base has at most
-one 3-digit power-identity member `(p, q, x)` (`R = 0`) with `x` even. -/
-theorem prop25_16_even {b p q x p' q' x' : ℕ} (hs : IsSolution b 1 [p, q, x])
-    (hR : 4 * p * x = 4 * p * (w 1 p + w 1 q) + q ^ 2) (hx : Even x)
-    (hs' : IsSolution b 1 [p', q', x'])
-    (hR' : 4 * p' * x' = 4 * p' * (w 1 p' + w 1 q') + q' ^ 2) (hx' : Even x') :
-    [p, q, x] = [p', q', x'] := by
-  obtain ⟨c, e, hpc, hqc, hxw, hY⟩ := prop22_8 hs hR hx
-  obtain ⟨c', e', hpc', hqc', hxw', hY'⟩ := prop22_8 hs' hR' hx'
-  have hp1 : 1 ≤ p := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
-  have hp1' : 1 ≤ p' := Nat.one_le_iff_ne_zero.2 (hs'.head_ne_zero (by simp))
-  have hc1 : 1 ≤ c := by rcases Nat.eq_zero_or_pos c with rfl | h; · simp at hpc; omega
-                         exact h
-  have hc1' : 1 ≤ c' := by rcases Nat.eq_zero_or_pos c' with rfl | h; · simp at hpc'; omega
-                           exact h
-  have hqb := hs.lt_base q (by simp)
-  have hqb' := hs'.lt_base q' (by simp)
-  have heb : e < b := by
-    have : e ≤ q := by rw [hqc]; nlinarith
-    omega
-  have heb' : e' < b := by
-    have : e' ≤ q' := by rw [hqc']; nlinarith
-    omega
-  -- equal last digits give equal members
-  have key : x = x' → [p, q, x] = [p', q', x'] := by
-    intro hxx
-    subst hxx
-    have h1 : c * b + e = c' * b + e' := hY.trans hY'.symm
-    have hcc : c = c' := by
-      have := congrArg (· / b) h1
-      rwa [Nat.mul_comm c, Nat.mul_comm c', Nat.mul_add_div (by omega),
-        Nat.mul_add_div (by omega), Nat.div_eq_of_lt heb, Nat.div_eq_of_lt heb'] at this
-    subst hcc
-    have hee : e = e' := by omega
-    subst hee
-    rw [hpc, hqc, hpc', hqc']
-  -- different last digits are impossible
-  by_contra hne
-  have hxx : x ≠ x' := fun h => hne (key h)
-  -- `p b^2 ≤ x^x` and `x'^x' < (p' + 1) b^2`, and the same with the roles exchanged
-  have bound : ∀ {p q x c e p' q' x' : ℕ}, IsSolution b 1 [p, q, x] → p = c ^ 2 →
-      c * b + e = x ^ (x / 2) → Even x → IsSolution b 1 [p', q', x'] →
-      p' + 1 ≤ x' → x < x' → False := by
-    intro p q x c e p' q' x' hs hpc hY hx hs' hpx' hlt
-    have hp1 : 1 ≤ p := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
-    have hx1 : 1 ≤ x := by
-      by_contra h0
-      have hx0 : x = 0 := by omega
-      subst hx0
-      simp at hY
-      have : c * b ≤ 1 := by omega
-      have hb := hs.lt_base p (by simp)
-      have : 1 ≤ c := by rcases Nat.eq_zero_or_pos c with rfl | h; · simp at hpc; omega
-                         exact h
-      nlinarith
-    -- `b^2 ≤ p b^2 ≤ x^x`
-    have hxx : x ^ x = (x ^ (x / 2)) ^ 2 := by
-      obtain ⟨k, hk⟩ := hx; rw [← pow_mul]; congr 1; omega
-    have h1 : p * b ^ 2 ≤ x ^ x := by
-      rw [hxx, ← hY, hpc]
-      calc c ^ 2 * b ^ 2 = (c * b) ^ 2 := by ring
-        _ ≤ (c * b + e) ^ 2 := Nat.pow_le_pow_left (Nat.le_add_right _ _) 2
-    have h2 : x' * x ^ x ≤ x' ^ x' := mul_pow_self_le hx1 hlt
-    -- `x'^x' < (p' + 1) b^2`
-    have heq := hs'.eq
-    simp only [P_cons, P_nil, List.length_cons, List.length_nil, Nat.cast_id, Fs_cons, Fs_nil,
-      add_zero, zero_add, pow_zero, pow_one, mul_one, w_one_eq_pow] at heq
-    rw [show (1 : ℕ) + 1 = 2 from rfl] at heq
-    have hqb := hs'.lt_base q' (by simp)
-    have hxb := hs'.lt_base x' (by simp)
-    have h3 : q' * b + x' < b ^ 2 := by
-      have e1 : (q' + 1) * b = q' * b + b := by ring
-      have e2 : (q' + 1) * b ≤ b * b := Nat.mul_le_mul_right _ (by omega)
-      have e3 : b * b = b ^ 2 := by ring
-      omega
-    have h4 : x' ^ x' < (p' + 1) * b ^ 2 := by
-      have e : (p' + 1) * b ^ 2 = p' * b ^ 2 + b ^ 2 := by ring
-      omega
-    have h5 : x' * (p * b ^ 2) < (p' + 1) * b ^ 2 := by
-      calc x' * (p * b ^ 2) ≤ x' * x ^ x := Nat.mul_le_mul_left _ h1
-        _ ≤ x' ^ x' := h2
-        _ < (p' + 1) * b ^ 2 := h4
-    have hb0 : 0 < b ^ 2 := by have := hs.lt_base p (by simp); exact pow_pos (by omega) 2
-    have h6 : x' * b ^ 2 ≤ x' * (p * b ^ 2) :=
-      Nat.mul_le_mul_left _ (Nat.le_mul_of_pos_left _ (by omega))
-    have : x' * b ^ 2 < (p' + 1) * b ^ 2 := lt_of_le_of_lt h6 h5
-    have := Nat.lt_of_mul_lt_mul_right this
-    omega
-  have hpx : p + 1 ≤ x := by
-    rw [hxw]
-    have := le_w (m := 1) (show p ≠ 0 by omega)
-    have : 1 ≤ w 1 q := by rw [w_one_eq_pow]; exact one_le_pow_self q
-    omega
-  have hpx' : p' + 1 ≤ x' := by
-    rw [hxw']
-    have := le_w (m := 1) (show p' ≠ 0 by omega)
-    have : 1 ≤ w 1 q' := by rw [w_one_eq_pow]; exact one_le_pow_self q'
-    omega
-  rcases Nat.lt_or_gt_of_ne hxx with h | h
-  · exact bound hs hpc hY hx hs' hpx' h
-  · exact bound hs' hpc' hY' hx' hs hpx h
 
 end Munchausen
