@@ -12,8 +12,6 @@ import Munchausen.Defs
 
 namespace Munchausen
 
-open Nat
-
 /-! ### Digit strings and numbers -/
 
 /-- The digits of the value of a valid string are the string itself. -/

@@ -12,8 +12,6 @@ import Munchausen.Basic
 
 namespace Munchausen
 
-open Nat
-
 /-! ### The digit-sum identity -/
 
 /-- In any commutative ring, `b - 1` divides `P_s(b) - (digit sum of s)` (section 1.6). -/
