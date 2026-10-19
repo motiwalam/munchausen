@@ -7,7 +7,8 @@ import Munchausen.Residues
 * Proposition 20.20: `(1, 2, x)` is a solution only for `x = 6`;
 * Lemma 18.14: the base of a 2-digit solution is at least `M^(M-1)`;
 * Theorem 15.7: under `0^0 = 1`, only base 3 has two 2-digit solutions;
-* Proposition 15.16: two 2-digit representations of one integer are `(a, c)` and `(c, a)`.
+* Proposition 15.16: two 2-digit representations of one integer are `(a, c)` and `(c, a)`;
+* Lemma 18.16 and Corollary 18.17: the shape of a third representation.
 -/
 
 namespace Munchausen
@@ -736,5 +737,334 @@ theorem prop15_16 {a c a' c' b b' : ℕ} (h : IsSolution b 1 [a, c]) (h' : IsSol
     have hcc := hinj hc hc' e
     have haa := hinj ha ha' (by omega)
     exact absurd (by rw [haa, hcc]) hne
+
+/-! ### Lemma 18.16 and Corollary 18.17: integers with three bases -/
+
+/-- Under `0^0 = 1`, each digit weighs at least 1. -/
+lemma one_le_w_one (d : ℕ) : 1 ≤ w 1 d := by rw [w_one_eq_pow]; exact one_le_pow_self d
+
+/-- `|s| ≤ F(s)` under `0^0 = 1`. -/
+lemma length_le_Fs_one (s : List ℕ) : s.length ≤ Fs 1 s := by
+  induction s with
+  | nil => simp
+  | cons d t ih => have := one_le_w_one d; simp; omega
+
+/-- A list with a member `d` weighs at least `w(d) + (|s| - 1)` under `0^0 = 1`. -/
+lemma Fs_ge_mem {s : List ℕ} {d : ℕ} (hd : d ∈ s) : w 1 d + (s.length - 1) ≤ Fs 1 s := by
+  induction s with
+  | nil => simp at hd
+  | cons e t ih =>
+    rcases List.mem_cons.1 hd with rfl | hd
+    · have := length_le_Fs_one t; simp; omega
+    · have := ih hd; have := one_le_w_one e; simp
+      have : 1 ≤ t.length := List.length_pos_of_mem hd
+      omega
+
+/-- If every digit of `s` is at most `d`, then `F(s) ≤ |s| w(d)`. -/
+lemma Fs_le_length_mul {s : List ℕ} {d : ℕ} (hs : ∀ e ∈ s, e ≤ d) :
+    Fs 1 s ≤ s.length * w 1 d := by
+  induction s with
+  | nil => simp
+  | cons e t ih =>
+    have h1 := w_le_of_le (m := 1) le_rfl (hs e (by simp))
+    have := ih (fun x hx => hs x (by simp [hx]))
+    simp; nlinarith
+
+/-- The largest digit of a solution of `N = a^a + w(c)` with `c ≤ a` is `a` (proof of
+Lemma 18.16). -/
+lemma max_digit_eq {a c b : ℕ} {s : List ℕ} (ha : 2 ≤ a) (hca : c ≤ a) (hs : IsSolution b 1 s)
+    (hN : P b s = a ^ a + w 1 c) : (∀ d ∈ s, d ≤ a) ∧ a ∈ s := by
+  have hF : Fs 1 s = a ^ a + w 1 c := by rw [← hs.eq, hN]
+  have hwc : w 1 c ≤ a ^ a := by
+    rw [← w_of_ne_zero 1 (by omega : a ≠ 0)]; exact w_le_of_le le_rfl hca
+  -- no digit above `a`
+  have hle : ∀ d ∈ s, d ≤ a := by
+    intro d hd
+    by_contra h
+    have h1 := w_le_Fs (m := 1) hd
+    have h2 : (a + 1) ^ (a + 1) ≤ w 1 d := by
+      rw [w_of_ne_zero 1 (by omega)]
+      exact (Nat.pow_le_pow_left (by omega) _).trans (Nat.pow_le_pow_right (by omega) (by omega))
+    have := two_pow_self_lt a (by omega)
+    omega
+  refine ⟨hle, ?_⟩
+  -- the largest digit `d`
+  by_contra hna
+  have hne : s ≠ [] := by rintro rfl; simp at hN; have := one_le_pow_self a; omega
+  obtain ⟨d, hd, hdmax⟩ : ∃ d ∈ s, ∀ e ∈ s, e ≤ d := by
+    obtain ⟨d, hd, hmax⟩ := s.toFinset.exists_max_image id (by simpa using hne)
+    exact ⟨d, List.mem_toFinset.1 hd, fun e he => hmax e (List.mem_toFinset.2 he)⟩
+  have hda : d < a := lt_of_le_of_ne (hle d hd) (fun h => hna (h ▸ hd))
+  have hd1 : 1 ≤ d := by
+    have h0 := hs.head_ne_zero hne
+    have := hdmax _ (List.head_mem hne)
+    omega
+  set k := s.length with hk
+  have hk1 : 1 ≤ k := List.length_pos_of_mem hd
+  have hb : d + 1 ≤ b := hs.lt_base d hd
+  -- `(d + 1)^(k - 1) ≤ b^(k-1) ≤ N`
+  have hpow : (d + 1) ^ (k - 1) ≤ a ^ a + w 1 c := by
+    have h1 : b ^ (k - 1) ≤ P b s := by
+      obtain ⟨e, t, rfl⟩ : ∃ e t, s = e :: t := by
+        cases s with
+        | nil => exact absurd rfl hne
+        | cons e t => exact ⟨e, t, rfl⟩
+      have he : 1 ≤ e := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
+      simp only [P_cons, Nat.cast_id, List.length_cons, hk] at *
+      have : b ^ t.length ≤ e * b ^ t.length := Nat.le_mul_of_pos_left _ he
+      simp only [Nat.add_sub_cancel]
+      omega
+    rw [← hN]; exact (Nat.pow_le_pow_left hb _).trans h1
+  have hFle := Fs_le_length_mul hdmax
+  have hFk : a ^ a + w 1 c ≤ k * w 1 d := by rw [← hF]; exact hFle
+  have hwc1 := one_le_w_one c
+  rcases Nat.lt_or_ge d 2 with hd2 | hd2
+  · -- all digits are 0 or 1, so `N = F ≤ k`
+    have hw1 : w 1 d = 1 := by interval_cases d <;> simp [w]
+    rw [hw1, mul_one] at hFk
+    have h4 : 2 ^ 2 ≤ a ^ a :=
+      (Nat.pow_le_pow_left ha 2).trans (Nat.pow_le_pow_right (by omega) ha)
+    have hk5 : 5 ≤ k := by omega
+    have h6 : 2 ^ (k - 1) ≤ (d + 1) ^ (k - 1) := Nat.pow_le_pow_left (by omega) _
+    have h7 : k < 2 ^ (k - 1) := by
+      have := Nat.lt_two_pow_self (n := k - 2)
+      have e : 2 ^ (k - 1) = 2 * 2 ^ (k - 2) := by
+        rw [show k - 1 = (k - 2) + 1 by omega, pow_succ]; ring
+      omega
+    omega
+  · -- `d ≥ 2`: then `k > 2 (d + 1)` and `(d+1)^(k-1-d) < k`, impossible
+    rw [w_of_ne_zero 1 (show d ≠ 0 by omega)] at hFk
+    have hda' : (d + 1) ^ (d + 1) ≤ a ^ a :=
+      (Nat.pow_le_pow_left (show d + 1 ≤ a by omega) (d + 1)).trans
+        (Nat.pow_le_pow_right (show 0 < a by omega) (show d + 1 ≤ a by omega))
+    have hb2 := two_mul_pow_le d (by omega)
+    have e1 : (d + 1) ^ (d + 1) = (d + 1) * (d + 1) ^ d := by ring
+    have hdd : 0 < d ^ d := by positivity
+    have hk : 2 * (d + 1) < k := by
+      have : 2 * (d + 1) * d ^ d < k * d ^ d := by
+        calc 2 * (d + 1) * d ^ d = (d + 1) * (2 * d ^ d) := by ring
+          _ ≤ (d + 1) * (d + 1) ^ d := Nat.mul_le_mul_left _ hb2
+          _ = (d + 1) ^ (d + 1) := e1.symm
+          _ ≤ a ^ a := hda'
+          _ < a ^ a + w 1 c := by omega
+          _ ≤ k * d ^ d := hFk
+      exact Nat.lt_of_mul_lt_mul_right this
+    obtain ⟨j, hj⟩ : ∃ j, k - 1 = d + j := ⟨k - 1 - d, by omega⟩
+    have hsplit : (d + 1) ^ (k - 1) = (d + 1) ^ d * (d + 1) ^ j := by rw [hj, pow_add]
+    have hlt : d ^ d < (d + 1) ^ d := Nat.pow_lt_pow_left (by omega) (by omega)
+    have h1 : (d + 1) ^ d * (d + 1) ^ j < (d + 1) ^ d * k := by
+      rw [← hsplit]
+      calc (d + 1) ^ (k - 1) ≤ a ^ a + w 1 c := hpow
+        _ ≤ k * d ^ d := hFk
+        _ < k * (d + 1) ^ d := Nat.mul_lt_mul_of_pos_left hlt (by omega)
+        _ = (d + 1) ^ d * k := by ring
+    have h2 : (d + 1) ^ j < k := Nat.lt_of_mul_lt_mul_left h1
+    have h3 : 3 ^ j ≤ (d + 1) ^ j := Nat.pow_le_pow_left (by omega) _
+    have h4 : 3 * j ≤ 3 ^ j := by
+      have := Nat.lt_pow_self (n := j - 1) (a := 3) (by norm_num)
+      have e : 3 ^ j = 3 * 3 ^ (j - 1) := by
+        rw [show j = (j - 1) + 1 by omega, pow_succ]; simp; ring
+      omega
+    omega
+
+/-- The value of a valid string of length `k` is at least `b^(k-1)`. -/
+lemma pow_length_le_P {b m : ℕ} {s : List ℕ} (hs : IsSolution b m s) (hne : s ≠ []) :
+    b ^ (s.length - 1) ≤ P b s := by
+  obtain ⟨e, t, rfl⟩ : ∃ e t, s = e :: t := by
+    cases s with
+    | nil => exact absurd rfl hne
+    | cons e t => exact ⟨e, t, rfl⟩
+  have he : 1 ≤ e := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
+  simp only [P_cons, Nat.cast_id, List.length_cons, Nat.add_sub_cancel]
+  have : b ^ t.length ≤ e * b ^ t.length := Nat.le_mul_of_pos_left _ he
+  omega
+
+/-- Splitting a weight sum at one digit value. -/
+lemma Fs_split (m x : ℕ) (s : List ℕ) :
+    Fs m s = s.count x * w m x + Fs m (s.filter (· ≠ x)) := by
+  induction s with
+  | nil => simp
+  | cons d t ih =>
+    by_cases h : d = x
+    · subst h; simp [ih]; ring
+    · simp [List.filter_cons, h, ih, List.count_cons]; omega
+
+/-- **Lemma 18.16** (section 18.3). Under `0^0 = 1`, let `N = a^a + w(c)` with `c ≤ a` and
+`a ≥ 2`. Every representation `s` of `N` is `(a, a)` with `c = a`, or contains the digit `a`
+exactly once; then the other digits weigh `w(c)` together, and with 3 or more digits they are
+all below `c`. -/
+theorem lemma18_16 {a c b : ℕ} {s : List ℕ} (ha : 2 ≤ a) (hca : c ≤ a) (hs : IsSolution b 1 s)
+    (hN : P b s = a ^ a + w 1 c) :
+    (s = [a, a] ∧ c = a) ∨ (s.count a = 1 ∧ Fs 1 (s.filter (· ≠ a)) = w 1 c ∧
+      (3 ≤ s.length → ∀ d ∈ s, d ≠ a → d < c)) := by
+  obtain ⟨hle, hmem⟩ := max_digit_eq ha hca hs hN
+  have hF : Fs 1 s = a ^ a + w 1 c := by rw [← hs.eq, hN]
+  have hsplit := Fs_split 1 a s
+  rw [w_of_ne_zero 1 (show a ≠ 0 by omega), hF] at hsplit
+  have hc1 : 1 ≤ s.count a := List.count_pos_iff.2 hmem
+  have hwc : w 1 c ≤ a ^ a := by
+    rw [← w_of_ne_zero 1 (by omega : a ≠ 0)]; exact w_le_of_le le_rfl hca
+  have hwc1 := one_le_w_one c
+  set R := s.filter (· ≠ a) with hR
+  have hRlen : s.length = s.count a + R.length := by
+    rw [hR, ← List.countP_eq_length_filter, List.count_eq_countP]
+    have := List.length_eq_countP_add_countP (fun d => d == a) (l := s)
+    simp only [ne_eq] at this ⊢
+    rw [this]
+    congr 1
+  rcases Nat.lt_or_ge (s.count a) 2 with h2 | h2
+  · -- `a` occurs once
+    have hcount : s.count a = 1 := by omega
+    rw [hcount, one_mul] at hsplit
+    have hRw : Fs 1 R = w 1 c := by omega
+    refine Or.inr ⟨hcount, hRw, fun hk d hd hda => ?_⟩
+    have hdR : d ∈ R := List.mem_filter.2 ⟨hd, by simpa using hda⟩
+    have hRl : 2 ≤ R.length := by omega
+    have := Fs_ge_mem (s := R) hdR
+    by_contra hdc
+    have := w_le_of_le (m := 1) le_rfl (show c ≤ d by omega)
+    omega
+  · -- `a` occurs twice: the string is `(a, a)` and `c = a`
+    have hRw : Fs 1 R = 0 := by
+      have : 2 * a ^ a ≤ s.count a * a ^ a := Nat.mul_le_mul_right _ h2
+      omega
+    have hR0 : R = [] := by
+      by_contra hne
+      have := length_le_Fs_one R
+      have := List.length_pos_of_ne_nil hne
+      omega
+    have hcount : s.count a = 2 := by
+      have : 2 * a ^ a ≤ s.count a * a ^ a := Nat.mul_le_mul_right _ h2
+      have : s.count a * a ^ a ≤ 2 * a ^ a := by omega
+      have hpos : 0 < a ^ a := by positivity
+      exact le_antisymm (Nat.le_of_mul_le_mul_right this hpos) h2
+    have hwca : w 1 c = a ^ a := by
+      have : 2 * a ^ a = a ^ a + w 1 c := by
+        rw [hcount, hR0] at hsplit; simp at hsplit; omega
+      omega
+    left
+    refine ⟨?_, ?_⟩
+    · have hlen : s.length = 2 := by rw [hRlen, hcount, hR0]; rfl
+      have hall : ∀ d ∈ s, d = a := by
+        intro d hd
+        by_contra hda
+        have : d ∈ R := List.mem_filter.2 ⟨hd, by simpa using hda⟩
+        rw [hR0] at this; simp at this
+      rw [List.eq_replicate_iff.2 ⟨hlen, hall⟩]; rfl
+    · by_contra hca'
+      have hlt : c < a := lt_of_le_of_ne hca hca'
+      rcases Nat.eq_zero_or_pos c with rfl | hc0
+      · simp [w] at hwca
+        have : 2 ^ 2 ≤ a ^ a :=
+          (Nat.pow_le_pow_left ha 2).trans (Nat.pow_le_pow_right (by omega) ha)
+        omega
+      · rw [w_of_ne_zero 1 hc0.ne'] at hwca
+        have := pow_self_injective hc0 (by omega) hwca
+        omega
+
+/-- **Lemma 18.16**, the lengths (section 18.3). With `N = a^a + w(c)`, `c ≤ a`, `a ≥ 2`:
+if `c ≤ 1` or `c = a`, every representation has 2 digits; if `2 ≤ c < a`, a representation
+with 3 or more digits has between `c + 2` and `a + 1` digits. -/
+theorem lemma18_16_length {a c b : ℕ} {s : List ℕ} (ha : 2 ≤ a) (hca : c ≤ a)
+    (hs : IsSolution b 1 s) (hN : P b s = a ^ a + w 1 c) :
+    ((c ≤ 1 ∨ c = a) → s.length = 2) ∧
+      (2 ≤ c → c < a → 3 ≤ s.length → c + 2 ≤ s.length ∧ s.length ≤ a + 1) := by
+  obtain ⟨hle, hmem⟩ := max_digit_eq ha hca hs hN
+  have hne : s ≠ [] := List.ne_nil_of_mem hmem
+  have hF : Fs 1 s = a ^ a + w 1 c := by rw [← hs.eq, hN]
+  have hwc1 := one_le_w_one c
+  -- the length is at least 2
+  have hlen2 : 2 ≤ s.length := by
+    by_contra h
+    have h1 : s.length = 1 := by have := List.length_pos_of_ne_nil hne; omega
+    obtain ⟨d, hd⟩ := List.length_eq_one_iff.1 h1
+    subst hd
+    simp at hmem; subst hmem
+    simp [Fs, w_of_ne_zero 1 (show a ≠ 0 by omega)] at hF
+    omega
+  -- `(a+1)^(k-1) ≤ N`
+  have hab : a + 1 ≤ b := hs.lt_base a hmem
+  have hpow : (a + 1) ^ (s.length - 1) ≤ a ^ a + w 1 c :=
+    (Nat.pow_le_pow_left hab _).trans (hN ▸ pow_length_le_P hs hne)
+  have hwca : w 1 c ≤ a ^ a := by
+    rw [← w_of_ne_zero 1 (by omega : a ≠ 0)]; exact w_le_of_le le_rfl hca
+  have htwo := two_pow_self_lt a (by omega)
+  rcases lemma18_16 ha hca hs hN with ⟨rfl, -⟩ | ⟨hcount, hRw, hsmall⟩
+  · exact ⟨fun _ => rfl, fun _ _ h3 => by simp at h3⟩
+  set R := s.filter (· ≠ a) with hR
+  have hRlen : s.length = 1 + R.length := by
+    rw [← hcount, hR, ← List.countP_eq_length_filter, List.count_eq_countP]
+    have := List.length_eq_countP_add_countP (fun d => d == a) (l := s)
+    simp only [ne_eq] at this ⊢
+    rw [this]
+    congr 1
+  -- the number of digits is at most `a + 1`, and at most `a` when `c = a`
+  have hklt : s.length - 1 < a + 1 := by
+    have : (a + 1) ^ (s.length - 1) < (a + 1) ^ (a + 1) := by omega
+    exact (Nat.pow_lt_pow_iff_right (by omega)).1 this
+  -- with 3 or more digits, the other digits are below `c`
+  have hRle : 3 ≤ s.length → Fs 1 R ≤ R.length * w 1 (c - 1) := by
+    intro hk3
+    apply Fs_le_length_mul
+    intro d hd
+    have := hsmall hk3 d (List.mem_of_mem_filter hd) (by simpa using (List.mem_filter.1 hd).2)
+    omega
+  constructor
+  · rintro hc
+    by_contra hk
+    have hk3 : 3 ≤ s.length := by omega
+    rcases hc with hc | rfl
+    · -- `c ≤ 1`: the other digits weigh `w(c) = 1`, so there is at most one
+      have h1 : w 1 c = 1 := by interval_cases c <;> simp [w]
+      have := length_le_Fs_one R
+      omega
+    · -- `c = a`: `a^a ≤ k' (a-1)^(a-1)` with `k' ≤ a` is impossible
+      have h1 := hRle hk3
+      rw [hRw, w_of_ne_zero 1 (show c ≠ 0 by omega), w_of_ne_zero 1 (show c - 1 ≠ 0 by omega)]
+        at h1
+      have h2 : c ^ c = c * c ^ (c - 1) := by rw [← pow_succ']; congr 1; omega
+      have h3 : (c - 1) ^ (c - 1) < c ^ (c - 1) := Nat.pow_lt_pow_left (by omega) (by omega)
+      have h4 : R.length * (c - 1) ^ (c - 1) ≤ c * (c - 1) ^ (c - 1) :=
+        Nat.mul_le_mul_right _ (by omega)
+      have h5 : c * (c - 1) ^ (c - 1) < c * c ^ (c - 1) := Nat.mul_lt_mul_of_pos_left h3 (by omega)
+      omega
+  · intro hc2 hca' hk3
+    refine ⟨?_, by omega⟩
+    have h1 := hRle hk3
+    rw [hRw, w_of_ne_zero 1 (show c ≠ 0 by omega), w_of_ne_zero 1 (show c - 1 ≠ 0 by omega)]
+      at h1
+    have h2 : c ^ c = c * c ^ (c - 1) := by rw [← pow_succ']; congr 1; omega
+    have h3 : (c - 1) ^ (c - 1) < c ^ (c - 1) := Nat.pow_lt_pow_left (by omega) (by omega)
+    have h5 : c * (c - 1) ^ (c - 1) < c * c ^ (c - 1) := Nat.mul_lt_mul_of_pos_left h3 (by omega)
+    have h6 : c * (c - 1) ^ (c - 1) < R.length * (c - 1) ^ (c - 1) := by omega
+    have := Nat.lt_of_mul_lt_mul_right h6
+    omega
+
+/-- **Corollary 18.17** (section 18.3). Under `0^0 = 1`, let `N` have the two 2-digit
+representations `(a, c)` and `(c, a)` (Proposition 15.16) and a third representation `s` with
+3 or more digits. Then both digits are at least 2, and `s` has between `min(a,c) + 2` and
+`max(a,c) + 1` digits. -/
+theorem corollary18_17 {a c b₁ b₂ b₃ : ℕ} {s : List ℕ} (h₁ : IsSolution b₁ 1 [a, c])
+    (h₂ : IsSolution b₂ 1 [c, a]) (hac : a ≠ c) (h₃ : IsSolution b₃ 1 s)
+    (hP : P b₃ s = P b₁ [a, c]) (hk : 3 ≤ s.length) :
+    2 ≤ min a c ∧ min a c + 2 ≤ s.length ∧ s.length ≤ max a c + 1 := by
+  have ha : 1 ≤ a := Nat.one_le_iff_ne_zero.2 (h₁.head_ne_zero (by simp))
+  have hc : 1 ≤ c := Nat.one_le_iff_ne_zero.2 (h₂.head_ne_zero (by simp))
+  have hN : P b₃ s = a ^ a + c ^ c := by
+    rw [hP, h₁.eq]; simp [w_one_eq_pow]
+  rcases Nat.lt_or_gt_of_ne hac with hlt | hlt
+  · -- `a < c`
+    have hN' : P b₃ s = c ^ c + w 1 a := by rw [hN, w_one_eq_pow]; ring
+    obtain ⟨h1, h2⟩ := lemma18_16_length (by omega) hlt.le h₃ hN'
+    have ha2 : 2 ≤ a := by by_contra h; have := h1 (Or.inl (by omega)); omega
+    have := h2 ha2 hlt hk
+    rw [min_eq_left hlt.le, max_eq_right hlt.le]
+    exact ⟨ha2, this⟩
+  · have hN' : P b₃ s = a ^ a + w 1 c := by rw [hN, w_one_eq_pow]
+    obtain ⟨h1, h2⟩ := lemma18_16_length (by omega) hlt.le h₃ hN'
+    have hc2 : 2 ≤ c := by by_contra h; have := h1 (Or.inl (by omega)); omega
+    have := h2 hc2 hlt hk
+    rw [min_eq_right hlt.le, max_eq_left hlt.le]
+    exact ⟨hc2, this⟩
 
 end Munchausen

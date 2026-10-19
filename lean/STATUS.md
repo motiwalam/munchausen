@@ -19,9 +19,9 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Search, Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 83 formalized (one of them a
+Counts of table rows at the time of writing: 85 formalized (one of them a
 list of computed solutions checked by `decide`), 11 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 78 not formalized and 2 not
+problems (13 `Prop`s), 4 refuted conjectures, 77 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -191,7 +191,8 @@ stated.
 | Proposition 18.13 | none | not formalized (cites abc and Faltings) |
 | Lemma 18.14 | `lemma18_14` [Short] | formalized |
 | Proposition 18.15 | none | not formalized (computation) |
-| Lemma 18.16, Corollary 18.17 | none | not formalized (elementary; the proof gap reported under "Problems found" is fixed in the library) |
+| Lemma 18.16 | `lemma18_16`, `lemma18_16_length`, `max_digit_eq` [Short] | formalized |
+| Corollary 18.17 | `corollary18_17` [Short] | formalized (the length range of a third representation; the divisibility conditions are Proposition 2.6) |
 | Proposition 18.18, Lemma 18.19 | none | not formalized (heuristic weights; Lemma 18.19 is elementary) |
 | Theorem 18.20, Corollary 18.21 | none | not formalized (Gauss sums) |
 | Proposition 18.22, Corollary 18.23 | none | not formalized (cite Laurent) |
@@ -365,7 +366,7 @@ In order of value and effort:
    Theorem 25.15.
 2. Theorem 20.12 (the 5-adic law) and the equality part of Theorem 20.11
    (`p`-adic power series).
-3. Theorem 15.7 under `0^0 = 0`, Lemma 18.16 and Corollary 18.17.
+3. Theorem 15.7 under `0^0 = 0`.
 4. The real-root count in Proposition 9.3 and the asymptotics of
    Theorem 11.2.
 5. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
