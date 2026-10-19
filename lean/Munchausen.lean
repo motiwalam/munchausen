@@ -5,7 +5,7 @@ import Munchausen.Constructions
 import Munchausen.Polynomial
 import Munchausen.Examples
 import Munchausen.Counting
-import Munchausen.SelfPayingCount
+import Munchausen.SelfPayingDigits
 import Munchausen.Conjectures
 import Munchausen.Residues
 import Munchausen.ShortEquations

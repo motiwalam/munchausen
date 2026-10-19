@@ -1,7 +1,10 @@
 import Munchausen.Constructions
 
 /-!
-# How many self-paying digits a base has (sections 8.3, 9.8 and 15.3)
+# Self-paying digits: moves and counts (sections 2.2, 8.3, 9.8 and 15.3)
+
+* Proposition 2.3: under `0^0 = 0`, self-paying digits can be added to or removed from zero
+  positions of a solution, one at a time or all at once (the core);
 
 * a base with `C` self-paying digits is `r^t` with `t ≥ C + 1`, where `r` is its primitive
   root; so `C < log2 b` (Proposition 8.5) and the base is an `r^t` with `t ≥ C + 1`
@@ -138,5 +141,136 @@ theorem prop15_8 {r t : ℕ} (hr : 2 ≤ r) (ht : 1 ≤ t) (hnp : NotPerfectPowe
       (by rw [mul_comm p q]; exact Nat.mul_lt_mul_of_pos_left (by omega) hq) ?_⟩
     obtain ⟨u, hu⟩ := hferm
     exact ⟨u * (p - 1), by rw [hu]; ring⟩
+
+/-! ### Proposition 2.3: moves of self-paying digits -/
+
+/-- The digit of `n` at position `i` in base `b`. -/
+def digitAt (b n i : ℕ) : ℕ := n / b ^ i % b
+
+lemma sum_digitAt (b n L : ℕ) :
+    ∑ i ∈ Finset.range L, digitAt b n i * b ^ i = n % b ^ L := by
+  induction L with
+  | zero => simp [Nat.mod_one]
+  | succ L ih =>
+    rw [Finset.sum_range_succ, ih, pow_succ, Nat.mod_mul, digitAt]
+    ring
+
+/-- `F` in terms of the digits up to any position `L` with `n < b^L` (under `0^0 = 0`). -/
+lemma F_zero_eq_sum {b n L : ℕ} (hb : 2 ≤ b) (hn : n < b ^ L) :
+    F b 0 n = ∑ i ∈ Finset.range L, w 0 (digitAt b n i) := by
+  have h1 : Nat.ofDigits b ((List.range L).map (digitAt b n)) = n := by
+    rw [ofDigits_map_range, sum_digitAt, Nat.mod_eq_of_lt hn]
+  have h2 := F_ofDigits_zero (b := b) (by omega) ((List.range L).map (digitAt b n))
+    (fun d hd => by
+      obtain ⟨i, -, rfl⟩ := List.mem_map.1 hd
+      exact Nat.mod_lt _ (by omega))
+  rw [h1, Fs_map_range] at h2
+  exact h2
+
+/-- **Proposition 2.3**, one move (section 2.2). Under `0^0 = 0`, if `n` has the digit 0 at
+position `k` and `a` is self-paying at `k`, then `n` is a solution exactly when `n + a b^k`
+is. Self-paying digits can be added to and removed from zero positions freely. -/
+theorem isMunchausen_add_selfPaying {b n a k : ℕ} (hb : 2 ≤ b) (hk : digitAt b n k = 0)
+    (h : SelfPaying b a k) : IsMunchausen b 0 n ↔ IsMunchausen b 0 (n + a * b ^ k) := by
+  classical
+  -- a common length `L` for both numbers
+  obtain ⟨L, hL, hkL⟩ : ∃ L, n + a * b ^ k < b ^ L ∧ k < L := by
+    refine ⟨n + a * b ^ k + k + 1, ?_, by omega⟩
+    exact lt_of_lt_of_le (by omega) (Nat.lt_pow_self (by omega)).le
+  have hnL : n < b ^ L := by omega
+  -- the digits of `n + a b^k` are those of `n` with `a` at position `k`
+  let f := Function.update (digitAt b n) k a
+  have hf : ∀ i, f i < b := by
+    intro i
+    by_cases hi : i = k
+    · subst hi; simp [f, h.2.2.1]
+    · simp [f, hi, digitAt]; exact Nat.mod_lt _ (by omega)
+  have hmem : k ∈ Finset.range L := Finset.mem_range.2 hkL
+  have hoff : ∀ g : ℕ → ℕ, ∑ i ∈ (Finset.range L).erase k, g (f i) * b ^ i =
+      ∑ i ∈ (Finset.range L).erase k, g (digitAt b n i) * b ^ i := fun g =>
+    Finset.sum_congr rfl fun i hi => by
+      simp only [f, Function.update_of_ne (Finset.ne_of_mem_erase hi)]
+  have hval : ∑ i ∈ Finset.range L, f i * b ^ i = n + a * b ^ k := by
+    rw [← Finset.add_sum_erase _ _ hmem]
+    have e2 := Finset.add_sum_erase _ (fun i => digitAt b n i * b ^ i) hmem
+    rw [sum_digitAt, Nat.mod_eq_of_lt hnL, hk, zero_mul, zero_add] at e2
+    have := hoff id
+    simp only [id] at this
+    rw [this, e2]
+    simp [f]; ring
+  have hw : ∑ i ∈ Finset.range L, w 0 (f i) = F b 0 n + w 0 a := by
+    rw [F_zero_eq_sum hb hnL, ← Finset.add_sum_erase _ _ hmem,
+      ← Finset.add_sum_erase _ (fun i => w 0 (digitAt b n i)) hmem]
+    have : ∑ i ∈ (Finset.range L).erase k, w 0 (f i) =
+        ∑ i ∈ (Finset.range L).erase k, w 0 (digitAt b n i) :=
+      Finset.sum_congr rfl fun i hi => by
+        simp only [f, Function.update_of_ne (Finset.ne_of_mem_erase hi)]
+    rw [this, hk]
+    simp [f]; ring
+  have hF : F b 0 (n + a * b ^ k) = F b 0 n + a * b ^ k := by
+    have h2 := F_ofDigits_zero (b := b) (by omega) ((List.range L).map f)
+      (fun d hd => by obtain ⟨i, -, rfl⟩ := List.mem_map.1 hd; exact hf i)
+    rw [ofDigits_map_range, hval, Fs_map_range, hw, ← h.balance] at h2
+    exact h2
+  unfold IsMunchausen
+  rw [hF]
+  omega
+
+/-- **Proposition 2.3**, the core (section 2.2). Under `0^0 = 0`, let `S` be a set of
+positions below `L` (with `n < b^L`) that hold self-paying digits of `n`. Removing them all
+gives the number `c = sum_{i ∉ S} d_i b^i`, and `n` is a solution exactly when `c` is (or
+`c = 0`). With Proposition 2.1 for a final 1, this is the decomposition of a solution into a
+core, self-paying digits and an optional final 1. -/
+theorem isMunchausen_iff_core {b n L : ℕ} (hb : 2 ≤ b) (hn : n < b ^ L) (S : Finset ℕ)
+    (hS : S ⊆ Finset.range L) (hsp : ∀ k ∈ S, SelfPaying b (digitAt b n k) k) :
+    IsMunchausen b 0 n ↔
+      IsMunchausen b 0 (∑ i ∈ (Finset.range L).filter (· ∉ S), digitAt b n i * b ^ i) := by
+  classical
+  let g : ℕ → ℕ := fun i => if i ∈ S then 0 else digitAt b n i
+  have hg : ∀ i, g i < b := fun i => by
+    simp only [g]; split_ifs
+    · omega
+    · exact Nat.mod_lt _ (by omega)
+  have hcval : ∑ i ∈ Finset.range L, g i * b ^ i =
+      ∑ i ∈ (Finset.range L).filter (· ∉ S), digitAt b n i * b ^ i := by
+    rw [Finset.sum_filter]
+    apply Finset.sum_congr rfl
+    intro i _
+    simp only [g]; split_ifs <;> simp
+  have hFc := F_ofDigits_zero (b := b) (by omega) ((List.range L).map g)
+    (fun d hd => by obtain ⟨i, -, rfl⟩ := List.mem_map.1 hd; exact hg i)
+  rw [ofDigits_map_range, hcval, Fs_map_range] at hFc
+  -- split `n` and `F(n)` into the part on `S` and the rest
+  have hsplit : ∀ h : ℕ → ℕ, ∑ i ∈ Finset.range L, h i =
+      ∑ i ∈ (Finset.range L).filter (· ∈ S), h i +
+        ∑ i ∈ (Finset.range L).filter (· ∉ S), h i := fun h =>
+    (Finset.sum_filter_add_sum_filter_not _ _ _).symm
+  have hfilter : (Finset.range L).filter (· ∈ S) = S := by
+    ext i; simp only [Finset.mem_filter]; exact ⟨fun h => h.2, fun h => ⟨hS h, h⟩⟩
+  have hn' : n = ∑ i ∈ S, digitAt b n i * b ^ i +
+      ∑ i ∈ (Finset.range L).filter (· ∉ S), digitAt b n i * b ^ i := by
+    have := hsplit (fun i => digitAt b n i * b ^ i)
+    rw [hfilter, sum_digitAt, Nat.mod_eq_of_lt hn] at this
+    exact this
+  have hwg : ∑ i ∈ Finset.range L, w 0 (g i) =
+      ∑ i ∈ (Finset.range L).filter (· ∉ S), w 0 (digitAt b n i) := by
+    rw [hsplit (fun i => w 0 (g i))]
+    have h1 : ∑ i ∈ (Finset.range L).filter (· ∈ S), w 0 (g i) = 0 := by
+      apply Finset.sum_eq_zero
+      intro i hi
+      simp [g, (Finset.mem_filter.1 hi).2]
+    rw [h1, zero_add]
+    apply Finset.sum_congr rfl
+    intro i hi
+    simp [g, (Finset.mem_filter.1 hi).2]
+  have hFn : F b 0 n = ∑ i ∈ S, digitAt b n i * b ^ i +
+      ∑ i ∈ (Finset.range L).filter (· ∉ S), w 0 (digitAt b n i) := by
+    rw [F_zero_eq_sum hb hn, hsplit, hfilter]
+    congr 1
+    exact Finset.sum_congr rfl fun k hk => ((hsp k hk).balance).symm
+  rw [hwg] at hFc
+  unfold IsMunchausen
+  rw [hFn, hFc]
+  constructor <;> intro h <;> omega
 
 end Munchausen
