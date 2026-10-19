@@ -143,7 +143,7 @@ stated.
 | Proposition 15.6 | none | not formalized (model) |
 | Theorem 15.7 | `theorem15_7`, `two_two_digit` [Short] | partial: the statement under `0^0 = 1`, proven in full; the `0^0 = 0` variant (twin bases `a^(a-1)`) is not formalized |
 | Proposition 15.8 | none | not formalized (the converse of Proposition 2.2 is now available; next step) |
-| Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`; the library's hypothesis that `a` is not a perfect power is not needed for the direct proof) |
+| Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`, as the library now states it) |
 | Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
 | Proposition 15.11 | `exists_root_mod_two_iff` [Poly] | formalized |
 | Lemma 15.12 (1) | `pow_self_modEq_two` [Cong], `multiple_mem_T` [Res] | partial: `x^x - x` is even, and every multiple of 2 occurs modulo `2^e` |
@@ -190,7 +190,7 @@ stated.
 | Proposition 18.13 | none | not formalized (cites abc and Faltings) |
 | Lemma 18.14 | `lemma18_14` [Short] | formalized |
 | Proposition 18.15 | none | not formalized (computation) |
-| Lemma 18.16, Corollary 18.17 | none | not formalized (elementary; see "Problems found") |
+| Lemma 18.16, Corollary 18.17 | none | not formalized (elementary; the proof gap reported under "Problems found" is fixed in the library) |
 | Proposition 18.18, Lemma 18.19 | none | not formalized (heuristic weights; Lemma 18.19 is elementary) |
 | Theorem 18.20, Corollary 18.21 | none | not formalized (Gauss sums) |
 | Proposition 18.22, Corollary 18.23 | none | not formalized (cite Laurent) |
@@ -238,7 +238,7 @@ stated.
 | Proposition 21.9 | none | not formalized |
 | Propositions 21.10 to 21.13 | none | not formalized |
 | Proposition 21.14 | `factorial_no_invariant_residue`, `factVal`, `FactValid` [Other] | formalized |
-| Proposition 21.15 | `factorial_selfPaying` [Other] | formalized (with the fix in "Problems found") |
+| Proposition 21.15 | `factorial_selfPaying` [Other] | formalized (the library now chooses `p >= 3`, as the Lean proof does) |
 | Question 62 (finiteness in the factorial system) | none | not stated |
 
 ## Chapter 22. Blocks and binomial families
@@ -304,6 +304,9 @@ stated.
 to 89) are research directions and are not stated.
 
 ## Problems found
+
+Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
+(commit ba0b75f).
 
 1. **Proposition 21.15** (section 21.5.1). The proof takes a prime `p` with
    `i/2 < p <= i` from Bertrand's postulate and then uses

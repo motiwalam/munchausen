@@ -4,6 +4,7 @@ import Munchausen.Congruences
 import Munchausen.Constructions
 import Munchausen.Polynomial
 import Munchausen.Examples
+import Munchausen.Counting
 import Munchausen.Conjectures
 import Munchausen.Residues
 import Munchausen.ShortEquations
