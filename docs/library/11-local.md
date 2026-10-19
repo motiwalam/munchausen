@@ -55,6 +55,11 @@ Three further tests:
 So a base does not "know" whether it has a solution. The count of solutions is
 one Poisson draw, with the same mean as the count of near-solutions.
 
+Update (chapter 35). Near-solutions are now proved to exist in every base
+`b >= 27`: some `n` of `b - 1` digits has `0 < |n - F(n)| < b^(b-1-T)` with
+`T` about `sqrt(b / e)` (Theorem 35.13). The model's statement, offsets of
+size `b` in every base, remains unproved.
+
 ## 11.2 Empty bases and missing b-digit solutions, again
 
 Empty bases. The spectrum gives each base its own expected count
@@ -197,6 +202,18 @@ solutions lie in bases 6 to 48, where the heuristic is crude. So the short
 solutions are coincidences as well. They are coincidences of a different kind
 from the long ones: one equation for the base, with the local densities of
 `Q_s` as the singular series.
+
+Update (chapter 35). The local factor, averaged over the arrangements of a
+multiset, is the per-base factor averaged over the residue of the base
+(Proposition 35.3). The residue `r == 1` gives the identity condition of
+the refined model, `r == 0` a last-digit share, and the other residues
+give `1/q` each up to an error that falls like
+`exp(-(1 - gamma)^2 (k - 1)/64)` (Theorem 35.1). So the excess that the
+local factors find at short lengths is the identity factor modulo `b - 1`,
+which the exact refined model contains at the short length. It is not an
+arrangement effect, and it does not explain all of the excess (section
+35.1.4). At lengths 6 to 12 the root heuristic and the refined model agree
+on totals (section 35.2).
 
 The same heuristic says how complete the lists are. The expected number of
 solutions with a digit above the list's bound (`analysis/list_tails.py` and a

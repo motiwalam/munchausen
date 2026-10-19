@@ -451,6 +451,13 @@ choice of the cell. Fresh data cannot come from more bases, since the
 5-digit list is complete up to `10^30.9` and the expectation above base 99
 is 0.002.
 
+Update (chapter 35). The medium lengths do not share the excess. At
+lengths 6 to 12 in bases 7 to 20 the refined model with the top digit
+forced matches the window calibration of section 22.4.1 cell by cell
+(correlation 0.99 under `0^0 = 1`, 0.94 under `0^0 = 0`), and the totals
+fit the census (section 35.2). Two of the four generic short exceptions of
+section 10.5 under `0^0 = 1` are this 5-digit excess (section 35.1.4).
+
 ### 22.4.4 Completeness and the counts for 6 and 7 digits
 
 Within their ranges the lists are exhaustive computations, so they do not

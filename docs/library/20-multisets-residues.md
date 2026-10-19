@@ -46,6 +46,10 @@ most `X_k(B)`. `S(c)` is the digit sum of `c`, `M` its largest digit, and
 `H_k = 1 + 1/2 + ... + 1/k`. "Solution" means a nontrivial solution with at
 least 2 digits, under a fixed convention.
 
+Note (chapter 35). In this chapter `S(c)` is the digit sum. Chapter 5 and
+question 91 use the same letter for the weight sum `F(c)`. Chapter 35
+writes `sigma(c)` for the digit sum and avoids `S`.
+
 ### 20.1.1 The window
 
 Lemma 20.1 (proven). Let `n` be a solution in base `b` with `k >= 2` digits,
@@ -255,6 +259,17 @@ modulo integers in short windows that depend on `F(c)` itself. I know no
 method for this. The number of multisets already exceeds `B` at `alpha = 1`, so
 any argument that counts candidates one by one stops there. This is the
 obstacle.
+
+Update (chapter 35). Averaging over the bases does not get around it. In
+the range of Theorem 20.3 a share `e^(-2A + o(1))` of the multisets has no
+digit of weight below `B^A` (Proposition 35.9). For those the averaged
+count is the count of Proposition 20.2, so averaging over the window with
+the small digits compressed gains at most a bounded factor (Corollary
+35.10). At `B = 10^96` the range stays `K = 49`. The window does give a
+statement for strings with few large digits: almost all bases have no
+solution of length up to `(ln b)^C` with at most
+`(1/C - eps) ln b / ln ln b` digits of weight at least `sqrt(b)`
+(Theorem 35.12).
 
 ## 20.2 The 3-adic and 5-adic laws of x^x - x (question 46)
 

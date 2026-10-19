@@ -418,6 +418,13 @@ modulo `p^e`, not `N_s(p^e) / p^(e-1)` as the question writes. Facts:
 `rho_s(5)`, and keeps `rho_s(p)` for `p = 7` to 31. It reproduces the
 numbers of section 11.4 for the old version exactly.
 
+Update (chapter 35). The mean of `N_s(q)` over the arrangements of a
+multiset is the sum over the residues `r` of the base of the share of
+arrangements with `P_s(r) == F(c) (mod q)` (Proposition 35.3). So the
+p-adic factor is the per-base factor averaged over `b mod p^e`. This is
+why it matches the refined model on totals but splits the parity factor
+evenly between even and odd bases (section 35.2).
+
 ### 19.3.2 The table of section 11.4, redone (heuristic)
 
 Expected number of solutions under `0^0 = 1`, against the 6, 2 and 6 observed
