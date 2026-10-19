@@ -1,0 +1,17 @@
+# largest digit of a solution in a base below b* = 46666^23333 - 3: M <= 46666
+# part (b) covers every base below 10^3301.2
+# mode last 200 200 46700: 1877380200 strings, 12 survivors
+# mode mid 200 46700 200: 1877380200 strings, 11 survivors
+# mode lead 46700 200 200: 1886726700 strings, 11 survivors
+# mode last 2000 2000 2000: 8008002000 strings, 11 survivors
+# distinct survivors: 12
+# survivors that are not solutions: D square, root <= largest digit: 4
+# survivors that are not solutions: D square, root not integral: 1
+# solutions (digits, base or log10 of base):
+  (1, 3, 1) base 4
+  (3, 1, 3) base 4
+  (5, 1, 3) base 25
+  (6, 1, 5) base 91
+  (1, 2, 6) base 215
+  (1, 7, 1) base 904
+  (1, 6, 46666) base 10^108941.7905
