@@ -22,7 +22,7 @@ number; the badges $L x.y$ lead to it.
     [`analysis/`], [Python, PARI/GP, Sage and C scripts for the model, the number theory and the experiments],
     [`analysis/data/`], [the output of every script, cited by file name in the library],
     [`docs/algorithm.md`], [the search algorithm in detail],
-    [`docs/library/`], [the library: 24 chapters and the open questions],
+    [`docs/library/`], [the library: 28 chapters and the open questions],
     [`docs/exposition/`], [this document],
     [`lean/`], [the Lean 4 formalization (@app-lean)],
   ),
@@ -41,17 +41,55 @@ identity on bit masks adds two such vectors in about 15 instructions.
 Large runs are split into about $10^5$ work units in a fixed order. With
 `--journal` the program records each finished unit and each solution at once,
 so a stopped run resumes where it stopped. `--shard i/n` splits a base over
-machines, and `fast merge` combines the outputs. A GPU path (Vulkan) gives
-the same results and node counts.
+machines, and `fast merge` combines the outputs. `--progress` prints the node
+count every 10 seconds and an estimate of the share of the work done; the
+estimate weights each unit by the size its type predicts and is off by at
+most 0.10, against 0.49 for a plain count of units (#lib("27.5")).
+`--unit-stats <file>` writes one line per finished unit, for studies of the
+work law: a few unit types hold most of the work, and scheduling on one
+machine is within 0.1% of ideal.
+
+With `--features gpu` the program also runs on a GPU through Vulkan 1.3.
+`--gpu` runs every unit on the GPU, and `--hybrid` shares the units between
+the GPU and the CPU threads. Both give the same solutions and node counts as
+the CPU search, and both support the `--zscore` rule and `--shard`
+(#lib("28.3")). `--journal` does not work with the GPU. At base 38 with
+`--zscore 3.4 --zlaw cond`, `--hybrid` took 24.7 s against 70.5 s on 8 CPU
+threads.
 
 Other options change the weights for experiments on the model:
 `--zero`, `--shift`, `--factorial`, `--power`, `--perturb`,
 `--keep-residues` and `--set-residue` (@sec-model-tests,
 @sec-worlds-weights). The inexact rules `--cap`, `--band`, `--deficit`,
 `--ratio` and `--zscore` skip nodes that the model calls unlikely, and print
-the expected number of missed solutions (@sec-search-inexact). With
-`--offset D` the search counts the near-solutions $n - F(n) = D$
-(@sec-model-defects).
+the expected number of missed solutions (@sec-search-inexact). The
+z-score rule compares $ln E$ with a law chosen by `--zlaw`: `poisson`, the
+law of #lib("10.3"), overstates the standard deviation by up to 3.8 times;
+`cond` conditions the cells on their total and is within 5% of a
+simulation (#lib("28.1")). `--zhist <file>` records, per length, the nodes
+by the smallest z-score on their path, so one run gives the cost of every
+threshold below the one used. With `--offset D` the search counts the
+near-solutions $n - F(n) = D$ (@sec-model-defects).
+
+#tablefig(
+  caption: [Recommended settings for large bases (#lib("28.3")).],
+  id: "tab-app-software-settings",
+  btable(
+    columns: (auto, 1fr),
+    align: (left, left),
+    [goal], [setting],
+    [miss about 2% of solutions], [`--zscore 3.4 --zlaw cond`],
+    [miss about 1% of solutions], [`--zscore 3.8 --zlaw cond`],
+    [exact search], [no inexact rule; `--journal` for long runs],
+    [a machine with a GPU], [add `--hybrid` (2.6 to 2.9 times faster); not above base 64],
+    [several machines], [`--shard i/n` on each, then `fast merge`],
+    [length], [do not restrict the length; windows do not pay (#lib("28.2"))],
+  ),
+)
+
+The miss rates hold from base 30 to 200 in the model. `fast search 10 41
+--zscore 3.4 --zlaw cond --hybrid` finds all 122 nontrivial solutions of
+bases 10 to 41.
 
 Base 37 takes about 205 seconds on an 8-thread laptop, and each further base
 costs about 1.9 times more.
@@ -111,6 +149,10 @@ them. Each library chapter ends with a table of its scripts and data files.
     [`r4b_`], [blocks and binomial families], [L22],
     [`r2c_`], [factorions, empty negative bases, cycles, scatter], [L23],
     [`r4f_`], [function fields: why the model misses], [L24],
+    [`r5f_`], [identity families and 3-digit solutions], [L25],
+    [`r5e_`], [near-solutions as evidence], [L26],
+    [`r5l_`], [limits of search: solvers, orders, certificates, work units], [L27],
+    [`r5p_`], [the z-score law, length windows and the GPU], [L28],
   ),
 )
 

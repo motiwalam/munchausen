@@ -12,7 +12,7 @@ every base, and in some number systems that are not bases at all.
 
 The material comes from a research library kept in the same repository, in
 `docs/library`. The library grew in rounds of questions and answers, so its
-24 chapters follow the order in which things were found, and later chapters
+28 chapters follow the order in which things were found, and later chapters
 correct earlier ones. This document sorts the results by theme and states
 each one in its current form. It is written for a mathematics undergraduate
 who enjoys number theory and is willing to meet a few tools from beyond a

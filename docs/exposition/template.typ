@@ -48,6 +48,8 @@
   "19": "19-sieve-spectra.md", "20": "20-multisets-residues.md",
   "21": "21-five-systems.md", "22": "22-blocks-families.md",
   "23": "23-factorions-negative.md", "24": "24-ffield-gap.md",
+  "25": "25-identity-families.md", "26": "26-near-solutions-evidence.md",
+  "27": "27-limits-of-search.md", "28": "28-zscore-gpu.md",
 )
 
 #let lib(..secs) = {
