@@ -627,6 +627,273 @@ theorem theorem21_7_necessary {B n : (ZMod p)[X]} (hB2 : B.natDegree = 2)
   · exact (mem_roots hf0).1 (by rw [hab]; simp)
   · exact (mem_roots hf0).1 (by rw [hab]; simp)
 
+/-- A polynomial of degree 2 with two distinct roots in `F_p` divides `T^p - T`. -/
+lemma dvd_X_pow_sub_X_of_two_roots {f : (ZMod p)[X]} (hf : f.natDegree = 2) {a b : ZMod p}
+    (hab : a ≠ b) (ha : f.IsRoot a) (hb : f.IsRoot b) : f ∣ (X ^ p - X : (ZMod p)[X]) := by
+  classical
+  have hf0 : f ≠ 0 := by rintro rfl; simp at hf
+  have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
+  have hnd : ({a, b} : Multiset (ZMod p)).Nodup := by simp [hab]
+  have hle : ({a, b} : Multiset (ZMod p)) ≤ f.roots := by
+    rw [Multiset.le_iff_subset hnd]
+    intro x hx
+    simp only [Multiset.insert_eq_cons, Multiset.mem_cons, Multiset.mem_singleton] at hx
+    rcases hx with rfl | rfl
+    · exact (mem_roots hf0).2 ha
+    · exact (mem_roots hf0).2 hb
+  have hcard : Multiset.card f.roots = f.natDegree := by
+    have h1 := card_roots' f
+    have h2 := Multiset.card_le_card hle
+    simp at h2
+    omega
+  have hroots : f.roots = {a, b} :=
+    (Multiset.eq_of_le_of_card_le hle (by rw [hcard, hf]; simp)).symm
+  have hroots' : (X ^ p - X : (ZMod p)[X]).roots = Finset.univ.val := by
+    have := FiniteField.roots_X_pow_card_sub_X (ZMod p)
+    rwa [ZMod.card] at this
+  have hP : (({a, b} : Multiset (ZMod p)).map fun x => X - C x).prod ∣
+      (X ^ p - X : (ZMod p)[X]) := by
+    refine dvd_trans (Multiset.prod_dvd_prod_of_le (Multiset.map_le_map ?_))
+      (hroots' ▸ prod_multiset_X_sub_C_dvd (X ^ p - X : (ZMod p)[X]))
+    rw [Multiset.le_iff_subset hnd]
+    intro x _
+    exact Finset.mem_univ_val x
+  rw [← C_leadingCoeff_mul_prod_multiset_X_sub_C hcard, hroots]
+  exact (IsUnit.mul_left_dvd (isUnit_C.2 (leadingCoeff_ne_zero.2 hf0).isUnit)).2 hP
+
+/-- **Theorem 21.7** (section 21.1.5). Let `deg B = 2` and `0^0 = 0`. The nontrivial
+solutions in base `B` (at least 2 digits) are the numbers `c + β T^p` with `β ≠ 0`, when
+`B - 1` has two distinct roots in `F_p`; otherwise there are none. -/
+theorem theorem21_7 {B n : (ZMod p)[X]} (hB2 : B.natDegree = 2) :
+    (IsFFSolution 0 B n ∧ 2 ≤ (polyDigits B n).length) ↔
+      (∃ c β : ZMod p, β ≠ 0 ∧ n = C c + C β * X ^ p) ∧
+        ∃ a b : ZMod p, a ≠ b ∧ (B - 1).IsRoot a ∧ (B - 1).IsRoot b := by
+  constructor
+  · rintro ⟨hn, hlen⟩; exact theorem21_7_necessary hB2 hn hlen
+  rintro ⟨⟨c, β, hβ, rfl⟩, a, b, hab, ha, hb⟩
+  have hB : 0 < B.degree := natDegree_pos_iff_degree_pos.1 (by omega)
+  have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
+  have hfdeg : (B - 1).natDegree = 2 := by
+    rw [show (B - 1 : (ZMod p)[X]) = B - C 1 by simp, natDegree_sub_C, hB2]
+  have hdvd := dvd_X_pow_sub_X_of_two_roots hfdeg hab ha hb
+  set n := C c + C β * X ^ p with hn
+  obtain ⟨hv, hexp⟩ := polyDigits_spec hB n
+  set L := polyDigits B n with hL
+  have hdig : ∀ d ∈ L, d.natDegree < 2 :=
+    fun d hd => hB2 ▸ natDegree_lt_of_digit (hexp.1 d hd) hB
+  have hndeg : n.natDegree = p := by
+    rw [hn, add_comm, natDegree_add_C, natDegree_C_mul_X_pow p β hβ]
+  constructor
+  · -- the digit sum is `c + β T`
+    have hS0 : L.sum = C c + C β * X := by
+      have h1 := sub_one_dvd_ringVal_sub_sum B L
+      rw [hv] at h1
+      have h2 : B - 1 ∣ n - (C c + C β * X) := by
+        rw [hn, show C c + C β * X ^ p - (C c + C β * X) = C β * (X ^ p - X) by ring]
+        exact dvd_mul_of_dvd_right hdvd _
+      have h3 : B - 1 ∣ L.sum - (C c + C β * X) := by
+        have := dvd_sub h2 h1
+        rwa [show n - (C c + C β * X) - (n - L.sum) = L.sum - (C c + C β * X) by ring] at this
+      have h4 : (L.sum - (C c + C β * X)).natDegree < (B - 1).natDegree := by
+        rw [hfdeg]
+        refine lt_of_le_of_lt (natDegree_sub_le _ _) (max_lt ?_ ?_)
+        · exact Nat.lt_succ_of_le (natDegree_list_sum_le_of_forall L
+            (fun d hd => Nat.le_of_lt_succ (hdig d hd)))
+        · exact lt_of_le_of_lt (natDegree_add_le _ _)
+            (max_lt (by simp) (lt_of_le_of_lt (natDegree_C_mul_le _ _) (by simp)))
+      exact sub_eq_zero.1 (eq_zero_of_dvd_of_natDegree_lt h3 h4)
+    have hF := sum_ffw_eq 0 2 L hdig
+    have hS := sum_eq_classSum 2 L hdig
+    simp only [Finset.sum_range_succ, Finset.sum_range_zero, zero_add, pow_zero, expand_one,
+      pow_one, zero_mul, C_0, add_zero] at hF hS
+    set D0 := classSum L 0
+    set D1 := classSum L 1
+    have hD0 : D0 = C (D0.coeff 0) := eq_C_of_natDegree_le_zero (natDegree_classSum_le L 0)
+    have hD1 : D1 = C (D1.coeff 1) * X + C (D1.coeff 0) :=
+      eq_X_add_C_of_natDegree_le_one (natDegree_classSum_le L 1)
+    set c0 := D0.coeff 0
+    set β' := D1.coeff 1
+    set α := D1.coeff 0
+    rw [hS, hD0, hD1] at hS0
+    have e1 := congrArg (fun f => coeff f 1) hS0
+    have e0 := congrArg (fun f => coeff f 0) hS0
+    simp [coeff_C, coeff_X] at e1 e0
+    unfold IsFFSolution ffF
+    rw [← hL, hF, hD0, hD1]
+    simp only [map_add, map_mul, expand_C, expand_X]
+    rw [hn, e1, ← e0, C_add]
+    ring
+  · -- `n` has degree `p ≥ 2`, so at least 2 digits
+    by_contra hlen
+    have hlen' : L.length ≤ 1 := by omega
+    have : n.natDegree < 2 := by
+      rw [← hv]
+      match L, hlen', hdig with
+      | [], _, _ => simp
+      | [d], _, hd => simpa using hd d (by simp)
+    omega
+
+/-- **Theorem 21.7**, the count (section 21.1.5). Let `deg B = 2`, `0^0 = 0`, and let `B - 1`
+have two distinct roots in `F_p`. Then base `B` has exactly `p (p - 1)` nontrivial solutions. -/
+theorem theorem21_7_card {B : (ZMod p)[X]} (hB2 : B.natDegree = 2) {a b : ZMod p} (hab : a ≠ b)
+    (ha : (B - 1).IsRoot a) (hb : (B - 1).IsRoot b) :
+    {n | IsFFSolution 0 B n ∧ 2 ≤ (polyDigits B n).length}.ncard = p * (p - 1) := by
+  have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
+  have hset : {n | IsFFSolution 0 B n ∧ 2 ≤ (polyDigits B n).length} =
+      (fun x : ZMod p × ZMod p => C x.1 + C x.2 * X ^ p) '' (Set.univ ×ˢ {0}ᶜ) := by
+    ext n
+    simp only [Set.mem_ofPred_eq, theorem21_7 hB2, Set.mem_image, Set.mem_prod, Set.mem_univ,
+      Set.mem_compl_iff, Set.mem_singleton_iff, true_and, Prod.exists]
+    constructor
+    · rintro ⟨⟨c, β, hβ, rfl⟩, -⟩; exact ⟨c, β, hβ, rfl⟩
+    · rintro ⟨c, β, hβ, rfl⟩; exact ⟨⟨c, β, hβ, rfl⟩, a, b, hab, ha, hb⟩
+  have hinj : Function.Injective fun x : ZMod p × ZMod p => C x.1 + C x.2 * X ^ p := by
+    rintro ⟨c, β⟩ ⟨c', β'⟩ h
+    simp only at h
+    have h0 := congrArg (fun f => coeff f 0) h
+    have hp := congrArg (fun f => coeff f p) h
+    have hp0 : (0 : ℕ) ≠ p := by omega
+    have hp0' : p ≠ 0 := by omega
+    simp [coeff_C, coeff_X_pow, hp0, hp0'] at h0 hp
+    exact Prod.ext h0 hp
+  rw [hset, Set.ncard_image_of_injective _ hinj, Set.ncard_prod, Set.ncard_univ, Set.ncard_compl,
+    Set.ncard_singleton, Nat.card_zmod]
+
+/-! ### Lemma 24.1: Frobenius replaces each digit by a block -/
+
+lemma ringVal_append {R : Type*} [CommRing R] (B : R) (A C : List R) :
+    ringVal B (A ++ C) = ringVal B A + B ^ A.length * ringVal B C := by
+  induction A with
+  | nil => simp [ringVal]
+  | cons d t ih => simp only [List.cons_append, ringVal, ih, List.length_cons]; ring
+
+lemma ringVal_replicate_zero {R : Type*} [CommRing R] (B : R) (k : ℕ) :
+    ringVal B (List.replicate k 0) = 0 := by
+  induction k with
+  | zero => rfl
+  | succ k ih => simp [List.replicate_succ, ringVal, ih]
+
+/-- The digits of a value can be read off any digit list, trailing zeros allowed. -/
+lemma getD_polyDigits_ringVal {B : (ZMod p)[X]} (hB : 0 < B.degree) {L : List (ZMod p)[X]}
+    (hL : ∀ d ∈ L, d.degree < B.degree) (k : ℕ) :
+    (polyDigits B (ringVal B L)).getD k 0 = L.getD k 0 := by
+  induction L generalizing k with
+  | nil => simp
+  | cons d t ih =>
+    have ht := ih (fun e he => hL e (by simp [he]))
+    by_cases h : d = 0 ∧ ringVal B t = 0
+    · obtain ⟨rfl, h2⟩ := h
+      simp only [ringVal_cons, h2, mul_zero, add_zero, polyDigits_zero, List.getD_nil]
+      cases k with
+      | zero => simp
+      | succ k => rw [List.getD_cons_succ, ← ht k, h2, polyDigits_zero, List.getD_nil]
+    · rw [ringVal_cons, polyDigits_add_mul hB (hL d (by simp)) (by tauto)]
+      cases k with
+      | zero => simp
+      | succ k => rw [List.getD_cons_succ, List.getD_cons_succ, ht k]
+
+/-- The block of a digit: the base-`B` digits of `d(T^p)`, padded with zeros to length `p`. -/
+noncomputable def frobBlock (B d : (ZMod p)[X]) : List (ZMod p)[X] :=
+  polyDigits B (expand (ZMod p) p d) ++
+    List.replicate (p - (polyDigits B (expand (ZMod p) p d)).length) 0
+
+lemma length_polyDigits_expand_le {B d : (ZMod p)[X]} (hB : 0 < B.degree)
+    (hd : d.degree < B.degree) : (polyDigits B (expand (ZMod p) p d)).length ≤ p := by
+  obtain ⟨hv, hexp⟩ := polyDigits_spec hB (expand (ZMod p) p d)
+  have h1 := hexp.natDegree_ge hB
+  rw [hv, natDegree_expand] at h1
+  have h2 := natDegree_lt_of_digit hd hB
+  by_contra hc
+  have h3 : p * B.natDegree ≤ ((polyDigits B (expand (ZMod p) p d)).length - 1) * B.natDegree :=
+    Nat.mul_le_mul_right _ (by omega)
+  have h4 : d.natDegree * p < p * B.natDegree := by
+    rw [mul_comm]; exact Nat.mul_lt_mul_of_pos_left h2 (Fact.out : p.Prime).pos
+  omega
+
+lemma length_frobBlock {B d : (ZMod p)[X]} (hB : 0 < B.degree) (hd : d.degree < B.degree) :
+    (frobBlock B d).length = p := by
+  have := length_polyDigits_expand_le hB hd
+  simp only [frobBlock, List.length_append, List.length_replicate]
+  omega
+
+lemma ringVal_frobBlock {B : (ZMod p)[X]} (hB : 0 < B.degree) (d : (ZMod p)[X]) :
+    ringVal B (frobBlock B d) = expand (ZMod p) p d := by
+  rw [frobBlock, ringVal_append, ringVal_replicate_zero, mul_zero, add_zero,
+    (polyDigits_spec hB _).1]
+
+lemma getD_frobBlock (B d : (ZMod p)[X]) (r : ℕ) :
+    (frobBlock B d).getD r 0 = (polyDigits B (expand (ZMod p) p d)).getD r 0 := by
+  unfold frobBlock
+  by_cases h : r < (polyDigits B (expand (ZMod p) p d)).length
+  · exact List.getD_append _ _ _ _ h
+  · have h0 : (polyDigits B (expand (ZMod p) p d)).getD r 0 = 0 :=
+      List.getD_eq_default _ _ (by omega)
+    rw [List.getD_append_right _ _ _ _ (by omega), h0, List.getD_eq_getElem?_getD,
+      List.getElem?_getD_replicate_default_eq]
+
+/-- **Lemma 24.1** (section 24.2.1). Let `deg B ≥ 1`. The base-`B` digit of `n(T^p)` at position
+`p i + r`, `r < p`, is the digit at position `r` of `d_i(T^p)`, where `d_i` is the digit of `n`
+at position `i`: Frobenius replaces each digit by a block of `p` digits and never carries. -/
+theorem lemma24_1 {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X]) (i : ℕ) {r : ℕ}
+    (hr : r < p) :
+    (polyDigits B (expand (ZMod p) p n)).getD (p * i + r) 0 =
+      (polyDigits B (expand (ZMod p) p ((polyDigits B n).getD i 0))).getD r 0 := by
+  obtain ⟨hv, hexp⟩ := polyDigits_spec hB n
+  set L := polyDigits B n
+  -- the concatenated blocks represent `n(T^p)`
+  have hval : ∀ M : List (ZMod p)[X], (∀ d ∈ M, d.degree < B.degree) →
+      ringVal B (M.flatMap (frobBlock B)) = expand (ZMod p) p (ringVal B M) := by
+    intro M hM
+    induction M with
+    | nil => simp [ringVal]
+    | cons d t ih =>
+      rw [List.flatMap_cons, ringVal_append, length_frobBlock hB (hM d (by simp)),
+        ringVal_frobBlock hB, ih (fun e he => hM e (by simp [he])), ringVal_cons, map_add,
+        map_mul, ZMod.expand_card B]
+  have hdig : ∀ d ∈ L.flatMap (frobBlock B), d.degree < B.degree := by
+    intro d hd
+    obtain ⟨d', hd', hdd⟩ := List.mem_flatMap.1 hd
+    rcases List.mem_append.1 hdd with h | h
+    · exact (polyDigits_spec hB _).2.1 d h
+    · rw [(List.eq_of_mem_replicate h)]; exact lt_of_le_of_lt bot_le hB
+  -- position `p i + r` of the concatenation lies in block `i`
+  have hpos : ∀ M : List (ZMod p)[X], (∀ d ∈ M, d.degree < B.degree) → ∀ i,
+      (M.flatMap (frobBlock B)).getD (p * i + r) 0 = (frobBlock B (M.getD i 0)).getD r 0 := by
+    intro M hM
+    induction M with
+    | nil =>
+      intro i
+      simp only [List.flatMap_nil, List.getD_nil]
+      rw [getD_frobBlock, map_zero, polyDigits_zero, List.getD_nil]
+    | cons d t ih =>
+      intro i
+      have hlen := length_frobBlock hB (hM d (by simp))
+      rw [List.flatMap_cons]
+      cases i with
+      | zero =>
+        rw [mul_zero, zero_add, List.getD_append _ _ _ _ (by omega), List.getD_cons_zero]
+      | succ i =>
+        rw [List.getD_append_right _ _ _ _ (by rw [hlen]; nlinarith), hlen,
+          show p * (i + 1) + r - p = p * i + r by rw [mul_add, mul_one]; omega,
+          ih (fun e he => hM e (by simp [he])) i, List.getD_cons_succ]
+  rw [← hv, ← hval L hexp.1, getD_polyDigits_ringVal hB hdig, hpos L hexp.1 i, getD_frobBlock]
+
+/-- **Lemma 24.1**, the zero digits (section 24.2.1). For a digit `d` and
+`r > (deg B - 1) p / deg B`, the digit of `d(T^p)` at position `r` is 0. -/
+theorem lemma24_1_zero {B d : (ZMod p)[X]} (hB : 0 < B.degree) (hd : d.degree < B.degree)
+    {r : ℕ} (hr : (B.natDegree - 1) * p < r * B.natDegree) :
+    (polyDigits B (expand (ZMod p) p d)).getD r 0 = 0 := by
+  obtain ⟨hv, hexp⟩ := polyDigits_spec hB (expand (ZMod p) p d)
+  have h1 := hexp.natDegree_ge hB
+  rw [hv, natDegree_expand] at h1
+  have h2 := natDegree_lt_of_digit hd hB
+  apply List.getD_eq_default
+  by_contra hc
+  have h3 : r * B.natDegree ≤ ((polyDigits B (expand (ZMod p) p d)).length - 1) * B.natDegree :=
+    Nat.mul_le_mul_right _ (by omega)
+  have h4 : d.natDegree * p ≤ (B.natDegree - 1) * p := Nat.mul_le_mul_right _ (by omega)
+  omega
+
 end Solutions
 
 end Munchausen
