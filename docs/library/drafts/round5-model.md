@@ -409,6 +409,12 @@ against PARI/GP `factormod` for the types.
   of the first runs capped at 20,000), `k = omega` in each. For `q = 7`,
   `e = 7`, 42 of the 65,856 squarefree polynomials of type `3 + 4` have
   `deg D <= 1`; Remark 2.6 excludes them by hand.
+- Open types, random samples (computed, `analysis/r5m_kB_sample.py`,
+  `analysis/data/r5m_kB_sample.txt`): `e = 11`, type `5 + 6`, 20,000
+  polynomials each for `q = 11` and `q = 13`; `e = 13`, `q = 13`, types
+  `4 + 9` and `3 + 4 + 6`, 5,000 each. `k = omega` in all, and `deg D` is
+  never below 6. These samples cannot reach the rare `M` with
+  `deg D <= 1`, which is where an exception would have to be.
 
 The `(2, 7)` census has 8 polynomials of the all-bad types (6 of type
 `3 + 4`, 2 of type `2^2 + 3`); Remark 2.6 and Theorem 2.5 (3) cover them.
@@ -748,10 +754,11 @@ the search of `r3t_factorial.rs` does. A first attempt did exactly that:
 `analysis/r5m_fact_open.py` ports the first levels of the search tree to
 exact integers and runs it to a fixed depth. It does not separate lengths.
 At depth 3 to 10 almost every length keeps surviving nodes, and their
-number grows with `L` like the census node counts (for example 382 nodes
-at depth 5 for `L = 26`, which has near-solutions, and 656 for `L = 25`, which has none). Consistency of
-the top digits with a few large counts is too weak a test, because the
-counts of zero for the largest values always survive. So I built the model
+number grows with `L` like the census node counts. For example, at depth
+5 the tree keeps 382 nodes for `L = 26`, which has near-solutions, and 656
+for `L = 25`, which has none. Consistency of the top digits with a few
+large counts is too weak a test, because the counts of zero for the
+largest values always survive. So I built the model
 the other way: keep the true top digits of `F` and randomize the rest.
 
 Window `W = [L!, (L+1)!)`; a member has digits `d_i <= i` at positions
@@ -902,7 +909,8 @@ nodes per length near `L = 40`.
 
 - Question 81: `analysis/r5m_shares.py`; data
   `analysis/data/r5m_shares.txt`.
-- Question 82: `analysis/r5m_kB.py`, `analysis/r5m_kB_types.py`; data
+- Question 82: `analysis/r5m_kB.py`, `analysis/r5m_kB_types.py`,
+  `analysis/r5m_kB_sample.py`; data `analysis/data/r5m_kB_sample.txt`,
   `analysis/data/r5m_kB_scan.txt`, `r5m_kB_types.txt`.
 - Question 80: `analysis/r5m_rho.c` (build:
   `gcc -O2 -fopenmp -o r5m_rho r5m_rho.c -lm`), `analysis/r5m_rho_report.py`,

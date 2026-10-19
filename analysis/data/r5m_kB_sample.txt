@@ -1,0 +1,4 @@
+q 11 degrees [5, 6]: 20000 samples, k - omega counts {0: 20000}, deg D counts {6: 9, 7: 161, 8: 1638, 9: 18192}
+q 13 degrees [5, 6]: 20000 samples, k - omega counts {0: 20000}, deg D counts {6: 10, 7: 114, 8: 1440, 9: 18436}
+q 13 degrees [4, 9]: 5000 samples, k - omega counts {0: 5000}, deg D counts {8: 3, 9: 27, 10: 341, 11: 4629}
+q 13 degrees [3, 4, 6]: 5000 samples, k - omega counts {0: 5000}, deg D counts {7: 1, 9: 24, 10: 341, 11: 4634}
