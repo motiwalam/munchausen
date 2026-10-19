@@ -20,7 +20,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
-(SearchRules), Fact (Factorials), MC (ModelComplete).
+(SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence).
 
 Counts of table rows at the time of writing: 133 formalized (one of them a
 list of computed solutions checked by `decide`), 19 partial, 11 rows of open
@@ -428,6 +428,22 @@ stated.
 | Theorem 34.12 | `theorem34_12_parity` [MC] | partial: `F_1(n) - n ≡ c_0(n) (mod 2)` for odd `b`; the limit `e^-2` uses Lemmas 29.3 and 29.4 (model) |
 | Conjecture 34.13 | none | not stated (about the model) |
 | Heuristics 34.4, 34.9, 34.14, 34.15 and the tables | none | not formalized (heuristic, computed) |
+
+## Chapter 35. One heuristic and existence
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 35.1, Corollary 35.2 | none | not formalized (character sums over random arrangements) |
+| Proposition 35.3 | `prop35_3`, `P_one` [Exist] | formalized (the exchange of the two sums, and `P_s(1)` is the digit sum; the other residues are estimated by Theorem 35.1) |
+| Heuristics 35.4, 35.11, sections 35.1.3, 35.1.4, 35.2, Table 35.3.2.1 | none | not formalized (heuristic, computed) |
+| Proposition 35.5 | `invIdeal`, `exchIdeal`, `Exch`, `ringVal_exch`, `prop35_5_one`, `prop35_5_two`, `prop35_5_three_le`, `prop35_5_three` [Exist] | partial: (1), (2) and (3) for place values `u β^i` with `i ≥ 0`; the negative positions of a unit `β` are not covered |
+| Proposition 35.6 | `prop35_6`, `prop35_6_rat` [Exist] | formalized (for `Z[t]/(f)` with any `f`, which is `Z[β]` when `f` is the minimal polynomial of the algebraic integer `β`; and for `p/q` in `Z[1/q]`, which covers `-p/q`) |
+| Proposition 35.7 | none | not formalized (convergence of a random walk on a finite group) |
+| Proposition 35.8 | none | not formalized (the window of Lemma 20.1 with the mean value theorem) |
+| Proposition 35.9 | `prop35_9_share`, `prop35_9_bounds` [Exist] | partial: the exact share as a product and its two exponential bounds; the limit `-2A` is not formalized |
+| Corollary 35.10, Theorem 35.12 | none | not formalized (asymptotic counts) |
+| Theorem 35.13 | `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | partial: Step 3 (no carry from `E < P_(T+1)`, so `n` and `F(n)` agree in the top digits, and an exchange below the top makes `n ≠ F(n)`); Steps 1 and 2 (the steering, with real bounds) are not formalized |
+| Corollary 35.14 | none | not formalized (asymptotics of the conditions; computed thresholds) |
 
 ## Open questions stated as `Prop`s
 
