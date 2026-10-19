@@ -217,7 +217,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 39. (Partly answered in chapter 18: none in the ranges searched; such an integer has a rigid shape (Corollary 18.17).) Does some integer have three bases under `0^0 = 1`? (chapter 15)
 40. (Partly answered in chapter 18: still open; gadgets made of pure powers need superpolynomial exponents (Corollary 18.23).) Is the problem with weights `x^(e(x))`, `e` in unary, NP-hard? It sits
     between the NP-complete general problem and the real one. (chapter 13)
-41. Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
+41. (Answered in chapter 19: offsets `j b (b-1)` have the normal count, so the shortfall is a fluctuation of about 2.5 sigma.) Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
     expected (P about 0.03 after the look-elsewhere effect). Bases 47 and 49
     would decide it. (chapter 17)
 42. Six of the eight empty negative bases up to -35 are multiples of 3
@@ -232,32 +232,32 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 Each question has a longer statement, with its motivation and a first
 attack, in [questions-round3.md](questions-round3.md).
 
-45. Count digit multisets instead of strings. Does this show that almost all
+45. (Answered in chapter 20: yes, up to slightly beyond `ln b / ln ln b` digits (Theorem 20.3); counting multisets cannot go further.) Count digit multisets instead of strings. Does this show that almost all
     bases have no solution with at most `(1 - eps) ln b / ln ln b` digits,
     twice the range of Theorem 11.2? (proof)
-46. Describe `T(q)`, the residues of `x^x - x` mod `q`, for `q = 3^e` and
+46. (Answered in chapter 20: Theorems 20.11 and 20.12 give the 3-adic and 5-adic laws; by Theorem 20.8 `T(p^e)` is everything for `p >= 7`.) Describe `T(q)`, the residues of `x^x - x` mod `q`, for `q = 3^e` and
     `5^e`, and prove `T(p^e)` is everything for `p >= 7`. (proof; Lemma 15.12)
-47. Add the prime powers 4, 8, 16, 9, 27, 81, 25, 125 to the `kdigit` sieve.
+47. (Answered in chapter 19: the new sieve is about 11x faster; 7- and 8-digit lists extended.) Add the prime powers 4, 8, 16, 9, 27, 81, 25, 125 to the `kdigit` sieve.
     (computation; Theorem 15.13)
-48. Do 2-, 3- and 5-adic root densities in the root heuristic explain the
+48. (Answered in chapter 19: the right factor is the root count mod `p^e`; it does not explain the 5-digit excess.) Do 2-, 3- and 5-adic root densities in the root heuristic explain the
     5-digit excess, 6 found against 2.42 predicted? (computation; section 11.4)
-49. A defect spectrum for short solutions: the test of section 11.1 at 4 and
+49. (Answered in chapter 19: 4-digit counts are Poisson and fit; 5-digit solutions in bases 13 to 99 are a 17-fold excess against far offsets.) A defect spectrum for short solutions: the test of section 11.1 at 4 and
     5 digits, with a `kdigit` offset. (computation)
 50. Does every base have at most two 3-digit solutions under `0^0 = 1`?
     (proof; Theorems 15.7 and section 18.2)
-51. Solve the families `(1,x,2)` and `(1,x,3)`, that is
+51. (Partly answered in chapter 20: `x^n + 25` solved for odd prime powers; `x^n + 3` reduced to a regulator condition.) Solve the families `(1,x,2)` and `(1,x,3)`, that is
     `b(b+x) = x^n + 3` and `x^n + 25`. (proof)
-52. Settle the case `x == 0 (mod 8)` of `b(b+x) = x^n + 1`. (proof; 18.1.9)
-53. How large are the orders of mixed ideal classes in `Q(sqrt(x^2+4))`, the
+52. (Partly answered in chapter 20: `n` bounded in terms of `x` and the class order; none for `x <= 10^4`.) Settle the case `x == 0 (mod 8)` of `b(b+x) = x^n + 1`. (proof; 18.1.9)
+53. (Answered in chapter 20 under GRH: `d | x` occurs, so only the Diophantine condition can close the loophole.) How large are the orders of mixed ideal classes in `Q(sqrt(x^2+4))`, the
     one loophole of Corollary 18.11? (computation)
 54. Prove Assumption R, which would make Corollary 13.11 unconditional. (proof)
 55. Is the general weighted problem still NP-hard when solutions must be
     long? (proof; section 13.1.6)
 56. Does the length tail beyond `ln b` (Conjecture 10.3) hold in many
     perturbed worlds? (computation)
-57. Does the factorion shortfall survive offsets `j b (b-1)`, which also keep
+57. (Answered in chapter 19: the shortfall is not caused by the last digit.) Does the factorion shortfall survive offsets `j b (b-1)`, which also keep
     `n mod b`? (computation; question 41)
-58. Narcissistic numbers (weights `x^d`) as a model test: residue factors
+58. (Answered in chapter 19: the refined model fits forced-residue cells, 207 against 208.5; short lengths run 1.5x high.) Narcissistic numbers (weights `x^d`) as a model test: residue factors
     that change with the length, and doubling in odd bases. (twist)
 59. Munchausen numbers in the Pisot base `(x + sqrt(x^2+4)) / 2`. (twist)
 60. Parity doubling in AFS rational bases. (twist; section 16.5)

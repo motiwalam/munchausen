@@ -1,6 +1,6 @@
-# Round 3 computations: a faster sieve, short-string spectra, narcissistic numbers
+# 19. A faster sieve, short-string spectra and narcissistic numbers
 
-Draft for questions 47, 49, 48, 58 and 57 of `questions-round3.md`, in that
+This chapter answers questions 47, 49, 48, 58 and 57 of `questions-round3.md`, in that
 order. Every statement is marked:
 
 - proven: the proof is here;
@@ -24,11 +24,11 @@ an idle machine. Each comparison of two programs alternated their runs.
 | 58 | `fast search --power d` finds all narcissistic numbers; bases 3 to 13 match OEIS. The refined model predicts 671 against 760 observed (basic model 253). In the cells with `x^d == x (mod b-1)` for all digits, `d >= 6`, it predicts 208.5 against 207 (basic model 24). | computed against heuristic |
 | 57 | The offsets `D = j b (b-1)` keep the last digit and have the normal count, 0.91 times the model. The factorion shortfall at `D = 0` (3 and 4 against about 11) is not a last-digit effect. It stays a fluctuation of P = 0.006 to 0.02 per convention, about 0.1 after the look-elsewhere factor. | computed against heuristic |
 
-## 47. Prime powers in the sieve of `kdigit`
+## 19.1 Prime powers in the sieve of `kdigit`
 
-### 47.1 Any modulus works, and only prime powers add anything (proven)
+### 19.1.1 Any modulus works, and only prime powers add anything (proven)
 
-Proposition 11.1 holds for every modulus `q`, with the same proof: if
+Proposition 19.1 holds for every modulus `q`, with the same proof: if
 `Q_s(b) = 0`, then `b mod q` is a root of `Q_s` modulo `q`. `Q_s(r) mod q`
 depends only on `r mod q`, because `Q_s` has integer coefficients. The mask
 method of section 11.5 therefore works for any `q`. It needs `w(x) mod q`
@@ -46,7 +46,7 @@ Two facts limit the useful moduli to one power of each prime:
   every string that `p^f` removes, and the test mod `p^f` is redundant after
   it.
 
-### 47.2 How much each modulus removes (computed)
+### 19.1.2 How much each modulus removes (computed)
 
 `kdigit --stats` counts, for each modulus in the order of the list, the
 candidate strings it tests and removes. A candidate is a string with one
@@ -95,7 +95,7 @@ What the table shows:
 - 25, 49 and 121 remove 0.04 to 0.10 more than 5, 7 and 11.
 - Above 32, 27 and 25, the gain per step is below 0.01.
 
-### 47.3 The new sieve (computed)
+### 19.1.3 The new sieve (computed)
 
 The prime powers alone do not make the program much faster. The old program
 spent its time on the masks, not on the exact root step: it built the mask
@@ -127,7 +127,7 @@ strings (`--survivors`, `k = 4, M = 44` and `k = 5, M = 20`). It reproduces
 the full lists `analysis/data/k4.txt` to `k7.txt` (`M` = 300, 80, 40, 26)
 line for line.
 
-### 47.4 Speed (computed)
+### 19.1.4 Speed (computed)
 
 Old (commit `4e0da21`) against new, 4 threads, best of 2 alternating runs,
 load average 25 to 32 (`r3c_kdigit_speed.py`, data `r3c_kdigit_speed.txt`):
@@ -178,7 +178,7 @@ the length of the list costs almost nothing, so the best list is not limited
 to 18. The default takes one power of each prime, strong and cheap ones
 first: 32, 27, 25, 49, then the primes 11 to 127.
 
-### 47.5 Longer lists (computed)
+### 19.1.5 Longer lists (computed)
 
 The speedup pays for longer lists. Three new runs, on 3 threads at load
 average 35 to 40 (data `r3c_k7_M32.txt`, `r3c_k8_M22.txt`,
@@ -201,9 +201,9 @@ base 9. By the tail estimate of section 11.4 (`analysis/list_tails.py`),
 the expected number of 7-digit solutions with a larger digit is
 `1.7 * 10^-33`, and `5.7 * 10^-21` for 8 digits.
 
-## 49. A defect spectrum for short strings
+## 19.2 A defect spectrum for short strings
 
-### 49.1 The runs (computed)
+### 19.2.1 The runs (computed)
 
 `kdigit --offset D` finds every pair `(s, b)` with `b > max(s)` and
 `P_s(b) - F(s) = D`: it adds `D` to the residue that the last digit needs,
@@ -251,7 +251,7 @@ solutions. 3435 = `(3,4,3,5)` in base 10 has neighbours `(3,4,1,5)` at
 So the offsets `D = j` are not independent of `D = 0`. The offsets `D = j L`
 are too far away for this.
 
-### 49.2 Four-digit strings (computed against heuristic)
+### 19.2.2 Four-digit strings (computed against heuristic)
 
 Under `0^0 = 1`, digits up to 22 (observed pairs `(s, b)` against the sums
 of the heuristic weights over the same offsets):
@@ -266,7 +266,7 @@ of the heuristic weights over the same offsets):
 | `D = 0` | all | 2 | | | 1.38 | 1.39 | 0.75 |
 
 Of the 16 pairs of `D = j` in bases of 100 and more, 15 belong to the
-algebraic families of section 49.1; chance expects 1.8. In bases below 100
+algebraic families of section 19.2.1; chance expects 1.8. In bases below 100
 the observed count is 0.93 times the prediction with primes and 1.01 times
 the p-adic one. The spacing alone, without local factors, predicts 525 for
 all bases, a quarter too few. The parity of `D` tests the 2-adic factor:
@@ -301,7 +301,7 @@ the self-paying `(7,0,0,0)` and `(7,0,0,1)` in base 49. The other 3 fit both
 versions. `D = 0` also has 13 solutions in bases of 100 and more, all from
 self-paying digits, against 0.01 for chance.
 
-### 49.3 Five-digit strings (computed against heuristic)
+### 19.2.3 Five-digit strings (computed against heuristic)
 
 Under `0^0 = 1`, digits up to 11, by the size of the base (observed /
 primes / p-adic):
@@ -355,7 +355,7 @@ self-paying `(9,0,0,0,0)` and `(9,0,0,0,1)` in base 81 and the block
 `(6,6,5,0,0)`, `(6,6,5,0,1)` in base 11. The offsets `D = j L` show 16 against
 22.6 (primes) and 29.8 (p-adic).
 
-### 49.4 Answer to question 49
+### 19.2.4 Answer to question 49
 
 Is the count of short solutions a Poisson draw with the mean of its offsets?
 
@@ -387,9 +387,9 @@ the counts are large: bases below 13 for both lengths. Above that, the
 offsets `D = j L` have 10 hits per length, and the systematic errors of the
 heuristic (the cap at 1, the clusters) are larger than 5%.
 
-## 48. p-adic local factors in the root heuristic
+## 19.3 p-adic local factors in the root heuristic
 
-### 48.1 The factor (proven)
+### 19.3.1 The factor (proven)
 
 Section 11.4 gives a string `s` the weight `min(1, S / P_s'(b*))`, where
 `b*` is the real root of `P_s(b) = F(s)` and `S = prod_p rho_s(p)` over the
@@ -415,7 +415,7 @@ modulo `p^e`, not `N_s(p^e) / p^(e-1)` as the question writes. Facts:
 `rho_s(5)`, and keeps `rho_s(p)` for `p = 7` to 31. It reproduces the
 numbers of section 11.4 for the old version exactly.
 
-### 48.2 The table of section 11.4, redone (heuristic)
+### 19.3.2 The table of section 11.4, redone (heuristic)
 
 Expected number of solutions under `0^0 = 1`, against the 6, 2 and 6 observed
 (digits up to `X`, as in section 11.4):
@@ -438,11 +438,11 @@ their weights are near the cap of 1. For example 3435 = `(3,4,3,5)` in base
 10 has `rho(2) = 2` but only one root mod 64 (`N(64) = 1`), so its weight
 drops from 1 (capped) to 0.49. `(2,2,3,5,2)` in base 6 has `rho(5) = 1` but
 `N(125) = 10`. With 2 to 6 solutions per length, such single strings decide
-the comparison. Section 49 replaces them by hundreds of offsets.
+the comparison. Section 19.2 replaces them by hundreds of offsets.
 
-### 48.3 The test with the offsets (computed against heuristic)
+### 19.3.3 The test with the offsets (computed against heuristic)
 
-The offsets of section 49 calibrate both versions on hundreds of pairs
+The offsets of section 19.2 calibrate both versions on hundreds of pairs
 (bases below 100 for `D = j`, all bases for `D = j L`; observed / predicted):
 
 | length | offsets | primes | p-adic |
@@ -466,7 +466,7 @@ Over `D = 1` to 200, the mean factor over all strings is 1.00 (primes) and
 1.04 (p-adic) for 4 digits, but 1.03 and 2.1 for 5 digits. The p-adic factor
 has a heavy tail: some strings have tens of roots modulo 64 or 81 at a few
 offsets and none at the others. Its mean over a full period of `D` is still
-exactly 1, by the identity of section 48.1.
+exactly 1, by the identity of section 19.3.1.
 
 Answer to question 48 (heuristic). The p-adic factor is the right local
 density, and for 4 digits it fits the offsets better than the factor mod
@@ -477,13 +477,13 @@ where the excess sits. The completeness estimates of section 11.4 replace
 the local factors by their mean, which is 1 for both versions, so they do
 not change.
 
-## 58. Narcissistic numbers as a model test
+## 19.4 Narcissistic numbers as a model test
 
 A `d`-digit narcissistic number in base `b` equals the sum of its digits,
 each raised to the power `d`. So the weights are `x^d`, and they change with
 the length.
 
-### 58.1 The data (computed)
+### 19.4.1 The data (computed)
 
 `fast search` takes a new option `--power p`: the weights become `x^p` for
 `x >= 1`. With `--zero 0`, `--min-digits d` and `--max-digits d` it finds
@@ -512,7 +512,7 @@ with more than 62 digits. A161951 (base 14) has 90 multi-digit terms,
 5 more than our 85, and they have more than 50 digits. A note on the
 question: A010353 is the list for base 9, not a table of counts.
 
-### 58.2 The prediction (heuristic)
+### 19.4.2 The prediction (heuristic)
 
 The refined model of chapter 5 applies with the weights `x^d`. It samples
 digit multisets of a random `d`-digit number and counts those whose sum
@@ -532,7 +532,7 @@ this length. Two cases are exact (proven):
 `r3c_narcissistic.py model` samples 400,000 multisets per cell (data
 `r3c_narcissistic_model.txt`). The sampling error is below 0.02 per cell.
 
-### 58.3 The comparison (computed against heuristic)
+### 19.4.3 The comparison (computed against heuristic)
 
 Per base, all lengths searched (`r3c_narcissistic_compare.txt`):
 
@@ -605,9 +605,9 @@ factor, which reaches `b - 1 = 13` in some cells, is confirmed to a few
 percent. The deviations are the short lengths, as for `x^x`, and an excess
 of about 20% in the even bases, which comes mostly from bases 8 and 10.
 
-## 57. The factorion shortfall in a narrower offset class
+## 19.5 The factorion shortfall in a narrower offset class
 
-### 57.1 The run (computed)
+### 19.5.1 The run (computed)
 
 `r3c_factorion_offsets.py` counts the solutions of `n = F(n) + D` with the
 weights `x!`, for `D = j b (b-1)`, `j = 1` to 30, in the odd bases 15 to 35.
@@ -617,7 +617,7 @@ digits, where `ref` is the number of digits of `(b-1)!`. These offsets keep
 run took 27 minutes on 3 threads (data `r3c_factorion_offsets.txt`,
 tables `r3c_factorion_offsets_report.txt`).
 
-### 57.2 The result (computed against heuristic)
+### 19.5.2 The result (computed against heuristic)
 
 Totals over the 11 odd bases from 15 to 35:
 
@@ -634,7 +634,7 @@ scatter around the model as the wide ones do: the per-offset means range
 from 0.43 to 1.43 per base and convention, against model values of 1.00 to
 1.20.
 
-### 57.3 What this means
+### 19.5.3 What this means
 
 The narrow class has the normal number of near-factorions: 0.91 times the
 model, against 0.94 to 0.99 for the wide class. So the coincidences that

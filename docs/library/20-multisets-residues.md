@@ -1,6 +1,6 @@
-# Round 3 number theory: multisets, x^x - x, and b(b+x) = x^n + c
+# 20. Multisets, the residues of x^x - x, and b(b+x) = x^n + c
 
-This draft answers, fully or in part, questions 45, 46, 52, 51 and 53 of
+This chapter answers, fully or in part, questions 45, 46, 52, 51 and 53 of
 `questions-round3.md`, in that order. Every statement is marked:
 
 - proven: the proof is here;
@@ -16,24 +16,24 @@ the library chapters.
 
 | question | what is now known | status |
 |---|---|---|
-| 45, window | Proposition 15.17 is correct, also when the leading digit is not the largest: only the second digit enters | proven (Lemma 1.1), checked on 3,135 solutions |
-| 45, range | almost all bases have no solution with `2 <= k <= (1 - eps) ln b / ln ln b` digits, and in fact up to `(ln b / ln ln b)(1 + (ln ln ln b + ln 2 - 1 - delta)/ln ln b)`; counting multisets cannot go further | proven (Theorem 1.3) |
+| 45, window | Proposition 15.17 is correct, also when the leading digit is not the largest: only the second digit enters | proven (Lemma 20.1), checked on 3,135 solutions |
+| 45, range | almost all bases have no solution with `2 <= k <= (1 - eps) ln b / ln ln b` digits, and in fact up to `(ln b / ln ln b)(1 + (ln ln ln b + ln 2 - 1 - delta)/ln ln b)`; counting multisets cannot go further | proven (Theorem 20.3) |
 | 45, `B = 10^96` | the multiset bound stays below `B` up to 49 digits, the string bound up to 31; at 16 digits `B^0.34` against `B^0.46` | computed |
-| 45, fixed `k` | the multiset count alone is weaker than Proposition 10.4; with `b - 1 \| F(c) - S(c)` it gains the factor `(k-2)!` | proven (Proposition 1.5) |
+| 45, fixed `k` | the multiset count alone is weaker than Proposition 10.4; with `b - 1 \| F(c) - S(c)` it gains the factor `(k-2)!` | proven (Proposition 20.5) |
 | 45, beyond `alpha = 1` | needs equidistribution of `F(c) - S(c)` in short windows of moduli; open | heuristic |
-| 46, `p >= 7` | `T(p^e) = Z/p^e` for every `e` | proven (Theorem 2.3) |
-| 46, `p = 3` | `T(3^e) = 3Z u {v == 2 (mod 27), v != 56 (mod 81)}` for `e >= 4`; 81 is the last useful single 3-power | proven (Theorem 2.6) |
-| 46, `p = 5` | `T(5^e)` misses exactly the `v == 3 (mod 5)` outside `A (1 - 25 s/2)`, `s` a square, `A = 1 - sqrt(-1)`; counts 1, 3, 11, 53, 261, 1303 | proven (Theorem 2.7) |
-| 46, coverings | 81 raises the covered share from 11.2% to 11.6% (3 digits) and 8.4% to 8.5% (6 digits); a single 5-power covers only special prefixes | proven (Corollary 2.8, Proposition 2.9), computed |
-| 52 | `(gamma) = Q^(a n - 2) B^n`; `Q^j` is not principal for `j <= log2 x - 3`; the linear form has three logarithms, so Laurent and Proposition 18.4 do not apply; Matveev gives `n < 4.1 * 10^12 (d+1)^2 (log x)^2 (1 + log n)`; a bound of `x` by `n` only in one pure configuration (`x < 2^(2n+1)`) | proven (section 3) |
-| 52, small `x` | no solution with `n >= 5` for `x <= 10^4` (all `n`), nor with `5 <= n <= 15` for `x <= 10^8` | computed (Theorem 3.5) |
-| 51, `(1, 2, x)` | a solution only for `x = 6` (base 215) | proven (Proposition 4.1) |
-| 51, `c = 25` | `sqrt D - 10` generates `P^2`, so Propositions 18.4 and 18.6 have analogues; `(1, x, 3)` is a solution for no prime power `x`; for odd prime powers `x` the solutions with `n >= 3` are `(5, 3)`, `(7, 3)`, `(3, 6)` | proven, with computations (Theorems 4.7, 4.8, Corollary 4.9) |
-| 51, `c = 3` | no explicit generator; the regulator of `Z[theta]` is not bounded by `log x`, so the analogue of Theorem 18.10 fails even for prime `x`; every prime factor of `x` is `+-1 (mod 12)` | proven (Lemma 4.2, Proposition 4.10) |
-| 51, computed | `(1, x, 2)` and `(1, x, 3)`: no solution for `x <= 10^9`; all `n` for odd `x <= 1001`: none for `c = 3`, only `(7, 3)` and `(3, 6)` for `c = 25` | computed (Theorem 4.11) |
+| 46, `p >= 7` | `T(p^e) = Z/p^e` for every `e` | proven (Theorem 20.8) |
+| 46, `p = 3` | `T(3^e) = 3Z u {v == 2 (mod 27), v != 56 (mod 81)}` for `e >= 4`; 81 is the last useful single 3-power | proven (Theorem 20.11) |
+| 46, `p = 5` | `T(5^e)` misses exactly the `v == 3 (mod 5)` outside `A (1 - 25 s/2)`, `s` a square, `A = 1 - sqrt(-1)`; counts 1, 3, 11, 53, 261, 1303 | proven (Theorem 20.12) |
+| 46, coverings | 81 raises the covered share from 11.2% to 11.6% (3 digits) and 8.4% to 8.5% (6 digits); a single 5-power covers only special prefixes | proven (Corollary 20.13, Proposition 20.14), computed |
+| 52 | `(gamma) = Q^(a n - 2) B^n`; `Q^j` is not principal for `j <= log2 x - 3`; the linear form has three logarithms, so Laurent and Proposition 18.4 do not apply; Matveev gives `n < 4.1 * 10^12 (d+1)^2 (log x)^2 (1 + log n)`; a bound of `x` by `n` only in one pure configuration (`x < 2^(2n+1)`) | proven (section 20.3) |
+| 52, small `x` | no solution with `n >= 5` for `x <= 10^4` (all `n`), nor with `5 <= n <= 15` for `x <= 10^8` | computed (Theorem 20.19) |
+| 51, `(1, 2, x)` | a solution only for `x = 6` (base 215) | proven (Proposition 20.20) |
+| 51, `c = 25` | `sqrt D - 10` generates `P^2`, so Propositions 18.4 and 18.6 have analogues; `(1, x, 3)` is a solution for no prime power `x`; for odd prime powers `x` the solutions with `n >= 3` are `(5, 3)`, `(7, 3)`, `(3, 6)` | proven, with computations (Theorems 20.26, 20.27, Corollary 20.28) |
+| 51, `c = 3` | no explicit generator; the regulator of `Z[theta]` is not bounded by `log x`, so the analogue of Theorem 18.10 fails even for prime `x`; every prime factor of `x` is `+-1 (mod 12)` | proven (Lemma 20.21, Proposition 20.29) |
+| 51, computed | `(1, x, 2)` and `(1, x, 3)`: no solution for `x <= 10^9`; all `n` for odd `x <= 1001`: none for `c = 3`, only `(7, 3)` and `(3, 6)` for `c = 25` | computed (Theorem 20.30) |
 | 53 | `d \| x` occurs (from `x = 15`, `d = 3`, up to `d = 34,333` at `x = 514,995`); the share of such `x` falls like `6.7 x^(-0.54)`; the class group conditions of Corollary 18.11 are expected to hold for infinitely many `x` | computed (GRH), heuristic |
 
-## 1. Counting multisets (question 45)
+## 20.1 Counting multisets (question 45)
 
 A `k`-digit solution `n = F(c)` is fixed by its digit multiset `c`: the
 multiset gives `n`, and `n` and the base give the string. Theorem 11.2 and
@@ -41,14 +41,14 @@ Proposition 10.4 count strings. This section counts multisets and doubles the
 range of Theorem 11.2.
 
 Notation. `L = ln B`. `X_k(B)` is the largest `X` with `X^X < B^k`; by
-Proposition 1.2 every digit of a `k`-digit solution in a base `b <= B` is at
+Proposition 20.2 every digit of a `k`-digit solution in a base `b <= B` is at
 most `X_k(B)`. `S(c)` is the digit sum of `c`, `M` its largest digit, and
 `H_k = 1 + 1/2 + ... + 1/k`. "Solution" means a nontrivial solution with at
 least 2 digits, under a fixed convention.
 
-### 1.1 The window
+### 20.1.1 The window
 
-Lemma 1.1 (proven). Let `n` be a solution in base `b` with `k >= 2` digits,
+Lemma 20.1 (proven). Let `n` be a solution in base `b` with `k >= 2` digits,
 leading digit `p` and largest digit `M`. Then
 
     p b^(k-1) <= n < p b^(k-1) + (M + 1) b^(k-2),
@@ -90,11 +90,11 @@ Computed (`analysis/r3nt_multiset.py`, `data/r3nt_multiset.txt`):
 | 7 | 7 | 3,432 | 2,031 | 342 | 1 | 2 |
 
 The column with `b - 1 | F(c) - S(c)` is for `0^0 = 1`. It uses the
-congruence `n == S(c) (mod b - 1)` of section 1.6; section 1.4 uses it.
+congruence `n == S(c) (mod b - 1)` of section 1.6; section 20.1.4 uses it.
 
-### 1.2 The count
+### 20.1.2 The count
 
-Proposition 1.2 (proven). Let `k >= 2` and `X = X_k(B)`. Under a fixed
+Proposition 20.2 (proven). Let `k >= 2` and `X = X_k(B)`. Under a fixed
 convention, the number of bases `b <= B` with a `k`-digit solution is at most
 
     C(X + k, k) * ( (X + 1) H_k / (k - 1) + k ).
@@ -103,15 +103,15 @@ Proof. Map a base with a `k`-digit solution to the triple (digit multiset
 `c`, leading digit `p`, base `b`). Different bases give different triples.
 The multiset has `k` digits from `{0, ..., X}`, so there are at most
 `C(X + k, k)` of them. The leading digit is one of the at most `k` distinct
-nonzero digits of `c`. By Lemma 1.1, given `c` and `p`, the base lies in a
+nonzero digits of `c`. By Lemma 20.1, given `c` and `p`, the base lies in a
 window with at most `(X + 1)/(p (k - 1)) + 1` integers. The sum of `1/p` over
 at most `k` distinct positive integers is at most `H_k`.
 
 For both conventions together the bound doubles.
 
-### 1.3 The range
+### 20.1.3 The range
 
-Theorem 1.3 (proven). Let `L = ln B`, and count bases `b <= B` with a
+Theorem 20.3 (proven). Let `L = ln B`, and count bases `b <= B` with a
 solution of `k` digits for some `2 <= k <= K`, under a fixed convention.
 
 - (a) For fixed `alpha < 1` and `K = alpha L / ln L`, the count is at most
@@ -124,7 +124,7 @@ solution of `k` digits for some `2 <= k <= K`, under a fixed convention.
   In particular this holds for `k <= (1 - eps) ln b / ln ln b`, twice the
   range of Theorem 11.2.
 - (d) For `K = (L / ln L) (1 + (ln ln L + ln 2 - 1 + delta) / ln L)` the
-  bound of Proposition 1.2 for `k = K` alone exceeds `B`. So the count of
+  bound of Proposition 20.2 for `k = K` alone exceeds `B`. So the count of
   multisets cannot reach further.
 
 Proof. Let `K = kappa L / ln L` with `kappa` bounded, and `X = X_K(B)`.
@@ -142,7 +142,7 @@ Step 2, the binomial. Stirling's formula and `K^2 / X = O(1)` give
 
     ln C(X + K, K) = kappa L (1 - a / ln L + O(ln ln L / (ln L)^2)),   a = ln ln L + ln 2 - 1.
 
-Step 3, the other factors. The window factor of Proposition 1.2 is at most
+Step 3, the other factors. The window factor of Proposition 20.2 is at most
 `(X + 1) H_K + K`, and the sum over `k <= K` adds a factor `K`, because the
 terms grow with `k`. Together these are `exp(O(ln L))`, which is
 `exp(o(L / ln L))`.
@@ -158,7 +158,7 @@ The correction term `(ln ln ln b + ln 2 - 1 - delta) / ln ln b` tends to 0,
 so the bound in (c) exceeds `(1 - eps) ln b / ln ln b` for large `b`.
 
 Computed (`r3nt_multiset.py`, part 4). The bounds of Proposition 10.4 summed
-over `2 <= k <= K` (strings) and of Proposition 1.2 (multisets), as powers of
+over `2 <= k <= K` (strings) and of Proposition 20.2 (multisets), as powers of
 `B`, at `B = 10^96`, where `L / ln L = 40.95`:
 
 | `K` | `alpha = K ln L / L` | strings | multisets |
@@ -185,16 +185,16 @@ formula of (b) with `delta = 0`:
 | `10^(10^6)` | 184,385 | 157,177.9 | 182,687.2 |
 | `10^(10^10)` | 1,088,827,070 | 965,044,571.6 | 1,080,937,272.3 |
 
-### 1.4 Fixed length
+### 20.1.4 Fixed length
 
 The question expected the multiset count to sharpen Proposition 10.4 for every
 fixed `k`. As it stands it does not. For fixed `k` and `B -> infinity`, the
-bound of Proposition 1.2 is about `X^(k+1) H_k / (k! (k - 1))`, which is larger
+bound of Proposition 20.2 is about `X^(k+1) H_k / (k! (k - 1))`, which is larger
 than the `X^k` of Proposition 10.4 by a factor of order `X`. The windows have
 about `X / (p k)` integers each, and that loses what the multisets gain. A
 divisibility condition repairs this.
 
-Lemma 1.4 (proven). Let `m >= 1`, `h >= 1` and `Y - h >= 1`, and let
+Lemma 20.4 (proven). Let `m >= 1`, `h >= 1` and `Y - h >= 1`, and let
 `d_1 < ... < d_r` be divisors of `m` in the interval `(Y - h, Y]`. Then
 `m > (Y - h)^r / h^(r (r-1) / 2)`.
 
@@ -205,7 +205,7 @@ Proof. For each prime `q`, write `e_i = v_q(d_i)`, sorted so that
 `lcm(d_1, ..., d_r) >= prod d_i / prod over i < j of gcd(d_i, d_j)`. Each
 `gcd(d_i, d_j)` divides `d_j - d_i < h`. And `m` is a multiple of the lcm.
 
-Proposition 1.5 (proven). Let `k >= 3`, and let `b_k` be the largest real `Y`
+Proposition 20.5 (proven). Let `k >= 3`, and let `b_k` be the largest real `Y`
 with `Y <= 2^k (k ln Y / (k - 1))^(k(k-1)/2)`. Under a fixed
 convention, the number of bases `b <= B` with a `k`-digit solution is at most
 
@@ -216,7 +216,7 @@ Proposition 10.4 by the factor `(k - 2)!`.
 
 Proof. Fix a multiset `c` with `n = F(c)` and a leading digit `p`. Let
 `Y = (n/p)^(1/(k-1))` and `h = (M + 1)/(p (k - 1))`. A base `b` of a
-solution with these data lies in `(Y - h, Y]` (Lemma 1.1), and `b - 1`
+solution with these data lies in `(Y - h, Y]` (Lemma 20.1), and `b - 1`
 divides `m = n - S(c)` (section 1.6). For `k >= 3`, `m >= 1`: all weights
 satisfy `w(d) >= d`, with equality for every digit only if all digits are 0 or
 1, and then `n <= k < 2^(k-1) <= b^(k-1)`. Suppose `k` such bases exist. Lemma
@@ -235,19 +235,19 @@ For `k = 3` this gives `X^3 (1 + o(1))`, the same as Proposition 10.4. For
 `k = 4` it gives `X^4 / 2`, with `b_4` about `1.5 * 10^10`. So the gain for
 fixed `k` is the factor `(k - 2)!`, a constant.
 
-### 1.5 Beyond alpha = 1
+### 20.1.5 Beyond alpha = 1
 
 Proposition 11.1 is a test on strings. Given a multiset `c` and a base `b`, the
 string is fixed, and a window base is a single integer to test. So local tests
 on strings cannot bring the number of candidate pairs below the number of
 multisets, which is `B^(alpha + o(1))`. At the level of multisets the only
 congruence is `n == S(c) (mod b - 1)` (Proposition 10.2), and the table of
-section 1.1 shows how strongly it filters: for `k = 3` and digits up to 40, 107
+section 20.1.1 shows how strongly it filters: for `k = 3` and digits up to 40, 107
 of 76,600 window bases pass.
 
 Heuristic. If `F(c) - S(c)` behaved like a random integer modulo each `b - 1`
 near `(F(c)/p)^(1/(k-1))`, the test would keep about one window base in `b`,
-and the count of Proposition 1.2 would lose a further factor of about `B`.
+and the count of Proposition 20.2 would lose a further factor of about `B`.
 The range would then reach the `K` where the number of multisets is about
 `B^2`, that is `alpha` near 2. A proof needs an equidistribution statement for
 the integers `F(c) - S(c) = sum of (d^d - d)` over multisets, in residue classes
@@ -256,19 +256,19 @@ method for this. The number of multisets already exceeds `B` at `alpha = 1`, so
 any argument that counts candidates one by one stops there. This is the
 obstacle.
 
-## 2. The 3-adic and 5-adic laws of x^x - x (question 46)
+## 20.2 The 3-adic and 5-adic laws of x^x - x (question 46)
 
 Let `f(x) = x^x - x` and `T(q) = { f(x) mod q : x >= 1 }`. For `q = p^e`, the
 value `f(x) mod q` depends only on `x mod p^e (p - 1)` once `x >= e`.
 
-### 2.1 Lifting
+### 20.2.1 Lifting
 
-Lemma 2.1 (proven). For every prime `p` and `e >= 1`, `T(p^e)` contains every
+Lemma 20.6 (proven). For every prime `p` and `e >= 1`, `T(p^e)` contains every
 multiple of `p`.
 
 Proof. For `x == 0 (mod p)` with `x >= e`, `f(x) == -x (mod p^e)`.
 
-Lemma 2.2 (proven). Let `p` be odd and `x_0` prime to `p` with
+Lemma 20.7 (proven). Let `p` be odd and `x_0` prime to `p` with
 `x_0^(x_0) != 1 (mod p)`. As `x` runs over the integers with
 `x == x_0 (mod p (p - 1))`, `f(x) mod p^e` runs over the whole class
 `f(x_0) + p Z` modulo `p^e`, for every `e >= 1`.
@@ -290,10 +290,10 @@ residues of the next `p`-adic digit. Induction on `j` gives every residue of
 Modulo `p`, `x^x == u^j` with `u = x mod p` and `j = x mod (p - 1)`, and these
 are independent. So `f(x) == g - u (mod p)` with `g` in the cyclic group
 generated by `u`. Call a residue `r != 0` good if `r = g - u` with `g != 1`.
-By Lemmas 2.1 and 2.2, `T(p^e)` contains the full classes of 0 and of every
+By Lemmas 20.6 and 20.7, `T(p^e)` contains the full classes of 0 and of every
 good residue.
 
-Theorem 2.3 (proven). For every prime `p >= 7` and every `e >= 1`,
+Theorem 20.8 (proven). For every prime `p >= 7` and every `e >= 1`,
 `T(p^e) = Z / p^e`.
 
 Proof. Let `r != 0`. For a primitive root `u`, the residue `g = u + r` lies in
@@ -303,7 +303,7 @@ the group generated by `u` unless `g = 0`, and `g != 1` unless `u = 1 - r`. So
 and `{-r, 1 - r} = {3, 5}` has no solution (`r = 4` gives `{3, 4}`, `r = 2`
 gives `{5, 6}`).
 
-Lemma 2.4 (proven). For `p = 5` the good residues are 1, 2 and 4. The residue
+Lemma 20.9 (proven). For `p = 5` the good residues are 1, 2 and 4. The residue
 3 arises only from `x == 3 (mod 5)` with `x^x == 1`, that is `x == 8 (mod 20)`.
 For `p = 3` there is no good residue. The residue 2 arises only from
 `x == 2 (mod 6)`, and 1 never arises.
@@ -313,12 +313,12 @@ Proof. A direct check of the pairs `(u, g)`. For `p = 5`: `r = 1` from
 `g - u = 3` with `g` a power of `u`, and the only pair is `(u, g) = (3, 1)`.
 For `p = 3` see Lemma 15.12.
 
-### 2.2 The classes with a vanishing derivative
+### 20.2.2 The classes with a vanishing derivative
 
-On the classes of Lemma 2.4, `x^x == 1 (mod p)`, so the step in Lemma 2.2 is
+On the classes of Lemma 20.9, `x^x == 1 (mod p)`, so the step in Lemma 20.7 is
 0 and the class does not lift. A power series describes it.
 
-Lemma 2.5 (proven, with standard facts on the p-adic exponential). Let `p` be
+Lemma 20.10 (proven, with standard facts on the p-adic exponential). Let `p` be
 odd, `zeta` in `Z_p` a root of unity of order `t | p - 1`, and `x` an integer
 with `x == zeta (mod p)` and `t | x`. Write `x = zeta e^a` with
 `a = log(x / zeta)` in `p Z_p`. Then
@@ -338,7 +338,7 @@ For `zeta = -1`: `c_0, c_1, ... = 2, 0, 0, 1/2, 5/12, 1/24, -47/360, ...`. For
 `zeta = i`, a square root of -1: `c_0 = 1 - i`, `c_1 = 0`, `c_2 = (i - 1)/2`
 (computed exactly in `r3nt_tq.py`).
 
-Theorem 2.6 (the 3-adic law, proven). For `e >= 4`,
+Theorem 20.11 (the 3-adic law, proven). For `e >= 4`,
 
     T(3^e) = { v : v == 0 (mod 3) }  together with  { v : v == 2 (mod 27), v != 56 (mod 81) }.
 
@@ -346,7 +346,7 @@ So `|T(3^e)| = 29 * 3^(e-4)` and the density of `T(3^e)` is `29/81`. For
 `e <= 3`, `T(3^e)` is as in Lemma 15.12. Every `T(3^e)` with `e >= 5` is the
 full preimage of `T(81)`.
 
-Proof. By Lemma 2.4 only the class `x == 2 (mod 6)` remains. Take `zeta = -1`
+Proof. By Lemma 20.9 only the class `x == 2 (mod 6)` remains. Take `zeta = -1`
 and `a = 3 w` with `w` in `Z_3`. The integers `x == 2 (mod 6)` are dense in
 `2 + 3 Z_3 = -exp(3 Z_3)`: the condition `x` even is free 3-adically. So the
 values `f(x) mod 3^e` on this class are the values of
@@ -371,7 +371,7 @@ shows that `G` maps `1 + 3 Z_3` onto `1 + 3 Z_3` and `2 + 3 Z_3` onto `3 Z_3`
 modulo every `3^e`. So the values of `G` modulo `3^e` are exactly the `g` with
 `g != 2 (mod 3)`.
 
-Theorem 2.7 (the 5-adic law, proven). Let `i` be the square root of -1 in
+Theorem 20.12 (the 5-adic law, proven). Let `i` be the square root of -1 in
 `Z_5` with `i == 3 (mod 5)`, and `A = 1 - i`, so `A == 8 (mod 25)`. For
 `e >= 2`,
 
@@ -382,9 +382,9 @@ The class `3 (mod 5)` holds exactly `sq(e - 2)` elements of `T(5^e)`, where
 even, `(5^(k+1) + 11)/12` for `k` odd. That is 1, 3, 11, 53, 261, 1303 for
 `e = 2, ..., 7`. The density of `T(5^e)` tends to `4/5 + 1/60 = 49/60`.
 
-Proof. By Lemmas 2.1, 2.2 and 2.4 only the class `x == 8 (mod 20)` needs
+Proof. By Lemmas 20.6, 20.7 and 20.9 only the class `x == 8 (mod 20)` needs
 work, and it gives the residues `== 3 (mod 5)`. Take `zeta = i` (order 4,
-and `4 | x`) and `a = 5 w`. As in Theorem 2.6, these `x` are dense in
+and `4 | x`) and `a = 5 w`. As in Theorem 20.11, these `x` are dense in
 `3 + 5 Z_5 = i exp(5 Z_5)`, so the values are those of `A + 25 G(w)` with
 
     G(w) = sum over n >= 2 of c_n 5^(n-2) w^n,   c_2 = -A/2.
@@ -411,25 +411,25 @@ mod 27, `{2, 29}` mod 81 and `2 + 27 j`, `j` in `{0, 1, 3, 4, 6, 7}` mod 243;
 `T(5^e)` misses 4 of the 5 classes `== 3` mod 25, 22 of 25 mod 125 and 114 of
 125 mod 625.
 
-### 2.3 Coverings with 81 and 125
+### 20.2.3 Coverings with 81 and 125
 
 Write `A(r) = sum s_i r^(k-i)` and `F_0` for a prefix
 `(s_1, ..., s_(k-1))`, as in Theorem 15.13.
 
-Corollary 2.8 (proven). If for every residue `r mod 81`, `A(r) - F_0` is not
+Corollary 20.13 (proven). If for every residue `r mod 81`, `A(r) - F_0` is not
 in `T(81)`, then no string `(s_1, ..., s_(k-1), x)` with `x >= 1` is a
 solution in any base, under either convention, and under `0^0 = 0` also for
 `x = 0`. For a single modulus `3^e`, the modulus 81 is the last one that adds
 anything: `T(3^e)` is the preimage of `T(81)` for `e >= 5`.
 
-Proof. As for Theorem 15.13, with Theorem 2.6.
+Proof. As for Theorem 15.13, with Theorem 20.11.
 
 Example. For `(8, 7, x)`, `A(r) - F_0 = 8 r^2 + 7 r - 8^8 - 7^7` is never
 `0 (mod 3)`, and it is `2 (mod 27)` only for `r == 8 (mod 9)`, where it is
 `56 (mod 81)`. So 81 excludes `(8, 7, x)` for every `x`, and 27 does not.
 Checked directly for `x <= 1500` (`analysis/r3nt_cover_examples.py`).
 
-Proposition 2.9 (proven). If a single modulus `5^e` excludes every last digit
+Proposition 20.14 (proven). If a single modulus `5^e` excludes every last digit
 of a prefix, then `F_0 == 2 (mod 5)`, and `A(r) == 0` and `A'(r) == 0 (mod 5)`
 for every `r`. So either every `s_i` is divisible by 5 (possible only under
 `0^0 = 1`, with the number of zero digits `== 2 (mod 5)`), or the polynomial
@@ -458,7 +458,7 @@ section 15.4.4). Share of prefixes whose last digit is excluded:
 | 6 | 0.0840 | 0.0853 | 0 | 0 | 0.0859 | 0.0873 |
 
 The modulus 81 adds 0.2 to 0.4 percentage points to the 8% of section 15.4.4,
-and 125 adds nothing alone, as Proposition 2.9 predicts. Small prefixes
+and 125 adds nothing alone, as Proposition 20.14 predicts. Small prefixes
 (`analysis/data/r3nt_cover_examples.txt`): with digits `1..40` and `k = 3`, 27
 excludes 204 of 1,600 prefixes and 81 excludes 210; with `k = 4` and digits
 `1..12`, 131 and 134 of 1,728; with `k = 5` and digits `1..7`, 168 and 169 of
@@ -468,13 +468,13 @@ For question 47 this means: 81 is worth adding to the sieve of `kdigit`, and
 `3^5` and higher are not, as single moduli. Powers of 5 above 25 are useful
 only in combination.
 
-## 3. The even case x == 0 (mod 8) (question 52)
+## 20.3 The even case x == 0 (mod 8) (question 52)
 
 The equation is (1) of chapter 18, `b (b + x) = x^n + 1`. By Proposition 18.1
 the open even cases have `x = 2^a m` with `a >= 3`, `m` odd, `x` not a square
 and `n >= 5` odd. Theorem 18.8 settles `m = 1`. Here `m > 1`.
 
-### 3.1 Setting
+### 20.3.1 Setting
 
 Put `V = b + x/2` and `E = (x/2)^2 + 1`. Then `V^2 - E = x^n`, `V` is odd, and
 `E == 1 (mod 16)`. Let `K = Q(sqrt E)`, `R = Z[(1 + sqrt E)/2]` (an order of
@@ -487,7 +487,7 @@ so `gamma` is in `R`, `N(gamma) = x^n / 4 = 2^(a n - 2) m^n`, and
 `Lam0 = log(gamma / gamma') < tau_n` with the `tau_n` of (2) in chapter 18,
 because `gamma / gamma' = (b + eps) / (b + eps')`.
 
-Lemma 3.1 (proven). The prime 2 splits in `R`, and the ideals `(gamma)` and
+Lemma 20.15 (proven). The prime 2 splits in `R`, and the ideals `(gamma)` and
 `(gamma')` of `R` are coprime. So
 
     (gamma) = Q^(a n - 2) B^n,
@@ -505,9 +505,9 @@ is a nonzero square mod `p`.
 This is where Lemma 18.3 breaks: the exponent `a n - 2` of `Q` is not a
 multiple of `n`.
 
-### 3.2 The class of Q
+### 20.3.2 The class of Q
 
-Lemma 3.2 (proven). `Q^j` is not principal in `R` for
+Lemma 20.16 (proven). `Q^j` is not principal in `R` for
 `1 <= j <= log2(x) - 3`. So the order `t` of the class of `Q` satisfies
 `t >= floor(log2 x) - 2`. In particular `Q^2` is not principal for `x >= 32`.
 
@@ -528,9 +528,9 @@ The bound is sharp for `x = 2^a`, where `Q^(a-2)` is principal. Computed
 `x == 0 (mod 8)` up to 4000 with `E` squarefree, `t >= floor(log2 x) - 2`
 holds, with equality in some cases.
 
-Proposition 3.3 (proven). Let `b` be a solution, `C = Q^a B`, and `d` the
+Proposition 20.17 (proven). Let `b` be a solution, `C = Q^a B`, and `d` the
 order of the class of `C` in the class group of `R`. (Parts (b) and (c), and
-Theorem 3.4 below, hold with the same proofs in the maximal order, which the
+Theorem 20.18 below, hold with the same proofs in the maximal order, which the
 computations use.) Then:
 
 - (a) `n [C] = 2 [Q]`, so `d >= t / 2 >= (floor(log2 x) - 2) / 2`;
@@ -547,13 +547,13 @@ computations use.) Then:
   `(gamma)` is divisible by the other prime above 2, then
   `t | 2 ((a - 1) n - 1)`.
 
-Proof. (a) Lemma 3.1 gives `(a n - 2)[Q] + n [B] = 0`. Multiplying
+Proof. (a) Lemma 20.15 gives `(a n - 2)[Q] + n [B] = 0`. Multiplying
 `n [C] = 2 [Q]` by `d` gives `2 d [Q] = 0`, so `t | 2 d`. (b) `C^n Q^(-2)` is
 principal and equals `C^(n0) Q^(-2) (C^d)^j`. (c) `N(delta) = x/4` and
 `delta - delta' = sqrt E`, so `(delta) = Q^(a-2) P_m` for one prime `Q`. In the
 first case `(gamma) = (delta)^n Q^(2n - 2)`. In the second `(gamma) = Q'^(a n - 2)
 P_m^n` and `[P_m] = -(a - 2)[Q]`, `[Q'] = -[Q]`, which gives
-`(2 (a - 1) n - 2) [Q] = 0`. In the first case Lemma 3.2 gives
+`(2 (a - 1) n - 2) [Q] = 0`. In the first case Lemma 20.16 gives
 `floor(log2 x) - 2 <= t <= 2 n - 2`.
 
 So the first pure configuration has an analogue of Corollary 18.5, but
@@ -564,7 +564,7 @@ Why there is no analogue of Proposition 18.4. In chapter 18 the fixed factor
 is trivial, so the linear form has two terms and the explicit generator
 `eps + 1` gives the lower bound `n log z >= mu0 - tau_n`. Here
 `rho` generates `C^(n0) Q^(-2)`, which is never the unit ideal (its norm is
-`x^(n0) / 4`), and `Q^2` itself is not principal (Lemma 3.2). So `lam` is a
+`x^(n0) / 4`), and `Q^2` itself is not principal (Lemma 20.16). So `lam` is a
 fixed real number of size up to `mu0` that need not lie in
 `Z th + 2 mu0 Z`.
 The form in (b) has three logarithms with coefficients `2k`, `j` and 1.
@@ -572,7 +572,7 @@ Laurent's two-logarithm theorem does not apply, and an inhomogeneous form
 gives no lower bound for `j`: `j th + lam` can be close to a multiple of
 `2 mu0` for small `j`. This is the obstacle at 2.
 
-### 3.3 A bound for n
+### 20.3.3 A bound for n
 
 Matveev's theorem (cited: E. M. Matveev, Izv. Math. 64 (2000) 1217-1269; in
 the form of Y. Bugeaud, M. Mignotte, S. Siksek, Ann. of Math. 163 (2006),
@@ -585,8 +585,8 @@ number field of degree `Dg`, `b_1, ..., b_r` integers with
 
 For `r = 3` and `Dg = 2` the constant is `CM = 9.70 * 10^11`.
 
-Theorem 3.4 (proven, with Matveev's theorem). In the setting of
-Proposition 3.3, with `|lam|, |th| <= mu0` after multiplying `rho` and `eta`
+Theorem 20.18 (proven, with Matveev's theorem). In the setting of
+Proposition 20.17, with `|lam|, |th| <= mu0` after multiplying `rho` and `eta`
 by units,
 
     (n/2) log x < log(2 sqrt(x^2 + 4)) + 0.01 + CM (1 + log B) (2 mu0) (d log x + mu0) (n0 log x + log 4 + mu0),
@@ -606,9 +606,9 @@ For `alpha_3`, use `4 rho` in place of `rho`: it generates the integral ideal
 This is the analogue of Theorem 18.10 with three logarithms: the bound has
 `d^2 (log x)^2` in place of `d log x`, and a constant 60 million times larger.
 
-### 3.4 Computations
+### 20.3.4 Computations
 
-Theorem 3.5 (computed). Let `x == 0 (mod 8)` have an odd prime factor and not
+Theorem 20.19 (computed). Let `x == 0 (mod 8)` have an odd prime factor and not
 be a square.
 
 - (a) For `x <= 10^8` there is no solution with `n` in {5, 7, ..., 15}
@@ -622,7 +622,7 @@ The method of (b), `analysis/r3nt_even.gp`. For each `x` the script builds
 `K` with a certified class group (`bnfcertify`), and for each of the two
 primes `Q` above 2 and each of the `2^omega(m)` choices of `B` it computes `d`,
 every `n0` with `n0 [C] = 2 [Q]`, and generators `rho`, `eta` in compact
-form. Theorem 3.4 then bounds `j` by `J` (at most `1.5 * 10^19`). The reduction
+form. Theorem 20.18 then bounds `j` by `J` (at most `1.5 * 10^19`). The reduction
 lemma of Dujella and Petho (cited: A. Dujella, A. Petho, Quart. J. Math.
 Oxford 49 (1998) 291-306, Lemma 5a) with a convergent `p/q` of
 `th / (2 mu0)`, `q > 6 J`, and `eps_1 = ||q lam/(2 mu0)|| - J ||q th/(2 mu0)|| > 0`
@@ -632,16 +632,16 @@ exponents are checked exactly, and so is every odd `n <= 301`. As a test,
 the same script with `n >= 3` and `x = 2^a` allowed finds the known
 solution `(x, n) = (8, 3)`.
 
-### 3.5 What remains
+### 20.3.5 What remains
 
 For `x == 0 (mod 8)` with an odd prime factor and `n >= 5` odd, a solution
 must have `x > 10^4`, and `x > 10^8` if `n <= 15`, and also `x > 10^9` for
 `n = 7, ..., 15` and `x > 10^10` for `n = 5` (section 18.1.7). The open part
-is a uniform bound: Theorem 3.4 bounds `n` by `x` and `d`, but nothing bounds
-`x` by `n` except in the pure configuration of Proposition 3.3(c). The abc
+is a uniform bound: Theorem 20.18 bounds `n` by `x` and `d`, but nothing bounds
+`x` by `n` except in the pure configuration of Proposition 20.17(c). The abc
 conjecture still gives finiteness (Proposition 18.13).
 
-## 4. The equations b(b+x) = x^n + 3 and x^n + 25 (question 51)
+## 20.4 The equations b(b+x) = x^n + 3 and x^n + 25 (question 51)
 
 Under `0^0 = 1`, `(1, x, r)` is a solution in base `b` exactly when
 `b (b + x) = x^x + c` with `c = w(r) - r + 1`: `c = 3` for `r = 2` and
@@ -650,9 +650,9 @@ Under `0^0 = 1`, `(1, x, r)` is a solution in base `b` exactly when
 `N(b + theta) = b^2 + b x - c`, so the equation says `N(b + theta) = x^n`.
 Work in the order `R = Z[theta]` of discriminant `D`.
 
-### 4.1 Elementary cases
+### 20.4.1 Elementary cases
 
-Proposition 4.1 (proven). `(1, 2, x)` is a solution in some base exactly for
+Proposition 20.20 (proven). `(1, 2, x)` is a solution in some base exactly for
 `x = 6`, in base 215, under either convention.
 
 Proof. The condition is `(b + 1)^2 = x^x + 6 - x`. For odd `x`, `x^2 == 1
@@ -661,7 +661,7 @@ square. For even `x >= 8`, `(x^(x/2) - 1)^2 < x^x + 6 - x < (x^(x/2))^2`. For
 `x = 6` the right side is `6^6 = 216^2`. The cases `x = 0, 1, 2, 4` fail by
 hand.
 
-Lemma 4.2 (proven). Let `c` be 3 or 25 and `n >= 2`.
+Lemma 20.21 (proven). Let `c` be 3 or 25 and `n >= 2`.
 
 - (a) If `n >= 4` is even, or `n >= 5` and `x` is a square, there is no
   solution once `x^2 + 4c < 4 x^(n/2) + 1`. For `c = 3` this holds for all
@@ -691,9 +691,9 @@ rank 1); the solutions `(x, b) = (5, 10), (7, 16), (656, 16477), (1600, 63205)`
 for `c = 25` (conductor 54005, rank 2). For `c = 1` the same script gives the
 list of chapter 16.
 
-### 4.2 c = 25: an explicit generator
+### 20.4.2 c = 25: an explicit generator
 
-Lemma 4.3 (proven). Let `x` be odd and prime to 5, and `c = 25`. The
+Lemma 20.22 (proven). Let `x` be odd and prime to 5, and `c = 25`. The
 conductor of `R` is prime to `10 x`, so the ideals below are invertible and
 factor uniquely.
 
@@ -718,7 +718,7 @@ fundamental unit of `R`. Every unit `e > 1` of `R` is `(u + v sqrt D)/2` with
 `u, v >= 1` and `u^2 - D v^2 = +-4`, so `e > sqrt(D - 4) > x` and
 `mu0 > log x`.
 
-Proposition 4.4 (proven). Let `x` be odd, prime to 5, `n >= 5` odd, and `b` a
+Proposition 20.23 (proven). Let `x` be odd, prime to 5, `n >= 5` odd, and `b` a
 pure solution of `b (b + x) = x^n + 25`. Put `l = arcsinh(10/x)`. Then there
 is an integer `s >= 1` with
 
@@ -728,7 +728,7 @@ where `Lam0 = log((b + theta)/(b + theta'))` (for `x = 3` assume `n >= 7`, so
 that the denominator is positive). In particular
 `n > (mu0 - tau_n) / l > (mu0 - tau_n) x / 10`.
 
-Proof. If `B = P`, Lemma 4.3 gives `(b + theta)^2 = u pi^n` with `u` a unit
+Proof. If `B = P`, Lemma 20.22 gives `(b + theta)^2 = u pi^n` with `u` a unit
 of `R`, `u = +-eta0^k`. Then `|pi / pi'| = (sqrt D - 10)/(sqrt D + 10) = e^(-2l)`,
 because `(sqrt D + 10)/x = sqrt(1 + 100/x^2) + 10/x`. So
 `2 Lam0 = 2 k mu0 - 2 n l`. For `B = P'` the sign of `n l` changes. In both
@@ -743,10 +743,10 @@ This is the analogue of Proposition 18.4, with `l = arcsinh(10/x)` in place of
 `eps + 1`; `(1, x, 3)` gets it because `c = 25` is a square, so that `theta - 5`
 has norm `-5 x`.
 
-Proposition 4.5 (proven). For odd `x >= 22,027` prime to 5, the equation
+Proposition 20.24 (proven). For odd `x >= 22,027` prime to 5, the equation
 `b (b + x) = x^x + 25` has no pure solution.
 
-Proof. Take `n = x` in Proposition 4.4. Then `x l = x arcsinh(10/x) < 10`, so
+Proof. Take `n = x` in Proposition 20.23. Then `x l = x arcsinh(10/x) < 10`, so
 `s mu0 < 10 + tau_x`, while `mu0 > log x >= log 22027 > 10 + 10^-5 > 10 + tau_x`.
 So `s < 1`, a contradiction.
 
@@ -758,11 +758,11 @@ part 2: the numbers `s mu` with `mu` in
 from 10, while `10 - x l < 1000/(6 x^2)`. That gives `x < 2808` for pure
 solutions, by a different route.)
 
-Proposition 4.6 (proven). For `x = 5^e` with `e >= 3` odd, the equation
+Proposition 20.25 (proven). For `x = 5^e` with `e >= 3` odd, the equation
 `b (b + x) = x^n + 25` has no solution with `n >= 3` odd. For `x = 5` the only
 solution with `n >= 3` is `n = 3`, `b = 10`.
 
-Proof. By Lemma 4.2(c), `b = 5 g`, and with `y = x/5 = 5^(e-1)` the equation
+Proof. By Lemma 20.21(c), `b = 5 g`, and with `y = x/5 = 5^(e-1)` the equation
 becomes `g^2 + g y - 1 = 5^(e n - 2)`, that is `N(g + eps_y) = 5^(e n - 2)` with
 `eps_y = (y + sqrt(y^2 + 4))/2` in `R_1 = Z[eps_y]`, whose conductor is prime
 to 5. For `x = 5`, `(2g + 1)^2 = 4 * 5^(n-2) + 5` forces `5 | 2g + 1` and then
@@ -773,7 +773,7 @@ gives `g = 2`. Now let `e >= 3`. As in Lemma 18.2, 5 splits in `R_1` and
 `t` of the class of `p` divides `e - 1` and `e n - 2`. If `p^j = (pi)` with
 `1 <= j <= e - 2`, write `pi = (u + v sqrt(y^2 + 4))/2`; then
 `|u^2 - (y^2 + 4) v^2|` is `4 * 5^j` or `5^j`, below `sqrt(y^2 + 4)`, so `u/v`
-is a convergent of `sqrt(y^2 + 4)` (as in Lemma 3.2). The continued fraction is
+is a convergent of `sqrt(y^2 + 4)` (as in Lemma 20.16). The continued fraction is
 `[y; (y-1)/2, 1, 1, (y-1)/2, 2y]`: the complete quotients are
 `(sqrt D_1 + y)/4`, `(sqrt D_1 + y - 2)/y`, `(sqrt D_1 + 2)/y`,
 `(sqrt D_1 + y - 2)/4` and `sqrt D_1 + y`, with `D_1 = y^2 + 4`. The norms of
@@ -781,15 +781,15 @@ the convergents are `+-1`, `+-4` and `+-y`, none of the form `5^j` or
 `4 * 5^j` with `1 <= j <= e - 2`. So `t = e - 1`, which is even, while `e n - 2`
 is odd. This contradicts `t | e n - 2`.
 
-Theorem 4.7 (proven, with the sieve below). `(1, x, 3)` is a solution in no
+Theorem 20.26 (proven, with the sieve below). `(1, x, 3)` is a solution in no
 base for any prime power `x`, under `0^0 = 1`.
 
-Proof. Even `x` and squares: Lemma 4.2(a). `x = 5^e`: Proposition 4.6 (for
+Proof. Even `x` and squares: Lemma 20.21(a). `x = 5^e`: Proposition 20.25 (for
 `x = 5`, `n = x = 5 >= 4`). Odd `x = p^e`, `p != 5`, `e` odd: every solution
-is pure (Lemma 4.3(d)), so `x < 22,027` by Proposition 4.5, and the sieve
+is pure (Lemma 20.22(d)), so `x < 22,027` by Proposition 20.24, and the sieve
 excludes every `x <= 10^9`.
 
-Theorem 4.8 (proven for `x > 507,211`; computed for smaller `x`). Let `x` be odd and
+Theorem 20.27 (proven for `x > 507,211`; computed for smaller `x`). Let `x` be odd and
 prime to 5, and `n >= 5` odd. Then `b (b + x) = x^n + 25` has no pure
 solution.
 
@@ -797,7 +797,7 @@ Proof for large `x`. Apply Laurent's theorem (section 18.1.4) to
 `alpha1 = eta0`, `alpha2 = zeta = e^(2l) = (sqrt D + 10)/(sqrt D - 10)`,
 `b1 = 2 s`, `b2 = n`: `|n log zeta - 2 s log eta0| = 2 Lam0`. Here `eta0` is the
 fundamental unit of the maximal order and `s` is replaced by `s` times the
-index of the unit groups; Proposition 4.4 holds with that `mu0` as well.
+index of the unit groups; Proposition 20.23 holds with that `mu0` as well.
 `zeta` is a root of `x^2 T^2 - 2 (x^2 + 200) T + x^2`, which is primitive since
 `gcd(x, 10) = 1`, so `h(zeta) = log x + l`, and `zeta` is not a unit, hence
 independent of `eta0`. Take `log A1 = max(mu0, 1)/2` and
@@ -818,20 +818,20 @@ convergents of `l / mu0` (Legendre, since `2 n tau_n < mu0` for `n >= 17`).
 No candidate with `n >= 17` appears. The exponents `5 <= n <= 15` are covered
 by the sieve for all `x <= 10^7` (`data/r3nt_sieve_c25_n5-15_1e7.txt`).
 
-Corollary 4.9 (proven, with computations). For an odd prime power `x`, the
+Corollary 20.28 (proven, with computations). For an odd prime power `x`, the
 solutions of `b (b + x) = x^n + 25` with `n >= 3` are exactly
 `(x, n, b) = (5, 3, 10)`, `(7, 3, 16)` and `(3, 6, 26)`.
 
 Proof. `n = 3`: the elliptic curve. `n >= 4` even, or `x` a square: Lemma
-4.2(a). `x = 5^e`: Proposition 4.6. Otherwise every solution is pure: `n <= 15`
-by the sieve (`x <= 10^7`), `n >= 17` by Theorem 4.8.
+4.2(a). `x = 5^e`: Proposition 20.25. Otherwise every solution is pure: `n <= 15`
+by the sieve (`x <= 10^7`), `n >= 17` by Theorem 20.27.
 
 So the method of chapter 18 does not need a unit of norm -1. It needs a fixed
 power of the ideal `P` of norm `x` with an explicit generator whose logarithm
 is about `C / x`; then Proposition 18.4 has an analogue, and the unit enters
 only through the lower bound `mu0 > log x`, which every order `Z[theta]` has.
 
-### 4.3 c = 3: where the method stops
+### 20.4.3 c = 3: where the method stops
 
 For `c = 3`, `theta` itself generates a prime above 3, and `(theta - 3)` has
 norm `6 - 3x`, not a multiple of `x`. No element `u + v theta` has a norm of the
@@ -846,11 +846,11 @@ through unchanged with `D = x^2 + 12`: for `B^d = (eta)`,
 In chapter 18, `mu0 <= log eps`, about `log x`, because `eps` is a unit; this
 turned the inequality into `n < 6.4 * 10^4 d log x`. For `c = 3` no unit of
 size `x` exists in general: `x^2 + 12` is of Richaud-Degert type only when
-`12 | 4x`, that is `3 | x`, which Lemma 4.2(b) excludes. Heuristic: as for
+`12 | 4x`, that is `3 | x`, which Lemma 20.21(b) excludes. Heuristic: as for
 most real quadratic fields, `mu0` is then typically of size `sqrt D`, about
 `x`, and the inequality allows `n` up to about `x^2 / log x`.
 
-Proposition 4.10 (proven). Let `x` be a prime, `x > 10^6`, and let `b` solve
+Proposition 20.29 (proven). Let `x` be a prime, `x > 10^6`, and let `b` solve
 `b (b + x) = x^x + 3`. Let `p` be the prime of `R` with `(b + theta) = p^x`.
 Then either the class of `p` has order exactly `x`, so the class number of `R`
 is a multiple of `x`, or `p = (eta)` is principal and
@@ -872,7 +872,7 @@ number formula makes the first case implausible: with `mu0 > log x`,
 explicit constants). The second case is the generic one. Computed
 (`analysis/r3nt_c3_primes.gp`, `data/r3nt_c3_primes.txt`, GRH): of the 1,121
 primes `x == +-1 (mod 12)` up to `2 * 10^4`, 621 have a principal prime above
-`x`, and all 621 have a regulator above the bound of Proposition 4.10 (median
+`x`, and all 621 have a regulator above the bound of Proposition 20.29 (median
 `mu0 / sqrt x` = 27); no class of order `x` occurs (largest order 56). This is the
 obstacle for `c = 3`: the regulator of `Z[theta]` is not bounded by `log x`.
 
@@ -882,19 +882,19 @@ Richaud-Degert type with the unit `1 + (x/3) theta = theta^2 / 3`. By Lemma
 
 For a fixed `x` the method still works, because it only needs `mu0`.
 
-Theorem 4.11 (computed). For odd `x <= 1001`:
+Theorem 20.30 (computed). For odd `x <= 1001`:
 
 - `b (b + x) = x^n + 3` has no solution with `n >= 2`;
 - `b (b + x) = x^n + 25` with `x` prime to 5 has, for `n >= 2`, only the
   solutions `(x, n, b) = (7, 3, 16)` and `(3, 6, 26)`.
 
-Proof. `n = 2` and even `n`: Lemma 4.2. `n = 3`: the elliptic curves.
+Proof. `n = 2` and even `n`: Lemma 20.21. `n = 3`: the elliptic curves.
 `n = 5, ..., 15`: the sieve (`x <= 10^7`,
 `data/r3nt_sieve_c3_n5-15_1e7.txt`, `data/r3nt_sieve_c25_n5-15_1e7.txt`).
 `n >= 17`: `analysis/r3nt_allnc.gp` (`data/r3nt_allnc_c3_1001.txt`,
 `data/r3nt_allnc_c25_1001.txt`), the method of Theorem 18.12 with `theta` in
 place of `eps`, certified class groups, and the bound of Laurent with the
-true `mu0`. For `c = 3`, 228 of the 323 values of `x` fail Lemma 4.2(b). The
+true `mu0`. For `c = 3`, 228 of the 323 values of `x` fail Lemma 20.21(b). The
 other 95 have 224 ideals `B` (78 not principal); Laurent allows `n` up to
 `2.1 * 10^9`. For `c = 25` there are 388 values and 1,306 ideals (658 not
 principal), with `n` up to `4.6 * 10^9`. No candidate appears. With the
@@ -916,7 +916,7 @@ analogue of Theorem 18.10 bounds `n` only in terms of `mu0`), and composite
 `x` divisible by 5. For `(1, x, 2)`: every `x > 10^9` whose prime factors are
 `== +-1 (mod 12)`, including primes, because of the regulator.
 
-## 5. Orders of mixed ideal classes (question 53)
+## 20.5 Orders of mixed ideal classes (question 53)
 
 Corollary 18.11 leaves one case of `b (b + x) = x^x + 1` open: `x > 4 * 10^9`
 odd, composite, not a prime power, with a mixed ideal `B` of norm `x` in
@@ -975,19 +975,19 @@ expected number of solutions beyond `4 * 10^9` stays far below 1.
 | file | content |
 |---|---|
 | `analysis/r3nt_multiset.py` | question 45: the window on all known solutions, the multiset search, the bounds at `B = 10^96` and beyond: `data/r3nt_multiset.txt` |
-| `analysis/r3nt_tq.py` | question 46: `T(p^e)` against Theorems 2.3, 2.6, 2.7 and Lemma 2.2 |
+| `analysis/r3nt_tq.py` | question 46: `T(p^e)` against Theorems 20.8, 20.11, 20.12 and Lemma 20.7 |
 | `analysis/r3nt_cover_density.py` | question 46: covered prefixes with 81 and 125: `data/r3nt_cover_density.txt` |
 | `analysis/r3nt_cover_examples.py` | question 46: small prefixes excluded by 81 or 125, direct checks: `data/r3nt_cover_examples.txt` |
-| `analysis/r3nt_even_q.gp` | question 52: the order of the class of `Q` (Lemma 3.2): `data/r3nt_even_q.txt` |
-| `analysis/r3nt_even.gp` | question 52: all `n` for `x == 0 (mod 8)` (Theorem 3.5): `data/r3nt_even_1e4.txt` |
+| `analysis/r3nt_even_q.gp` | question 52: the order of the class of `Q` (Lemma 20.16): `data/r3nt_even_q.txt` |
+| `analysis/r3nt_even.gp` | question 52: all `n` for `x == 0 (mod 8)` (Theorem 20.19): `data/r3nt_even_1e4.txt` |
 | `analysis/r3nt_even_direct.py` | question 52: exact check for `n <= 15`, `x <= 10^5`: `data/r3nt_even_direct.txt` |
 | `analysis/r3nt_sieve.c` | questions 51, 52: sieve for `A x^e + B x^2 + C x + D` a square: `data/r3nt_sieve_*.txt` |
 | `analysis/r3nt_n3.sage` | question 51: `n = 3` for `c = 1, 3, 25`: `data/r3nt_n3.txt` |
 | `analysis/r3nt_c25.py` | question 51: identities, gaps and the Laurent constant for `c = 25`; continued fractions for `x = 5^e` |
-| `analysis/r3nt_pure25.gp` | question 51: pure solutions for `c = 25`, `x <= 507,211` (Theorem 4.8): `data/r3nt_pure25_507211.txt` |
-| `analysis/r3nt_allnc.gp` | question 51: all `n` for `c = 3, 25`, odd `x <= 1001` (Theorem 4.11): `data/r3nt_allnc_c3_1001.txt`, `data/r3nt_allnc_c25_1001.txt` |
+| `analysis/r3nt_pure25.gp` | question 51: pure solutions for `c = 25`, `x <= 507,211` (Theorem 20.27): `data/r3nt_pure25_507211.txt` |
+| `analysis/r3nt_allnc.gp` | question 51: all `n` for `c = 3, 25`, odd `x <= 1001` (Theorem 20.30): `data/r3nt_allnc_c3_1001.txt`, `data/r3nt_allnc_c25_1001.txt` |
 | `analysis/r3nt_mixed_orders.gp` | question 53: class orders of mixed ideals: `data/r3nt_mixed_orders.txt` |
-| `analysis/r3nt_mixed_stats.py` | question 53: the statistics of section 5: `data/r3nt_mixed_stats.txt` |
+| `analysis/r3nt_mixed_stats.py` | question 53: the statistics of section 20.5: `data/r3nt_mixed_stats.txt` |
 | `analysis/r3nt_c3_primes.gp` | question 51: principal primes and regulators for `c = 3`: `data/r3nt_c3_primes.txt` |
 
 Build the sieve with `cc -O2 -o fast/target/r3nt_sieve analysis/r3nt_sieve.c`.

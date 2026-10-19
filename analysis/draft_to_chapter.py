@@ -37,11 +37,18 @@ def convert(text, N, title, internal_lines, single=False):
             pass
         out.append(l)
     lines = out
-    # definitions of results, in order
+    # definitions of results, in order. A definition is numbered inside the
+    # draft (its first part is a draft section) and is followed by a status in
+    # parentheses; library results and forward references can also start a
+    # line. Results without a status are numbered after those with one.
     ids, k = {}, 0
-    for l in lines:
-        m = re.match(r'^(\*\*)?' + KINDS + r' (\d+\.\d+)', l)
-        if m and m.group(3) not in ids:
+    for strict in (True, False):
+        for l in lines:
+            m = re.match(r'^(\*\*)?' + KINDS + r' (\d+\.\d+)(\*\*)?(\s*\()?', l)
+            if not m or m.group(3) in ids or m.group(3).split('.')[0] not in hmap:
+                continue
+            if strict and not m.group(5):
+                continue
             k += 1
             ids[m.group(3)] = f'{N}.{k}'
     def rep_id(m):

@@ -30,6 +30,8 @@ statement is marked by its source:
 | [16. Algebra of the polynomial](16-algebra.md) | Aurifeuillian factors and base 904, the equation `b(b+x) = x^x + 1`, reducibility, Galois groups, rational bases |
 | [17. Other weights](17-weights.md) | a general weight table in the engine; forced residues multiply the count by `b-1` as predicted; `0^0 = m`; universality of the laws |
 | [18. The equation b(b+x) = x^n + 1 and more](18-number-theory.md) | `b(b+x) = x^n + 1` solved for prime powers and odd `x <= 1001`; the M/L series in general; bases with 2- and 3-digit solutions; integers with three bases; signs of roots; powers as weights |
+| [19. A faster sieve and short-string spectra](19-sieve-spectra.md) | prime powers in the `kdigit` sieve (11x faster); defect spectra for 4 and 5 digits; p-adic local factors; narcissistic numbers as a model test; the factorion shortfall is chance |
+| [20. Multisets and the residues of x^x - x](20-multisets-residues.md) | almost all bases have no solution with up to about `ln b / ln ln b` digits; the 3-adic and 5-adic laws of `x^x - x`; `b(b+x) = x^n + c` for `x == 0 (mod 8)` and `c = 3, 25`; mixed ideal classes |
 | [Open questions](questions.md) | 63 research questions in three rounds, with priorities and answers |
 
 ## Main results
@@ -63,8 +65,8 @@ Proven:
   the digit multiset determines is `n mod (b-1)` (Proposition 10.2).
 - Up to `B`, at most a power of `ln B` bases have a solution with a fixed
   number of digits (Proposition 10.4).
-- Almost all bases have no solution with fewer than `(1/2 - eps) ln b / ln ln b`
-  digits (Theorem 11.2).
+- Almost all bases have no solution with fewer than `(1 - eps) ln b / ln ln b`
+  digits (Theorem 20.3, doubling the range of Theorem 11.2).
 - A digit string whose polynomial `Q_s` has no root modulo some prime is not a
   solution in any base (Proposition 11.1). If `Q_s` is irreducible, this
   happens for a positive density of primes (Proposition 12.1).
@@ -88,6 +90,9 @@ Proven:
 - With arbitrary weights in place of `x^x`, deciding whether a solution exists
   is NP-complete and counting them is #P-complete (chapter 13). Any fast
   algorithm for real Munchausen numbers must use the arithmetic of `x^x`.
+- The residues of `x^x - x` cover everything modulo `p^e` for `p >= 7`; modulo
+  powers of 3 and 5 they follow explicit laws (Theorems 20.8, 20.11, 20.12).
+  So coverings can use only the moduli 2^e, 81 and powers of 5.
 - Infinitely many digit strings are excluded in every base by covering
   congruences with moduli `3^e` and `2^e`; `(2,1,x)` is never a solution
   (chapter 15).
@@ -112,6 +117,8 @@ Computed:
   to 10,000 has one with 18, 21, 22, 24, 26 or 28 digits.
 - Under `0^0 = 1`, base 25 is the only base below `10^51` with both a
   2-digit and a 3-digit solution: `(1,3)` and `(5,1,3)` (section 18.2).
+- Under `0^0 = 1` no new 7-digit solution exists in bases up to `10^7.2`,
+  nor an 8-digit one up to base 23,364 (section 19.1.5).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 41.
 
@@ -131,6 +138,8 @@ Model:
 - The exact tree grows like `2^b` in the limit (section 10.1).
 - Under `0^0 = 1`, long solutions lie within `ln k + ln ln k` of their length
   `k` (Conjecture 10.3).
+- Narcissistic numbers (weights `x^d`) fit the refined model where residues
+  are forced: 207 found against 208.5 predicted (section 19.4).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data
