@@ -1,0 +1,728 @@
+# Bibliography of the exposition (Hayagriva format).
+# Add new works here. Keys are author-year in lower case.
+
+vanberkel2009:
+  type: article
+  title: On a curious property of 3435
+  author: van Berkel, Daan
+  date: 2009
+  serial-number:
+    arxiv: "0911.3038"
+  url: https://arxiv.org/abs/0911.3038
+
+kures2021:
+  type: article
+  title: Münchhausen numbers
+  author: Kureš, Miroslav
+  date: 2021
+
+oeis-a166623:
+  type: web
+  title: "Sequence A166623: Munchausen numbers in base n"
+  author: OEIS Foundation
+  url: https://oeis.org/A166623
+
+oeis-a014080:
+  type: web
+  title: "Sequence A014080: Factorions"
+  author: OEIS Foundation
+  url: https://oeis.org/A014080
+
+oeis-a193163:
+  type: web
+  title: "Sequence A193163: Number of factorions in base n"
+  author: OEIS Foundation
+  url: https://oeis.org/A193163
+
+oeis-a005188:
+  type: web
+  title: "Sequence A005188: Armstrong (or pluperfect, or narcissistic) numbers"
+  author: OEIS Foundation
+  url: https://oeis.org/A005188
+
+knuth-backpdi:
+  type: web
+  title: "BACK-PDI: perfect digital invariants by backtracking (CWEB program)"
+  author: Knuth, Donald E.
+  url: https://www-cs-faculty.stanford.edu/~knuth/programs.html
+
+knuth1997:
+  type: book
+  title: "The Art of Computer Programming, Volume 2: Seminumerical Algorithms"
+  author: Knuth, Donald E.
+  edition: 3
+  publisher: Addison-Wesley
+  date: 1997
+
+berman1978:
+  type: article
+  title: Relationship between density and deterministic complexity of NP-complete languages
+  author: Berman, Piotr
+  date: 1978
+  page-range: 63-71
+  parent:
+    type: proceedings
+    title: "Automata, Languages and Programming (ICALP 1978)"
+    parent:
+      type: book
+      title: Lecture Notes in Computer Science
+      volume: 62
+      publisher: Springer
+
+mahaney1982:
+  type: article
+  title: "Sparse complete sets for NP: solution of a conjecture of Berman and Hartmanis"
+  author: Mahaney, Stephen R.
+  date: 1982
+  page-range: 130-143
+  parent:
+    type: periodical
+    title: Journal of Computer and System Sciences
+    volume: 25
+    issue: 2
+
+book1974:
+  type: article
+  title: Tally languages and complexity classes
+  author: Book, Ronald V.
+  date: 1974
+  page-range: 186-193
+  parent:
+    type: periodical
+    title: Information and Control
+    volume: 26
+
+valiant1979:
+  type: article
+  title: The complexity of computing the permanent
+  author: Valiant, Leslie G.
+  date: 1979
+  page-range: 189-201
+  parent:
+    type: periodical
+    title: Theoretical Computer Science
+    volume: 8
+    issue: 2
+
+garey-johnson1979:
+  type: book
+  title: "Computers and Intractability: A Guide to the Theory of NP-Completeness"
+  author: ["Garey, Michael R.", "Johnson, David S."]
+  publisher: W. H. Freeman
+  date: 1979
+
+cormen2009:
+  type: book
+  title: Introduction to Algorithms
+  author: ["Cormen, Thomas H.", "Leiserson, Charles E.", "Rivest, Ronald L.", "Stein, Clifford"]
+  edition: 3
+  publisher: MIT Press
+  date: 2009
+
+arora-barak2009:
+  type: book
+  title: "Computational Complexity: A Modern Approach"
+  author: ["Arora, Sanjeev", "Barak, Boaz"]
+  publisher: Cambridge University Press
+  date: 2009
+
+lagarias-odlyzko1985:
+  type: article
+  title: Solving low-density subset sum problems
+  author: ["Lagarias, Jeffrey C.", "Odlyzko, Andrew M."]
+  date: 1985
+  page-range: 229-246
+  parent:
+    type: periodical
+    title: Journal of the ACM
+    volume: 32
+    issue: 1
+
+howgrave-graham-joux2010:
+  type: article
+  title: New generic algorithms for hard knapsacks
+  author: ["Howgrave-Graham, Nick", "Joux, Antoine"]
+  date: 2010
+  page-range: 235-256
+  parent:
+    type: proceedings
+    title: "Advances in Cryptology (EUROCRYPT 2010)"
+    parent:
+      type: book
+      title: Lecture Notes in Computer Science
+      volume: 6110
+      publisher: Springer
+
+becker-coron-joux2011:
+  type: article
+  title: Improved generic algorithms for hard knapsacks
+  author: ["Becker, Anja", "Coron, Jean-Sébastien", "Joux, Antoine"]
+  date: 2011
+  page-range: 364-385
+  parent:
+    type: proceedings
+    title: "Advances in Cryptology (EUROCRYPT 2011)"
+    parent:
+      type: book
+      title: Lecture Notes in Computer Science
+      volume: 6632
+      publisher: Springer
+
+montanaro2018:
+  type: article
+  title: Quantum-walk speedup of backtracking algorithms
+  author: Montanaro, Ashley
+  date: 2018
+  page-range: 1-24
+  parent:
+    type: periodical
+    title: Theory of Computing
+    volume: 14
+
+chen1975:
+  type: article
+  title: Poisson approximation for dependent trials
+  author: Chen, Louis H. Y.
+  date: 1975
+  page-range: 534-545
+  parent:
+    type: periodical
+    title: The Annals of Probability
+    volume: 3
+    issue: 3
+
+arratia1989:
+  type: article
+  title: "Two moments suffice for Poisson approximations: the Chen-Stein method"
+  author: ["Arratia, Richard", "Goldstein, Larry", "Gordon, Louis"]
+  date: 1989
+  page-range: 9-25
+  parent:
+    type: periodical
+    title: The Annals of Probability
+    volume: 17
+    issue: 1
+
+lecam1960:
+  type: article
+  title: An approximation theorem for the Poisson binomial distribution
+  author: Le Cam, Lucien
+  date: 1960
+  page-range: 1181-1197
+  parent:
+    type: periodical
+    title: Pacific Journal of Mathematics
+    volume: 10
+    issue: 4
+
+barbour1992:
+  type: book
+  title: Poisson Approximation
+  author: ["Barbour, A. D.", "Holst, Lars", "Janson, Svante"]
+  publisher: Oxford University Press
+  date: 1992
+
+durrett2019:
+  type: book
+  title: "Probability: Theory and Examples"
+  author: Durrett, Rick
+  edition: 5
+  publisher: Cambridge University Press
+  date: 2019
+
+cover-thomas2006:
+  type: book
+  title: Elements of Information Theory
+  author: ["Cover, Thomas M.", "Thomas, Joy A."]
+  edition: 2
+  publisher: Wiley
+  date: 2006
+
+flajolet-odlyzko1990:
+  type: article
+  title: Random mapping statistics
+  author: ["Flajolet, Philippe", "Odlyzko, Andrew M."]
+  date: 1990
+  page-range: 329-354
+  parent:
+    type: proceedings
+    title: "Advances in Cryptology (EUROCRYPT '89)"
+    parent:
+      type: book
+      title: Lecture Notes in Computer Science
+      volume: 434
+      publisher: Springer
+
+jordan1872:
+  type: article
+  title: Recherches sur les substitutions
+  author: Jordan, Camille
+  date: 1872
+  page-range: 351-367
+  parent:
+    type: periodical
+    title: Journal de Mathématiques Pures et Appliquées
+    volume: 17
+
+serre2003:
+  type: article
+  title: On a theorem of Jordan
+  author: Serre, Jean-Pierre
+  date: 2003
+  page-range: 429-440
+  parent:
+    type: periodical
+    title: Bulletin of the American Mathematical Society
+    volume: 40
+    issue: 4
+
+cameron-cohen1992:
+  type: article
+  title: On the number of fixed point free elements in a permutation group
+  author: ["Cameron, Peter J.", "Cohen, Arjeh M."]
+  date: 1992
+  page-range: 135-138
+  parent:
+    type: periodical
+    title: Discrete Mathematics
+    volume: 106-107
+
+stevenhagen-lenstra1996:
+  type: article
+  title: Chebotarëv and his density theorem
+  author: ["Stevenhagen, Peter", "Lenstra, Hendrik W., Jr."]
+  date: 1996
+  page-range: 26-37
+  parent:
+    type: periodical
+    title: The Mathematical Intelligencer
+    volume: 18
+    issue: 2
+
+serre-topics2008:
+  type: book
+  title: "Topics in Galois Theory"
+  author: Serre, Jean-Pierre
+  edition: 2
+  publisher: A K Peters
+  date: 2008
+
+ritt1922:
+  type: article
+  title: Prime and composite polynomials
+  author: Ritt, Joseph Fels
+  date: 1922
+  page-range: 51-66
+  parent:
+    type: periodical
+    title: Transactions of the American Mathematical Society
+    volume: 23
+    issue: 1
+
+ireland-rosen1990:
+  type: book
+  title: A Classical Introduction to Modern Number Theory
+  author: ["Ireland, Kenneth", "Rosen, Michael"]
+  edition: 2
+  publisher: Springer
+  date: 1990
+
+niven-zuckerman-montgomery1991:
+  type: book
+  title: An Introduction to the Theory of Numbers
+  author: ["Niven, Ivan", "Zuckerman, Herbert S.", "Montgomery, Hugh L."]
+  edition: 5
+  publisher: Wiley
+  date: 1991
+
+marcus1977:
+  type: book
+  title: Number Fields
+  author: Marcus, Daniel A.
+  publisher: Springer
+  date: 1977
+
+cohen1993:
+  type: book
+  title: A Course in Computational Algebraic Number Theory
+  author: Cohen, Henri
+  publisher: Springer
+  date: 1993
+
+washington1997:
+  type: book
+  title: Introduction to Cyclotomic Fields
+  author: Washington, Lawrence C.
+  edition: 2
+  publisher: Springer
+  date: 1997
+
+gouvea1997:
+  type: book
+  title: "p-adic Numbers: An Introduction"
+  author: Gouvêa, Fernando Q.
+  edition: 2
+  publisher: Springer
+  date: 1997
+
+brent1993:
+  type: article
+  title: On computing factors of cyclotomic polynomials
+  author: Brent, Richard P.
+  date: 1993
+  page-range: 131-149
+  parent:
+    type: periodical
+    title: Mathematics of Computation
+    volume: 61
+    issue: 203
+
+stevenhagen1987:
+  type: article
+  title: On Aurifeuillian factorizations
+  author: Stevenhagen, Peter
+  date: 1987
+  page-range: 451-468
+  parent:
+    type: periodical
+    title: Indagationes Mathematicae
+    volume: 49
+
+baker1966:
+  type: article
+  title: Linear forms in the logarithms of algebraic numbers I
+  author: Baker, Alan
+  date: 1966
+  page-range: 204-216
+  parent:
+    type: periodical
+    title: Mathematika
+    volume: 13
+
+baker-wustholz2007:
+  type: book
+  title: "Logarithmic Forms and Diophantine Geometry"
+  author: ["Baker, Alan", "Wüstholz, Gisbert"]
+  publisher: Cambridge University Press
+  date: 2007
+
+laurent2008:
+  type: article
+  title: Linear forms in two logarithms and interpolation determinants II
+  author: Laurent, Michel
+  date: 2008
+  page-range: 325-348
+  parent:
+    type: periodical
+    title: Acta Arithmetica
+    volume: 133
+    issue: 4
+
+matveev2000:
+  type: article
+  title: An explicit lower bound for a homogeneous rational linear form in the logarithms of algebraic numbers. II
+  author: Matveev, Eugene M.
+  date: 2000
+  page-range: 1217-1269
+  parent:
+    type: periodical
+    title: Izvestiya Mathematics
+    volume: 64
+    issue: 6
+
+bugeaud-mignotte-siksek2006:
+  type: article
+  title: "Classical and modular approaches to exponential Diophantine equations I. Fibonacci and Lucas perfect powers"
+  author: ["Bugeaud, Yann", "Mignotte, Maurice", "Siksek, Samir"]
+  date: 2006
+  page-range: 969-1018
+  parent:
+    type: periodical
+    title: Annals of Mathematics
+    volume: 163
+    issue: 3
+
+bmsst2008:
+  type: article
+  title: Integral points on hyperelliptic curves
+  author: ["Bugeaud, Yann", "Mignotte, Maurice", "Siksek, Samir", "Stoll, Michael", "Tengely, Szabolcs"]
+  date: 2008
+  page-range: 859-885
+  parent:
+    type: periodical
+    title: Algebra & Number Theory
+    volume: 2
+    issue: 8
+
+dujella-petho1998:
+  type: article
+  title: A generalization of a theorem of Baker and Davenport
+  author: ["Dujella, Andrej", "Pethő, Attila"]
+  date: 1998
+  page-range: 291-306
+  parent:
+    type: periodical
+    title: The Quarterly Journal of Mathematics
+    volume: 49
+    issue: 195
+
+smart1998:
+  type: book
+  title: The Algorithmic Resolution of Diophantine Equations
+  author: Smart, Nigel P.
+  publisher: Cambridge University Press
+  date: 1998
+
+shorey-tijdeman1986:
+  type: book
+  title: Exponential Diophantine Equations
+  author: ["Shorey, Tarlok N.", "Tijdeman, Robert"]
+  publisher: Cambridge University Press
+  date: 1986
+
+bilu-hanrot-voutier2001:
+  type: article
+  title: Existence of primitive divisors of Lucas and Lehmer numbers
+  author: ["Bilu, Yuri", "Hanrot, Guillaume", "Voutier, Paul M."]
+  date: 2001
+  page-range: 75-122
+  parent:
+    type: periodical
+    title: Journal für die reine und angewandte Mathematik
+    volume: 539
+
+szalay2000:
+  type: article
+  title: "On the Diophantine equation 2^a + 2^b + 1 = x^2"
+  author: Szalay, László
+  date: 2000
+  parent:
+    type: periodical
+    title: Publicationes Mathematicae Debrecen
+
+scott2006:
+  type: article
+  title: "On the equation 2^a + 2^b + 1 = x^2"
+  author: Scott, Reese
+  date: 2006
+  serial-number:
+    arxiv: math/0608796
+  url: https://arxiv.org/abs/math/0608796
+
+le-soydan2020:
+  type: article
+  title: A brief survey on the generalized Lebesgue-Ramanujan-Nagell equation
+  author: ["Le, Maohua", "Soydan, Gökhan"]
+  date: 2020
+  serial-number:
+    arxiv: "2001.09617"
+  url: https://arxiv.org/abs/2001.09617
+
+granville-tucker2002:
+  type: article
+  title: It's as easy as abc
+  author: ["Granville, Andrew", "Tucker, Thomas J."]
+  date: 2002
+  page-range: 1224-1231
+  parent:
+    type: periodical
+    title: Notices of the American Mathematical Society
+    volume: 49
+    issue: 10
+
+overholt1993:
+  type: article
+  title: "The Diophantine equation n! + 1 = m^2"
+  author: Overholt, Marius
+  date: 1993
+  page-range: 104
+  parent:
+    type: periodical
+    title: Bulletin of the London Mathematical Society
+    volume: 25
+    issue: 2
+
+faltings1983:
+  type: article
+  title: Endlichkeitssätze für abelsche Varietäten über Zahlkörpern
+  author: Faltings, Gerd
+  date: 1983
+  page-range: 349-366
+  parent:
+    type: periodical
+    title: Inventiones Mathematicae
+    volume: 73
+    issue: 3
+
+chabauty1941:
+  type: article
+  title: Sur les points rationnels des courbes algébriques de genre supérieur à l'unité
+  author: Chabauty, Claude
+  date: 1941
+  page-range: 882-885
+  parent:
+    type: periodical
+    title: Comptes Rendus de l'Académie des Sciences Paris
+    volume: 212
+
+coleman1985:
+  type: article
+  title: Effective Chabauty
+  author: Coleman, Robert F.
+  date: 1985
+  page-range: 765-770
+  parent:
+    type: periodical
+    title: Duke Mathematical Journal
+    volume: 52
+    issue: 3
+
+mccallum-poonen2012:
+  type: article
+  title: The method of Chabauty and Coleman
+  author: ["McCallum, William", "Poonen, Bjorn"]
+  date: 2012
+  page-range: 99-117
+  parent:
+    type: book
+    title: "Explicit Methods in Number Theory: Rational Points and Diophantine Equations"
+    publisher: Société Mathématique de France
+    parent:
+      type: book
+      title: Panoramas et Synthèses
+      volume: 36
+
+silverman2009:
+  type: book
+  title: The Arithmetic of Elliptic Curves
+  author: Silverman, Joseph H.
+  edition: 2
+  publisher: Springer
+  date: 2009
+
+mahler1968:
+  type: article
+  title: An unsolved problem on the powers of 3/2
+  author: Mahler, Kurt
+  date: 1968
+  page-range: 313-321
+  parent:
+    type: periodical
+    title: Journal of the Australian Mathematical Society
+    volume: 8
+    issue: 2
+
+zudilin2007:
+  type: article
+  title: "A new lower bound for ||(3/2)^k||"
+  author: Zudilin, Wadim
+  date: 2007
+  page-range: 311-323
+  parent:
+    type: periodical
+    title: Journal de Théorie des Nombres de Bordeaux
+    volume: 19
+    issue: 1
+
+ko1940:
+  type: article
+  title: "Note on the Diophantine equation x^x y^y = z^z"
+  author: Ko, Chao
+  date: 1940
+  page-range: 205-207
+  parent:
+    type: periodical
+    title: Journal of the Chinese Mathematical Society
+    volume: 2
+
+akiyama-frougny-sakarovitch2008:
+  type: article
+  title: Powers of rationals modulo 1 and rational base number systems
+  author: ["Akiyama, Shigeki", "Frougny, Christiane", "Sakarovitch, Jacques"]
+  date: 2008
+  page-range: 53-91
+  parent:
+    type: periodical
+    title: Israel Journal of Mathematics
+    volume: 168
+
+katai-szabo1975:
+  type: article
+  title: Canonical number systems for complex integers
+  author: ["Kátai, Imre", "Szabó, János"]
+  date: 1975
+  page-range: 255-260
+  parent:
+    type: periodical
+    title: Acta Scientiarum Mathematicarum (Szeged)
+    volume: 37
+
+katai-kovacs1980:
+  type: article
+  title: Kanonische Zahlensysteme in der Theorie der quadratischen algebraischen Zahlen
+  author: ["Kátai, Imre", "Kovács, Béla"]
+  date: 1980
+  page-range: 99-107
+  parent:
+    type: periodical
+    title: Acta Scientiarum Mathematicarum (Szeged)
+    volume: 42
+
+gilbert1981:
+  type: article
+  title: Radix representations of quadratic fields
+  author: Gilbert, William J.
+  date: 1981
+  page-range: 264-274
+  parent:
+    type: periodical
+    title: Journal of Mathematical Analysis and Applications
+    volume: 83
+
+parry1960:
+  type: article
+  title: On the β-expansions of real numbers
+  author: Parry, William
+  date: 1960
+  page-range: 401-416
+  parent:
+    type: periodical
+    title: Acta Mathematica Academiae Scientiarum Hungaricae
+    volume: 11
+
+frougny-solomyak1992:
+  type: article
+  title: Finite beta-expansions
+  author: ["Frougny, Christiane", "Solomyak, Boris"]
+  date: 1992
+  page-range: 713-723
+  parent:
+    type: periodical
+    title: Ergodic Theory and Dynamical Systems
+    volume: 12
+    issue: 4
+
+rosen2002:
+  type: book
+  title: Number Theory in Function Fields
+  author: Rosen, Michael
+  publisher: Springer
+  date: 2002
+
+pari2024:
+  type: web
+  title: PARI/GP, a computer algebra system for number theory
+  author: The PARI Group
+  url: https://pari.math.u-bordeaux.fr/
+
+sagemath:
+  type: web
+  title: SageMath, the Sage Mathematics Software System
+  author: The Sage Developers
+  url: https://www.sagemath.org/
+
+lean4:
+  type: web
+  title: The Lean theorem prover and the Mathlib library
+  author: The Lean community
+  url: https://leanprover-community.github.io/

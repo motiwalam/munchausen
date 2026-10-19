@@ -1,0 +1,5 @@
+# Extra bibliography entries added while writing. Merge into main.yml.
+placeholder-f2:
+  type: misc
+  title: Placeholder entry, never cited
+  date: 2026
