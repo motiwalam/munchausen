@@ -1,0 +1,7 @@
+# b opt_tree_certificate internal_nodes nodes_that_reveal_the_largest_unrevealed_value share
+5 16 7 6 0.86
+6 33 14 11 0.79
+7 53 18 14 0.78
+8 167 58 46 0.79
+9 325 115 91 0.79
+10 682 253 198 0.78
