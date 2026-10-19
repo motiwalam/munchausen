@@ -93,6 +93,21 @@ impl<const N: usize> Search<N> {
             row[7] = put(&mut tab, &p.pow_lo);
             row[8] = put(&mut tab, &p.max_v);
             debug_assert_eq!(p.w.len(), kmax + 1);
+            // the residue rule: r_m(x) by digit value for m = 0, 1, then the
+            // sets rok[2 k + m] as four words each
+            let mut x = [0u8; 64];
+            for m in 0..2 {
+                x[..=kmax].copy_from_slice(&p.rres[m * (kmax + 1)..(m + 1) * (kmax + 1)]);
+                let i = put(&mut tab, &DV::from_bytes(&x));
+                if m == 0 {
+                    row[12] = i;
+                }
+            }
+            row[13] = (tab.len() / 4) as u32;
+            for v in &p.rok {
+                (0..4).for_each(|j| tab.extend_from_slice(&((v >> (32 * j)) as u32).to_le_bytes()));
+            }
+            tab.resize(tab.len().next_multiple_of(vb), 0);
             if self.inexact {
                 // The typical-set test in fixed point (2^-20): a child fails
                 // if lneed + G[k][rf] > A[k][pp], where lneed is the sum of
@@ -264,8 +279,9 @@ impl<const N: usize> Search<N> {
         let (pi, k, e, occk, pp, rf, root) = (it[0] as usize, it[1] as usize, it[2] as u32, it[3] as u32, it[4] as u32, it[5] as u32, it[6] != 0);
         let mut cnt = [0u8; 128];
         cnt[..64].copy_from_slice(&dv(HEADER + 4 * vb));
-        let mut n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0, zmin: f32::INFINITY };
         let p = &self.params[pi];
+        let mut n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0, zmin: f32::INFINITY, res: [0; 2] };
+        n.res = p.node_res(&n, k, &cnt);
         if self.inexact {
             // The item does not carry the model's bookkeeping. The node has
             // decided the digits above k; rebuild m and lneed from the counts
@@ -292,7 +308,8 @@ impl<const N: usize> Search<N> {
             te = te.add(&p.w[k], &p.base);
             hi = hi.add(&p.dhi[k], &p.base);
         }
-        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: n.m, lneed: n.lneed, ln_e: 0.0, zmin: f32::INFINITY }, k, e, occk };
+        let res = (0..e).fold(n.res, |r, _| p.res_add(r, k));
+        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: n.m, lneed: n.lneed, ln_e: 0.0, zmin: f32::INFINITY }, k, e, occk, res };
         let mut l = Local::for_params(p);
         rayon::scope(|s| {
             if self.inexact {

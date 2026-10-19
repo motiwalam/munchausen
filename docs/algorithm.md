@@ -237,6 +237,34 @@ Two siblings in step 1 show how branches fail:
 - Two copies of 5: `t = 6250`, and `[6250, 6762]` starts with 6. Digit 6 is
   above 5, and its count is 0, so the node fails.
 
+### The residue rule
+
+A number is congruent to its digit sum modulo `b - 1`, so a solution
+satisfies
+
+    sum over digits x of (w(x) - x) == 0   (mod b - 1)
+
+(Proposition 1.5 of the library). The left side depends only on the
+multiset. A node knows every digit of its multiset except the `rf` free
+slots, which hold digits below `k`. So a node stores the residue `R` of the
+known part, once per convention, and updates it with each decided or
+forced digit. If `rf = 1`, a completion adds `w(y) - y` for one digit
+`y < k`, and the node can hold a solution only if some `y < k` has
+`w(y) - y == -R`. A table per level `k` holds these residues as a bit set
+of 128 bits, so the test is two shifts. The search drops a node with one
+free slot that fails the test under both conventions. It also tests child
+`e = rf - 1` of a cursor before its interval, because that child has one
+free slot before its forced digits, and forcing only names the digit `y`.
+
+Two thirds of the nodes have one or two free slots, and the nodes with one
+free slot are 43% of the tree, so this one test removes 12% to 25% of the
+nodes in bases 15 to 35. The same test for two free slots, or for none,
+costs more than it saves (`docs/library/drafts/round6-search.md`).
+
+With `-m 0` or `-m 1` the test uses only that convention, and removes up to
+30% of the nodes. The search then may miss solutions of the other
+convention, which `-m` does not print anyway.
+
 ### Why the search misses nothing
 
 Each rule only removes count vectors that cannot be solutions.
@@ -247,6 +275,9 @@ Each rule only removes count vectors that cannot be solutions.
 - Forcing a digit only removes completions that leave it out.
 - The first unknown digit of every reachable sum lies in the range that the
   test checks. If no value in that range has a copy left, no completion fits.
+- The residue rule removes a node only if no completion has a digit sum
+  congruent to its Munchausen sum modulo `b - 1`. A solution has one, under
+  its own convention.
 
 A count vector reaches a leaf only if it passed every check on the way down.
 The leaf then compares the exact sum with the vector.

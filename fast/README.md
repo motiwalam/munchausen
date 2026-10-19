@@ -51,19 +51,23 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 
 | option | meaning |
 |---|---|
-| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`) |
+| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`). With one convention, the residue rule keeps only its solutions, so the search visits 13% to 30% fewer nodes than without the rule, and up to 10% fewer than for `both` |
+| `--no-residue` | `search` only. Turn off the residue rule (see "Third round" below), for comparisons |
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
 | `--progress` | `search` only. Print progress every 10 seconds, with the node count and an estimate of the share of the work done (fitted on bases 26 to 33 under the `x^x` weights, so rough for other weights). |
 | `--unit-stats <file>` | `search` only. Write one line per finished work unit: index, digits, `k`, free slots, known digits, start and end seconds, and the node count of the run at the end of the unit (a per-unit count only with `-j 1`). See section 27.5 of the library. |
 | `--shard <i>/<n>` | `search` only. Search only the work units whose index is `i` modulo `n`, for `0 <= i < n`. `{shard}` in the journal name becomes `<i>of<n>`. |
+| `--shard-by <index\|size>` | `search` only, with `--shard`. `index` (default) is the rule above. `size` deals the units out largest first by their predicted size, each to the shard with the least predicted work. See "Split a base over processes". |
 | `--max-digits <n>` | `search` only. Look only for numbers with at most `n` digits. Bases above 62 need `n <= 62`. |
 | `--min-digits <n>` | `search` only. Look only for numbers with at least `n` digits. |
 | `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
 | `--par-depth <n>` | `search` only. Depth below a unit at which the program still splits work into parallel tasks (default 4). |
 
-`search` always explores the tree for both conventions. `-m` only selects the
-output, so `-m 1` takes as long as `both`.
+`search` explores one tree for both conventions. With `-m 0` or `-m 1` the
+residue rule tests only that convention, so the tree is smaller, and the
+search can miss solutions of the other convention. A journal records the
+convention, and a run with another `-m` refuses it.
 
 ### Long runs
 
@@ -112,6 +116,29 @@ single run.
 A shard has its own journal, and its header names the shard. Use
 `{shard}` in the journal name to keep the files apart. A shard refuses a
 journal of another shard.
+
+The units differ in size by factors of 1000 and more, so every `n`-th unit
+is a poor split for many shards. `--shard-by size` predicts the size of
+each unit from its free slots `rf` and unknown digits `L`, as
+`2^((15 rf - 10 L) / 16)` (about `e^(0.656 rf - 0.44 L)`, the fit of
+section 27.5 of the library), scaled to the share of its digit count. It
+then gives the largest unit to the least loaded shard, and so on down. The
+arithmetic is in integers, so every machine computes the same split. All
+shards and `merge` must use the same rule; `merge` refuses a mix. The
+largest shard over the mean, base 30, from the measured unit sizes
+(`analysis/r6s_shards.py`):
+
+| unit depth | shards | `index` | `size` | best possible |
+|---:|---:|---:|---:|---:|
+| 4 | 16 | 1.33 | 1.15 | 1.00 |
+| 4 | 64 | 2.12 | 1.35 | 1.00 |
+| 6 | 16 | 1.07 | 1.04 | 1.00 |
+| 6 | 64 | 1.21 | 1.14 | 1.00 |
+| 6 | 256 | 1.57 | 1.36 | 1.00 |
+
+The best possible split knows the true sizes. For 16 shards or more, use
+`--unit-depth 6 --shard-by size`. Building the units of depth 6 costs 0.4%
+of the run in base 30.
 
 On one machine, more processes do not help. Base 32 on the test laptop
 (4 P-cores and 4 E-cores, other jobs running), median of 5 alternating runs:
@@ -285,6 +312,60 @@ What did not help, in cycles at base 26 on a P-core:
   `../docs/algorithm.md`.
 
 `docs/algorithm.md` describes the data structures.
+
+### Third round: the residue rule
+
+A solution satisfies `sum (w(x) - x) c_x == 0 (mod b - 1)`, because a
+number is congruent to its digit sum (Proposition 1.5 of the library). A
+node with one free slot knows its whole multiset except one digit `y`
+below `k`, so the congruence leaves only the `y` with the right residue.
+The search drops the node if no `y < k` has it, under both conventions.
+`docs/algorithm.md` ("The residue rule") gives the details, and
+`docs/library/drafts/round6-search.md` the measurements. The output is the
+same as before for every base from 2 to 35. The rule also removes some of
+the work units, so a journal written by an older build lists a different
+number of units and the new build refuses it. Resume such a journal with
+`--no-residue`, which builds the old units.
+
+43% of the nodes of the old tree had one free slot. The rule removes 12% to
+25% of all nodes in bases 15 to 35, more where `b - 1` has the factors 2, 3
+and 5. User-mode cycles of `search b -j 1` on one P-core, median of 2 or 3
+alternating runs, other jobs on the machine:
+
+| base | nodes before | nodes after | cycles before | cycles after | change |
+|---:|---:|---:|---:|---:|---:|
+| 24 | 1,430,261 | 1,166,554 | 0.423 G | 0.381 G | -10.0% |
+| 26 | 4,955,060 | 3,894,520 | 1.369 G | 1.202 G | -12.2% |
+| 27 | 9,510,641 | 7,720,378 | 2.552 G | 2.286 G | -10.4% |
+| 28 | 18,025,432 | 13,596,926 | 4.830 G | 4.075 G | -15.6% |
+| 29 | 33,546,007 | 26,908,928 | 9.090 G | 8.002 G | -12.0% |
+| 30 | 66,246,690 | 53,636,804 | 18.15 G | 15.93 G | -12.3% |
+| 31 | 121,387,604 | 92,205,006 | 41.37 G | 34.00 G | -17.8% |
+| 31, `-m 1` | 121,387,604 | 86,091,750 | 41.53 G | 32.29 G | -22.3% |
+
+On 8 threads, base 32 took 6.45 s against 7.27 s, and base 33 15.1 s
+against 17.2 s (`-m 1`: 14.4 s against 17.6 s), median of 2 or 3
+alternating runs with other jobs running.
+
+Every node now carries its residue per convention. That costs about 10% more
+instructions, so the cycles fall by less than the nodes. The GPU search
+runs the same test, with the same node counts as the CPU. On the GPU it
+made base 30 1.18x faster: 1.03 s against 1.21 s, median of 3 alternating
+runs with `--no-residue`.
+
+What did not help:
+
+- The same test for a child with no free slot (`e = rf`): such a child
+  nearly always fails its interval anyway, and the test cost 2% more
+  cycles at base 26.
+- The test for two free slots: the residues of two digits below `k` reach
+  almost every class modulo `b - 1` under one of the two conventions, so it
+  removed 0.0% to 1% of the nodes.
+- The last one or two digits of `S`. With one free slot the low digits of
+  every completion are known, and they must be digits that the unknown
+  positions still hold. This removes another 17% (one digit) or 24% (two
+  digits) of the nodes at base 26, but the nodes it removes are cheap, and
+  the test cost 2% and 7% more cycles than it saved.
 
 ## GPU search
 
