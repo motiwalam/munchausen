@@ -22,7 +22,12 @@
 //! usage: r3t_pisot direct <x> <Nmax>        every N <= Nmax, both conventions
 //!        r3t_pisot search <x> [J]           every digit multiset in the
 //!                                           proven window; J offsets j x
+//!        r3t_pisot search <x> <J> list      the same, and print every
+//!                                           near-solution with its digits
 //!        r3t_pisot model <x> <samples>      the model per integer-part length
+//!        r3t_pisot defects <x> <Nmax> <H>   for every N <= Nmax, count
+//!                                           D = N - F(N) with |D| <= H and
+//!                                           x | D, per convention and length
 //!        r3t_pisot lengths <x> <Nmax>       total lengths of N <= Nmax
 
 use rayon::prelude::*;
@@ -190,6 +195,35 @@ fn direct(x: i128, nmax: i128) {
     println!("done direct x {x} Nmax {nmax} sols {}", s.len());
 }
 
+fn defects(x: i128, nmax: i128, h: i128) {
+    let ctx = Ctx::new(x, 80);
+    let hist = Mutex::new(std::collections::BTreeMap::<(i128, usize, i128), u64>::new());
+    let chunk = 1 << 16;
+    let nchunks = (nmax + chunk - 1) / chunk;
+    (0..nchunks).into_par_iter().for_each(|c| {
+        let mut loc = std::collections::BTreeMap::<(i128, usize, i128), u64>::new();
+        for n in (c * chunk).max(1)..((c + 1) * chunk).min(nmax + 1) {
+            let (_k, ds) = ctx.expand(n);
+            let f0: i128 = ds.iter().map(|&d| weight(d as u32, 0)).sum();
+            let z = ds.iter().filter(|&&d| d == 0).count() as i128;
+            for m in 0..2 {
+                let d = n - (f0 + m * z);
+                if d.abs() <= h && d.rem_euclid(x) == 0 {
+                    *loc.entry((m, ds.len(), d)).or_insert(0) += 1;
+                }
+            }
+        }
+        let mut g = hist.lock().unwrap();
+        for (k, v) in loc {
+            *g.entry(k).or_insert(0) += v;
+        }
+    });
+    for ((m, t, d), v) in hist.into_inner().unwrap() {
+        println!("def x {x} m {m} T {t} D {d} count {v}");
+    }
+    println!("done defects x {x} Nmax {nmax} H {h}");
+}
+
 struct Search<'a> {
     ctx: &'a Ctx,
     w: Vec<i128>, // w[d] for d >= 1, w[0] = 0
@@ -198,11 +232,13 @@ struct Search<'a> {
     hi: i128,
     offs: Vec<i128>,
     wres: Vec<i128>,
+    list: bool,
 }
 
 struct SOut {
     sols: Vec<(i128, i128, String)>,
     near: [Vec<u64>; 2],
+    nears: Vec<(i128, usize, i128, String)>,
     leaves: u64,
 }
 
@@ -232,8 +268,11 @@ impl Search<'_> {
                         o.sols.push((m, fm, s));
                     }
                     for (j, &dd) in self.offs.iter().enumerate() {
-                        if self.matches(fm + dd, c).is_some() {
+                        if let Some(s) = self.matches(fm + dd, c) {
                             o.near[m as usize][j] += 1;
+                            if self.list {
+                                o.nears.push((m, j + 1, fm + dd, s));
+                            }
                         }
                     }
                 }
@@ -259,7 +298,7 @@ impl Search<'_> {
     }
 }
 
-fn search(x: i128, jmax: usize) {
+fn search(x: i128, jmax: usize, list: bool) {
     let ctx = Ctx::new(x, 120);
     let w: Vec<i128> = (0..=x as u32).map(|d| weight(d, 0)).collect();
     let wres: Vec<i128> = (0..=x).map(|d| (w[d as usize] - d).rem_euclid(x.max(1))).collect();
@@ -291,12 +330,12 @@ fn search(x: i128, jmax: usize) {
             let v = a as f64 + b as f64 * ctx.eps;
             if v > 1e30 { i128::MAX / 4 } else { v.ceil() as i128 + 1 }
         };
-        let s = Search { ctx: &ctx, w: w.clone(), t, lo, hi, offs: offs.clone(), wres: wres.clone() };
+        let s = Search { ctx: &ctx, w: w.clone(), t, lo, hi, offs: offs.clone(), wres: wres.clone(), list };
         let xs = x as usize;
         let tasks: Vec<(usize, usize)> = (0..=t).flat_map(|a| (0..=t - a).map(move |b| (a, b))).collect();
-        let out = Mutex::new(SOut { sols: vec![], near: [vec![0; jmax], vec![0; jmax]], leaves: 0 });
+        let out = Mutex::new(SOut { sols: vec![], near: [vec![0; jmax], vec![0; jmax]], nears: vec![], leaves: 0 });
         tasks.par_iter().for_each(|&(a, b)| {
-            let mut o = SOut { sols: vec![], near: [vec![0; jmax], vec![0; jmax]], leaves: 0 };
+            let mut o = SOut { sols: vec![], near: [vec![0; jmax], vec![0; jmax]], nears: vec![], leaves: 0 };
             let mut c = vec![0usize; xs + 1];
             if xs >= 2 {
                 c[xs] = a;
@@ -312,6 +351,7 @@ fn search(x: i128, jmax: usize) {
             }
             let mut g = out.lock().unwrap();
             g.sols.extend(o.sols);
+            g.nears.extend(o.nears);
             g.leaves += o.leaves;
             for m in 0..2 {
                 for j in 0..jmax {
@@ -325,6 +365,10 @@ fn search(x: i128, jmax: usize) {
         for (m, n, d) in &o.sols {
             println!("sol x {x} m {m} T {t} N {n} digits {d}");
             nsol[*m as usize] += 1;
+        }
+        o.nears.sort();
+        for (m, j, n, d) in &o.nears {
+            println!("nearsol x {x} m {m} j {j} T {t} N {n} digits {d}");
         }
         for m in 0..2 {
             for j in 0..jmax {
@@ -443,8 +487,9 @@ fn main() {
     let x: i128 = a[2].parse().unwrap();
     match a[1].as_str() {
         "direct" => direct(x, a[3].parse().unwrap()),
-        "search" => search(x, a.get(3).map(|s| s.parse().unwrap()).unwrap_or(0)),
+        "search" => search(x, a.get(3).map(|s| s.parse().unwrap()).unwrap_or(0), a.get(4).map(|s| s == "list").unwrap_or(false)),
         "model" => model(x, a[3].parse().unwrap()),
+        "defects" => defects(x, a[3].parse().unwrap(), a[4].parse().unwrap()),
         "lengths" => lengths(x, a[3].parse().unwrap()),
         _ => panic!("unknown mode"),
     }

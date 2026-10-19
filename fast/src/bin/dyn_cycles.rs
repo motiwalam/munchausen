@@ -24,7 +24,19 @@
 //! gives the collision probability of the class: the chance that two draws
 //! from it give the same multiset. --model-only skips the walk.
 //!
-//! usage: dyn_cycles <b> <m> [--matrix FILE] [--show L] [--model-only]
+//! With --image FILE the program skips the cycle walk and instead counts,
+//! for every multiset, how many multisets map to it (its in-degree, capped
+//! at 255). A second pass writes per class: the number of multisets, their
+//! total weight, the number mapped into the class, the number in the image,
+//! the in-degree histogram, and the predictions of the class-lumped random
+//! mapping, with the image drawn uniformly from the multisets of the class
+//! or with probability proportional to the weight. Multisets that differ
+//! only in their zeros (0^0 = 0), or only in the split of c_0 + c_1
+//! (0^0 = 1), have the same S, and other sums coincide too (w(2) = 4 w(1)).
+//! So the program also collects the distinct values of S (bases up to 16,
+//! where S < 2^64), and a second histogram and prediction use them alone.
+//!
+//! usage: dyn_cycles <b> <m> [--matrix FILE] [--show L] [--model-only] [--image FILE]
 //! prints one "cycle" line per cycle and a "summary" line. Cycles of length
 //! at most L (default 8) list their elements as base-b digit strings.
 
@@ -42,6 +54,14 @@ struct Ctx<const B: usize> {
     mat: Vec<f64>,
     coll: Vec<f64>,
     model_only: bool,
+    image: bool,
+    indeg: Vec<u8>,
+    indeg0: Vec<u8>,
+    into: Vec<f64>,
+    into0: Vec<f64>,
+    sums: Vec<u64>,
+    wclass: Vec<f64>,
+    nclass: Vec<f64>,
     show: usize,
     cycles: Vec<(usize, u128)>,
     out: std::io::BufWriter<std::io::Stdout>,
@@ -85,6 +105,14 @@ impl<const B: usize> Ctx<B> {
             mat: vec![0f64; s * s],
             coll: vec![0f64; s],
             model_only: false,
+            image: false,
+            indeg: Vec::new(),
+            indeg0: Vec::new(),
+            into: vec![0f64; s],
+            into0: vec![0f64; s],
+            sums: Vec::new(),
+            wclass: vec![0f64; s],
+            nclass: vec![0f64; s],
             show,
             cycles: Vec::new(),
             out: std::io::BufWriter::new(std::io::stdout()),
@@ -216,6 +244,18 @@ impl<const B: usize> Ctx<B> {
         let to = (self.len_of(s) - 1) * (B - 1) + (sr % q) as usize;
         self.mat[from * B * (B - 1) + to] += weight;
         self.coll[from] += weight * weight;
+        if self.image {
+            self.into[to] += 1.0;
+            self.wclass[from] += weight;
+            self.nclass[from] += 1.0;
+            let (c2, d2, _) = self.digits(s);
+            let y = self.rank(&c2, d2);
+            self.indeg[y] = self.indeg[y].saturating_add(1);
+            if cnt[0] == 0 {
+                self.sums.push(s as u64);
+            }
+            return;
+        }
         if self.model_only {
             return;
         }
@@ -271,6 +311,111 @@ impl<const B: usize> Ctx<B> {
         }
         cnt[v] = 0;
     }
+}
+
+const HMAX: usize = 16;
+
+struct ImageStats {
+    obs: Vec<[f64; HMAX + 1]>,
+    pred_w: Vec<[f64; HMAX + 1]>,
+    pred_u: Vec<[f64; HMAX + 1]>,
+    obs0: Vec<[f64; HMAX + 1]>,
+    pred0: Vec<[f64; HMAX + 1]>,
+}
+
+impl<const B: usize> Ctx<B> {
+    fn image_pass(&self, v: usize, budget: usize, cnt: &mut [u8; MAXB], st: &mut ImageStats) {
+        if v == 0 {
+            for c0 in 0..=budget {
+                cnt[0] = c0 as u8;
+                let d = B - budget + c0;
+                if d - c0 == 0 {
+                    continue;
+                }
+                let q = (B - 1) as u64;
+                let mut ds = 0u64;
+                let mut lw = self.lnfact[d];
+                for x in 0..B {
+                    let c = cnt[x] as u64;
+                    ds += c * x as u64;
+                    lw -= self.lnfact[c as usize];
+                }
+                let weight = lw.exp() * (d - cnt[0] as usize) as f64 / d as f64;
+                let k = (d - 1) * (B - 1) + (ds % q) as usize;
+                let r = self.rank(cnt, d);
+                st.obs[k][(self.indeg[r] as usize).min(HMAX)] += 1.0;
+                st.obs0[k][(self.indeg0[r] as usize).min(HMAX)] += 1.0;
+                let lam_w = if self.wclass[k] > 0.0 { self.into[k] * weight / self.wclass[k] } else { 0.0 };
+                let lam_u = self.into[k] / self.nclass[k];
+                let lam_0 = if self.wclass[k] > 0.0 { self.into0[k] * weight / self.wclass[k] } else { 0.0 };
+                for (lam, arr) in [(lam_w, &mut st.pred_w[k]), (lam_u, &mut st.pred_u[k]), (lam_0, &mut st.pred0[k])] {
+                    let mut p = (-lam).exp();
+                    let mut cum = 0.0;
+                    for i in 0..HMAX {
+                        arr[i] += p;
+                        cum += p;
+                        p *= lam / (i + 1) as f64;
+                    }
+                    arr[HMAX] += (1.0 - cum).max(0.0);
+                }
+            }
+            cnt[0] = 0;
+            return;
+        }
+        for c in 0..=budget {
+            cnt[v] = c as u8;
+            self.image_pass(v - 1, budget - c, cnt, st);
+        }
+        cnt[v] = 0;
+    }
+}
+
+fn run_image<const B: usize>(m: u32, path: String) {
+    let t0 = std::time::Instant::now();
+    let mut ctx: Ctx<B> = Ctx::new(m, 0);
+    let nodes = ctx.binom[2 * B][B] as usize;
+    ctx.image = true;
+    ctx.indeg = vec![0u8; nodes];
+    ctx.indeg0 = vec![0u8; nodes];
+    let mut cnt = [0u8; MAXB];
+    let mut path_v = Vec::new();
+    assert!(B <= 16, "--image needs b <= 16");
+    ctx.enumerate(B - 1, B, &mut cnt, 0, &mut path_v);
+    let mut sums = std::mem::take(&mut ctx.sums);
+    sums.sort_unstable();
+    sums.dedup();
+    let q = (B - 1) as u64;
+    for &v in &sums {
+        let (c2, d2, _) = ctx.digits(v as u128);
+        let y = ctx.rank(&c2, d2);
+        ctx.indeg0[y] = ctx.indeg0[y].saturating_add(1);
+        ctx.into0[(d2 - 1) * (B - 1) + (v % q) as usize] += 1.0;
+    }
+    let nsums = sums.len();
+    drop(sums);
+    let s = B * (B - 1);
+    let z = || vec![[0.0; HMAX + 1]; s];
+    let mut st = ImageStats { obs: z(), pred_w: z(), pred_u: z(), obs0: z(), pred0: z() };
+    ctx.image_pass(B - 1, B, &mut cnt, &mut st);
+    let mut f = std::io::BufWriter::new(std::fs::File::create(path).unwrap());
+    writeln!(f, "# dyn_cycles --image b={} m={}: class = (digits-1)*(b-1)+residue", B, m).unwrap();
+    writeln!(f, "# class digits residue multisets weight mapped_in mapped_in_distinct | obs in-degree 0..{}+ | pred (weighted) | pred (uniform) | obs in-degree of distinct sums | pred (weighted, distinct sums)", HMAX).unwrap();
+    let fmt = |a: &[f64; HMAX + 1]| a.iter().map(|x| format!("{:.3}", x)).collect::<Vec<_>>().join(" ");
+    let (mut tot, mut img, mut pw, mut pu, mut p0) = (0.0, 0.0, 0.0, 0.0, 0.0);
+    for k in 0..s {
+        if ctx.nclass[k] == 0.0 {
+            continue;
+        }
+        writeln!(f, "{} {} {} {} {:e} {} {} | {} | {} | {} | {} | {}", k, k / (B - 1) + 1, k % (B - 1), ctx.nclass[k], ctx.wclass[k], ctx.into[k], ctx.into0[k],
+                 fmt(&st.obs[k]), fmt(&st.pred_w[k]), fmt(&st.pred_u[k]), fmt(&st.obs0[k]), fmt(&st.pred0[k])).unwrap();
+        tot += ctx.nclass[k];
+        img += ctx.nclass[k] - st.obs[k][0];
+        pw += ctx.nclass[k] - st.pred_w[k][0];
+        pu += ctx.nclass[k] - st.pred_u[k][0];
+        p0 += ctx.nclass[k] - st.pred0[k][0];
+    }
+    writeln!(ctx.out, "image b={} m={} nodes={} multisets={} image={} share={:.5} pred_weighted={:.1} share_w={:.5} pred_uniform={:.1} share_u={:.5} distinct_sums={} pred_distinct={:.1} share_d={:.5} seconds={:.1}",
+             B, m, nodes, tot, img, img / tot, pw, pw / tot, pu, pu / tot, nsums, p0, p0 / tot, t0.elapsed().as_secs_f64()).unwrap();
 }
 
 fn run<const B: usize>(m: u32, matrix: Option<String>, show: usize, model_only: bool) {
@@ -331,6 +476,7 @@ fn main() {
     let mut matrix = None;
     let mut show = 8;
     let mut model_only = false;
+    let mut image = None;
     let mut i = 3;
     while i < args.len() {
         match args[i].as_str() {
@@ -342,6 +488,10 @@ fn main() {
                 model_only = true;
                 i += 1;
             }
+            "--image" => {
+                image = Some(args[i + 1].clone());
+                i += 2;
+            }
             "--show" => {
                 show = args[i + 1].parse().unwrap();
                 i += 2;
@@ -352,7 +502,10 @@ fn main() {
     macro_rules! go {
         ($($n:literal),*) => {
             match b {
-                $($n => run::<$n>(m, matrix, show, model_only),)*
+                $($n => match image {
+                    Some(p) => run_image::<$n>(m, p),
+                    None => run::<$n>(m, matrix, show, model_only),
+                },)*
                 _ => panic!("base must be 3 to 24"),
             }
         };
