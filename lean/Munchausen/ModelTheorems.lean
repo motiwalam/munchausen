@@ -16,8 +16,9 @@ Both bounds below are linear algebra over `F_q`. The lower bound is the inclusio
 
     dim R^φ ≤ k(B) ≤ dim R^φ + 1.
 
-Berlekamp's count `dim R^φ = ω(B - 1)` (Lemma 29.8 (1)) is not formalized, so these are
-Theorem 21.6 and Theorem 29.11 (1) with `dim R^φ` in place of `ω(B - 1)`.
+With Berlekamp's count `dim R^φ = ω(B - 1)` (Lemma 29.8 (1) for `j = 1`, proved with the
+Chinese remainder theorem and the fixed points of `x ↦ x^q` modulo a prime power), these are
+Theorem 21.6 and Theorem 29.11 (1): `ω(B - 1) ≤ k(B) ≤ ω(B - 1) + 1`.
 
 Corollary 29.10 rests on a counting fact about the degrees of the factors of `B - 1`, proved
 here as `exists_good_factor`. The example of Lemma 29.14 is checked by `decide`.
@@ -200,6 +201,160 @@ theorem kDim_le (hB : 2 ≤ B.natDegree) :
     · exact hJ (e - 2) (Finset.mem_Icc.2 ⟨hpos, by omega⟩)
 
 end Residue
+
+/-! ### Berlekamp's count: `dim R^φ = ω(B - 1)` -/
+
+section Berlekamp
+
+variable {K : Type*} [Field K] [Fintype K]
+
+/-- `X^q - X = ∏_{c ∈ F_q} (X - c)`. -/
+lemma X_pow_card_sub_X_eq_prod :
+    (X ^ Fintype.card K - X : K[X]) = ∏ c : K, (X - C c) := by
+  have hm : (X ^ Fintype.card K - X : K[X]).Monic :=
+    monic_X_pow_sub (by rw [degree_X]; exact_mod_cast Fintype.one_lt_card)
+  have hc : Multiset.card (X ^ Fintype.card K - X : K[X]).roots =
+      (X ^ Fintype.card K - X : K[X]).natDegree := by
+    rw [FiniteField.roots_X_pow_card_sub_X,
+      FiniteField.X_pow_card_sub_X_natDegree_eq K Fintype.one_lt_card]
+    simp
+  rw [← prod_multiset_X_sub_C_of_monic_of_roots_card_eq hm hc,
+    FiniteField.roots_X_pow_card_sub_X]
+  rfl
+
+/-- The fixed points of the Frobenius modulo a prime power are the constants: if
+`P^e ∣ f^q - f` with `P` prime and `e ≥ 1`, then `f ≡ c (mod P^e)` for some `c ∈ F_q`
+(proof of Lemma 29.8 (1), for `j = 1`). -/
+lemma exists_C_of_dvd_pow_card_sub {P f : K[X]} (hP : Prime P) {e : ℕ}
+    (hdvd : P ^ e ∣ f ^ Fintype.card K - f) : ∃ c : K, P ^ e ∣ f - C c := by
+  set q := Fintype.card K
+  have hprod : f ^ q - f = ∏ c : K, (f - C c) := by
+    have := congrArg (aeval f) (X_pow_card_sub_X_eq_prod (K := K))
+    simpa [map_prod] using this
+  rcases Nat.eq_zero_or_pos e with rfl | he
+  · exact ⟨0, by simp⟩
+  have hP1 : P ∣ ∏ c : K, (f - C c) := hprod ▸ (dvd_pow_self P he.ne').trans hdvd
+  obtain ⟨c, -, hc⟩ := (Prime.dvd_finsetProd_iff hP _).1 hP1
+  refine ⟨c, ?_⟩
+  -- `y = f - c` has `P^e ∣ y^e` and `P^e ∣ y^q - y`, hence `P^e ∣ y`
+  set y := f - C c
+  have hy : P ^ e ∣ y * (y ^ (q - 1) - 1) := by
+    have hfr : y ^ q = f ^ q - C c := by
+      have h1 := map_sub (FiniteField.frobeniusAlgHom K K[X]) f (C c)
+      have h2 := (FiniteField.frobeniusAlgHom K K[X]).commutes c
+      simp only [FiniteField.coe_frobeniusAlgHom, algebraMap_eq] at h1 h2
+      rw [h1, h2]
+    have hq : 1 ≤ q := Fintype.card_pos
+    have : y * (y ^ (q - 1) - 1) = f ^ q - f := by
+      rw [mul_sub, mul_one, ← pow_succ', Nat.sub_add_cancel hq, hfr]; ring
+    rw [this]; exact hdvd
+  refine hP.pow_dvd_of_dvd_mul_right e ?_ hy
+  intro h
+  have hq2 : 2 ≤ q := Fintype.one_lt_card
+  have : P ∣ y ^ (q - 1) := (hc.trans (dvd_pow_self y (by omega)))
+  have h1 : P ∣ 1 := by
+    have := dvd_sub this h
+    rwa [sub_sub_cancel] at this
+  exact hP.not_isUnit (isUnit_of_dvd_one h1)
+
+/-- In `F_q[T]/(P^e)` with `P` prime and `e ≥ 1`, the fixed points of `x ↦ x^q` are the
+`q` constants. -/
+lemma natCard_fixed_local {P : K[X]} (hP : Prime P) {e : ℕ} (he : 1 ≤ e) :
+    Nat.card {a : K[X] ⧸ Ideal.span {P} ^ e // a ^ Fintype.card K = a} = Fintype.card K := by
+  set I := Ideal.span {P} ^ e
+  have hI : I = Ideal.span {P ^ e} := Ideal.span_singleton_pow P e
+  have hmk : ∀ f g : K[X], Ideal.Quotient.mk I f = Ideal.Quotient.mk I g ↔ P ^ e ∣ f - g := by
+    intro f g
+    rw [Ideal.Quotient.eq, hI, Ideal.mem_span_singleton]
+  let toFix : K → {a : K[X] ⧸ I // a ^ Fintype.card K = a} := fun c =>
+    ⟨Ideal.Quotient.mk I (C c), by rw [← map_pow, ← C_pow, FiniteField.pow_card]⟩
+  have hbij : Function.Bijective toFix := by
+    constructor
+    · intro c c' h
+      have h' := (hmk _ _).1 (congrArg Subtype.val h)
+      rw [← C_sub] at h'
+      by_contra hne
+      have hu : IsUnit (C (c - c')) := isUnit_C.2 (sub_ne_zero.2 hne).isUnit
+      exact hP.not_isUnit (isUnit_of_dvd_unit ((dvd_pow_self P (by omega)).trans h') hu)
+    · rintro ⟨a, ha⟩
+      obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective a
+      have hdvd : P ^ e ∣ f ^ Fintype.card K - f := by
+        rw [← map_pow] at ha
+        exact (hmk _ _).1 ha
+      obtain ⟨c, hc⟩ := exists_C_of_dvd_pow_card_sub hP hdvd
+      exact ⟨c, Subtype.ext ((hmk _ _).2 (by rw [← neg_sub, dvd_neg]; exact hc))⟩
+  rw [← Nat.card_eq_of_bijective toFix hbij, Nat.card_eq_fintype_card]
+
+variable [DecidableEq K]
+
+/-- `ω(M)`, the number of distinct monic irreducible factors of `M` (section 29.2.1). -/
+noncomputable def omegaF (M : K[X]) : ℕ :=
+  (UniqueFactorizationMonoid.normalizedFactors M).toFinset.card
+
+/-- **Berlekamp's count**, Lemma 29.8 (1) for `j = 1` (section 29.2.1): the fixed ring of the
+Frobenius of `R = F_q[T]/(B - 1)` has dimension `ω(B - 1)`. -/
+theorem finrank_ker_frobR {B : K[X]} (hB : 1 ≤ B.natDegree) :
+    finrank K (LinearMap.ker (frobR B - 1)) = omegaF (B - 1) := by
+  have hne := sub_one_ne_zero hB
+  have : Module.Finite K (AdjoinRoot (B - 1)) := (AdjoinRoot.powerBasis hne).finite
+  set q := Fintype.card K
+  set S := (UniqueFactorizationMonoid.normalizedFactors (B - 1)).toFinset
+  set nf := UniqueFactorizationMonoid.normalizedFactors (B - 1)
+  -- the Chinese remainder theorem
+  have hprime : ∀ i ∈ S, Prime (Ideal.span {i}) := by
+    intro i hi
+    have hpi := UniqueFactorizationMonoid.prime_of_normalized_factor i
+      (Multiset.mem_toFinset.1 hi)
+    exact Ideal.prime_of_isPrime (by simpa using hpi.ne_zero)
+      ((Ideal.span_singleton_prime hpi.ne_zero).2 hpi)
+  have hcop : ∀ i ∈ S, ∀ j ∈ S, i ≠ j → Ideal.span {i} ≠ Ideal.span {j} := by
+    intro i hi j hj hij h
+    apply hij
+    exact (Ideal.span_singleton_eq_span_singleton.1 h).eq_of_normalized
+      (UniqueFactorizationMonoid.normalize_normalized_factor i (Multiset.mem_toFinset.1 hi))
+      (UniqueFactorizationMonoid.normalize_normalized_factor j (Multiset.mem_toFinset.1 hj))
+  have hprod : ∏ i ∈ S, Ideal.span {i} ^ nf.count i = Ideal.span {B - 1} := by
+    simp only [Ideal.span_singleton_pow, Ideal.prod_span_singleton]
+    rw [← Finset.prod_multiset_count]
+    exact Ideal.span_singleton_eq_span_singleton.2
+      (UniqueFactorizationMonoid.prod_normalizedFactors hne)
+  let Φ := IsDedekindDomain.quotientEquivPiOfFinsetProdEq (Ideal.span {B - 1})
+    (fun i => Ideal.span {i}) (fun i => nf.count i) hprime hcop hprod
+  -- count the fixed points
+  have hker : Nat.card (LinearMap.ker (frobR B - 1)) =
+      Nat.card {x : K[X] ⧸ Ideal.span {B - 1} // x ^ q = x} := by
+    refine Nat.card_congr (Equiv.subtypeEquivRight fun x => ?_)
+    simp only [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero]
+    rfl
+  have hpi : Nat.card {x : K[X] ⧸ Ideal.span {B - 1} // x ^ q = x} = q ^ S.card := by
+    let A := fun i : S => K[X] ⧸ Ideal.span {(i : K[X])} ^ nf.count (i : K[X])
+    have e1 : {x : K[X] ⧸ Ideal.span {B - 1} // x ^ q = x} ≃ {y : (i : S) → A i // y ^ q = y} :=
+      Φ.toEquiv.subtypeEquiv fun x =>
+        (show x ^ q = x ↔ (Φ x) ^ q = Φ x by rw [← map_pow, Φ.injective.eq_iff])
+    have e2 : {y : (i : S) → A i // y ^ q = y} ≃ ((i : S) → {a : A i // a ^ q = a}) :=
+      (Equiv.subtypeEquivRight fun y => by simp only [funext_iff, Pi.pow_apply]).trans
+        Equiv.subtypePiEquivPi
+    rw [Nat.card_congr (e1.trans e2), Nat.card_pi]
+    have hloc : ∀ i : S, Nat.card {a : A i // a ^ q = a} = q := by
+      intro i
+      have hmem := Multiset.mem_toFinset.1 i.2
+      exact natCard_fixed_local (UniqueFactorizationMonoid.prime_of_normalized_factor _ hmem)
+        (Multiset.one_le_count_iff_mem.2 hmem)
+    simp only [hloc, Finset.prod_const, Finset.card_univ, Fintype.card_coe]
+  rw [hpi, Module.natCard_eq_pow_finrank (K := K), Nat.card_eq_fintype_card] at hker
+  exact Nat.pow_right_injective Fintype.one_lt_card hker
+
+/-- **Theorem 21.6** (section 21.1.4) and **Lemma 29.8 (4)**: `k(B) ≥ ω(B - 1)` for every `B`
+of degree at least 1. -/
+theorem theorem21_6 {B : K[X]} (hB : 1 ≤ B.natDegree) : omegaF (B - 1) ≤ kDim B :=
+  finrank_ker_frobR hB ▸ finrank_ker_le_kDim hB
+
+/-- **Theorem 29.11 (1)** (section 29.2.3): `k(B) ≤ ω(B - 1) + 1` for every `B` of degree
+`e ≥ 2`. -/
+theorem theorem29_11_one {B : K[X]} (hB : 2 ≤ B.natDegree) : kDim B ≤ omegaF (B - 1) + 1 :=
+  finrank_ker_frobR (B := B) (by omega) ▸ kDim_le hB
+
+end Berlekamp
 
 /-! ### Corollary 29.10: a good factor exists when `e - 1` is a prime power -/
 
