@@ -1,0 +1,35 @@
+# least inert prime l(Delta), fundamental discriminants with 1 < |Delta| <= 4000000
+# record holders: sign Delta l(Delta) (envelope max over |Delta'| <= |Delta|)
++ 5 2
++ 8 3
++ 12 5
++ 24 7
++ 60 13
++ 364 17
++ 984 19
++ 1596 31
++ 3705 37
++ 58444 41
++ 84396 43
++ 164620 47
++ 172236 53
++ 369105 61
++ 731676 71
++ 3442296 79
+# sign +: 1215856 discriminants, max l(Delta) = 79
+- -3 2
+- -4 3
+- -8 5
+- -15 7
+- -20 11
+- -24 13
+- -231 17
+- -264 19
+- -831 23
+- -920 29
+- -1364 37
+- -9044 41
+- -67044 59
+- -268719 67
+- -3604695 71
+# sign -: 1215854 discriminants, max l(Delta) = 71

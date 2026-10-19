@@ -1,0 +1,7 @@
+# bases r^t, r in [2, 3, 5, 6, 7], 2 <= t <= 100000, positions <= 1000000
+# r t | length L, c, chain digits j, |S|, self-paying digits available, top | L / ln b
+2 6 | 11 8 1 2 1 self-paying top | 2.6449
+# configurations: 1
+# lengths: [(11, 1)]
+# best by L / ln b:
+#    (2.6449409082964332, 2, 6, 11, 8, 1, 2, 1, 'self-paying top')

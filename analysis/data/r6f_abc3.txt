@@ -1,0 +1,32 @@
+# largest x allowed by c < rad^(7/4), two other digits <= B
+# weight B last middle leading
+x^x 1 37 45 38  ratio max/B 45.00
+x^x 2 42 47 43  ratio max/B 23.50
+x^x 5 62 62 64  ratio max/B 12.80
+x^x 10 105 105 105  ratio max/B 10.50
+x^x 20 196 196 194  ratio max/B 9.80
+x^x 50 481 481 477  ratio max/B 9.62
+x^x 100 974 974 970  ratio max/B 9.74
+x^x 150 1479 1479 1474  ratio max/B 9.86
+x^x 200 1991 1991 1986  ratio max/B 9.96
+x^x 201 2001 2001 1996  ratio max/B 9.96
+x^x 202 2011 2011 2006  ratio max/B 9.96
+x^x 210 2094 2094 2088  ratio max/B 9.97
+x^x 500 5130 5130 5124  ratio max/B 10.26
+x^x 1000 10484 10484 10478  ratio max/B 10.48
+x! 1 4103765 4103958 4103759  ratio max/B 4103958.00
+x! 2 4103774 4103958 4103769  ratio max/B 2051979.00
+x! 5 4103786 4103957 4103826  ratio max/B 820791.40
+x! 10 4103809 4103956 4103971  ratio max/B 410397.10
+x! 20 4104193 4104193 4104352  ratio max/B 205217.60
+x! 50 4105690 4105690 4105837  ratio max/B 82116.74
+x! 100 4108710 4108710 4108848  ratio max/B 41088.48
+x! 150 4112088 4112088 4112220  ratio max/B 27414.80
+x! 200 4115697 4115697 4115826  ratio max/B 20579.13
+x! 201 4115771 4115771 4115900  ratio max/B 20477.11
+x! 202 4115846 4115846 4115974  ratio max/B 20376.11
+x! 210 4116441 4116441 4116569  ratio max/B 19602.71
+x! 500 4140039 4140039 4140155  ratio max/B 8280.31
+x! 1000 4185606 4185606 4185712  ratio max/B 4185.71
+# x^x: positions at B = 200: [1991, 1991, 1986]
+# x^x: largest B with x_max <= 2000 in every position: 200
