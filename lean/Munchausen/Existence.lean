@@ -1,4 +1,4 @@
-import Munchausen.OtherSystems
+import Munchausen.FunctionField
 import Munchausen.Counting
 
 /-!
@@ -58,12 +58,6 @@ def Exch (A : Set (List R)) (s t : List R) : Prop :=
 elementary exchanges. -/
 def exchIdeal (A : Set (List R)) (β u : R) : Ideal R :=
   Ideal.span {z | ∃ s t, Exch A s t ∧ z = u * ringVal β s - u * ringVal β t}
-
-lemma ringVal_append (β : R) (a b : List R) :
-    ringVal β (a ++ b) = ringVal β a + β ^ a.length * ringVal β b := by
-  induction a with
-  | nil => simp [ringVal]
-  | cons d a ih => simp only [List.cons_append, ringVal, ih, List.length_cons]; ring
 
 /-- The value change of an exchange: `(x - y)(β^i - β^j)` at the positions
 `i = |a|`, `j = |a| + |m| + 1`. -/
