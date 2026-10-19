@@ -242,7 +242,8 @@ convention.
 | split the work units over several machines | linear in the number of machines | the units are independent, but this is not measured |
 
 None of these ideas changes the growth rate of about 1.9x per base. At that
-rate, and on the laptop above, base 40 takes about 30 minutes, base 45 about
+rate, and on the laptop above, base 40 takes about 30 minutes (an estimate
+with the first build; section 6.1 of the library has measured times), base 45 about
 13 hours, and base 50 about 13 days.
 
 Chapter 6 of `docs/library/` explains where the growth comes from. It also

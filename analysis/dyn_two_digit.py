@@ -9,7 +9,7 @@ up to A and last digits up to C, under both conventions, and checks the
 inequalities used in the proof of Theorem 13.1 on a grid.
 
 Part 2 lists the 2-digit solutions whose base is a perfect power r^t with a
-self-paying digit (by Proposition 16.1: t has a prime factor that does not
+self-paying digit (by Proposition 15.8: t has a prime factor that does not
 divide r), and marks the swaps c = a^a.
 
 usage: python3 analysis/dyn_two_digit.py [A] [C]
