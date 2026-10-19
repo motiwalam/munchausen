@@ -1,0 +1,8 @@
+# solver=kissat404 model=counts mode=1
+# b d status sols wall_s cpu_s decisions conflicts vars clauses check
+8 7 done 0 0.307 0.064 -1 -1 783 2994 ok
+9 8 done 0 1.836 0.356 -1 -1 1332 5162 ok
+10 9 done 0 3.574 0.884 -1 -1 2089 8349 ok
+11 10 done 0 4.183 2.036 -1 -1 2679 10802 ok
+12 11 done 0 5.177 2.901 -1 -1 3057 12290 ok
+kissat: fatal error: calling 'kissat_add': incremental solving not supported

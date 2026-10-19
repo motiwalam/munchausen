@@ -1,0 +1,8 @@
+# weights=random seed=1 mode=1 d=b-1
+# b vectors sols topdown nodes opt_tree min_cover(bound,status,maximal) lower(k) |G*|
+4 20 3 10 5 10 (7, 7, 'OPTIMAL', 3) 4(2) 5
+5 70 2 23 9 23 (20, 20, 'OPTIMAL', 33) 4(3) 9
+6 252 1 41 15 41 (40, 40, 'OPTIMAL', 67) 6(4) 71
+7 924 0 77 27 68 (57, 57, 'OPTIMAL', 148) 9(5) 185
+8 3432 1 223 80 187 (141, 141, 'OPTIMAL', 535) 30(4) 671
+9 12870 0 266 79 214 (165, 165, 'OPTIMAL', 1236) 22(5) 2526

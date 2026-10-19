@@ -1,0 +1,14 @@
+# base 26 unit_depth 4 gen_nodes 6762 total_nodes 4955060 wall_s 11.294
+# base 27 unit_depth 4 gen_nodes 8100 total_nodes 9510641 wall_s 13.701
+# base 28 unit_depth 4 gen_nodes 8864 total_nodes 18025432 wall_s 32.130
+# base 29 unit_depth 4 gen_nodes 10189 total_nodes 33546007 wall_s 49.774
+# base 30 unit_depth 4 gen_nodes 11675 total_nodes 66246690 wall_s 69.067
+# base 31 unit_depth 4 gen_nodes 14410 total_nodes 121387604 wall_s 140.356
+# base 32 unit_depth 4 gen_nodes 16052 total_nodes 214709067 wall_s 281.280
+# base 33 unit_depth 4 gen_nodes 18209 total_nodes 464274849 wall_s 409.357
+# base 34 unit_depth 4 gen_nodes 19763 total_nodes 824063470 wall_s 848.814
+# base 30 unit_depth 2 gen_nodes 194 total_nodes 66246690 wall_s 36.490
+# base 30 unit_depth 3 gen_nodes 1741 total_nodes 66246690 wall_s 20.007
+# base 30 unit_depth 5 gen_nodes 60270 total_nodes 66246690 wall_s 40.924
+# base 30 unit_depth 6 gen_nodes 245831 total_nodes 66246690 wall_s 33.750
+# base 30 unit_depth 7 gen_nodes 819036 total_nodes 66246690 wall_s 39.858

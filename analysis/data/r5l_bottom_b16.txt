@@ -1,0 +1,10 @@
+# base 16, d = 15, 0^0 = 1, exact counts
+plain: 11178 nodes
+plain+bot: 11178 nodes
+hybrid: 27512 nodes
+odd-first: 3426255 nodes
+# base 16, d = 15, 0^0 = 1, Knuth estimates, 5000 probes, seed 1
+plain: 7192 +/- 7.3e+02 nodes
+plain+bot: 7192 +/- 7.3e+02 nodes
+hybrid: 8096 +/- 9.6e+02 nodes
+odd-first: 9.639e+06 +/- 8.8e+06 nodes

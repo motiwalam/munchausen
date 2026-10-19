@@ -1,0 +1,8 @@
+# solver=cadical195 model=direct mode=1
+# b d status sols wall_s cpu_s decisions conflicts vars clauses check
+8 7 done 0 0.596 0.088 4024 2098 783 2879 ok
+9 8 done 0 2.562 0.442 18956 8270 1261 4902 ok
+10 9 done 0 5.761 1.019 26489 14227 1771 6979 ok
+11 10 done 0 19.304 3.426 90114 42885 2281 9234 ok
+12 11 done 0 70.034 14.567 279958 129137 2875 11440 ok
+13 12 done 2 80.475 38.653 572759 269595 3463 14236 ok

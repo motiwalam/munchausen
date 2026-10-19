@@ -1,0 +1,5 @@
+# base 32, d = 31, 0^0 = 1, Knuth estimates, 5000 probes, seed 1
+plain: 1.686e+07 +/- 7.5e+06 nodes
+plain+bot: 1.686e+07 +/- 7.5e+06 nodes
+hybrid: 1.686e+07 +/- 7.5e+06 nodes
+odd-first: 5.5e+11 +/- 5.2e+11 nodes

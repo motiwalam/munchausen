@@ -1,0 +1,16 @@
+brute force, b = 4..14: the top m values minimize H(R) at every m
+
+peak entropy max_m H(R_m) in nats, as a multiple of b, and e^(peak/b)
+| order | b = 40 | b = 100 | b = 1000 |
+|---|---:|---:|---:|
+| top-down | 17.3 = 0.432 b (1.540^b) | 43.9 = 0.439 b (1.551^b) | 453.1 = 0.453 b (1.573^b) |
+| bottom-up | 50.3 = 1.258 b (3.519^b) | 128.6 = 1.286 b (3.619^b) | 1303.0 = 1.303 b (3.680^b) |
+| middle-out | 49.0 = 1.226 b (3.407^b) | 127.3 = 1.273 b (3.572^b) | 1301.7 = 1.302 b (3.675^b) |
+| random | 44.8 = 1.120 b (3.064^b) | 118.8 = 1.188 b (3.280^b) | 1270.5 = 1.271 b (3.563^b) |
+| odd first, each class top-down | 27.2 = 0.679 b (1.972^b) | 68.9 = 0.689 b (1.993^b) | 699.6 = 0.700 b (2.013^b) |
+| by residue mod 3, each class top-down | 34.8 = 0.871 b (2.389^b) | 87.0 = 0.870 b (2.388^b) | 870.1 = 0.870 b (2.387^b) |
+| upper half bottom-up, then the lower half top-down | 24.5 = 0.613 b (1.846^b) | 63.7 = 0.637 b (1.890^b) | 650.8 = 0.651 b (1.917^b) |
+
+stage at which the largest value b-1 is revealed fixes the peak of every other order;
+before it, u = b-1, L = d and H(R) = m H(Poisson(d/b)):
+H(Poisson(1)) = 1.3048, H(Poisson((b-1)/b)) at b=40: 1.2903
