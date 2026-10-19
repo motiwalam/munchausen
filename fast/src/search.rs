@@ -79,10 +79,17 @@ pub struct Params<const N: usize> {
     // the top lane, if t can be negative (a negative weight for 0), else 0
     negbit: u64,
     zscore: f64,
+    // the typical-set test applies at the levels k <= zk
+    zk: usize,
     // typical-set test: mean and standard deviation of ln E for a node at level
-    // k with pp unknown positions, at index k * (d + 1) + pp
+    // k with pp unknown positions, at index k * (d + 1) + pp, and the
+    // threshold mean - zscore * sd
     lik_mean: Vec<f64>,
     lik_sd: Vec<f64>,
+    lik_thr: Vec<f64>,
+    zoff: Vec<f64>,
+    zhist: bool,
+    tree_stats: bool,
 }
 
 /// Pruning rules for the inexact search. Both are off by default.
@@ -129,10 +136,43 @@ pub struct Prune {
     /// experiment: raise each weight w(x), x >= 1, by the least amount that
     /// makes it congruent to x + r modulo b-1 (after --perturb, if given)
     pub set_residue: Option<u32>,
+    /// the null law of ln E for --zscore: Poisson (default) or Cond
+    pub zlaw: ZLaw,
+    /// --zscore applies at the levels k <= zfrom * (kmax + 1)
+    pub zfrom: f64,
+    /// the threshold of --zscore at level k is zscore + zslope (u - 1/2),
+    /// u = k / (kmax + 1)
+    pub zslope: f64,
+    /// record, per digit count, a histogram of the nodes and interval
+    /// evaluations by the smallest z-score on their path
+    pub zhist: bool,
+    /// record the mean subtree size per level and number of unknown positions
+    pub tree_stats: bool,
+    /// replace the null law of ln E in these cells: (d, k, pp, mean, sd)
+    pub ztable: Option<&'static [(u32, u32, u32, f64, f64)]>,
+}
+
+/// The null law of ln E for the typical-set test.
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub enum ZLaw {
+    /// independent Poisson cells, minus the entropy and varentropy of the total
+    Poisson,
+    /// Poisson cells conditioned on their total by linear regression
+    Cond,
+}
+
+/// Bins of the --zhist histogram: z from ZH_LO in steps of ZH_STEP. The last
+/// bin also holds the nodes above every tested level (z = +inf).
+pub const ZH_BINS: usize = 480;
+pub const ZH_LO: f64 = -16.0;
+pub const ZH_STEP: f64 = 0.05;
+
+fn zbin(z: f32) -> usize {
+    (((z as f64 - ZH_LO) / ZH_STEP).floor().max(0.0) as usize).min(ZH_BINS - 1)
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None, zlaw: ZLaw::Poisson, zfrom: 0.75, zslope: 0.0, zhist: false, tree_stats: false, ztable: None };
 
     /// whether the weights differ from x^x with 0^0 in {0, 1}
     pub fn custom_weights(&self) -> bool {
@@ -273,16 +313,46 @@ impl<const N: usize> Params<N> {
                 let m = (kmax + 1 - k.max(1)) as f64;
                 for pp in 0..=d {
                     let n = pp as f64;
-                    let (hh, vh) = poisson_entropy(n / kk);
-                    let (hs, vs) = poisson_entropy(n * k as f64 / kk);
-                    let (hn, vn) = poisson_entropy(n);
-                    let h = m * hh + hs - hn;
-                    let v = (m * vh + vs - vn).max(0.0);
-                    lik_mean.push(n * (kk / b as f64).ln() - h);
-                    lik_sd.push(v.sqrt().max(1e-9));
+                    match prune.zlaw {
+                        ZLaw::Poisson => {
+                            let (hh, vh) = poisson_entropy(n / kk);
+                            let (hs, vs) = poisson_entropy(n * k as f64 / kk);
+                            let (hn, vn) = poisson_entropy(n);
+                            let h = m * hh + hs - hn;
+                            let v = (m * vh + vs - vn).max(0.0);
+                            lik_mean.push(n * (kk / b as f64).ln() - h);
+                            lik_sd.push(v.sqrt().max(1e-9));
+                        }
+                        ZLaw::Cond => {
+                            // X = sum over cells of ln n! - n ln p; ln E = ln pp! - X + pp ln(kk / b)
+                            let (mean, sd) = if pp == 0 || k == 0 {
+                                (0.0, 1e-9)
+                            } else {
+                                let a = cell_moments(n / kk, -kk.ln());
+                                let s = cell_moments(n * k as f64 / kk, (k as f64 / kk).ln());
+                                let (ex, vx, cx) = (m * a.0 + s.0, m * a.1 + s.1, m * a.2 + s.2);
+                                let lf: f64 = (1..=pp).map(|j| (j as f64).ln()).sum();
+                                (lf - ex + n * (kk / b as f64).ln(), (vx - cx * cx / n).max(0.0).sqrt().max(1e-9))
+                            };
+                            lik_mean.push(mean);
+                            lik_sd.push(sd);
+                        }
+                    }
                 }
             }
         }
+        if let Some(t) = prune.ztable {
+            for &(td, k, pp, mean, sd) in t {
+                if td == d && (k as usize) <= kmax && pp <= d && !lik_mean.is_empty() {
+                    let i = k as usize * (d as usize + 1) + pp as usize;
+                    lik_mean[i] = mean;
+                    lik_sd[i] = sd;
+                }
+            }
+        }
+        // the shift of the threshold at level k, and the threshold itself
+        let zoff: Vec<f64> = (0..=kmax).map(|k| if prune.zslope == 0.0 { 0.0 } else { prune.zslope * (k as f64 / (kmax + 1) as f64 - 0.5) }).collect();
+        let lik_thr = lik_mean.iter().zip(&lik_sd).enumerate().map(|(i, (m, s))| m - (prune.zscore + zoff[i / (d as usize + 1)]) * s).collect();
         Params {
             d,
             base: Base::new(b),
@@ -317,8 +387,13 @@ impl<const N: usize> Params<N> {
             zstep,
             negbit: if lshift > 0 { 1u64 << (32 * N - 1) } else { 0 },
             zscore: prune.zscore,
+            zk: (prune.zfrom * (kmax + 1) as f64).floor() as usize,
             lik_mean,
             lik_sd,
+            lik_thr,
+            zoff,
+            zhist: prune.zhist,
+            tree_stats: prune.tree_stats,
         }
     }
 
@@ -348,19 +423,25 @@ impl<const N: usize> Params<N> {
     /// digit plus rf digits below k, in some order. With random digits that
     /// happens with probability pp! k^rf / (prod need_x! * rf! * b^pp).
     #[inline(always)]
-    fn likely(&self, c: &mut Node<N>, parent_ln_e: f64, k: usize, l: &mut Local) -> bool {
+    fn likely(&self, c: &mut Node<N>, parent: &Head, k: usize, l: &mut Local) -> bool {
         if !self.track_ln {
             return true;
         }
         let ln_e = self.ln_fact[c.pp as usize] + c.rf as f64 * self.ln_k[k]
             - c.lneed - self.ln_fact[c.rf as usize] - c.pp as f64 * self.ln_b;
         c.ln_e = ln_e;
+        c.zmin = parent.zmin;
         // At the top levels only a few digit values are decided, ln E is far
-        // from normal, and the tree is narrow anyway, so the test starts at 3/4.
-        let atypical = self.zscore.is_finite() && 4 * k <= 3 * (self.kmax + 1) && {
+        // from normal, and the tree is narrow anyway, so by default the test
+        // starts at 3/4.
+        let atypical = self.zscore.is_finite() && k <= self.zk && {
             let i = k * (self.d as usize + 1) + c.pp as usize;
-            ln_e < self.lik_mean[i] - self.zscore * self.lik_sd[i]
+            if self.zhist {
+                c.zmin = c.zmin.min(((ln_e - self.lik_mean[i]) / self.lik_sd[i] + self.zoff[k]) as f32);
+            }
+            ln_e < self.lik_thr[i]
         };
+        let parent_ln_e = parent.ln_e;
         if atypical || ln_e < self.ln_eps || ln_e < parent_ln_e + self.ln_ratio {
             l.skipped += ln_e.exp();
             return false;
@@ -387,6 +468,28 @@ impl<const N: usize> Params<N> {
         let nz = t.nonzero_mask();
         if nz & !(self.dmask >> 1) == 0 || nz & self.negbit != 0 { self.pow_lo } else { *t }
     }
+}
+
+// E h, Var h and Cov(h, N) for N ~ Poisson(mu) and h(n) = ln n! - n lnp.
+fn cell_moments(mu: f64, lnp: f64) -> (f64, f64, f64) {
+    if mu <= 0.0 {
+        return (0.0, 0.0, 0.0);
+    }
+    let (mut e1, mut e2, mut en) = (0.0, 0.0, 0.0);
+    let (mut lp, mut lf) = (-mu, 0.0);
+    let top = (mu + 12.0 * mu.sqrt() + 30.0) as usize;
+    for j in 0..=top {
+        if j > 0 {
+            lp += mu.ln() - (j as f64).ln();
+            lf += (j as f64).ln();
+        }
+        let p = lp.exp();
+        let h = lf - j as f64 * lnp;
+        e1 += p * h;
+        e2 += p * h * h;
+        en += p * h * j as f64;
+    }
+    (e1, e2 - e1 * e1, en - e1 * mu)
 }
 
 // Entropy and varentropy (variance of -ln p) of the Poisson law with mean mu.
@@ -437,6 +540,7 @@ struct Node<const N: usize> {
     m: u32,        // number of decided digits, all >= k
     lneed: f64,    // sum over decided digits x of ln((c_x - occ_x)!)
     ln_e: f64,     // ln of the model's expected number of solutions below the node
+    zmin: f32,     // with --zhist: the smallest z-score on the path to the node
 }
 
 #[derive(Default)]
@@ -445,6 +549,10 @@ struct Stats {
     nodes: AtomicU64,
     evals: AtomicU64,
     skipped: Mutex<f64>,
+    // with --zhist: per digit count d, ZH_BINS node counts, then ZH_BINS evaluations
+    zh: Mutex<Vec<u64>>,
+    // with --tree-stats: per digit count d, the table of Local::ts
+    ts: Mutex<Vec<u64>>,
 }
 
 #[derive(Default)]
@@ -452,6 +560,46 @@ struct Local {
     nodes: u64,
     evals: u64,
     skipped: f64, // expected number of solutions in skipped subtrees
+    // with --zhist: the digit count of this task's nodes and their histogram
+    d: u32,
+    zh: Vec<u64>,
+    // with --tree-stats: per (k, pp), the number of nodes and their total
+    // subtree size
+    ts: Vec<u64>,
+}
+
+impl Local {
+    fn for_params<const N: usize>(p: &Params<N>) -> Local {
+        Local {
+            d: p.d,
+            zh: if p.zhist { vec![0; 2 * ZH_BINS] } else { vec![] },
+            ts: if p.tree_stats { vec![0; 2 * 64 * 64] } else { vec![] },
+            ..Local::default()
+        }
+    }
+
+    fn subtree<const N: usize>(&mut self, p: &Params<N>, k: usize, pp: u32, size: u64) {
+        let i = 2 * (k.min(63) * 64 + pp as usize);
+        let _ = p;
+        self.ts[i] += 1;
+        self.ts[i + 1] += size;
+    }
+
+    #[inline(always)]
+    fn node(&mut self, zmin: f32) {
+        self.nodes += 1;
+        if !self.zh.is_empty() {
+            self.zh[zbin(zmin)] += 1;
+        }
+    }
+
+    #[inline(always)]
+    fn eval(&mut self, zmin: f32) {
+        self.evals += 1;
+        if !self.zh.is_empty() {
+            self.zh[ZH_BINS + zbin(zmin)] += 1;
+        }
+    }
 }
 
 pub struct Search<const N: usize> {
@@ -459,6 +607,10 @@ pub struct Search<const N: usize> {
     pub par_depth: u32,
     /// whether any inexact rule is on; the exact search compiles without them
     inexact: bool,
+    /// whether the only inexact rule is the typical-set test, which the GPU
+    /// search also runs
+    #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
+    zscore_only: bool,
     /// (convention, number of digits, digits with the least significant first)
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
     /// statistics, one slot per thread so that threads do not share cache lines
@@ -490,8 +642,17 @@ impl<const N: usize> Search<N> {
                 || prune.epsilon > 0.0
                 || prune.ratio > 0.0
                 || prune.zscore.is_finite()
+                || prune.tree_stats
                 // the generic path also handles a negative t
                 || prune.zero < 0,
+            zscore_only: prune.cap == u32::MAX
+                && !prune.z.is_finite()
+                && !prune.deficit.is_finite()
+                && prune.epsilon <= 0.0
+                && prune.ratio <= 0.0
+                && prune.zero >= 0
+                && !prune.zhist
+                && !prune.tree_stats,
             found: Mutex::new(vec![]),
             // slot 0 serves threads outside the pool
             stats: (0..=rayon::current_num_threads()).map(|_| Stats::default()).collect(),
@@ -507,6 +668,70 @@ impl<const N: usize> Search<N> {
         if l.skipped > 0.0 {
             *st.skipped.lock().unwrap() += l.skipped;
         }
+        if !l.zh.is_empty() {
+            let mut h = st.zh.lock().unwrap();
+            if h.is_empty() {
+                h.resize(65 * 2 * ZH_BINS, 0);
+            }
+            let o = l.d as usize * 2 * ZH_BINS;
+            for (a, v) in h[o..o + 2 * ZH_BINS].iter_mut().zip(&l.zh) {
+                *a += v;
+            }
+        }
+        if !l.ts.is_empty() {
+            let mut h = st.ts.lock().unwrap();
+            if h.is_empty() {
+                h.resize(65 * 2 * 64 * 64, 0);
+            }
+            let o = l.d as usize * 2 * 64 * 64;
+            for (a, v) in h[o..o + 2 * 64 * 64].iter_mut().zip(&l.ts) {
+                *a += v;
+            }
+        }
+    }
+
+    /// with --tree-stats: (d, k, pp, nodes, total subtree size) for every
+    /// node of level k (digits >= k decided) with pp unknown positions whose
+    /// subtree ran in one task
+    pub fn tree_stats(&self) -> Vec<(u32, usize, usize, u64, u64)> {
+        let sz = 2 * 64 * 64;
+        let mut tot = vec![0u64; 65 * sz];
+        for s in &self.stats {
+            for (a, v) in tot.iter_mut().zip(s.ts.lock().unwrap().iter()) {
+                *a += v;
+            }
+        }
+        let mut out = vec![];
+        for p in &self.params {
+            let o = p.d as usize * sz;
+            for k in 0..64 {
+                for pp in 0..64 {
+                    let i = o + 2 * (k * 64 + pp);
+                    if tot[i] > 0 {
+                        out.push((p.d, k, pp, tot[i], tot[i + 1]));
+                    }
+                }
+            }
+        }
+        out
+    }
+
+    /// with --zhist: per digit count d, the nodes and the interval evaluations
+    /// by bin of the smallest z-score on their path
+    pub fn zhist(&self) -> Vec<(u32, Vec<u64>, Vec<u64>)> {
+        let mut tot = vec![0u64; 65 * 2 * ZH_BINS];
+        for s in &self.stats {
+            for (a, v) in tot.iter_mut().zip(s.zh.lock().unwrap().iter()) {
+                *a += v;
+            }
+        }
+        self.params
+            .iter()
+            .map(|p| {
+                let o = p.d as usize * 2 * ZH_BINS;
+                (p.d, tot[o..o + ZH_BINS].to_vec(), tot[o + ZH_BINS..o + 2 * ZH_BINS].to_vec())
+            })
+            .collect()
     }
 
     /// number of tree nodes visited so far
@@ -528,10 +753,10 @@ impl<const N: usize> Search<N> {
     /// The order is deterministic, so unit indices are stable between runs.
     pub fn units(&self, depth: u32) -> Vec<Unit<N>> {
         let mut out = vec![];
-        let mut l = Local::default();
         for (pi, p) in self.params.iter().enumerate() {
+            let mut l = Local::for_params(p);
             let hi = p.root_hi.add(&p.drop[p.kmax * (p.d as usize + 1) + p.d as usize], &p.base);
-            let root = Node { t: p.root_t, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b) };
+            let root = Node { t: p.root_t, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b), zmin: f32::INFINITY };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -540,7 +765,7 @@ impl<const N: usize> Search<N> {
                         next.push(u);
                         continue;
                     }
-                    l.nodes += 1;
+                    l.node(u.n.zmin);
                     let mut cnt = u.cnt;
                     self.expand::<true>(p, u.k, &u.n, &mut cnt, &mut l, |_, c, cnt| {
                         next.push(Unit { pi, k: u.k - 1, n: *c, cnt: *cnt });
@@ -549,8 +774,8 @@ impl<const N: usize> Search<N> {
                 frontier = next;
             }
             out.extend(frontier);
+            self.flush(&l);
         }
-        self.flush(&l);
         out
     }
 
@@ -601,7 +826,7 @@ impl<const N: usize> Search<N> {
             // mispredicted branch does not throw them away.
             cur.te = te.add(wk, base);
             cur.hi = hi.add(dhi, base);
-            l.evals += 1;
+            l.eval(n.zmin);
             let ck = cur.occk + e;
             let mk = n.m + ck;
             if X {
@@ -627,13 +852,13 @@ impl<const N: usize> Search<N> {
             let mut clo = if nlo & top == 0 { p.pow_lo } else { te };
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
-            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0 };
+            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0, zmin: f32::INFINITY };
             if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt) && {
                 // hi for the child's own cursor, before the branches below
                 c.hi = c.hi.add(unsafe { p.drop.get_unchecked((k - 1) * (p.d as usize + 1) + c.rf as usize) }, base);
                 first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
             }
-                && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n.ln_e, k, l)))
+                && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n, k, l)))
             {
                 return Some(c);
             }
@@ -758,7 +983,7 @@ impl<const N: usize> Search<N> {
 
     // A parallel task: search the subtree below n.
     fn rec<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
-        let mut l = Local::default();
+        let mut l = Local::for_params(p);
         self.rec_seq::<X>(s, p, k, &n, &mut cnt, &mut l, depth);
         self.flush(&l);
     }
@@ -769,7 +994,13 @@ impl<const N: usize> Search<N> {
     // tasks, so idle threads can steal them. Otherwise the children run
     // here, which avoids the cost of a task per node.
     fn rec_seq<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, depth: u32) {
-        l.nodes += 1;
+        // with --tree-stats: the node count when each cursor's node was
+        // counted, to measure its subtree; split marks a node whose children
+        // went to other tasks
+        let ts = X && p.tree_stats;
+        let mut starts = [0u64; 64];
+        let (mut cur_start, mut split) = (l.nodes, false);
+        l.node(n.zmin);
         if k == 1 {
             self.leaf(p, n, cnt);
             return;
@@ -787,28 +1018,45 @@ impl<const N: usize> Search<N> {
                     let (c, cnt) = (*c, *cnt);
                     s.spawn(move |s| self.rec::<X>(s, p, ck - 1, c, cnt, level + 1))
                 });
+                if ts {
+                    split = true;
+                }
                 None
             } else {
                 self.next_child::<X>(p, &mut cur, cnt, l)
             };
             match child {
                 Some(c) => {
-                    l.nodes += 1;
+                    let before = l.nodes;
+                    l.node(c.zmin);
                     if ck == 2 {
                         self.leaf(p, &c, cnt);
                     } else {
                         // a node has at most 62 ancestors below the root
                         unsafe { stack.get_unchecked_mut(sp) }.write(cur);
+                        if ts {
+                            starts[sp] = cur_start;
+                            cur_start = before;
+                        }
                         sp += 1;
                         cur = Cursor::new(p, ck - 1, &c);
                     }
                 }
                 None => {
+                    if ts {
+                        if !split {
+                            l.subtree(p, ck + 1, cur.h.pp, l.nodes - cur_start);
+                        }
+                        split = false;
+                    }
                     if sp == 0 {
                         return;
                     }
                     sp -= 1;
                     cur = unsafe { stack.get_unchecked(sp).assume_init_read() };
+                    if ts {
+                        cur_start = starts[sp];
+                    }
                 }
             }
         }
@@ -835,18 +1083,19 @@ struct Head {
     m: u32,
     lneed: f64,
     ln_e: f64,
+    zmin: f32,
 }
 
 impl<const N: usize> Cursor<N> {
     #[inline(always)]
     fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
         let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
-        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e }, k, e: 0, occk }
+        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e, zmin: n.zmin }, k, e: 0, occk }
     }
 
     // the node of a cursor that has not started yet
     fn node0(&self) -> Node<N> {
         let h = &self.h;
-        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e }
+        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e, zmin: h.zmin }
     }
 }

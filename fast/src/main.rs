@@ -65,6 +65,24 @@ options:
   --zscore <z>            (search, inexact) skip a node whose expected number of
                           solutions is more than z standard deviations below its
                           mean for a random suffix (typical-set test)
+  --zlaw <poisson|cond>   (search, inexact) null law of ln E for --zscore:
+                          independent Poisson cells (default) or Poisson cells
+                          conditioned on their total, which has the right
+                          standard deviation
+  --zfrom <f>             (search, inexact) apply --zscore at the levels
+                          k <= f (kmax + 1) (default: 0.75)
+  --zslope <s>            (search, inexact) use the threshold z + s (u - 1/2) at
+                          level k, u = k / (kmax + 1) (default: 0)
+  --zhist <file>          (search, inexact) write to <file> the nodes and
+                          interval evaluations per digit count, binned by the
+                          smallest z-score on their path; \"{base}\" in the name
+                          becomes the base
+  --ztable <file>         (search, inexact) replace the null law of ln E for
+                          --zscore in the cells of <file>, lines \"d k pp mean sd\"
+  --tree-stats <file>     (search) write to <file> the number of nodes and their
+                          mean subtree size per digit count d, level k and
+                          number pp of unknown positions; \"{base}\" in the
+                          name becomes the base
   --uniform               (search, inexact) measure --band and --deficit on the
                           scale of the whole random walk instead of pointwise
   --unit-depth <n>        (search) tree depth at which the search is cut into
@@ -102,6 +120,8 @@ struct Opts {
     #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     gpu_subgroups: u32,
     shard: (u32, u32),
+    zhist: Option<String>,
+    tree_stats: Option<String>,
 }
 
 fn parse_args() -> Opts {
@@ -124,6 +144,8 @@ fn parse_args() -> Opts {
     let mut hybrid = false;
     let mut gpu_subgroups = 2048;
     let mut shard = (0, 1);
+    let mut zhist = None;
+    let mut tree_stats = None;
     let mut i = 0;
     while i < args.len() {
         let a = args[i].as_str();
@@ -162,6 +184,39 @@ fn parse_args() -> Opts {
             "--power" => prune.power = val().parse().ok().filter(|&p| p >= 1).unwrap_or_else(|| die("bad power: use an integer p >= 1")),
             "--set-residue" => prune.set_residue = Some(val().parse().unwrap_or_else(|_| die("bad residue"))),
             "--zscore" => prune.zscore = val().parse().unwrap_or_else(|_| die("bad z-score")),
+            "--zlaw" => {
+                prune.zlaw = match val().as_str() {
+                    "poisson" => search::ZLaw::Poisson,
+                    "cond" => search::ZLaw::Cond,
+                    l => die(&format!("bad law {l}: use poisson or cond")),
+                }
+            }
+            "--zfrom" => prune.zfrom = val().parse().ok().filter(|&f: &f64| (0.0..=1.0).contains(&f)).unwrap_or_else(|| die("bad level fraction: use 0 <= f <= 1")),
+            "--zslope" => prune.zslope = val().parse().unwrap_or_else(|_| die("bad slope")),
+            "--zhist" => {
+                zhist = Some(val());
+                prune.zhist = true
+            }
+            "--tree-stats" => {
+                tree_stats = Some(val());
+                prune.tree_stats = true
+            }
+            "--ztable" => {
+                let path = val();
+                let text = std::fs::read_to_string(&path).unwrap_or_else(|e| die(&format!("cannot read {path}: {e}")));
+                let mut t = vec![];
+                for line in text.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()) {
+                    let f: Vec<&str> = line.split_whitespace().collect();
+                    let bad = || -> ! { die(&format!("bad line in {path}: {line}")) };
+                    if f.len() != 5 {
+                        bad();
+                    }
+                    let u = |i: usize| f[i].parse::<u32>().unwrap_or_else(|_| bad());
+                    let x = |i: usize| f[i].parse::<f64>().unwrap_or_else(|_| bad());
+                    t.push((u(0), u(1), u(2), x(3), x(4)));
+                }
+                prune.ztable = Some(Vec::leak(t));
+            }
             "--progress" => progress = true,
             "--gpu" => gpu = true,
             "--hybrid" => {
@@ -191,8 +246,8 @@ fn parse_args() -> Opts {
     if shard.1 > 1 && pos[0] != "search" {
         die("--shard works only with the search engine");
     }
-    if gpu && (journal.is_some() || prune.offset != 0 || prune.custom_weights() || shard.1 > 1) {
-        die("--gpu works only with the true weights, without --journal, --offset and --shard");
+    if gpu && (journal.is_some() || prune.offset != 0 || prune.custom_weights()) {
+        die("--gpu works only with the true weights, without --journal and --offset");
     }
     if (prune.shift != 0) as u32 + prune.factorial as u32 + (prune.power != 0) as u32 > 1 {
         die("--shift, --factorial and --power exclude each other");
@@ -200,10 +255,13 @@ fn parse_args() -> Opts {
     if gpu && !cfg!(feature = "gpu") {
         die("--gpu needs a build with --features gpu");
     }
+    if zhist.is_some() && !prune.zscore.is_finite() {
+        die("--zhist needs --zscore");
+    }
     if gpu_subgroups == 0 {
         die("--gpu-subgroups must be positive");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, shard, gpu, hybrid, gpu_subgroups }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, shard, gpu, hybrid, gpu_subgroups, zhist, tree_stats }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -294,11 +352,12 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     #[cfg(feature = "gpu")]
     if o.gpu {
         let go = search::gpu::GpuOptions { subgroups: o.gpu_subgroups, cpu: o.hybrid, verbose: o.progress };
+        let units: Vec<_> = units.into_iter().enumerate().filter(|&(i, _)| mine(i)).map(|(_, u)| u).collect();
         if let Err(e) = sr.run_gpu(b, &units, &go) {
             eprintln!("GPU search failed: {e}");
             std::process::exit(1);
         }
-        return finish(b, &sr, out);
+        return finish(b, &sr, out, o);
     }
     sr.run_units(
         &units,
@@ -316,10 +375,36 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
             }
         },
     );
-    finish(b, &sr, out)
+    finish(b, &sr, out, o)
 }
 
-fn finish<const N: usize>(b: u32, sr: &search::Search<N>, mut out: Found) -> Found {
+fn finish<const N: usize>(b: u32, sr: &search::Search<N>, mut out: Found, o: &Opts) -> Found {
+    if let Some(path) = &o.tree_stats {
+        use std::io::Write;
+        let path = path.replace("{base}", &b.to_string());
+        let mut f = std::io::BufWriter::new(std::fs::File::create(&path).unwrap_or_else(|e| panic!("cannot write {path}: {e}")));
+        writeln!(f, "# base {b}; lines: d, level k (digits >= k decided), unknown positions pp, nodes, total subtree size").unwrap();
+        for (d, k, pp, n, size) in sr.tree_stats() {
+            writeln!(f, "{d} {k} {pp} {n} {size}").unwrap();
+        }
+    }
+    if let Some(path) = &o.zhist {
+        use std::io::Write;
+        let path = path.replace("{base}", &b.to_string());
+        let mut f = std::io::BufWriter::new(std::fs::File::create(&path).unwrap_or_else(|e| panic!("cannot write {path}: {e}")));
+        let law = match o.prune.zlaw {
+            search::ZLaw::Poisson => "poisson",
+            search::ZLaw::Cond => "cond",
+        };
+        writeln!(f, "# base {b} zscore {} zlaw {law} zfrom {} zslope {}; lines: d, lower edge of the z bin, nodes, evaluations; the last bin holds +inf", o.prune.zscore, o.prune.zfrom, o.prune.zslope).unwrap();
+        for (d, nodes, evals) in sr.zhist() {
+            for i in 0..search::ZH_BINS {
+                if nodes[i] > 0 || evals[i] > 0 {
+                    writeln!(f, "{d} {:.2} {} {}", search::ZH_LO + i as f64 * search::ZH_STEP, nodes[i], evals[i]).unwrap();
+                }
+            }
+        }
+    }
     eprintln!("  base {b}: {} nodes, {} interval evaluations", sr.nodes(), sr.evals());
     let skipped = sr.skipped();
     if skipped > 0.0 {
@@ -433,6 +518,8 @@ mod tests {
             gpu: false,
             hybrid: false,
             gpu_subgroups: 2048,
+            zhist: None,
+            tree_stats: None,
         }
     }
 
@@ -459,10 +546,10 @@ mod tests {
     // the GPU search, alone and with the CPU, must find the same numbers and
     // visit the same nodes
     #[cfg(feature = "gpu")]
-    fn check_gpu<const N: usize>(bases: std::ops::RangeInclusive<u32>) {
+    fn check_gpu<const N: usize>(bases: std::ops::RangeInclusive<u32>, prune: search::Prune) {
         for b in bases {
             let run = |gpu: bool, cpu: bool| {
-                let sr = search::Search::<N>::new(b, 1, u32::MAX, 3, search::Prune::NONE);
+                let sr = search::Search::<N>::new(b, 1, u32::MAX, 3, prune);
                 let units = sr.units(2);
                 if gpu {
                     let go = search::gpu::GpuOptions { subgroups: 64, cpu, verbose: false };
@@ -484,8 +571,19 @@ mod tests {
     #[cfg(feature = "gpu")]
     #[test]
     fn gpu_matches_cpu() {
-        check_gpu::<1>(2..=26);
-        check_gpu::<2>(2..=24);
+        check_gpu::<1>(2..=26, search::Prune::NONE);
+        check_gpu::<2>(2..=24, search::Prune::NONE);
+    }
+
+    // the typical-set test runs in fixed point on the GPU; on these bases it
+    // makes the same decisions as the CPU
+    #[cfg(feature = "gpu")]
+    #[test]
+    fn gpu_zscore_matches_cpu() {
+        let n = search::Prune::NONE;
+        check_gpu::<1>(10..=26, search::Prune { zscore: 3.0, ..n });
+        check_gpu::<1>(10..=26, search::Prune { zscore: 2.0, zlaw: search::ZLaw::Cond, zfrom: 1.0, zslope: 2.0, ..n });
+        check_gpu::<2>(10..=24, search::Prune { zscore: 2.5, ..n });
     }
 
     // every solution for the weights of `prune`, by trying every digit multiset
