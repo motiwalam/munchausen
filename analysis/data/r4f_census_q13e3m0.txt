@@ -1,0 +1,197 @@
+# r4f_ffield q 13 e 3 m 0 max length 113, model in 0.5 s
+orbit 2197 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 0
+orbit 2198 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2199 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 2200 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2201 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2202 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2203 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 2204 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2205 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2206 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 2207 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2208 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2209 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 2210 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 2211 size 156 k 3 sols 2028 basic 0.9959 refined 2187.9636 lengths 5:156,57:312,113:1560 zeros0 156
+orbit 2212 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 113:624 zeros0 0
+orbit 2213 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2214 size 156 k 2 sols 0 basic 0.9959 refined 167.8748 lengths  zeros0 0
+orbit 2215 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2216 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2217 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2218 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2219 size 156 k 1 sols 156 basic 0.9959 refined 11.9986 lengths 113:156 zeros0 0
+orbit 2220 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2221 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 2222 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2223 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 2224 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2225 size 156 k 2 sols 468 basic 0.9959 refined 169.7237 lengths 113:468 zeros0 0
+orbit 2226 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2227 size 156 k 2 sols 780 basic 0.9959 refined 169.7237 lengths 57:156,113:624 zeros0 0
+orbit 2228 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2229 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 2230 size 156 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 57:156,113:2028 zeros0 0
+orbit 2231 size 156 k 3 sols 2028 basic 0.9959 refined 2187.9636 lengths 113:2028 zeros0 0
+orbit 2232 size 156 k 2 sols 780 basic 0.9959 refined 169.7237 lengths 57:156,113:624 zeros0 0
+orbit 2233 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2234 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 2235 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2249 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2250 size 156 k 3 sols 2340 basic 0.9959 refined 2187.9636 lengths 5:156,57:156,113:2028 zeros0 156
+orbit 2251 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2252 size 156 k 2 sols 0 basic 0.9959 refined 167.8748 lengths  zeros0 0
+orbit 2253 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 2254 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2255 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 2256 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2257 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 57:156,113:156 zeros0 0
+orbit 2258 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2259 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2260 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2261 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 2288 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 2289 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2290 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 57:156,113:156 zeros0 0
+orbit 2291 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2292 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2293 size 156 k 3 sols 1716 basic 0.9959 refined 2187.9636 lengths 5:156,113:1560 zeros0 156
+orbit 2294 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 57:156,113:468 zeros0 0
+orbit 2295 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2296 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2297 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 2298 size 156 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,57:312,113:1716 zeros0 156
+orbit 2299 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 2300 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4394 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4395 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4396 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4397 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 4398 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 4399 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4400 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4401 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4402 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4403 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4404 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 4405 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 4406 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 4407 size 156 k 1 sols 156 basic 0.9959 refined 11.9986 lengths 113:156 zeros0 0
+orbit 4408 size 156 k 2 sols 468 basic 0.9959 refined 169.7237 lengths 113:468 zeros0 0
+orbit 4409 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4410 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 113:624 zeros0 0
+orbit 4411 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4412 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4413 size 156 k 3 sols 2808 basic 0.9959 refined 2187.9636 lengths 57:156,113:2652 zeros0 0
+orbit 4414 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4415 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4416 size 156 k 3 sols 2028 basic 0.9959 refined 2187.9636 lengths 57:156,113:1872 zeros0 0
+orbit 4417 size 156 k 2 sols 468 basic 0.9959 refined 169.7237 lengths 113:468 zeros0 0
+orbit 4418 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4419 size 156 k 2 sols 468 basic 0.9959 refined 169.7237 lengths 113:468 zeros0 0
+orbit 4420 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4421 size 156 k 3 sols 1716 basic 0.9959 refined 2187.9636 lengths 113:1716 zeros0 0
+orbit 4422 size 156 k 1 sols 156 basic 0.9959 refined 11.9986 lengths 113:156 zeros0 0
+orbit 4423 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4424 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4425 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4426 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4427 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 4428 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 4429 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 113:624 zeros0 0
+orbit 4430 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4431 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4432 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4446 size 156 k 3 sols 2340 basic 0.9959 refined 2187.9636 lengths 5:156,113:2184 zeros0 156
+orbit 4447 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4448 size 156 k 3 sols 1872 basic 0.9959 refined 2187.9636 lengths 113:1872 zeros0 0
+orbit 4449 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 4450 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 57:156,113:156 zeros0 0
+orbit 4451 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4452 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4453 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4454 size 156 k 2 sols 780 basic 0.9959 refined 169.7237 lengths 113:780 zeros0 0
+orbit 4455 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4456 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4457 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 4458 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4485 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 4486 size 156 k 3 sols 1872 basic 0.9959 refined 2187.9636 lengths 57:156,113:1716 zeros0 0
+orbit 4487 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4488 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4489 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4490 size 156 k 2 sols 0 basic 0.9959 refined 167.8748 lengths  zeros0 0
+orbit 4491 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4492 size 156 k 2 sols 780 basic 0.9959 refined 169.7237 lengths 113:780 zeros0 0
+orbit 4493 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 4494 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 4495 size 156 k 2 sols 312 basic 0.9959 refined 167.8748 lengths 113:312 zeros0 0
+orbit 4496 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 4497 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8788 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8789 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8790 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8791 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8792 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8793 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 8794 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8795 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 8796 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 8797 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8798 size 52 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 5:156,113:2028 zeros0 156
+orbit 8799 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8800 size 52 k 1 sols 0 basic 0.9959 refined 11.8748 lengths  zeros0 0
+orbit 8801 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 8802 size 156 k 3 sols 2028 basic 0.9959 refined 2187.9636 lengths 113:2028 zeros0 0
+orbit 8803 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8804 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8805 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8806 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8807 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 8808 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8809 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8810 size 156 k 2 sols 312 basic 0.9959 refined 167.8748 lengths 113:312 zeros0 0
+orbit 8811 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8812 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8813 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 113:624 zeros0 0
+orbit 8814 size 156 k 1 sols 156 basic 0.9959 refined 11.9986 lengths 113:156 zeros0 0
+orbit 8815 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8816 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8817 size 156 k 1 sols 156 basic 0.9959 refined 11.9986 lengths 113:156 zeros0 0
+orbit 8818 size 156 k 3 sols 1092 basic 0.9959 refined 2187.9636 lengths 5:156,57:156,113:780 zeros0 156
+orbit 8819 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 8820 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8821 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8822 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8823 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 57:156,113:156 zeros0 0
+orbit 8824 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8825 size 156 k 3 sols 2652 basic 0.9959 refined 2187.9636 lengths 57:156,113:2496 zeros0 0
+orbit 8826 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8840 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 8841 size 156 k 3 sols 2184 basic 0.9959 refined 2187.9636 lengths 57:156,113:2028 zeros0 0
+orbit 8842 size 156 k 2 sols 156 basic 0.9959 refined 167.8748 lengths 113:156 zeros0 0
+orbit 8843 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8844 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8845 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 113:624 zeros0 0
+orbit 8846 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8847 size 156 k 1 sols 156 basic 0.9959 refined 11.9986 lengths 113:156 zeros0 0
+orbit 8848 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8849 size 156 k 2 sols 312 basic 0.9959 refined 169.7237 lengths 113:312 zeros0 0
+orbit 8850 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8851 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8852 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8879 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 113:156 zeros0 0
+orbit 8880 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8881 size 156 k 2 sols 156 basic 0.9959 refined 169.7237 lengths 57:156 zeros0 0
+orbit 8882 size 156 k 3 sols 2808 basic 0.9959 refined 2187.9636 lengths 57:156,113:2652 zeros0 0
+orbit 8883 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8884 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8885 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8886 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8887 size 156 k 2 sols 0 basic 0.9959 refined 169.7237 lengths  zeros0 0
+orbit 8888 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8889 size 156 k 2 sols 624 basic 0.9959 refined 169.7237 lengths 113:624 zeros0 0
+orbit 8890 size 156 k 1 sols 0 basic 0.9959 refined 11.9986 lengths  zeros0 0
+orbit 8891 size 156 k 3 sols 2652 basic 0.9959 refined 2187.9636 lengths 57:156,113:2496 zeros0 0
+# total q 13 e 3 m 0: bases 26364 solutions 10732176 per base 407.0769 basic 0.9959 refined 379.1180 time 18.1 s

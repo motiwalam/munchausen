@@ -1,0 +1,16 @@
+# r4f_ffield q 5 e 3 m 0 max length 17, model in 0.0 s
+type D_0..D_e-1 0,top,0 real/base 0.0000 refined/base 0.2065
+type D_0..D_e-1 top,top,0 real/base 0.0000 refined/base 0.1032
+type D_0..D_e-1 0,0,low real/base 0.8000 refined/base 1.5766
+type D_0..D_e-1 top,0,low real/base 0.0000 refined/base 0.6098
+type D_0..D_e-1 0,low,low real/base 0.0000 refined/base 0.5949
+type D_0..D_e-1 top,low,low real/base 0.0000 refined/base 0.1674
+type D_0..D_e-1 0,top,low real/base 0.8000 refined/base 1.3719
+type D_0..D_e-1 top,top,low real/base 0.0000 refined/base 0.4295
+type D_0..D_e-1 0,0,top real/base 15.5200 refined/base 2.4847
+type D_0..D_e-1 top,0,top real/base 0.6400 refined/base 1.8581
+type D_0..D_e-1 0,low,top real/base 0.6400 refined/base 4.1463
+type D_0..D_e-1 top,low,top real/base 0.0000 refined/base 2.6713
+type D_0..D_e-1 0,top,top real/base 16.0000 refined/base 6.0163
+type D_0..D_e-1 top,top,top real/base 0.0000 refined/base 3.9936
+# total q 5 e 3 m 0: bases 500 solutions 17200 per base 34.4000 basic 0.9910 refined 26.2301 time 0.0 s

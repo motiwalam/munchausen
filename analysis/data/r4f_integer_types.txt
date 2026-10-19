@@ -1,0 +1,4 @@
+0^0 = 0, even bases 12-41: 19 long solutions, zero digits 10 against 16.8 +/- 4.0; solutions without zeros 11 against 7.7
+0^0 = 0, odd bases 12-41: 29 long solutions, zero digits 19 against 25.7 +/- 5.0; solutions without zeros 15 against 11.7
+0^0 = 1, even bases 12-41: 21 long solutions, zero digits 17 against 18.5 +/- 4.2; solutions without zeros 11 against 8.6
+0^0 = 1, odd bases 12-41: 23 long solutions, zero digits 16 against 14.6 +/- 4.8; solutions without zeros 15 against 16.1

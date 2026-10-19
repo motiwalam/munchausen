@@ -1,0 +1,11 @@
+# q 3 e 4 m 0: max length 21, 8 offsets per K and orbit
+refined model per base 9.858
+K   0 (bottom 0 digits changed) near-solutions per base and offset 14.444
+K   1 (bottom 2 digits changed) near-solutions per base and offset 14.444
+K   4 (bottom 2 digits changed) near-solutions per base and offset 11.708
+K   8 (bottom 3 digits changed) near-solutions per base and offset 11.625
+K  16 (bottom 5 digits changed) near-solutions per base and offset 10.583
+K  32 (bottom 9 digits changed) near-solutions per base and offset 8.854
+K  48 (bottom 13 digits changed) near-solutions per base and offset 8.701
+K  64 (bottom 17 digits changed) near-solutions per base and offset 5.868
+K  76 (bottom 20 digits changed) near-solutions per base and offset 6.632

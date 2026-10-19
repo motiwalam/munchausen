@@ -1,0 +1,27 @@
+# r4f_ffield q 5 e 3 m 1 max length 17, model in 0.0 s
+orbit 125 size 20 k 2 sols 16 basic 0.9910 refined 24.8474 lengths 17:16 zeros0 16
+orbit 126 size 20 k 1 sols 0 basic 0.9910 refined 3.2567 lengths  zeros0 0
+orbit 127 size 20 k 2 sols 80 basic 0.9910 refined 24.8474 lengths 17:80 zeros0 80
+orbit 128 size 20 k 2 sols 0 basic 0.9910 refined 24.8474 lengths  zeros0 0
+orbit 129 size 20 k 2 sols 0 basic 0.9910 refined 24.8474 lengths  zeros0 0
+orbit 130 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 131 size 20 k 3 sols 60 basic 0.9910 refined 110.4050 lengths 17:60 zeros0 60
+orbit 132 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 133 size 20 k 2 sols 0 basic 0.9910 refined 24.8474 lengths  zeros0 0
+orbit 134 size 20 k 2 sols 0 basic 0.9910 refined 24.8474 lengths  zeros0 0
+orbit 135 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 136 size 20 k 2 sols 20 basic 0.9910 refined 24.8474 lengths 17:20 zeros0 20
+orbit 137 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 138 size 20 k 2 sols 0 basic 0.9910 refined 20.8447 lengths  zeros0 0
+orbit 139 size 20 k 2 sols 20 basic 0.9910 refined 20.8447 lengths 17:20 zeros0 20
+orbit 140 size 20 k 2 sols 0 basic 0.9910 refined 20.8447 lengths  zeros0 0
+orbit 141 size 20 k 2 sols 0 basic 0.9910 refined 24.8474 lengths  zeros0 0
+orbit 142 size 20 k 2 sols 20 basic 0.9910 refined 20.8447 lengths 17:20 zeros0 20
+orbit 143 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 144 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 145 size 20 k 2 sols 20 basic 0.9910 refined 24.8474 lengths 17:20 zeros0 20
+orbit 146 size 20 k 3 sols 40 basic 0.9910 refined 110.4050 lengths 17:40 zeros0 40
+orbit 147 size 20 k 2 sols 20 basic 0.9910 refined 24.8474 lengths 17:20 zeros0 20
+orbit 148 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+orbit 149 size 20 k 1 sols 0 basic 0.9910 refined 3.4411 lengths  zeros0 0
+# total q 5 e 3 m 1: bases 500 solutions 5920 per base 11.8400 basic 0.9910 refined 23.3379 time 0.0 s
