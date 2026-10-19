@@ -11,6 +11,7 @@ import Munchausen.Conjectures
 import Munchausen.Residues
 import Munchausen.ThreeAdic
 import Munchausen.ShortEquations
+import Munchausen.LocalTests
 import Munchausen.OtherSystems
 import Munchausen.FunctionField
 import Munchausen.ThreeDigits
