@@ -89,10 +89,10 @@ options:
                           resumable units (default: 4)
   --par-depth <n>         (search) further depth below a unit down to which
                           work is split into parallel tasks (default: 4)
-  --gpu                   (search, exact only) run the search on the GPU through
-                          Vulkan; needs a build with --features gpu
-  --hybrid                (search, exact only) like --gpu, but the CPU threads
-                          search units too
+  --gpu                   (search, exact or --zscore) run the search on the GPU
+                          through Vulkan; needs a build with --features gpu
+  --hybrid                (search, exact or --zscore) like --gpu, but the CPU
+                          threads search units too
   --gpu-subgroups <n>     (with --gpu) number of subgroups that search in
                           parallel (default: 2048)
 

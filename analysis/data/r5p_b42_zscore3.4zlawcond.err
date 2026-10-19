@@ -1,0 +1,5 @@
+  gpu: 808 dispatches, 198.790 s on the GPU, 205.615 s in all, 20.4 M nodes/s
+  cpu: 236899 of 292060 units and 494359 GPU items, done after 205.910 s
+  base 42: 7026535103 nodes, 35899127493 interval evaluations
+  base 42: expected number of solutions in skipped subtrees 0.0079
+base 42 done in 206.161s

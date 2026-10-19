@@ -1,0 +1,44 @@
+run base 36 [--zscore 2.94] 26.93 s wall, 157.83 s CPU, 364550317 nodes, load 1.3, output 54e004a0
+run base 36 [--zscore 3.37 --zlaw cond] 26.83 s wall, 145.57 s CPU, 296300483 nodes, load 4.5, output 54e004a0
+run base 36 [--zscore 3.33] 45.41 s wall, 207.33 s CPU, 490676866 nodes, load 7.0, output 54e004a0
+run base 36 [--zscore 3.82 --zlaw cond] 40.08 s wall, 184.89 s CPU, 405602260 nodes, load 10.6, output 54e004a0
+run base 36 [--zscore 2.94] 29.05 s wall, 159.24 s CPU, 364550317 nodes, load 13.4, output 54e004a0
+run base 36 [--zscore 3.37 --zlaw cond] 27.37 s wall, 143.02 s CPU, 296300483 nodes, load 12.7, output 54e004a0
+run base 36 [--zscore 3.33] 36.35 s wall, 198.55 s CPU, 490676866 nodes, load 13.3, output 54e004a0
+run base 36 [--zscore 3.82 --zlaw cond] 38.49 s wall, 186.70 s CPU, 405602260 nodes, load 12.6, output 54e004a0
+run base 36 [--zscore 2.94] 37.06 s wall, 157.14 s CPU, 364550317 nodes, load 13.3, output 54e004a0
+run base 36 [--zscore 3.37 --zlaw cond] 27.68 s wall, 146.42 s CPU, 296300483 nodes, load 13.8, output 54e004a0
+run base 36 [--zscore 3.33] 35.01 s wall, 201.97 s CPU, 490676866 nodes, load 13.9, output 54e004a0
+run base 36 [--zscore 3.82 --zlaw cond] 32.11 s wall, 184.06 s CPU, 405602260 nodes, load 12.5, output 54e004a0
+median base 36 [--zscore 2.94] 29.05 s wall, 157.83 s CPU over 3 runs
+median base 36 [--zscore 3.37 --zlaw cond] 27.37 s wall, 145.57 s CPU over 3 runs
+median base 36 [--zscore 3.33] 36.35 s wall, 201.97 s CPU over 3 runs
+median base 36 [--zscore 3.82 --zlaw cond] 38.49 s wall, 184.89 s CPU over 3 runs
+run base 34 [] 38.08 s wall, 215.30 s CPU, 824063470 nodes, load 12.1, output 36e8f297
+run base 34 [--gpu] 20.34 s wall, 0.78 s CPU, 824063470 nodes, load 12.5, output 36e8f297
+run base 34 [--hybrid] 14.34 s wall, 65.61 s CPU, 824063470 nodes, load 11.5, output 36e8f297
+run base 34 [] 39.18 s wall, 215.71 s CPU, 824063470 nodes, load 11.5, output 36e8f297
+run base 34 [--gpu] 20.29 s wall, 0.93 s CPU, 824063470 nodes, load 11.5, output 36e8f297
+run base 34 [--hybrid] 13.13 s wall, 75.09 s CPU, 824063470 nodes, load 9.2, output 36e8f297
+median base 34 [] 38.63 s wall, 215.51 s CPU over 2 runs
+median base 34 [--gpu] 20.31 s wall, 0.85 s CPU over 2 runs
+median base 34 [--hybrid] 13.73 s wall, 70.35 s CPU over 2 runs
+run base 38 [--zscore 3] 77.80 s wall, 496.74 s CPU, 1169641079 nodes, load 9.0, output b46dd500
+run base 38 [--zscore 3 --gpu] 43.96 s wall, 2.10 s CPU, 1169641079 nodes, load 10.9, output b46dd500
+run base 38 [--zscore 3 --hybrid] 28.78 s wall, 169.36 s CPU, 1169641079 nodes, load 7.7, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond] 76.79 s wall, 437.02 s CPU, 888209023 nodes, load 10.5, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --gpu] 37.04 s wall, 1.55 s CPU, 888209023 nodes, load 12.8, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --hybrid] 25.79 s wall, 137.28 s CPU, 888209023 nodes, load 9.4, output b46dd500
+run base 38 [--zscore 3] 84.89 s wall, 497.83 s CPU, 1169641079 nodes, load 11.2, output b46dd500
+run base 38 [--zscore 3 --gpu] 44.36 s wall, 2.29 s CPU, 1169641079 nodes, load 12.2, output b46dd500
+run base 38 [--zscore 3 --hybrid] 30.12 s wall, 156.24 s CPU, 1169641079 nodes, load 7.1, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond] 64.18 s wall, 431.65 s CPU, 888209023 nodes, load 9.7, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --gpu] 36.94 s wall, 1.57 s CPU, 888209023 nodes, load 10.3, output b46dd500
+run base 38 [--zscore 3.4 --zlaw cond --hybrid] 23.67 s wall, 152.97 s CPU, 888209023 nodes, load 6.9, output b46dd500
+median base 38 [--zscore 3] 81.34 s wall, 497.28 s CPU over 2 runs
+median base 38 [--zscore 3 --gpu] 44.16 s wall, 2.20 s CPU over 2 runs
+median base 38 [--zscore 3 --hybrid] 29.45 s wall, 162.80 s CPU over 2 runs
+median base 38 [--zscore 3.4 --zlaw cond] 70.49 s wall, 434.34 s CPU over 2 runs
+median base 38 [--zscore 3.4 --zlaw cond --gpu] 36.99 s wall, 1.56 s CPU over 2 runs
+median base 38 [--zscore 3.4 --zlaw cond --hybrid] 24.73 s wall, 145.12 s CPU over 2 runs
+TIMINGDONE

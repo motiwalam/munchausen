@@ -826,7 +826,7 @@ impl<const N: usize> Search<N> {
             // mispredicted branch does not throw them away.
             cur.te = te.add(wk, base);
             cur.hi = hi.add(dhi, base);
-            l.eval(n.zmin);
+            if X { l.eval(n.zmin) } else { l.evals += 1 }
             let ck = cur.occk + e;
             let mk = n.m + ck;
             if X {
@@ -1000,7 +1000,7 @@ impl<const N: usize> Search<N> {
         let ts = X && p.tree_stats;
         let mut starts = [0u64; 64];
         let (mut cur_start, mut split) = (l.nodes, false);
-        l.node(n.zmin);
+        if X { l.node(n.zmin) } else { l.nodes += 1 }
         if k == 1 {
             self.leaf(p, n, cnt);
             return;
@@ -1028,7 +1028,7 @@ impl<const N: usize> Search<N> {
             match child {
                 Some(c) => {
                     let before = l.nodes;
-                    l.node(c.zmin);
+                    if X { l.node(c.zmin) } else { l.nodes += 1 }
                     if ck == 2 {
                         self.leaf(p, &c, cnt);
                     } else {

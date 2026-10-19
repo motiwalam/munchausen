@@ -1,0 +1,160 @@
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 46 of 46 units and 0 GPU items, done after 0.075 s
+  base 10: 229 nodes, 741 interval evaluations
+  base 10: expected number of solutions in skipped subtrees 0.0038
+base 10 done in 0.077s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 87 of 87 units and 0 GPU items, done after 0.065 s
+  base 11: 390 nodes, 1328 interval evaluations
+  base 11: expected number of solutions in skipped subtrees 0.0056
+base 11 done in 0.066s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 111 of 111 units and 0 GPU items, done after 0.062 s
+  base 12: 546 nodes, 1971 interval evaluations
+  base 12: expected number of solutions in skipped subtrees 0.0103
+base 12 done in 0.063s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 179 of 179 units and 0 GPU items, done after 0.064 s
+  base 13: 1153 nodes, 4127 interval evaluations
+  base 13: expected number of solutions in skipped subtrees 0.0090
+base 13 done in 0.066s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 254 of 254 units and 0 GPU items, done after 0.061 s
+  base 14: 1873 nodes, 6784 interval evaluations
+  base 14: expected number of solutions in skipped subtrees 0.0075
+base 14 done in 0.063s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 335 of 335 units and 0 GPU items, done after 0.062 s
+  base 15: 3702 nodes, 13477 interval evaluations
+  base 15: expected number of solutions in skipped subtrees 0.0106
+base 15 done in 0.064s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 415 of 415 units and 0 GPU items, done after 0.063 s
+  base 16: 5920 nodes, 21985 interval evaluations
+  base 16: expected number of solutions in skipped subtrees 0.0140
+base 16 done in 0.066s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 1220 of 1220 units and 0 GPU items, done after 0.060 s
+  base 17: 11336 nodes, 42490 interval evaluations
+  base 17: expected number of solutions in skipped subtrees 0.0121
+base 17 done in 0.064s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 2163 of 2163 units and 0 GPU items, done after 0.062 s
+  base 18: 19018 nodes, 74424 interval evaluations
+  base 18: expected number of solutions in skipped subtrees 0.0140
+base 18 done in 0.065s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 3353 of 3353 units and 0 GPU items, done after 0.063 s
+  base 19: 29001 nodes, 115261 interval evaluations
+  base 19: expected number of solutions in skipped subtrees 0.0139
+base 19 done in 0.068s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 4965 of 4965 units and 0 GPU items, done after 0.063 s
+  base 20: 46801 nodes, 189822 interval evaluations
+  base 20: expected number of solutions in skipped subtrees 0.0152
+base 20 done in 0.072s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 6508 of 6508 units and 0 GPU items, done after 0.065 s
+  base 21: 83056 nodes, 336691 interval evaluations
+  base 21: expected number of solutions in skipped subtrees 0.0144
+base 21 done in 0.078s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 8614 of 8614 units and 0 GPU items, done after 0.065 s
+  base 22: 159191 nodes, 649004 interval evaluations
+  base 22: expected number of solutions in skipped subtrees 0.0153
+base 22 done in 0.083s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 11174 of 11174 units and 0 GPU items, done after 0.060 s
+  base 23: 277242 nodes, 1134853 interval evaluations
+  base 23: expected number of solutions in skipped subtrees 0.0165
+base 23 done in 0.081s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 13977 of 13977 units and 0 GPU items, done after 0.073 s
+  base 24: 493556 nodes, 2030352 interval evaluations
+  base 24: expected number of solutions in skipped subtrees 0.0183
+base 24 done in 0.088s
+  gpu: 0 dispatches, 0.000 s on the GPU, 0.000 s in all, NaN M nodes/s
+  cpu: 17966 of 17966 units and 0 GPU items, done after 0.106 s
+  base 25: 809795 nodes, 3383983 interval evaluations
+  base 25: expected number of solutions in skipped subtrees 0.0166
+base 25 done in 0.124s
+  gpu: 7 dispatches, 0.062 s on the GPU, 0.065 s in all, 11.2 M nodes/s
+  cpu: 14068 of 22260 units and 1 GPU items, done after 0.133 s
+  base 26: 1423003 nodes, 5988396 interval evaluations
+  base 26: expected number of solutions in skipped subtrees 0.0091
+base 26 done in 0.151s
+  gpu: 8 dispatches, 0.067 s on the GPU, 0.072 s in all, 21.5 M nodes/s
+  cpu: 12485 of 28116 units and 0 GPU items, done after 0.165 s
+  base 27: 2468929 nodes, 10396253 interval evaluations
+  base 27: expected number of solutions in skipped subtrees 0.0066
+base 27 done in 0.189s
+  gpu: 9 dispatches, 0.101 s on the GPU, 0.110 s in all, 29.5 M nodes/s
+  cpu: 14272 of 32932 units and 0 GPU items, done after 0.190 s
+  base 28: 4138756 nodes, 17727527 interval evaluations
+  base 28: expected number of solutions in skipped subtrees 0.0051
+base 28 done in 0.223s
+  gpu: 10 dispatches, 0.146 s on the GPU, 0.155 s in all, 37.0 M nodes/s
+  cpu: 17161 of 39694 units and 4 GPU items, done after 0.264 s
+  base 29: 7046872 nodes, 30913687 interval evaluations
+  base 29: expected number of solutions in skipped subtrees 0.0038
+base 29 done in 0.293s
+  gpu: 12 dispatches, 0.277 s on the GPU, 0.291 s in all, 39.0 M nodes/s
+  cpu: 17533 of 48573 units and 2 GPU items, done after 0.355 s
+  base 30: 12657118 nodes, 56461622 interval evaluations
+  base 30: expected number of solutions in skipped subtrees 0.0026
+base 30 done in 0.389s
+  gpu: 12 dispatches, 0.688 s on the GPU, 0.714 s in all, 24.4 M nodes/s
+  cpu: 8645 of 60144 units and 1 GPU items, done after 0.880 s
+  base 31: 20456946 nodes, 92506402 interval evaluations
+  base 31: expected number of solutions in skipped subtrees 0.0028
+base 31 done in 0.930s
+  gpu: 12 dispatches, 1.088 s on the GPU, 1.127 s in all, 24.0 M nodes/s
+  cpu: 21685 of 71187 units and 0 GPU items, done after 1.279 s
+  base 32: 30533202 nodes, 141115532 interval evaluations
+  base 32: expected number of solutions in skipped subtrees 0.0018
+base 32 done in 1.324s
+  gpu: 17 dispatches, 2.146 s on the GPU, 2.215 s in all, 25.6 M nodes/s
+  cpu: 35063 of 84559 units and 2317 GPU items, done after 2.314 s
+  base 33: 67101809 nodes, 310075383 interval evaluations
+  base 33: expected number of solutions in skipped subtrees 0.0037
+base 33 done in 2.379s
+  gpu: 21 dispatches, 3.170 s on the GPU, 3.281 s in all, 25.6 M nodes/s
+  cpu: 24931 of 97629 units and 21789 GPU items, done after 3.379 s
+  base 34: 104418204 nodes, 490983016 interval evaluations
+  base 34: expected number of solutions in skipped subtrees 0.0041
+base 34 done in 3.469s
+  gpu: 28 dispatches, 4.987 s on the GPU, 5.093 s in all, 25.5 M nodes/s
+  cpu: 51921 of 109942 units and 28878 GPU items, done after 5.265 s
+  base 35: 172023350 nodes, 812193961 interval evaluations
+  base 35: expected number of solutions in skipped subtrees 0.0050
+base 35 done in 5.350s
+  gpu: 41 dispatches, 8.161 s on the GPU, 8.303 s in all, 25.8 M nodes/s
+  cpu: 89010 of 131538 units and 28657 GPU items, done after 8.389 s
+  base 36: 303506752 nodes, 1447585927 interval evaluations
+  base 36: expected number of solutions in skipped subtrees 0.0065
+base 36 done in 8.485s
+  gpu: 62 dispatches, 13.611 s on the GPU, 13.872 s in all, 25.1 M nodes/s
+  cpu: 56320 of 151073 units and 22826 GPU items, done after 14.014 s
+  base 37: 527446991 nodes, 2545496697 interval evaluations
+  base 37: expected number of solutions in skipped subtrees 0.0070
+base 37 done in 14.123s
+  gpu: 100 dispatches, 23.263 s on the GPU, 23.638 s in all, 24.8 M nodes/s
+  cpu: 109522 of 172053 units and 1 GPU items, done after 23.899 s
+  base 38: 888209023 nodes, 4343425284 interval evaluations
+  base 38: expected number of solutions in skipped subtrees 0.0069
+base 38 done in 24.016s
+  gpu: 177 dispatches, 41.931 s on the GPU, 42.569 s in all, 25.1 M nodes/s
+  cpu: 138011 of 198197 units and 1 GPU items, done after 42.708 s
+  base 39: 1606071687 nodes, 7849092867 interval evaluations
+  base 39: expected number of solutions in skipped subtrees 0.0069
+base 39 done in 42.847s
+  gpu: 266 dispatches, 63.744 s on the GPU, 64.550 s in all, 24.8 M nodes/s
+  cpu: 188254 of 223786 units and 50971 GPU items, done after 64.650 s
+  base 40: 2517286347 nodes, 12491772463 interval evaluations
+  base 40: expected number of solutions in skipped subtrees 0.0078
+base 40 done in 64.809s
+  gpu: 459 dispatches, 112.867 s on the GPU, 115.053 s in all, 23.2 M nodes/s
+  cpu: 174475 of 255387 units and 3 GPU items, done after 115.169 s
+  base 41: 4443133569 nodes, 22326808902 interval evaluations
+  base 41: expected number of solutions in skipped subtrees 0.0084
+base 41 done in 115.297s
