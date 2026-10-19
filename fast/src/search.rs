@@ -90,6 +90,15 @@ pub struct Params<const N: usize> {
     zoff: Vec<f64>,
     zhist: bool,
     tree_stats: bool,
+    // The residue rule. A solution has sum (w(x) - x) c_x + offset == 0
+    // modulo q = b - 1 (Proposition 1.5). rres[m * (kmax + 1) + x] is
+    // w(x) - x modulo q under convention m. Bit r of rok[2 k + m] is set if
+    // a node with residue r and one free slot below k can still reach
+    // residue 0 under convention m.
+    q: u8,
+    rres: Vec<u8>,
+    rok: Vec<u128>,
+    root_res: [u8; 2],
 }
 
 /// Pruning rules for the inexact search. Both are off by default.
@@ -150,6 +159,9 @@ pub struct Prune {
     pub tree_stats: bool,
     /// replace the null law of ln E in these cells: (d, k, pp, mean, sd)
     pub ztable: Option<&'static [(u32, u32, u32, f64, f64)]>,
+    /// the conventions (bit m for 0^0 = m) for which a node must keep
+    /// n == F(n) modulo b - 1 possible; 0 turns the residue rule off
+    pub residue: u8,
 }
 
 /// The null law of ln E for the typical-set test.
@@ -172,7 +184,7 @@ fn zbin(z: f32) -> usize {
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None, zlaw: ZLaw::Poisson, zfrom: 0.75, zslope: 0.0, zhist: false, tree_stats: false, ztable: None };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None, zlaw: ZLaw::Poisson, zfrom: 0.75, zslope: 0.0, zhist: false, tree_stats: false, ztable: None, residue: 3 };
 
     /// whether the weights differ from x^x with 0^0 in {0, 1}
     pub fn custom_weights(&self) -> bool {
@@ -353,6 +365,23 @@ impl<const N: usize> Params<N> {
         // the shift of the threshold at level k, and the threshold itself
         let zoff: Vec<f64> = (0..=kmax).map(|k| if prune.zslope == 0.0 { 0.0 } else { prune.zslope * (k as f64 / (kmax + 1) as f64 - 0.5) }).collect();
         let lik_thr = lik_mean.iter().zip(&lik_sd).enumerate().map(|(i, (m, s))| m - (prune.zscore + zoff[i / (d as usize + 1)]) * s).collect();
+        // the residue rule: r_m(x) = w(x) - x modulo q, with w(0) = zw[m]
+        let q = b - 1;
+        let rres: Vec<u8> = (0..2)
+            .flat_map(|m| (0..=kmax).map(move |x| (m, x)))
+            .map(|(m, x)| {
+                let wx = if x == 0 { zw[m].rem_euclid(q as i64) as u32 } else { (&wt[x] % q).iter_u32_digits().next().unwrap_or(0) };
+                ((wx + q - x as u32 % q) % q) as u8
+            })
+            .collect();
+        let mut rok = vec![if prune.residue & 3 == 0 { u128::MAX } else { 0 }; (kmax + 1) * 2];
+        for m in (0..2).filter(|m| prune.residue & (1 << m) != 0) {
+            for k in 1..=kmax {
+                // residue r is fine if r + r_m(x) == 0 for a digit x < k
+                rok[2 * k + m] = (0..k).fold(0, |a, x| a | 1 << ((q - rres[m * (kmax + 1) + x] as u32) % q));
+            }
+        }
+        let root_res = [(prune.offset % q as u64) as u8; 2];
         Params {
             d,
             base: Base::new(b),
@@ -394,7 +423,47 @@ impl<const N: usize> Params<N> {
             zoff,
             zhist: prune.zhist,
             tree_stats: prune.tree_stats,
+            q: q as u8,
+            rres,
+            rok,
+            root_res,
         }
+    }
+
+    // whether a node with the residues res, whose one free slot holds a
+    // digit below k, can still have n == F(n) modulo b - 1 under some
+    // convention
+    #[inline(always)]
+    fn res_ok(&self, k: usize, res: [u8; 2]) -> bool {
+        let ok = unsafe { (self.rok.get_unchecked(2 * k) >> res[0]) | (self.rok.get_unchecked(2 * k + 1) >> res[1]) };
+        ok & 1 != 0
+    }
+
+    // the residues of a node whose cursor decides c_k: the digits above k
+    // count cnt[x] times, and the digits up to k as often as the known
+    // leading digits hold them (each of those was forced)
+    #[cfg_attr(not(any(test, feature = "gpu")), allow(dead_code))]
+    fn node_res(&self, n: &Node<N>, k: usize, cnt: &Hist) -> [u8; 2] {
+        let lo = self.clip_lo(&n.t);
+        let known = self.known(n.pp);
+        let mut res = self.root_res;
+        for x in 0..=self.kmax {
+            let c = if x > k { cnt[x] as u32 } else { lo.count(x as u8, known) };
+            for _ in 0..c {
+                res = self.res_add(res, x);
+            }
+        }
+        res
+    }
+
+    // the residues after one more copy of the digit x
+    #[inline(always)]
+    fn res_add(&self, res: [u8; 2], x: usize) -> [u8; 2] {
+        let add = |a: u8, r: u8| {
+            let s = a + r;
+            if s >= self.q { s - self.q } else { s }
+        };
+        unsafe { [add(res[0], *self.rres.get_unchecked(x)), add(res[1], *self.rres.get_unchecked(self.kmax + 1 + x))] }
     }
 
     /// Inexact search: under a random arrangement of the digits, the known
@@ -541,6 +610,7 @@ struct Node<const N: usize> {
     lneed: f64,    // sum over decided digits x of ln((c_x - occ_x)!)
     ln_e: f64,     // ln of the model's expected number of solutions below the node
     zmin: f32,     // with --zhist: the smallest z-score on the path to the node
+    res: [u8; 2],  // offset + sum of w(x) - x over the digits in t, modulo b - 1, per convention
 }
 
 #[derive(Default)]
@@ -762,7 +832,7 @@ impl<const N: usize> Search<N> {
         for (pi, p) in self.params.iter().enumerate() {
             let mut l = Local::for_params(p);
             let hi = p.root_hi.add(&p.drop[p.kmax * (p.d as usize + 1) + p.d as usize], &p.base);
-            let root = Node { t: p.root_t, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b), zmin: f32::INFINITY };
+            let root = Node { t: p.root_t, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b), zmin: f32::INFINITY, res: p.root_res };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -843,6 +913,11 @@ impl<const N: usize> Search<N> {
                     continue;
                 }
             }
+            let res = cur.res;
+            cur.res = p.res_add(res, k);
+            if n.rf - e == 1 && !p.res_ok(k, res) {
+                continue;
+            }
             let mut nlo = te.nonzero_mask();
             if X && nlo & p.negbit != 0 {
                 nlo = 0; // lo < 0: clip it to b^(d-1)
@@ -858,14 +933,17 @@ impl<const N: usize> Search<N> {
             let mut clo = if nlo & top == 0 { p.pow_lo } else { te };
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
-            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0, zmin: f32::INFINITY };
+            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0, zmin: f32::INFINITY, res };
             if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt) && {
                 // hi for the child's own cursor, before the branches below
                 c.hi = c.hi.add(unsafe { p.drop.get_unchecked((k - 1) * (p.d as usize + 1) + c.rf as usize) }, base);
                 first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
             }
+                && (c.rf != 1 || p.res_ok(k, c.res))
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n, k, l)))
             {
+                #[cfg(test)]
+                assert_eq!(c.res, p.node_res(&c, k - 1, cnt), "the residues of a node");
                 return Some(c);
             }
         }
@@ -908,6 +986,7 @@ impl<const N: usize> Search<N> {
                 fl &= fl - 1;
                 let x = unsafe { *ld.get_unchecked(i as usize) } as usize;
                 c.t = c.t.add(unsafe { p.w.get_unchecked(x) }, base);
+                c.res = p.res_add(c.res, x);
                 c.hi = c.hi.add(unsafe { p.shift.get_unchecked(row + x) }, base);
             }
             let mut big = new & !forced;
@@ -1079,6 +1158,7 @@ struct Cursor<const N: usize> {
     k: usize,
     e: u32,
     occk: u32,
+    res: [u8; 2], // the residues of the child for e
 }
 
 // the fields of a node that its cursor still needs
@@ -1096,12 +1176,12 @@ impl<const N: usize> Cursor<N> {
     #[inline(always)]
     fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
         let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
-        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e, zmin: n.zmin }, k, e: 0, occk }
+        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e, zmin: n.zmin }, k, e: 0, occk, res: n.res }
     }
 
     // the node of a cursor that has not started yet
     fn node0(&self) -> Node<N> {
         let h = &self.h;
-        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e, zmin: h.zmin }
+        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e, zmin: h.zmin, res: self.res }
     }
 }

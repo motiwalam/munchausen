@@ -51,7 +51,8 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 
 | option | meaning |
 |---|---|
-| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`) |
+| `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`). With one convention, the residue rule keeps only its solutions, so the search visits 13% to 30% fewer nodes than for `both` |
+| `--no-residue` | `search` only. Turn off the residue rule (see "Third round" below), for comparisons |
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
 | `--progress` | `search` only. Print progress every 10 seconds, with the node count and an estimate of the share of the work done (fitted on bases 26 to 33 under the `x^x` weights, so rough for other weights). |
@@ -62,8 +63,10 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | `--unit-depth <n>` | `search` only. Tree depth of the resumable work units (default 4). |
 | `--par-depth <n>` | `search` only. Depth below a unit at which the program still splits work into parallel tasks (default 4). |
 
-`search` always explores the tree for both conventions. `-m` only selects the
-output, so `-m 1` takes as long as `both`.
+`search` explores one tree for both conventions. With `-m 0` or `-m 1` the
+residue rule tests only that convention, so the tree is smaller, and the
+search can miss solutions of the other convention. A journal records the
+convention, and a run with another `-m` refuses it.
 
 ### Long runs
 
@@ -285,6 +288,51 @@ What did not help, in cycles at base 26 on a P-core:
   `../docs/algorithm.md`.
 
 `docs/algorithm.md` describes the data structures.
+
+### Third round: the residue rule
+
+A solution satisfies `sum (w(x) - x) c_x == 0 (mod b - 1)`, because a
+number is congruent to its digit sum (Proposition 1.5 of the library). A
+node with one free slot knows its whole multiset except one digit `y`
+below `k`, so the congruence leaves only the `y` with the right residue.
+The search drops the node if no `y < k` has it, under both conventions.
+`docs/algorithm.md` ("The residue rule") gives the details, and
+`docs/library/drafts/round6-search.md` the measurements. The output is the
+same as before for every base from 2 to 35.
+
+43% of the nodes of the old tree had one free slot. The rule removes 13% to
+25% of all nodes in bases 15 to 33, more where `b - 1` has the factors 2, 3
+and 5. User-mode cycles of `search b -j 1` on one P-core, median of 2 or 3
+alternating runs, other jobs on the machine:
+
+| base | nodes before | nodes after | cycles before | cycles after | change |
+|---:|---:|---:|---:|---:|---:|
+| 24 | 1,430,261 | 1,166,554 | 0.423 G | 0.381 G | -10.0% |
+| 26 | 4,955,060 | 3,894,520 | 1.369 G | 1.202 G | -12.2% |
+| 27 | 9,510,641 | 7,720,378 | 2.552 G | 2.286 G | -10.4% |
+| 28 | 18,025,432 | 13,596,926 | 4.830 G | 4.075 G | -15.6% |
+| 29 | 33,546,007 | 26,908,928 | 9.090 G | 8.002 G | -12.0% |
+| 30 | 66,246,690 | 53,636,804 | 18.15 G | 15.93 G | -12.3% |
+
+Every node now carries its residue per convention. That costs about 10% more
+instructions, so the cycles fall by less than the nodes. The GPU search
+runs the same test, with the same node counts as the CPU. On the GPU it
+made base 30 1.18x faster: 1.03 s against 1.21 s, median of 3 alternating
+runs with `--no-residue`.
+
+What did not help:
+
+- The same test for a child with no free slot (`e = rf`): such a child
+  nearly always fails its interval anyway, and the test cost 2% more
+  cycles at base 26.
+- The test for two free slots: the residues of two digits below `k` reach
+  almost every class modulo `b - 1` under one of the two conventions, so it
+  removed 0.0% to 1% of the nodes.
+- The last one or two digits of `S`. With one free slot the low digits of
+  every completion are known, and they must be digits that the unknown
+  positions still hold. This removes another 17% (one digit) or 24% (two
+  digits) of the nodes at base 26, but the nodes it removes are cheap, and
+  the test cost 2% and 7% more cycles than it saved.
 
 ## GPU search
 

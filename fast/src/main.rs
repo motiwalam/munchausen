@@ -22,7 +22,9 @@ engines:
   merge       combine the outputs of --shard runs into the output of a full run
 
 options:
-  -m, --mode <0|1|both>   value of 0^0 (default: both)
+  -m, --mode <0|1|both>   value of 0^0 (default: both); with one value the
+                          search also skips parts of the tree that hold only
+                          solutions of the other convention
   -j, --threads <n>       worker threads (default: all cores)
   --journal <file>        (search) record finished work units and solutions in
                           <file> and resume from it if it exists; \"{base}\"
@@ -87,6 +89,9 @@ options:
                           mean subtree size per digit count d, level k and
                           number pp of unknown positions; \"{base}\" in the
                           name becomes the base
+  --no-residue            (search) turn off the residue rule: by default the
+                          search drops nodes with one free slot whose digit
+                          multiset cannot satisfy n == F(n) modulo b - 1
   --uniform               (search, inexact) measure --band and --deficit on the
                           scale of the whole random walk instead of pointwise
   --unit-depth <n>        (search) tree depth at which the search is cut into
@@ -152,6 +157,7 @@ fn parse_args() -> Opts {
     let mut shard = (0, 1);
     let mut zhist = None;
     let mut tree_stats = None;
+    let mut no_residue = false;
     let mut i = 0;
     while i < args.len() {
         let a = args[i].as_str();
@@ -182,6 +188,7 @@ fn parse_args() -> Opts {
             "--epsilon" => prune.epsilon = val().parse().unwrap_or_else(|_| die("bad epsilon")),
             "--ratio" => prune.ratio = val().parse().unwrap_or_else(|_| die("bad ratio")),
             "--uniform" => prune.uniform = true,
+            "--no-residue" => no_residue = true,
             "--perturb" => prune.perturb = val().parse().unwrap_or_else(|_| die("bad seed")),
             "--keep-residues" => prune.keep_residues = true,
             "--offset" => prune.offset = val().parse().unwrap_or_else(|_| die("bad offset")),
@@ -242,6 +249,9 @@ fn parse_args() -> Opts {
         }
         i += 1;
     }
+    // the residue rule only needs to keep the solutions of the conventions
+    // that the run reports
+    prune.residue = if no_residue { 0 } else { modes.iter().fold(0, |a, &m| a | 1 << m) };
     if pos.len() < 2 || pos.len() > 3 {
         die("expected an engine and one or two bases");
     }
@@ -352,7 +362,7 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
 
     let journal = o.journal.as_ref().map(|path| {
         let path = path.replace("{base}", &b.to_string()).replace("{shard}", &format!("{shard}of{shards}"));
-        journal::Journal::open(&path, b, total, o.unit_depth, o.shard)
+        journal::Journal::open(&path, b, total, o.unit_depth, o.shard, o.prune.residue)
     });
     let skip: Vec<bool> = match &journal {
         Some(j) => {
@@ -612,6 +622,24 @@ mod tests {
     #[test]
     fn wide_vectors_match_reference() {
         check_against_reference::<2>(2..=22);
+    }
+
+    // The residue rule for one convention keeps every solution of that
+    // convention, and without the rule the search finds the same numbers.
+    #[test]
+    fn residue_rule_keeps_solutions() {
+        for b in 2..=20 {
+            let want = [0, 1].map(|m| sorted(from_u128(if b <= 9 { reference::brute(b, m) } else { reference::dfs_search(b, m).0 }, b)));
+            for residue in 0..4u8 {
+                let o = Opts { prune: search::Prune { residue, ..search::Prune::NONE }, ..test_opts() };
+                let got = run_search_n::<1>(b, &o);
+                for m in 0..2 {
+                    if residue == 0 || residue & (1 << m) != 0 {
+                        assert_eq!(sorted(got[m].clone()), want[m], "base {b} mode {m} residue rule {residue}");
+                    }
+                }
+            }
+        }
     }
 
     // the GPU search, alone and with the CPU, must find the same numbers and

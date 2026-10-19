@@ -30,7 +30,7 @@ layout(local_size_x = 64) in;
 
 // per digit count: d, kmax, then table offsets in digit vectors, then the
 // word offsets of the tables of the typical-set test
-const uint P_D = 0, P_KMAX = 1, P_W = 2, P_DHI = 3, P_SHIFT = 4, P_DROP = 5, P_TW0 = 6, P_POWLO = 7, P_MAXV = 8, P_LF = 9, P_G = 10, P_A = 11, P_STRIDE = 16;
+const uint P_D = 0, P_KMAX = 1, P_W = 2, P_DHI = 3, P_SHIFT = 4, P_DROP = 5, P_TW0 = 6, P_POWLO = 7, P_MAXV = 8, P_LF = 9, P_G = 10, P_A = 11, P_RES = 12, P_ROK = 13, P_STRIDE = 16;
 // a work item: a 16-byte header, then t, hi, te, chi and cnt as digit vectors
 const uint H_PI = 0, H_K = 1, H_E = 2, H_OCCK = 3, H_PP = 4, H_RF = 5, H_ROOT = 6;
 const uint VB = 32 * W;            // bytes per digit vector
@@ -213,7 +213,7 @@ DV count_digit(DV h, DV a, uint i) { return h + DV(VEQ(LANEV, DV(lane_of(a, i)))
 uint nodes_here, evals_here;
 
 // parameters of the current digit count
-uint D, KMAX, OW, ODHI, OSHIFT, ODROP, OTW0, OLF, OG, OA;
+uint D, KMAX, OW, ODHI, OSHIFT, ODROP, OTW0, OLF, OG, OA, ORES, OROK;
 MASK DM, TOP;
 DV POW_LO, MAX_V;
 
@@ -313,6 +313,21 @@ bool likely(uint k, DV cnt, DV hp, uint pp, uint rf) {
     return lneed + int(tab[OG + k * (D + 1u) + rf]) <= a;
 }
 
+// The residue rule of search.rs, for a node with one free slot below k.
+// The multiset holds cnt[x] copies of each x >= k and hp[x] copies of each
+// x < k, since every known leading digit below k was forced.
+bool res_ok(uint k, DV cnt, DV hp) {
+    uint q = B - 1u;
+    DV c = mix(hp, cnt, VGE(LANEV, DV(k)));
+    for (uint m = 0u; m < 2u; m++) {
+        uint r = subgroupAdd(pack1(c * ldv(ORES + m))) % q;
+        if (((tab[OROK + (2u * k + m) * 4u + (r >> 5)] >> (r & 31u)) & 1u) != 0u) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void report(uint mode, DV s) {
     uint slot = 0u;
     if (subgroupElect()) {
@@ -379,6 +394,8 @@ void load_params(uint pi) {
     OLF = par[o + P_LF];
     OG = par[o + P_G];
     OA = par[o + P_A];
+    ORES = par[o + P_RES];
+    OROK = par[o + P_ROK];
     POW_LO = ldv(par[o + P_POWLO]);
     MAX_V = ldv(par[o + P_MAXV]);
     DM = bit(D) - MASK(1);
@@ -463,6 +480,9 @@ bool run_item(uint idx) {
             }
             evals_here++;
             uint ck = occk + ee;
+            if (rf - ee == 1u && !res_ok(k, set_lane(cnt, k, ck), nhp)) {
+                continue;
+            }
             MASK nlo = m_nz(te);
             if ((nlo & ~DM) != MASK(0)) {
                 e = rf + 1u;
@@ -480,7 +500,8 @@ bool run_item(uint idx) {
             cpp = pp;
             crf = rf - ee;
             chp = nhp;
-            if (settle(k, ct, chn, cpp, crf, clo, chc, cnt, chp) && first_digit_ok(clo, chc, cpp, k, cnt, chp) && likely(k, cnt, chp, cpp, crf)) {
+            if (settle(k, ct, chn, cpp, crf, clo, chc, cnt, chp) && first_digit_ok(clo, chc, cpp, k, cnt, chp) && (crf != 1u || res_ok(k, cnt, chp))
+                && likely(k, cnt, chp, cpp, crf)) {
                 got = true;
                 break;
             }
