@@ -274,6 +274,11 @@ up to `B` grows like a power of `ln B`. Conjecture 10.3 says that, apart from
 finitely many and from algebraic families, they all lie in a window of width
 `ln k + ln ln k` above `k`.
 
+Update (chapter 28). The z-score law of section 10.3 overstates the standard
+deviation of `ln E` by 1.15x to 3.8x. Conditioning the cells on their total
+(`--zlaw cond`) fixes it, so a threshold gives the same miss rate in every
+base, with 1.1 to 1.3x fewer nodes at equal miss rate.
+
 Update (chapter 27). Constraint solvers (CP-SAT, CaDiCaL) grow 1.95 to 2.3
 per base, worse than the tree. Theorem 27.2 extends Theorem 10.1 to every
 order of revealing counts, and bottom digits do not help even in bases

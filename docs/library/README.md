@@ -39,6 +39,7 @@ statement is marked by its source:
 | [25. Identity families and 3-digit solutions](25-identity-families.md) | where the large digits of an identity sit; a second infinite family `(c^j, 0, ..., 0, x)`; no other 3-digit solution up to `10^3301`; at most 30 three-digit solutions in almost every base |
 | [26. Near-solutions as evidence](26-near-solutions-evidence.md) | the swap lemma: near-solutions cluster across offsets; a corrected calibration; every chance verdict revisited; a pooled test across worlds |
 | [27. Limits of search](27-limits-of-search.md) | constraint solvers lose to the tree; the entropy floor holds for every order; certificates of emptiness; bottom digits do not pay; the law of work-unit sizes |
+| [28. A sharper z-score rule, length windows and the GPU](28-zscore-gpu.md) | `--zlaw cond` fixes the variance of the z-score test (1.1 to 1.3x fewer nodes at equal miss rate); length windows do not pay; the GPU runs the inexact search and shards |
 | [Open questions](questions.md) | 89 research questions in five rounds, with priorities and answers; [round 5 directions](questions-round5.md) |
 
 ## Main results
@@ -159,7 +160,10 @@ Model:
   solutions, and says the short lists are complete (section 11.4).
 - A search that misses a few percent of solutions grows about 1.71x per
   base instead of 1.89x (section 9.3). The `--zscore` rule keeps its miss rate
-  near 2% from base 30 to 300 (section 10.3).
+  near 2% from base 30 to 300 (section 10.3). With `--zlaw cond` its threshold
+  maps to a fixed miss rate (3.4 for about 2%, 3.8 for about 1%) and it visits
+  1.1 to 1.3x fewer nodes at equal miss rate; stacked with `--hybrid` it ran
+  3.1x faster than CPU `--zscore 3` at base 38 (chapter 28).
 - The exact tree grows like `2^b` in the limit (section 10.1).
 - Under `0^0 = 1`, long solutions lie within `ln k + ln ln k` of their length
   `k`, apart from algebraic families (Conjecture 10.3).

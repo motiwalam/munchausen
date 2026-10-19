@@ -1,8 +1,8 @@
-# Round 5: a sharper z-score rule, length windows, and the GPU
+# 28. A sharper z-score rule, length windows and the GPU
 
 Chapter 10 gave the inexact search its best rule, `--zscore 3`: a node is
 dropped when `ln E`, the log of its expected number of solutions, lies more
-than 3 standard deviations below its mean. This draft does three things. It
+than 3 standard deviations below its mean. This chapter does three things. It
 replaces the law behind that rule by one with the right standard deviation,
 and measures the gain at equal miss rate. It measures what a window on the
 length of a solution saves. It runs the rule on the GPU, together with
@@ -10,7 +10,7 @@ length of a solution saves. It runs the rule on the GPU, together with
 
 Each statement carries one mark:
 
-- proven: a proof is in this draft;
+- proven: a proof is in this chapter;
 - computed: a measurement, with its range;
 - heuristic: an estimate that rests on the model of chapter 5.
 
@@ -23,23 +23,23 @@ load.
 
 | section | statement | result | status |
 |---|---|---|---|
-| 1.1 | the law of `ln E` | the Poisson law of chapter 10 gets the mean right but overstates the standard deviation by 1.15x to 3.8x (Table 1.1). Conditioning the cells on their total (`--zlaw cond`) is within 5% of a direct simulation. | computed |
-| 1.2 | calibration on planted paths | under `cond` the z-score of a planted solution has mean 0.03 to 0.25 and standard deviation 0.89 to 1.01 at every level from 0.3 to 0.9 of `kmax`, in bases 40 to 200. Under `poisson` the standard deviation rises from 0.5 at level 0.3 to 1.0 at level 0.9. | computed |
-| 1.3 | forced top digits | a planted solution whose top 3 digits are those of `F`, as in the second-order model, has the same z-score law within sampling error. The rule only tests levels where the top digits are already known. | computed |
-| 1.4 | one run per curve (Lemma 1.2) | a run at a loose threshold that records each node's smallest z on its path gives the node count of every stricter threshold exactly | proven, checked |
-| 1.5 | gain at equal miss rate (Proposition 1.3) | at a planted miss rate of 1% or 2%, `--zlaw cond` visits 1.10x to 1.34x fewer nodes and makes 1.04x to 1.20x fewer interval evaluations than the default law, in bases 30 to 40. The gain grows with the base. | computed |
-| 1.6 | other rules | starting the test at the top level, a threshold that changes with the level, and a cost-aware rule that keeps the nodes with the largest `E / T` all reach the same gain, or less | computed |
-| 1.7 | wall time | the time follows the interval evaluations: 1.07x to 1.18x faster at equal miss rate (bases 34, 36, 42) | computed |
-| 1.8 | larger bases | at a fixed threshold the miss rate of `cond` stays at 2.0% to 2.4% from base 30 to 200; that of `poisson` falls from 2.0% to 0.7%, so the default rule spends more nodes per miss as the base grows | heuristic |
-| 2.1 | cost per length | each length `d = b - J` costs about its share of the solutions: `J = 0` holds 11% to 17% of the nodes and 8% of the solutions, `J = 1` holds 42% to 60% and 55% | computed |
-| 2.2 | length windows (Proposition 2.2) | every window is dominated by a lower threshold: a window saves 1.03x to 1.45x at 2 to 21 points of extra miss rate, a lower threshold saves 1.3x to 6x at the same miss rate | computed |
-| 3.1 | GPU with the z-score rule (Lemma 3.1) | the GPU runs `--zscore` with every law option in fixed point. Same node counts as the CPU at every base tested (10 to 26 in the test suite, 28, 30, 31, 33). | proven (bound), computed |
-| 3.2 | GPU with shards | `--gpu` and `--hybrid` accept `--shard`; three hybrid shards of base 31 merge to the output of one run | computed |
-| 3.3 | speed (Proposition 3.2) | `--hybrid` with the z-score rule runs 2.6x to 2.9x faster than 8 CPU threads at base 38, under a load of 7 to 14 | computed |
+| 28.1.1 | the law of `ln E` | the Poisson law of chapter 10 gets the mean right but overstates the standard deviation by 1.15x to 3.8x (Table 28.1.1). Conditioning the cells on their total (`--zlaw cond`) is within 5% of a direct simulation. | computed |
+| 28.1.2 | calibration on planted paths | under `cond` the z-score of a planted solution has mean 0.03 to 0.25 and standard deviation 0.89 to 1.01 at every level from 0.3 to 0.9 of `kmax`, in bases 40 to 200. Under `poisson` the standard deviation rises from 0.5 at level 0.3 to 1.0 at level 0.9. | computed |
+| 28.1.3 | forced top digits | a planted solution whose top 3 digits are those of `F`, as in the second-order model, has the same z-score law within sampling error. The rule only tests levels where the top digits are already known. | computed |
+| 28.1.4 | one run per curve (Lemma 28.1) | a run at a loose threshold that records each node's smallest z on its path gives the node count of every stricter threshold exactly | proven, checked |
+| 28.1.5 | gain at equal miss rate (Proposition 28.2) | at a planted miss rate of 1% or 2%, `--zlaw cond` visits 1.10x to 1.34x fewer nodes and makes 1.04x to 1.20x fewer interval evaluations than the default law, in bases 30 to 40. The gain grows with the base. | computed |
+| 28.1.6 | other rules | starting the test at the top level, a threshold that changes with the level, and a cost-aware rule that keeps the nodes with the largest `E / T` all reach the same gain, or less | computed |
+| 28.1.7 | wall time | the time follows the interval evaluations: 1.07x to 1.18x faster at equal miss rate (bases 34, 36, 42) | computed |
+| 28.1.8 | larger bases | at a fixed threshold the miss rate of `cond` stays at 2.0% to 2.4% from base 30 to 200; that of `poisson` falls from 2.0% to 0.7%, so the default rule spends more nodes per miss as the base grows | heuristic |
+| 28.2.1 | cost per length | each length `d = b - J` costs about its share of the solutions: `J = 0` holds 11% to 17% of the nodes and 8% of the solutions, `J = 1` holds 42% to 60% and 55% | computed |
+| 28.2.2 | length windows (Proposition 28.6) | every window is dominated by a lower threshold: a window saves 1.03x to 1.45x at 2 to 21 points of extra miss rate, a lower threshold saves 1.3x to 6x at the same miss rate | computed |
+| 28.3.1 | GPU with the z-score rule (Lemma 28.7) | the GPU runs `--zscore` with every law option in fixed point. Same node counts as the CPU at every base tested (10 to 26 in the test suite, 28, 30, 31, 33). | proven (bound), computed |
+| 28.3.2 | GPU with shards | `--gpu` and `--hybrid` accept `--shard`; three hybrid shards of base 31 merge to the output of one run | computed |
+| 28.3.3 | speed (Proposition 28.8) | `--hybrid` with the z-score rule runs 2.6x to 2.9x faster than 8 CPU threads at base 38, under a load of 7 to 14 | computed |
 
-## 1. A sharper z-score rule
+## 28.1 A sharper z-score rule
 
-### 1.1 The law of ln E
+### 28.1.1 The law of ln E
 
 At a node of level `k`, the counts of the digits `k` to `kmax` are fixed.
 The node has `pp` unknown positions and `rf` free digits below `k`, and
@@ -71,7 +71,7 @@ Then
 with `S = sum N_i` and `Var S = pp`. The engine sums the three moments of
 `h` over the two kinds of cells.
 
-Table 1.1 (computed, `analysis/r5p_mc.py`, `analysis/data/r5p_mc.txt`).
+Table 28.1.1 (computed, `analysis/r5p_mc.py`, `analysis/data/r5p_mc.txt`).
 Base 40, `kmax = 39`, 200,000 multinomial draws per cell. Mean and standard
 deviation of `ln E`.
 
@@ -89,7 +89,7 @@ large at the bottom. The conditioned one is within 5% everywhere. Its mean
 is 0.05 to 0.4 too low, a shift that the next section measures on real
 paths.
 
-### 1.2 Calibration on search paths
+### 28.1.2 Calibration on search paths
 
 The multinomial is the law of a random suffix. The node on the path of a
 solution is not a random node: its prefix length `pp` depends on the counts.
@@ -101,7 +101,7 @@ section 9.9) and replays their path with the engine's interval logic. It
 records `k`, `pp`, `rf` and `ln need!` at every level. `r5p_calib.py`
 computes the z-score of each level under both laws.
 
-Table 1.2 (computed, `analysis/data/r5p_calib.txt`). Mean and standard
+Table 28.1.2 (computed, `analysis/data/r5p_calib.txt`). Mean and standard
 deviation of the z-score of planted solutions, by level fraction
 `u = k / (kmax + 1)`. 10,000 strings at bases 40 and 100, 4,000 at base
 200.
@@ -125,7 +125,7 @@ at `u >= 0.6` for 146 of them and below 0.4 for none. Under `cond` at
 3.35, 105 of 221 misses come from `u < 0.6`. The calibrated rule spreads
 its misses over all tested levels.
 
-### 1.3 The forced top digits
+### 28.1.3 The forced top digits
 
 Section 11.2a and chapter 24 found that the top 2 or 3 digits of `F` are
 fixed by the largest digits, and that the digits below them are uniform.
@@ -150,13 +150,13 @@ uniform part below them. So the second-order model does not change the
 per-node likelihood. I use the order-1 rates below, and the order-2 rates
 as a check.
 
-### 1.4 Measuring a whole curve in one run
+### 28.1.4 Measuring a whole curve in one run
 
 The new option `--zhist <file>` gives every node the smallest z-score on its
 path, among the tested levels, and records the nodes and the interval
 evaluations in bins of 0.05 of that value, per length.
 
-Lemma 1.2 (proven). Fix the law and all other options. The nodes that
+Lemma 28.1 (proven). Fix the law and all other options. The nodes that
 `--zscore c` visits are exactly the nodes of a run with `--zscore c0`,
 `c0 >= c`, whose smallest z-score is at least `-c`. The same holds for the
 interval evaluations, counted at their parent.
@@ -176,13 +176,13 @@ threshold up to 5. The miss rate at each threshold comes from the planted
 paths: a planted solution is cut exactly when its smallest z is below
 `-c`.
 
-### 1.5 The gain at equal miss rate
+### 28.1.5 The gain at equal miss rate
 
 `analysis/r5p_curves.py` combines the two curves. For a target planted miss
 rate, it finds the threshold of each law that reaches it and reads off the
 nodes.
 
-Table 1.3 (computed, `analysis/data/r5p_curves.txt`). Nodes and interval
+Table 28.1.3 (computed, `analysis/data/r5p_curves.txt`). Nodes and interval
 evaluations at the same planted miss rate. 10,000 planted strings per base;
 the thresholds carry a sampling error of about 0.05.
 
@@ -201,7 +201,7 @@ the thresholds carry a sampling error of about 0.05.
 | 40 | 1% | 3.33 | `4.68 * 10^9` | 3.81 | `3.48 * 10^9` | 1.34x | 1.19x |
 | 40 | 2% | 2.94 | `3.28 * 10^9` | 3.42 | `2.55 * 10^9` | 1.29x | 1.15x |
 
-Proposition 1.3 (computed). At equal planted miss rate, `--zlaw cond`
+Proposition 28.2 (computed). At equal planted miss rate, `--zlaw cond`
 visits 1.10x to 1.34x fewer nodes than the default law in bases 30 to 40,
 and the gain grows with the base. The interval evaluations fall by 1.04x to
 1.19x. The thresholds `3.4` for 2% and `3.8` for 1% hold in every base of
@@ -221,13 +221,13 @@ looser 1% thresholds neither cuts any. `fast search 10 41 --zscore 3.4
 --zlaw cond --hybrid` finds all 122 nontrivial solutions of bases 10 to
 41, both conventions, in 285 s (load 11).
 
-### 1.6 Other rules that do not do better
+### 28.1.6 Other rules that do not do better
 
 I tried three more ways to spend the same miss rate, all through
 `--zhist` and planted paths, at base 32 and partly at 36.
 
 - Test every level (`--zfrom 1`). Under `cond` the top levels are well
-  calibrated too (Table 1.2), but cutting there costs miss rate and saves
+  calibrated too (Table 28.1.2), but cutting there costs miss rate and saves
   few nodes. At 1% and 2% miss it visits 0.91x to 1.07x the nodes of
   `poisson` (bases 32 to 40), worse than `cond` from 0.75. Under `poisson`
   it is 2x worse, as chapter 10 found.
@@ -245,21 +245,21 @@ I tried three more ways to spend the same miss rate, all through
   1.17x evaluations over `poisson`; at base 36 1.11x to 1.14x nodes and
   1.08x to 1.12x evaluations. That is the same as `cond`, or less.
 
-Heuristic 1.4. Rules that judge one node at a time by its `E` lie on one
+Heuristic 28.3. Rules that judge one node at a time by its `E` lie on one
 frontier. Theorem 10.1 bounds every such rule by the entropy of the path
 law, and the calibrated rule loses only the width of its band,
 `c sqrt(V)`. The cost-aware rule and the slopes move nodes between levels
 but do not shrink that band. A larger gain needs information that `E` does
 not carry, as section 10.4 says.
 
-### 1.7 Wall time
+### 28.1.7 Wall time
 
-Other jobs kept the load high, so Table 1.4 gives the CPU seconds (user
+Other jobs kept the load high, so Table 28.1.4 gives the CPU seconds (user
 plus system) next to the wall times. Each line is the median of alternating
 runs (`analysis/r5p_timing.py`, `analysis/data/r5p_timing.txt` and
-`r5p_timing_idle.txt`). The thresholds are those of Table 1.3.
+`r5p_timing_idle.txt`). The thresholds are those of Table 28.1.3.
 
-Table 1.4 (computed). `poisson` against `cond` at the same planted miss
+Table 28.1.4 (computed). `poisson` against `cond` at the same planted miss
 rate.
 
 | run | miss | load | `poisson` | `cond` | gain |
@@ -276,12 +276,12 @@ the nodes: the calibrated rule saves 1.07x to 1.18x of the time where it
 saves 1.10x to 1.31x of the nodes. The base 42 runs use `--zscore 2.94` and
 `--zscore 3.4 --zlaw cond`.
 
-### 1.8 Larger bases
+### 28.1.8 Larger bases
 
 Exhaustive answers stop at base 43, and node counts at equal miss rate need
 full runs. Above base 40 the comparison rests on the planted paths.
 
-Table 1.5 (computed, `analysis/r5p_planted.py`,
+Table 28.1.5 (computed, `analysis/r5p_planted.py`,
 `analysis/data/r5p_planted.txt`). Planted miss rate at a fixed threshold,
 order 1 (10,000 strings; 4,000 at base 200).
 
@@ -296,7 +296,7 @@ order 1 (10,000 strings; 4,000 at base 200).
 | 150 | 1.3% | 0.5% | 2.4% | 1.0% |
 | 200 | 0.7% | 0.3% | 2.2% | 0.6% |
 
-Heuristic 1.5. The miss rate of `cond` at a fixed threshold does not depend
+Heuristic 28.4. The miss rate of `cond` at a fixed threshold does not depend
 on the base, so one threshold serves every base. The default rule becomes
 stricter in miss rate and looser in nodes as the base grows: at base 200 it
 needs `c` near 2.65 to miss 2%, and at that threshold its band covers more
@@ -304,15 +304,15 @@ of the lower levels than the calibrated band. So the gain of Proposition
 1.3, which grows from 1.10x to 1.34x between bases 30 and 40, keeps growing
 above 40. I have no node counts there to say by how much.
 
-## 2. Length windows
+## 28.2 Length windows
 
-### 2.1 Cost per length
+### 28.2.1 Cost per length
 
-`--zhist` records the histogram per length `d`, so the runs of section 1
+`--zhist` records the histogram per length `d`, so the runs of section 28.1
 also give the cost of each `J = b - d`. A run with `--zscore 1000` tests
 nothing and gives the exact tree.
 
-Table 2.1 (computed, `analysis/r5p_lengths.py`,
+Table 28.2.1 (computed, `analysis/r5p_lengths.py`,
 `analysis/data/r5p_lengths.txt`). Share of the nodes per `J` under
 `--zscore 3.35 --zlaw cond`, and the share of solutions in the model
 (section 10.5).
@@ -341,7 +341,7 @@ nodes. In the exact search `--max-digits b-1` saves 1.24x to 1.32x and
 gives up the `b`-digit solutions: 8% of them in the model, and 2 of 122 in
 bases 10 to 41 (bases 15 and 16, both under `0^0 = 0`).
 
-Proposition 2.1 (computed). Under the z-score rule, in bases 30 to 40, every
+Proposition 28.5 (computed). Under the z-score rule, in bases 30 to 40, every
 length costs about its share of the solutions. The exception is `J = 0`,
 the `b`-digit numbers, which cost 1.4x to 1.8x their share (2.4x to 3x in
 the exact tree). The lengths with `J >= 4` together
@@ -352,14 +352,14 @@ The rule keeps the nodes of every length in proportion to their
 probability, and the tree of a length grows with the number of its
 multisets, as its expected number of solutions does.
 
-### 2.2 What a window saves
+### 28.2.2 What a window saves
 
 A window keeps the lengths with `J` in `[j0, j1]`. Its planted miss rate
 adds the share of planted solutions outside the window to the misses of
 the rule inside it. The alternative spends the same miss rate on a lower
 threshold over all lengths.
 
-Table 2.2 (computed, `analysis/data/r5p_lengths.txt`). Base 40, starting
+Table 28.2.2 (computed, `analysis/data/r5p_lengths.txt`). Base 40, starting
 from `--zscore 3.35 --zlaw cond` (planted miss 2.2%, `2.43 * 10^9` nodes).
 
 | window | fewer nodes | planted miss | lower threshold at that miss | its saving |
@@ -371,8 +371,8 @@ from `--zscore 3.35 --zlaw cond` (planted miss 2.2%, `2.43 * 10^9` nodes).
 | `1 <= J <= 3` | 1.24x | 14.8% | 2.04 | 3.23x |
 | `1 <= J <= 2` | 1.38x | 23.2% | 1.68 | 4.35x |
 
-Proposition 2.2 (computed). In bases 30 to 40, under both laws, every
-window in Table 2.2 saves less than a lower threshold that reaches the
+Proposition 28.6 (computed). In bases 30 to 40, under both laws, every
+window in Table 28.2.2 saves less than a lower threshold that reaches the
 same planted miss rate, by a factor of 1.2 to 4.5.
 
 So a length window does not pay, and it does not pay in combination with
@@ -384,9 +384,9 @@ and loses the 2% of model solutions with `J >= 5`, plus the short
 solutions that the model does not cover (section 9.9). I do not recommend
 it.
 
-## 3. The GPU with the inexact search and shards
+## 28.3 The GPU with the inexact search and shards
 
-### 3.1 The z-score rule in fixed point
+### 28.3.1 The z-score rule in fixed point
 
 Before this round the GPU path refused every inexact rule and `--shard`.
 The rule needs `ln E` per child. The GPU does not keep `lneed` on its
@@ -406,7 +406,7 @@ integers. A cell that the rule does not test (`k` above `zfrom`) holds the
 largest integer. The threshold `thr` comes from the CPU's own table, so
 every law option works: `--zlaw`, `--zfrom`, `--zslope`, `--ztable`.
 
-Lemma 3.1 (proven). The GPU and the CPU make the same decision for every
+Lemma 28.7 (proven). The GPU and the CPU make the same decision for every
 child whose `ln E` differs from its threshold by more than
 `(d + 3) 2^-21`.
 
@@ -435,7 +435,7 @@ weights. It handles bases up to 64, since a lane indexes a digit value.
 The reported expected number of solutions in skipped subtrees counts only
 the nodes that the CPU skipped.
 
-### 3.2 Shards
+### 28.3.2 Shards
 
 `--shard i/n` with `--gpu` or `--hybrid` now gives the GPU the units whose
 index is `i` modulo `n`. Three hybrid shards of base 31 with
@@ -444,9 +444,9 @@ nodes, and `fast merge` of their outputs equals the output of one CPU run
 (16,090,402 nodes; each shard also counts the nodes that build the unit
 list). So a large base can be split over machines, each with its own GPU.
 
-### 3.3 Speed
+### 28.3.3 Speed
 
-Table 3.3 (computed, `analysis/data/r5p_timing.txt` and
+Table 28.3.3 (computed, `analysis/data/r5p_timing.txt` and
 `r5p_timing_idle.txt`). Median wall times of alternating runs. The load
 from other jobs was 7 to 14 in these runs. It slows the CPU threads but
 hardly the GPU, so the GPU columns look better than on an idle machine.
@@ -466,7 +466,7 @@ costs one table lookup per lane and one subgroup sum for each child that
 passes the exact tests. The pruned tree also makes 4.4 interval evaluations
 per node, against 3.3 in the exact tree.
 
-Proposition 3.2 (computed). With the z-score rule, `--hybrid` runs 2.6x to
+Proposition 28.8 (computed). With the z-score rule, `--hybrid` runs 2.6x to
 2.9x faster than 8 CPU threads at base 38 under a load of 7 to 14, as fast
 relative to the CPU as in the exact search at base 34. The earlier
 measurement on a quieter machine gave 1.6x to 1.8x for the exact search;
@@ -475,7 +475,7 @@ the true gain on an idle machine lies between.
 The settings stack. At base 38, `--zscore 3.4 --zlaw cond --hybrid` took
 24.2 s against 74.4 s for `--zscore 3` on the CPU, 3.1x faster. The node
 count falls 1.32x. Of this, 1.22x is the calibrated law at equal miss rate
-(Table 1.3), and the rest comes from the higher miss rate of the new
+(Table 28.1.3), and the rest comes from the higher miss rate of the new
 setting, 2.1% against 1.7% planted. At equal miss rate the law gives about
 1.1x in time and the GPU 2.6x to 2.9x.
 
@@ -483,8 +483,8 @@ setting, 2.1% against 1.7% planted. At equal miss rate the law gives about
 
 - Use `--zscore 3.4 --zlaw cond` for a miss rate of about 2% per solution,
   and `--zscore 3.8 --zlaw cond` for about 1%. Both rates hold from base 30
-  to 200 in the model (Table 1.5).
-- Do not restrict the length (section 2).
+  to 200 in the model (Table 28.1.5).
+- Do not restrict the length (section 28.2).
 - On a machine with the GPU, add `--hybrid`. It ran 2.6x to 2.9x faster
   than the CPU alone in these measurements. Above base 64 the GPU cannot
   help.
@@ -501,19 +501,19 @@ setting, 2.1% against 1.7% planted. At equal miss rate the law gives about
 | `analysis/r5p_law.py` | the two laws of `ln E`, and the trace reader |
 | `analysis/r5p_trace.py` | planted search paths, order 1 and order 2 |
 | `analysis/r5p_real.py` | the search paths of the real solutions (`data/r5p_trace_real.txt`) |
-| `analysis/r5p_mc.py` | Table 1.1 |
-| `analysis/r5p_calib.py` | Table 1.2 and the miss rates by law |
-| `analysis/r5p_curves.py` | Table 1.3 and section 1.6, from `data/r5p_zhist/` |
+| `analysis/r5p_mc.py` | Table 28.1.1 |
+| `analysis/r5p_calib.py` | Table 28.1.2 and the miss rates by law |
+| `analysis/r5p_curves.py` | Table 28.1.3 and section 28.1.6, from `data/r5p_zhist/` |
 | `analysis/r5p_ztable.py` | the `E / T` table for `--ztable` |
 | `analysis/r5p_realmiss.py` | the real solutions cut by each rule |
-| `analysis/r5p_planted.py` | Table 1.5 |
+| `analysis/r5p_planted.py` | Table 28.1.5 |
 | `analysis/r5p_lengths.py` | Tables 2.1 and 2.2 |
 | `analysis/r5p_timing.py` | Tables 1.4 and 3.3, `data/r5p_timing.txt` |
 | `analysis/data/r5p_zhist/` | the `--zhist` histograms, `b<base>_<law>_<zfrom>[_s<slope>].txt`, `b<base>_table_1.txt` for `E / T`, `b<base>_exact.txt` for the exact tree, and the logs of the runs |
 | `analysis/data/r5p_tree_b32_cond5.txt`, `r5p_tree_b36_cond5.txt` | `--tree-stats` at `--zscore 5 --zlaw cond --zfrom 1` |
 | `analysis/data/r5p_ztable_b32.txt`, `r5p_ztable_b36.txt` | the `E / T` tables |
 | `analysis/data/r5p_check_cond3.4.txt` | `fast search 10 41 --zscore 3.4 --zlaw cond --hybrid` |
-| `analysis/data/r5p_b42_*.err` | the two base 42 runs of Table 1.4 |
+| `analysis/data/r5p_b42_*.err` | the two base 42 runs of Table 28.1.4 |
 
 The planted paths are too large for the repository (145 MB). They are
 rebuilt with `python3 r5p_trace.py <b> <n> <order> <seed>`, with `n =
