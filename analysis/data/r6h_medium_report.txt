@@ -1,0 +1,45 @@
+# totals per convention and length, bases 7..20 (win: lengths 6..10 only, bases with a class mean)
+# m k obs ref ref_t1 ref_t2 ref_t3 win plain prime padic
+1 6 1.000 1.429 1.296 1.391 1.658 1.345 1.304 1.525 1.670
+1 7 1.000 1.360 1.185 1.222 1.047 1.154 1.291 1.545 1.637
+1 8 2.000 1.291 1.134 1.296 1.322 1.332 1.248 1.314 1.340
+1 9 0.000 1.228 1.193 1.013 0.949 1.091 1.223 1.354 1.251
+1 10 2.000 1.225 1.173 1.132 1.271 1.120 1.197 1.320 1.379
+1 11 1.000 1.133 1.137 1.111 1.211 0.000 1.176 1.227 1.192
+1 12 3.000 1.184 1.180 1.244 1.415 0.000 1.162 1.222 1.276
+1 all 10.000 8.850 8.298 8.409 8.874 6.042 8.600 9.507 9.744
+0 6 2.000 2.487 1.779 1.843 2.201 1.995 1.301 2.172 2.612
+0 7 2.000 1.883 1.538 1.626 1.500 1.521 1.291 2.159 3.373
+0 8 3.000 1.810 1.597 1.707 1.576 1.805 1.249 1.875 1.923
+0 9 1.000 1.548 1.475 1.088 1.053 1.195 1.222 1.687 1.555
+0 10 2.000 1.786 1.721 1.636 1.816 1.641 1.193 1.749 1.660
+0 11 0.000 1.434 1.413 1.402 1.536 0.000 1.174 1.710 1.646
+0 12 2.000 1.769 1.786 1.970 2.173 0.000 1.160 1.646 1.417
+0 all 12.000 12.717 11.308 11.273 11.856 8.157 8.591 12.998 14.185
+# same, split by base parity (all lengths)
+1 even 3.000 3.898 3.672 3.581 3.470 2.541 4.122 4.540 4.532
+1 odd 7.000 4.951 4.626 4.828 5.404 3.501 4.478 4.967 5.212
+0 even 2.000 3.989 3.626 3.308 3.189 2.384 4.121 6.115 5.936
+0 odd 10.000 8.728 7.682 7.964 8.667 5.773 4.470 6.883 8.249
+# cells with a window estimate (lengths 6..10): totals and cell-by-cell agreement with win
+1 win-cells(64) 6.000 6.533 5.981 6.054 6.247 6.042 6.262 7.059 7.277
+1 win-cells even(33) 1.000 2.812 2.596 2.529 2.325 2.541 2.949 3.282 3.305
+1 win-cells odd(31) 5.000 3.721 3.385 3.525 3.922 3.501 3.312 3.777 3.972
+   ref: correlation with win 0.988, sum |x - win| 1.124
+   ref_t1: correlation with win 0.992, sum |x - win| 0.915
+   ref_t3: correlation with win 0.956, sum |x - win| 2.290
+   plain: correlation with win 0.982, sum |x - win| 1.199
+   prime: correlation with win 0.961, sum |x - win| 1.756
+   padic: correlation with win 0.840, sum |x - win| 5.264
+0 win-cells(64) 10.000 9.514 8.110 7.900 8.147 8.157 6.257 9.641 11.122
+0 win-cells even(33) 2.000 2.909 2.553 2.250 2.042 2.384 2.950 4.372 4.333
+0 win-cells odd(31) 8.000 6.605 5.557 5.651 6.105 5.773 3.307 5.269 6.789
+   ref: correlation with win 0.914, sum |x - win| 3.993
+   ref_t1: correlation with win 0.939, sum |x - win| 2.853
+   ref_t3: correlation with win 0.874, sum |x - win| 4.360
+   plain: correlation with win 0.988, sum |x - win| 3.387
+   prime: correlation with win 0.825, sum |x - win| 5.191
+   padic: correlation with win 0.311, sum |x - win| 5.555
+# cell by cell: correlation over cells of log(root_padic / ref_t3)
+m=1: 73 cells, mean log ratio -1.348, sd 1.305, median ratio 0.211
+m=0: 73 cells, mean log ratio -1.057, sd 1.397, median ratio 0.300
