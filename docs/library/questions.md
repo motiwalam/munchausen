@@ -303,7 +303,7 @@ their motivation and a first attack, are in
 79. Bottom-up information in bases with a small radical.
 80. Assumption R when `b - 1` is prime.
 81. The length shares as a theorem in the model.
-82. Is `k(B)` always the number of factors of `B - 1`?.
+82. Is `k(B)` always the number of factors of `B - 1`?
 83. A model that keeps the Frobenius blocks.
 84. Open lengths in the factorial system.
 85. The image and in-degrees of `F`.
