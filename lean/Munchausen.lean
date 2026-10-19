@@ -8,6 +8,7 @@ import Munchausen.Counting
 import Munchausen.SelfPayingDigits
 import Munchausen.Conjectures
 import Munchausen.Residues
+import Munchausen.ThreeAdic
 import Munchausen.ShortEquations
 import Munchausen.OtherSystems
 import Munchausen.ThreeDigits
