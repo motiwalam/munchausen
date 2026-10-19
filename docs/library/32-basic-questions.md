@@ -226,7 +226,11 @@ Proof. If `p` is not a square, Theorem 32.3 applies. Let `p` be a square. If
 `x < 44`, then `p b^2 <= F < 2 * 20^20 + 42^42`, so `b < 2 * 10^34`, inside
 the lists of chapter 3 (every 3-digit solution in bases up to `10^51`, both
 conventions). If `x >= 44 = 2 * 20 + 4`, Theorem 25.7 applies with
-`B = 20`.
+`B = 20`. Theorem 25.7 is stated under `0^0 = 1`, but for `x` in the middle
+or last position its proof uses only the algebra of `R` and the bound
+`w(d) <= B^B` for the small digits, so it holds under `0^0 = 0` as well; in
+case (i) the value `e = 0` is then allowed, with `x = w(c^2) = c^(2c^2)`
+(the zeros weigh nothing).
 `N = 4 p x^x` is a square, so case (iii) is empty, case (ii) has no solution,
 and case (i) is the family.
 
