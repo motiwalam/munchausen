@@ -1,0 +1,3 @@
+plain: 253827862 nodes (1917.9 s)
+hybrid: 3381869941 nodes (8232.6 s)
+plain+bot: 253827862 nodes (1026.1 s)

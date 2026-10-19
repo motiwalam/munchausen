@@ -28,6 +28,10 @@ options:
                           <file> and resume from it if it exists; \"{base}\"
                           in the name is replaced by the base
   --progress              (search) report progress every 10 seconds
+  --unit-stats <file>     (search) write one line per finished work unit: index,
+                          digits, k, free slots, known digits, start and end
+                          seconds, and the node count of the whole run at the
+                          end of the unit (a per-unit count only with -j 1)
   --shard <i>/<n>         (search) search only the work units whose index is
                           i modulo n; \"{shard}\" in the journal name becomes
                           <i>of<n>; merge the outputs of all n shards with
@@ -93,6 +97,7 @@ struct Opts {
     max_digits: u32,
     prune: search::Prune,
     journal: Option<String>,
+    unit_stats: Option<String>,
     progress: bool,
     // read only in builds with the gpu feature
     #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
@@ -119,6 +124,7 @@ fn parse_args() -> Opts {
     let mut prune = search::Prune::NONE;
     let mut max_digits = u32::MAX;
     let mut journal = None;
+    let mut unit_stats = None;
     let mut progress = false;
     let mut gpu = false;
     let mut hybrid = false;
@@ -145,6 +151,7 @@ fn parse_args() -> Opts {
             "--par-depth" => par_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
             "--unit-depth" => unit_depth = val().parse().unwrap_or_else(|_| die("bad depth")),
             "--journal" => journal = Some(val()),
+            "--unit-stats" => unit_stats = Some(val()),
             "--max-digits" => max_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
             "--min-digits" => min_digits = val().parse().unwrap_or_else(|_| die("bad digit count")),
             "--cap" => prune.cap = val().parse().unwrap_or_else(|_| die("bad cap")),
@@ -203,7 +210,7 @@ fn parse_args() -> Opts {
     if gpu_subgroups == 0 {
         die("--gpu-subgroups must be positive");
     }
-    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, progress, shard, gpu, hybrid, gpu_subgroups }
+    Opts { engine: pos[0].clone(), b0, b1, modes, threads, par_depth, unit_depth, min_digits, max_digits, prune, journal, unit_stats, progress, shard, gpu, hybrid, gpu_subgroups }
 }
 
 // big-endian digits of every Munchausen number found, for 0^0 = 0 and 0^0 = 1
@@ -237,6 +244,27 @@ fn run_search(b: u32, o: &Opts) -> Found {
 
 fn lanes_to_digits(d: u32, lanes: &[u8; 64]) -> Vec<u32> {
     (0..d as usize).rev().map(|i| lanes[i] as u32).collect()
+}
+
+// A rough guess of each unit's share of the work, used only to report
+// progress. Fitted to the exact x^x search in bases 26 to 33: within one
+// digit count d, a unit with rf free slots and L unknown digits has about
+// exp(0.656 rf - 0.44 L) nodes, and the digit counts d = b, b-1, b-2, ...
+// take fixed shares of the work.
+fn unit_weights<const N: usize>(b: u32, sr: &search::Search<N>, units: &[search::Unit<N>]) -> Vec<f64> {
+    const SHARE: [f64; 10] = [0.205, 0.48, 0.21, 0.068, 0.014, 0.013, 0.005, 0.003, 0.001, 0.0003];
+    let raw: Vec<(u32, f64)> = units
+        .iter()
+        .map(|u| {
+            let (d, _, rf, known) = sr.unit_info(u);
+            (b.saturating_sub(d), (0.656 * rf as f64 - 0.44 * (d - known) as f64).exp())
+        })
+        .collect();
+    let mut by_j = std::collections::HashMap::new();
+    for &(j, w) in &raw {
+        *by_j.entry(j).or_insert(0.0) += w;
+    }
+    raw.iter().map(|&(j, w)| SHARE.get(j as usize).copied().unwrap_or(1e-4) * w / by_j[&j]).collect()
 }
 
 fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
@@ -290,6 +318,9 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
     }
 
     let start = Instant::now();
+    let weights = if o.progress { unit_weights(b, &sr, &units) } else { vec![] };
+    let my_weight: f64 = (0..total).filter(|&i| mine(i)).map(|i| weights.get(i).copied().unwrap_or(0.0)).sum();
+    let done_weight = std::sync::Mutex::new((0..total).filter(|&i| mine(i) && skip[i]).map(|i| weights.get(i).copied().unwrap_or(0.0)).sum::<f64>());
     let progress = std::sync::Mutex::new((Instant::now(), already));
     #[cfg(feature = "gpu")]
     if o.gpu {
@@ -300,19 +331,55 @@ fn run_search_n<const N: usize>(b: u32, o: &Opts) -> Found {
         }
         return finish(b, &sr, out);
     }
+    let starts: Vec<std::sync::atomic::AtomicU64> = if o.unit_stats.is_some() { (0..total).map(|_| Default::default()).collect() } else { vec![] };
+    let stats_file = o.unit_stats.as_ref().map(|path| {
+        let f = std::fs::File::create(path.replace("{base}", &b.to_string())).unwrap_or_else(|e| {
+            eprintln!("cannot write {path}: {e}");
+            std::process::exit(1)
+        });
+        std::sync::Mutex::new(std::io::BufWriter::new(f))
+    });
     sr.run_units(
         &units,
-        |i| skip[i],
+        |i| {
+            if skip[i] {
+                return true;
+            }
+            if let Some(s) = starts.get(i) {
+                s.store(start.elapsed().as_nanos() as u64, std::sync::atomic::Ordering::Relaxed);
+            }
+            false
+        },
         |i| {
             if let Some(j) = &*journal {
                 j.lock().unwrap().done(i);
             }
+            if let Some(f) = &stats_file {
+                use std::io::Write;
+                let (d, k, rf, known) = sr.unit_info(&units[i]);
+                let t0 = starts[i].load(std::sync::atomic::Ordering::Relaxed) as f64 * 1e-9;
+                let t1 = start.elapsed().as_secs_f64();
+                let th = rayon::current_thread_index().unwrap_or(0);
+                writeln!(f.lock().unwrap(), "{i} {d} {k} {rf} {known} {t0:.6} {t1:.6} {} {th}", sr.nodes()).unwrap();
+            }
             let mut p = progress.lock().unwrap();
             p.1 += 1;
-            if o.progress && p.0.elapsed().as_secs_f64() >= 10.0 {
-                p.0 = Instant::now();
-                // unit sizes vary wildly, so this is not a reliable fraction of the work
-                eprintln!("  base {b}: {}/{my_total} units done, {:.0}s elapsed", p.1, start.elapsed().as_secs_f64());
+            if o.progress {
+                let mut dw = done_weight.lock().unwrap();
+                *dw += weights[i];
+                if p.0.elapsed().as_secs_f64() >= 10.0 {
+                    p.0 = Instant::now();
+                    // unit sizes vary wildly, so the unit count is not a reliable
+                    // fraction of the work; the weighted share was off by at most
+                    // 0.10 in bases 26 to 33
+                    eprintln!(
+                        "  base {b}: {}/{my_total} units done, about {:.0}% of the work (estimate), {} nodes, {:.0}s elapsed",
+                        p.1,
+                        100.0 * *dw / my_weight,
+                        sr.nodes(),
+                        start.elapsed().as_secs_f64()
+                    );
+                }
             }
         },
     );
@@ -428,6 +495,7 @@ mod tests {
             max_digits: u32::MAX,
             prune: search::Prune::NONE,
             journal: None,
+            unit_stats: None,
             progress: false,
             shard: (0, 1),
             gpu: false,

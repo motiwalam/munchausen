@@ -1,0 +1,6 @@
+# model=direct mode=1 workers=1 exist=False
+# b d status sols wall_s cpu_s branches conflicts check
+8 7 INFEASIBLE 0 0.748 0.111 1645 270 ok
+9 8 INFEASIBLE 0 1.875 0.340 6567 670 ok
+10 9 INFEASIBLE 0 7.336 1.387 20951 2842 ok
+11 10 INFEASIBLE 0 20.211 8.418 77089 10977 ok

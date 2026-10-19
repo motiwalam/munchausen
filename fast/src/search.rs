@@ -476,6 +476,12 @@ pub struct Unit<const N: usize> {
 }
 
 impl<const N: usize> Search<N> {
+    /// (digit count, digit k decided next, free slots, known leading digits) of a unit
+    pub fn unit_info(&self, u: &Unit<N>) -> (u32, usize, u32, u32) {
+        let d = self.params[u.pi].d;
+        (d, u.k, u.n.rf, d - u.n.pp)
+    }
+
     pub fn new(b: u32, min_digits: u32, max_digits: u32, par_depth: u32, prune: Prune) -> Self {
         Search {
             params: {

@@ -222,11 +222,14 @@ def solve(b, d, mode, model_kind, name, tlimit, dimacs=None):
                 digs.append(vs[0])
             sols.append(tuple(reversed(digs)))
             s.add_clause([-x[i][digs[i]] for i in range(d)])
-        st = s.accum_stats()
+        try:
+            st = s.accum_stats()
+        except NotImplementedError:  # kissat in PySAT has no statistics
+            st = {}
     t = time.perf_counter() - t0
     r1 = resource.getrusage(resource.RUSAGE_SELF)
     cpu = (r1.ru_utime - r0.ru_utime) + (r1.ru_stime - r0.ru_stime)
-    return status, sorted(sols), t, cpu, st.get('decisions', 0), st.get('conflicts', 0), cnf.n, len(cnf.clauses)
+    return status, sorted(sols), t, cpu, st.get('decisions', -1), st.get('conflicts', -1), cnf.n, len(cnf.clauses)
 
 
 def main():
