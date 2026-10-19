@@ -1,0 +1,5 @@
+# solutions with at least b-6 digits, bases 12-43: zero digits, observed against models
+0^0=0 even: 19 solutions, zeros 10, refined 16.7 +/- 4.0, binomial 16.8 +/- 4.0; zero-free 11, refined 7.7, binomial 7.7
+0^0=0 odd: 30 solutions, zeros 19, refined 26.4 +/- 5.0, binomial 26.7 +/- 5.0; zero-free 16, refined 12.2, binomial 12.1
+0^0=1 even: 21 solutions, zeros 17, refined 18.6 +/- 4.2, binomial 18.5 +/- 4.2; zero-free 11, refined 8.5, binomial 8.6
+0^0=1 odd: 25 solutions, zeros 18, refined 15.7 +/- 5.0, binomial 16.0 +/- 5.0; zero-free 16, refined 17.6, binomial 17.4

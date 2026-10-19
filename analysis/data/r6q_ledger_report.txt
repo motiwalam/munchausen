@@ -1,0 +1,72 @@
+# 133 current tests with a P value, in 56 data groups
+all tests, unmerged: n = 133; below 0.01, 0.05, 0.1: 10, 32, 41 (uniform 1.3, 6.7, 13.3); median 0.24; KS D = 0.291, P = 0.000; Fisher 518.3 on 266, P = 2e-18
+## groups merged by sidak
+all groups: n = 56; below 0.01, 0.05, 0.1: 3, 14, 17 (uniform 0.6, 2.8, 5.6); median 0.23; KS D = 0.311, P = 0.000; Fisher 223.8 on 112, P = 1.9e-09
+groups named in advance: n = 12; below 0.01, 0.05, 0.1: 0, 0, 0 (uniform 0.1, 0.6, 1.2); median 0.59; KS D = 0.219, P = 0.555; Fisher 19.2 on 24, P = 0.74
+groups not named in advance or unclear: n = 44; below 0.01, 0.05, 0.1: 3, 14, 17 (uniform 0.4, 2.2, 4.4); median 0.18; KS D = 0.386, P = 0.000; Fisher 204.6 on 88, P = 2.8e-11
+without F_q[T] and the factorial system: n = 40; below 0.01, 0.05, 0.1: 1, 8, 10 (uniform 0.4, 2.0, 4.0); median 0.24; KS D = 0.315, P = 0.001; Fisher 132.9 on 80, P = 0.00019
+integers only: n = 9; below 0.01, 0.05, 0.1: 1, 3, 4 (uniform 0.1, 0.5, 0.9); median 0.23; KS D = 0.394, P = 0.090; Fisher 37.2 on 18, P = 0.0049
+## groups merged by primary
+all groups: n = 56; below 0.01, 0.05, 0.1: 4, 14, 18 (uniform 0.6, 2.8, 5.6); median 0.24; KS D = 0.347, P = 0.000; Fisher 230.8 on 112, P = 3e-10
+groups named in advance: n = 12; below 0.01, 0.05, 0.1: 0, 0, 0 (uniform 0.1, 0.6, 1.2); median 0.65; KS D = 0.163, P = 0.877; Fisher 20.7 on 24, P = 0.66
+groups not named in advance or unclear: n = 44; below 0.01, 0.05, 0.1: 4, 14, 18 (uniform 0.4, 2.2, 4.4); median 0.22; KS D = 0.402, P = 0.000; Fisher 210.1 on 88, P = 5.5e-12
+without F_q[T] and the factorial system: n = 40; below 0.01, 0.05, 0.1: 2, 8, 11 (uniform 0.4, 2.0, 4.0); median 0.24; KS D = 0.370, P = 0.000; Fisher 140.2 on 80, P = 3.7e-05
+integers only: n = 9; below 0.01, 0.05, 0.1: 1, 3, 3 (uniform 0.1, 0.5, 0.9); median 0.23; KS D = 0.326, P = 0.242; Fisher 35.8 on 18, P = 0.0076
+## sign of the deviation, groups with Sidak P < 0.2: 17 excess, 8 deficit
+## groups, sorted by Sidak P: key, k, Sidak P, primary P, world, prereg, direction, section, test
+ff_odd_all              1 5.7e-07 5.7e-07 ffield       unclear  excess   24.3.1 combined z over the nine odd-q cases, 0^0=0
+ff_q5e4                 1 0.0037 0.0037 ffield       unclear  excess   24.3.1 (5,4), 2500 bases
+int_b10-41_empty        2 0.004 0.002 integers     unclear  deficit  4.5; 7.5 empty bases ==3 mod 8: 3 of the 4 bases 11-35 empty, model about 0.06 
+ff_q3e4                 1 0.012 0.012 ffield       unclear  excess   24.3.1 (3,4), 162 bases
+neg_near_b10-27         4 0.0147 0.22 negative     unclear  deficit  23.2.2; 26.4 near-solutions at offsets j step b vs j step, other bases, 0^0=0
+narc_b3-14              2 0.0199 0.06 narcissistic unclear  excess   19.4.3 d >= 6, even bases
+ff_q5e3                 1 0.021 0.021 ffield       unclear  excess   24.3.1 (5,3), 500 bases
+kdigit5_b13-99          2 0.0219 0.26 kdigit       no       excess   22.4; 26.4 5-digit, 0^0=1, bases 13-99, base-by-base window calibration
+ff_q7e3                 1 0.028 0.028 ffield       unclear  excess   24.3.1 (7,3), 2058 bases
+fact_odd_b15-35         9 0.0354 0.004 factorions   no       deficit  17.4   odd bases 15-35, long, w(0)=0, vs refined model
+ff_q2e6                 1 0.036 0.036 ffield       unclear  excess   24.3.1 (2,6), 64 bases
+int_long_b12-41         1 0.036 0.036 integers     unclear  deficit  24.6.2 zero digits of long solutions, 0^0=0, bases 12-41
+int_b10-38_bm1          1 0.038 0.038 integers     no       excess   5.5    0^0=1, b-1 digit solutions, bases 10-38, refined model
+pisot_x2-12             1 0.042 0.042 pisot        no       excess   26.5.1 pooled component: Pisot x=2..12, even j for even x
+int_near_b12-32        19 0.0501 0.62 integers     unclear  excess   11.2a; 23.5; 26.4 0^0=1, mean lambda/model over bases 12-32
+gauss_n2-3              1 0.052 0.052 eisenstein   no       excess   14.5.2 Gaussian base -3+i, 0^0=1
+ff_q13e3                1 0.072 0.072 ffield       unclear  excess   24.3.1 (13,3), 26364 bases
+pooled_8worlds          7 0.1 0.016 other        unclear  fit      26.5.2 heterogeneity without any one other world
+neg_empty               2 0.128 0.066 negative     unclear  deficit  23.2.2 empty bases -2 to -38
+blocks_b13up            3 0.132 0.046 kdigit       unclear  excess   22.2.4 exact blocks (L,m)=(2,1), bases 100-20000, 0^0=1
+cycles2_b3-18           7 0.144 0.022 cycles2      unclear  other    15.1.6 lead: 2-cycles in every odd base 3-11, none in even bases 4-10
+shift_xp2_b10-32        1 0.163 0.163 other        yes      excess   17.4   weights x^(x+2), bases 10-32, long solutions [P computed here, Poisson
+pisot_x2-8_T2           3 0.169 0.1 pisot        no       excess   26.6.2 odd x 3-7, 0^0=1, vs local offsets
+fact_odd_b15-47         1 0.18 0.18 factorions   no       deficit  23.1.3; 26.4 combined: in-sample after selection plus fresh bases 37-47 (Fisher)
+neg_mult3_empty         1 0.19 0.19 negative     yes      deficit  23.2.2 empty multiples of 3, -12 to -36
+ff_q2e4                 1 0.19 0.19 ffield       unclear  deficit  24.3.1 (2,4), 16 bases
+ff_q3e5                 1 0.19 0.19 ffield       unclear  excess   24.3.1 (3,5), 486 bases
+resid_b12-24            5 0.224 0.144 other        yes      excess   17.2   --set-residue 0, 0^0=1 [P computed here, Poisson]
+int_b10-38_all          1 0.23 0.23 integers     unclear  excess   5.4    all lengths, bases 20-38, 0^0=1, basic model
+neg_b10-38              1 0.24 0.24 negative     unclear  deficit  23.2.2 solutions, bases -10 to -38, refined model
+kdigit3_sign            1 0.25 0.25 kdigit       no       other    18.4   non-partner 3-digit solutions all with positive root (3 of 3) under th
+fact_odd_b37-47         1 0.26 0.26 factorions   yes      deficit  23.1.1 fresh odd bases 37-47, long factorions per convention
+ff_q2e5                 1 0.37 0.37 ffield       unclear  deficit  24.3.1 (2,5), 32 bases
+ff_q3e3                 1 0.37 0.37 ffield       unclear  excess   24.3.1 (3,3), 54 bases
+ff_q17e3                1 0.42 0.42 ffield       unclear  excess   24.3.1 (17,3), 78608 bases
+rat_p11                 2 0.422 0.24 rational     unclear  deficit  21.2; 26.4 p, q odd, 0^0=0, 9 bases, D=0 vs near-solutions
+eis_n2-3                1 0.5 0.5 eisenstein   unclear  excess   26.5.1 pooled component: Eisenstein -2+w, -3+w
+kdigit4_m0              4 0.502 0.28 kdigit       unclear  excess   19.2.2; 26.4 4-digit, 0^0=0, bases below 100, D=jL, p-adic
+int_bdigit_m1           1 0.54 0.54 integers     no       deficit  11.2; 26.4 no b-digit solution under 0^0=1, bases 10-30, offsets restricted to b 
+cycles2_b18             1 0.543 0.543 cycles2      yes      excess   23.3   fresh base 18, one 2-cycle under each convention [P computed here, Poi
+ff_q2e3                 1 0.55 0.55 ffield       unclear  deficit  24.3.1 F_q[T] census vs refined, 0^0=0, (q,e)=(2,3), 8 bases
+kdigit5_m1              3 0.561 0.24 kdigit       no       excess   11.4; 19.3.2 5-digit solutions, 0^0=1, digits up to 11, p-adic root heuristic
+zero_m_b10-30           5 0.582 1 other        yes      fit      17 summary odd-base factor vs parity of m, after splitting off zero-free solution
+int_b39-43_fresh        4 0.59 0.2 integers     yes      excess   5.5; 7.5 fresh bases 39, 40, 41, 43, 0^0=1, b-1 digit solutions
+int_b10-41_all          1 0.6 0.6 integers     unclear  excess   13.2.5 correlation of n0 and n1 across bases 10-41 vs bivariate Poisson model
+ff_q11e3                1 0.62 0.62 ffield       unclear  excess   24.3.1 (11,3), 13310 bases
+shift_xm1_b10-32        1 0.651 0.651 other        yes      fit      17.4   weights x^(x-1), bases 10-32, long solutions, both conventions [P comp
+neg_fresh_b36-38        2 0.67 0.83 negative     yes      deficit  23.2.1 fresh bases -36, -37, -38, 0^0=0 [P computed here, Poisson]
+int_b44                 1 0.68 0.68 integers     yes      deficit  9.3    base 44, 0^0=0, inexact search (about 15% miss rate) found none
+fsys_L3-33              2 0.686 0.78 factorial    no       deficit  29.5.3 same, cluster calibration, 0^0=1
+fact_b10-42             1 0.697 0.697 factorions   yes      fit      17.4   x! all lengths, both conventions, bases 10-42 [P computed here, Poisso
+neg_b10-35              5 0.855 1 negative     unclear  excess   14.3.2 top-length share, bases -10 to -35, both conventions
+kdigit4_m1              6 0.917 0.34 kdigit       unclear  excess   11.4; 19.3.2 4-digit solutions, 0^0=1, digits up to 22, p-adic root heuristic
+fact_even_b14-36        1 0.94 0.94 factorions   unclear  deficit  26.5.1 pooled component: even factorions 14-36, offsets j(b-1)
+shift_xp1_b10-32        1 0.997 0.997 other        yes      fit      17.4   weights x^(x+1), bases 10-32, long solutions [P computed here, Poisson
+ff_q2e7                 1 1 1 ffield       unclear  fit      24.3.1 (2,7), 128 bases

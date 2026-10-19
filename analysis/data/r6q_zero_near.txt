@@ -1,0 +1,5 @@
+# r5e_int_std.txt: zero digits of near-solutions, observed against the refined model
+0^0=0 even: 7.92 near-solutions per offset (model 8.58); zeros per near-solution 0.823 against 0.840; zeros minus the model mean, per offset -0.149 (z -0.33, clustered)
+0^0=0 odd: 16.38 near-solutions per offset (model 14.83); zeros per near-solution 0.720 against 0.849; zeros minus the model mean, per offset -2.031 (z -3.11, clustered)
+0^0=1 even: 9.27 near-solutions per offset (model 8.61); zeros per near-solution 0.842 against 0.842; zeros minus the model mean, per offset -0.038 (z -0.09, clustered)
+0^0=1 odd: 10.20 near-solutions per offset (model 8.63); zeros per near-solution 0.451 against 0.594; zeros minus the model mean, per offset -1.376 (z -2.62, clustered)

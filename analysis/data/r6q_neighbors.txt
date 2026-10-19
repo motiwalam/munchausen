@@ -1,0 +1,35 @@
+# model t=0 exact
+0^0=0 even bases: mean ratio 0.933, pooled 0.932, z of pooled -1.23
+0^0=0 odd bases: mean ratio 1.054, pooled 1.056, z of pooled +1.22
+0^0=0 all: mean ratio 0.991, pooled 1.012, z +0.33
+0^0=1 even bases: mean ratio 1.095, pooled 1.093, z of pooled +1.66
+0^0=1 odd bases: mean ratio 1.145, pooled 1.146, z of pooled +2.50
+0^0=1 all: mean ratio 1.119, pooled 1.120, z +2.96
+0^0=0: lag-1 correlation of residuals -0.305 (permutation P two-sided 0.060, null sd 0.162); lag-2 +0.049
+0^0=1: lag-1 correlation of residuals -0.408 (permutation P two-sided 0.067, null sd 0.223); lag-2 -0.023
+same base, the two conventions: correlation +0.845
+base b under 0^0=0 against base b+1 under 0^0=1: -0.320
+# model t=3
+0^0=0 even bases: mean ratio 0.941, pooled 0.936, z of pooled -1.15
+0^0=0 odd bases: mean ratio 1.036, pooled 1.048, z of pooled +1.04
+0^0=0 all: mean ratio 0.986, pooled 1.008, z +0.23
+0^0=1 even bases: mean ratio 1.110, pooled 1.109, z of pooled +1.91
+0^0=1 odd bases: mean ratio 1.133, pooled 1.144, z of pooled +2.44
+0^0=1 all: mean ratio 1.121, pooled 1.127, z +3.09
+0^0=0: lag-1 correlation of residuals -0.091 (permutation P two-sided 0.646, null sd 0.191); lag-2 -0.098
+0^0=1: lag-1 correlation of residuals -0.167 (permutation P two-sided 0.457, null sd 0.221); lag-2 -0.092
+same base, the two conventions: correlation +0.780
+base b under 0^0=0 against base b+1 under 0^0=1: -0.221
+0^0=0: 906 distinct near-solution multisets in bases 12-26; in two or more bases: 0 []; expected if independent: neighbours 2.02e-02, any two bases 2.85e-02
+0^0=1: 716 distinct near-solution multisets in bases 12-26; in two or more bases: 0 []; expected if independent: neighbours 7.45e-03, any two bases 1.25e-02
+# b d: candidates in both bases among N strings; mean top factor in b, in b+1; E[f_b f_b+1] / (E f_b E f_b+1); correlation
+12 11: 20000 of 35804; 0.995 1.231; joint ratio 1.272; correlation +0.037
+12 10: 20000 of 150056; 1.126 1.356; joint ratio 0.728; correlation -0.020
+16 15: 20000 of 35931; 0.973 1.109; joint ratio 1.079; correlation +0.011
+16 14: 20000 of 79568; 0.923 1.318; joint ratio 1.161; correlation +0.015
+20 19: 20000 of 35919; 0.853 0.813; joint ratio 0.698; correlation -0.033
+20 18: 20000 of 80973; 1.101 1.134; joint ratio 1.427; correlation +0.044
+24 23: 20000 of 35938; 1.038 1.088; joint ratio 1.132; correlation +0.021
+24 22: 20000 of 81733; 0.830 1.236; joint ratio 1.003; correlation +0.000
+30 29: 20000 of 36158; 0.931 1.102; joint ratio 0.797; correlation -0.027
+30 28: 20000 of 83406; 1.136 1.180; joint ratio 0.761; correlation -0.031

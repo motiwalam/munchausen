@@ -1,0 +1,207 @@
+# r5e_int_std.txt, seed 0
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.433   3.459  0.993 -0.07
+even 0 z=1 :   2.933   3.169  0.926 -0.72
+even 0 z=2 :   1.117   1.401  0.797 -1.31
+even 0 z=3+:   0.433   0.479  0.904 -0.36
+even 0 all :   7.917   8.509  0.930 -1.11   (phi 2.01)
+even 1 z=0 :   3.433   3.439  0.998 -0.02
+even 1 z=1 :   4.133   3.171  1.303 +2.90
+even 1 z=2 :   1.500   1.405  1.068 +0.43
+even 1 z=3+:   0.200   0.514  0.389 -2.35
+even 1 all :   9.267   8.528  1.087 +1.35   (phi 2.09)
+odd 0 z=0 :   7.967   6.339  1.257 +3.43
+odd 0 z=1 :   5.850   5.502  1.063 +0.79
+odd 0 z=2 :   1.850   2.349  0.788 -1.73
+odd 0 z=3+:   0.717   0.712  1.007 +0.03
+odd 0 all :  16.383  14.901  1.100 +2.04   (phi 2.13)
+odd 1 z=0 :   7.967   6.349  1.255 +3.36
+odd 1 z=1 :   0.000   0.000    nan  +nan
+odd 1 z=2 :   2.167   2.307  0.939 -0.48
+odd 1 z=3+:   0.067   0.104  0.641 -0.61
+odd 1 all :  10.200   8.761  1.164 +2.54   (phi 2.19)
+# r5e_int_std.txt, seed 0
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.433   3.621  0.948 -0.54
+even 0 z=1 :   2.933   3.204  0.915 -0.83
+even 0 z=2 :   1.117   1.331  0.839 -1.02
+even 0 z=3+:   0.433   0.419  1.034 +0.12
+even 0 all :   7.917   8.576  0.923 -1.23   (phi 2.01)
+even 1 z=0 :   3.433   3.621  0.948 -0.53
+even 1 z=1 :   4.133   3.234  1.278 +2.68
+even 1 z=2 :   1.500   1.334  1.124 +0.77
+even 1 z=3+:   0.200   0.423  0.473 -1.84
+even 1 all :   9.267   8.612  1.076 +1.20   (phi 2.09)
+odd 0 z=0 :   7.967   6.187  1.288 +3.79
+odd 0 z=1 :   5.850   5.567  1.051 +0.64
+odd 0 z=2 :   1.850   2.337  0.792 -1.69
+odd 0 z=3+:   0.717   0.736  0.974 -0.12
+odd 0 all :  16.383  14.827  1.105 +2.14   (phi 2.13)
+odd 1 z=0 :   7.967   6.187  1.288 +3.74
+odd 1 z=1 :   0.000   0.000    nan  +nan
+odd 1 z=2 :   2.167   2.331  0.930 -0.56
+odd 1 z=3+:   0.067   0.116  0.576 -0.75
+odd 1 all :  10.200   8.634  1.181 +2.79   (phi 2.19)
+# r6q_pert_s1.txt, seed 1
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.217   3.599  0.894 -1.09
+even 0 z=1 :   3.217   3.227  0.997 -0.03
+even 0 z=2 :   1.617   1.346  1.202 +1.27
+even 0 z=3+:   0.533   0.420  1.271 +0.95
+even 0 all :   8.583   8.591  0.999 -0.01   (phi 2.05)
+even 1 z=0 :   3.217   3.599  0.894 -1.12
+even 1 z=1 :   3.267   3.227  1.012 +0.12
+even 1 z=2 :   1.483   1.347  1.102 +0.65
+even 1 z=3+:   0.450   0.420  1.073 +0.26
+even 1 all :   8.417   8.592  0.980 -0.33   (phi 1.95)
+odd 0 z=0 :   3.300   3.124  1.056 +0.53
+odd 0 z=1 :   3.350   2.815  1.190 +1.71
+odd 0 z=2 :   1.083   1.180  0.918 -0.48
+odd 0 z=3+:   0.300   0.371  0.810 -0.62
+odd 0 all :   8.033   7.490  1.073 +1.06   (phi 2.10)
+odd 1 z=0 :   3.300   3.124  1.056 +0.56
+odd 1 z=1 :   3.150   2.815  1.119 +1.13
+odd 1 z=2 :   1.000   1.181  0.847 -0.94
+odd 1 z=3+:   0.117   0.371  0.315 -2.35
+odd 1 all :   7.567   7.490  1.010 +0.16   (phi 1.89)
+# r6q_pert_s2.txt, seed 2
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   4.450   3.593  1.238 +2.41
+even 0 z=1 :   3.167   3.227  0.981 -0.18
+even 0 z=2 :   1.217   1.347  0.903 -0.60
+even 0 z=3+:   0.350   0.421  0.832 -0.58
+even 0 all :   9.183   8.588  1.069 +1.08   (phi 2.10)
+even 1 z=0 :   4.450   3.593  1.238 +2.43
+even 1 z=1 :   2.967   3.226  0.920 -0.78
+even 1 z=2 :   1.133   1.344  0.843 -0.98
+even 1 z=3+:   0.450   0.420  1.072 +0.25
+even 1 all :   9.000   8.583  1.049 +0.77   (phi 2.07)
+odd 0 z=0 :   3.833   3.123  1.228 +2.11
+odd 0 z=1 :   2.633   2.815  0.935 -0.57
+odd 0 z=2 :   1.017   1.181  0.861 -0.79
+odd 0 z=3+:   0.483   0.371  1.303 +0.97
+odd 0 all :   7.967   7.489  1.064 +0.92   (phi 2.18)
+odd 1 z=0 :   3.833   3.123  1.228 +2.14
+odd 1 z=1 :   2.367   2.813  0.841 -1.42
+odd 1 z=2 :   1.233   1.182  1.044 +0.25
+odd 1 z=3+:   0.350   0.371  0.945 -0.18
+odd 1 all :   7.783   7.488  1.039 +0.57   (phi 2.12)
+# r6q_pert_s3.txt, seed 3
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.967   3.588  1.105 +1.08
+even 0 z=1 :   3.183   3.223  0.988 -0.12
+even 0 z=2 :   1.083   1.346  0.805 -1.23
+even 0 z=3+:   0.450   0.419  1.073 +0.26
+even 0 all :   8.683   8.576  1.013 +0.20   (phi 2.04)
+even 1 z=0 :   3.967   3.588  1.105 +1.05
+even 1 z=1 :   3.250   3.219  1.010 +0.09
+even 1 z=2 :   0.933   1.347  0.693 -1.88
+even 1 z=3+:   0.450   0.420  1.072 +0.25
+even 1 all :   8.600   8.575  1.003 +0.05   (phi 2.16)
+odd 0 z=0 :   3.600   3.121  1.153 +1.44
+odd 0 z=1 :   2.550   2.814  0.906 -0.84
+odd 0 z=2 :   1.383   1.181  1.172 +0.99
+odd 0 z=3+:   0.383   0.371  1.034 +0.11
+odd 0 all :   7.917   7.487  1.057 +0.84   (phi 2.12)
+odd 1 z=0 :   3.600   3.121  1.153 +1.47
+odd 1 z=1 :   2.783   2.816  0.988 -0.10
+odd 1 z=2 :   1.050   1.181  0.889 -0.65
+odd 1 z=3+:   0.233   0.371  0.629 -1.22
+odd 1 all :   7.667   7.489  1.024 +0.35   (phi 2.05)
+# r6q_pert_s4.txt, seed 4
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.567   3.592  0.993 -0.07
+even 0 z=1 :   3.983   3.226  1.235 +2.34
+even 0 z=2 :   1.817   1.345  1.351 +2.25
+even 0 z=3+:   0.483   0.421  1.149 +0.53
+even 0 all :   9.850   8.582  1.148 +2.40   (phi 1.96)
+even 1 z=0 :   3.567   3.592  0.993 -0.07
+even 1 z=1 :   3.717   3.226  1.152 +1.52
+even 1 z=2 :   1.533   1.344  1.141 +0.91
+even 1 z=3+:   0.450   0.419  1.073 +0.26
+even 1 all :   9.267   8.581  1.080 +1.30   (phi 1.94)
+odd 0 z=0 :   2.450   3.122  0.785 -2.14
+odd 0 z=1 :   2.117   2.816  0.752 -2.34
+odd 0 z=2 :   1.067   1.179  0.905 -0.58
+odd 0 z=3+:   0.167   0.371  0.449 -1.88
+odd 0 all :   5.800   7.488  0.775 -3.47   (phi 1.90)
+odd 1 z=0 :   2.450   3.122  0.785 -2.10
+odd 1 z=1 :   2.117   2.819  0.751 -2.31
+odd 1 z=2 :   1.000   1.180  0.847 -0.92
+odd 1 z=3+:   0.300   0.370  0.810 -0.64
+odd 1 all :   5.867   7.492  0.783 -3.28   (phi 1.97)
+# r6q_pert_s5.txt, seed 5
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.433   3.596  0.955 -0.48
+even 0 z=1 :   2.967   3.239  0.916 -0.84
+even 0 z=2 :   1.233   1.351  0.913 -0.56
+even 0 z=3+:   0.567   0.419  1.353 +1.27
+even 0 all :   8.200   8.604  0.953 -0.76   (phi 1.95)
+even 1 z=0 :   3.433   3.596  0.955 -0.48
+even 1 z=1 :   2.883   3.234  0.892 -1.09
+even 1 z=2 :   1.050   1.350  0.778 -1.44
+even 1 z=3+:   0.500   0.422  1.184 +0.67
+even 1 all :   7.867   8.603  0.914 -1.40   (phi 1.92)
+odd 0 z=0 :   2.700   3.129  0.863 -1.30
+odd 0 z=1 :   2.850   2.823  1.010 +0.09
+odd 0 z=2 :   1.233   1.184  1.042 +0.24
+odd 0 z=3+:   0.367   0.372  0.985 -0.05
+odd 0 all :   7.150   7.508  0.952 -0.70   (phi 2.10)
+odd 1 z=0 :   2.700   3.129  0.863 -1.30
+odd 1 z=1 :   2.700   2.801  0.964 -0.32
+odd 1 z=2 :   1.067   1.185  0.900 -0.58
+odd 1 z=3+:   0.367   0.370  0.992 -0.03
+odd 1 all :   6.833   7.485  0.913 -1.27   (phi 2.10)
+# r6q_shift_c1.txt, seed 0, offsets 2j(b-1)+1
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   3.383   3.594  0.941 -0.59
+even 0 z=1 :   4.133   3.234  1.278 +2.67
+even 0 z=2 :   1.317   1.363  0.966 -0.21
+even 0 z=3+:   0.617   0.419  1.473 +1.64
+even 0 all :   9.450   8.609  1.098 +1.53   (phi 2.10)
+even 1 z=0 :   3.383   3.594  0.941 -0.58
+even 1 z=1 :   3.767   3.256  1.157 +1.48
+even 1 z=2 :   1.500   1.341  1.118 +0.72
+even 1 z=3+:   0.550   0.419  1.313 +1.06
+even 1 all :   9.200   8.610  1.068 +1.05   (phi 2.18)
+odd 0 z=0 :   0.000   0.000    nan  +nan
+odd 0 z=1 :   0.000   0.000    nan  +nan
+odd 0 z=2 :   0.000   0.000    nan  +nan
+odd 0 z=3+:   0.000   0.000    nan  +nan
+odd 0 all :   0.000   0.000    nan  +nan   (phi 1.00)
+odd 1 z=0 :   0.000   0.000    nan  +nan
+odd 1 z=1 :   5.350   5.603  0.955 -0.59
+odd 1 z=2 :   0.000   0.000    nan  +nan
+odd 1 z=3+:   0.533   0.646  0.826 -0.77
+odd 1 all :   5.883   6.249  0.942 -0.80   (phi 2.00)
+# r6q_shift_c2.txt, seed 0, offsets 2j(b-1)+2
+# parity m z: observed per offset, model, ratio, z; the variance under the null is phi E / J,
+# with phi = sum K^2 / sum K over the clusters of the group (chapter 26)
+even 0 z=0 :   4.400   3.612  1.218 +2.18
+even 0 z=1 :   3.767   3.256  1.157 +1.48
+even 0 z=2 :   1.500   1.334  1.124 +0.75
+even 0 z=3+:   0.283   0.418  0.678 -1.09
+even 0 all :   9.950   8.620  1.154 +2.38   (phi 2.18)
+even 1 z=0 :   4.400   3.612  1.218 +2.19
+even 1 z=1 :   3.067   3.195  0.960 -0.38
+even 1 z=2 :   1.717   1.363  1.260 +1.60
+even 1 z=3+:   0.683   0.419  1.630 +2.16
+even 1 all :   9.867   8.589  1.149 +2.31   (phi 2.15)
+odd 0 z=0 :   6.700   6.259  1.071 +0.95
+odd 0 z=1 :   5.350   5.603  0.955 -0.57
+odd 0 z=2 :   2.167   2.331  0.930 -0.58
+odd 0 z=3+:   0.983   0.725  1.357 +1.63
+odd 0 all :  15.200  14.917  1.019 +0.39   (phi 2.08)
+odd 1 z=0 :   6.700   6.259  1.071 +0.96
+odd 1 z=1 :   0.000   0.000    nan  +nan
+odd 1 z=2 :   1.850   2.424  0.763 -2.00
+odd 1 z=3+:   0.083   0.112  0.745 -0.46
+odd 1 all :   8.633   8.794  0.982 -0.29   (phi 2.03)

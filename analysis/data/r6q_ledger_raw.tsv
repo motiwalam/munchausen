@@ -1,0 +1,242 @@
+id	section	world	test	observed	expected	reported	p_two	p_one	direction	dgroup	prereg	status	selection	note
+L001	3.4	integers	lengths 2-30 with no solution under 0^0=1 (all searched bases); model about 37% missing	7	10.7	7 of 29 missing (24%) against about 37%			excess	int_lengths_k2-30	unclear	current		no P; expected 0.37*29 computed by me; short lengths include families
+L002	4.4	integers	per-base count distribution vs Poisson with refined means, bases 10-39, 0^0=0 (n=0..6+)			qualitative: roughly Poisson, upper tail heavier			fit	int_b10-39_counts	unclear	current		no statistic; obs 6,9,5,3,3,3,1 vs 6.3,8.9,7.1,4.2,2.1,0.9,0.4
+L003	4.4	integers	per-base count distribution vs Poisson with refined means, bases 10-39, 0^0=1 (n=0..6+)			qualitative: roughly Poisson, upper tail heavier			fit	int_b10-39_counts	unclear	current		no statistic; obs 6,7,9,4,3,1,0 vs 8.6,10.7,6.7,2.8,0.9,0.2,0.1
+L004	4.5; 7.5	integers	empty bases ==3 mod 8: 3 of the 4 bases 11-35 empty, model about 0.06 per odd base	3	0.24	probability about 10^-3		0.001	deficit	int_b10-41_empty	no	current	residue class chosen after seeing data; all 15 odd bases 11-39: about 0.06	empty bases count as fewer solutions; pattern resolved as chance by base 43
+L005	7.5; 8.5	integers	base 43 (next ==3 mod 8) named in advance as a test of the empty-base pattern; it has a solution			base 43 has a solution: pattern was chance			other	int_b43	yes	current		no P; tests the post hoc pattern, model gives about 0.94 for a solution
+L006	5.4	integers	all lengths, bases 10-38, 0^0=0, even bases, refined model	22	17.3	table only			excess	int_b10-38_all	unclear	current		no P; basic 17.2; surplus in small bases (families)
+L007	5.4	integers	all lengths, bases 10-38, 0^0=0, odd bases, refined model	38	32.5	table only			excess	int_b10-38_all	unclear	current		no P; basic 16.0
+L008	5.4	integers	all lengths, bases 10-38, 0^0=1, even bases, refined model	26	17.4	table only			excess	int_b10-38_all	unclear	current		no P; basic 17.2
+L009	5.4	integers	all lengths, bases 10-38, 0^0=1, odd bases, refined model	26	19.1	table only			excess	int_b10-38_all	unclear	current		no P; basic 16.0
+L010	5.4	integers	all lengths, bases 20-38, 0^0=1, basic model	26	20.6	1.2 standard deviations	0.23		excess	int_b10-38_all	unclear	current		p_two from z=1.2
+L011	5.5	integers	0^0=1, b-1 digit solutions, bases 10-38, refined model	27	17.3	P(>=27)=0.019		0.019	excess	int_b10-38_bm1	no	current	after about 14 groups: about 0.23	9.6 and 7.5 call it resolved: total over lengths b-6..b fits (see bulk rows)
+L012	5.5	integers	0^0=0, b-1 digit solutions, bases 10-38, refined model	26	23.8	parity effect accounts for the whole excess			excess	int_b10-38_bm1	unclear	current		no P; 9 vs 8.3 even, 17 vs 15.5 odd
+L013	5.5; 7.5	integers	fresh bases 39, 40, 41, 43, 0^0=1, b-1 digit solutions	5	2.45	P(>=5)=0.10		0.10	excess	int_b39-43_fresh	yes	current		searched after the group was chosen
+L014	5.5	integers	fresh bases 39, 40, 41, 43, 0^0=0, b-1 digit solutions	5	3.86	probability 0.35		0.35	excess	int_b39-43_fresh	yes	current		
+L015	5.7	integers	fresh bases 39-41, all lengths, 0^0=0	6	5.19	table only			excess	int_b39-43_fresh	yes	current		no P; searched after the model was built
+L016	5.7	integers	fresh bases 39-41, all lengths, 0^0=1	4	3.38	table only			excess	int_b39-43_fresh	yes	current		no P; searched after the model was built
+L017	5.6; 7.1	integers	no b-digit solution under 0^0=1, bases 3-45, refined (basic) model	0	3.6	probability 0.03 (0.04 with basic 3.2)		0.03	deficit	int_bdigit_m1	unclear	superseded by L039		model overestimates b-digit length by about 1.6x (11.2)
+L018	7.4; 9.7	integers	no empty even base 10-41 (empty = no solution under either convention)	0	2.62	P(no empty even base)=0.057		0.057	excess	int_b10-41_empty	unclear	current		7.4 quotes 2.6 and 0.06; base 44 also nonempty; 11.2 counts it as chance
+L019	9.7	integers	empty odd bases 10-41 (19, 27, 35)	3	1.13	table only			deficit	int_b10-41_empty	unclear	current		no P; same data as the mod 8 row
+L020	9.3	integers	base 44, 0^0=0, inexact search (about 15% miss rate) found none	0	1.08	no solution had probability 0.34		0.34	deficit	int_b44	yes	current		expectation stated before the run; not exhaustive
+L021	9.6	integers	bases 16-28, lengths b-6..b, 0^0=0, true weights	16	20.1	table only			deficit	int_bulk_b16-41	unclear	current		no P; random perturbation 13.7, residue-keeping 19.6
+L022	9.6	integers	bases 16-28, lengths b-6..b, 0^0=1, true weights	16	14.9	fits the refined model			excess	int_bulk_b16-41	unclear	current		no P
+L023	9.6	integers	bases 29-41, lengths b-6..b, 0^0=1	17	14.6	fits the refined model			excess	int_bulk_b16-41	unclear	current		no P; resolves the b-1 digit excess
+L024	9.6	other	perturbed weights keeping residues mod 2(b-1), bases 16-28, 3 seeds, lengths b-6..b, 0^0=0	19.6	20.1	exactly the refined model's size			fit	perturb_b16-28	unclear	current		no P; 0^0=1: 14.9 vs 14.9; random perturbation loses parity effect
+L025	9.7	other	perturbed weights, empty even bases 16-27, 240 runs	47	44.8	emptiness law holds			deficit	perturb_b16-28	unclear	current		no P
+L026	9.7	other	perturbed weights, empty odd bases, 240 runs	16	20.6	emptiness law holds			excess	perturb_b16-28	unclear	current		no P
+L027	10.5	integers	long exceptions J > ln b + 2 (k >= 6 digits), bases 10-127	3	1.2	agree with the model			excess	int_lenwindow	unclear	current		no P; one is in base 64 (self-paying)
+L028	10.5	kdigit	short exceptions J > ln b + 2 (3-5 digits), bases 10-5000	9	1.0	do not agree; per-base model not applicable			excess	kdigit_short_window	no	current		explained by the root heuristic of 11.4
+L029	11.1; 26.4	integers	0^0=0 even bases 12-32, >= b-6 digits, D=0 vs offsets 2j(b-1)	13	10.9	P(>=)=0.31 (clustered)		0.31	excess	int_near_b12-32	unclear	current		old Poisson value 0.30
+L030	11.1; 26.4	integers	0^0=0 odd bases 12-32, >= b-6 digits, D=0 vs offsets	20	22.2	P(<=)=0.38 (clustered)		0.38	deficit	int_near_b12-32	unclear	current		old 0.37
+L031	11.1; 26.4	integers	0^0=1 even bases 12-32, >= b-6 digits, D=0 vs offsets	15	12.8	P(>=)=0.31 (clustered)		0.31	excess	int_near_b12-32	unclear	current		old 0.31
+L032	11.1; 26.4	integers	0^0=1 odd bases 12-32, >= b-6 digits, D=0 vs offsets	15	14.0	P(>=)=0.43 (clustered)		0.43	excess	int_near_b12-32	unclear	current		old 0.43
+L033	11.1; 26.4	integers	dispersion of N_0 around lambda(b), 42 base-convention cases			sum (N0-lambda)^2/lambda=44.6, P=0.36	0.36		fit	int_near_b12-32	unclear	current		old 48.8, P 0.22; chi2 upper tail
+L034	11.1	integers	variance/mean of offset counts within a base, 42 cases			median 0.98 (range 0.70-1.64)			fit	int_near_b12-32	unclear	current		no P; Poisson check of offsets; 26.2.1: sums over offsets are overdispersed (phi 1.5-3.5)
+L035	11.1; 26.4	integers	empty base 19, union mean of its own spectrum 1.9	0	1.9	P(empty)=0.15		0.15	deficit	int_near_b12-32	no	current		unchanged in 26.4
+L036	11.2; 26.4	integers	bases 12-32 with no long solution, even bases, both conventions	4	7.8	table only			excess	int_near_b12-32	unclear	current		no P; 3 vs 4.2 (0^0=0, was 4.1), 1 vs 3.6 (0^0=1); fewer empty = more solutions
+L037	11.2; 26.4	integers	bases 12-32 with no long solution, odd bases, both conventions	7	4.0	table only			deficit	int_near_b12-32	unclear	current		no P; 2 vs 1.3 (0^0=0), 5 vs 2.7 (0^0=1, was 2.6); total 11 vs 11.6 called normal
+L038	11.2	integers	0^0=1 bases 12-32, D=0 vs offsets 2jb(b-1) that also match the residue mod b (even 11.0, odd 13.1)	30	24.1	predict slightly fewer solutions, not more			excess	int_near_b12-32	unclear	current		no P
+L039	11.2; 26.4	integers	no b-digit solution under 0^0=1, bases 10-30, offsets restricted to b digits	0	1.30	P=0.27		0.27	deficit	int_bdigit_m1	no	current		unchanged in 26.4; refined model gave 1.74
+L040	11.2	integers	b-digit solutions under 0^0=0, bases 10-30, offset calibration	2	1.30	table only			excess	int_bdigit_m0	unclear	current		no P; refined model 2.33
+L041	11.2	other	perturbed weights, b-digit solutions per world, bases 12-24, 40 seeds	0.65-0.83	1.04-1.39	shortfall like the true weights			deficit	perturb_b12-24_bdigit	unclear	current		no P; supports model overestimate of b digits
+L042	11.2a; 23.5; 26.4	integers	chi-square of lambda/model, 21 bases 12-32, t=0, 0^0=0			chi2=41.4 on 21, P=0.005	0.005		fit	int_near_b12-32	unclear	current		old 108 on 20 df (11.2a, earlier model run), 97.0 (23.5, P 1e-11, sample variance)
+L043	11.2a; 23.5; 26.4	integers	chi-square of lambda/model, 21 bases, t=0, 0^0=1			chi2=43.3 on 21, P=0.003	0.003		fit	int_near_b12-32	unclear	current		old 85 on 20 df (11.2a), 95.7 (23.5)
+L044	23.5; 26.4	integers	same, top 3 digits forced (t=3), 0^0=0			chi2=30.2 on 21, P=0.09	0.09		fit	int_near_b12-32	unclear	current		old 68.2, P 1e-6
+L045	23.5; 26.4	integers	same, t=3, 0^0=1			chi2=34.7 on 21, P=0.03	0.03		fit	int_near_b12-32	unclear	current		old 75.7, P 1e-8
+L046	23.5; 26.4	integers	same, t=4, 0^0=0			chi2=28.0 on 21, P=0.14	0.14		fit	int_near_b12-32	unclear	current		old 59.6
+L047	23.5; 26.4	integers	same, t=4, 0^0=1			chi2=34.5 on 21, P=0.03	0.03		fit	int_near_b12-32	unclear	current		old 72.4
+L048	23.5; 26.4	integers	base 19, 0^0=0, near-solution rate vs top-digit model (t=3)	1.35	2.02	z=-2.9	0.0037		deficit	int_near_b12-32	no	current	one of 42 cases	old z=-4.6 (26.4); 23.5 text says about 4.5
+L049	11.2a; 23.5; 26.4	integers	0^0=1, mean lambda/model over bases 12-32	1.12	1.00	z=3.0	0.0027		excess	int_near_b12-32	unclear	current		old z=4.4; even 1.11, odd 1.13
+L050	11.2a	integers	0^0=0, mean lambda/model over bases 12-32	0.98	1.00	ratio 0.98			fit	int_near_b12-32	unclear	current		no z given
+L051	11.4; 19.3.2	kdigit	3-digit solutions, 0^0=1, digits up to 60, root heuristic with local factors	6	5.59	table only			excess	kdigit3_m1	no	current		no P; primes version 5.09, spacing only 2.31
+L052	11.4; 19.3.2	kdigit	4-digit solutions, 0^0=1, digits up to 22, p-adic root heuristic	2	0.75	P(>=2)=0.17 (p-adic); 0.41 with primes (1.39)		0.17	excess	kdigit4_m1	no	current		
+L053	11.4; 19.3.2	kdigit	5-digit solutions, 0^0=1, digits up to 11, p-adic root heuristic	6	3.32	P(>=6)=0.12 (p-adic); 0.037 with primes (2.42)		0.12	excess	kdigit5_m1	no	current		excess known before the heuristic was refined
+L054	19.3.2	kdigit	3- to 5-digit solutions together, 0^0=1, p-adic root heuristic	14	9.66	table only			excess	kdigit_all_m1	no	current		no P; overlaps the three rows above
+L055	13.2.4	integers	twin pairs (solutions ending in 0 with twin), bases 10-41, 0^0=0	5	2.7	table only			excess	int_b10-41_all	unclear	current		no P
+L056	13.2.5	integers	correlation of n0 and n1 across bases 10-41 vs bivariate Poisson model	0.563	0.470	P(corr>=0.563)=0.30		0.30	excess	int_b10-41_all	unclear	current		shared share 0.63 vs model 0.57
+L057	14.3.1	negative	bases -10 to -35, 0^0=0, even bases vs refined model	15	14.5	P(X<=15)=0.62		0.62	excess	neg_b10-35	unclear	current		lower tail as printed
+L058	14.3.1	negative	bases -10 to -35, 0^0=0, odd bases	26	29.5	P(X<=26)=0.30		0.30	deficit	neg_b10-35	unclear	current		
+L059	14.3.1	negative	bases -10 to -35, 0^0=1, even bases	11	14.6	P(X<=11)=0.21		0.21	deficit	neg_b10-35	unclear	current		
+L060	14.3.1	negative	bases -10 to -35, 0^0=1, odd bases	14	17.0	P(X<=14)=0.28		0.28	deficit	neg_b10-35	unclear	current		
+L061	14.3.2	negative	top-length share, bases -10 to -35, both conventions	34	28.3	surplus of about 1 standard deviation	0.32		excess	neg_b10-35	no	current		p_two from z of about 1; echoes 5.5
+L062	14.3.3	negative	empty bases -2 to -35	8	4.2	P(>=8)=0.046		0.046	deficit	neg_empty	no	superseded by L168		Poisson-binomial
+L063	14.3.3	negative	empty multiples of 3, -12 to -33 (after -3, -6, -9 named)	3	0.97	P(>=3)=0.06		0.06	deficit	neg_mult3_empty	yes	superseded by L169	-3, -6, -9 set aside; their product 0.0026 called not small among 34 bases	prereg per text, but the cluster was seen in the same census
+L064	14.3.3	negative	variance/mean of near-solution counts, bases -10 to -24, 30 cases			median 0.90 (range 0.51-1.61)			fit	neg_near_b10-27	unclear	current		no P; Poisson check of offsets
+L065	14.5.2	eisenstein	Gaussian bases -2+i (both conventions) and -3+i (0^0=0)	2	4.37	census matches the model			deficit	gauss_n2-3	unclear	current		no P; Gaussian not Eisenstein; 1 vs 2.22, 0 vs 1.05, 1 vs 1.10
+L066	14.5.2	eisenstein	Gaussian base -3+i, 0^0=1	4	1.11	P=0.026		0.026	excess	gauss_n2-3	no	current		Gaussian base; the one exception picked among the cells
+L067	14.6.2	factorions	factorions, bases 10-41, all lengths	37	37.1	table only			fit	fact_b10-41	unclear	current		no P
+L068	14.6.2	factorions	bases 10-41 with no factorion	11	10.1	table only			deficit	fact_b10-41	unclear	current		no P
+L069	14.6.2	factorions	lengths L-5 to L+1	28	34.8	follow the length law loosely			deficit	fact_b10-41	unclear	current		no P
+L070	14.6.2	factorions	lengths L-6 and shorter (mostly 2 digits)	9	2.3	four times too common			excess	fact_b10-41	unclear	current		no P; per-base model not applicable
+L071	14.6.2	factorions	top length L	9	15.8	short of the model			deficit	fact_b10-41	unclear	current		no P
+L072	15.1.6	cycles2	2-cycles, bases 3-17, odd, 0^0=0	7	7.9	P(<=)=0.47, P(>=)=0.67		0.47	deficit	cycles2_b3-18	unclear	superseded by L177		
+L073	15.1.6	cycles2	2-cycles, bases 3-17, odd, 0^0=1	5	4.4	P(<=)=0.72, P(>=)=0.45		0.45	excess	cycles2_b3-18	unclear	superseded by L178		
+L074	15.1.6	cycles2	2-cycles, bases 3-17, even, 0^0=0	1	3.5	P(<=)=0.13, P(>=)=0.97		0.13	deficit	cycles2_b3-18	no	superseded by L175		
+L075	15.1.6	cycles2	2-cycles, bases 3-17, even, 0^0=1	3	3.8	P(<=)=0.47, P(>=)=0.73		0.47	deficit	cycles2_b3-18	unclear	superseded by L176		
+L076	15.1.6	other	cycles of all lengths (fixed point 1 excluded), bases 3-17, four groups	237	232.9	total matches the model in all four groups			fit	cycles_b3-17	unclear	current		no P; 92/94.4, 61/52.5, 41/42.6, 43/43.4
+L077	15.1.6	integers	fixed points (solutions), bases 3-17, four groups	80	49.9	excess by 1.4 to 1.8			excess	int_b3-17	unclear	current		no P; families and small bases
+L078	15.1.6	cycles2	lead: 2-cycles in every odd base 3-11, none in even bases 4-10			model probability 0.081*0.141=0.011		0.011	other	cycles2_b3-18	no	current		pattern chosen after looking; breaks at bases 13, 15, 16
+L079	17.2	other	forced residues --set-residue 0, 0^0=0, bases 12-24, 104 runs, long solutions	1955	1891.4	within 7% of the model			fit	resid_b12-24	yes	current		no P; designed test, prediction section precedes measurement
+L080	17.2	other	--set-residue 0, 0^0=1	845	789.8	within 7%			excess	resid_b12-24	yes	current		no P
+L081	17.2	other	--set-residue 1, 0^0=1 (only b-1 digit solutions allowed)	1030	984.7	within 7%			excess	resid_b12-24	yes	current		no P
+L082	17.2	other	--set-residue 1, 0^0=0	454	453.1	within 7%			fit	resid_b12-24	yes	current		no P
+L083	17.2	other	--perturb (random residues), both conventions, same runs	207	223.6	table only			deficit	resid_b12-24	yes	current		no P; 98 and 109 vs 111.8 each
+L084	17.2	other	dispersion per run under forced residues, 104 runs			sum (N-lambda)^2/lambda=192 to 261 over 104 runs			fit	resid_b12-24	unclear	current		no P; random residues 98 and 101; families cause it
+L085	17.3	other	solutions with zeros, even m (-2,0,2), even bases 10-30	16	21.7	P(at least observed)=0.91		0.91	deficit	zero_m_b10-30	yes	current		upper tail as printed although count is below expectation
+L086	17.3	other	solutions with zeros, even m, odd bases	42	39.5	P(at least)=0.37		0.37	excess	zero_m_b10-30	yes	current		
+L087	17.3	other	solutions with zeros, odd m (-1,1,3), even bases	28	21.7	P(at least)=0.11		0.11	excess	zero_m_b10-30	yes	current		
+L088	17.3	other	solutions with zeros, odd m, odd bases	11	10.9	P(at least)=0.53		0.53	excess	zero_m_b10-30	yes	current		
+L089	17.3	integers	zero-free solutions (count for every m), bases 10-30	24	16.5	table only			excess	zero_m_b10-30	unclear	current		no P; 10 vs 5.8 even, 14 vs 10.6 odd
+L090	17 summary	other	odd-base factor vs parity of m, after splitting off zero-free solutions			agree within 1.4 standard deviations	0.16		fit	zero_m_b10-30	yes	current		largest deviation; p_two from z=1.4
+L091	17.4	other	weights x^(x-1), bases 10-32, long solutions, both conventions	58	62.2	dispersion 19.8 (0^0=0) and 21.8 (0^0=1) on 23 bases			fit	shift_xm1_b10-32	yes	current		no P; 31/35.9 and 27/26.3; empty 6/5.5, 6/7.4
+L092	17.4	integers	weights x^x, bases 10-30, long solutions, both conventions	62	55.8	dispersion 31.2 and 29.1 on 21 bases			excess	int_b10-30_long	unclear	current		no P; 32/32.3 and 30/23.5; empty 5/5.1, 6/6.9
+L093	17.4	other	weights x^(x+1), bases 10-32, long solutions	61	61.7	dispersion 21.5 and 24.0 on 23 bases			fit	shift_xp1_b10-32	yes	current		no P; 36/35.8, 25/25.9; empty 7/5.5, 7/7.5
+L094	17.4	other	weights x^(x+2), bases 10-32, long solutions	72	60.5	dispersion 23.4 and 29.3 on 23 bases			excess	shift_xp2_b10-32	yes	current		no P; 40/35.2, 32/25.3; empty 4/5.6, 5/7.7
+L095	17.4	other	short solutions (j >= 6), weights x^(x-1), 0^0=0	18	6.7	exceed the model for every weight			excess	shift_xm1_b10-32	no	current		no P; local factors missing from the model
+L096	17.4	factorions	x! all lengths, both conventions, bases 10-42	75	79.1	total near the model			fit	fact_b10-42	yes	current		no P; no parity factor, as predicted
+L097	17.4	factorions	x! long factorions (j <= 5), both conventions, bases 10-42	56	72.6	dispersion 46.9 (w(0)=0) and 38.2 (w(0)=1) on 33 bases			deficit	fact_b10-42	unclear	current		no P; 27/36.5 and 29/36.1
+L098	17.4	factorions	x! bases with no long factorion, bases 10-42	35	22.1	table only			deficit	fact_b10-42	unclear	current		no P; 19 vs 11.0 and 16 vs 11.1 (empty bases, so fewer solutions)
+L099	17.4	factorions	odd bases, top length D, both conventions	4	15.8	the shortfall sits in odd bases at the top length			deficit	fact_odd_b15-35	no	current		no P
+L100	17.4	factorions	even bases 14-36, long, w(0)=0	9	13.0	table only			deficit	fact_even_b14-36	unclear	current		no P; near-solutions 0.73 of model
+L101	17.4	factorions	even bases 14-36, long, w(0)=1	12	12.9	table only			deficit	fact_even_b14-36	unclear	current		no P; near 0.92
+L102	17.4	factorions	odd bases 15-35, long, w(0)=0, vs refined model	3	11.9	P(X<=3)=0.002		0.002	deficit	fact_odd_b15-35	no	current	after about 16 groups: about 0.03 (17.4); about 0.1 (19.5); 0.13 (26.4)	the two conventions share zero-free solutions
+L103	17.4	factorions	odd bases 15-35, long, w(0)=1, vs refined model	4	11.8	P(X<=4)=0.009		0.009	deficit	fact_odd_b15-35	no	current	see row above	
+L104	17.4; 26.4	factorions	odd bases 15-35, w(0)=0, D=0 vs offsets j(b-1)	3	11.83	P=0.0060 (clustered); rank P 0.032		0.0060	deficit	fact_odd_b15-35	no	current		old 0.0026 (in 26.4; 17.4 itself prints no offset P)
+L105	17.4; 26.4	factorions	odd bases 15-35, w(0)=1, D=0 vs offsets j(b-1)	4	11.10	P=0.019 (clustered); rank P 0.032		0.019	deficit	fact_odd_b15-35	no	current		old 0.014
+L106	17.4	factorions	fresh odd bases 43 and 45, long factorions per convention	1	2.05	one observed fits both readings			deficit	fact_odd_b37-47	yes	superseded by L161		no P
+L107	19.2.2; 26.4	kdigit	4-digit, 0^0=1, D=0 vs heuristic calibrated by D=j, primes	2	1.29	P(>=2)=0.39 (clustered)		0.39	excess	kdigit4_m1	unclear	current		old 0.37
+L108	19.2.2; 26.4	kdigit	4-digit, 0^0=1, calibrated by D=j, p-adic	2	0.74	P(>=2)=0.19		0.19	excess	kdigit4_m1	unclear	current		old 0.17
+L109	19.2.2; 26.4	kdigit	4-digit, 0^0=1, calibrated by D=jL, primes	2	1.44	P(>=2)=0.45		0.45	excess	kdigit4_m1	unclear	current		old 0.42
+L110	19.2.2; 26.4	kdigit	4-digit, 0^0=1, calibrated by D=jL, p-adic	2	0.63	P(>=2)=0.17		0.17	excess	kdigit4_m1	unclear	current		old 0.13
+L111	19.2.2; 26.4	kdigit	4-digit, 0^0=0, bases below 100, calibrated by D=j, primes	5	2.41	P(>=5)=0.14		0.14	excess	kdigit4_m0	unclear	current		old 0.10; 2 of the 5 are self-paying (base 49)
+L112	19.2.2; 26.4	kdigit	4-digit, 0^0=0, bases below 100, D=j, p-adic	5	2.11	P(>=5)=0.10		0.10	excess	kdigit4_m0	unclear	current		old 0.06
+L113	19.2.2; 26.4	kdigit	4-digit, 0^0=0, bases below 100, D=jL, primes	5	2.81	P(>=5)=0.24		0.24	excess	kdigit4_m0	unclear	current		old 0.15
+L114	19.2.2; 26.4	kdigit	4-digit, 0^0=0, bases below 100, D=jL, p-adic	5	1.76	P(>=5)=0.08		0.08	excess	kdigit4_m0	unclear	current		old 0.03
+L115	19.2.2	kdigit	4-digit offsets D=j=1..200, bases below 100, vs root heuristic	682	677.1	chi2-like 81 (primes) and 92 (p-adic) over 200 offsets			fit	kdigit4_offsets	unclear	current		no P; primes predict 731.0; variance/mean 0.97
+L116	19.2.2	kdigit	4-digit offsets D=j, bases 100 and up	16	1.8	15 of 16 from algebraic families			excess	kdigit4_offsets	unclear	current		no P; structural
+L117	19.2.3; 26.4	kdigit	5-digit, 0^0=1, D=0 vs heuristic calibrated by D=j, primes	6	2.95	P(>=6)=0.12 (clustered)		0.12	excess	kdigit5_m1	no	current		old 0.08
+L118	19.2.3; 26.4	kdigit	5-digit, 0^0=1, calibrated by D=j, p-adic	6	3.53	P(>=6)=0.19		0.19	excess	kdigit5_m1	no	current		old 0.15
+L119	19.2.3; 26.4	kdigit	5-digit, 0^0=1, calibrated by D=jL, primes	6	1.55	P(>=6)=0.012		0.012	excess	kdigit5_m1	no	superseded by L152		old 0.005; 26.4: weaker, superseded by 22.4
+L120	19.2.3; 26.4	kdigit	5-digit, 0^0=1, calibrated by D=jL, p-adic	6	1.82	P(>=6)=0.023		0.023	excess	kdigit5_m1	no	superseded by L152		old 0.011
+L121	19.2.3; 26.4	kdigit	5-digit, 0^0=1, bases 13-99 only, calibrated by D=jL	3	0.18	P(>=3)=0.0012		0.0012	excess	kdigit5_b13-99	no	superseded by L152	range chosen after seeing data; about 5 ranges: about 0.005	old 0.0008 (0.0009 p-adic); summary of ch. 19 calls it 17 times
+L122	19.2.3	kdigit	5-digit offsets, 0^0=1: bases below 10, D=j	354	353.7	heuristic with primes fits exactly			fit	kdigit5_offsets	unclear	current		no P; bases 10-99: 177 vs 83 (clusters, families); D=jL: 10 vs 16.0
+L123	19.4.3	narcissistic	narcissistic numbers, bases 3-14, all searched lengths, refined model	760	671.3	table only			excess	narc_b3-14	unclear	current		no P; basic model 252.5; no fitted parameter
+L124	19.4.3	narcissistic	forced cells (x^d == x mod b-1 for all x), d >= 6	207	208.48	table only			fit	narc_b3-14	unclear	current		no P; basic model 24.3
+L125	19.4.3	narcissistic	d >= 6, odd bases	354	349.72	parity factor holds			fit	narc_b3-14	unclear	current		no P
+L126	19.4.3	narcissistic	d >= 6, all bases	634	588.0	P(>=634)=0.03		0.03	excess	narc_b3-14	unclear	current		
+L127	19.4.3	narcissistic	d >= 6, even bases	280	238.27	P=0.005		0.005	excess	narc_b3-14	no	current		split found after looking; mostly bases 8 and 10
+L128	19.4.3	narcissistic	short lengths d <= 5	126	83.31	ratio 1.5			excess	narc_b3-14	unclear	current		no P; local factors missing (30.3.4: 2-digit part 22 vs 14.4)
+L129	19.4.3	narcissistic	cell scatter, 336 long cells with E >= 0.05			sum (N-E)^2/E=405 over 336 cells			fit	narc_b3-14	unclear	current		no P reported
+L130	19.4.3	narcissistic	OEIS terms beyond searched lengths: base 14 above 50 digits	5	6.0	model expects 6.0, OEIS has 5			deficit	narc_b14_long	unclear	current		no P; bases 11-13 above 62 digits: 0 vs 0.02
+L131	19.5; 26.4	factorions	odd bases 15-35, w(0)=0, D=0 vs narrow offsets j b(b-1)	3	10.83	P=0.0089 (clustered, triples); rank P 0.032		0.0089	deficit	fact_odd_b15-35	no	current	after about 16 groups: 0.13 (26.4; 19.5 said about 0.1)	old 0.006; 26.3.1: Poisson 0.0056, compound 0.0077
+L132	19.5; 26.4	factorions	odd bases 15-35, w(0)=1, D=0 vs narrow offsets	4	10.60	P=0.025 (clustered); rank P 0.032		0.025	deficit	fact_odd_b15-35	no	current	after about 16 groups: 0.13	old 0.020
+L133	21.1.6; 24.4.3; 26.4	ffield	F_q[T] solutions vs near-solutions at offsets (B-1)g as independent draws			solutions match near-solutions within 15%: ordinary draws			fit	ff_census	unclear	withdrawn		Lemmas 24.9/24.10: the near-solutions were mostly the solutions again
+L134	21.2; 26.4	rational	p, q odd, 0^0=0, 9 bases, D=0 vs near-solutions	14	19.9	P=0.12 (clustered)		0.12	deficit	rat_p11	unclear	current		old P(X<=14)=0.11 vs refined model 19.8
+L135	21.2	rational	p, q odd, 0^0=1, 9 bases	11	9.9	table only			excess	rat_p11	unclear	current		no P; near 9.8
+L136	21.2	rational	other bases (q > 1), 0^0=0, 20 bases	20	23.4	table only			deficit	rat_p11	unclear	current		no P; near 21.9
+L137	21.2	rational	other bases, 0^0=1	22	24.0	table only			deficit	rat_p11	unclear	current		no P; near 24.3
+L138	21.2	rational	near-solution doubling in odd/odd bases under 0^0=0	2.2	2.2	2.2 per offset and base against 1.1, as predicted			fit	rat_p11	unclear	current		no P; model 19.8 vs basic 10.0
+L139	21.3	eisenstein	Eisenstein -2+w, -3+w, 0^0=0, searched lengths	3	2.2	match the model			excess	eis_n2-3	unclear	current		no P
+L140	21.3	eisenstein	Eisenstein -2+w, -3+w, 0^0=1	3	2.1	match the model			excess	eis_n2-3	unclear	current		no P
+L141	21.3	eisenstein	no doubling: near-solution rates 1.03, 1.27 (0^0=0) vs 1.07, 1.13 (0^0=1); Gaussian control 2.57 vs 1.07			as the odd modulus predicts			fit	eis_n2-3	unclear	current		no P
+L142	21.4.4	pisot	even x 2-12, 0^0=0	31	17.0	7 twin pairs account for 7; near-solutions (2.65) match the model (2.8)			excess	pisot_x2-12	no	superseded by L222		no P; 26.4: the class jx is wrong for even x
+L143	21.4.4	pisot	odd x 3-11, 0^0=0	9	5.4	table only			excess	pisot_x2-12	unclear	current		no P
+L144	21.4.4	pisot	even x, 0^0=1	12	11.6	table only			fit	pisot_x2-12	unclear	current		no P
+L145	21.4.4	pisot	odd x, 0^0=1	10	6.4	table only			excess	pisot_x2-12	unclear	current		no P
+L146	21.5.3	factorial	no solution for 3 <= L <= 33, plain model, per convention	0	4.5	P=0.011 per convention		0.011	deficit	fsys_L3-33	unclear	superseded by L237		model judged wrong for a structural reason
+L147	21.5.3; 29.5.2	factorial	near-solutions D=1000j, j=1..100, L 10-26, totals	218 and 263	231	mean about right, variance far larger than Poisson			fit	fsys_near	unclear	current		no P
+L148	22.1.2	kdigit	last digits of the 3 five-digit solutions in bases 13-99: two of three in {0,1}	2	0.67	probability about 0.13		0.13	other	kdigit5_b13-99	no	current		
+L149	22.2.4	kdigit	exact blocks (L,m)=(2,1), bases 100-20000, 0^0=1	1	0.023	P(>=1)=0.023		0.023	excess	blocks_b13up	no	current		(1,7) in base 904
+L150	22.2.4	kdigit	exact blocks (4,1), bases 13-5000	1	0.039	P(>=1)=0.038		0.038	excess	blocks_b13up	no	current		(3,3,6,6) in base 13
+L151	22.2.4	kdigit	all exact blocks L >= 2, bases 13 up	2	0.73	P=0.17		0.17	excess	blocks_b13up	unclear	current		
+L152	22.4; 26.4	kdigit	5-digit, 0^0=1, bases 13-99, base-by-base window calibration	3	0.33	P(>=3)=0.0055 (clustered)		0.0055	excess	kdigit5_b13-99	no	current	after the choice of 10 cells: about 0.018 (old 0.015)	old 0.0047; 0.0024 to 0.014 over window and class choices
+L153	22.4; 26.4	kdigit	4-digit, 0^0=1, bases 13-99, window calibration	1	1.40	P(>=1)=0.74		0.74	deficit	kdigit4_m1	unclear	current		old 0.75; upper tail as printed
+L154	22.4.4	kdigit	6-digit, bases 3-99, calibrated expectation	1	1.41	counts fit			deficit	kdigit6-8	unclear	current		no P
+L155	22.4.4	kdigit	7-digit, bases 3-99	1	1.19	counts fit			deficit	kdigit6-8	unclear	current		no P
+L156	22.4.4	kdigit	8-digit, bases 3-12	2	1.35	counts fit			excess	kdigit6-8	unclear	current		no P; table of 22.4.1 gives 1.13 for 8 digits in bases 3-12
+L157	22.4.1	kdigit	5-digit, bases 13-99, offsets 0 < abs(D) <= 300 in the class of 0	7	6.1	normal once the class is fixed			fit	kdigit5_offsets	unclear	current		no P
+L158	22.5.1	integers	exact splits at m=1 among solutions with >= 4 digits, bases 2-43, 0^0=1	2	3.38	counts match the model			deficit	int_splits_b2-43	unclear	current		no P
+L159	22.5.1	integers	exact splits at m=2, 0^0=0	6	0.84	three twin pairs; two are chance against 0.42 pairs			excess	int_splits_b2-43	unclear	current		no P; one pair is an identity
+L160	18.4	kdigit	non-partner 3-digit solutions all with positive root (3 of 3) under the symmetric root heuristic	3	1.5	probability 1/8		0.125	other	kdigit3_sign	no	current		explained by the square class (Lemma 18.19)
+L161	23.1.1	factorions	fresh odd bases 37-47, long factorions per convention	3	6.2	P(X<=3)=0.13		0.13	deficit	fact_odd_b37-47	yes	current		searched after the shortfall was found
+L162	23.1.3; 26.4	factorions	odd bases, D=0 vs offsets j b^2(b-1), j b^3(b-1), lcm family, 0^0=0	3	10.6-11.8	P=0.004 to 0.007 (clustered)		0.007	deficit	fact_odd_b15-35	no	current		old about 0.005; p_one is the top of the range
+L163	23.1.3; 26.4	factorions	same, 0^0=1	4	10.6-11.8	P=0.020 (clustered)		0.020	deficit	fact_odd_b15-35	no	current		old about 0.005
+L164	23.1.3; 26.4	factorions	combined: in-sample after selection plus fresh bases 37-47 (Fisher)			about 0.09		0.09	deficit	fact_odd_b15-47	no	current	in-sample after 16 groups: 0.05 to 0.1	old about 0.05 (23.1.3; still quoted in ch. 17 and 19)
+L165	23.1.3	factorions	solutions at top length L(b), bases 14-36: odd 0 and 1, even 2 and 3, vs offsets j b(b-1) per offset 4.1, 3.7, 4.5, 5.0	6	17.3	deficit sits mostly at the top length			deficit	fact_b14-36_top	no	current		no P; even bases compensate at L(b)-1 (11 vs 6.2)
+L166	23.2.1	negative	fresh bases -36, -37, -38, 0^0=1	4	3.28	table only			excess	neg_fresh_b36-38	yes	current		no P
+L167	23.2.1	negative	fresh bases -36, -37, -38, 0^0=0	2	4.18	table only			deficit	neg_fresh_b36-38	yes	current		no P
+L168	23.2.2	negative	empty bases -2 to -38	9	4.63	P=0.033		0.033	deficit	neg_empty	no	current		Poisson-binomial
+L169	23.2.2	negative	empty multiples of 3, -12 to -36	3	1.15	P=0.095		0.095	deficit	neg_mult3_empty	yes	current		prereg per text (named bases set aside)
+L170	23.2.2	negative	empty other bases -10 to -38	3	2.44	P=0.45		0.45	deficit	neg_empty	unclear	current		
+L171	23.2.2	negative	solutions, bases -10 to -38, refined model	72	83.2	P=0.12		0.12	deficit	neg_b10-38	unclear	current		
+L172	23.2.2; 26.4	negative	bases -10 to -27, D=0 vs offsets j step b (keep last digit)	42	52.0	P=0.11 (clustered)		0.11	deficit	neg_near_b10-27	unclear	current		old 0.09; model 53.9
+L173	23.2.2; 26.4	negative	multiples of 3, D=0 vs their offsets j step b	10	17.3	P=0.056 (clustered)		0.056	deficit	neg_near_b10-27	no	current	chosen after the fact	old 0.044; 23.2.2 text gives P=0.04 against the model 17.6
+L174	23.2.2; 26.4	negative	near-solutions at offsets j step b vs j step, other bases, 0^0=0	19.15	24.90	2.9 SD (2.3 SD on bases -10 to -24)	0.0037		deficit	neg_near_b10-27	no	current		old about 4 SD; offset-family comparison, not D=0
+L175	23.3	cycles2	2-cycles, bases 4-18, even, 0^0=0, vs model E_2	2	4.02	P(X<=2)=0.24		0.24	deficit	cycles2_b3-18	no	current		
+L176	23.3	cycles2	2-cycles, bases 4-18, even, 0^0=1	4	4.30	P(X<=4)=0.57		0.57	deficit	cycles2_b3-18	unclear	current		
+L177	23.3	cycles2	2-cycles, bases 4-18, odd, 0^0=0	6	7.23	P(X<=6)=0.42		0.42	deficit	cycles2_b3-18	unclear	current		
+L178	23.3	cycles2	2-cycles, bases 4-18, odd, 0^0=1	4	3.88	P(X<=4)=0.65		0.65	excess	cycles2_b3-18	unclear	current		lower tail as printed
+L179	23.3; 26.4	cycles2	even bases 4-18, 0^0=0, 2-cycles vs near-2-cycles per offset	2	5.25	P=0.11 (clustered)		0.11	deficit	cycles2_b3-18	no	current		old 0.10
+L180	23.3	cycles2	fresh base 18, one 2-cycle under each convention	2	1.02	table only			excess	cycles2_b18	yes	current		no P; 0.51 per convention
+L181	23.3	cycles2	near-2-cycles per offset, even bases, 0^0=0, vs model	5.25	4.02	model underestimates slightly			excess	cycles2_b3-18	unclear	current		no P; fixed points: offsets 10.4 vs model 9.4
+L182	24.3.1	ffield	F_q[T] census vs refined, 0^0=0, (q,e)=(2,3), 8 bases	1.500	1.786	z=-0.6	0.55		deficit	ff_q2e3	unclear	current		per base; ratio 0.84
+L183	24.3.1	ffield	(2,4), 16 bases	2.375	3.196	z=-1.3	0.19		deficit	ff_q2e4	unclear	current		ratio 0.74
+L184	24.3.1	ffield	(2,5), 32 bases	3.750	4.071	z=-0.9	0.37		deficit	ff_q2e5	unclear	current		ratio 0.92
+L185	24.3.1	ffield	(2,6), 64 bases	6.594	4.575	z=2.1	0.036		excess	ff_q2e6	unclear	current		ratio 1.44
+L186	24.3.1	ffield	(2,7), 128 bases	5.031	5.026	z=0.0	1.0		fit	ff_q2e7	unclear	current		ratio 1.00
+L187	24.3.1	ffield	(3,3), 54 bases	8.222	6.479	z=0.9	0.37		excess	ff_q3e3	unclear	current		ratio 1.27
+L188	24.3.1	ffield	(3,4), 162 bases	14.444	9.858	z=2.5	0.012		excess	ff_q3e4	unclear	current		ratio 1.47
+L189	24.3.1	ffield	(3,5), 486 bases	14.296	12.924	z=1.3	0.19		excess	ff_q3e5	unclear	current		ratio 1.11
+L190	24.3.1	ffield	(5,3), 500 bases	34.400	26.230	z=2.3	0.021		excess	ff_q5e3	unclear	current		ratio 1.31
+L191	24.3.1	ffield	(5,4), 2500 bases	60.480	45.414	z=2.9	0.0037		excess	ff_q5e4	unclear	current		ratio 1.33
+L192	24.3.1	ffield	(7,3), 2058 bases	76.286	64.810	z=2.2	0.028		excess	ff_q7e3	unclear	current		ratio 1.18
+L193	24.3.1	ffield	(11,3), 13310 bases	240.000	233.004	z=0.5	0.62		excess	ff_q11e3	unclear	current		ratio 1.03
+L194	24.3.1	ffield	(13,3), 26364 bases	407.077	379.118	z=1.8	0.072		excess	ff_q13e3	unclear	current		ratio 1.07
+L195	24.3.1	ffield	(17,3), 78608 bases	857.412	835.518	z=0.8	0.42		excess	ff_q17e3	unclear	current		ratio 1.03
+L196	24.3.1	ffield	combined z over the nine odd-q cases, 0^0=0			z about 5 (sum of z / 3)	5.7e-7		excess	ff_odd_all	unclear	current		same data as the odd-q rows above; mechanism in 24.4.5
+L197	24.3.1	ffield	0^0=1 census vs refined, all odd q			ratio 0.025 to 0.75			deficit	ff_odd_all	unclear	current		no P; explained exactly by Proposition 24.11 (zero count)
+L198	24.6.2	integers	zero digits of long solutions, 0^0=0, bases 12-41	29	42.5	2.1 standard deviations	0.036		deficit	int_long_b12-41	unclear	current		forced top digits account for 2 to 4 of the 13.5
+L199	24.6.2	integers	zero digits of long solutions, 0^0=1, bases 12-41	33	33.1	follow the model			fit	int_long_b12-41	unclear	current		no P
+L200	26.2.2	integers	bases 12-26, 0^0=0, D=0 vs offsets 2j(b-1), clustered	27	24.30	P(>=27)=0.33		0.33	excess	int_near_b12-32	unclear	current		
+L201	26.2.2	integers	bases 12-26, 0^0=0, D=0 vs transposition-free offsets	27	25.37	P(>=27)=0.40		0.40	excess	int_near_b12-32	unclear	current		
+L202	26.2.2	integers	bases 12-26, 0^0=1, D=0 vs offsets 2j(b-1)	25	19.47	P(>=25)=0.13		0.13	excess	int_near_b12-32	unclear	current		
+L203	26.2.2	integers	bases 12-26, 0^0=1, D=0 vs transposition-free offsets	25	19.75	P(>=25)=0.15		0.15	excess	int_near_b12-32	unclear	current		
+L204	26.5.1	integers	pooled test component: integers 12-32, both conventions	63	59.9	z corrected=+0.38 (naive +0.40)	0.70		excess	int_near_b12-32	unclear	current		
+L205	26.5.1	factorions	pooled component: odd factorions 15-35, offsets j b(b-1)	7	21.4	z corrected=-2.88 (naive -3.12)	0.0040		deficit	fact_odd_b15-35	no	current		
+L206	26.5.1	factorions	pooled component: even factorions 14-36, offsets j(b-1)	21	21.4	z corrected=-0.07 (naive -0.08)	0.94		deficit	fact_even_b14-36	unclear	current		
+L207	26.5.1	negative	pooled component: negative -10 to -27, offsets j step b	42	52.0	z corrected=-1.29 (naive -1.38)	0.20		deficit	neg_near_b10-27	unclear	current		
+L208	26.5.1	rational	pooled component: rational p <= 11, q > 1, both conventions	67	75.9	z corrected=-0.99 (naive -1.02)	0.32		deficit	rat_p11	unclear	current		phi=2 assumed
+L209	26.5.1	pisot	pooled component: Pisot x=2..12, library offsets jx	62	39.7	z corrected=+3.11 (naive +3.54)	0.0019		excess	pisot_x2-12	no	superseded by L210		the class jx is wrong for even x (26.6)
+L210	26.5.1	pisot	pooled component: Pisot x=2..12, even j for even x	62	46.1	z corrected=+2.03 (naive +2.34)	0.042		excess	pisot_x2-12	no	current		
+L211	26.5.1	eisenstein	pooled component: Eisenstein -2+w, -3+w	6	4.5	z corrected=+0.68 (naive +0.71)	0.50		excess	eis_n2-3	unclear	current		phi=2 assumed
+L212	26.5.1	cycles2	pooled component: 2-cycles, bases 4-18	16	22.4	z corrected=-1.33 (naive -1.36)	0.18		deficit	cycles2_b3-18	unclear	current		
+L213	26.5.2	other	pooled heterogeneity, 8 worlds, library Pisot offsets	284	297.2	Q=23.3 on 7, P=0.001 (chi2), 0.002 (bootstrap)	0.002		fit	pooled_8worlds	unclear	superseded by L215		common ratio 0.956
+L214	26.5.2	other	random effect tau=0.29 on log ratio, library Pisot offsets			LRT of tau=0: P=0.007	0.007		fit	pooled_8worlds	unclear	superseded by L216		
+L215	26.5.2	other	pooled heterogeneity, Pisot offsets in class of 0 mod 2x	284	303.6	Q=17.2 on 7, P=0.016 (chi2), 0.018 (bootstrap)	0.016		fit	pooled_8worlds	unclear	current		common ratio 0.935
+L216	26.5.2	other	random effect tau=0.22, class offsets			LRT of tau=0: P=0.06	0.06		fit	pooled_8worlds	unclear	current		
+L217	26.5.2	other	heterogeneity without the odd factorions			Q=9.1 on 6, P=0.17	0.17		fit	pooled_8worlds	no	current		leave-one-out chosen after
+L218	26.5.2	other	heterogeneity without the Pisot bases			Q=10.5 on 6, P=0.10	0.10		fit	pooled_8worlds	no	current		
+L219	26.5.2	other	heterogeneity without any one other world			Q=15.7 to 17.2, P=0.009 to 0.015	0.015		fit	pooled_8worlds	no	current		p_two is the top of the range
+L220	26.5.2	other	six worlds without odd factorions and Pisot: heterogeneity			Q=3.6 on 5, P=0.60	0.60		fit	pooled_8worlds	no	current		
+L221	26.5.2	other	six worlds: common ratio 0.91 against 1	0.91	1.00	1.3 standard deviations below 1	0.19		deficit	pooled_8worlds	no	current		p_two from z=-1.3
+L222	26.6.2	pisot	even x 2-8, 0^0=0, lengths T >= 2, D=0 vs all offsets jx (jx > 0)	25	10.60	P=0.0016 (clustered, phi 2.5, twins)		0.0016	excess	pisot_x2-8_T2	no	superseded by L224		calibration judged wrong (class mod 2x, peak at 0)
+L223	26.6.2	pisot	even x 2-8, 0^0=0, vs even j offsets	25	12.53	P=0.0095		0.0095	excess	pisot_x2-8_T2	no	superseded by L224		
+L224	26.6.2	pisot	even x 2-8, 0^0=0, vs local offsets D=+-2jx, j=1..3	25	14.83	P=0.049 (0.05 with the calibration error)		0.05	excess	pisot_x2-8_T2	no	current		also quoted as 25 vs 14.8 in 21.4 and 26 summary
+L225	26.6.2	pisot	even x 2-8, 0^0=1, vs local offsets	11	6.83	P=0.14		0.14	excess	pisot_x2-8_T2	no	current		rests on tiny solutions of x <= 5
+L226	26.6.2	pisot	odd x 3-7, 0^0=1, vs local offsets	7	2.17	P=0.03		0.03	excess	pisot_x2-8_T2	no	current		rests on tiny solutions of x <= 5
+L227	26.6.2	pisot	odd x 3-7, 0^0=0, vs local offsets	6	2.67	table only			excess	pisot_x2-8_T2	unclear	current		no P
+L228	26.7.2	other	image share of F on multisets, bases 10-16, vs weighted random mapping	0.21-0.14	0.38-0.31	factor about 2 (uniform formula 0.50)			deficit	other_image	unclear	current		no P; distinct-sums model 0.26-0.22
+L229	26.7.4	other	in-degree variance/mean, bases 10-16, vs Poisson mixture of the model	3.6-6.3	2.3-3.8	overdispersed			fit	other_image	unclear	current		no P
+L230	26.8.2	other	mixing statistic: agreement ratio of low digits F/U, several worlds	0.984-1.037	1	within 1.6% (3.7% Pisot); F_5[T] 2.2-3.4% excess per value			fit	other_mixing	unclear	current		no P
+L231	29.4.2	ffield	F_q[T] (5,3), refined model, per-orbit Pearson, 25 orbits	34.40	26.23	Pearson=26.5 on 25 orbits			fit	ff_q5e3	unclear	current		no P; per base totals
+L232	29.4.2	ffield	(5,3), Frobenius-block model	34.40	31.62	Pearson=6.6 on 23 orbits			fit	ff_q5e3	no	current		no P; model built after the census
+L233	29.4.2	ffield	(7,3), refined model, 63 orbits	76.29	64.81	Pearson=48.5 on 63 orbits			fit	ff_q7e3	unclear	current		no P
+L234	29.4.2	ffield	(7,3), block model	76.29	73.49	Pearson=13.8 on 43 orbits			fit	ff_q7e3	no	current		no P
+L235	29.4.2	ffield	(5,4), refined model, 160 orbits	60.48	45.41	Pearson=749.1 on 160 orbits			fit	ff_q5e4	unclear	current		no P
+L236	29.4.2	ffield	(5,4), block model	60.48	58.68	Pearson=186.9 on 155 orbits			fit	ff_q5e4	no	current		no P
+L237	29.5.3	factorial	no solution for 3 <= L <= 33 vs top-digit model, 0^0=0	0	3.85	P=e^-3.85=0.021		0.021	deficit	fsys_L3-33	no	superseded by L238		plain model 0.010; model built after the census
+L238	29.5.3	factorial	same, with the cluster calibration from near-solutions, 0^0=0	0	0.92	P=exp(-0.24*3.85)=0.39		0.39	deficit	fsys_L3-33	no	current		expected = 0.24 * 3.85
+L239	29.5.3	factorial	same, cluster calibration, 0^0=1	0	1.52	P=exp(-0.39*3.90)=0.22		0.22	deficit	fsys_L3-33	no	current		expected = 0.39 * 3.90
+L240	29.5.2	factorial	near-solutions at open lengths 14, 18, 19, 24 (D=1000j)	0	40	a few empty open lengths are ordinary (clusters)			deficit	fsys_near	no	current		no P; closed lengths 0 vs 81 under the plain model
+L241	30.3.4	narcissistic	2-digit narcissistic numbers, bases 3-14, refined model	22	14.4	model short by a factor of order ln b			excess	narc_b3-14	unclear	current		no P; exact count tau(b^2+1)-2; basic 9.0
