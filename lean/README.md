@@ -45,14 +45,20 @@ use `decide`, which the kernel checks.
 | `Munchausen/Basic.lean` | chapter 1: length bound, finitely many solutions per base, digit bound, one base per string, the two conventions, the top digit (1.7) |
 | `Munchausen/Congruences.lean` | section 1.6, Proposition 10.2, Theorem 15.2, Corollary 15.3 |
 | `Munchausen/Constructions.lean` | chapter 2 (twins, self-paying digits and the converse of 2.2, swaps, 2-digit solutions, Corollary 2.4, Proposition 2.7), Propositions 4.2 and 8.5, Theorems 9.2 and 15.9, chapter 22 (splits, blocks, binomial families) and Theorem 25.5 |
-| `Munchausen/SelfPayingDigits.lean` | Proposition 2.3 (moves and cores), Proposition 15.8, the counts of Propositions 8.5 and 9.3 |
+| `Munchausen/SelfPayingDigits.lean` | Proposition 2.3 (moves and cores), Propositions 15.4, 15.5 and 15.8, the counts of Propositions 8.5 and 9.3 |
 | `Munchausen/Counting.lean` | Propositions 4.1 and 10.4, the finite form of Theorem 11.2 |
+| `Munchausen/AlmostAll.lean` | Theorem 11.2: almost all bases have no short solution |
+| `Munchausen/BaseWindow.lean` | Lemma 20.1 and Proposition 15.17: the window of the base |
 | `Munchausen/Polynomial.lean` | `Q_s`, local obstructions (11.1, 19.1), the test modulo 2 (15.11), negative bases (12.2, 12.3) |
-| `Munchausen/Residues.lean` | residues of `x^x - x` modulo 27 and 81, Lemma 20.6, the coverings 15.13 and 20.13 |
+| `Munchausen/Residues.lean` | residues of `x^x - x` modulo 27 and 81, Lemmas 20.6, 20.7, Theorem 20.8, the coverings 15.13 and 20.13 |
+| `Munchausen/AdicLaws.lean` | Theorem 20.11 (the 3-adic law) and part of Theorem 20.12 (the 5-adic law) |
 | `Munchausen/ShortEquations.lean` | Propositions 18.1, 16.5, 20.20, Lemma 18.14, Theorem 15.7 |
-| `Munchausen/ThreeDigits.lean` | Theorem 8.3 and Theorem 25.7 (ii): a large digit in the square class |
-| `Munchausen/OtherSystems.lean` | negative bases (14.4, 14.5), the factorial system (21.14, 21.15), `F_p[T]` (21.1, 21.3, 21.5, 24.1), base `-1+i` (23.1) |
-| `Munchausen/Search.lean` | chapters 26 and 27: the swap lemma, the image of `F`, bottom digits |
+| `Munchausen/LocalTests.lean` | Proposition 16.8, section 19.1.1, Lemma 20.21, the families of 11.3 and 12.3 |
+| `Munchausen/ThreeDigits.lean` | Theorem 8.3, Theorem 25.2, Theorem 25.7 (ii), Lemma 25.13, Corollary 25.14 |
+| `Munchausen/ThreeDigitBases.lean` | Theorem 25.7 (i), Propositions 25.9, 25.16, 25.17, Theorems 25.10 and 25.15 |
+| `Munchausen/OtherSystems.lean` | negative bases (14.4, 14.5), the factorial system (21.14, 21.15), `F_p[T]` (21.1, 21.3, 21.5), base `-1+i` (23.1), section 17.2 |
+| `Munchausen/FunctionField.lean` | base-`B` expansions in `F_p[T]`: Corollary 21.2, Propositions 21.3, 21.4, Theorem 21.7, Lemmas 24.1, 24.7, 24.8 |
+| `Munchausen/Search.lean` | chapters 26 and 27: the swap lemma, the image of `F`, bottom digits, Theorem 27.5 (abstract form) |
 | `Munchausen/Examples.lean` | concrete solutions checked by `decide`, and `(1,6,46666)` in base `46666^23333 - 3` |
 | `Munchausen/Conjectures.lean` | open problems as named `Prop`s, and proofs that refuted conjectures are false |
 

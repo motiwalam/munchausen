@@ -10,7 +10,8 @@ import Munchausen.ShortEquations
 * function fields `F_p[T]`: the linearity of the weight (Proposition 21.1), translates
   (Proposition 21.3), the identity modulo `B - 1` (Proposition 21.5) and the Frobenius
   identity behind Lemma 24.1;
-* base `-1 + i`: the block form of Theorem 23.1 (section 23.4).
+* base `-1 + i`: the block form of Theorem 23.1 (section 23.4);
+* other weights: the identity with forced residues (section 17.2).
 -/
 
 namespace Munchausen
@@ -343,5 +344,47 @@ theorem gaussian_blocks (bl : List (ℕ × ℕ × ℕ × ℕ))
   ring
 
 end GaussianBase
+
+/-! ### Section 17.2: other weights with forced residues -/
+
+/-- **Section 17.2**, the identity with forced residues. Let a weight `W` satisfy
+`W(x) ≡ x + r (mod b - 1)` for every digit `x ≥ 1`, and `W(0) = z`. A string with `P_s(b)`
+equal to its weight sum, `d` digits and `c₀` zeros, has `r (d - c₀) + z c₀ ≡ 0 (mod b - 1)`. -/
+theorem forced_residue {b r z : ℕ} (hb : 1 ≤ b) (W : ℕ → ℕ)
+    (hW : ∀ x, 1 ≤ x → W x ≡ x + r [MOD b - 1]) (hW0 : W 0 = z) {s : List ℕ}
+    (hs : P b s = (s.map W).sum) :
+    r * (s.length - s.count 0) + z * s.count 0 ≡ 0 [MOD b - 1] := by
+  -- the weight sum is the digit sum plus `r (d - c₀) + z c₀`
+  have key : ∀ t : List ℕ, (t.map W).sum ≡ t.sum + (r * (t.length - t.count 0) +
+      z * t.count 0) [MOD b - 1] := by
+    intro t
+    induction t with
+    | nil => simp [Nat.ModEq.refl]
+    | cons d t ih =>
+      have hc : t.count 0 ≤ t.length := List.count_le_length
+      rcases Nat.eq_zero_or_pos d with rfl | hd
+      · simp only [List.map_cons, List.sum_cons, hW0, List.count_cons_self, List.length_cons]
+        have e : r * (t.length + 1 - (t.count 0 + 1)) + z * (t.count 0 + 1) =
+            z + (r * (t.length - t.count 0) + z * t.count 0) := by
+          rw [show t.length + 1 - (t.count 0 + 1) = t.length - t.count 0 by omega]; ring
+        rw [e]
+        calc z + (t.map W).sum ≡ z + (t.sum + (r * (t.length - t.count 0) + z * t.count 0))
+            [MOD b - 1] := ih.add_left z
+          _ = 0 + t.sum + (z + (r * (t.length - t.count 0) + z * t.count 0)) := by ring
+      · simp only [List.map_cons, List.sum_cons, List.count_cons_of_ne hd.ne',
+          List.length_cons]
+        have e : r * (t.length + 1 - t.count 0) + z * t.count 0 =
+            r + (r * (t.length - t.count 0) + z * t.count 0) := by
+          rw [show t.length + 1 - t.count 0 = (t.length - t.count 0) + 1 by omega]; ring
+        rw [e]
+        have := (hW d hd).add ih
+        calc W d + (t.map W).sum ≡ d + r + (t.sum + (r * (t.length - t.count 0) +
+              z * t.count 0)) [MOD b - 1] := this
+          _ = d + t.sum + (r + (r * (t.length - t.count 0) + z * t.count 0)) := by ring
+  have h1 := P_modEq_sum hb s
+  rw [hs] at h1
+  have h2 := h1.symm.trans (key s)
+  -- cancel the digit sum
+  exact Nat.ModEq.add_left_cancel' s.sum (h2.symm.trans (Nat.ModEq.refl _))
 
 end Munchausen

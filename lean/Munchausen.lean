@@ -5,10 +5,16 @@ import Munchausen.Constructions
 import Munchausen.Polynomial
 import Munchausen.Examples
 import Munchausen.Counting
+import Munchausen.AlmostAll
+import Munchausen.BaseWindow
 import Munchausen.SelfPayingDigits
 import Munchausen.Conjectures
 import Munchausen.Residues
+import Munchausen.AdicLaws
 import Munchausen.ShortEquations
+import Munchausen.LocalTests
 import Munchausen.OtherSystems
+import Munchausen.FunctionField
 import Munchausen.ThreeDigits
+import Munchausen.ThreeDigitBases
 import Munchausen.Search
