@@ -355,4 +355,58 @@ theorem lemma20_21_d {b x : ℕ} :
     rw [ZMod.val_natCast] at this
     omega
 
+lemma not_isSquare_two_zmod_three : ¬ IsSquare ((2 : ℕ) : ZMod 3) := by decide
+
+/-- **Lemma 20.21 (b)** (section 20.4.1), odd primes. If `b (b + x) = x^n + 3` with `n ≥ 2`,
+then every odd prime `p ∣ x` has `p ≡ ±1 (mod 12)`: `(2b + x)^2 ≡ 12 (mod p)`, so 3 is a
+square modulo `p`, and quadratic reciprocity decides. -/
+theorem lemma20_21_b_prime {b x n p : ℕ} [hp : Fact p.Prime] (hp2 : p ≠ 2) (hn : 2 ≤ n)
+    (hpx : p ∣ x) (h : b * (b + x) = x ^ n + 3) : p % 12 = 1 ∨ p % 12 = 11 := by
+  have h3 : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  have hp3 : p ≠ 3 := by
+    rintro rfl; exact lemma20_21_b_three hn hpx h
+  -- `3` is a square modulo `p`
+  have hsq3 : IsSquare ((3 : ℕ) : ZMod p) := by
+    have hU : (2 * b + x) ^ 2 = 4 * x ^ n + x ^ 2 + 12 := by nlinarith
+    have hcast := congrArg (fun k : ℕ => (k : ZMod p)) hU
+    push_cast at hcast
+    have hx0 : (x : ZMod p) = 0 := (ZMod.natCast_eq_zero_iff x p).2 hpx
+    rw [hx0, zero_pow (by omega), zero_pow two_ne_zero, mul_zero, zero_add, add_zero] at hcast
+    have h2 : (2 : ZMod p) ≠ 0 := by
+      intro h0
+      have : ((2 : ℕ) : ZMod p) = 0 := by exact_mod_cast h0
+      rw [ZMod.natCast_eq_zero_iff] at this
+      exact hp2 ((Nat.prime_dvd_prime_iff_eq hp.out Nat.prime_two).1 this)
+    have h4 : (4 : ZMod p) ≠ 0 := by
+      rw [show (4 : ZMod p) = 2 * 2 by norm_num]; exact mul_ne_zero h2 h2
+    have hb : (4 : ZMod p) * ((b : ZMod p) * b - 3) = 0 := by linear_combination hcast
+    rcases mul_eq_zero.1 hb with h0 | h0
+    · exact absurd h0 h4
+    · exact ⟨b, by push_cast; linear_combination -h0⟩
+  have hodd : p % 4 = 1 ∨ p % 4 = 3 := by
+    have := hp.out.eq_one_or_self_of_dvd 2
+    rcases Nat.even_or_odd p with ⟨k, hk⟩ | ⟨k, hk⟩
+    · exact absurd (this ⟨k, by omega⟩) (by omega)
+    · omega
+  have hp3' : p % 3 ≠ 0 := by
+    intro h0
+    have := hp.out.eq_one_or_self_of_dvd 3 (Nat.dvd_of_mod_eq_zero h0)
+    omega
+  -- squares modulo 3
+  have hsq_iff : IsSquare ((p : ℕ) : ZMod 3) ↔ p % 3 = 1 := by
+    rw [← ZMod.natCast_mod]
+    have : p % 3 = 1 ∨ p % 3 = 2 := by omega
+    rcases this with h1 | h1 <;> rw [h1]
+    · exact iff_of_true ⟨1, by norm_num⟩ rfl
+    · exact iff_of_false not_isSquare_two_zmod_three (by norm_num)
+  rcases hodd with h4 | h4
+  · have := (ZMod.exists_sq_eq_prime_iff_of_mod_four_eq_one (p := p) (q := 3) h4 (by norm_num)).1
+      hsq3
+    rw [hsq_iff] at this
+    omega
+  · have := (ZMod.exists_sq_eq_prime_iff_of_mod_four_eq_three (p := p) (q := 3) h4 (by norm_num)
+      hp3).1 hsq3
+    rw [hsq_iff] at this
+    omega
+
 end Munchausen
