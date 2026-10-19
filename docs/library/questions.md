@@ -311,3 +311,32 @@ their motivation and a first attack, are in
 87. Narcissistic numbers in even bases 15 to 20.
 88. Chains with many self-paying digits under `0^0 = 1`.
 89. A prefix test for the Gaussian base `-4+i`.
+
+## Round 6: directions and questions from the whole library
+
+Seven directions, the full statements of these questions with their
+motivation, a first attack and leads, four proposed workloads and a list of
+problems found in the library are in
+[questions-round6.md](questions-round6.md).
+
+90. The expected count is the trace of a stochastic matrix.
+91. Arrangements and the local factor.
+92. The two heuristics at medium lengths.
+93. Where the 12% excess under `0^0 = 1` sits.
+94. Do near-solutions share the zero deficit of question 71?
+95. Bijective numeration: no zero, and a self-paying digit in every base.
+96. A criterion for identity families.
+97. Three-digit factorions are finite, except for a Brocard case.
+98. Factorions of every length under GRH.
+99. Long structured solutions under `0^0 = 1` (speculative).
+100. Near-solutions that provably exist (speculative).
+101. Beyond `ln b / ln ln b` by averaging over bases.
+102. The abc conjecture and the 3-digit list.
+103. A ledger of P values.
+104. A pre-registered census of bases 42 to 46.
+105. The first `b`-digit solution under `0^0 = 1`.
+106. Are neighbouring bases independent?
+107. The class modulo `2x` in even Pisot bases.
+108. One invariant-residue proposition for every positional system.
+109. Is anything about the middle digits cheap? (speculative)
+110. A last-digit factor in negative bases?
