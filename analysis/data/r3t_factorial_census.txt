@@ -1,0 +1,74 @@
+# factorial number system, 0^0 = 0, lengths 1..33, offsets j * 1, j = 1..0
+sol m 0 L 1 n 1 digits 1
+len m 0 L 1 sols 1 nodes 3 near  near_nodes 0 secs 0.00
+sol m 0 L 2 n 4 digits 2,0
+sol m 0 L 2 n 5 digits 2,1
+len m 0 L 2 sols 2 nodes 6 near  near_nodes 0 secs 0.00
+len m 0 L 3 sols 0 nodes 1 near  near_nodes 0 secs 0.00
+len m 0 L 4 sols 0 nodes 4 near  near_nodes 0 secs 0.00
+len m 0 L 5 sols 0 nodes 10 near  near_nodes 0 secs 0.01
+len m 0 L 6 sols 0 nodes 7 near  near_nodes 0 secs 0.00
+len m 0 L 7 sols 0 nodes 4 near  near_nodes 0 secs 0.00
+len m 0 L 8 sols 0 nodes 42 near  near_nodes 0 secs 0.03
+len m 0 L 9 sols 0 nodes 81 near  near_nodes 0 secs 0.00
+len m 0 L 10 sols 0 nodes 119 near  near_nodes 0 secs 0.06
+len m 0 L 11 sols 0 nodes 28 near  near_nodes 0 secs 0.00
+len m 0 L 12 sols 0 nodes 173 near  near_nodes 0 secs 0.02
+len m 0 L 13 sols 0 nodes 568 near  near_nodes 0 secs 0.01
+len m 0 L 14 sols 0 nodes 1211 near  near_nodes 0 secs 0.02
+len m 0 L 15 sols 0 nodes 1562 near  near_nodes 0 secs 0.01
+len m 0 L 16 sols 0 nodes 416 near  near_nodes 0 secs 0.00
+len m 0 L 17 sols 0 nodes 2927 near  near_nodes 0 secs 0.02
+len m 0 L 18 sols 0 nodes 6649 near  near_nodes 0 secs 0.01
+len m 0 L 19 sols 0 nodes 18839 near  near_nodes 0 secs 0.07
+len m 0 L 20 sols 0 nodes 30705 near  near_nodes 0 secs 0.14
+len m 0 L 21 sols 0 nodes 17792 near  near_nodes 0 secs 0.07
+len m 0 L 22 sols 0 nodes 36139 near  near_nodes 0 secs 0.15
+len m 0 L 23 sols 0 nodes 186674 near  near_nodes 0 secs 0.37
+len m 0 L 24 sols 0 nodes 359177 near  near_nodes 0 secs 0.83
+len m 0 L 25 sols 0 nodes 441758 near  near_nodes 0 secs 1.17
+len m 0 L 26 sols 0 nodes 643573 near  near_nodes 0 secs 0.93
+len m 0 L 27 sols 0 nodes 575733 near  near_nodes 0 secs 0.51
+len m 0 L 28 sols 0 nodes 3221536 near  near_nodes 0 secs 5.97
+len m 0 L 29 sols 0 nodes 6048739 near  near_nodes 0 secs 4.01
+len m 0 L 30 sols 0 nodes 14993633 near  near_nodes 0 secs 19.49
+len m 0 L 31 sols 0 nodes 6525128 near  near_nodes 0 secs 11.61
+len m 0 L 32 sols 0 nodes 22306685 near  near_nodes 0 secs 27.14
+len m 0 L 33 sols 0 nodes 13570110 near  near_nodes 0 secs 15.36
+# factorial number system, 0^0 = 1, lengths 1..33, offsets j * 1, j = 1..0
+sol m 1 L 1 n 1 digits 1
+len m 1 L 1 sols 1 nodes 3 near  near_nodes 0 secs 0.00
+sol m 1 L 2 n 2 digits 1,0
+sol m 1 L 2 n 5 digits 2,1
+len m 1 L 2 sols 2 nodes 7 near  near_nodes 0 secs 0.00
+len m 1 L 3 sols 0 nodes 1 near  near_nodes 0 secs 0.00
+len m 1 L 4 sols 0 nodes 3 near  near_nodes 0 secs 0.00
+len m 1 L 5 sols 0 nodes 8 near  near_nodes 0 secs 0.00
+len m 1 L 6 sols 0 nodes 7 near  near_nodes 0 secs 0.00
+len m 1 L 7 sols 0 nodes 4 near  near_nodes 0 secs 0.00
+len m 1 L 8 sols 0 nodes 36 near  near_nodes 0 secs 0.00
+len m 1 L 9 sols 0 nodes 72 near  near_nodes 0 secs 0.00
+len m 1 L 10 sols 0 nodes 109 near  near_nodes 0 secs 0.00
+len m 1 L 11 sols 0 nodes 28 near  near_nodes 0 secs 0.00
+len m 1 L 12 sols 0 nodes 160 near  near_nodes 0 secs 0.00
+len m 1 L 13 sols 0 nodes 545 near  near_nodes 0 secs 0.00
+len m 1 L 14 sols 0 nodes 1182 near  near_nodes 0 secs 0.00
+len m 1 L 15 sols 0 nodes 1526 near  near_nodes 0 secs 0.00
+len m 1 L 16 sols 0 nodes 418 near  near_nodes 0 secs 0.00
+len m 1 L 17 sols 0 nodes 2920 near  near_nodes 0 secs 0.00
+len m 1 L 18 sols 0 nodes 6617 near  near_nodes 0 secs 0.01
+len m 1 L 19 sols 0 nodes 18767 near  near_nodes 0 secs 0.03
+len m 1 L 20 sols 0 nodes 30562 near  near_nodes 0 secs 0.12
+len m 1 L 21 sols 0 nodes 17740 near  near_nodes 0 secs 0.06
+len m 1 L 22 sols 0 nodes 36132 near  near_nodes 0 secs 0.08
+len m 1 L 23 sols 0 nodes 186563 near  near_nodes 0 secs 0.41
+len m 1 L 24 sols 0 nodes 359063 near  near_nodes 0 secs 0.60
+len m 1 L 25 sols 0 nodes 441684 near  near_nodes 0 secs 0.57
+len m 1 L 26 sols 0 nodes 643098 near  near_nodes 0 secs 0.81
+len m 1 L 27 sols 0 nodes 575718 near  near_nodes 0 secs 0.65
+len m 1 L 28 sols 0 nodes 3221371 near  near_nodes 0 secs 5.70
+len m 1 L 29 sols 0 nodes 6048355 near  near_nodes 0 secs 7.76
+len m 1 L 30 sols 0 nodes 14992411 near  near_nodes 0 secs 25.70
+len m 1 L 31 sols 0 nodes 6525087 near  near_nodes 0 secs 12.35
+len m 1 L 32 sols 0 nodes 22306445 near  near_nodes 0 secs 33.71
+len m 1 L 33 sols 0 nodes 13570069 near  near_nodes 0 secs 15.09

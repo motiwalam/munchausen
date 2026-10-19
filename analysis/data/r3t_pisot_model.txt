@@ -1,0 +1,97 @@
+# model x 1: windows eps^k <= N < eps^(k+1), refined factor 1
+len x 1 k 1 basic0 1.0000e0 refined0 1.0000e0 zerofree0 0.0000e0 basic1 0.0000e0 refined1 0.0000e0 zerofree1 0.0000e0
+len x 1 k 2 basic0 5.0047e-1 refined0 5.0047e-1 zerofree0 0.0000e0 basic1 0.0000e0 refined1 0.0000e0 zerofree1 0.0000e0
+len x 1 k 4 basic0 0.0000e0 refined0 0.0000e0 zerofree0 0.0000e0 basic1 1.0000e0 refined1 1.0000e0 zerofree1 0.0000e0
+len x 1 k 5 basic0 0.0000e0 refined0 0.0000e0 zerofree0 0.0000e0 basic1 1.0000e0 refined1 1.0000e0 zerofree1 0.0000e0
+model x 1 basic0 1.5005 refined0 1.5005 zerofree0 0.0000 basic1 2.0000 refined1 2.0000 zerofree1 0.0000
+# model x 2: windows eps^k <= N < eps^(k+1), refined factor 2
+len x 2 k 1 basic0 1.0000e0 refined0 2.0000e0 zerofree0 6.6921e-1 basic1 6.6654e-1 refined1 6.6921e-1 zerofree1 6.6921e-1
+len x 2 k 2 basic0 7.7629e-1 refined0 1.5526e0 zerofree0 2.1984e-1 basic1 7.7629e-1 refined1 1.1068e0 zerofree1 2.1984e-1
+model x 2 basic0 1.7763 refined0 3.5526 zerofree0 0.8890 basic1 1.4428 refined1 1.7760 zerofree1 0.8890
+# model x 3: windows eps^k <= N < eps^(k+1), refined factor 3
+len x 3 k 1 basic0 8.5721e-1 refined0 0.0000e0 zerofree0 0.0000e0 basic1 8.5721e-1 refined1 8.5601e-1 zerofree1 0.0000e0
+len x 3 k 2 basic0 3.8542e-1 refined0 4.6498e-1 zerofree0 2.3532e-1 basic1 4.2409e-1 refined1 3.4987e-1 zerofree1 2.3532e-1
+len x 3 k 3 basic0 2.4394e-1 refined0 2.5766e-1 zerofree0 0.0000e0 basic1 4.1597e-1 refined1 4.7641e-1 zerofree1 0.0000e0
+len x 3 k 4 basic0 3.6675e-3 refined0 1.1003e-2 zerofree0 0.0000e0 basic1 3.6675e-3 refined1 0.0000e0 zerofree1 0.0000e0
+model x 3 basic0 1.4902 refined0 0.7336 zerofree0 0.2353 basic1 1.7009 refined1 1.6823 zerofree1 0.2353
+# model x 4: windows eps^k <= N < eps^(k+1), refined factor 4
+len x 4 k 1 basic0 2.2992e-1 refined0 6.1092e-1 zerofree0 3.0514e-1 basic1 2.2992e-1 refined1 3.0514e-1 zerofree1 3.0514e-1
+len x 4 k 2 basic0 4.0720e-1 refined0 6.1395e-1 zerofree0 3.4012e-1 basic1 4.0720e-1 refined1 4.0933e-1 zerofree1 3.4012e-1
+len x 4 k 3 basic0 4.0745e-1 refined0 1.2242e0 zerofree0 4.0621e-1 basic1 4.0745e-1 refined1 7.3214e-1 zerofree1 4.0621e-1
+len x 4 k 4 basic0 3.5306e-1 refined0 8.7503e-1 zerofree0 1.9960e-1 basic1 3.8380e-1 refined1 6.3583e-1 zerofree1 1.9960e-1
+model x 4 basic0 1.3976 refined0 3.3241 zerofree0 1.2511 basic1 1.4284 refined1 2.0824 zerofree1 1.2511
+# model x 5: windows eps^k <= N < eps^(k+1), refined factor 5
+len x 5 k 2 basic0 1.9290e-1 refined0 1.3248e-1 zerofree0 8.7288e-2 basic1 1.9290e-1 refined1 1.7642e-1 zerofree1 8.7288e-2
+len x 5 k 3 basic0 5.3603e-1 refined0 4.7601e-1 zerofree0 2.7024e-1 basic1 5.3603e-1 refined1 4.9254e-1 zerofree1 2.7024e-1
+len x 5 k 4 basic0 3.4823e-1 refined0 3.6030e-1 zerofree0 1.4458e-1 basic1 3.4823e-1 refined1 3.7094e-1 zerofree1 1.4458e-1
+len x 5 k 5 basic0 1.1484e-1 refined0 1.0249e-1 zerofree0 0.0000e0 basic1 1.1484e-1 refined1 1.1925e-1 zerofree1 0.0000e0
+len x 5 k 6 basic0 1.7500e-5 refined0 8.7500e-5 zerofree0 0.0000e0 basic1 1.7500e-5 refined1 0.0000e0 zerofree1 0.0000e0
+model x 5 basic0 1.1920 refined0 1.0714 zerofree0 0.5021 basic1 1.1920 refined1 1.1591 zerofree1 0.5021
+# model x 6: windows eps^k <= N < eps^(k+1), refined factor 6
+len x 6 k 2 basic0 6.0525e-2 refined0 9.0180e-2 zerofree0 0.0000e0 basic1 6.0525e-2 refined1 0.0000e0 zerofree1 0.0000e0
+len x 6 k 3 basic0 2.1311e-1 refined0 2.3547e-1 zerofree0 1.4197e-1 basic1 2.1311e-1 refined1 3.0159e-1 zerofree1 1.4197e-1
+len x 6 k 4 basic0 4.1520e-1 refined0 6.9882e-1 zerofree0 3.2627e-1 basic1 4.1520e-1 refined1 5.8364e-1 zerofree1 3.2627e-1
+len x 6 k 5 basic0 3.7370e-1 refined0 7.5732e-1 zerofree0 2.6532e-1 basic1 3.7370e-1 refined1 5.2033e-1 zerofree1 2.6532e-1
+len x 6 k 6 basic0 2.0860e-1 refined0 4.2828e-1 zerofree0 7.1565e-2 basic1 2.0860e-1 refined1 3.0360e-1 zerofree1 7.1565e-2
+model x 6 basic0 1.2711 refined0 2.2101 zerofree0 0.8051 basic1 1.2711 refined1 1.7092 zerofree1 0.8051
+# model x 7: windows eps^k <= N < eps^(k+1), refined factor 7
+len x 7 k 2 basic0 7.3207e-2 refined0 6.5870e-2 zerofree0 4.4870e-2 basic1 7.3207e-2 refined1 4.4870e-2 zerofree1 4.4870e-2
+len x 7 k 3 basic0 5.2380e-2 refined0 1.3457e-2 zerofree0 1.3457e-2 basic1 5.2380e-2 refined1 4.5185e-2 zerofree1 1.3457e-2
+len x 7 k 4 basic0 1.8043e-1 refined0 1.6471e-1 zerofree0 9.1262e-2 basic1 1.8043e-1 refined1 1.7489e-1 zerofree1 9.1262e-2
+len x 7 k 5 basic0 4.8159e-1 refined0 5.4472e-1 zerofree0 2.4864e-1 basic1 4.8159e-1 refined1 5.0701e-1 zerofree1 2.4864e-1
+len x 7 k 6 basic0 3.3998e-1 refined0 3.7116e-1 zerofree0 1.3092e-1 basic1 3.3998e-1 refined1 3.4464e-1 zerofree1 1.3092e-1
+len x 7 k 7 basic0 9.2472e-2 refined0 8.9967e-2 zerofree0 0.0000e0 basic1 9.2472e-2 refined1 9.0965e-2 zerofree1 0.0000e0
+model x 7 basic0 1.2201 refined0 1.2499 zerofree0 0.5291 basic1 1.2201 refined1 1.2076 zerofree1 0.5291
+# model x 8: windows eps^k <= N < eps^(k+1), refined factor 8
+len x 8 k 2 basic0 2.1045e-2 refined0 6.8200e-2 zerofree0 0.0000e0 basic1 2.1045e-2 refined1 0.0000e0 zerofree1 0.0000e0
+len x 8 k 3 basic0 4.8923e-2 refined0 1.6452e-1 zerofree0 7.8080e-2 basic1 4.8923e-2 refined1 9.9060e-2 zerofree1 7.8080e-2
+len x 8 k 4 basic0 4.2150e-2 refined0 6.7260e-2 zerofree0 3.0400e-2 basic1 4.2150e-2 refined1 5.5080e-2 zerofree1 3.0400e-2
+len x 8 k 5 basic0 1.9334e-1 refined0 4.8348e-1 zerofree0 2.3498e-1 basic1 1.9334e-1 refined1 3.5344e-1 zerofree1 2.3498e-1
+len x 8 k 6 basic0 4.1731e-1 refined0 7.2864e-1 zerofree0 3.2122e-1 basic1 4.1731e-1 refined1 6.5864e-1 zerofree1 3.2122e-1
+len x 8 k 7 basic0 3.5779e-1 refined0 9.9438e-1 zerofree0 3.8080e-1 basic1 3.5779e-1 refined1 6.1686e-1 zerofree1 3.8080e-1
+len x 8 k 8 basic0 1.5817e-1 refined0 3.6378e-1 zerofree0 7.8440e-2 basic1 1.5817e-1 refined1 2.4424e-1 zerofree1 7.8440e-2
+model x 8 basic0 1.2387 refined0 2.8703 zerofree0 1.1239 basic1 1.2387 refined1 2.0273 zerofree1 1.1239
+# model x 9: windows eps^k <= N < eps^(k+1), refined factor 9
+len x 9 k 2 basic0 1.0493e-2 refined0 3.9983e-2 zerofree0 0.0000e0 basic1 1.1980e-2 refined1 0.0000e0 zerofree1 0.0000e0
+len x 9 k 3 basic0 1.9488e-2 refined0 2.6685e-2 zerofree0 1.1925e-2 basic1 1.9488e-2 refined1 2.1285e-2 zerofree1 1.1925e-2
+len x 9 k 4 basic0 4.9432e-2 refined0 6.8782e-2 zerofree0 3.2130e-2 basic1 4.9432e-2 refined1 5.3775e-2 zerofree1 3.2130e-2
+len x 9 k 5 basic0 3.8608e-2 refined0 7.5938e-2 zerofree0 3.9488e-2 basic1 3.8608e-2 refined1 5.1210e-2 zerofree1 3.9488e-2
+len x 9 k 6 basic0 1.7379e-1 refined0 1.5136e-1 zerofree0 6.8962e-2 basic1 1.7379e-1 refined1 1.6443e-1 zerofree1 6.8962e-2
+len x 9 k 7 basic0 4.6514e-1 refined0 4.4667e-1 zerofree0 1.9798e-1 basic1 4.6514e-1 refined1 4.7020e-1 zerofree1 1.9798e-1
+len x 9 k 8 basic0 3.3882e-1 refined0 3.3885e-1 zerofree0 1.2186e-1 basic1 3.3882e-1 refined1 3.3379e-1 zerofree1 1.2186e-1
+len x 9 k 9 basic0 7.7420e-2 refined0 7.6725e-2 zerofree0 0.0000e0 basic1 7.7420e-2 refined1 7.6230e-2 zerofree1 0.0000e0
+model x 9 basic0 1.1732 refined0 1.2250 zerofree0 0.4723 basic1 1.1747 refined1 1.1709 zerofree1 0.4723
+# model x 10: windows eps^k <= N < eps^(k+1), refined factor 10
+len x 10 k 2 basic0 8.4325e-3 refined0 9.8500e-3 zerofree0 0.0000e0 basic1 8.4325e-3 refined1 1.0375e-2 zerofree1 0.0000e0
+len x 10 k 3 basic0 3.1425e-3 refined0 5.4750e-3 zerofree0 0.0000e0 basic1 3.1425e-3 refined1 4.6250e-3 zerofree1 0.0000e0
+len x 10 k 4 basic0 2.8145e-2 refined0 5.5725e-2 zerofree0 2.2825e-2 basic1 2.8145e-2 refined1 4.6250e-2 zerofree1 2.2825e-2
+len x 10 k 5 basic0 3.7560e-2 refined0 6.6275e-2 zerofree0 3.1025e-2 basic1 3.7560e-2 refined1 5.8500e-2 zerofree1 3.1025e-2
+len x 10 k 6 basic0 3.5170e-2 refined0 7.2700e-2 zerofree0 3.5950e-2 basic1 3.5170e-2 refined1 6.2175e-2 zerofree1 3.5950e-2
+len x 10 k 7 basic0 1.8444e-1 refined0 3.7222e-1 zerofree0 1.7162e-1 basic1 1.8444e-1 refined1 3.1590e-1 zerofree1 1.7162e-1
+len x 10 k 8 basic0 4.2026e-1 refined0 8.4403e-1 zerofree0 3.6323e-1 basic1 4.2026e-1 refined1 7.2330e-1 zerofree1 3.6323e-1
+len x 10 k 9 basic0 3.5082e-1 refined0 7.0465e-1 zerofree0 2.5275e-1 basic1 3.5082e-1 refined1 5.2897e-1 zerofree1 2.5275e-1
+len x 10 k 10 basic0 1.2832e-1 refined0 2.5545e-1 zerofree0 4.1225e-2 basic1 1.2832e-1 refined1 1.8143e-1 zerofree1 4.1225e-2
+model x 10 basic0 1.1963 refined0 2.3864 zerofree0 0.9186 basic1 1.1963 refined1 1.9315 zerofree1 0.9186
+# model x 11: windows eps^k <= N < eps^(k+1), refined factor 11
+len x 11 k 2 basic0 6.4050e-3 refined0 1.6417e-2 zerofree0 0.0000e0 basic1 6.4050e-3 refined1 8.5525e-3 zerofree1 0.0000e0
+len x 11 k 4 basic0 1.1917e-2 refined0 9.9000e-3 zerofree0 2.9150e-3 basic1 1.1917e-2 refined1 1.0697e-2 zerofree1 2.9150e-3
+len x 11 k 5 basic0 1.7440e-2 refined0 1.7572e-2 zerofree0 9.4600e-3 basic1 1.7440e-2 refined1 1.7765e-2 zerofree1 9.4600e-3
+len x 11 k 6 basic0 3.5787e-2 refined0 3.2120e-2 zerofree0 1.2210e-2 basic1 3.5787e-2 refined1 3.3990e-2 zerofree1 1.2210e-2
+len x 11 k 7 basic0 3.4938e-2 refined0 3.5612e-2 zerofree0 1.6417e-2 basic1 3.4938e-2 refined1 3.4485e-2 zerofree1 1.6417e-2
+len x 11 k 8 basic0 1.7156e-1 refined0 1.7286e-1 zerofree0 7.7000e-2 basic1 1.7156e-1 refined1 1.6874e-1 zerofree1 7.7000e-2
+len x 11 k 9 basic0 4.5732e-1 refined0 4.5986e-1 zerofree0 2.0135e-1 basic1 4.5732e-1 refined1 4.6329e-1 zerofree1 2.0135e-1
+len x 11 k 10 basic0 3.3535e-1 refined0 3.3775e-1 zerofree0 1.2281e-1 basic1 3.3535e-1 refined1 3.3462e-1 zerofree1 1.2281e-1
+len x 11 k 11 basic0 6.6000e-2 refined0 6.5257e-2 zerofree0 0.0000e0 basic1 6.6000e-2 refined1 6.7128e-2 zerofree1 0.0000e0
+model x 11 basic0 1.1367 refined0 1.1474 zerofree0 0.4422 basic1 1.1367 refined1 1.1393 zerofree1 0.4422
+# model x 12: windows eps^k <= N < eps^(k+1), refined factor 12
+len x 12 k 2 basic0 4.8050e-3 refined0 4.2900e-2 zerofree0 0.0000e0 basic1 4.8050e-3 refined1 0.0000e0 zerofree1 0.0000e0
+len x 12 k 4 basic0 3.2325e-3 refined0 1.0680e-2 zerofree0 1.7700e-3 basic1 3.2325e-3 refined1 2.7000e-3 zerofree1 1.7700e-3
+len x 12 k 5 basic0 6.4950e-3 refined0 3.2760e-2 zerofree0 1.4250e-2 basic1 6.4950e-3 refined1 1.5870e-2 zerofree1 1.4250e-2
+len x 12 k 6 basic0 1.8810e-2 refined0 2.3730e-2 zerofree0 9.6900e-3 basic1 1.8810e-2 refined1 2.9460e-2 zerofree1 9.6900e-3
+len x 12 k 7 basic0 2.8320e-2 refined0 8.9100e-2 zerofree0 3.9360e-2 basic1 2.8320e-2 refined1 5.7630e-2 zerofree1 3.9360e-2
+len x 12 k 8 basic0 3.5370e-2 refined0 6.7230e-2 zerofree0 3.0210e-2 basic1 3.5370e-2 refined1 5.9880e-2 zerofree1 3.0210e-2
+len x 12 k 9 basic0 1.8138e-1 refined0 4.6266e-1 zerofree0 2.1576e-1 basic1 1.8138e-1 refined1 3.5220e-1 zerofree1 2.1576e-1
+len x 12 k 10 basic0 4.2257e-1 refined0 7.7862e-1 zerofree0 3.2322e-1 basic1 4.2257e-1 refined1 7.2588e-1 zerofree1 3.2322e-1
+len x 12 k 11 basic0 3.4412e-1 refined0 9.1668e-1 zerofree0 3.6684e-1 basic1 3.4412e-1 refined1 6.2223e-1 zerofree1 3.6684e-1
+len x 12 k 12 basic0 1.0913e-1 refined0 2.4120e-1 zerofree0 4.8960e-2 basic1 1.0913e-1 refined1 1.6536e-1 zerofree1 4.8960e-2
+model x 12 basic0 1.1542 refined0 2.6656 zerofree0 1.0501 basic1 1.1542 refined1 2.0312 zerofree1 1.0501
