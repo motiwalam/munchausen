@@ -1,7 +1,7 @@
-# Round 6: is the refined model complete?
+# 34. Is the refined model complete?
 
-DRAFT. This file answers questions 93, 94, 90, 103 and 106 of
-`questions-round6.md` (workload 1). All five ask whether the refined model
+This chapter answers questions 90, 93, 94, 103 and 106 of `questions.md`
+(workload 1 of `questions-round6.md`). All five ask whether the refined model
 of section 5.3, with the forced top digits of section 23.5, accounts for
 everything apart from identities. Question 93 looks for a third kind of
 correction in the 12% excess under `0^0 = 1`. Question 94 asks whether the
@@ -30,23 +30,23 @@ zero digits of a string, `c_0` the zeros of a multiset.
 
 | question | result | status |
 |---|---|---|
-| 93 | The refined model can now be computed exactly, split by the number of zeros (Proposition 1.1). The 12% excess under `0^0 = 1` has two parts. In odd bases it is the zero-free near-solutions: 1.26 times the model (`z = +3.4`), the same strings under both conventions. They carry 72% of the expectation under `0^0 = 1` and 42% under `0^0 = 0`, so the same surplus lifts the `0^0 = 1` ratio more. In even bases it is the near-solutions with one zero under `0^0 = 1`: 1.30 times the model (`z = +2.9`), while `0^0 = 0` has 0.93. | computed |
-| 93 | At the shifted offsets `2j(b-1) + 1` and `+ 2` the even bases show surpluses of 7% to 15% in both conventions and other zero classes. In five perturbed worlds the two conventions agree: the gap `R1 - R0` is -0.02 to -0.04 in every seed, against +0.09 +/- 0.04 for the true weights. The perturbed worlds also show that world-level ratios scatter 1.3 to 1.5 times more than the clustered error allows, which brings `z = 3.0` down to about 2. Verdict: not established. The excess does not sit in the zeros, and no third kind of correction is needed at the present precision. | computed; Heuristic 1.6 |
+| 93 | The refined model can now be computed exactly, split by the number of zeros (Proposition 34.1). The 12% excess under `0^0 = 1` has two parts. In odd bases it is the zero-free near-solutions: 1.26 times the model (`z = +3.4`), the same strings under both conventions. They carry 72% of the expectation under `0^0 = 1` and 42% under `0^0 = 0`, so the same surplus lifts the `0^0 = 1` ratio more. In even bases it is the near-solutions with one zero under `0^0 = 1`: 1.30 times the model (`z = +2.9`), while `0^0 = 0` has 0.93. | computed |
+| 93 | At the shifted offsets `2j(b-1) + 1` and `+ 2` the even bases show surpluses of 7% to 15% in both conventions and other zero classes. In five perturbed worlds the two conventions agree: the gap `R1 - R0` is -0.02 to -0.04 in every seed, against +0.09 +/- 0.04 for the true weights. The perturbed worlds also show that world-level ratios scatter 1.3 to 1.5 times more than the clustered error allows, which brings `z = 3.0` down to about 2. Verdict: not established. The excess does not sit in the zeros, and no third kind of correction is needed at the present precision. | computed; Heuristic 34.4 |
 | 94 | Solutions under `0^0 = 0`, bases 12 to 43: 29 zeros against 43.1 in the exact model (`z = -2.2`). The forced top digits do not lower this expectation: they raise the zeros per near-solution by 5% in even bases and lower them by 1% in odd bases, against the 10% of the lead. Near-solutions: no deficit in even bases (0.82 zeros per near-solution against 0.84), a deficit in odd bases (0.72 against 0.85, `z = -3.1`), which is the zero-free surplus of question 93 seen from the other side. | computed |
-| 90 | The basic expected count over the lengths 2 to `b` is the trace of the length matrix without its first row and column. Every row `b - j` tends to one law `(s_j')` (Theorem 3.2). The trace is `1 + C/b + o(1/b)` with `C = -d E[J'] / d mu = e/(e-1)^2 + 1/(2e) + 2.2 * 10^-5 = 1.10464` (Proposition 3.4; proved for the partial trace, the tail computed). `C/b` is one eigenvalue: `b lambda_2` is 1.34, 1.20, 1.14 at `b` = 40, 100, 300. Length 1 adds `E_1 = N_1(b)/(b-1)` with `N_1(b) = #{x : x^x < b}`, which grows like `ln b / ln ln b`, so with length 1 the excess has no limit. The "second eigenvalue about `3/b`" of the lead is this length-1 state. | Theorem 3.2, Propositions 3.1, 3.3 to 3.5; computed |
-| 90 | The refined count is a sum over the characters `t` of `Z/(b-1)` (Proposition 3.6). For odd `b` and `0^0 = 0` the character of order 2 gives exactly the basic count again (Theorem 15.2); for `0^0 = 1` it tends to `e^-2` times it (Theorem 3.8). The other characters add between -0.23 and +0.36 at `b <= 25` and at most 0.11 in absolute value for `25 < b <= 128`. | Proposition 3.6, Theorem 3.8; computed; Conjecture 3.9 |
-| 103 | 241 rows, 133 current tests with a P value, 56 data groups. Taken together the P values are far from uniform: 14 of 56 groups below 0.05 (2.8 expected), Fisher P `10^-9`. The 12 groups named before the data were seen look uniform: none below 0.1, median 0.59, Fisher P = 0.74. Every group below 0.05 is an anomaly the library already names, or a world where the model is known to fail. No lean toward deficits: 17 excesses against 8 deficits among the groups with P < 0.2. | computed; Heuristic 4.1 |
-| 106 | Residuals `lambda / model` of neighbouring bases 12 to 32: lag-1 correlation -0.09 and -0.17 with the top-digit model (permutation P 0.65 and 0.46); -0.31 and -0.41 without it (P 0.06, 0.07). No multiset is a near-solution in two bases (0.02 expected). The top-digit factors of one multiset in bases `b` and `b + 1` are uncorrelated (`|r| <= 0.044`). But the two conventions in one base correlate at +0.78: pooled tests must not treat them as independent. | computed; Heuristic 5.2 |
-| library | Two stale combined P values (sections 17 and 19), a range misquoted in section 21.4, and four problems with the leads of `questions-round6.md` | section 6 |
+| 90 | The basic expected count over the lengths 2 to `b` is the trace of the length matrix without its first row and column. Every row `b - j` tends to one law `(s_j')` (Theorem 34.6). The trace is `1 + C/b + o(1/b)` with `C = -d E[J'] / d mu = e/(e-1)^2 + 1/(2e) + 2.2 * 10^-5 = 1.10464` (Proposition 34.8; proved for the partial trace, the tail computed). `C/b` is one eigenvalue: `b lambda_2` is 1.34, 1.20, 1.14 at `b` = 40, 100, 300. Length 1 adds `E_1 = N_1(b)/(b-1)` with `N_1(b) = #{x : x^x < b}`, which grows like `ln b / ln ln b`, so with length 1 the excess has no limit. The "second eigenvalue about `3/b`" of the lead is this length-1 state. | Theorem 34.6, Propositions 34.5 and 34.8, Corollary 34.7, Heuristic 34.9; computed |
+| 90 | The refined count is a sum over the characters `t` of `Z/(b-1)` (Proposition 34.10). For odd `b` and `0^0 = 0` the character of order 2 gives exactly the basic count again (Theorem 15.2); for `0^0 = 1` it tends to `e^-2` times it (Theorem 34.12). The other characters add between -0.23 and +0.36 at `b <= 25` and at most 0.11 in absolute value for `25 < b <= 128`. | Proposition 34.10, Theorem 34.12; computed; Conjecture 34.13 |
+| 103 | 241 rows, 133 current tests with a P value, 56 data groups. Taken together the P values are far from uniform: 14 of 56 groups below 0.05 (2.8 expected), Fisher P `10^-9`. The 12 groups named before the data were seen look uniform: none below 0.1, median 0.59, Fisher P = 0.74. Every group below 0.05 is an anomaly the library already names, or a world where the model is known to fail. No lean toward deficits: 17 excesses against 8 deficits among the groups with P < 0.2. | computed; Heuristic 34.14 |
+| 106 | Residuals `lambda / model` of neighbouring bases 12 to 32: lag-1 correlation -0.09 and -0.17 with the top-digit model (permutation P 0.65 and 0.46); -0.31 and -0.41 without it (P 0.06, 0.07). No multiset is a near-solution in two bases (0.02 expected). The top-digit factors of one multiset in bases `b` and `b + 1` are uncorrelated (`|r| <= 0.044`). But the two conventions in one base correlate at +0.78: pooled tests must not treat them as independent. | computed; Heuristic 34.15 |
+| library | Two stale combined P values (chapters 17 and 19), a range misquoted in section 21.4, an unsupported claim in section 24.6.2, a pooled test in Table 26.5.1 that adds correlated counts as independent, and three problems with the leads of `questions-round6.md` | section "Library corrections" |
 
-## 1. Where the 12% excess sits (question 93)
+## 34.1 Where the 12% excess sits (question 93)
 
-### 1.1 An exact refined model
+### 34.1.1 An exact refined model
 
 The library computes the refined model by sampling. It can be computed
 exactly, and split by any statistic of the low digits.
 
-Proposition 1.1 (proved). Let `w(1) < ... < w(b-1)` and `w(0) <= w(1)`.
+Proposition 34.1 (proved). Let `w(1) < ... < w(b-1)` and `w(0) <= w(1)`.
 Walk over the digit values from `b - 1` down to 0. Given that no digit above
 `x` is present, the free digits that remain are independent and uniform on
 `{0, ..., x}`, and a pending leading digit is uniform on `{1, ..., x}`. So
@@ -73,12 +73,12 @@ exact because all later terms are at most `w(x)` each.
 its standard error in all 30 cases checked (bases 12 to 26, both
 conventions; for example 1.1462 against 1.1488 +/- 0.0056 in base 12). A
 base takes about 0.05 seconds. The same walk gives the whole length matrix
-of section 3 and accepts the perturbed weights of `fast --perturb`
+of section 34.3 and accepts the perturbed weights of `fast --perturb`
 (`r6q_lib.weights` reproduces them; checked on three near-solutions).
 
-### 1.2 The excess
+### 34.1.2 The excess
 
-Table 1.2.1 (computed, `r6q_neighbors.py residuals`,
+Table 34.1.2.1 (computed, `r6q_neighbors.py residuals`,
 `data/defects_bulk_b1.txt`, bases 12 to 32). `lambda / model` per parity
 and convention. "Mean" is the mean of the per-base ratios, as in section
 23.5; `z` is that of the pooled ratio, with the clustered standard errors of
@@ -93,19 +93,19 @@ chapter 26.
 
 This reproduces the 12% and `z = 3.0` of Table 26.4.1.
 
-### 1.3 The split by zeros
+### 34.1.3 The split by zeros
 
 Two exact facts organize the data.
 
-Lemma 1.2 (proved). A string without the digit 0 has the same `F` under both
+Lemma 34.2 (proved). A string without the digit 0 has the same `F` under both
 conventions. So the zero-free near-solutions are the same events under
 both conventions, and so is their model expectation.
 
-Lemma 1.3 (proved). `F_1(n) = F_0(n) + c_0(n)`. So `n` is a near-solution
+Lemma 34.3 (proved). `F_1(n) = F_0(n) + c_0(n)`. So `n` is a near-solution
 at `D` under `0^0 = 1` with `c` zeros exactly when it is a near-solution at
 `D + c` under `0^0 = 0` with `c` zeros.
 
-Table 1.3.1 (computed, `r6q_zeros.py comparetop`, `data/r5e_int_std.txt`,
+Table 34.1.3.1 (computed, `r6q_zeros.py comparetop`, `data/r5e_int_std.txt`,
 bases 12 to 26, 60 offsets each, model `t = 3`). Near-solutions per offset
 summed over the bases of each parity, by the number of zeros, against the
 model. `z` uses the variance `phi E / J` with the measured `phi` (1.9 to
@@ -127,7 +127,7 @@ So the excess is not one effect.
 - Odd bases. Under `0^0 = 1` an odd number of zeros breaks the parity
   doubling, and 72% of the expectation is zero-free; under `0^0 = 0` it is
   42%. The zero-free near-solutions run 26% above the model, and they are
-  the same events in both conventions (Lemma 1.2). So the same surplus
+  the same events in both conventions (Lemma 34.2). So the same surplus
   raises the `0^0 = 1` ratio to 1.16 and the `0^0 = 0` ratio to 1.10. The
   classes with zeros fit (0.93 to 1.06, apart from two zeros under
   `0^0 = 0`, 0.79). Base 13 carries 0.70 of the 1.63 surplus per offset
@@ -136,10 +136,10 @@ So the excess is not one effect.
   factors of section 11.4 raise the count.
 - Even bases. The zero-free class fits (0.99 and 1.00). The convention gap
   sits in the strings with one zero: 1.30 under `0^0 = 1` against 0.93
-  under `0^0 = 0`. By Lemma 1.3 the first are the `0^0 = 0` near-solutions
+  under `0^0 = 0`. By Lemma 34.3 the first are the `0^0 = 0` near-solutions
   with one zero at the offsets `2j(b-1) + 1`.
 
-### 1.4 The shifted offsets
+### 34.1.4 The shifted offsets
 
 `analysis/r6q_offsets.py` reran the search at `D = 2j(b-1) + c`, `c = 1, 2`,
 `j = 1..60`, bases 12 to 26 (`data/r6q_shift_c1.txt`, `r6q_shift_c2.txt`).
@@ -147,8 +147,8 @@ The model takes the residue condition of `D == c (mod b-1)` (the argument
 `shift` of `refined_by_zeros`). In odd bases `0^0 = 0` has no near-solution
 at odd `D`, since `x^x - x` is even; the model agrees.
 
-Table 1.4.1 (computed, `r6q_zeros.py compare`, model `t = 0`, even bases
-12 to 26). Ratio observed / model; `z` as in Table 1.3.1.
+Table 34.1.4.1 (computed, `r6q_zeros.py compare`, model `t = 0`, even bases
+12 to 26). Ratio observed / model; `z` as in Table 34.1.3.1.
 
 | offsets | `0^0` | zero-free | 1 zero | 2 zeros | 3 or more | all |
 |---|---:|---:|---:|---:|---:|---|
@@ -160,7 +160,7 @@ Table 1.4.1 (computed, `r6q_zeros.py compare`, model `t = 0`, even bases
 | `2j(b-1) + 2` | 1 | 1.22 | 0.96 | 1.26 | 1.63 | 1.15 (`z` +2.3) |
 
 The one-zero cell of `0^0 = 0` at `+1` repeats the one-zero cell of
-`0^0 = 1` at 0 (4.133 per offset in both), as Lemma 1.3 requires; this
+`0^0 = 1` at 0 (4.133 per offset in both), as Lemma 34.3 requires; this
 checks the runs. In odd bases the offsets `+ 2` give 1.02 (`0^0 = 0`) and
 0.98 (`0^0 = 1`).
 
@@ -172,7 +172,7 @@ convention is high in all three families. So the one-zero surplus of Table
 1.3.1 is one cell of a scatter that the other cells share; it is not a
 property of the zeros.
 
-### 1.5 Perturbed worlds
+### 34.1.5 Perturbed worlds
 
 `analysis/r5e_int_offsets.py std 12 26 60 1 --perturb s`, `s = 1..5`
 (`data/r6q_pert_s*.txt`). The engine replaces each `w(x)`, `x >= 2`, by
@@ -180,10 +180,10 @@ property of the zeros.
 destroys every residue structure. The model is the exact refined model on
 the same weights (`t = 0`).
 
-Table 1.5.1 (computed, `r6q_zeros.py summary`, `data/r6q_zero_summary.txt`).
+Table 34.1.5.1 (computed, `r6q_zeros.py summary`, `data/r6q_zero_summary.txt`).
 Ratio observed / model. `R0`, `R1`: all bases 12 to 26 pooled, per
 convention. The gap `R1 - R0` has standard error from the events with
-zeros only, since the zero-free events are common (Lemma 1.2).
+zeros only, since the zero-free events are common (Lemma 34.2).
 
 | world | even, `0^0 = 0` | even, 1 | odd, 0 | odd, 1 | odd, zero-free | `R0` | `R1` | gap |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
@@ -208,10 +208,10 @@ What this shows (computed).
   between seeds; seed 4 has 0.78 in odd bases (`z` about -3.3). The odd
   zero-free cell, whose true value 1.26 drives the excess, takes 0.79 to
   1.23 (standard deviation 0.18 against a sampling error of about 0.10).
-- Forcing the top digits of the perturbed weights (Table 1.5.2) removes
+- Forcing the top digits of the perturbed weights (Table 34.1.5.2) removes
   part of this scatter, not all of it.
 
-Table 1.5.2 (computed, the same runs against the model with `t = 3` on the
+Table 34.1.5.2 (computed, the same runs against the model with `t = 3` on the
 perturbed weights, 200,000 strings per length).
 
 | seed | even, 0 | even, 1 | odd, 0 | odd, 1 | odd, zero-free | `R0` | `R1` | gap |
@@ -229,9 +229,9 @@ world-level ratio by a factor of about 1.3 to 1.5 in standard deviation,
 even with the top digits forced. The pooled ratios `R0` and `R1` stay
 within 0.92 to 1.03, and the gap stays negative in every seed.
 
-### 1.6 Verdict
+### 34.1.6 Verdict
 
-Heuristic 1.6. The 12% excess under `0^0 = 1` is not a third kind of
+Heuristic 34.4. The 12% excess under `0^0 = 1` is not a third kind of
 correction tied to the zeros.
 
 - In odd bases it is a surplus of zero-free near-solutions (1.26, base 13
@@ -254,19 +254,19 @@ and the convention gap about 1.7 to 2. So the answer to direction A1 is:
 not established. The data do not need a third kind of correction, and the
 excess does not sit in the zeros. A modest effect of `x^x` that separates
 the conventions is not excluded; fresh bases (odd bases 27 to 41 with
-strings) would decide it (new question 2). The extra between-world
-variance is a real finding and needs a cause (new question 1).
+strings) would decide it (question 140). The extra between-world
+variance is a real finding and needs a cause (question 139).
 
-## 2. Do near-solutions share the zero deficit? (question 94)
+## 34.2 Do near-solutions share the zero deficit? (question 94)
 
-### 2.1 The expected zeros
+### 34.2.1 The expected zeros
 
 Section 24.6.2 compared the zeros of the long solutions with a binomial law
-`Bin(d-1, 1/b)`. The exact model of Proposition 1.1 gives the law of the
+`Bin(d-1, 1/b)`. The exact model of Proposition 34.1 gives the law of the
 zero count of a solution of given base, length and convention, with the
 length and the residue conditions in place.
 
-Table 2.1.1 (computed, `r6q_zeros.py solutions`,
+Table 34.2.1.1 (computed, `r6q_zeros.py solutions`,
 `data/r6q_zero_solutions.txt`). Solutions with at least `b - 6` digits,
 bases 12 to 43 (`output/b2-41-*.txt`, `b43-*.txt`).
 
@@ -287,11 +287,11 @@ length) says otherwise. Per near-solution, the expected zeros are 0.893
 against 0.847 at `t = 0` in even bases under `0^0 = 0` (+5%), and 0.847
 against 0.859 in odd bases (-1%). Section 24.6.2's "the forced top
 digits account for 2 to 4 of the 13.5" is not supported by this
-computation (section 6, item 3).
+computation (section "Library corrections", item 3).
 
-### 2.2 The near-solutions
+### 34.2.2 The near-solutions
 
-Table 2.2.1 (computed, `r6q_zeros.py near`, `data/r6q_zero_near.txt`,
+Table 34.2.2.1 (computed, `r6q_zeros.py near`, `data/r6q_zero_near.txt`,
 bases 12 to 26). Per near-solution event. The residual is the sum over
 events of their zeros minus the model's mean zeros per near-solution in
 their base, per offset; `z` uses the clustered variance of the residuals
@@ -310,7 +310,7 @@ Without base 13 the odd rows give 0.757 against 0.860 (`z = -2.2`) and
 Answer (computed). The near-solutions have the zero rate of the model in
 even bases, where the solutions under `0^0 = 0` have their larger shortfall
 (10 against 16.7). In odd bases the near-solutions are short of zeros under
-both conventions, but this is the zero-free surplus of Table 1.3.1 seen
+both conventions, but this is the zero-free surplus of Table 34.1.3.1 seen
 from the other side: there are too many zero-free near-solutions, not too
 few zeros in the others (the classes with zeros fit, 0.93 to 1.06). The
 solutions under `0^0 = 1` in odd bases have no shortfall (18 against 15.7).
@@ -318,17 +318,17 @@ So the near-solutions do not confirm question 71 as a law of the zeros of
 `F`. The even-base part of question 71 is chance (`z` about -1.7, with no
 counterpart in thousands of near-solution digits). The odd-base part
 (19 against 26.4, `z = -1.5`) has the same sign as the zero-free surplus,
-which is itself within the between-world scatter of section 1.5.
+which is itself within the between-world scatter of section 34.1.5.
 
-## 3. The expected count is a trace (question 90)
+## 34.3 The expected count is a trace (question 90)
 
-### 3.1 The length matrix
+### 34.3.1 The length matrix
 
 Let `M_b` be the `b x b` matrix with `M_b[d, d'] = P(F(n) has d' digits)`
 for `n` a uniform `d`-digit string (leading digit uniform on `1..b-1`).
 `F(n) < b^b`, so `M_b` is stochastic (Proposition 15.1).
 
-Proposition 3.1 (proved). (1) The basic model's expected count over the
+Proposition 34.5 (proved). (1) The basic model's expected count over the
 lengths 2 to `b` (the count of `analysis/model.py`, which starts at length
 2) is `tr M_b - M_b[1, 1]`. (2) `M_b[1, 1] = E_1 = N_1(b) / (b - 1)` with
 `N_1(b) = #{x >= 1 : x^x < b}`. So `N_1(b) = 2` for `5 <= b <= 27`, 3 for
@@ -346,9 +346,9 @@ chance at most `((N_1(b) + 1)/b)^(d-1)`. So `E_1` is almost an eigenvalue of `M_
 the "second eigenvalue about `3/b`" of the lead: it is `N_1(b)/(b-1)`, and
 `N_1 = 3` for `28 <= b <= 256`.
 
-### 3.2 The rows converge
+### 34.3.2 The rows converge
 
-Theorem 3.2 (proved). Fix `j, j' >= 0`. For `b >= b_0(j')` (the constant of
+Theorem 34.6 (proved). Fix `j, j' >= 0`. For `b >= b_0(j')` (the constant of
 Theorem 29.1),
 
     | M_b[b - j, b - j'] - s_j' |  <=  ((j+1)(j'+1) + 1) / b  +  (j'+2) / floor(sqrt b)!.
@@ -364,15 +364,15 @@ string of `b - j` digits, gives the total variation bound
 `(1 + K + K j)/b = (1 + (j'+1)(j+1))/b`. Under the Poisson law `Q` the
 chance of `A_j'` is `s_j'` whatever `j` is.
 
-Corollary 3.3 (proved; question 81). The law of the length of `F` for a
+Corollary 34.7 (proved; question 81). The law of the length of `F` for a
 string of `b - j` digits has the limit `(s_j')`, independent of `j`. The
 length shares of section 5.2 are the diagonal of this limit, and the shares
 add to 1 because the limit is a probability law. This is the reason behind
 "one solution per base" that section 14.6.3 states in words.
 
-### 3.3 The first correction is one eigenvalue
+### 34.3.3 The first correction is one eigenvalue
 
-Proposition 3.4 (proved at the level of Proposition 29.7, whose expansion it
+Proposition 34.8 (proved at the level of Proposition 29.7, whose expansion it
 uses). (1) For fixed `j, j'`,
 
     M_b[b - j, b - j'] = s_j' + ( (j + 1) sigma_j' + a_j' ) / b + O(1/b^2),
@@ -417,7 +417,7 @@ The uniformity in `j` needed to let `J` grow with `b` is not proved here.
 Theorem 29.5 bounds the tail sum of `E_(b-j)` by `5.6 e^(-J/3)`, not by
 `o(1/b)`. The exact computation closes the gap numerically:
 
-Table 3.3.1 (computed, `r6q_trace.py table` and `rows`,
+Table 34.3.3.1 (computed, `r6q_trace.py table` and `rows`,
 `data/r6q_trace_table.txt`, `r6q_trace_rows.txt`; exact up to a dropped
 mass below `2 * 10^-11`; both conventions agree to 6 digits).
 
@@ -432,8 +432,8 @@ mass below `2 * 10^-11`; both conventions agree to 6 digits).
 
 Limit: `C = 1.105`. At small `b` the length-2 row adds about `(N_2/b)^2 b`.
 
-Why one eigenvalue (Heuristic 3.5, checked by the last column). To first
-order the corner of `M_b` is `1 u^T + (1/b) v sigma^T` with
+Heuristic 34.9 (why one eigenvalue; checked by the last column of Table
+34.3.3.1). To first order the corner of `M_b` is `1 u^T + (1/b) v sigma^T` with
 `u = s + a/b` and `v_j = j + 1`. A rank-two matrix of this form has the
 eigenvalues `u . 1 = 1` and `(sigma . v)/b = C/b`. So the whole first-order
 excess of the trace is one eigenvalue, `C/b`, and it measures how much the
@@ -442,7 +442,7 @@ has fewer large digits, so `F` is a little shorter too. With length 1 the
 trace is `1 + (N_1(b) b/(b-1) + C)/b + o(1/b)`, and `b (tr M_b - 1)` has no
 limit.
 
-### 3.4 The refined model: a sum over characters
+### 34.3.4 The refined model: a sum over characters
 
 Let `q = b - 1`, `e(x) = exp(2 pi i x)`, and for a character `t` of `Z/q`
 
@@ -450,7 +450,7 @@ Let `q = b - 1`, `e(x) = exp(2 pi i x)`, and for a character `t` of `Z/q`
 
 `n` a uniform `d`-digit string.
 
-Proposition 3.6 (proved). The refined model's expected count over the
+Proposition 34.10 (proved). The refined model's expected count over the
 lengths 2 to `b` is `sum over t of tau_t(b)`. It is also the trace of the
 class matrix of section 15.1.5 restricted to these lengths, and
 `tau_0 = tr M_b - E_1`.
@@ -461,13 +461,13 @@ Proof. The `d`-digit numbers are `q b^(d-1)` consecutive integers, so
 the class matrix in the `q` classes of length `d`, and orthogonality of
 the characters writes it as the sum of the `tau_t`.
 
-Corollary 3.7 (proved). For odd `b` and `0^0 = 0`, `tau_(q/2) = tau_0`
+Corollary 34.11 (proved). For odd `b` and `0^0 = 0`, `tau_(q/2) = tau_0`
 exactly, and the class matrix has two closed classes (the parities). This is
 the only case where a nontrivial character is constant on `F(n) - n`
 (Theorem 15.2). So the eigenvalue 1 has multiplicity 2 exactly in that
 case, and the refined count is `2 tau_0` plus the other characters.
 
-Theorem 3.8 (proved). For odd `b` and `0^0 = 1`, `tau_(q/2)(b) -> e^-2` as
+Theorem 34.12 (proved). For odd `b` and `0^0 = 1`, `tau_(q/2)(b) -> e^-2` as
 `b -> infinity`.
 
 Proof. For odd `b`, `n` is congruent to its digit sum modulo 2, and
@@ -482,7 +482,7 @@ independent of `A_j`, and `E[(-1)^(c_0)] = e^-2`. So the term of length
 absolute value by the tail bound of Theorem 29.5, which tends to 0 as `J`
 grows. Sum over `j` and use `sum s_j = 1`.
 
-Conjecture 3.9. The other characters vanish in the limit:
+Conjecture 34.13. The other characters vanish in the limit:
 `sum over t not in {0, q/2} of tau_t(b) -> 0`. Then the refined count tends
 to 1 (even `b`), 2 (odd `b`, `0^0 = 0`) and `1 + e^-2` (odd `b`,
 `0^0 = 1`), the table of section 5.3.
@@ -491,7 +491,7 @@ This needs equidistribution of `sum (w(x) - x)` modulo `q` with a relative
 error, the strong form of Assumption R (Conjecture 29.18). The
 anti-concentration of Theorem 30.5 is not enough.
 
-Table 3.4.1 (computed, `r6q_trace.py refined`,
+Table 34.3.4.1 (computed, `r6q_trace.py refined`,
 `data/r6q_refined_trace.txt`, bases 10 to 64, 80, 100, 128). The
 decomposition of the refined count, lengths 2 to `b`.
 
@@ -512,16 +512,16 @@ most 0.11 in absolute value for `b > 25`. The ratio `tau_(q/2) / tau_0`
 under `0^0 = 1` is 0.211 at `b = 13`, 0.145 at `b = 63`, against
 `(1 - 2/b)^(b-2)`, which tends to `e^-2 = 0.135`. The largest values of
 the other characters occur at `b` = 13, 11, 25, 22, 29, 14, 37 and 43. I
-found no simple rule for them (new question 4).
+found no simple rule for them (question 142).
 
 The lead's other claims, in this language. The parity doubling is the
-multiplicity 2 of Corollary 3.7, and `1 + e^-2` is Theorem 3.8. The factor
+multiplicity 2 of Corollary 34.11, and `1 + e^-2` is Theorem 34.12. The factor
 `q^k(B)` of Theorem 21.6 should be the multiplicity of the eigenvalue 1 in
 `F_q[T]` in the same way; I have not written that proof.
 
-## 4. A ledger of P values (question 103)
+## 34.4 A ledger of P values (question 103)
 
-### 4.1 The ledger
+### 34.4.1 The ledger
 
 `data/r6q_ledger_raw.tsv` lists 241 statements of chapters 3 to 32 that
 compare data with the model: the section, the world, the test, the counts,
@@ -538,9 +538,9 @@ Tests that share data are merged into 56 groups, in two ways: the smallest
 P of the group with the Sidak correction `1 - (1 - p)^k`, and the first
 test listed in the group.
 
-### 4.2 Results
+### 34.4.2 Results
 
-Table 4.2.1 (computed, `r6q_ledger.py`, `data/r6q_ledger_report.txt`; the
+Table 34.4.2.1 (computed, `r6q_ledger.py`, `data/r6q_ledger_report.txt`; the
 Sidak merge, the primary merge in brackets).
 
 | set | groups | below 0.01 | below 0.05 | expected below 0.05 | median | Fisher P |
@@ -560,7 +560,7 @@ zero digits of question 71 (24.6.2); the `b-1`-digit excess of section 5.5;
 the Pisot class (26.6); the 12% excess (23.5). Each is already named in the
 library as an anomaly, a selected pattern or a known failure.
 
-Heuristic 4.1. The P values of the library are not uniform, and the cause
+Heuristic 34.14. The P values of the library are not uniform, and the cause
 is selection, not a hidden flaw.
 
 - The 12 groups named in advance (fresh bases 39 to 44 and -36 to -38,
@@ -579,7 +579,7 @@ is selection, not a hidden flaw.
   negative, rational and 2-cycle worlds, each about one standard deviation
   low, and does not show in the ledger as a whole.
 - Dependence. The integer groups share data across the two conventions
-  (Table 5.1.1: correlation +0.78 in one base), and several groups reuse
+  (Table 34.5.1.1: correlation +0.78 in one base), and several groups reuse
   the same bases. The Fisher P values above treat the groups as
   independent and so overstate the evidence; the conclusion does not
   depend on them, since the named-in-advance set is clean and the rest is
@@ -591,9 +591,9 @@ dominated by tests chosen after the data. The tests that were named in
 advance agree with the model. The cheapest way to strengthen this is more
 of them (question 104).
 
-## 5. Are neighbouring bases independent? (question 106)
+## 34.5 Are neighbouring bases independent? (question 106)
 
-### 5.1 Correlation of the residuals
+### 34.5.1 Correlation of the residuals
 
 `r6q_neighbors.py residuals`. For each base 12 to 32 and convention, the
 standardized residual `(lambda - model) / se`, with the clustered standard
@@ -601,7 +601,7 @@ error (bases 12 to 26) or the sample one times `sqrt(2.1)` (bases 27 to
 32). The parity means are removed, since the parities alternate. The null
 law permutes the residuals within each parity class (20,000 draws).
 
-Table 5.1.1 (computed, `data/r6q_neighbors.txt`).
+Table 34.5.1.1 (computed, `data/r6q_neighbors.txt`).
 
 | model | `0^0` | lag-1 correlation | permutation P | lag 2 |
 |---|---:|---:|---:|---:|
@@ -617,11 +617,11 @@ the model now carries. With 20 pairs the null standard deviation is 0.19 to
 0.22, so the test excludes only correlations above about 0.4.
 
 The two conventions in one base are strongly correlated, because the
-zero-free near-solutions are common to both (Lemma 1.2). Any pooled test
+zero-free near-solutions are common to both (Lemma 34.2). Any pooled test
 that adds the two conventions as independent counts overstates its
 precision; Table 26.5.1 does this for the integers ("both conventions").
 
-### 5.2 Shared multisets
+### 34.5.2 Shared multisets
 
 `S(c)` does not depend on the base. A multiset with largest digit `X` is a
 candidate in every base above `X`, so dependence between bases could come
@@ -643,7 +643,7 @@ of the candidates in base `b`), the forced-top factors of section 23.5
 `E[f_b f_(b+1)] / (E f_b E f_(b+1))` is 0.70 to 1.43 with no consistent
 sign (`r6q_neighbors.py top`).
 
-Heuristic 5.2. For the second Borel-Cantelli lemma in the form of
+Heuristic 34.15. For the second Borel-Cantelli lemma in the form of
 Kochen and Stone, it is enough that
 `sum over b != b' <= B of P(A_b and A_b')` is at most
 `(1 + o(1)) (sum over b <= B of P(A_b))^2`. Within the model, the only
@@ -658,40 +658,41 @@ correlated top digits, no neighbour correlation once the top digits are
 modelled. This is a test of the model's assumption, not a proof for the
 true weights.
 
-## 6. Problems found
+## Library corrections
 
-1. `17-weights.md` lines 25 and 325 and `19-sieve-spectra.md` line 25 (the
-   summary row of question 57) and line 668 still give the factorion
-   shortfall "a combined P of about 0.05". Section 23.5 (update) and Table
+Items 1 to 7 now have a note in the chapter or question they correct.
+
+1. The summary and section 17.4 of `17-weights.md`, and the summary row of
+   question 57 and section 19.5.3 of `19-sieve-spectra.md`, still give the
+   factorion shortfall "a combined P of about 0.05". Section 23.5 (update) and Table
    26.4.1 revise it to about 0.09. Found by the ledger agent; checked.
-2. `21-five-systems.md` line 649 and the summary of chapter 26 (question
-   74): "even `j` carry 1.4 to 2.4 times as many near-solutions as odd `j`".
+2. Section 21.4 (update) and the summary of chapter 26 (question 74): "even `j` carry 1.4 to 2.4 times as many near-solutions as odd `j`".
    The table of section 26.6.2 gives ratios 1.68, 1.48, 1.49 and 2.36, so
    1.5 to 2.4.
 3. `24-ffield-gap.md`, section 24.6.2: "The forced top digits account for 2
    to 4 of the 13.5" missing zeros. With the top three digits forced, the
    expected zeros per near-solution rise by 5% in even bases and fall by
-   1% in odd bases (section 2.1), so they account for none of it. The text
+   1% in odd bases (section 34.2.1), so they account for none of it. The text
    seems to have used Heuristic 24.17 (zeros of `S(c)` for random `c`),
    which is a different quantity from the zeros of `c` given that `c` is a
    solution.
 4. `questions-round6.md`, question 90 and direction A1: "the second
    eigenvalue near `3/b`" and "`b (tr M - 1)` is 5.5, 5.6, 5.0 and 4.7" use
    the trace over lengths 1 to `b`. The length-1 entry is `N_1(b)/(b-1)`
-   (Proposition 3.1), which is the second eigenvalue and makes
+   (Proposition 34.5), which is the second eigenvalue and makes
    `b (tr M - 1)` grow like `ln b / ln ln b`. Over lengths 2 to `b`, the
    count the library uses, `b (tr - 1)` tends to `C = 1.105`.
 5. `questions-round6.md`, question 94 (lead): the forced top digits do not
-   lower the expected zeros by about 10% (section 2.1).
+   lower the expected zeros by about 10% (section 34.2.1).
 6. `questions-round6.md`, question 93 (lead): "even bases have 177 distinct
    multisets with zeros ... 217 under `0^0 = 1`" counts multisets in each
-   convention separately; by Lemma 1.3 those of `0^0 = 1` are `0^0 = 0`
+   convention separately; by Lemma 34.3 those of `0^0 = 1` are `0^0 = 0`
    near-solutions at other offsets, so the two numbers are not counts of
    the same events. The comparison needs the model per zero class, as in
-   Table 1.3.1.
+   Table 34.1.3.1.
 7. Table 26.5.1, row "integers, 12 to 32, both conventions": the two
    conventions are added as independent, but their residuals correlate at
-   +0.78 (Table 5.1.1). The `z` of that row is too large by a factor of
+   +0.78 (Table 34.5.1.1). The `z` of that row is too large by a factor of
    about 1.3; the conclusion of section 26.5 does not change.
 8. The ledger agent reported smaller inconsistencies, not checked one by
    one: the old P values of the factorion row of Table 26.4.1 (0.0026,
@@ -707,21 +708,23 @@ true weights.
 
 | file | contents |
 |---|---|
-| `analysis/r6q_lib.py` | exact refined model by zero class (Proposition 1.1), the weights of `fast --perturb`, the reader of near-solution files |
-| `analysis/r6q_trace.py` | exact length matrix, trace, spectrum, `c_j` and `C`, the character decomposition (section 3) |
-| `analysis/data/r6q_trace_table.txt`, `r6q_trace_rows.txt`, `r6q_refined_trace.txt` | its outputs (Tables 3.3.1, 3.4.1) |
+| `analysis/r6q_lib.py` | exact refined model by zero class (Proposition 34.1), the weights of `fast --perturb`, the reader of near-solution files |
+| `analysis/r6q_trace.py` | exact length matrix, trace, spectrum, `c_j` and `C`, the character decomposition (section 34.3) |
+| `analysis/data/r6q_trace_table.txt`, `r6q_trace_rows.txt`, `r6q_refined_trace.txt` | its outputs (Tables 34.3.3.1, 34.3.4.1) |
 | `analysis/r6q_offsets.py` | near-solutions at `D = 2j(b-1) + c` |
 | `analysis/data/r6q_shift_c1.txt`, `r6q_shift_c2.txt` | its runs, bases 12 to 26, 60 offsets |
 | `analysis/data/r6q_pert_s1.txt` .. `r6q_pert_s5.txt` | near-solutions in perturbed worlds (`r5e_int_offsets.py ... --perturb s`) |
 | `analysis/r6q_zeros.py` | zero classes: exact and forced-top models, comparisons, the zero tests of question 94, the summary |
 | `analysis/data/r6q_zero_model.txt`, `r6q_zero_top.txt` | model by zero class (exact; `t = 0..3` sampled) |
-| `analysis/data/r6q_zero_classes.txt`, `r6q_zero_summary.txt`, `r6q_zero_near.txt`, `r6q_zero_solutions.txt` | comparisons (Tables 1.3.1 to 2.2.1) |
-| `analysis/r6q_neighbors.py` | residual correlations, shared multisets, joint top digits (section 5) |
+| `analysis/data/r6q_zero_classes.txt`, `r6q_zero_summary.txt`, `r6q_zero_near.txt`, `r6q_zero_solutions.txt` | comparisons (Tables 34.1.3.1 to 34.2.2.1) |
+| `analysis/r6q_neighbors.py` | residual correlations, shared multisets, joint top digits (section 34.5) |
 | `analysis/data/r6q_neighbors.txt` | its output |
 | `analysis/r6q_ledger.py` | merging, uniformity and Fisher tests of the ledger |
-| `analysis/data/r6q_ledger_raw.tsv`, `r6q_ledger_report.txt` | the ledger and the report (Table 4.2.1) |
+| `analysis/data/r6q_ledger_raw.tsv`, `r6q_ledger_report.txt` | the ledger and the report (Table 34.4.2.1) |
 
 ## New questions
+
+These are questions 139 to 143 of `questions.md`.
 
 1. Between-world variance. In perturbed worlds the ratio `lambda / model`
    of one parity and convention ranges from 0.84 to 1.16 across seeds even
@@ -737,7 +740,7 @@ true weights.
    solutions?
 3. Uniform first-order trace. Prove `tr M_b - E_1 = 1 + C/b + o(1/b)` by
    bounding `|E_(b-j) - s_j - c_j/b|` uniformly for `j <= C' ln b`, which
-   with Theorem 29.5 would finish Proposition 3.4.
+   with Theorem 29.5 would finish Proposition 34.8.
 4. The other characters. Which property of `b - 1` makes
    `sum over t not in {0, q/2} of tau_t(b)` large (0.36 at `b = 13`, 0.19 at
    25, 0.06 at 64)? Is it bounded by a function of the largest power of 2
