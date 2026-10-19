@@ -47,7 +47,7 @@ In chapter 25 the same split is `U^2 = N + R` with `N = 4 l x^x`.
 | 102 | abc implies: every 3-digit solution of `x^x` (either convention, any position and parity) with `R != 0` has `x <= (2 + O(eps)) B + C_eps`. Under `c < rad^(7/4)`: `x <= 10.5 B` for `B <= 1000`, and every 3-digit solution under `0^0 = 1` with two digits at most 200 is one of the six known or a member of case (i) of Theorem 25.7 | Theorem 33.16, Corollary 33.18, conditional |
 | 102 | Two large digits `u >= v`: abc leaves exactly the range `v log v >= (1/2 - eps) u log u` (about `v >= u/2`); the 7/4 form leaves `v >= u/14` roughly. Neither Fermat-Catalan nor the `n`-conjecture covers the rest | Proposition 33.20, conditional; discussion |
 | 99 | The constructions of Theorem 15.14 need one exact coincidence each. Those with a one-step chain are finitely many and the only one is the 11-digit solution of base 64. Search to `t = 10^5` (`r <= 7`) and `t = 20000` (`r <= 40`): nothing else. Length grows like `c` with `|L - c| = O(log b)` | Proposition 33.22, proved and computed; Heuristic 33.23 |
-| library | Section 32.1.6 says abc does not help for 3 digits; it does (Theorem 33.16). Four smaller problems in the questions file | section "Library corrections" |
+| library | The table of section 32.1.6 lists the regime "`n` varies" as open; under abc it is finite (Theorem 33.16). Four smaller problems in the questions file | section "Library corrections" |
 
 ## 33.1 Three-digit factorions (question 97)
 
@@ -641,14 +641,13 @@ for 2 digits. So the residue of the 3-digit problem under abc is precisely
 the comparable pair `u/2 <~ v <= u`, the range of Theorem 25.11 with "two
 digits above 200".
 
-Correction to section 32.1.6 (last paragraph): "The abc conjecture does not
-help here, unlike for `(1, x, 1)` ... the radical of the right side contains
-`b` ... so the abc inequality is satisfied." That remark used the triple
-`x^x = p b^2 + q b + (x - C)`. The completed square `U^2 = N + R` has
-`rad(U^2) <= U`, about `x^(x/2)`, and gives Theorem 33.16. So the regime
-"`n` varies" of the table in section 32.1.6 is settled under abc (and the
-other regimes too), and the open part under abc is the two-digit range of
-Proposition 33.20.
+Note on section 32.1.6. A draft of that section said that abc does not
+help for 3 digits. It used the triple `x^x = p b^2 + q b + (x - C)`, whose
+radical contains `b`. The last paragraph of section 32.1.6 now points to the
+completed square instead, and Theorem 33.16 is the proof: `rad(U^2) <= U`,
+about `x^(x/2)`. So the regime "`n` varies" of the table in section 32.1.6
+is finite under abc (and the other regimes too), and the open part under
+abc is the two-digit range of Proposition 33.20.
 
 ## 33.5 Long structured solutions under `0^0 = 1` (question 99)
 
@@ -722,9 +721,10 @@ must still end at 0 and land within `O(log b)` of `c`.
 
 Each item below now has a note in the chapter or question it corrects.
 
-1. Section 32.1.6, last paragraph: the claim that abc does not help for
-   3-digit strings is wrong; see section 33.4.4. The table there ("`n`
-   varies: none known, open") should add "finite under abc".
+1. Section 32.1.6, table: the row "`n` varies" says "none known, open".
+   Under abc it is finite (Theorem 33.16, section 33.4.4). The last
+   paragraph of that section sketches the argument; a draft of it claimed
+   the opposite.
 2. `questions-round6.md`, question 97 ("Why"): a proof "would be the
    library's first unconditional finiteness theorem for a family of short
    strings with a free digit, in any world". Theorem 15.13 (coverings: a
