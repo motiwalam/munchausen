@@ -2,3 +2,6 @@ import Munchausen.Defs
 import Munchausen.Basic
 import Munchausen.Congruences
 import Munchausen.Constructions
+import Munchausen.Polynomial
+import Munchausen.Examples
+import Munchausen.Conjectures

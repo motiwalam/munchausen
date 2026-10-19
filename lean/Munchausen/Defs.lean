@@ -61,6 +61,10 @@ structure IsSolution (b m : ℕ) (s : List ℕ) : Prop where
   head_ne_zero : ∀ h : s ≠ [], s.head h ≠ 0
   eq : P b s = Fs m s
 
+instance (b m : ℕ) (s : List ℕ) : Decidable (IsSolution b m s) :=
+  decidable_of_iff ((∀ d ∈ s, d < b) ∧ (∀ h : s ≠ [], s.head h ≠ 0) ∧ P b s = Fs m s)
+    ⟨fun ⟨h1, h2, h3⟩ => ⟨h1, h2, h3⟩, fun ⟨h1, h2, h3⟩ => ⟨h1, h2, h3⟩⟩
+
 /-- The Munchausen polynomial `Q_s(r) = P_s(r) - F(s)` of a digit string (section 11.3 and
 chapter 12). A string is a solution in base `b` exactly when `Q_s(b) = 0` and `b` exceeds
 every digit. -/
