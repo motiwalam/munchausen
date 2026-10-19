@@ -935,6 +935,8 @@ other worlds. Theorem 29.1, Theorem 29.9, Corollary 29.10 and Theorem
 
 ## New questions
 
+These are questions 111 to 117 of `questions.md`.
+
 1. The case left by Theorem 29.11: squarefree `B - 1` whose factors all
    share a divisor with `e - 1`, no factor of degree 2, `q >= e - 1`.
    Does condition (b) of Theorem 29.11 (2) for `k = 2, 3` already force a
