@@ -232,27 +232,26 @@ Short numbers need care, because $n = F(n) + D$ needs $n > D$. So the comparison
     [$0^0 = 1$, even bases], [15], [12.8],
     [$0^0 = 1$, odd bases], [15], [14.0],
   ))
-  Within a base the counts $N_D$ over the offsets have variance-to-mean ratio 0.98 (median over 42 cases). Across bases, $sum (N_0 - lambda)^2 slash lambda = 48.8$ over 42 cases.
+  Within a base the counts $N_D$ at single offsets have variance-to-mean ratio 0.98 (median over 42 cases). Across bases, $sum (N_0 - lambda)^2 slash lambda = 44.6$ over 42 cases with the clustered calibration of @sec-model-evidence ($P = 0.36$; 48.8 with the naive one).
 ]
 
-So solutions are ordinary draws. Within a base the near-solution counts are Poisson. Across bases the number of solutions scatters around the base's own mean as a Poisson draw would. Odd bases under $0^0 = 0$ have twice as many near-solutions as even ones, at every offset in the class: the parity effect, now seen without the model. A base does not "know" whether it has a solution. The empty base 19 has an ordinary spectrum, with $lambda = 1.02$ under $0^0 = 1$ and 1.35 under $0^0 = 0$, inside the range 0.88 to 2.17 of the other bases.
+So solutions are ordinary draws. The count at a single offset is Poisson. Across bases the number of solutions scatters around the base's own mean as a Poisson draw would. One caution, which @sec-model-evidence makes precise: the offsets are not independent of each other, so the mean $lambda$ is less precise than 60 independent offsets would make it. Odd bases under $0^0 = 0$ have twice as many near-solutions as even ones, at every offset in the class: the parity effect, now seen without the model. A base does not "know" whether it has a solution. The empty base 19 has an ordinary spectrum, with $lambda = 1.02$ under $0^0 = 1$ and 1.35 under $0^0 = 0$, inside the range 0.88 to 2.17 of the other bases.
 
 === How well the model predicts a single base
 
-The ratio $lambda slash "model"$ averages 0.98 under $0^0 = 0$ and 1.12 under $0^0 = 1$ over bases 12 to 32. So the model is right on average. But its spread from base to base is about 20%, twice the sampling error of the offsets #lib("11.2a"). Part of the spread comes from the forced top digits. The top digits of $F(c)$ are fixed by the counts of the largest digits, and those top digits must also be in the multiset. The model treats them as random. A model that reads the top $t$ digits off $F$ and draws only the rest follows the bases more closely.
+The ratio $lambda slash "model"$ averages 0.98 under $0^0 = 0$ and 1.12 under $0^0 = 1$ over bases 12 to 32. So the model is right on average. Its spread from base to base was first measured at about 20%, twice the sampling error of the offsets #lib("11.2a"). With the clustered variance of @sec-model-evidence about half of that excess disappears; it was an artefact of treating the offsets as independent. Part of the rest comes from the forced top digits. The top digits of $F(c)$ are fixed by the counts of the largest digits, and those top digits must also be in the multiset. The model treats them as random. A model that reads the top $t$ digits off $F$ and draws only the rest follows the bases more closely.
 
-#computation(id: "model-comp-top", title: "Forced top digits and the scatter", src: "23.5")[
-  Bases 12 to 32, lengths $b - 6$ to $b$, 400,000 sampled multisets per base and length, chi-square of $lambda slash "model"$ on 21 bases:
+#computation(id: "model-comp-top", title: "Forced top digits and the scatter", src: ("23.5", "26.4"))[
+  Bases 12 to 32, lengths $b - 6$ to $b$, 400,000 sampled multisets per base and length. Chi-square of $lambda slash "model"$ on 21 bases, with the naive variance of the offset means and with the clustered one:
   #align(center, btable(columns: 5, align: (right, right, right, right, right),
-    [top digits forced, $t$], [$0^0 = 0$: chi-square], [correlation], [$0^0 = 1$: chi-square], [correlation],
-    [0 (refined model)], [97.0], [0.84], [95.7], [0.34],
-    [2], [76.3], [0.86], [81.9], [0.56],
-    [3], [68.2], [0.91], [75.7], [0.66],
-    [4], [59.6], [0.89], [72.4], [0.62],
+    [top digits forced, $t$], [$0^0 = 0$: naive], [clustered], [$0^0 = 1$: naive], [clustered],
+    [0 (refined model)], [97.0], [41.4 ($P = 0.005$)], [95.7], [43.3 ($P = 0.003$)],
+    [3], [68.2], [30.2 ($P = 0.09$)], [75.7], [34.7 ($P = 0.03$)],
+    [4], [59.6], [28.0 ($P = 0.14$)], [72.4], [34.5 ($P = 0.03$)],
   ))
 ]
 
-The forced top digits explain about half of the excess scatter under $0^0 = 0$ and a third under $0^0 = 1$. The rest is concentrated in a few bases. Under $0^0 = 0$, base 19 has 0.67 times the model's rate of near-solutions, about 4.5 standard errors low, and base 13 is high because its lengths are short and local factors of the kind in @sec-short-heuristic raise the count. Under $0^0 = 1$ the model is 12% low on average in both parities. These are open questions (@sec-model-anomalies).
+With the clustered variance and the top three or four digits forced, the remaining scatter under $0^0 = 0$ is noise, and under $0^0 = 1$ it is marginal. Two items remain. Under $0^0 = 1$ the model is 12% low on average in both parities, at 3.0 standard deviations. Under $0^0 = 0$ base 19 has 0.67 times the model's rate of near-solutions; this looked like 4.6 standard errors with the naive variance and is 2.9 with the clustered one, one case among 42, so it is no longer a separate anomaly. Base 13 is high because its lengths are short and local factors of the kind in @sec-short-heuristic raise the count. @sec-model-anomalies collects the verdicts.
 
 === Why the integer digits are almost uniform
 
@@ -264,11 +263,83 @@ In the function-field world of @sec-worlds-ffield the model fails, because Frobe
 
 The forced top digits move the integer predictions by a few percent only: they change the chance that the zero counts of $c$ and $S(c)$ match by less than 2%, raise the parity factor under $0^0 = 1$ by 2% to 4%, and lower the total by about 1% through the $b$-digit share #lib("24.6").
 
-There is a second lesson in the comparison. In $FF_q [T]$ the near-solution check of the library first agreed with the census, but only because adding $(B - 1) g$ to a solution there gives a near-solution with the same class sums: the offsets mapped solutions to near-solutions one to one, so they were not independent draws. In the integers this cannot happen. Adding $j(b - 1)$ changes the two lowest digits by $-j$ and $+j$, but it changes $F$ by $w(d_0 - j) - w(d_0) + w(d_1 + j) - w(d_1) != 0$, because $x |-> x^x$ is not additive. So an integer near-solution is a different multiset and a genuine second draw. The integer test of @model-comp-spectrum stands.
+There is a second lesson in the comparison. In $FF_q [T]$ the near-solution check of the library first agreed with the census, but only because adding $(B - 1) g$ to a solution there gives a near-solution with the same class sums: the offsets mapped solutions to near-solutions one to one, so they were not independent draws. The library first argued that this cannot happen in the integers, because changing digits changes $F$ by $w(d_0 - j) - w(d_0) + w(d_1 + j) - w(d_1) != 0$. That argument overlooks rearrangements. Swapping two digits keeps the multiset, so it keeps $F$, and it moves $n$ by a multiple of $b - 1$. So a multiset can be a near-solution at several offsets at once, and two thirds of the integer near-solutions share their multiset with another offset (@sec-model-evidence). The integer offsets are therefore weaker evidence than independent draws, but they are not copies of the solutions as in $FF_q [T]$, and the test of @model-comp-spectrum stands with wider error bars.#footnote[Library section 24.6.3 calls an integer near-solution "a genuine second draw". Section 26.4 corrects this.]
 
 #remark(id: "model-rem-blocks")[
   Some solutions contain a block that pays for itself, such as $(3, 3, 6, 6, 1)$ in base 13, where $13 dot P_((3,3,6,6))(13) = 3^3 + 3^3 + 6^6 + 6^6$ (@sec-cons-blocks). In the model a solution ends in such a self-paying tail with probability $T_m (b) slash b^m$, where $T_m (b)$ counts the $m$-digit tails that pay for themselves. Under $0^0 = 1$, $T_1 (b) = 1$ (the digit 1) and $T_2 (b)$ is the number of 2-digit solutions, usually 0. So the block route is a share of about $1 slash b$ of the solutions, already counted. In bases 2 to 43 under $0^0 = 1$, 2 of the 59 solutions with at least 4 digits have an exact split at the last digit, against 3.38 expected #lib("22.5").
 ]
+
+== Near-solutions as evidence <sec-model-evidence>
+
+Almost every "chance" verdict in this document rests on near-solutions: a count at $D = 0$ is compared with its mean over many offsets in the class of 0. The library first treated the offsets as independent draws. They are not, and the reason is elementary.
+
+#lemma(id: "model-lem-swap", title: "Swap lemma", src: "26.1")[
+  Let $n$ and $n'$ have the same digit multiset in base $b$, both without a leading zero. Then $F(n') = F(n)$ and
+  $ n' - F(n') = (n - F(n)) + (n' - n), quad n' - n equiv 0 med (mod b - 1). $
+  If $n'$ is $n$ with the digits $x$ at position $i$ and $y$ at position $j > i$ exchanged, then $n' - n = (x - y)(b^j - b^i) = (x - y) b^i (b - 1) R_(j - i)$, where $R_s = 1 + b + dots + b^(s - 1)$. For the last two digits this is $(x - y)(b - 1)$.
+]
+#proof[
+  $F$ depends only on the multiset. Every power of $b$ is 1 modulo $b - 1$, so a number is congruent to its digit sum, and the two digit sums agree. For the transposition only positions $i$ and $j$ change.
+]
+
+So the near-solutions of one multiset form a _cluster_: a multiset $c$ is a near-solution at every offset $D = n' - S(c)$ for which some arrangement $n'$ of $c$ puts $D$ in the offset set. A single coincidence, a weight $S(c)$ close to one of its own arrangements, is counted at several offsets. The same holds in every positional world where $F$ depends only on the multiset: negative bases, factorions, the factorial system and the Pisot base #lib("26.1").
+
+#proposition(id: "model-prop-design", title: "What the clusters change", src: "26.1")[
+  Assume that distinct multisets are independent, as the model does. Then the count $N_D$ at one offset is still Poisson, up to clumps such as twins at that offset, and the mean $lambda$ of the counts over $J$ offsets is still unbiased. But the total $T$ over the offsets has variance $phi E T$ with the _design effect_ $phi = E[K^2] slash E[K]$, where $K$ is the number of offsets at which a near-solution's multiset appears. So $J$ offsets are worth only about $J slash phi$ independent ones. Finally $N_0$ and $T$ are positively correlated, because a solution and its rearrangements lie in one cluster.
+]
+
+The design effect is the familiar quantity of cluster sampling (@app-prob): a survey that interviews whole households learns less than one that interviews the same number of unrelated people.
+
+#computation(id: "model-comp-design", title: "Design effects", src: ("26.2", "26.3"))[
+  Integer bases 12 to 26, offsets $2 j(b - 1)$, $j = 1, dots, 60$, numbers with at least $b - 6$ digits. Between 43% and 88% of the near-solutions share their multiset with another offset. The design effect is 1.5 to 3.5 (pooled 2.48 under $0^0 = 0$ and 2.14 under $0^0 = 1$), so 60 offsets are worth 26 to 29 independent ones. The partner pairs sit at the moves of @model-lem-swap: 43% at a swap of the last two digits, 20% at positions 0 and 2, 18% at positions 1 and 2. Of the 52 solutions in these bases, 29 have a rearrangement that is a near-solution in the window. A simple count of the expected partners under uniform bottom digits predicts the design effect within a few percent under $0^0 = 1$. Factorions, negative bases, near-2-cycles and the Pisot bases have design effects of 1.6 to 6.4; offset families with steps divisible by many small numbers have none.
+]
+
+A better offset family avoids the problem. Choose offsets $D = k(b - 1)$ such that no two differ by the move of a single transposition. This _transposition-free_ family cuts the shared share to about 15%, keeps the mean within 4%, and is worth about 51 of 60 offsets. For a single count $N_0$ against its offsets, the right P value mixes the Poisson law over the uncertainty of $lambda$, with the variance inflated by $phi$ and with the clumps at one offset (twins, factorion triples) built in #lib("26.3").
+
+=== Every verdict revisited
+
+The library recomputed every P value that rests on offsets. @tab-model-verdicts lists the main ones. The pattern is clear. Verdicts about $D = 0$ barely move, because the Poisson noise of a single count of 3 to 60 dominates the calibration error. What moves are statements about the precision of $lambda$ itself: per-base comparisons with the model and comparisons between offset families.
+
+#tablefig(caption: [Verdicts that rest on near-solutions, with the naive and the clustered calibration #lib("26.4").], id: "tab-model-verdicts")[
+  #btable(columns: 4, align: (left, right, right, left), size: 8.5pt,
+    [statement], [old], [new], [verdict],
+    [integers, 4 groups of @model-comp-spectrum], [$P$ 0.30 to 0.43], [0.31 to 0.43], [unchanged],
+    [empty base 19, union mean 1.9], [0.15], [0.15], [unchanged],
+    [no $b$-digit solution under $0^0 = 1$, 0 against 1.30], [0.27], [0.27], [unchanged],
+    [per-base scatter, chi-square on 21 bases], [97, 96], [41, 43], [half an artefact],
+    [base 19 near-solutions, $0^0 = 0$], [$z = -4.6$], [$z = -2.9$], [one case of 42],
+    [model 12% low under $0^0 = 1$], [$z = 4.4$], [$z = 3.0$], [weaker, survives],
+    [odd-base factorions, per family], [0.003 to 0.02], [0.004 to 0.025], [unchanged],
+    [factorions, combined with fresh bases], [about 0.05], [about 0.09], [weaker],
+    [factorions, after the choice of 16 groups], [about 0.1], [0.13], [unchanged],
+    [5-digit excess, bases 13 to 99, window calibration], [0.0047], [0.0055], [unchanged],
+    [the same after the choice of 10 cells], [0.015], [0.018], [unchanged],
+    [negative bases, last digit kept, 42 against 52], [0.09], [0.11], [unchanged],
+    [negative multiples of 3, 10 against 17.3], [0.044], [0.056], [unchanged],
+    [step-$b$ offsets against step offsets, negative bases], [about 4 SD], [2.9 SD], [weaker],
+    [2-cycles in even bases, 2 against 5.25], [0.10], [0.11], [unchanged],
+  )
+]
+
+=== A pooled test across worlds
+
+Each world of @ch-worlds with a near-solution calibration gives one comparison of $D = 0$ with its offsets. Pooling them tests whether $D = 0$ is special anywhere.
+
+#computation(id: "model-comp-pooled", title: "Eight worlds pooled", src: "26.5")[
+  Integers, odd-base and even-base factorions, negative bases, rational bases, the Pisot bases, Eisenstein bases and 2-cycles: 284 solutions against 297 to 304 expected from their offsets. The worlds disagree more than chance allows: the heterogeneity statistic is 17.2 to 23.3 on 7 degrees of freedom ($P = 0.002$ to 0.016), depending on the Pisot calibration. Two worlds drive it, the odd-base factorions (ratio 0.33) and the Pisot bases (ratio 1.34 to 1.56). Without them the other six fit one common ratio of 0.91, with $P = 0.60$ for heterogeneity.
+]
+
+So outside two named worlds there is no sign that $D = 0$ is special. The odd-base factorions are the shortfall found after looking at 16 groups (@sec-model-anomalies). The Pisot excess is mostly a calibration fault: for even $x$ the offsets $j x$ mix two classes modulo $2x$, and the defect spectrum peaks near $D = 0$; against a local calibration in the right class, 25 solutions against 14.8 expected has $P approx 0.05$ (@sec-worlds-pisot) #lib("26.6").
+
+=== Do the low digits of $F$ mix?
+
+One can ask the model's assumption directly. Draw random strings $c$ whose weight has the right length, remove from $c$ the top three digits of $F(c)$, and ask whether the low digits of $F(c)$ have exactly the remaining copies of each value, compared with random low digits.
+
+#computation(id: "model-comp-mixing", title: "A mixing statistic", src: "26.8")[
+  The low digits of $F(c)$ agree with $c$ at the rate of random digits within 1.6% per value in the integers (base 20), in base $-20$, for factorions and in the factorial system, and within 3.7% in the Pisot base $x = 6$. $FF_5 [T]$ is the one world with a clear excess, 2.2% to 3.4% per value.
+]
+
+The statistic does not follow the model's error. It flags $FF_q [T]$ with the same sign under both conventions, where the model error changes sign, and it misses the factorial failure, which sits in the top digits. Both places where the model fails have one narrow cause, the top digits in the factorial system and the zero count in $FF_q [T]$ under $0^0 = 1$, and an average over all digit values dilutes both. The negative answer still confirms the picture of this chapter: apart from the top, the integer digits of $F$ look random.
 
 == A Poisson limit theorem <sec-model-poisson>
 
@@ -429,6 +500,23 @@ The spectrum of $M$ explains the parity effect for cycles. In odd bases under $0
   The total number of cycles of all lengths in bases 3 to 17 matches the model in all four groups (for example 92 against 94.4 in odd bases under $0^0 = 0$). Fixed points are in excess by a factor 1.4 to 1.8, because of the constructions and the small bases.
 ]
 
+=== The image of $F$
+
+A random mapping also predicts how many points are hit. The image of $F$ is much smaller than that prediction.
+
+#proposition(id: "model-prop-image", title: "Coincident sums", src: "26.7")[
+  The image of the multiset map is the same under both conventions. Under $0^0 = 0$, multisets that differ only in their zeros have the same weight; under $0^0 = 1$, multisets that differ only in the split of $c_0 + c_1$ have the same weight.
+]
+#proof[
+  Under $0^0 = 0$ a zero weighs nothing, and under $0^0 = 1$ zeros and ones both weigh 1. So under both conventions the image is the set of multisets of $S_0 (e)$ for the zero-free multisets $e$ of 1 to $b$ digits.
+]
+
+#computation(id: "model-comp-image", title: "The image share", src: "26.7")[
+  The share of multisets with at least one preimage is 0.21 in base 10 and falls to 0.14 in base 16. The class-weighted random mapping predicts 0.38 to 0.31. Counting the distinct weights, not the multisets, closes 55% to 66% of the gap, and keeping the true top three digits of each weight closes about two thirds of the rest. The in-degrees are overdispersed: variance-to-mean 3.6 to 6.3 against 2.3 to 3.8 in the model.
+]
+
+So the forced top digits show up once more: the weights $S(c)$ share their leading digits far more than random integers do, and their multisets collide. The cycle counts above are not affected much, because they depend on the trace of the class matrix, not on the image.
+
 An early observation said that every odd base from 3 to 11 has a 2-cycle under $0^0 = 0$ and no even base from 4 to 10 does. That is the parity doubling of the invariant plus chance: bases 13 and 15 have no 2-cycle, base 16 has one, base 18 has one. The deficit in even bases was tested with near-2-cycles, $F(F(n)) = n - j(b - 1)$, which keep every residue the map preserves. They come at the normal rate, 5.25 per offset against 4.02 in the model, so there is no second invariant #lib("23.3").
 
 == Anomalies and how they were resolved <sec-model-anomalies>
@@ -447,11 +535,14 @@ A model tested on many groups of data will show a few deviations by chance. The 
 
 / The even-base empty deficit: No even base from 10 to 41 is empty, against 2.62 expected ($P = 0.057$). @sec-model-empty explains why it counts as chance.
 
-/ Factorions in odd bases: With the weights $x!$, long factorions are rare in odd bases: 3 and 4 against about 11.9 per convention in bases 14 to 36. Offsets that keep every residue up to $b + 1$ and modulo $b^3$ give normal near-factorion counts, so no congruence explains it. Fresh odd bases 37 to 47 give 3 per convention against 6.2. The library counts it as an unexplained fluctuation, $P approx 0.05$ after all corrections (@sec-worlds-weights).
+/ Factorions in odd bases: With the weights $x!$, long factorions are rare in odd bases: 3 and 4 against about 11.9 per convention in bases 14 to 36. Offsets that keep every residue up to $b + 1$ and modulo $b^3$ give normal near-factorion counts, so no congruence explains it. Fresh odd bases 37 to 47 give 3 per convention against 6.2. With the clustered calibration of @sec-model-evidence the combined evidence has $P approx 0.09$, and 0.13 after the choice among 16 groups. The library counts it as an unexplained fluctuation (@sec-worlds-weights).
+
+/ Base 19: The empty base 19 also has few near-solutions under $0^0 = 0$, 0.67 times the model's rate. With the naive variance this was 4.6 standard errors, a real anomaly. With the clustered variance it is 2.9, one case among 42 bases, and no longer a separate anomaly #lib("26.4").
 
 Some deviations remain open. Each is a question in @sec-open-list.
 
-- Under $0^0 = 1$ the per-base rate of near-solutions is 12% above the refined model, in odd and even bases alike #q(70).
-- Base 19, the empty base, is low in its near-solutions too, at 0.67 times the model's rate, about 4.5 standard errors #q(68). So its emptiness may not be pure chance after all, but no mechanism is known.
+- Under $0^0 = 1$ the per-base rate of near-solutions is 12% above the refined model, in odd and even bases alike. It survives the clustered calibration at 3.0 standard deviations #q(70).
+- Base 19 is low in its near-solutions, now 2.9 standard errors #q(68). The question has lost most of its basis.
 - The long solutions under $0^0 = 0$ in bases 12 to 41 contain fewer zero digits than the model predicts: 29 against 42.5, about 2.1 standard deviations. The forced top digits account for 2 to 4 of the 13.5. This is the one place where the integer data lean the way the function-field world does (@sec-worlds-ffield) #q(71).
-- The model's per-base predictions scatter about 20% beyond sampling error; the forced top digits explain a third to a half of the excess #q(44).
+- The model's per-base predictions seemed to scatter about 20% beyond sampling error. With the clustered variance and the top digits forced, the scatter is noise under $0^0 = 0$ and marginal under $0^0 = 1$ ($P = 0.03$) #q(44).
+- In even Pisot bases, offsets $j x$ with even $j$ carry 1.4 to 2.4 times as many near-solutions as those with odd $j$ under $0^0 = 0$. The identity behind this class factor modulo $2x$ is unknown #lib("26.6").

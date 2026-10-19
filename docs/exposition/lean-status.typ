@@ -38,6 +38,8 @@
   "cons-rare": "selfPaying_base_pow, card_selfPaying_le (partial: the shape r^t with t >= c + 1)",
   "cons-two-reps": "prop15_16",
   // Chapter 3
+  "model-lem-swap": "swap_lemma, swap_lemma_perm, swap_last_two",
+  "model-prop-image": "prop26_10_one, prop26_10_two",
   "model-prop-cycles": "F_lt_pow_self (partial: F maps numbers below b^b to themselves)",
   // Chapter 4
   "search-prop-fixed-length": "prop4_1, prop10_4",

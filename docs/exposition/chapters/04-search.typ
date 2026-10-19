@@ -40,6 +40,45 @@ At a node for digit $v$, the children try $c_v = p + e$ for $e = 0, 1, dots, r$,
   Two siblings in step 1 fail at once. With no 5, the interval $[0, 1024]$ clips to $[1000, 1024]$, which forces the digits 1 and 0, and then $"hi" = 514 < 1000$. With two 5s, $[6250, 6762]$ starts with 6, and the count of 6 is 0.
 ]
 
+#let search-node(x, y, body, kind: "plain") = {
+  let fill = if kind == "fail" { rgb("#f6e3e1") } else if kind == "sol" { rgb("#e1f0e4") } else { white }
+  let stroke = if kind == "fail" { 0.6pt + rgb("#a8322d") } else if kind == "sol" { 0.6pt + rgb("#2e7d32") } else { 0.6pt + luma(90) }
+  place(dx: x - 1.65cm, dy: y, box(width: 3.3cm, height: 1.25cm, inset: 3pt, fill: fill, stroke: stroke, radius: 2pt,
+    align(center + horizon, text(size: 7.3pt, body))))
+}
+#let search-edge(x1, y1, x2, y2, label) = {
+  place(line(start: (x1, y1 + 1.25cm), end: (x2, y2), stroke: 0.5pt + luma(60)))
+  place(dx: (x1 + x2) / 2 - 1.1cm, dy: (y1 + 1.25cm + y2) / 2 - 0.2cm,
+    box(width: 2.2cm, height: 0.4cm, align(center + horizon, box(fill: white, inset: 1.5pt, text(size: 7pt, fill: luma(40), label)))))
+}
+
+#figure(
+  block(width: 100%, height: 8.9cm, {
+    let (xa, xb, xc) = (2.0cm, 7.9cm, 13.8cm)
+    let (y0, y1, y2, y3, y4) = (0cm, 1.9cm, 3.8cm, 5.7cm, 7.6cm)
+    search-edge(xb, y0, xa, y1, $c_5 = 0$)
+    search-edge(xb, y0, xb, y1, $c_5 = 1$)
+    search-edge(xb, y0, xc, y1, $c_5 = 2$)
+    search-edge(xb, y1, 3.9cm, y2, $c_4 = 0$)
+    search-edge(xb, y1, xb, y2, $c_4 = 1$)
+    search-edge(xb, y1, 11.9cm, y2, $c_4 = 2$)
+    search-edge(xb, y2, xb, y3, $c_3 = 2$)
+    search-edge(xb, y3, xb, y4, $c_2 = c_1 = 0$)
+    search-node(xb, y0)[length $k = 4$, start at $v = 5$ \ $S$ in $[1000, 9999]$]
+    search-node(xa, y1, kind: "fail")[$[1000, 1024]$ forces 1, 0 \ then $"hi" = 514 < 1000$]
+    search-node(xb, y1)[$[3125, 3893]$ \ forces the digit 3]
+    search-node(xc, y1, kind: "fail")[$[6250, 6762]$ starts \ with 6, but $c_6 = 0$]
+    search-node(3.9cm, y2)[$[3152, 3206]$ \ no solution below]
+    search-node(xb, y2)[$[3408, 3435]$ \ prefix 34]
+    search-node(11.9cm, y2, kind: "fail")[$S = 3664$ has \ two 6s, but $c_6 = 0$]
+    search-node(xb, y3)[$"lo" = "hi" = 3435$ \ digits fit the counts]
+    search-node(xb, y4, kind: "sol")[leaf: $S = 3435$ \ digits ${3, 3, 4, 5}$: solution]
+  }),
+  caption: [Part of the search tree for 4-digit numbers in base 10. Each node fixes one more digit count, from the largest digit down, and shows the interval for the sum $S$. Red nodes fail the leading-digit test; the green leaf is 3435. The subtree under $c_4 = 0$ is not drawn.],
+) <fig-search-tree>
+
+@fig-search-tree shows the walk. Most of the tree in a large base looks like the middle column: nodes that pass the tests for many levels because their small digits are still free.
+
 === Both conventions in one pass
 
 The conventions differ only in what a zero adds to the sum. The interval above is wide enough for both: $"lo" = t$ is the smallest sum under $0^0 = 0$, and hi adds 1 for each known zero, which covers $0^0 = 1$. The extra width is at most $k$, tiny next to $(v - 1)^(v - 1)$ except at the bottom of the tree. So one tree serves both conventions, and the leaves check each convention exactly. A combined run of base 28 visits 19,362,129 nodes, a run for one convention 19,361,945 (`docs/algorithm.md`).
@@ -73,6 +112,14 @@ At the level where the counts of the $m$ largest digit values are fixed, let $L$
   - the likely part, the nodes that lie above a model solution with nonnegligible probability, has entropy $H = (1 - kappa) b dot H("Poisson"(kappa))$, largest at $kappa approx 0.37$, where it equals $0.4933 b$; so it grows like $e^(0.4933) = 1.638$ per base.
   At finite bases the two rates are 1.88 and 1.55 at base 40, 1.92 and 1.56 at base 100, and 1.96 and 1.59 at base 10,000.
 ]
+
+=== Work units and time estimates
+
+The engine cuts the tree into work units at depth 4. Their sizes are very uneven: in bases 24 to 34 the largest 1% of the units hold 47% to 81% of the work, and the pooled size law has a tail like a power law. The type of a unit, its length, free slots and known digits, explains 93% to 97% of the variance of the log of its size. Within a type the law is light-tailed, and each free slot multiplies the size by about 1.93, the growth of the whole search per base. So the heavy tail comes from mixing the types #lib("27.5").
+
+On one machine this costs nothing: on 8 threads the scheduling finishes within 0.1% of the ideal time. It matters for many shards, where a shard of 64 can get 2.6 times the mean work at depth 4; deeper units fix that. The best estimate of a run's cost before it starts is the previous base times 1.9 (the ratio of consecutive bases from 26 to 34 is 1.77 to 2.16). During a run the progress line weights each unit by its type, which is off by at most 0.10 where the plain fraction of finished units was off by up to 0.49.
+
+=== The limit
 
 The exact search therefore gets slightly worse in larger bases. The gap between the two rates, $(2 slash 1.638)^b = 1.22^b$ in the limit, is all that skipping unlikely nodes can gain. @sec-search-entropy proves that in the model no tree search can beat $1.638^b$.
 
@@ -143,11 +190,50 @@ The likely part of the tree grows like $1.638^b$. Is that a limit for every sear
 
 The theorem is a statement about the model, in which the copies of the large digits in the unknown suffix are random. For the real weights this is the assumption that @ch-model tests.
 
+=== Every order of deciding the counts
+
+The tree decides the counts from the largest digit down. Could another order, or an order chosen node by node, do better? No. Let a tree reveal at level $m$ the counts of some set $R$ of $m$ digit values, and let $u$ be the largest value outside $R$. The free positions then hold values at most $u$, so the interval for $S$ has width about $r w(u)$, and the unknown part of $n$ has about $L(u) = (ln r + u ln u) slash ln b + 1$ digits. In the model the node law then has entropy $H(R) = m h(L(u) slash b)$, where $h(lambda)$ is the entropy of a Poisson($lambda$) variable.
+
+#lemma(id: "search-lem-orders", title: "Top-down is best", src: "27.2")[
+  For every set $R$ of $m$ values, $H(R) >= H("top" m)$, the entropy of the top-down tree at level $m$.
+]
+#proof[
+  The complement of $R$ has $b - m$ values, so its largest value is $u >= b - 1 - m$, with equality only for the top $m$ values. $L(u)$ does not decrease with $u$, and $h$ increases, because Poisson($lambda + mu$) is the law of a sum $X + Y$ of independent Poisson variables and $H(X + Y) >= H(X + Y | Y) = H(X)$.
+]
+
+#theorem(id: "search-thm-orders", title: "The bound for every order", src: "27.2")[
+  In the model, take a tree that reveals one count per level, in an order that may depend on the node. If a set $S$ of its level-$m$ nodes contains the node above the solution with probability $p$, then $|S| >= (p - V slash t^2) e^(H_m - t)$ for every $t > 0$, where $H_m$ is the top-down entropy at level $m$ and $V$ the largest varentropy over the sets $R$ of size $m$. So every such tree needs about $1.638^b$ nodes, and only the top-down order can reach this floor.
+]
+#sketch[
+  The path determines the revealed set, so $P(X = x) <= P(X = x | R = R(x))$. Given $R$, the quantity $-ln P(X | R)$ has mean $H(R) >= H_m$ and variance at most $V$. The rest is the proof of @thm-entropy-bound.
+]
+
+Other orders are far worse: bottom-up, middle-out and random orders peak near $1.30 b$ nats, about $3.6^b$, because as long as the count of $b - 1$ is unknown the interval says nothing. Revealing the odd values first peaks at about $0.70 b$ nats, $2.0^b$ #lib("27.2"). In bases 5 to 10 the best adaptive tree, computed exactly, branches on the largest unrevealed value at 78% to 86% of its nodes and is only 0.83 to 0.91 times the top-down tree.
+
+=== Certificates without a model
+
+@thm-entropy-bound and @search-thm-orders need the model. A weaker statement holds without it. Consider any exact method that learns about $S$ only through queries of the following kind: fix the counts of a set of values, and ask the interval test of @sec-search-tree whether the completions can contain a solution. To report "no solution with $k$ digits", such a method must have collected a _certificate of emptiness_: a set of failing queries whose completions cover all count vectors. Otherwise some vector was never excluded, and a weight table with that vector as its only solution would give the same answers #lib("27.3").
+
+#theorem(id: "search-thm-certificates", title: "Certificates are as large as the tree", src: "27.3")[
+  For every level $v$, every certificate of emptiness has at least $N_v$ queries, where $N_v$ counts the distinct restrictions to the values $>= v$ of count vectors whose sums are consistent with their own leading digits far enough down. For bases 5 to 21, $max_v N_v$ is at least 0.86 times the widest level of the exact tree.
+]
+#sketch[
+  A fooling-set argument. Two vectors that agree with their own sums to many leading digits cannot lie in one failing query unless the query fixes all their large counts: a query that leaves a large value free has an interval too wide to expose a contradiction. So vectors with distinct large counts need distinct queries.
+]
+
+#computation(id: "search-comp-certificates", title: "Smallest certificates", src: "27.3")[
+  For $k = b - 1$ under $0^0 = 1$, solved exactly as set-cover problems: in base 10 the smallest certificate has 414 queries, the best adaptive tree 682 and the top-down tree's own certificate 794. In bases 8 to 10 a certificate that is not a tree saves a factor 1.6 to 1.9; an adaptive tree saves 9% to 20%.
+]
+
+So no method of this kind beats the exact tree by more than a polynomial factor, if the witness share stays bounded as it does up to base 21. A faster exact method must use what the interval hides: the low digits of $S$, that is, the arithmetic of $x^x$. @sec-search-fail tests the two natural ways to do that.
+
 === A rule that reaches the bound
 
-The proof says which nodes to keep: those whose probability is close to $e^(-H)$. In the model, the expected count $E$ of @sec-search-inexact is the probability of the observed multinomial outcome, so $ln E$ has mean $-H$ and standard deviation $sqrt(V)$. The rule `--zscore c` drops a node if $ln E < -H - c sqrt(V)$, with $H$ and $V$ precomputed per level from the Poisson approximation. Near the top of the tree $ln E$ has a long left tail, so the rule applies only at the lower three quarters of the levels.
+The proof says which nodes to keep: those whose probability is close to $e^(-H)$. In the model, the expected count $E$ of @sec-search-inexact is the probability of the observed multinomial outcome, so $ln E$ has mean $-H$ and standard deviation $sqrt(V)$. The rule `--zscore c` drops a node if $ln E < -H - c sqrt(V)$, with $H$ and $V$ precomputed per level. Near the top of the tree $ln E$ has a long left tail, so the rule applies only at the lower three quarters of the levels.
 
-#computation(id: "search-comp-zscore", title: "The `--zscore` rule", src: "10.3")[
+The first version of the rule took $H$ and $V$ from independent Poisson cells. That gets the mean right but overstates the standard deviation by 1.15 times at the top of the tested range and up to 3.8 times at the bottom, because the log probability and the total number of unknown positions are correlated. Conditioning on the total, by linear regression, fixes it: the option `--zlaw cond` matches a direct simulation within 5%. The numbers below first describe the original rule, then the corrected one #lib("28.1").
+
+#computation(id: "search-comp-zscore", title: "The `--zscore` rule, original law", src: "10.3")[
   #align(center, btable(columns: 4, align: (left, right, right, right),
     [rule], [growth, bases 30 to 38], [nodes at base 38], [missed],
     [exact], [1.89], [about $10^10$], [0],
@@ -155,6 +241,16 @@ The proof says which nodes to keep: those whose probability is close to $e^(-H)$
     [`--zscore 2`], [1.70], [$4.5 dot 10^8$], [6 of 112],
   ))
   For planted solutions the miss rate of `--zscore 3` stays between 1% and 3% from base 30 to base 300. On the 54 real solutions with at least $b - 6$ digits in bases 20 to 43 it misses 2.
+]
+
+#computation(id: "search-comp-zlaw", title: "The corrected law", src: "28.1")[
+  On planted solutions in bases 30 to 200, the z-score under `--zlaw cond` is close to a standard normal variable at every tested level, with mean 0.03 to 0.25 and standard deviation 0.89 to 1.01. At a fixed threshold its planted miss rate does not depend on the base: 2.0% to 2.4% at threshold 3.35 and 0.6% to 1.0% at 3.82, from base 30 to base 200. Under the original law the miss rate at threshold 3 falls from 2.0% at base 30 to 0.7% at base 200, so it spends ever more nodes per miss. At equal planted miss rate (1% or 2%), `--zlaw cond` visits 1.10 to 1.34 times fewer nodes in bases 30 to 40, with the gain growing with the base, and runs 1.07 to 1.18 times faster. The thresholds 3.4 for 2% and 3.8 for 1% hold in every base of the table. With `--zscore 3.4 --zlaw cond` the search finds all 122 nontrivial solutions of bases 10 to 41.
+]
+
+One run measures a whole curve. If each node records the smallest z-score on its path, a run at a loose threshold $c_0$ gives the node count of every stricter threshold $c <= c_0$ exactly, because the tree of $c$ is the set of nodes of the tree of $c_0$ whose smallest z-score is at least $-c$ #lib("28.1"). The library used this to compare rules at equal miss rate. Testing every level, letting the threshold change with the level, and a cost-aware rule that keeps the nodes with the largest ratio of $E$ to subtree size all reach the same gain or less. Rules that judge one node at a time by $E$ seem to lie on one frontier, bounded by @thm-entropy-bound; the calibrated rule loses only the width of its band.
+
+#computation(id: "search-comp-windows", title: "Length windows do not pay", src: "28.2")[
+  Under the z-score rule each length costs about its share of the solutions: $J = b - k = 1$ holds 51% to 57% of the nodes and 55% of the model solutions, while $J = 0$ costs 1.4 to 1.8 times its share of 8%. At base 40, a window on $J$ saves 1.03 to 1.38 times the nodes at 2 to 21 extra points of planted miss rate, while a lower threshold with the same miss rate saves 1.4 to 4.4 times. So every window is dominated by a lower threshold.
 ]
 
 The gain of this rule is speed at a fixed miss rate. At the thresholds that miss a few percent at base 30, the miss rate of the deficit rule grows with $b$: for `--deficit 2` it is 2.5% at base 30 and 11.5% at base 100, and $P(z_min < -2) = 0.317$ at base 300. A deficit threshold of 3 also stays near 1%, but it keeps 77% to 92% of the exact tree in bases 24 to 32, while `--zscore 3` grows like 1.75 per base #lib("9.4", "9.5"). The measured growth, 1.75, lies above the bound of 1.55 for these bases because the kept band has width $c sqrt(V)$, which grows like $sqrt(b)$ and adds a factor of about $e^(c sqrt(V) slash (2 b))$ per base, 1.15 at base 35. That factor tends to 1, so the rule's growth tends to the bound. In the limit it saves $1.22^b$ against the exact search with a fixed miss rate.
@@ -169,9 +265,36 @@ The gain of this rule is speed at a fixed miss rate. At the thresholds that miss
 / Congruences: $n$ is linear in the counts modulo $b^j$, and $n equiv "digit sum" med (mod b - 1)$. Both constraints involve every count, so they prune only near the leaves. By @thm-only-residue, $b - 1$ is the only modulus whose residue the multiset determines, and it removes a factor $b - 1$, which does not change the rate.
 / Iterating $F$: Solutions are the fixed points of $n |-> F(n)$. From random starting points the orbits run for about $1.85^b$ steps before they repeat, and in bases 14 to 22 none of 600 orbits ended at a solution. A random map on the $4^b$ multisets has orbits of length about $2^b$, and a fixed point attracts a vanishing share of starting points (@sec-model-cycles).
 / The representation technique: The best algorithms for random subset sum split a solution into two halves in many ways and filter by a residue #cite(<howgrave-graham-joux2010>) #cite(<becker-coron-joux2011>). Here the target $n$ is not fixed; it is the unknown itself. Guessing its residue costs as much as the filter saves, and the library's estimate for a full multiset search is $e^(1.28 b)$, worse than the tree.
+/ Constraint solvers: A SAT or constraint solver that ends with "no further solution" has proven it, so it is an exact search that need not be a tree, and its learned clauses could in principle cut across branches. The library encoded the problem column by column for CP-SAT and as a circuit for the SAT solver CaDiCaL. Both list the solutions with $b - 1$ digits correctly, in bases 8 to 20 and 8 to 18. Their conflicts grow 1.95 to 1.96 per base, as fast as the tree, at 2 to 5 (CP-SAT) and 57 to 153 (CaDiCaL) conflicts per node of the tree, and $10^4$ to $10^5$ times the time. Without redundant constraints that expose the interval, CP-SAT grows about 4 times per base. A learned clause excludes about one subtree of the tree, no more #lib("27.1").
+/ Bottom digits in bases $2^k$: In base $b$, $v^v$ is divisible by $b^L$ when $v dot v_p (v) >= L v_p (b)$ for every prime $p | b$. So in bases $2^k$ the even digits contribute nothing to the last few digits of $S$, and those digits are known once the counts of the odd values, of 0 and of a few small even values are known: at least $b slash 2 + 2$ values. The top-down tree learns them only at its leaves, so a check of the bottom digits never prunes it. Orders that reveal the odd counts early pay for it: in base 32 a hybrid tree visits 13.3 times as many nodes as the plain tree, and an odd-first tree about $10^11$ to $10^12$ against $2.5 dot 10^8$ #lib("27.4").
 / Quantum backtracking: A quantum computer can search a backtracking tree of $T$ nodes in about $sqrt(T)$ steps #cite(<montanaro2018>). That gives about $1.41^b$ for the exact tree and $1.28^b$ for its likely part. It is the only known way past @thm-entropy-bound.
 
-In short, the leading digits are the only information that a partial assignment of counts reveals cheaply, and the entropy bound says what that information is worth. A large classical speedup would need a new source of information about the low digits of $n$. The library's view, which it marks as an argument and not a proof, is that a polynomial-time exact search would have to rule out large groups of multisets without looking at them, and nothing in the data hints at a structure that allows this #lib("6.4").
+In short, the leading digits are the only information that a partial assignment of counts reveals cheaply, and the entropy bound and its extension to every order say what that information is worth. A large classical speedup would need a new source of information about the low digits of $n$. The library's view, which it marks as an argument and not a proof, is that a polynomial-time exact search would have to rule out large groups of multisets without looking at them, and nothing in the data hints at a structure that allows this #lib("6.4").
+
+== Practical searches: the GPU and recommended settings <sec-search-practice>
+
+The engine also runs on a GPU, alone (`--gpu`) or together with the CPU threads (`--hybrid`). The GPU path handles bases up to 64, runs the z-score rule with every law option and accepts `--shard`, so a base can be split over machines, each with its own GPU, and merged afterwards. The GPU evaluates the rule in fixed point, with values rounded to multiples of $2^(-20)$.
+
+#lemma(id: "search-lem-gpu", title: "The GPU decides as the CPU does", src: "28.3")[
+  The GPU and the CPU make the same decision for every child whose $ln E$ differs from its threshold by more than $(k + 3) 2^(-21)$.
+]
+#proof[
+  The GPU sum adds at most $k slash 2 + 2$ rounded terms, each off by at most $2^(-21)$; the terms with $ln 0!$ and $ln 1!$ are exact. All values stay far below $2^11$, so the 32-bit integers do not overflow.
+]
+
+In tests on bases 10 to 26 and runs at bases 28 to 33 the node counts agree exactly with the CPU. With the z-score rule, `--hybrid` ran 2.6 to 2.9 times faster than 8 CPU threads at base 38, on a laptop shared with other jobs #lib("28.3").
+
+#tablefig(caption: [Recommended settings for a large base #lib("28.2", "28.3").], id: "tab-search-settings")[
+  #btable(columns: 2, align: (left, left),
+    [goal], [setting],
+    [exact answer], [`fast search b`, with `--journal` for long runs],
+    [miss rate about 2% per solution], [`--zscore 3.4 --zlaw cond`],
+    [miss rate about 1% per solution], [`--zscore 3.8 --zlaw cond`],
+    [length window], [none: a lower threshold saves more at the same miss rate],
+    [a machine with a GPU, base at most 64], [add `--hybrid`; a GPU run cannot use `--journal`],
+    [several machines], [`--shard i/n` on each, then `fast merge`; for many shards use deeper work units],
+  )
+]
 
 == Complexity <sec-search-complexity>
 
