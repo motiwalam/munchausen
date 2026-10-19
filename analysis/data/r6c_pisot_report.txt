@@ -1,0 +1,8 @@
+x 2 0^0=0: near 69, even share 0.536 (factor 1.16); independent 0.519; broad pooled 0.538; broad by length 0.538 (factor 1.17); j > 0 only: 37 even of 68
+x 2 0^0=1: near 43, even share 0.465 (factor 0.87); independent 0.517; broad pooled 0.538; broad by length 0.538 (factor 1.17); j > 0 only: 20 even of 41
+x 4 0^0=0: near 121, even share 0.628 (factor 1.69); independent 0.495; broad pooled 0.536; broad by length 0.650 (factor 1.86); j > 0 only: 52 even of 83
+x 4 0^0=1: near 72, even share 0.514 (factor 1.06); independent 0.491; broad pooled 0.515; broad by length 0.522 (factor 1.09); j > 0 only: 25 even of 48
+x 6 0^0=0: near 154, even share 0.630 (factor 1.70); independent 0.457; broad pooled 0.613; broad by length 0.727 (factor 2.66); j > 0 only: 46 even of 77
+x 6 0^0=1: near 127, even share 0.646 (factor 1.82); independent 0.490; broad pooled 0.536; broad by length 0.612 (factor 1.58); j > 0 only: 44 even of 63
+x 8 0^0=0: near 206, even share 0.529 (factor 1.12); independent 0.501; broad pooled 0.499; broad by length 0.499 (factor 1.00); j > 0 only: 53 even of 90
+x 8 0^0=1: near 102, even share 0.510 (factor 1.04); independent 0.500; broad pooled 0.500; broad by length 0.499 (factor 1.00); j > 0 only: 26 even of 38
