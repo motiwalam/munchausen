@@ -169,28 +169,31 @@ Mechanisms tested:
   (mod 3)`, so it carries no factor 3, and the refined model includes it
   exactly.
 - Near-solutions. `analysis/r2c_nega_offsets.py` counts `n = F(n) + D` for
-  10 offsets in two families, `j step` (step `b+1`, or `2(b+1)` for even
+  20 offsets in two families, `j step` (step `b+1`, or `2(b+1)` for even
   `b`) and `j step b`, which also keeps `n - F(n)` mod `b`, hence mod 3.
   Bases -10 to -27, sums of the mean counts:
 
 | group | `m` | `D = 0` | model | `j step` | `j step b` |
 |---|---:|---:|---:|---:|---:|
-| multiples of 3 | 0 | 6 | 10.25 | 10.40 | 11.50 |
-| multiples of 3 | 1 | 4 | 7.38 | 7.40 | 8.50 |
-| others | 0 | 20 | 21.07 | 23.70 | 17.50 |
-| others | 1 | 12 | 15.24 | 18.30 | 13.50 |
+| multiples of 3 | 0 | 6 | 10.25 | 11.45 | 9.85 |
+| multiples of 3 | 1 | 4 | 7.38 | 7.90 | 7.40 |
+| others | 0 | 20 | 21.07 | 24.90 | 19.15 |
+| others | 1 | 12 | 15.24 | 18.25 | 15.55 |
 
 The multiples of 3 have the model's rate of near-solutions in both
 families. So nothing about these bases lowers the chance of a solution, and
 their low count at `D = 0` (10 against 17.6) is a draw (P = 0.04 for the
 sum, chosen after the fact). Verdict: chance, as in section 14.3.3.
 
-A side result (computed, 10 offsets per base). For the other bases the
-family that keeps the last digit gives 17.5 and 13.5 against 23.7 and 18.3,
-about 3 standard deviations apart. In positive bases the offsets `2 j b
-(b-1)` also predicted slightly fewer solutions than `j (b-1)` (section
-11.2). So the last digit lowers the rate in some bases; it is not the cause
-of the empty multiples of 3.
+A side result (computed, 20 offsets per base). The family that keeps the
+last digit gives fewer near-solutions in every group: 19.15 against 24.90
+for the other bases under `0^0 = 0` (about 4 standard deviations), and
+9.85 against 11.45 for the multiples of 3. In positive bases the offsets
+`2 j b (b-1)` also predicted slightly fewer solutions than `j (b-1)`
+(section 11.2). It is the better calibration for `D = 0`, and against it
+the totals at `D = 0` are 42 against 52 (all bases) and 10 against 17.3
+(multiples of 3). The last digit is not the cause of the empty multiples
+of 3: it acts on all bases alike.
 
 ## Question 35: 2-cycles in even bases under `0^0 = 0`
 
@@ -354,9 +357,9 @@ together, and local factors for the short lengths, is the natural next step.
 - R2.b. Why is base 19 low under `0^0 = 0` in its near-solutions, not just
   in its solutions? The top-digit model does not explain it.
 - R2.c. Prove the length runs of positive integers in base `-n+i`, `n >= 2`.
-- R2.d. In negative bases, does keeping the last digit (offsets `j step b`)
-  lower the near-solution rate in bases with `3` not dividing `b`, and why
-  there and not in the multiples of 3?
+- R2.d. In negative bases, keeping the last digit (offsets `j step b`)
+  lowers the near-solution rate by 10 to 25%. Which digits of `F mod b`
+  cause it, and does the refined model need a last-digit factor?
 - R2.e. Under `0^0 = 1` the per-base rate is 12% above the refined model in
   both parities. Is this the short lengths, the zeros, or something else?
 
