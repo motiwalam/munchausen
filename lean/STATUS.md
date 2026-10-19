@@ -19,7 +19,7 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 74 formalized (one of them a
+Counts of table rows at the time of writing: 76 formalized (one of them a
 list of computed solutions checked by `decide`), 9 partial, 10 rows of open
 problems (13 `Prop`s), 4 refuted conjectures, 76 not formalized and 2 not
 stated.
@@ -212,7 +212,9 @@ stated.
 |---|---|---|
 | Lemma 20.1, Propositions 20.2, 20.5, Lemma 20.4, Theorem 20.3 | none | not formalized (counting; Lemma 20.1 and 20.4 are elementary) |
 | Lemma 20.6 | `multiple_mem_T` [Res] | formalized |
-| Lemma 20.7, Theorem 20.8, Lemma 20.9 | none | not formalized (lifting modulo `p^e`) |
+| Lemma 20.7 | `lemma20_7`, `step_lemma20_7` [Res] | formalized (for every prime `p`; the library's "odd" is not needed) |
+| Theorem 20.8 | `theorem20_8`, `exists_start`, `exists_generator_avoiding` [Res] | formalized (`p = 7` by a finite check, `p ≥ 11` with three generators) |
+| Lemma 20.9 | none | not formalized (a finite check of pairs `(u, g)` modulo 5 and 3) |
 | Lemma 20.10 | none | not formalized (`p`-adic exponential) |
 | Theorem 20.11 (3-adic law) | `pow_self_modEq_81` [Res] | partial: the inclusion `T(81) ⊆ 3Z ∪ {2, 29}`, by a finite check over one period of 162; the equality for every `e` is not formalized |
 | Theorem 20.12 (5-adic law) | none | not formalized |
@@ -342,7 +344,8 @@ In order of value and effort:
    `q = 2 lam c e` when `R = 0`), then Propositions 25.16 and 25.17.
 2. Theorem 25.15 (at most 30 three-digit solutions per base).
 3. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
-4. Lemma 20.7 and Theorem 20.8 (lifting modulo `p^e`).
+4. Lemma 20.9 and Theorem 20.12 (the 5-adic law), the equality part of
+   Theorem 20.11.
 5. Theorem 15.7 under `0^0 = 0`, Lemma 18.16 and Corollary 18.17.
 6. The real-root count in Proposition 9.3 and the asymptotics of
    Theorem 11.2.
