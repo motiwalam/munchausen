@@ -244,7 +244,7 @@ attack, in [questions-round3.md](questions-round3.md).
     5-digit excess, 6 found against 2.42 predicted? (computation; section 11.4)
 49. (Answered in chapter 19: 4-digit counts are Poisson and fit; 5-digit solutions in bases 13 to 99 are an excess of about 9 times (recalibrated in chapter 22).) A defect spectrum for short solutions: the test of section 11.1 at 4 and
     5 digits, with a `kdigit` offset. (computation)
-50. Does every base have at most two 3-digit solutions under `0^0 = 1`?
+50. (Partly answered in chapter 25: true for bases up to `10^3301`; at most 30 in almost every base.) Does every base have at most two 3-digit solutions under `0^0 = 1`?
     (proof; Theorems 15.7 and section 18.2)
 51. (Partly answered in chapter 20: `x^n + 25` solved for odd prime powers; `x^n + 3` reduced to a regulator condition.) Solve the families `(1,x,2)` and `(1,x,3)`, that is
     `b(b+x) = x^n + 3` and `x^n + 25`. (proof)
@@ -268,11 +268,11 @@ attack, in [questions-round3.md](questions-round3.md).
 
 ## Round 4: questions raised by chapter 22
 
-64. Is every short solution under `0^0 = 1` beyond some size a member of an
+64. (Answered in chapter 25 for linear identities: two families; other mechanisms need an extra coincidence; Conjecture 25.8.) Is every short solution under `0^0 = 1` beyond some size a member of an
     algebraic family, such as the binomial families of Theorem 22.6? Do other
     identity families exist, for example with `p x^x` a `j`-th power for `p`
     not a `j`-th power, or with two large digits? (chapter 22)
-65. Is `(1,6,46666)` in base `46666^23333 - 3` the next 3-digit solution under
+65. (Partly answered in chapter 25: it is the next family member, and no other 3-digit solution exists up to `10^3301`.) Is `(1,6,46666)` in base `46666^23333 - 3` the next 3-digit solution under
     `0^0 = 1` after `(1,7,1)` in base 904? (chapter 22)
 66. Apply the base-by-base calibration of section 22.4.1 to the 4-digit list
     and to the long solutions of bases 12 to 40, as a check on section 11.1.

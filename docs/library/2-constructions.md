@@ -140,6 +140,8 @@ Under `m = 1` a family for every `k >= 3` exists too, but its bases are
 enormous. The digits are the coefficients of `(c r + e)^(k-1)` without the
 constant term, followed by one large digit `x` that makes `x^x` a
 `(k-1)`-th power (Theorem 22.6, Corollary 22.7). The smallest member is
-`(1,2,6)` in base 215; the next 3-digit one is `(1,6,46666)` in base
-`46666^23333 - 3`. Chapter 3 gives evidence that below such sizes some
+`(1,2,6)` in base 215; the next 3-digit member is `(1,6,46666)` in base
+`46666^23333 - 3`, and no other 3-digit solution exists in bases up to
+`10^3301` (Theorem 25.11). Chapter 25 adds a second family,
+`(c^j, 0, ..., 0, x)`, with smaller members for 4 to 6 digits. Chapter 3 gives evidence that below such sizes some
 lengths have no solution at all.

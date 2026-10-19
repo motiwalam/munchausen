@@ -36,6 +36,7 @@ statement is marked by its source:
 | [22. Self-paying blocks and binomial families](22-blocks-families.md) | infinitely many solutions of every length under `0^0 = 1`; self-paying blocks; the 5-digit excess recalibrated to about 9x and still unexplained |
 | [23. Factorions, empty negative bases, cycles and scatter](23-factorions-negative.md) | base 47 factorions; negative census to -38; near-2-cycles; lengths in base -1+i proven; where the per-base scatter comes from |
 | [24. Why the model misses in F_q[T]](24-ffield-gap.md) | Frobenius blocks make the digits of `F` far from uniform; the exact channel under `0^0 = 1`; short solutions counted for every degree; small effects on the integer model |
+| [25. Identity families and 3-digit solutions](25-identity-families.md) | where the large digits of an identity sit; a second infinite family `(c^j, 0, ..., 0, x)`; no other 3-digit solution up to `10^3301`; at most 30 three-digit solutions in almost every base |
 | [Open questions](questions.md) | 89 research questions in five rounds, with priorities and answers; [round 5 directions](questions-round5.md) |
 
 ## Main results
@@ -62,9 +63,13 @@ Proven:
 - Under `0^0 = 1`, every length `k >= 3` has infinitely many solutions
   (Corollary 22.7). The digits are the coefficients of `(c r + e)^(k-1)`
   without the constant term, then one digit `x` with `x^x` a `(k-1)`-th
-  power. The smallest is `(1,2,6)` in base 215; the next 3-digit one is
+  power. The smallest is `(1,2,6)` in base 215; the next 3-digit member is
   `(1,6,46666)` in base `46666^23333 - 3`. This refutes the finiteness
   conjecture of chapters 3 and 7 and corrects Corollary 8.4.
+- A second family, `(c^j, 0, ..., 0, x)` with `x = c^(j c^j) + j - 1`, gives
+  smaller solutions of 4 to 6 digits, such as `(8,0,0,16777218)` in base
+  `16777218^5592406 / 2`. In every power identity the large digit is last
+  (Theorems 25.2, 25.5).
 - Short solutions under `0^0 = 1` with a large leading digit are finite in
   the square class, with an explicit bound (Theorem 8.3).
 - Base `n^(n-1)` has at least `2^(n-1) - 2` solutions under `0^0 = 0`, and
@@ -129,6 +134,9 @@ Computed:
   2-digit and a 3-digit solution: `(1,3)` and `(5,1,3)` (section 18.2).
 - Under `0^0 = 1` no new 7-digit solution exists in bases up to `10^7.2`,
   nor an 8-digit one up to base 23,364 (section 19.1.5).
+- Under `0^0 = 1` no base up to `10^3301` has a 3-digit solution other than
+  the six known ones, and every such base has at most two (Theorem 25.11,
+  section 25.3).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 
