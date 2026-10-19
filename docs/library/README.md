@@ -34,7 +34,9 @@ statement is marked by its source:
 | [20. Multisets and the residues of x^x - x](20-multisets-residues.md) | almost all bases have no solution with up to about `ln b / ln ln b` digits; the 3-adic and 5-adic laws of `x^x - x`; `b(b+x) = x^n + c` for `x == 0 (mod 8)` and `c = 3, 25`; mixed ideal classes |
 | [21. Five more number systems](21-five-systems.md) | function fields `F_q[T]`, rational bases, Eisenstein bases, a Pisot base, the factorial system; the residue factor follows the identity modulus everywhere; the model fails in the factorial system |
 | [22. Self-paying blocks and binomial families](22-blocks-families.md) | infinitely many solutions of every length under `0^0 = 1`; self-paying blocks; the 5-digit excess recalibrated to about 9x and still unexplained |
-| [Open questions](questions.md) | 66 research questions in four rounds, with priorities and answers |
+| [23. Factorions, empty negative bases, cycles and scatter](23-factorions-negative.md) | base 47 factorions; negative census to -38; near-2-cycles; lengths in base -1+i proven; where the per-base scatter comes from |
+| [24. Why the model misses in F_q[T]](24-ffield-gap.md) | Frobenius blocks make the digits of `F` far from uniform; the exact channel under `0^0 = 1`; short solutions counted for every degree; small effects on the integer model |
+| [Open questions](questions.md) | 71 research questions in four rounds, with priorities and answers |
 
 ## Main results
 
@@ -152,6 +154,11 @@ Model:
   its modulus: doubling exactly when it is even, a factor `q` per prime factor
   in `F_q[T]`. The coincidence model fails in the factorial number system,
   where large digits are tied to top positions (chapter 21).
+- In base `-1+i` positive integers have exactly the lengths `== 1, 4 (mod 8)`,
+  so its census is complete (section 23.4).
+- In `F_q[T]` the model fails because Frobenius makes the digits of `F` far
+  from uniform. The integer analog is only the forced top digits, a correction
+  of a few percent (chapter 24).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data

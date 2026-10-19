@@ -1,6 +1,6 @@
-# Round 2: computations for questions 41, 42, 35, 43 and 44
+# 23. Factorions, empty negative bases, cycles and scatter
 
-DRAFT. Each claim is marked proven (a proof is here), computed (an
+This chapter answers questions 41, 42, 35, 43 and 44. Each claim is marked proven (a proof is here), computed (an
 exhaustive computation, with its range) or heuristic (the probabilistic
 model, or a judgment from data).
 
@@ -14,7 +14,7 @@ model, or a judgment from data).
 | 43, lengths in base -1+i | Positive integers have exactly the lengths `== 1, 4 (mod 8)`: integers are base -4 numbers written in blocks of four digits. The census of base -1+i is complete. | proven |
 | 44, per-base scatter | Forcing the top 3 or 4 digits of `F` lowers the chi-square of `lambda / model` from 97 to 60 (`0^0 = 0`) and from 96 to 72 (`0^0 = 1`) on 21 bases. The rest sits in a few bases (13, 19, 16, 20) and in a uniform 12% excess under `0^0 = 1`. | computed, heuristic |
 
-## Question 41: long factorions in odd bases
+## 23.1 Long factorions in odd bases (question 41)
 
 Setting. `F(n)` is the sum of `x!` over the base-`b` digits, with `w(0) = 0`
 (`m = 0`) or `w(0) = 0! = 1` (`m = 1`). `L(b)` is the length of `(b-1)!`,
@@ -23,7 +23,7 @@ and a factorion is long if it has at least `L(b) - 5` digits. The engine is
 `fast/target/qweights` and run with `--journal`. The model is the refined
 model of that branch (`analysis/r2c_wgt_model.py`, a copy).
 
-### New bases (computed)
+### 23.1.1 New bases (computed)
 
 Bases 10 to 45 were done on branch q-weights
 (`analysis/data/r2c_qw_factorial*.txt`). Base 47 is new:
@@ -49,7 +49,7 @@ in the model (computed). `P(X <= 3) = 0.13` for a Poisson count with mean
 6.2 (heuristic). The fresh data lean toward the shortfall (0.5 times the
 model) but do not decide between it and chance.
 
-### The census is right (computed)
+### 23.1.2 The census is right (computed)
 
 - `worlds lanes B fact0`, a new weight table in the independent engine
   `fast/src/bin/worlds.rs`, finds the same `m = 0` factorions as
@@ -61,7 +61,7 @@ model) but do not decide between it and chance.
 
 So the shortfall is not an engine error.
 
-### Offsets that keep more residues (computed)
+### 23.1.3 Offsets that keep more residues (computed)
 
 Section 11.1 calibrates each base with near-solutions `n = F(n) + D`. The
 offsets `D = j (b-1)` keep only the residue mod `b-1`. If the shortfall came
@@ -120,9 +120,9 @@ calibration; after the choice among about 16 groups it is about 0.05 to
 0.05. I count it as an unexplained fluctuation. Base 49 (expected 1.1 per
 convention) would add little; ten more odd bases would.
 
-## Question 42: empty negative bases
+## 23.2 Empty negative bases (question 42)
 
-### Census of -36 and -37 (computed)
+### 23.2.1 Census of -36 and -37 (computed)
 
 `worlds lanes` gets `--shard i/n`, which searches the `i`-th of `n` parts
 of the parallel front; output is unchanged without it. The script
@@ -148,7 +148,7 @@ and has exactly two zeros, then `n - 1` (last digit 1) is a solution under
 `0^0 = 1`, in any base `b` or `-b`. Indeed `F_1(n-1) = F_0(n) + 2 - 4 + 1 =
 n - 1`.
 
-### Multiples of 3 (computed, then heuristic)
+### 23.2.2 Multiples of 3 (computed, then heuristic)
 
 `analysis/r2c_nega_compare.py`. Base -38 is empty in both conventions, so
 bases -2 to -38 have 9 empty bases against 4.63 expected (P = 0.033).
@@ -201,9 +201,9 @@ the totals at `D = 0` are 42 against 52 (all bases) and 10 against 17.3
 (multiples of 3). The last digit is not the cause of the empty multiples
 of 3: it acts on all bases alike.
 
-## Question 35: 2-cycles in even bases under `0^0 = 0`
+## 23.3 2-cycles in even bases under `0^0 = 0` (question 35)
 
-### Near-2-cycles (computed)
+### 23.3.1 Near-2-cycles (computed)
 
 `fast/src/bin/r2c_cycles2.rs` visits every digit multiset `c` of 1 to `b`
 digits once (as `dyn_cycles.rs`). With `c'` the multiset of `S(c)` and
@@ -258,7 +258,7 @@ Verdict: chance. The model underestimates near-2-cycles slightly in even
 bases (5.25 against 4.02), as it underestimates fixed points (the offsets
 give 10.4 against 9.4).
 
-## Question 43: lengths in base -1+i
+## 23.4 Lengths in base -1+i (question 43)
 
 Theorem R2.1 (proven). In base `beta = -1+i` (digits 0 and 1), the
 representation of a rational integer `n` is its base -4 representation with
@@ -311,7 +311,7 @@ integer. For `-n+i` with `n >= 2` no power is real, because the argument
 `pi - arctan(1/n)` is not a rational multiple of `pi`; so the runs of
 section 14.5.1 need another proof.
 
-## Question 44: the per-base scatter of `lambda`
+## 23.5 The per-base scatter of `lambda` (question 44)
 
 `analysis/r2c_top_model.py`. For each base 12 to 32 and length `b-6` to `b`,
 400,000 random multisets are drawn as in the refined model. For those whose

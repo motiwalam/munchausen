@@ -201,8 +201,11 @@ give distinct `F`. `F` has degree `q >= 2`, so it has at least 2 digits.
 The census agrees in all 3,654 bases of degree 2 with `q` = 2, 3, 5, 7, 11,
 13 (computed). The refined model gives the same numbers, 0 or `q(q-1)`,
 because for `e = 2` the identity decides everything. Under `0^0 = 1` the
-count is `q (q - 2)` in every base with two roots for `q` = 5, 7, 11, 13, 5
-for `q = 3`, 2 for `q = 2`, and 0 otherwise (computed).
+count is `q (q - 2)` on average over the bases with two roots for `q` = 5, 7,
+11, 13, 5 for `q = 3`, 2 for `q = 2`, and 0 otherwise (computed). Correction:
+this is an average, not a per-base count. Each such base has 0 or `q(q-1)`
+solutions under `0^0 = 1`, and the square bases `lambda (T - c)^2` have none
+(Corollary 24.12).
 
 ### 21.1.6 The census for `e >= 3`
 

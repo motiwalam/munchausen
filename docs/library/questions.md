@@ -207,7 +207,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
     of `P_s`? (chapter 16)
 34. (Answered in chapter 18: the root heuristic is symmetric in sign; in the square class small t favours positive roots about 9 to 1.) Why do negative bases lack the non-partner 3-digit solutions, such as
     `(3,1,3)`, that positive bases have? (chapters 12 and 16)
-35. Even bases under `0^0 = 0` have 1 two-cycle of `n -> F(n)` against 3.5
+35. (Answered in chapter 23: chance; near-2-cycles have the normal rate, so no second invariant.) Even bases under `0^0 = 0` have 1 two-cycle of `n -> F(n)` against 3.5
     expected. Is there a second invariant, or is this chance? (chapter 15)
 36. (Answered in chapter 18 below 10^51: only base 25.) Which bases have one 2-digit and one 3-digit solution? (chapter 15)
 37. Close the case `a^a ~ c^c` of the cores in self-paying bases, where abc
@@ -217,14 +217,14 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 39. (Partly answered in chapter 18: none in the ranges searched; such an integer has a rigid shape (Corollary 18.17).) Does some integer have three bases under `0^0 = 1`? (chapter 15)
 40. (Partly answered in chapter 18: still open; gadgets made of pure powers need superpolynomial exponents (Corollary 18.23).) Is the problem with weights `x^(e(x))`, `e` in unary, NP-hard? It sits
     between the NP-complete general problem and the real one. (chapter 13)
-41. (Answered in chapter 19: offsets `j b (b-1)` have the normal count, so the shortfall is a fluctuation of about 2.5 sigma.) Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
+41. (Answered in chapters 19 and 23: offsets that keep every small residue have the normal count, so the shortfall is most likely chance, P about 0.05; base 49 not yet searched.) Long factorions are rare in odd bases: bases 14 to 36 have 3 against 11.9
     expected (P about 0.03 after the look-elsewhere effect). Bases 47 and 49
     would decide it. (chapter 17)
-42. Six of the eight empty negative bases up to -35 are multiples of 3
+42. (Answered in chapter 23: chance; the cluster did not grow to -38, but negative bases have a general excess of empty bases, P = 0.03.) Six of the eight empty negative bases up to -35 are multiples of 3
     (P = 0.06 for those not named in advance). Chance? (chapter 14)
-43. In base `-n+i`, positive integers occupy lengths in runs of one parity.
+43. (Answered in chapter 23: yes, proven; integers are base -4 numbers in blocks of four digits.) In base `-n+i`, positive integers occupy lengths in runs of one parity.
     For `-1+i`, are the lengths exactly the residues 1 and 4 mod 8? (chapter 14)
-44. Per-base expected counts vary by about 20% beyond sampling error, and
+44. (Partly answered in chapter 23: top digits explain a third to a half; the rest sits in a few bases and a 12% excess under `0^0 = 1`.) Per-base expected counts vary by about 20% beyond sampling error, and
     forced top digits explain part of it. What explains the rest? (section 11.2a)
 
 ## Round 3: questions raised by chapters 11 to 18
@@ -275,3 +275,13 @@ attack, in [questions-round3.md](questions-round3.md).
     `0^0 = 1` after `(1,7,1)` in base 904? (chapter 22)
 66. Apply the base-by-base calibration of section 22.4.1 to the 4-digit list
     and to the long solutions of bases 12 to 40, as a check on section 11.1.
+67. Factorions: what could separate `D = 0` from every small offset that keeps
+    all residues up to `b+1` and mod `b^3`? (chapter 23)
+68. Why is base 19 low in its near-solutions under `0^0 = 0`, not only in its
+    solutions? (section 23.5)
+69. Prove the length runs of positive integers in base `-n+i` for `n >= 2`.
+    (section 23.4)
+70. Why is the model about 12% low under `0^0 = 1` in every parity?
+    (section 23.5)
+71. Do the long integer solutions under `0^0 = 0` really have fewer zeros
+    than the model, 29 against 42.5 in bases 12 to 41? (section 24.6)
