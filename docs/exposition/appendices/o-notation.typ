@@ -25,6 +25,8 @@
   [$Q_s (r)$], [the Munchausen polynomial $P_s (r) - F(s)$; $s$ is a solution in base $b$ exactly when $Q_s (b) = 0$ and $b$ exceeds every digit], [@sec-basics-polynomial],
   [$g(c)$], [$w(c) - c$], [@sec-cons-two-digit],
   [$T(q)$], [the set of residues of $x^x - x$ modulo $q$], [@sec-short-coverings],
+  [$h(alpha)$], [the absolute logarithmic height of an algebraic number], [@sec-app-baker-height],
+  [$eta$], [the fundamental unit $> 1$ of a real quadratic field], [@sec-short-regimes],
   [$rho_s (p)$], [the number of roots of $Q_s$ modulo $p$], [@sec-short-heuristic],
   [$D$], [an offset: near-solutions satisfy $n - F(n) = D$], [@sec-model-defects],
   [$lambda_m (b)$], [the mean number of near-solutions per offset, an estimate of the expected $N_m (b)$], [@sec-model-defects],
@@ -66,6 +68,10 @@
 #term[Self-paying block][A string $t$ with $b^m P_t (b) = F(t)$ for some shift $m >= 1$. A tail that pays for itself completes it to a solution.][@sec-cons-blocks]
 
 #term[Binomial family][The solutions of @thm-binomial, whose leading digits are the binomial coefficients of $(c r + e)^(k-1)$. They give infinitely many solutions of every length under both conventions.][@sec-cons-binomial]
+
+#term[Free slot][A position of a search node that will hold a digit below the current value, still unknown. Nodes with one free slot are 43% of the exact tree in base 28, and the residue rule acts on them.][@sec-search-residue]
+
+#term[Height][A measure of how complicated an algebraic number is, roughly the number of digits needed to write it down. Lower bounds for linear forms in logarithms depend on it.][@sec-app-baker-height]
 
 #term[Digit-sum identity][$n equiv$ (digit sum of $n$) $mod (b - 1)$, which for a solution becomes a condition on the digit multiset.][@thm-digit-sum]
 

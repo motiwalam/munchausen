@@ -1,6 +1,6 @@
-# Round 6 search: theory turned into pruning
+# 31. Pruning by the residue and balanced shards
 
-DRAFT. This file collects the results of the library that restrict digit
+This chapter collects the results of the library that restrict digit
 counts or residues, and asks which of them the exact search of `fast` can
 use. One of them pays: the congruence of Proposition 1.5, tested on the
 nodes with one free slot. The others are implied by the interval test
@@ -13,16 +13,16 @@ or heuristic (the model of chapter 5, or a judgment from data).
 
 | section | question | result | status |
 |---|---|---|---|
-| 1 | where the tree spends its nodes | 43% of the nodes have one free slot and 25% have two (base 28). Their subtrees are tiny. The tree dies in the middle levels, not at the leaves. | computed |
-| 2 | the congruence mod `b - 1` as a pruning rule | a node with one free slot fails if no digit below `k` completes its residue (Theorem 2.1). The rule removes 12% to 25% of the nodes in bases 15 to 35 and saves 10% to 18% of the cycles (1.11x to 1.22x) in bases 24 to 31. With one convention (`-m 0` or `-m 1`) it removes 13% to 30% (1.22x to 1.29x in cycles at bases 28 and 31). The GPU is 1.18x faster at base 30. The `--zscore` search visits 9% to 13% fewer nodes. | proven; computed |
-| 3 | the fixed-point interval | the engine already iterates the forced digits to a fixed point. The iteration saves 1.46x to 1.47x nodes in every base from 20 to 33, a constant factor. The interval it reaches is the exact hull of the reachable sums (Lemma 3.1), so the worst-case bound on the free slots is not loose. | proven; computed |
-| 4 | other count and residue results | Proposition 1.6 and the bound of section 1.7 are implied by the interval test (Proposition 4.1). The parity rules of section 1.6 are parts of the congruence of section 2. The residue test with zero or two free slots, and a test on the last one or two digits with one free slot, cost more cycles than they save. Self-paying digits and blocks give no rule. | proven; computed |
-| 5 | splitting a base into jobs | `--shard-by size` (new) deals the units out by predicted size. The largest of 64 shards drops from 2.12 to 1.35 times the mean at unit depth 4, and from 1.21 to 1.14 at depth 6 (base 30). | computed |
-| 6 | the inexact search | the residue rule is exact, so it keeps the miss rate of `--zscore` and its calibration. No other change to the thresholds follows from the theory. | heuristic; computed |
+| 31.1 | where the tree spends its nodes | 43% of the nodes have one free slot and 25% have two (base 28). Their subtrees are tiny. The tree dies in the middle levels, not at the leaves. | computed |
+| 31.2 | the congruence mod `b - 1` as a pruning rule | a node with one free slot fails if no digit below `k` completes its residue (Theorem 31.1). The rule removes 12% to 25% of the nodes in bases 15 to 35 and saves 10% to 18% of the cycles (1.11x to 1.22x) in bases 24 to 31. With one convention (`-m 0` or `-m 1`) it removes 13% to 30% (1.22x to 1.29x in cycles at bases 28 and 31). The GPU is 1.18x faster at base 30. The `--zscore` search visits 9% to 13% fewer nodes. | proven; computed |
+| 31.3 | the fixed-point interval | the engine already iterates the forced digits to a fixed point. The iteration saves 1.46x to 1.47x nodes in every base from 20 to 33, a constant factor. The interval it reaches is the exact hull of the reachable sums (Lemma 31.4), so the worst-case bound on the free slots is not loose. | proven; computed |
+| 31.4 | other count and residue results | Proposition 1.6 and the bound of section 1.7 are implied by the interval test (Proposition 31.5). The parity rules of section 1.6 are parts of the congruence of section 31.2. The residue test with zero or two free slots, and a test on the last one or two digits with one free slot, cost more cycles than they save. Self-paying digits and blocks give no rule. | proven; computed |
+| 31.5 | splitting a base into jobs | `--shard-by size` (new) deals the units out by predicted size. The largest of 64 shards drops from 2.12 to 1.35 times the mean at unit depth 4, and from 1.21 to 1.14 at depth 6 (base 30). | computed |
+| 31.6 | the inexact search | the residue rule is exact, so it keeps the miss rate of `--zscore` and its calibration. No other change to the thresholds follows from the theory. | heuristic; computed |
 
-Scripts: `analysis/r6s_residue.py` (Table 2.2), `analysis/r6s_nodes.py`
+Scripts: `analysis/r6s_residue.py` (Table 31.2.1), `analysis/r6s_nodes.py`
 (node tables from the stderr of `fast search`), `analysis/r6s_shards.py`
-(section 5), `analysis/r6s_cyc.c` and `analysis/r6s_cycbench.py` (cycle
+(section 31.5), `analysis/r6s_cyc.c` and `analysis/r6s_cycbench.py` (cycle
 counts). Data: `analysis/data/r6s_*`. Engine: `fast/src/search.rs`,
 `fast/src/search/gpu.rs`, `fast/shaders/search.comp`, `fast/src/main.rs`,
 `fast/src/merge.rs`, `fast/src/journal.rs`.
@@ -42,9 +42,9 @@ search, and an assertion (in test builds) that the residue each node
 carries equals the residue recomputed from its counts and prefix. The GPU
 tests give the same node and evaluation counts on the GPU and the CPU.
 
-## 1. Where the exact tree spends its nodes
+## 31.1 Where the exact tree spends its nodes
 
-### 1.1 Notation
+### 31.1.1 Notation
 
 A node of level `k` has fixed the counts `c_x` of the digits `x >= k`. Its
 known prefix holds the top `d - pp` digits of the sum, and `pp` is the
@@ -59,16 +59,16 @@ and its sum is `S = t + w(y_1) + ... + w(y_rf)`, plus `m` for every zero
 under `0^0 = m`. The interval `[t, t + z + rf W(k-1)]` of the node holds
 every such `S` (`docs/algorithm.md`).
 
-### 1.2 Nodes by free slots (computed)
+### 31.1.2 Nodes by free slots (computed)
 
 `--tree-stats` counts nodes by level and unknown positions. A build that
 keys the same table by `rf` instead of `pp` (a one-line change, not
 committed) gives the table below.
 
-Table 1.1. Base 28, both conventions. Share of the nodes by free slots,
+Table 31.1.1. Base 28, both conventions. Share of the nodes by free slots,
 the mean size of their subtrees, and their mean level. Before: the engine
 of 17 October 2026 (18.0 million nodes). After: with the residue rule of
-section 2 (13.6 million nodes).
+section 31.2 (13.6 million nodes).
 
 | `rf` | nodes before | share | subtree | level | nodes after | share | subtree |
 |---:|---:|---:|---:|---:|---:|---:|---:|
@@ -94,15 +94,15 @@ at the leaves and saves nothing; this is why section 6.3 found that
 congruences "only prune near the leaves". A rule that needs only a few
 unknowns can act on the two thirds of the nodes with one or two free slots.
 
-## 2. The residue rule
+## 31.2 The residue rule
 
-### 2.1 The rule
+### 31.2.1 The rule
 
 Write `q = b - 1` and `r_m(x) = w(x) - x mod q`, with `w(0) = m` under
 `0^0 = m`. For a node, let `R_m` be the sum of `r_m(x)` over the known part
 of its multiset (decided and forced digits), modulo `q`.
 
-Theorem 2.1 (proven). Let a node have exactly one free slot, holding a
+Theorem 31.1 (proven). Let a node have exactly one free slot, holding a
 digit below `k`. If no `y < k` has `R_m + r_m(y) == 0 (mod q)`, then no
 completion of the node is a solution under `0^0 = m`.
 
@@ -125,12 +125,12 @@ two points:
   `y` of the slot, so the test is the same, and it saves the interval
   evaluation.
 
-Corollary 2.2 (proven). The search with the residue rule finds every
+Corollary 31.2 (proven). The search with the residue rule finds every
 solution of the conventions that it reports. With both conventions it
 finds every solution that the old search finds.
 
 Proof. The old search was exact (`docs/algorithm.md`, "Why the search
-misses nothing"). The new rule removes a node only by Theorem 2.1, applied
+misses nothing"). The new rule removes a node only by Theorem 31.1, applied
 to every reported convention.
 
 The rule also acts while the engine builds the work units, so a base now
@@ -139,19 +139,19 @@ then names another unit count, and the new build refuses it; `--no-residue`
 builds the old units and resumes it. A journal written with `-m 0` or
 `-m 1` records the convention, and a run with another `-m` refuses it.
 
-The rule is the congruence of chapter 6.3 and Proposition 10.2 used where
+The rule is the congruence of section 6.3 and Proposition 10.2 used where
 it bites. Section 10.4 said that it "removes a factor of `b - 1`, which
 does not change the growth rate". That is right for the growth. But the
 factor is not a factor `b - 1` of the leaves; it is a share of the nodes
 with one free slot, which are 43% of the tree.
 
-### 2.2 How much it can remove (heuristic)
+### 31.2.2 How much it can remove (heuristic)
 
 The rule removes the share `1 - p` of the nodes with one free slot, where
 `p` is the share of residues `R` that some `y < k` completes. With both
 conventions a node passes if one of them passes.
 
-Table 2.2. The share of residues that pass, for `k = 0.57 b`, the mean
+Table 31.2.1. The share of residues that pass, for `k = 0.57 b`, the mean
 level of the nodes with one free slot. `either` is for a node with one
 known zero, so that `R_1 = R_0 + 1` (`analysis/r6s_residue.py`).
 
@@ -176,21 +176,21 @@ So the rule removes most where `b - 1` has the factors 2, 3 and 5 (bases
 25, 31, 37, 127) and least where `b - 1` is prime (24, 30, 32). With one
 free slot the rule passes 40% to 77% of the nodes under both conventions,
 and 18% to 48% under one. With two free slots almost every class is
-reachable, so a test there removes almost nothing (section 4.2).
+reachable, so a test there removes almost nothing (section 31.4.2).
 
-Heuristic 2.3. The rule removes about `0.43 (1 - p)` of the tree, where
+Heuristic 31.3. The rule removes about `0.43 (1 - p)` of the tree, where
 `0.43` is the share of the nodes with one free slot. For `p = 0.4` to 0.77
 this is 10% to 26%, and with one convention (`p` = 0.18 to 0.48) 22% to
 35%. The share of these nodes, and `p` at the level `0.57 b`, change little
-with `b` (Table 1.1 and Table 2.2), so the gain is a constant factor, as
-section 10.4 predicted, of size 1.1 to 1.35. Table 2.3 measures 12% to 25%
+with `b` (Tables 31.1.1 and 31.2.1), so the gain is a constant factor, as
+section 10.4 predicted, of size 1.1 to 1.35. Table 31.2.2 measures 12% to 25%
 for both conventions, as estimated, and 13% to 30% for one, a little
 below the estimate. The estimate takes `p` at one level and treats the
 residue of a node as uniform; I have not checked which of the two fails.
 
-### 2.3 Nodes (computed)
+### 31.2.3 Nodes (computed)
 
-Table 2.3. Nodes of `fast search b`, old engine against the residue rule,
+Table 31.2.2. Nodes of `fast search b`, old engine against the residue rule,
 for both conventions together and for each alone. The output is the same in
 every base.
 
@@ -223,9 +223,9 @@ factors of `b - 1`: the best bases are 34 (`q = 33`), 28 (`q = 27`) and 31
 (`q = 30`). It shows no trend with the base. With one convention it lies between 0.70 and 0.87. The old
 engine explored the same tree for `-m 0`, `-m 1` and both.
 
-### 2.4 Time (computed)
+### 31.2.4 Time (computed)
 
-Table 2.4. User-mode cycles of `fast search b -j 1` on one P-core.
+Table 31.2.3. User-mode cycles of `fast search b -j 1` on one P-core.
 
 | b | run | cycles, old | cycles, new | ratio | speedup |
 |---:|---|---:|---:|---:|---:|
@@ -248,7 +248,7 @@ residues, and the instructions grow by 6% to 13%. The removed nodes are
 cheap: a node with one free slot has two children, and most of its work is
 those two interval evaluations.
 
-Table 2.5. Wall time and user time of `fast search b -j 8`, median of 3
+Table 31.2.4. Wall time and user time of `fast search b -j 8`, median of 3
 (base 32) or 2 (base 33) alternating runs, with a load of 5 to 9 from
 other jobs.
 
@@ -259,7 +259,7 @@ other jobs.
 | base 33, `-m 1` | 17.63 s | 14.37 s | 1.23x | 119.8 s | 102.8 s | 1.17x |
 
 The wall times scatter by 10% to 20% between runs of the same build under
-this load; the cycle counts of Table 2.4 are the better measure.
+this load; the cycle counts of Table 31.2.3 are the better measure.
 
 GPU. The shader runs the same test (a subgroup sum of the counts times the
 residues of the digit values), and the GPU and the CPU visit the same nodes
@@ -267,9 +267,9 @@ and evaluations in the test suite (bases 2 to 26, with and without
 `--zscore`). Base 30 with `--gpu`: 1.03 s against 1.21 s with
 `--no-residue` (median of 3 alternating runs), 1.18x.
 
-## 3. The fixed-point interval
+## 31.3 The fixed-point interval
 
-### 3.1 The engine already iterates to a fixed point
+### 31.3.1 The engine already iterates to a fixed point
 
 A proposed rule: once the counts of the digits `>= k` are fixed, every
 digit `v < k` among the determined leading digits of `S` forces
@@ -287,13 +287,15 @@ test "`r'` at most the unknown positions" never fires: the unknown
 positions hold the missing copies of the decided digits and the free slots,
 so `pp = sum over x >= k of (c_x - occ_x) + rf` is an identity.
 
-### 3.2 What the iteration is worth (computed)
+### 31.3.2 What the iteration is worth (computed)
 
 A test build stops the forcing loop after its first round: the forced
 digits of the first round still go into `t` and `hi`, but the search does
 not look for new leading digits in the narrower interval at that node.
-The next level finds them. Both builds without the residue rule, bases 20
-to 33, same output:
+The next level finds them.
+
+Table 31.3.1. Both builds without the residue rule, bases 20 to 33, same
+output.
 
 | b | nodes, fixed point | nodes, one round | ratio | evaluations, ratio |
 |---:|---:|---:|---:|---:|
@@ -316,9 +318,9 @@ The iteration saves a factor 1.46 to 1.47 in nodes and 1.16 in interval
 evaluations, the same in every base. It changes the constant, not the
 growth.
 
-### 3.3 The interval cannot be narrowed further
+### 31.3.3 The interval cannot be narrowed further
 
-Lemma 3.1 (proven). Let a node have `rf >= 1` free slots. The ends of its
+Lemma 31.4 (proven). Let a node have `rf >= 1` free slots. The ends of its
 interval are sums of completions of the node: `lo = t` is the sum of the
 completion with every free slot 0 under `0^0 = 0`, and
 `hi = t + z + rf W(k-1)` is the sum of the completion with every free slot
@@ -331,7 +333,7 @@ each free slot adds `w(k-1) = W(k-1)`.
 So the interval is the exact hull of the sums that the known counts allow.
 The bound on the free slots is attained, not loose. A narrower range must
 use the digits of the completions themselves, which the levels below the
-node test one count at a time, or residues, as in section 2.
+node test one count at a time, or residues, as in section 31.2.
 
 The gap between the measured growth 1.89 and the floor 1.638 has another
 cause (section 10.1). The floor counts the nodes that are likely in the
@@ -342,11 +344,11 @@ Theorem 27.5 shows that this is not a weakness of the tree: every
 certificate built from interval queries has at least `N_k` queries, and
 `N_k` is 0.86 to 0.98 times the widest level of the tree in bases 10 to 21.
 
-## 4. The other results, one by one
+## 31.4 The other results, one by one
 
-### 4.1 Results that the interval test already implies (proven)
+### 31.4.1 Results that the interval test already implies (proven)
 
-Proposition 4.1 (proven). The exact search never creates a node of length
+Proposition 31.5 (proven). The exact search never creates a node of length
 `d = b` with at most two copies of `b - 1` (Proposition 1.6, `b >= 7`), nor
 a node of length `d = b - 1` with three or more copies of `b - 1`
 (section 1.7).
@@ -369,7 +371,7 @@ parts of Proposition 1.5 modulo the prime powers of `b - 1`. The residue
 rule tests the whole congruence, so it contains them. They bite only where
 the multiset is known up to one digit, like the full congruence.
 
-### 4.2 Tests that cost more than they save (computed)
+### 31.4.2 Tests that cost more than they save (computed)
 
 All at base 26, cycles relative to the build with the residue rule
 (1.20 G cycles, 3.89 million nodes).
@@ -389,7 +391,7 @@ Child `e = rf` has no free slot. Its residue passes with probability about
 saves an evaluation that fails early anyway, and its branch mispredicts.
 
 Two free slots: the sums `r(y_1) + r(y_2)` reach 87% to 100% of the
-classes under one of the two conventions (Table 2.2).
+classes under one of the two conventions (Table 31.2.1).
 
 The last digits. With one free slot `y`, the sum `S = t + w(y)` is known
 for each `y` with the right residue, and its last digits must be digits of
@@ -403,7 +405,7 @@ counts in the prefix. Corollary 27.9 says that a bottom check never prunes a
 top-down tree above its single vectors. Here it prunes, but where the tree
 is already cheap.
 
-### 4.3 Results that give no rule
+### 31.4.3 Results that give no rule
 
 - Self-paying digits (Propositions 2.2 and 2.3) need `a^(a-1) = b^k`. In
   bases up to 127 this happens only in perfect powers such as 8 and 64.
@@ -415,13 +417,13 @@ is already cheap.
 - The leading digit of section 1.7 is a statement about the top digits of
   `S`, which the interval computes exactly.
 - The 3-adic and 5-adic laws of chapter 20 describe which residues
-  `x^x - x` reaches. They enter through Table 2.2, not as separate rules:
+  `x^x - x` reaches. They enter through Table 31.2.1, not as separate rules:
   every residue of the multiset modulo a divisor of `b - 1` is a part of
   the residue modulo `b - 1` (Proposition 10.2).
 - Bottom digits in bases with a small radical (section 27.4): no node above
   the single vectors knows them.
 
-## 5. Splitting a base into jobs
+## 31.5 Splitting a base into jobs
 
 Section 27.5 found that the work units have a heavy-tailed size law, that
 every `n`-th unit is a poor split for many shards, and that the type of a
@@ -438,7 +440,7 @@ shifts), so every machine computes the same split. The shard line of the
 output and the journal header name the rule, and `merge` refuses shards
 split by different rules.
 
-Table 5.1. Largest shard over the mean, base 30 with the residue rule,
+Table 31.5.1. Largest shard over the mean, base 30 with the residue rule,
 from the measured unit sizes (`analysis/r6s_shards.py`). `best` is the
 same greedy split with the true sizes.
 
@@ -463,9 +465,9 @@ The prediction error is the limit. Within a type the standard deviation of
 times larger. The greedy split with the true sizes is perfect at 64 shards.
 A better predictor, for example the node count of each unit two levels
 down, would close part of the gap at the cost of a pass over the units
-(question S3).
+(question 126).
 
-## 6. The inexact search
+## 31.6 The inexact search
 
 The residue rule is exact, and it runs on the generic path of the inexact
 rules too. So `--zscore` keeps its miss rate, and the calibration of
@@ -486,20 +488,20 @@ The gain is smaller than in the exact search, because the z-score rule has
 already removed many of the nodes that the residue rule removes: a node
 with one free slot and an unlikely prefix.
 
-Heuristic 6.1. The theory gives no better threshold. The z-score uses the
+Heuristic 31.6. The theory gives no better threshold. The z-score uses the
 probability `E` of the suffix counts. A residue factor `q P_f(R)`, the
 chance that `f` free digits complete the residue, could join `E`. It
-differs from 1 only for `f <= 2` (Table 2.2), where the subtrees hold one
+differs from 1 only for `f <= 2` (Table 31.2.1), where the subtrees hold one
 to three nodes, and the exact rule already removes the nodes where it is 0.
 A threshold that changes with the level or with the cost of a subtree was
 tried in section 28.1.6 and gave no gain.
 
-## 7. What this means for the runs of round 6
+## 31.7 What this means for the runs of round 6
 
 Question 104 asks for an exact census of bases 42 to 46, both conventions.
 Run them together: one run with both conventions visits 0.75 to 0.87 of
 the old tree, while two runs with `-m 0` and `-m 1` visit 1.4 to 1.7 times
-it. For many machines, use `--unit-depth 6 --shard-by size` (section 5).
+it. For many machines, use `--unit-depth 6 --shard-by size` (section 31.5).
 
 Question 105 asks for a `b`-digit solution under `0^0 = 1` with
 `--min-digits b --zscore 3.4 --zlaw cond`. Add `-m 1`: the residue rule then
@@ -519,7 +521,7 @@ free slot.
 
 Section A7 of `questions-round6.md` says that what is left for the exact
 search is the middle digits of `S`, constant factors and quantum search.
-This draft adds one constant factor, from the one residue the multiset
+This chapter adds one constant factor, from the one residue the multiset
 fixes, and shows that the low digits pay only where the tree is already
 cheap. It does not touch question 109.
 
@@ -532,43 +534,45 @@ cheap. It does not touch question 109.
   `fast/src/journal.rs` (the shard rule and the convention in the headers).
 - Scripts: `analysis/r6s_residue.py`, `analysis/r6s_nodes.py`,
   `analysis/r6s_shards.py`, `analysis/r6s_cyc.c`, `analysis/r6s_cycbench.py`.
-- Data: `analysis/data/r6s_nodes_*.txt` (stderr of the runs of Tables 2.3
-  and 3.2; bases 34 and 35 in `r6s_nodes_old_34_35.txt` and
-  `r6s_nodes_res_34_35.txt`), `analysis/data/r6s_rf_b28_*.txt` (Table 1.1),
-  `analysis/data/r6s_units_b30_u4.txt.gz` (Table 5.1).
-- Test builds that are not committed: the table by `rf` (Table 1.1), the
-  first-round-only forcing loop (section 3.2), the bottom checks and the
-  other variants of section 4.2. Each is a few lines in `next_child` or
+- Data: `analysis/data/r6s_nodes_*.txt` (stderr of the runs of Tables 31.2.2
+  and 31.3.1; bases 34 and 35 in `r6s_nodes_old_34_35.txt` and
+  `r6s_nodes_res_34_35.txt`), `analysis/data/r6s_rf_b28_*.txt` (Table 31.1.1),
+  `analysis/data/r6s_units_b30_u4.txt.gz` (Table 31.5.1).
+- Test builds that are not committed: the table by `rf` (Table 31.1.1), the
+  first-round-only forcing loop (section 31.3.2), the bottom checks and the
+  other variants of section 31.4.2. Each is a few lines in `next_child` or
   `settle`.
 
 ## New questions
 
-S1. The residue rule needs one free slot. Is there a cheap exact test for
+These are questions 124 to 128 of `questions.md`.
+
+1. The residue rule needs one free slot. Is there a cheap exact test for
 two free slots? The congruence alone reaches almost every class. The pair
 `(y_1, y_2)` must also make `S = t + w(y_1) + w(y_2)` fall in the interval
 of the prefix; with the residue this is a 2-sum problem over `k` values.
 How often does no pair satisfy both, and can a sorted table per level
 answer it in a few instructions?
 
-S2. Where do the extra cycles of the residue go? Two residues per node
+2. Where do the extra cycles of the residue go? Two residues per node
 cost 6% to 13% more instructions. A child that computes its residue only
 after its forced digits saves 2.3% of the instructions and no cycles
-(section 4.2), so the cost is not the arithmetic. A profile of the loop
+(section 31.4.2), so the cost is not the arithmetic. A profile of the loop
 over `e` with and without the rule would say whether the larger node, the
 extra branch, or the pre-test before the interval costs the time.
 
-S3. A better size predictor for `--shard-by size`. The node count of each
+3. A better size predictor for `--shard-by size`. The node count of each
 unit after one or two more levels, times the type fit, should cut the
 within-type error of 0.5 in `ln(nodes)`. What is the best balance for 64 and
 256 shards at depth 4, and what does the probe cost?
 
-S4. Table 1.1 says that each free slot multiplies the subtree by about 1.8,
+4. Table 31.1.1 says that each free slot multiplies the subtree by about 1.8,
 and that the tree is 43% nodes with one free slot. Is the law of `rf` over
 the nodes of the exact tree a fixed geometric law, as the branching process
 of section 27.5 suggests? If so, the share of the nodes that any test on
 `f` free slots can reach is known in advance for every base.
 
-S5. Do the last digits pay in some other form? A check of the last digit
+5. Do the last digits pay in some other form? A check of the last digit
 removes 17% of the nodes at base 26 but costs 2% more cycles. A table of
 `w(y) mod b` per residue class, and a bit mask of the digits that the
 unknown positions still hold, would make it a few instructions. Is the mask

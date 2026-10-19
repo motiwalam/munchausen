@@ -42,7 +42,9 @@ statement is marked by its source:
 | [28. A sharper z-score rule, length windows and the GPU](28-zscore-gpu.md) | `--zlaw cond` fixes the variance of the z-score test (1.1 to 1.3x fewer nodes at equal miss rate); length windows do not pay; the GPU runs the inexact search and shards |
 | [29. Theorems about the model](29-model-theorems.md) | the length shares of the basic model proven; `k(B) = omega(B - 1)` in `F_q[T]` for every `e <= 10`; Assumption R reduced to one number per base and checked up to base 6000; a block model for `F_q[T]`; open lengths in the factorial system |
 | [30. Connections to other fields](30-applications.md) | anti-concentration proves the refined Poisson law in the limit; Assumption R as a collision bound for `x^x - x`; 2-digit solutions as fixed points of `x -> x^x mod p`; `tau(b^2 + 1) - 2` two-digit narcissistic numbers, so empty bases are Landau's problem; analogies |
-| [Open questions](questions.md) | 123 research questions in eight rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [31. Pruning by the residue and balanced shards](31-search-rules.md) | the congruence mod `b - 1` prunes the nodes with one free slot (12% to 25% fewer nodes, 1.1x to 1.2x faster); the forcing loop already reaches its fixed point, the exact hull of the sums; the other count and residue results do not pay; `--shard-by size` balances shards |
+| [32. The basic questions revisited](32-basic-questions.md) | a 2-adic Baker bound and a sieve exclude 3-digit strings with an even large digit behind a non-square leading digit; the three regimes of 3-digit strings; what can be said about empty bases; searching by multisets across bases saves little |
+| [Open questions](questions.md) | 132 research questions in ten rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -150,6 +152,21 @@ Proven:
   when `b^2 + 1` is prime, so whether infinitely many bases have none is
   Landau's problem. The mean over odd bases is twice the mean over even
   bases, `(4/pi) ln X` against `(2/pi) ln X` (Proposition 30.14).
+- Let `p` be a non-square leading digit, `q` a second digit and `x` an even
+  digit. Then `(p, q, x)` and `(p, x, q)` are solutions for only finitely
+  many `x`, with an explicit bound (Theorem 32.2), uniformly
+  `x <= C B^(3/2) (log 3B)^4` for `p, q <= B` (Theorem 32.5). The proof is
+  a 2-adic bound for linear forms in two logarithms: all the Pell
+  equations live in one field `Q(sqrt p)`.
+- With a sieve up to the bound: for `p, q <= 20` none of these strings is
+  a solution in any base, and for `p, q <= 10` none is with `x` an odd
+  square (Theorem 32.3, Proposition 32.7, computer-assisted). So every
+  3-digit solution with two digits at most 20 and an even third digit that
+  does not lead is in the lists of chapter 3 or a binomial member
+  (Corollary 32.4).
+- A node of the exact search with one free slot can be dropped when no
+  digit completes the residue mod `b - 1` (Theorem 31.1). The interval of a
+  node is the exact hull of the sums its counts allow (Lemma 31.4).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -185,6 +202,10 @@ Computed:
 - For every prime `11 <= p < 10^5`, the shifted map `x^x - x` has about
   `2 (p - 1)` collisions, like a random map, while `x^x` follows the
   Holden-Moree prediction, about `2.64 (p - 1)` (Table 30.2.1).
+- The residue rule removes 12% to 25% of the nodes of the exact search in
+  bases 15 to 35 and saves 1.11x to 1.22x in cycles, a constant factor.
+  The forcing loop, iterated to its fixed point, saves 1.46x in nodes in
+  every base from 20 to 33 (chapter 31).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 

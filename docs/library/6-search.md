@@ -75,6 +75,14 @@ solutions.
 - A feasibility check on the interval removes 10 to 13% of the nodes. That is a
   constant factor.
 
+Update (chapter 31). The congruence mod `b - 1` does prune before the
+leaves, at the nodes with one free slot. There the multiset is known up to
+one digit below the current value, so the test is a table lookup. These
+nodes are 43% of the tree in base 28. The rule removes 12% to 25% of the
+nodes in bases 15 to 35 and makes the search 1.11x to 1.22x faster in
+cycles (Theorem 31.1, section 31.2). It is a constant factor, and the
+growth rate does not change.
+
 ## 6.4 Why I do not expect a fast exact search
 
 The random model of chapter 5 describes a solution as a coincidence: one digit

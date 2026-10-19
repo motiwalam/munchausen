@@ -319,6 +319,18 @@ corrects Corollary 8.4 in its final form: the square class adds exactly the
 members of case (i). Cases (i) with odd `x` need a coincidence; none occurs
 with `p, q <= 2000` (section 25.2).
 
+Update (chapter 32). Case (iii) now has two exclusions. If `x` is even
+and not leading and `p` is not a square, the Pell equations of one pair
+`(p, q)` all live in one field `Q(sqrt n)`, where `n` is the squarefree
+part of `p`. A 2-adic bound for linear forms in two logarithms then bounds
+`x` (Theorem 32.2), uniformly as `x <= C B^(3/2) (log 3B)^4`
+(Theorem 32.5). A sieve up to that bound shows that no such string with
+`p, q <= 20` is a solution in any base (Theorem 32.3). Matveev's bound and
+the same sieve exclude an odd square `x = t^2 >= 9` for `p, q <= 10`
+(Proposition 32.7). What remains open in case (iii) is the part where the
+field changes with `x`: odd `x` that does not lead, and even `x` that
+leads (section 32.1.6).
+
 The six known 3-digit solutions are all small cases: `x` is at most 7, so
 `x < 2B + 4`. `(5,1,3)` in base 25 sits on the boundary of (ii):
 `N = 4 * 5^6 = 250^2`, `U = 251` and `R = 501 = 2V + 1`.
@@ -388,6 +400,14 @@ Evidence.
 - The members of the two linear families are infinite for every `k >= 3`
   (`k >= 4` for Theorem 25.5), so (a) cannot be improved to "finitely many
   solutions".
+
+Update (chapter 32). Part (b) is now proven for a slice of the 3-digit
+strings in every base. A 3-digit solution with two digits at most 20 and an
+even third digit that does not lead is in the lists of chapter 3 or a
+member of Theorem 22.6 (Corollary 32.4). For two digits at most 10 the same
+holds when the third digit is an odd square (Proposition 32.7). For larger
+small digits, a solution with an even, non-leading large digit
+`x > C B^(3/2) (log 3B)^4` is a member (Theorem 32.5 with Theorem 25.7).
 
 The conjecture fails under `0^0 = 0`, where the self-paying digits and the
 swaps of chapter 2 give further identity families, with polynomials
@@ -511,6 +531,15 @@ Answer to question 65.
   digits, outside the reach of Theorem 25.7. An exhaustive run of the sieve
   over all strings with digits up to 46,700 has about `10^14` strings and
   was not run.
+
+Update (chapter 32). The computation now reaches every base for two kinds
+of strings with one large digit `x` and two digits at most `B`. With
+`B = 20`, `x` even and not leading, every solution is in the lists of
+chapter 3 or a binomial member (Corollary 32.4). With `B = 10` the same
+holds for an odd square `x` (Proposition 32.7). Both rest on a proven bound
+for `x` (Theorem 32.2, and Matveev's theorem in Proposition 32.7), not on
+the heuristic. The strings with two digits above 200 are untouched, so the
+answer to question 65 is unchanged.
 
 ## 25.3 At most two 3-digit solutions per base (question 50)
 

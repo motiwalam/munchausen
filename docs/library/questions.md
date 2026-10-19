@@ -268,11 +268,11 @@ attack, in [questions-round3.md](questions-round3.md).
 
 ## Round 4: questions raised by chapter 22
 
-64. (Answered in chapter 25 for linear identities: two families; other mechanisms need an extra coincidence; Conjecture 25.8.) Is every short solution under `0^0 = 1` beyond some size a member of an
+64. (Answered in chapter 25 for linear identities: two families; other mechanisms need an extra coincidence; Conjecture 25.8. Partly answered in chapter 32 for 3 digits: with an even large digit behind a non-square leading digit only finitely many, none with the other digits at most 20 (Theorems 32.2, 32.3); open where the field `Q(sqrt n)` changes with `x`.) Is every short solution under `0^0 = 1` beyond some size a member of an
     algebraic family, such as the binomial families of Theorem 22.6? Do other
     identity families exist, for example with `p x^x` a `j`-th power for `p`
     not a `j`-th power, or with two large digits? (chapter 22)
-65. (Partly answered in chapter 25: it is the next family member, and no other 3-digit solution exists up to `10^3301`.) Is `(1,6,46666)` in base `46666^23333 - 3` the next 3-digit solution under
+65. (Partly answered in chapter 25: it is the next family member, and no other 3-digit solution exists up to `10^3301`. Chapter 32 adds every base for an even, non-leading large digit with the other digits at most 20 (Corollary 32.4).) Is `(1,6,46666)` in base `46666^23333 - 3` the next 3-digit solution under
     `0^0 = 1` after `(1,7,1)` in base 904? (chapter 22)
 66. Apply the base-by-base calibration of section 22.4.1 to the 4-digit list
     and to the long solutions of bases 12 to 40, as a check on section 11.1.
@@ -299,8 +299,8 @@ their motivation and a first attack, are in
 75. (Answered in chapter 27: every order needs at least the top-down entropy, so 1.638^b holds for all orders (Theorem 27.2).) The entropy bound for other orders.
 76. (Answered in chapter 27 in the oracle model: the exact tree is optimal up to a factor about linear in `b`, up to base 21.) Certificates of emptiness in an oracle model.
 77. (Answered in chapter 27: CP-SAT and CaDiCaL grow 1.95 to 2.3 per base, worse than the engine.) A constraint solver as a search that is not a tree.
-78. (Answered in chapter 27: unit sizes are explained by their type; deeper units balance shards; `--unit-stats`.) The law of subtree sizes.
-79. (Answered in chapter 27: no; bottom digits make the tree 2.5 to 13 times larger in bases 16 and 32.) Bottom-up information in bases with a small radical.
+78. (Answered in chapter 27: unit sizes are explained by their type; deeper units balance shards; `--unit-stats`. Chapter 31 adds `--shard-by size`.) The law of subtree sizes.
+79. (Answered in chapter 27: no; bottom digits make the tree 2.5 to 13 times larger in bases 16 and 32. Chapter 31: a last-digit check on nodes with one free slot prunes 17% but costs 2% more cycles.) Bottom-up information in bases with a small radical.
 80. (Partly answered in chapter 29: R reduced to `rho(b)` (Theorem 29.15), proven by computation up to base 6000; square-root cancellation seen for `b - 1` prime; no `o(p)` bound in the literature. Chapter 30: R follows from `O(p)` collisions of `x^x - x` modulo `p` (Corollary 30.8); computed about `2 (p - 1)` for `p < 10^5`.) Assumption R when `b - 1` is prime.
 81. (Answered in chapter 29: proven with error `O(1/b)` (Theorem 29.1); the sum over lengths tends to 1.) The length shares as a theorem in the model.
 82. (Partly answered in chapter 29: yes when a factor has degree prime to `e - 1`, for non-squarefree `B - 1`, and for `e <= 10`; always at most one more; open from `e = 11`.) Is `k(B)` always the number of factors of `B - 1`?
@@ -331,7 +331,7 @@ problems found in the library are in
 99. Long structured solutions under `0^0 = 1` (speculative).
 100. Near-solutions that provably exist (speculative).
 101. Beyond `ln b / ln ln b` by averaging over bases.
-102. The abc conjecture and the 3-digit list.
+102. (Partly answered in chapter 32: abc bounds `x` for one large digit in every position and parity (section 32.1.6); unconditional for an even large digit behind a non-square leading digit (Theorem 32.2) and for a fixed square class (Proposition 32.6); two large digits open.) The abc conjecture and the 3-digit list.
 103. A ledger of P values.
 104. A pre-registered census of bases 42 to 46.
 105. The first `b`-digit solution under `0^0 = 1`.
@@ -398,3 +398,57 @@ problems found in the library are in
 123. Write the coupled model of section 13.2 for factorions (weights `x!`)
      and check that Theorem 30.3 gives its Poisson limit, as section 30.1.5
      claims. (proof; section 30.1.5)
+
+## Round 9: questions raised by chapter 31
+
+124. Is there a cheap exact test for nodes with two free slots? The
+     congruence alone reaches almost every class. The pair `(y_1, y_2)`
+     must also put `S = t + w(y_1) + w(y_2)` in the interval of the prefix,
+     a 2-sum problem over `k` values. How often does no pair satisfy both,
+     and can a sorted table per level answer it in a few instructions?
+     (computation; section 31.4.2)
+125. Where do the extra cycles of the residue rule go? Two residues per node
+     cost 6% to 13% more instructions, but computing a child's residue
+     only after its forced digits saves no cycles. A profile of the loop
+     over `e` with and without the rule would say whether the larger node,
+     the extra branch or the test before the interval costs the time.
+     (computation; section 31.2.4)
+126. A better size predictor for `--shard-by size`. Does the node count of
+     each unit after one or two more levels, times the type fit, cut the
+     within-type error of 0.5 in `ln(nodes)`? What is the best balance for
+     64 and 256 shards at depth 4, and what does the probe cost?
+     (computation; section 31.5)
+127. Each free slot multiplies the subtree by about 1.8, and 43% of the
+     nodes have one free slot (Table 31.1.1). Is the law of the free slots
+     over the exact tree a fixed geometric law, as the branching process of
+     section 27.5 suggests? Then the share of the nodes that a test on `f`
+     free slots can reach is known in advance for every base.
+     (computation; section 31.1.2)
+128. Do the last digits pay in another form? A check of the last digit
+     removes 17% of the nodes at base 26 but costs 2% more cycles. A table
+     of `w(y) mod b` per residue class, and a bit mask of the digits that
+     the unknown positions still hold, would make it a few instructions. Is
+     the mask cheap to keep up to date as the prefix grows? (computation;
+     section 31.4.2)
+
+## Round 10: questions raised by chapter 32
+
+129. Uniformity over fields. Is there a bound for the solutions of
+     `U^2 - n V^2 = R`, with `V` a power like `x^(x/2)`, that is uniform
+     over the fields `Q(sqrt(p x))` with `x` odd? This would close the
+     3-digit problem with one large digit up to computation. Lead: results
+     on `y^2 = a x^n + c` that are uniform in `n`. (proof; section 32.1.6)
+130. Other square classes. Proposition 32.6 gives finiteness for odd `x` in
+     any fixed square class `x = lam t^2`, and Proposition 32.7 closes
+     `lam = 1` for `p, q <= 10`. For `lam > 1` the linear form has five
+     logarithms and the bound on `t` is about `10^10`. Is there a better
+     route, for example an `l`-adic bound at a prime `l` dividing `lam`?
+     (proof and computation; section 32.1.6)
+131. Four digits with a binomial prefix. Carry out section 32.1.7 for
+     `(p, q, r, x)` with `q^2 = 3 p r`, `x` even and `3 | x`: a Thue
+     equation in `Q(p^(1/3))` with a 2-adic bound. (proof; section 32.1.7)
+132. (Answered in chapter 31: the engine already iterates to the fixed
+     point, which saves 1.46 to 1.47 times the nodes in bases 20 to 33, a
+     constant factor (section 31.3.2).) A fixed-point bound for the exact
+     tree: how many nodes does the iterated interval remove? (computation;
+     section 32.3)

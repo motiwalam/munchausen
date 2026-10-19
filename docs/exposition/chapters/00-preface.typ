@@ -69,11 +69,13 @@ coincidences and blind to identities. @ch-constructions tells this story.
   (@sec-worlds-ffield, @sec-worlds-factorial).
 - The exact search costs about $1.9^b$. In the model no tree search can do
   better than about $1.64^b$, and a proof of any lower bound would settle
-  P versus NP (@ch-search).
+  P versus NP (@ch-search). The digit-sum identity still gives a constant
+  factor, at the nodes that miss only one digit (@sec-search-residue).
 - For a fixed number of digits the question becomes one polynomial equation
   in the base. Local obstructions, Galois groups and a root heuristic
   describe the short solutions, and almost all bases have none
-  (@ch-short).
+  (@ch-short). For 3 digits, a 2-adic form of Baker's theorem excludes
+  whole families with an even large digit (@sec-short-regimes).
 - The 3-digit solution $(1, 7, 1)$ in base 904 leads to the equation
   $b(b + x) = x^x + 1$ and its relatives, which need quadratic fields,
   linear forms in logarithms and the abc conjecture (@ch-diophantine).

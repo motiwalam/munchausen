@@ -467,6 +467,14 @@ infinity in one stroke.
 The same theorem covers `(2, y, x)` and `(8, y, x)` for
 `y = 1, 2, 3, 4, 6, 8, 9, 10`, and many longer prefixes.
 
+Update (chapter 32). Families without a covering can still be excluded.
+For a non-square leading digit `p <= 20`, a second digit `q <= 20` and an
+even large digit `x`, the strings `(p, q, x)` and `(p, x, q)` are never
+solutions (Theorem 32.3). Each member fails modulo some prime, but no
+finite set of primes seems to cover the family. The proof bounds `x` with
+a 2-adic linear form in logarithms (Theorem 32.2) and sieves below the
+bound.
+
 ### 15.4.4 The search (computed)
 
 `analysis/dyn_cover.py` uses the prime powers 2, 4, 8, 16, 32, 3, 9, 27,

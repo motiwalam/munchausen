@@ -1,30 +1,30 @@
-# Round 6: the basic questions revisited
+# 32. The basic questions revisited
 
-This draft returns to three questions from the start of the project:
+This chapter returns to three questions from the start of the project:
 
 1. Which digit strings are never a solution, in any base?
 2. Which bases have no solution at all?
 3. How can the search be made faster?
 
-The main new result answers part of question 1. It uses a tool the library
+The main new result answers part of the first question. It uses a tool the library
 has not used before for this purpose: Baker's theory of linear forms in
 logarithms, in its 2-adic form.
 
 ## Summary
 
-| question | result | status |
+| basic question | result | status |
 |---|---|---|
-| 1 | For fixed digits `p, q` with `p` not a square and `x` even, the strings `(p, q, x)` and `(p, x, q)` are solutions for only finitely many `x`, with an explicit bound `X0(p, q)` | proven (Theorem 1.2) |
-| 1 | The bound is uniform: `x <= C B^(3/2) (log 3B)^4` when `p, q <= B` | proven, `C` effective (Theorem 1.5) |
-| 1 | For `p, q <= 20` no such string is a solution in any base, under either convention; for `p, q <= 10` the same holds when `x >= 9` is an odd square | proven and computed (Theorem 1.3, Proposition 1.7) |
-| 1 | Every 3-digit solution in any base with two digits at most 20 and the third digit even and not leading is in the lists of chapter 3 or a member of the binomial family | proven and computed (Corollary 1.4) |
-| 1 | The three regimes: `N` a square (elementary), the square class of `N` fixed (Baker), the class varying (open) | proven for the first two (section 1.6) |
-| 2 | What counting can and cannot prove about empty bases, and what the families add | discussion (section 2) |
-| 3 | Searching by multisets across bases saves at most about 2.1x on a sweep, and nothing on one base | proven bound, heuristic gain (section 3) |
+| 1 | For fixed digits `p, q` with `p` not a square and `x` even, the strings `(p, q, x)` and `(p, x, q)` are solutions for only finitely many `x`, with an explicit bound `X0(p, q)` | proven (Theorem 32.2) |
+| 1 | The bound is uniform: `x <= C B^(3/2) (log 3B)^4` when `p, q <= B` | proven, `C` effective (Theorem 32.5) |
+| 1 | For `p, q <= 20` no such string is a solution in any base, under either convention; for `p, q <= 10` the same holds when `x >= 9` is an odd square | proven and computed (Theorem 32.3, Proposition 32.7) |
+| 1 | Every 3-digit solution in any base with two digits at most 20 and the third digit even and not leading is in the lists of chapter 3 or a member of the binomial family | proven and computed (Corollary 32.4) |
+| 1 | The three regimes: `N` a square (elementary), the square class of `N` fixed (Baker), the class varying (open) | proven for the first two (section 32.1.6) |
+| 2 | What counting can and cannot prove about empty bases, and what the families add | discussion (section 32.2) |
+| 3 | Searching by multisets across bases saves at most about 2.1x on a sweep, and nothing on one base | proven bound, heuristic gain (section 32.3) |
 
-## 1. Strings that are never solutions
+## 32.1 Strings that are never solutions
 
-### 1.1 Setting
+### 32.1.1 Setting
 
 Chapter 1 shows that a string is a solution in at most one base
 (Proposition 1.3), and chapter 11 that a string whose polynomial `Q_s` has no
@@ -70,7 +70,7 @@ The point is that `n` does not depend on `x`. As `x` runs over the even
 numbers, all these Pell equations live in one field, `K = Q(sqrt n)`. Write
 `O_K` for its ring of integers and `eta > 1` for its fundamental unit.
 
-### 1.2 The tool
+### 32.1.2 The tool
 
 Linear forms in two `p`-adic logarithms (primer). For algebraic numbers
 `a_1, a_2` and integers `b_1, b_2`, the number `a_1^(b_1) - a_2^(b_2)` is
@@ -79,7 +79,7 @@ says more: it cannot be very small, in the real sense or in the `p`-adic
 sense, unless the heights of `a_1, a_2` or the exponents are large. We use
 the `p`-adic form with `p = 2`, in the version of Bugeaud and Laurent:
 
-Theorem 1.1 (Bugeaud and Laurent; stated as Theorem 2.1 of M. A. Bennett and
+Theorem 32.1 (Bugeaud and Laurent; stated as Theorem 2.1 of M. A. Bennett and
 Y. Bugeaud, Acta Arith. 155 (2012) 259-269, simplifying Theoreme 3 of
 Y. Bugeaud and M. Laurent, J. Number Theory 61 (1996) 311-342). Let `p` be
 a prime, `a_1, a_2` multiplicatively independent algebraic numbers with
@@ -97,9 +97,9 @@ Let `log A_i >= max(h(a_i), (log p)/D)` and
 Here `v_p` is normalized by `v_p(p) = 1` and `h` is the absolute logarithmic
 height.
 
-### 1.3 The theorem
+### 32.1.3 The theorem
 
-Theorem 1.2 (proven). Let `p = n f^2` with `n > 1` squarefree, let `q >= 0`,
+Theorem 32.2 (proven). Let `p = n f^2` with `n > 1` squarefree, let `q >= 0`,
 and let `x` be even. If `(p, q, x)` or `(p, x, q)` is a solution in some
 base, under either convention, then
 
@@ -160,7 +160,7 @@ If `m = 0` then `|beta| = |delta| > (|R| eta^(-1))^(1/2)`, and with
 `|beta| <= |R| / (V sqrt n)` this forces `V sqrt n < (|R| eta)^(1/2)`, so `x`
 is tiny. `r6b_pell_bound.py` checks that both side bounds lie below `X0`.
 
-Otherwise apply Theorem 1.1 with `p = 2`, `a_1` as above, `b_1 = 1`,
+Otherwise apply Theorem 32.1 with `p = 2`, `a_1` as above, `b_1 = 1`,
 `a_2 = eta^2` and `b_2 = m` if `m > 0`, or `a_2 = eta^(-2)` and `b_2 = -m`
 if `m < 0`. Here `D = 2`, `g <= 3`,
 `h(a_1) <= 2 h(delta) <= log(|R| eta)`, and `h(eta^(+-2)) = log eta`. The
@@ -185,9 +185,9 @@ Remarks.
   Each member is excluded by some prime; the family as a whole is excluded
   by the bound.
 
-### 1.4 The computation
+### 32.1.4 The computation
 
-Theorem 1.3 (proven and computed). Let `p <= 20` be a non-square, let
+Theorem 32.3 (proven and computed). Let `p <= 20` be a non-square, let
 `q <= 20`, and let `x >= 2` be even. Then neither `(p, q, x)` nor
 `(p, x, q)` is a solution in any base, under either convention.
 
@@ -215,31 +215,35 @@ The sieve tested `1.73 * 10^11` values of `x` in about 3 hours on 5 shared
 threads, and no value passed every prime (`data/r6b_sieve20.txt`). In total
 704 cases and `1.98 * 10^11` values of `x`.
 
-Corollary 1.4 (proven and computed). Let `s` be a 3-digit solution in some
+Corollary 32.4 (proven and computed). Let `s` be a 3-digit solution in some
 base, under either convention, whose leading digit and one other digit are
 at most 20, and whose third digit `x` is even and not leading. Then `s` is
 in the complete 3-digit lists of chapter 3, or `s = (c^2, 2ce, x)` with
 `x = w(c^2) + w(2ce) + e^2` and `x^x = (c b + e)^2`: case (i) of Theorem
 25.7, the binomial family of Theorem 22.6 with `j = 2`.
 
-Proof. If `p` is not a square, Theorem 1.3 applies. Let `p` be a square. If
+Proof. If `p` is not a square, Theorem 32.3 applies. Let `p` be a square. If
 `x < 44`, then `p b^2 <= F < 2 * 20^20 + 42^42`, so `b < 2 * 10^34`, inside
 the lists of chapter 3 (every 3-digit solution in bases up to `10^51`, both
 conventions). If `x >= 44 = 2 * 20 + 4`, Theorem 25.7 applies with
-`B = 20`.
+`B = 20`. Theorem 25.7 is stated under `0^0 = 1`, but for `x` in the middle
+or last position its proof uses only the algebra of `R` and the bound
+`w(d) <= B^B` for the small digits, so it holds under `0^0 = 0` as well; in
+case (i) the value `e = 0` is then allowed, with `x = w(c^2) = c^(2c^2)`
+(the zeros weigh nothing).
 `N = 4 p x^x` is a square, so case (iii) is empty, case (ii) has no solution,
 and case (i) is the family.
 
 Of the known 3-digit solutions only `(1,2,6)` in base 215 has this shape
 (under `0^0 = 1`), and it is the first family member.
 
-### 1.5 A bound uniform in the small digits
+### 32.1.5 A bound uniform in the small digits
 
-Theorem 1.5 (proven, with an effective constant `C`). Let `s = (p, q, x)` or
+Theorem 32.5 (proven, with an effective constant `C`). Let `s = (p, q, x)` or
 `(p, x, q)` be a 3-digit solution with `p, q <= B`, `B >= 2`, `x` even and
 `p` not a square. Then `x <= C B^(3/2) (log 3B)^4`.
 
-Proof sketch. Use Theorem 1.2 with explicit bounds for its terms.
+Proof sketch. Use Theorem 32.2 with explicit bounds for its terms.
 
 - The regulator. With `Delta <= 4n <= 4B` the discriminant of `K`, the class
   number formula gives `log eta <= h log eta = (sqrt(Delta)/2) L(1, chi)`.
@@ -262,7 +266,7 @@ Theorem 25.7: every 3-digit solution with an even, non-leading digit
 `x > C B^(3/2) (log 3B)^4` is a member of the binomial family, where `B` is
 the larger of the other two digits.
 
-### 1.6 Three regimes, and where the frontier is
+### 32.1.6 Three regimes, and where the frontier is
 
 For a 3-digit string with one large digit `x` and small digits at most `B`,
 Theorem 25.7 reduces everything to `U^2 - n V^2 = R` with `V` a power of `x`
@@ -272,11 +276,11 @@ the leading digit.
 | regime | when | method | result |
 |---|---|---|---|
 | `N` a square | `x` odd and leading; `x` even with a square leading digit | the gap of Theorem 25.7 (ii) | no solution except the family |
-| `n` fixed in `x` | `x` even and not leading, `p` not a square | 2-adic Baker (Theorem 1.2) | finitely many, explicit |
-| `n` fixed on a class | `x` in a fixed square class: odd, not leading, `x = lam t^2`; or even and leading, `x = lam t^2` | real Baker (Matveev), Proposition 1.6 | finitely many in each class |
+| `n` fixed in `x` | `x` even and not leading, `p` not a square | 2-adic Baker (Theorem 32.2) | finitely many, explicit |
+| `n` fixed on a class | `x` in a fixed square class: odd, not leading, `x = lam t^2`; or even and leading, `x = lam t^2` | real Baker (Matveev), Proposition 32.6 | finitely many in each class |
 | `n` varies | odd `x` not leading, even `x` leading, over all classes | none known | open |
 
-Proposition 1.6 (proven). Fix `p, q`, the position of `x`, and a squarefree
+Proposition 32.6 (proven). Fix `p, q`, the position of `x`, and a squarefree
 `lam`. Then only finitely many `x` with squarefree part `lam` make the string
 a solution, and their number is effectively bounded.
 
@@ -292,13 +296,13 @@ large `x`. If `x` is odd, `V` has no factor 2, so the 2-adic argument is not
 available. The real one is, but with a worse constant: about `10^17` in place
 of `10^9`.
 
-Proposition 1.7 (proven and computed). Let `p <= 10` be a non-square,
+Proposition 32.7 (proven and computed). Let `p <= 10` be a non-square,
 `q <= 10`, and `x = t^2` with `t >= 3` odd. Then neither `(p, q, x)` nor
 `(p, x, q)` is a solution in any base, under either convention.
 
 Proof. Here `x^x = (t^x)^2`, so `V = 2 f t^x` and the field is `Q(sqrt n)`
 again, with `n` the squarefree part of `p`. With `beta' = U + V sqrt n` and
-the associate `delta'` of Step 1 of Theorem 1.2,
+the associate `delta'` of Step 1 of Theorem 32.2,
 
     Lambda = log(4 f sqrt n) + x log t - log|delta'| + m log eta
            = log|1 - beta/beta'|,
@@ -319,16 +323,16 @@ threads (`data/r6b_sieve_sq10.txt`). The only survivors have `t = 1`, that
 is `x = 1`: the invalid strings `(2,1,0)`, `(3,0,1)`, `(3,1,2)` and the known
 solutions `(3,1,3)`, `(5,1,3)`, `(6,1,5)` (`0^0 = 1`) and `(5,0,1)`,
 `(7,0,1)` (`0^0 = 0`). For square `p`, `N` is a square and Theorem 25.7
-decides, as in Corollary 1.4.
+decides, as in Corollary 32.4.
 
-So Corollary 1.4 holds for `p, q <= 10` with "`x` even" replaced by "`x`
+So Corollary 32.4 holds for `p, q <= 10` with "`x` even" replaced by "`x`
 even or an odd square".
 
 So the open part of the 3-digit problem has a precise shape: Pell equations
 `U^2 - n V^2 = R` in which the field `Q(sqrt n)` changes with `x`. The
 regulator of `Q(sqrt(p x))` can be as large as `sqrt(x) log x`, and then
 every Baker bound is too weak by a power of `log x`. This is the obstacle of
-direction A7 of round 5 (the field `Q(sqrt(x^2 + 4c))` for
+direction A7 of `questions-round5.md` (the field `Q(sqrt(x^2 + 4c))` for
 `b (b + x) = x^n + c`), now seen to be the only obstacle for three digits.
 A uniform treatment of a family of real quadratic fields, for example
 through results on `y^2 = a x^n + c` that are uniform in `n`, would settle
@@ -341,10 +345,10 @@ radical contains `b`, about `x^(x/2)`, and abc says nothing. Written as
 removing their common factor, which divides `R`) is at most
 `|R| * 4 l x * U`, about `x^(x/2 + 3) B^B`, while `U^2` is about `x^x`.
 The quality tends to 2, so abc bounds `x` for each `B`, in all positions
-and for both parities. This is question 102 of round 6. Theorem 1.2 and
-Proposition 1.6 prove parts of this unconditionally.
+and for both parities. This is question 102. Theorem 32.2 and
+Proposition 32.6 prove parts of this unconditionally.
 
-### 1.7 Four or more digits
+### 32.1.7 Four or more digits
 
 The same method applies when the polynomial is a perfect power up to a small
 remainder in a fixed field. For `k` digits with the large digit last and
@@ -356,7 +360,7 @@ equation defines a curve of genus at least 1 that changes with `x`, and Baker's
 method for such curves needs more. This leaves question 64 open for `k >= 4`
 outside these shapes.
 
-## 2. Bases without solutions
+## 32.2 Bases without solutions
 
 The library proves nothing about bases without solutions beyond single
 computations (bases 19, 27 and 35 up to 41), and chapter 8 explains why. Here
@@ -374,7 +378,7 @@ equidistribution question of the random model.
 What the families add. The bases with a 3-digit solution are now better
 known. Under `0^0 = 1` they are 4, 25, 91, 215, 904, the bases of the
 binomial family, and possibly bases above `10^3301` with two large digits
-(Theorem 25.11). Theorem 1.3 removes from that last set every solution with
+(Theorem 25.11). Theorem 32.3 removes from that last set every solution with
 an even, non-leading large digit and the two other digits at most 20. So the
 set of bases with a solution of length 3 is known except for strings with
 two large digits or odd ones.
@@ -386,19 +390,19 @@ removes a fraction `1/(b-1)` at best. So an emptiness proof for infinitely
 many bases must use the size and the digits together, as Theorem 25.7 (ii)
 does for 3 digits. For long strings no such structure is known, and the
 model says that none should exist: the per-base events look independent with
-probability about `e^(-E)`. I regard question 2 as out of reach in the
+probability about `e^(-E)`. I regard the second question as out of reach in the
 present state of knowledge.
 
 A model case shows how hard it is. For two-digit narcissistic numbers
 (weights `x^2`), base `b` has exactly `tau(b^2 + 1) - 2` of them, and an
-even base has none exactly when `b^2 + 1` is prime (section 3 of
-`drafts/round6-applications.md`). So "infinitely many empty bases" is
-Landau's problem on primes of the form `n^2 + 1` in that toy world, one of
-the oldest open problems in number theory. The Munchausen question has the
-same shape with a far less tractable weight. The useful targets are its pieces with a fixed
-shape, as in section 1.
+even base has none exactly when `b^2 + 1` is prime (Theorem 30.12 and
+Corollary 30.13). So "infinitely many empty bases" is Landau's problem on
+primes of the form `n^2 + 1` in that toy world, one of the oldest open
+problems in number theory. The Munchausen question has the same shape with
+a far less tractable weight. The useful targets are its pieces with a
+fixed shape, as in section 32.1.
 
-## 3. Faster search
+## 32.3 Faster search
 
 Searching by multisets across bases. Proposition 1.3 suggests sharing work
 across bases: enumerate multisets once and test each in every base where it
@@ -422,21 +426,24 @@ could fit. The gain is small.
 The short-length engine `kdigit` already works by strings across all bases,
 which is where this idea pays.
 
-What remains. The search agent of round 6 assembles the library's results
-into pruning rules for the engine (`drafts/round6-search.md`). From the
-basic question I take one point: the exact tree grows like `1.89^b`, tending
-to `2^b`, and the model floor for every top-down search is `1.638^b`. The
-gap comes from the worst-case bound on the remaining digits at each node. A
-bound that uses the digits of `F` already fixed (each fixed digit value
-below the current one is a lower bound on its count, and the number of
-remaining free slots shrinks accordingly) can be iterated to a fixed point at
-each node. Whether this narrows the gap is a measurement, not a theorem.
+What remains. Chapter 31 assembles the library's results into pruning
+rules for the engine. From the basic question I take one point: the exact
+tree grows like `1.89^b`, tending to `2^b`, and the model floor for every
+top-down search is `1.638^b`. The gap comes from the worst-case bound on
+the remaining digits at each node. A bound that uses the digits of `F`
+already fixed (each fixed digit value below the current one is a lower
+bound on its count, and the number of remaining free slots shrinks
+accordingly) can be iterated to a fixed point at each node. Section 31.3
+measures it: the engine already iterates this bound, the iteration saves a
+constant factor 1.46 in nodes, and the interval it reaches is the exact
+hull of the reachable sums (Lemma 31.4). So it does not narrow the gap in
+the growth rate.
 
 ## Files
 
 | file | contents |
 |---|---|
-| `analysis/r6b_pell_bound.py` | the bound `X0(p, q)` of Theorem 1.2 for every family, with the side cases |
+| `analysis/r6b_pell_bound.py` | the bound `X0(p, q)` of Theorem 32.2 for every family, with the side cases |
 | `analysis/r6b_sieve.c` | the sieve over even `x <= X0` |
 | `analysis/data/r6b_sieve10.txt` | the run for `p, q <= 10` |
 | `analysis/data/r6b_sieve20.txt` | the run for `p, q <= 20` |
@@ -444,17 +451,21 @@ each node. Whether this narrows the gap is a measurement, not a theorem.
 
 ## New questions
 
+These are questions 129 to 132 of `questions.md`.
+
 1. Uniformity over fields. Is there a bound for the solutions of
    `U^2 - n V^2 = R` with `V = x^(x/2)`-type powers that is uniform over the
    fields `Q(sqrt(p x))`, `x` odd? This would close the 3-digit problem up to
    computation. Lead: the results on `y^2 = a x^n + c` uniform in `n`.
-2. Other square classes. Proposition 1.6 gives finiteness for odd `x` in
-   any fixed square class `x = lam t^2`, and Proposition 1.7 closes
+2. Other square classes. Proposition 32.6 gives finiteness for odd `x` in
+   any fixed square class `x = lam t^2`, and Proposition 32.7 closes
    `lam = 1`. For `lam > 1` the linear form has five logarithms and the
    bound on `t` is about `10^10`. Is there a better route, for example a
    `l`-adic bound at a prime `l` dividing `lam`?
-3. Four digits with a binomial prefix. Carry out section 1.7 for
+3. Four digits with a binomial prefix. Carry out section 32.1.7 for
    `(p, q, r, x)` with `q^2 = 3 p r` and `x` even, `3 | x`: a Thue equation
    in `Q(p^(1/3))` with a 2-adic bound.
-4. A fixed-point bound for the exact tree. Measure how many nodes the
-   iterated interval of section 3 removes at bases 25 to 35.
+4. (Answered in section 31.3.2: the engine already iterates to the fixed
+   point, which saves 1.46 to 1.47 times the nodes in bases 20 to 33.) A
+   fixed-point bound for the exact tree. Measure how many nodes the
+   iterated interval of section 32.3 removes at bases 25 to 35.

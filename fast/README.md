@@ -193,7 +193,7 @@ default law, `--zscore 3` misses about 2% at base 30 but only 0.7% at
 base 200, so its miss rate depends on the base. A window on the length `d`
 does not pay: it saves 1.03x to 1.45x for 2 to 21 points of miss rate,
 where a lower threshold saves 1.3x to 6x for the same miss rate.
-`docs/library/drafts/round5-performance.md` has the measurements.
+Chapter 28 of the library (`docs/library/28-zscore-gpu.md`) has the measurements.
 
 Two options measure the tree for these experiments:
 
@@ -320,9 +320,9 @@ number is congruent to its digit sum (Proposition 1.5 of the library). A
 node with one free slot knows its whole multiset except one digit `y`
 below `k`, so the congruence leaves only the `y` with the right residue.
 The search drops the node if no `y < k` has it, under both conventions.
-`docs/algorithm.md` ("The residue rule") gives the details, and
-`docs/library/drafts/round6-search.md` the measurements. The output is the
-same as before for every base from 2 to 35. The rule also removes some of
+`docs/algorithm.md` ("The residue rule") gives the details, and chapter 31
+of the library (`docs/library/31-search-rules.md`) the measurements. The
+output is the same as before for every base from 2 to 35. The rule also removes some of
 the work units, so a journal written by an older build lists a different
 number of units and the new build refuses it. Resume such a journal with
 `--no-residue`, which builds the old units.
@@ -451,7 +451,7 @@ digits are at most `M`. It is complete for the bases `b` with
 `b^k <= (M+1)^(M+1)`. It discards the strings whose polynomial `Q_s` has
 no root modulo some modulus, and solves the rest exactly
 (`../docs/library/11-local.md`, section 11.5, and
-`../docs/library/drafts/round3-computation.md`, section 47).
+`../docs/library/19-sieve-spectra.md`, section 19.1).
 
 | option | meaning |
 |---|---|
