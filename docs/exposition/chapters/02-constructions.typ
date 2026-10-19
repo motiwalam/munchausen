@@ -340,12 +340,16 @@ the binomial theorem.
   Different $u$ give different digit strings.
 ]
 
+A second infinite family, with zeros inside, gives smaller solutions of
+lengths 4 to 6; it is described in @sec-cons-identities.
+
 For $j = 2$ the condition on $x$ is that $x$ is even or a square. With
 $c = 1$ this holds for every odd $e$, and $e = 1$ gives the smallest member,
 $(1, 2, 6)$ in base $6^3 - 1 = 215$: here $(b + 1)^2 = 216^2 = 6^6$. This
 solution had been known for years as one of the six 3-digit solutions. Only
-the family behind it was new. The next 3-digit member is short enough to
-check by hand.
+the family behind it was new. The next member of the family is short enough
+to check by hand. It is also the next 3-digit member of any power identity
+(@cons-next-member).
 
 #example(id: "cons-46666", title: [The second member for $k = 3$])[
   Take $j = 2$, $c = 1$, $e = 3$. Then $(r + 3)^2 = r^2 + 6 r + 9$, so the
@@ -359,7 +363,8 @@ check by hand.
 #tablefig(
   caption: [The smallest known member of the binomial family for each length,
   after $(1, 2, 6)$ in base 215 (#lib("22.3")). The search covered
-  $c <= 6$ and $e <= 12$; members of other shapes may be smaller.],
+  $c <= 6$ and $e <= 12$. For 4 to 6 digits the family of @cons-zero-family
+  gives smaller solutions (@tab-cons-smallest).],
   id: "tab-cons-binomial",
 )[
   #btable(
@@ -417,10 +422,217 @@ $4 p x^x + R$.
 Two near-misses of the same kind appear in the short-string data of
 #lib("19.2"). The strings $(1, 0, 0, x)$ and $(1, 3, 3, x)$ with $x^x$ a cube
 satisfy $P_s (b) - F(s) = x - 3$ and $x - 56$ in suitable bases, so they are
-near-solutions with a fixed defect, not solutions. Whether every solution
-beyond some size belongs to an identity family like these is open (#q(64)),
-and so is whether $(1, 6, 46666)$ is the next 3-digit solution after
-$(1, 7, 1)$ in base 904 (#q(65)).
+near-solutions with a fixed defect, not solutions.
+
+== Power identities and a second family <sec-cons-identities>
+
+The binomial families raise a natural question (#q(64)): which identities can
+turn a short string into a solution, and where can the large digit sit? The
+library answers it in #lib("25.1"). The answer is short. The large digit is
+always last, a linear identity gives exactly two families, and every other
+mechanism needs one more coincidence. Throughout this section $0^0 = 1$.
+
+#definition(id: "cons-power-identity", title: "Power identity", src: "25.1")[
+  Let $L$ be a nonempty set of positions of a digit string $s$ whose digits
+  are at least 2, the _large_ digits, and let $W$ be the sum of their weights.
+  A _power identity_ for $(s, L)$ is an equation
+  $ Q_s (r) = lambda A(r)^j - W $
+  of polynomials in $QQ[r]$, with $j >= 2$, a rational $lambda > 0$ and a
+  nonconstant $A$. Equivalently $P_s (r) - E = lambda A(r)^j$, where $E$ is the
+  sum of the weights of the digits outside $L$.
+]
+
+With such an identity, $s$ is a solution in base $b$ exactly when
+$W = lambda A(b)^j$ and $b$ exceeds the digits. The root heuristic treats
+$Q_s (b) = 0$ as a coincidence. An identity replaces it by the condition
+$W = lambda A(b)^j$, which can hold for a structural reason: $x^x$ is a
+$j$-th power whenever $j$ divides $x$.
+
+#theorem(id: "cons-last-large", title: "The large digit is last", src: "25.1")[
+  In every power identity the last position belongs to $L$.
+]
+#proof[
+  Suppose the last digit $s_0$ is not large, so it is one of the digits
+  outside $L$, and $E >= w(s_0) >= s_0$. If $E > s_0$, the polynomial
+  $P_s (r) - E$ has a positive leading coefficient, nonnegative middle
+  coefficients and a negative constant term. By Descartes' rule of signs it
+  has exactly one positive root, counted with multiplicity, so that root is
+  simple. A positive root exists, since the polynomial is negative at 0 and
+  positive for large $r$. But every root of $A$ is a root of $lambda A^j$ of
+  multiplicity at least $j >= 2$. If $E = s_0$, then $s_0 = 1$ is the only
+  digit outside $L$. Then $A(0) = 0$, so $r^j$ divides $P_s (r) - E$, and the
+  coefficient of $r$ vanishes. But that coefficient is a large digit, at
+  least 2.
+]
+
+#corollary(id: "cons-one-large", title: "One large digit", src: "25.1")[
+  Let $s$ have one large digit $x$ with $Q_s (r) = lambda A(r)^j - x^x$. Then
+  $x$ is the last digit. Writing $s = (t, x)$,
+  $ r P_t (r) + C = lambda A(r)^j, quad x = F(t) + C $
+  for an integer $C$, so the digits of $t$ alone fix $j$, $A$, $lambda$, $C$
+  and $x$. The string is a solution in base $b$ exactly when
+  $x^x = lambda A(b)^j$ and $b > x$.
+]
+
+So an identity never puts the large digit in front or in the middle. The
+simplest case is a linear $A = c r + e$ with $c >= 1$ and $gcd(c, e) = 1$.
+Then $j = k - 1$, the digits are the coefficients
+$t_i = lambda c^(j-i) binom(j, i) e^i$, and $x = F(t) + lambda e^j$.
+
+#theorem(id: "cons-linear", title: "Linear identities", src: "25.1")[
+  For a linear identity as above:
+  + If $lambda = mu^j$ is a $j$-th power, the members are those of
+    @thm-binomial (rescaled, for $e >= 1$) and of @cons-zero-family below (for
+    $e = 0$). When $j$ divides $x$ the conditions are congruences on the
+    parameters, so the members come in infinite families.
+  + If $lambda$ is not a $j$-th power, then $j$ does not divide $x$, and the
+    part of $x$ prime to $lambda$ is a perfect $m$-th power with
+    $m = j slash gcd(j, x) >= 2$.
+  + If $lambda$ is a $j$-th power but $j$ does not divide $x$, then $x$ is a
+    perfect $m$-th power, with $m$ as before.
+]
+#sketch[
+  Part 1 is @thm-binomial after rescaling $A$. For part 2, if $j$ divides $x$
+  then $x^x$ is a $j$-th power, and so is $lambda = x^x slash y^j$. For a
+  prime $l$ not dividing $lambda$, $j$ must divide $v_l (x^x) = x v_l (x)$,
+  and with $g = gcd(j, x)$ this forces $m = j slash g$ to divide $v_l (x)$.
+  Part 3 is the same argument with no prime of $lambda$.
+]
+
+Types 2 and 3 need $x$, a number of size about the weight of the largest
+prefix digit, to be nearly a perfect power. Heuristically that happens with
+probability about $x^(1 slash m - 1)$, a convergent sum, so these members
+are coincidences. For 3 digits with $p, q <= 2000$, 6,143 shapes need
+$x slash lambda$ to be a square; the expected number of squares is 0.89, and
+none occurs.
+
+The case $e = 0$ gives nothing for three digits (@cons-r-zero). For more
+digits it gives a new family. The zeros now weigh 1 each, and the large last
+digit pays for them.
+
+#theorem(id: "cons-zero-family", title: "A second infinite family", src: "25.1")[
+  Let $j >= 3$ and $c >= 2$ be such that every prime factor of $c$ divides
+  $j - 1$ and $c^(j c^j) equiv 1 med (mod j)$. Put
+  $ x = c^(j c^j) + j - 1, quad b = x^(x slash j) slash c. $
+  Then $(c^j, 0, dots, 0, x)$, with $j - 1$ zeros, is a $(j+1)$-digit solution
+  in base $b$ under $0^0 = 1$. The conditions hold for $c = (j - 1)^a$ with any
+  $a >= 1$.
+]
+#proof[
+  First $x equiv c^(j c^j) - 1 equiv 0 med (mod j)$, so $y = x^(x slash j)$ is
+  an integer. A prime $l$ dividing $c$ divides $j - 1$, so
+  $x equiv j - 1 equiv 0 med (mod l)$ and
+  $v_l (y) = (x slash j) v_l (x) >= x slash j > c >= v_l (c)$. So $c$ divides
+  $y$, and $b = y slash c$ is an integer with $b > x > c^j$. Then
+  $ P = c^j b^j + x = y^j + x = x^x + x, $
+  $ F = w(c^j) + (j - 1) w(0) + w(x) = c^(j c^j) + j - 1 + x^x = x + x^x. $
+  For $c = (j - 1)^a$ we have $c equiv (-1)^a med (mod j)$, and the exponent
+  $j c^j$ is even because $j(j - 1)$ is even, so $c^(j c^j) equiv 1$.
+]
+
+#example(id: "cons-zero-example", title: [The smallest member, $k = 4$])[
+  With $j = 3$ and $c = 2$: $x = 2^(24) + 2 = 16777218$, and
+  $(8, 0, 0, 16777218)$ is a solution in base $16777218^(5592406) slash 2$,
+  about $10^(4.04 dot 10^7)$. Here $8 dot b^3 = y^3 = x^x$, and the value $x$ of
+  the last digit pays for $w(8) = 2^(24)$ and the two zeros. The library
+  checked it with exact integers.
+]
+
+#remark(id: "cons-zero-swap")[
+  Under $0^0 = 0$ the zeros are free, and $(c^j, 0, dots, 0, c^(j c^j))$ is
+  the swap of @sec-cons-swaps with $a = c^j$. So @cons-zero-family is the
+  swap under $0^0 = 1$: the last digit is raised by $j - 1$ to pay for the
+  zeros. Since $c = (j - 1)^a$ works for every $a$, it gives a second proof
+  that every length $k >= 4$ has infinitely many solutions under $0^0 = 1$
+  (@thm-every-length-m1).
+]
+
+#tablefig(
+  caption: [The smallest known solution of each length beyond the complete
+  lists, from the two linear families (#lib("25.1")). The family of
+  @cons-zero-family wins for 4, 5 and 6 digits, the binomial family for 7, 8
+  and 9.],
+  id: "tab-cons-smallest",
+)[
+  #btable(
+    columns: 4,
+    align: (right, left, left, left),
+    [$k$], [@cons-zero-family: $c$, $x$, base], [@thm-binomial: smallest, base], [smaller],
+    [4], [$2$, $2^(24) + 2$; $10^(4.04 dot 10^7)$], [$(1, 6, 12, x)$; $10^(3.85 dot 10^(13))$], [zeros],
+    [5], [$3$, $81^(81) + 3 approx 10^(154.6)$; $10^(10^(156.2))$], [$(16, 64, 96, 64, x)$; $10^(10^(192.0))$], [zeros],
+    [6], [$2$, $2^(160) + 4 approx 10^(48.2)$; $10^(10^(49.1))$], [$x approx 10^(3977)$; $10^(10^(3980))$], [zeros],
+    [7], [$5$, $5^(93750) + 5 approx 10^(65528)$; $10^(10^(65532))$], [$(1, 6, 15, 20, 15, 6, x)$; $10^(10^(26.7))$], [binomial],
+    [8], [$6$, $x approx 10^(1.52 dot 10^6)$], [$x approx 10^(18921)$; $10^(10^(18924))$], [binomial],
+    [9], [$7$, $x approx 10^(3.90 dot 10^7)$], [$x approx 10^(76220)$; $10^(10^(76224))$], [binomial],
+  )
+]
+
+For 10 digits the zero family with $c = 2$ gives $x = 2^(4608) + 8$, about
+$10^(1387)$; the binomial table stops at 9 digits.
+
+Other identities exist, but each needs a second coincidence.
+
+#proposition(id: "cons-nonlinear", title: "Nonlinear identities", src: "25.1")[
+  Let $s = (t, x)$ have a power identity with $deg A >= 2$, where $A$ is not a
+  constant times a power of a linear polynomial. Then $s$ is a solution only
+  if $A(b) = y$ for the integer $y$ with $x^x = lambda y^j$. This is one
+  polynomial equation in $b$ for a number $y$ of size about $x^(x slash j)$
+  that $t$ fixes.
+]
+
+A number of size $y$ is a value of a fixed polynomial of degree $d >= 2$
+with probability about $y^(1 slash d - 1)$, so such members are
+coincidences. The other mechanisms that one might try reduce to the same
+cases (#lib("25.1")):
+
+- a decomposable value polynomial $P_s = G(h(r))$ gives a nonlinear $A$;
+- a factorization of a 3-digit equation into two algebraic factors is a square
+  identity; the Aurifeuillian pair behind $(1, 7, 1)$ in base 904 holds for
+  $x = 7$ only, not as an identity in $x$ (@sec-dio-aurifeuille);
+- several large digits need a sum such as $u^u + v^v$ to be nearly a $j$-th
+  power, a Fermat-type coincidence; equal large digits leave finitely many
+  small strings for each $j$;
+- a self-paying digit above a tail, as $(5, 1, 3)$ in base 25, needs the
+  tail to be a solution of that base, again a coincidence.
+
+#computation(id: "cons-identity-census", title: "Census of identities", src: "25.1")[
+  For every prefix with digits up to 120, 60, 30, 16 and 10 (for 3, 4, 5, 6 and
+  7 digits) the library found every power identity and decided its two
+  conditions. The only members are linear with $lambda$ a $j$-th power and
+  $j$ dividing $x$: 65 three-digit members of @thm-binomial, and three
+  4-digit members, $(1, 6, 12, x)$ and $(8, 24, 24, x)$ of @thm-binomial and
+  $(8, 0, 0, x)$ of @cons-zero-family. 108 nonlinear shapes pass the power
+  test, and each fails modulo a prime below 60.
+]
+
+#conjecture(id: "cons-families-conj", title: "Families explain the rest", src: "25.1")[
+  For each $k >= 3$, all but finitely many $k$-digit solutions under
+  $0^0 = 1$ belong to the two linear families of @thm-binomial and
+  @cons-zero-family. Every $k$-digit solution in a base above the largest base
+  of the complete list of that length belongs to them.
+]
+
+Under $0^0 = 0$ the conjecture fails, because self-paying digits and swaps
+give further identity families. For three digits the families are
+completely understood.
+
+#theorem(id: "cons-next-member", title: "The next 3-digit member", src: "25.2")[
+  After $(1, 2, 6)$ in base 215, the next 3-digit member of a power identity
+  is $(1, 6, 46666)$ in base $46666^(23333) - 3$.
+]
+#sketch[
+  A member with $x <= 46666$ has $w(p), w(q) <= x$, so $p, q <= 6$. The few
+  shapes $(lambda c^2, 2 lambda c e)$ in that range give $x$ in
+  ${6, 261, 262, 513, 46666, 46686}$; all but 6 and 46666 fail the parity or
+  square condition, or exceed 46666. The shapes with $e = 0$ give nothing.
+]
+
+Whether $(1, 6, 46666)$ is the next 3-digit solution of any kind (#q(65)) is
+only partly settled. An exhaustive sieve finds no 3-digit solution in the
+bases from 905 to $10^(3301)$ other than the known ones, and the strings that
+remain below $46666^(23333) - 3$ have two digits above 200 and a digit above
+2000; the root heuristic gives them an expected $10^(-3294)$ solutions
+(@sec-short-lists, @sec-short-square).
 
 == Self-paying blocks <sec-cons-blocks>
 
