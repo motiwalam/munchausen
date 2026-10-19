@@ -16,7 +16,7 @@ logarithms, in its 2-adic form.
 |---|---|---|
 | 1 | For fixed digits `p, q` with `p` not a square and `x` even, the strings `(p, q, x)` and `(p, x, q)` are solutions for only finitely many `x`, with an explicit bound `X0(p, q)` | proven (Theorem 1.2) |
 | 1 | The bound is uniform: `x <= C B^(3/2) (log 3B)^4` when `p, q <= B` | proven, `C` effective (Theorem 1.5) |
-| 1 | For `p, q <= 20` no such string is a solution in any base, under either convention | proven and computed (Theorem 1.3) |
+| 1 | For `p, q <= 20` no such string is a solution in any base, under either convention; for `p, q <= 10` the same holds when `x >= 9` is an odd square | proven and computed (Theorem 1.3, Proposition 1.7) |
 | 1 | Every 3-digit solution in any base with two digits at most 20 and the third digit even and not leading is in the lists of chapter 3 or a member of the binomial family | proven and computed (Corollary 1.4) |
 | 1 | The three regimes: `N` a square (elementary), the square class of `N` fixed (Baker), the class varying (open) | proven for the first two (section 1.6) |
 | 2 | What counting can and cannot prove about empty bases, and what the families add | discussion (section 2) |
@@ -289,6 +289,38 @@ large `x`. If `x` is odd, `V` has no factor 2, so the 2-adic argument is not
 available. The real one is, but with a worse constant: about `10^17` in place
 of `10^9`.
 
+Proposition 1.7 (proven and computed). Let `p <= 10` be a non-square,
+`q <= 10`, and `x = t^2` with `t >= 3` odd. Then neither `(p, q, x)` nor
+`(p, x, q)` is a solution in any base, under either convention.
+
+Proof. Here `x^x = (t^x)^2`, so `V = 2 f t^x` and the field is `Q(sqrt n)`
+again, with `n` the squarefree part of `p`. With `beta' = U + V sqrt n` and
+the associate `delta'` of Step 1 of Theorem 1.2,
+
+    Lambda = log(4 f sqrt n) + x log t - log|delta'| + m log eta
+           = log|1 - beta/beta'|,
+
+so `log|Lambda| <= log(2|R|) - log(4 f^2 n) - 2x log t`, and `Lambda != 0`.
+Matveev's theorem (E. M. Matveev, Izv. Math. 64 (2000) 1217-1269,
+Corollary 2.3) for four logarithms in a real field of degree `D = 2` gives
+
+    log|Lambda| > -1.4 * 30^7 * 4^4.5 * D^2 (1 + log D) (1 + log B)
+                  * A_1 A_2 A_3 A_4
+
+with `B = max(x, |m|)`, `A_1 = log(16 f^2 n)`, `A_2 = 2 log t`,
+`A_3 = log(|R| eta)` and `A_4 = log eta` (each at least 0.16). The two
+bounds meet at `t <= T0(p, q)`, at most `2.4 * 10^9` here
+(`r6b_pell_bound.py 10 10 sq`). The sieve in mode `sq` tested every odd
+`t <= T0`, `1.18 * 10^11` values in all, in about 3.5 hours on 5 shared
+threads (`data/r6b_sieve_sq10.txt`). The only survivors have `t = 1`, that
+is `x = 1`: the invalid strings `(2,1,0)`, `(3,0,1)`, `(3,1,2)` and the known
+solutions `(3,1,3)`, `(5,1,3)`, `(6,1,5)` (`0^0 = 1`) and `(5,0,1)`,
+`(7,0,1)` (`0^0 = 0`). For square `p`, `N` is a square and Theorem 25.7
+decides, as in Corollary 1.4.
+
+So Corollary 1.4 holds for `p, q <= 10` with "`x` even" replaced by "`x`
+even or an odd square".
+
 So the open part of the 3-digit problem has a precise shape: Pell equations
 `U^2 - n V^2 = R` in which the field `Q(sqrt n)` changes with `x`. The
 regulator of `Q(sqrt(p x))` can be as large as `sqrt(x) log x`, and then
@@ -405,6 +437,7 @@ each node. Whether this narrows the gap is a measurement, not a theorem.
 | `analysis/r6b_sieve.c` | the sieve over even `x <= X0` |
 | `analysis/data/r6b_sieve10.txt` | the run for `p, q <= 10` |
 | `analysis/data/r6b_sieve20.txt` | the run for `p, q <= 20` |
+| `analysis/data/r6b_sieve_sq10.txt` | the odd squares `x = t^2`, `p, q <= 10` |
 
 ## New questions
 
@@ -412,9 +445,11 @@ each node. Whether this narrows the gap is a measurement, not a theorem.
    `U^2 - n V^2 = R` with `V = x^(x/2)`-type powers that is uniform over the
    fields `Q(sqrt(p x))`, `x` odd? This would close the 3-digit problem up to
    computation. Lead: the results on `y^2 = a x^n + c` uniform in `n`.
-2. The odd squares. Run the real (Matveev) bound and the sieve for odd
-   square `x = t^2` and `p, q <= 10`: `1.2 * 10^11` values of `t` in all
-   (`r6b_pell_bound.py 10 10 sq`, `r6b_sieve sq`).
+2. Other square classes. Proposition 1.6 gives finiteness for odd `x` in
+   any fixed square class `x = lam t^2`, and Proposition 1.7 closes
+   `lam = 1`. For `lam > 1` the linear form has five logarithms and the
+   bound on `t` is about `10^10`. Is there a better route, for example a
+   `l`-adic bound at a prime `l` dividing `lam`?
 3. Four digits with a binomial prefix. Carry out section 1.7 for
    `(p, q, r, x)` with `q^2 = 3 p r` and `x` even, `3 | x`: a Thue equation
    in `Q(p^(1/3))` with a 2-adic bound.
