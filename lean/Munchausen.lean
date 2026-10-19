@@ -22,3 +22,4 @@ import Munchausen.Applications
 import Munchausen.ModelTheorems
 import Munchausen.SearchRules
 import Munchausen.Factorials
+import Munchausen.ModelComplete

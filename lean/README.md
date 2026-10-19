@@ -63,6 +63,7 @@ use `decide`, which the kernel checks.
 | `Munchausen/ModelTheorems.lean` | chapter 29: Lemma 29.2, `k(B)` and Berlekamp's count, Theorems 21.6 and 29.11 (1), (3), Corollary 29.10 (the factor), Lemma 29.14 |
 | `Munchausen/SearchRules.lean` | chapters 31 and 32: the residue rule (31.1), the interval (31.4, 31.5), the Pell form of `(p, q, x)` and `(p, x, q)`, the sieve |
 | `Munchausen/Factorials.lean` | chapter 33: factorions and other weights (33.9, 33.12, 33.13), the completed square, Lemmas 33.1, 33.2, Theorem 33.4 (b), (d), Proposition 33.21, and the abc step of Theorem 33.16 with abc as a hypothesis |
+| `Munchausen/ModelComplete.lean` | chapter 34: the two conventions (34.2, 34.3), `N_1(b)` (34.5), the residues of the `d`-digit numbers (34.10), the parity character (34.11, 34.12) |
 | `Munchausen/Examples.lean` | concrete solutions checked by `decide`, and `(1,6,46666)` in base `46666^23333 - 3` |
 | `Munchausen/Conjectures.lean` | open problems as named `Prop`s, and proofs that refuted conjectures are false |
 

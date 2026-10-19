@@ -20,7 +20,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
-(SearchRules), Fact (Factorials).
+(SearchRules), Fact (Factorials), MC (ModelComplete).
 
 Counts of table rows at the time of writing: 133 formalized (one of them a
 list of computed solutions checked by `decide`), 19 partial, 11 rows of open
@@ -413,6 +413,21 @@ stated.
 | Proposition 33.21 | `prop33_21`, `prop33_21_card` [Fact] | formalized (the arithmetic; Theorem 15.14 itself is not formalized) |
 | Proposition 33.22 | none | not formalized (inequalities closed by a computation) |
 | Heuristic 33.23, the census of 33.3.4 | none | not formalized (heuristic, computed) |
+
+## Chapter 34. Is the refined model complete?
+
+| result | Lean name | status |
+|---|---|---|
+| Proposition 34.1 (the exact refined model) | none | not formalized (a statement about the model) |
+| Lemma 34.2 | `lemma34_2`, `lemma34_2_F` [MC], `isMunchausen_one_iff_zero` [Basic] | formalized |
+| Lemma 34.3 | `lemma34_3` [MC], `F_one_eq` [Basic] | formalized |
+| Proposition 34.5 | `N1`, `N1_eq`, `prop34_5`, `prop34_5_one_digit` [MC] | partial: (2), the values of `N_1(b)` and the 1-digit strings whose `F` has one digit; (1) is about the model, and `N_1(b) ~ ln b / ln ln b` is not formalized |
+| Theorem 34.6, Corollary 34.7, Proposition 34.8 | none | not formalized (theorems about the model; they use Theorem 29.1) |
+| Proposition 34.10 | `prop34_10_uniform` [MC] | partial: every residue modulo `b - 1` occurs `b^(d-1)` times among the `d`-digit numbers; the trace and the characters are about the model |
+| Corollary 34.11 | `corollary34_11` [MC], `F_modEq_self_iff` [Cong] | partial: `F_0(n) ≡ n (mod 2)` for odd `b`, and no other modulus or convention has such an identity (Theorem 15.2); the multiplicity of the eigenvalue is about the model |
+| Theorem 34.12 | `theorem34_12_parity` [MC] | partial: `F_1(n) - n ≡ c_0(n) (mod 2)` for odd `b`; the limit `e^-2` uses Lemmas 29.3 and 29.4 (model) |
+| Conjecture 34.13 | none | not stated (about the model) |
+| Heuristics 34.4, 34.9, 34.14, 34.15 and the tables | none | not formalized (heuristic, computed) |
 
 ## Open questions stated as `Prop`s
 

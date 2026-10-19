@@ -338,7 +338,8 @@ theorem theorem33_12_member (wt : ℕ → ℕ) {j M u x y : ℕ} (hj : 2 ≤ j) 
 `M ∣ w(d)` whenever `M ∣ d ≥ 1` (S2), and that every `x ≥ X0` with `M ∣ x` has `w(x) = y^j`
 with `M ∣ y` (S1) and `y > M (x + v)` whenever `v^j ≤ x` (S3). Then there are infinitely many
 solutions of length `j + 1`. -/
-theorem theorem33_12 (wt : ℕ → ℕ) {j M X0 : ℕ} (hj : 2 ≤ j) (hM : 1 ≤ M) (hS2 : ∀ d, 1 ≤ d → M ∣ d → M ∣ wt d)
+theorem theorem33_12 (wt : ℕ → ℕ) {j M X0 : ℕ} (hj : 2 ≤ j) (hM : 1 ≤ M)
+    (hS2 : ∀ d, 1 ≤ d → M ∣ d → M ∣ wt d)
     (hS : ∀ x, X0 ≤ x → M ∣ x → ∃ y, wt x = y ^ j ∧ M ∣ y ∧ ∀ v, v ^ j ≤ x → M * (x + v) < y) :
     {s : List ℕ | s.length = j + 1 ∧ ∃ b, IsWSolution wt b s}.Infinite := by
   set xx : ℕ → ℕ := fun u => (M * u) ^ j + ((binomDigits j M (M * u)).map wt).sum with hxx
