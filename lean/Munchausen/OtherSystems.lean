@@ -10,7 +10,7 @@ import Munchausen.ShortEquations
 * function fields `F_p[T]`: the linearity of the weight (Proposition 21.1), translates
   (Proposition 21.3), the identity modulo `B - 1` (Proposition 21.5) and the Frobenius
   identity behind Lemma 24.1;
-* base `-1 + i`: the block form of Theorem R2.1 (section 23.4).
+* base `-1 + i`: the block form of Theorem 23.1 (section 23.4).
 -/
 
 namespace Munchausen
@@ -227,7 +227,7 @@ section GaussianBase
 /-- The base `β = -1 + i` of section 23.4. -/
 def beta : GaussianInt := ⟨-1, 1⟩
 
-/-- `β^4 = -4` (proof of Theorem R2.1). -/
+/-- `β^4 = -4` (proof of Theorem 23.1). -/
 lemma beta_pow_four : beta ^ 4 = -4 := by decide
 
 /-- The value `a₀ + a₁ β + a₂ β^2 + a₃ β^3` of a block of four digits. -/
@@ -309,7 +309,7 @@ lemma zVal_eq_ofDigits (L : List ℕ) :
   | nil => rfl
   | cons d t ih => rw [List.map_cons, zVal, ih, ofDigits_cons']
 
-/-- **Theorem R2.1** (section 23.4), block form. Let a string of digits 0 and 1 in base
+/-- **Theorem 23.1** (section 23.4), block form. Let a string of digits 0 and 1 in base
 `β = -1 + i` be cut into blocks `(a₀, a₁, a₂, a₃)` of four digits. If its value is a rational
 integer, then every block has `a₁ = 0` and `a₂ = a₃`, and the value is the base `-4` number
 with digits `a₀ + 2 a₂`. With the uniqueness of representations in base `-1 + i` and base
