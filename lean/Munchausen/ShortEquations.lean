@@ -1067,4 +1067,75 @@ theorem corollary18_17 {a c b₁ b₂ b₃ : ℕ} {s : List ℕ} (h₁ : IsSolut
     rw [min_eq_right hlt.le, max_eq_left hlt.le]
     exact ⟨hc2, this⟩
 
+/-! ### Theorem 15.7 under `0^0 = 0` -/
+
+/-- A zero-free solution under `0^0 = 0` is a solution under `0^0 = 1` (Proposition 1.4). -/
+lemma IsSolution.to_one_of_zero_free {b : ℕ} {s : List ℕ} (h : IsSolution b 0 s)
+    (hz : 0 ∉ s) : IsSolution b 1 s :=
+  ⟨h.1, h.2, by rw [Fs_one_eq, List.count_eq_zero_of_not_mem hz, add_zero]; exact h.3⟩
+
+/-- `(a, 0)` under `0^0 = 0` lives in base `a^(a-1)`, with `a ≥ 3`. -/
+lemma two_digit_zero_base {a b : ℕ} (h : IsSolution b 0 [a, 0]) : 3 ≤ a ∧ b = a ^ (a - 1) := by
+  have ha : 1 ≤ a := Nat.one_le_iff_ne_zero.2 (h.head_ne_zero (by simp))
+  obtain ⟨hab, -, heq⟩ := (isSolution_two_iff ha).1 h
+  simp at heq
+  have haa : a ^ a = a * a ^ (a - 1) := by rw [← pow_succ']; congr 1; omega
+  rw [haa] at heq
+  have hb : b = a ^ (a - 1) := Nat.eq_of_mul_eq_mul_left (by omega) heq
+  refine ⟨?_, hb⟩
+  by_contra h3
+  interval_cases a <;> simp at hb <;> omega
+
+/-- `x ↦ x^(x-1)` is injective on `x ≥ 1`. -/
+lemma pow_pred_injective {x y : ℕ} (hx : 1 ≤ x) (hy : 1 ≤ y) (h : x ^ (x - 1) = y ^ (y - 1)) :
+    x = y := by
+  have key : ∀ x y : ℕ, 1 ≤ x → x < y → x ^ (x - 1) < y ^ (y - 1) := fun x y hx hlt =>
+    lt_of_le_of_lt (Nat.pow_le_pow_left hlt.le _) (Nat.pow_lt_pow_right (by omega) (by omega))
+  rcases Nat.lt_trichotomy x y with hlt | heq | hgt
+  · exact absurd h (key x y hx hlt).ne
+  · exact heq
+  · exact absurd h (key y x hy hgt).ne'
+
+/-- **Theorem 15.7** under `0^0 = 0` (section 15.2). Two different 2-digit solutions in one base
+are in base 3, or they are the twins `(a, 0)` and `(a, 1)` in base `a^(a-1)` with `a ≥ 3`. -/
+theorem theorem15_7_zero {b a c A C : ℕ} (h1 : IsSolution b 0 [a, c]) (h2 : IsSolution b 0 [A, C])
+    (hne : [a, c] ≠ [A, C]) :
+    b = 3 ∨ (3 ≤ a ∧ a = A ∧ b = a ^ (a - 1) ∧ ({c, C} : Finset ℕ) = {0, 1}) := by
+  have ha : 1 ≤ a := Nat.one_le_iff_ne_zero.2 (h1.head_ne_zero (by simp))
+  have hA : 1 ≤ A := Nat.one_le_iff_ne_zero.2 (h2.head_ne_zero (by simp))
+  -- the case of a zero last digit
+  have zero_case : ∀ {a A C : ℕ}, IsSolution b 0 [a, 0] → IsSolution b 0 [A, C] →
+      [a, 0] ≠ [A, C] → 1 ≤ A → 3 ≤ a ∧ a = A ∧ b = a ^ (a - 1) ∧ C = 1 := by
+    intro a A C h1 h2 hne hA
+    obtain ⟨ha3, hb⟩ := two_digit_zero_base h1
+    rcases Nat.eq_zero_or_pos C with rfl | hC
+    · obtain ⟨-, hb'⟩ := two_digit_zero_base h2
+      have := pow_pred_injective (by omega) hA (hb.symm.trans hb')
+      exact absurd (by rw [this]) hne
+    · -- `(a, 1)` and `(A, C)` are both solutions under `0^0 = 1`
+      have h1' : IsSolution b 1 [a, 1] := hb ▸ isSolution_a_one ha3
+      have h2' : IsSolution b 1 [A, C] :=
+        h2.to_one_of_zero_free (by simp; omega)
+      by_cases heq : [a, 1] = [A, C]
+      · simp only [List.cons.injEq, and_true] at heq
+        exact ⟨ha3, heq.1, hb, heq.2.symm⟩
+      · exfalso
+        have := theorem15_7 (by simp) (by simp) h1' h2' heq
+        have : 3 ^ 2 ≤ a ^ (a - 1) :=
+          (Nat.pow_le_pow_left ha3 2).trans (Nat.pow_le_pow_right (by omega) (by omega))
+        omega
+  rcases Nat.eq_zero_or_pos c with rfl | hc
+  · obtain ⟨h3, hAa, hb, hC⟩ := zero_case h1 h2 hne hA
+    right
+    refine ⟨h3, hAa, hb, ?_⟩
+    rw [hC]
+  rcases Nat.eq_zero_or_pos C with rfl | hC
+  · obtain ⟨h3, hAa, hb, hc1⟩ := zero_case h2 h1 (Ne.symm hne) ha
+    right
+    refine ⟨hAa ▸ h3, hAa.symm, hAa ▸ hb, ?_⟩
+    rw [hc1]; decide
+  · left
+    exact theorem15_7 (by simp) (by simp) (h1.to_one_of_zero_free (by simp; omega))
+      (h2.to_one_of_zero_free (by simp; omega)) hne
+
 end Munchausen

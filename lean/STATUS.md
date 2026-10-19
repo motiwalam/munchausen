@@ -19,8 +19,8 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Search, Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 85 formalized (one of them a
-list of computed solutions checked by `decide`), 11 partial, 10 rows of open
+Counts of table rows at the time of writing: 86 formalized (one of them a
+list of computed solutions checked by `decide`), 10 partial, 10 rows of open
 problems (13 `Prop`s), 4 refuted conjectures, 77 not formalized and 2 not
 stated.
 
@@ -142,7 +142,7 @@ stated.
 | Corollary 15.3 | `exists_even_cycle` [Cong] | formalized |
 | Propositions 15.4, 15.5 | none | not formalized (follow from 1.4, 2.1 and 2.3) |
 | Proposition 15.6 | none | not formalized (model) |
-| Theorem 15.7 | `theorem15_7`, `two_two_digit` [Short] | partial: the statement under `0^0 = 1`, proven in full; the `0^0 = 0` variant (twin bases `a^(a-1)`) is not formalized |
+| Theorem 15.7 | `theorem15_7`, `two_two_digit`, `theorem15_7_zero` [Short] | formalized (both conventions; under `0^0 = 0` the other bases are the twin bases `a^(a-1)`) |
 | Proposition 15.8 | `prop15_8`, `NotPerfectPower` [SPD] | formalized |
 | Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`, as the library now states it) |
 | Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
@@ -366,9 +366,8 @@ In order of value and effort:
    Theorem 25.15.
 2. Theorem 20.12 (the 5-adic law) and the equality part of Theorem 20.11
    (`p`-adic power series).
-3. Theorem 15.7 under `0^0 = 0`.
-4. The real-root count in Proposition 9.3 and the asymptotics of
+3. The real-root count in Proposition 9.3 and the asymptotics of
    Theorem 11.2.
-5. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
+4. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
    chapter 24.
-6. Corollary 26.2 and an abstract form of Theorem 27.5 (fooling sets).
+5. Corollary 26.2 and an abstract form of Theorem 27.5 (fooling sets).
