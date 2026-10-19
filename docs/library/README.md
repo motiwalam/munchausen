@@ -40,7 +40,7 @@ statement is marked by its source:
 | [26. Near-solutions as evidence](26-near-solutions-evidence.md) | the swap lemma: near-solutions cluster across offsets; a corrected calibration; every chance verdict revisited; a pooled test across worlds |
 | [27. Limits of search](27-limits-of-search.md) | constraint solvers lose to the tree; the entropy floor holds for every order; certificates of emptiness; bottom digits do not pay; the law of work-unit sizes |
 | [28. A sharper z-score rule, length windows and the GPU](28-zscore-gpu.md) | `--zlaw cond` fixes the variance of the z-score test (1.1 to 1.3x fewer nodes at equal miss rate); length windows do not pay; the GPU runs the inexact search and shards |
-| [Open questions](questions.md) | 89 research questions in five rounds, with priorities and answers; [round 5 directions](questions-round5.md) |
+| [Open questions](questions.md) | 110 research questions in six rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
