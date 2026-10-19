@@ -155,7 +155,7 @@ stated.
 | Lemma 15.12 (3) | `pow_self_modEq_27`, `pow_self_modEq_three_of_ne` [Res] | formalized |
 | Theorem 15.13 | `covering_27` [Res] | formalized |
 | example `(2,1,x)` | `not_isSolution_two_one` [Res] | formalized |
-| Theorem 15.14 (chains and cycles) | none | not formalized |
+| Theorem 15.14 (chains and cycles) | `theorem15_14`, `chainDigit`, `P_map_range` [SPD] | formalized (the chain `u_0 -> ... -> 0` and the cycles are given as a set `X` in `[1, t)` with `φ` injective on `X` and `φ(X) = (X minus u_0) ∪ {0}`, which is the same data; the 11-digit solution of base 64 is an example) |
 | Proposition 15.15 | `prop15_15` [Cons] | partial: `c^c + 1` is a solution in every base `r^t` with `u < t`, `t ∣ u (c - 1)`, and in base `c^c - c + 1`; that the number of such `t` is unbounded is not formalized |
 | Proposition 15.16 (needs `c ≥ 3` for the pair `(c,1)`) | `prop15_16`, `pow_self_pair`, `pow_self_injective` [Short] | formalized |
 | Proposition 15.17 | `prop15_17` [Window] | formalized |

@@ -463,4 +463,156 @@ theorem prop8_6_iff {b : ℕ} {s s' : List ℕ} {j : ℕ} (h : SPFill b s s' j) 
     have h2 : ((P b s' : ℕ) : ℤ) = ((Fs 1 s' : ℕ) : ℤ) := by linarith
     exact_mod_cast h2
 
+/-! ### Theorem 15.14: chains and cycles of power digits -/
+
+/-- The digits of the construction of Theorem 15.14 in base `r^t`: `r^(u_0)` at position 0 and
+`r^(φ x)` at position `π x` for `x ∈ X`, where `φ x = x r^x mod t` and `π x = ⌊x r^x / t⌋`
+(written as a sum over the at most one `x` with `π x = k`), and 0 elsewhere. -/
+def chainDigit (r t u0 : ℕ) (X : Finset ℕ) (k : ℕ) : ℕ :=
+  if k = 0 then r ^ u0 else ∑ x ∈ X.filter (fun x => x * r ^ x / t = k), r ^ (x * r ^ x % t)
+
+lemma P_map_range (b : ℕ) (f : ℕ → ℕ) (n : ℕ) :
+    P b ((List.range n).reverse.map f) = ∑ k ∈ Finset.range n, f k * b ^ k := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [List.range_succ, List.reverse_append, List.reverse_singleton, List.singleton_append,
+      List.map_cons, P_cons, List.length_map, List.length_reverse, List.length_range, ih,
+      Finset.sum_range_succ]
+    push_cast; ring
+
+lemma Fs_reverse_map_range (m : ℕ) (f : ℕ → ℕ) (n : ℕ) :
+    Fs m ((List.range n).reverse.map f) = ∑ k ∈ Finset.range n, w m (f k) := by
+  rw [List.map_reverse, Fs_reverse, Fs_map_range]
+
+/-- **Theorem 15.14** (section 15.5). Let `b = r^t`, `φ x = x r^x mod t`, `π x = ⌊x r^x / t⌋`,
+and let `X ⊆ [1, t)` contain `u_0`, with `φ` injective on `X` and `φ(X) = (X \ {u_0}) ∪ {0}`:
+this is exactly a chain `u_0 → u_1 → ... → 0` of `φ` together with cycles of `φ`. Place `r^(u_0)`
+at position 0 and `r^(φ x)` at position `π x` for `x ∈ X`. If the positions `π x` are distinct
+and positive, `T` is the largest one, and the string has exactly `r^(u_0) - 1` zeros
+(`T + 1 = r^(u_0) + |X|`), then it is a solution under `0^0 = 1`: the digit `r^(φ x)` at
+`π x` is worth `r^(x r^x) = w(r^x)`. -/
+theorem theorem15_14 {r t u0 T : ℕ} {X : Finset ℕ} (hr : 2 ≤ r) (hu0 : u0 ∈ X)
+    (hX : ∀ x ∈ X, 1 ≤ x ∧ x < t)
+    (hpos : ∀ x ∈ X, 1 ≤ x * r ^ x / t ∧ x * r ^ x / t ≤ T)
+    (hπ : Set.InjOn (fun x => x * r ^ x / t) X) (hφ : Set.InjOn (fun x => x * r ^ x % t) X)
+    (himage : X.image (fun x => x * r ^ x % t) = insert 0 (X.erase u0))
+    (hT : ∃ x ∈ X, x * r ^ x / t = T) (hlen : T + 1 = r ^ u0 + X.card) :
+    IsSolution (r ^ t) 1 ((List.range (T + 1)).reverse.map (chainDigit r t u0 X)) := by
+  set b := r ^ t with hb
+  set f := chainDigit r t u0 X with hfdef
+  set φ : ℕ → ℕ := fun x => x * r ^ x % t with hφdef
+  set π : ℕ → ℕ := fun x => x * r ^ x / t with hπdef
+  have hr0 : 0 < r := by omega
+  have ht : 1 ≤ t := by have := hX u0 hu0; omega
+  have hφt : ∀ x, φ x < t := fun x => Nat.mod_lt _ (by omega)
+  -- the fibre of a position has at most one element
+  have hfib : ∀ k, X.filter (fun x => π x = k) = ∅ ∨
+      ∃ a ∈ X, π a = k ∧ X.filter (fun x => π x = k) = {a} := by
+    intro k
+    rcases (X.filter (fun x => π x = k)).eq_empty_or_nonempty with h | ⟨a, ha⟩
+    · exact Or.inl h
+    · obtain ⟨haX, hak⟩ := Finset.mem_filter.1 ha
+      refine Or.inr ⟨a, haX, hak, Finset.eq_singleton_iff_unique_mem.2 ⟨ha, fun y hy => ?_⟩⟩
+      obtain ⟨hyX, hyk⟩ := Finset.mem_filter.1 hy
+      exact hπ hyX haX (hyk.trans hak.symm)
+  have hfib0 : X.filter (fun x => π x = 0) = ∅ :=
+    Finset.filter_eq_empty_iff.2 fun x hx => by have := (hpos x hx).1; simp only [π]; omega
+  have hf : ∀ k, f k = (if k = 0 then r ^ u0 else 0) + ∑ x ∈ X.filter (fun x => π x = k),
+      r ^ φ x := by
+    intro k
+    by_cases hk : k = 0
+    · subst hk; simp [hfdef, chainDigit, hfib0]
+    · simp [hfdef, chainDigit, hk, φ, π]
+  -- the value of a placed digit
+  have hval : ∀ x, r ^ φ x * b ^ π x = w 1 (r ^ x) := by
+    intro x
+    rw [w_one_eq_pow, hb, ← pow_mul, ← pow_add, ← pow_mul]
+    congr 1
+    simp only [φ, π]
+    exact Nat.mod_add_div _ _
+  have hmaps : ∀ x ∈ X, π x ∈ Finset.range (T + 1) := fun x hx =>
+    Finset.mem_range.2 (by have := (hpos x hx).2; simp only [π]; omega)
+  -- `P = r^(u_0) + ∑_X w(r^x)`
+  have hP : P b ((List.range (T + 1)).reverse.map f) = r ^ u0 + ∑ x ∈ X, w 1 (r ^ x) := by
+    rw [P_map_range]
+    simp only [hf, add_mul, Finset.sum_add_distrib, Finset.sum_mul]
+    have h1 : ∑ k ∈ Finset.range (T + 1), (if k = 0 then r ^ u0 else 0) * b ^ k = r ^ u0 := by
+      simp [ite_mul]
+    rw [h1, ← Finset.sum_fiberwise_of_maps_to hmaps (fun x => w 1 (r ^ x))]
+    congr 1
+    refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun x hx => ?_
+    rw [← hval x, (Finset.mem_filter.1 hx).2]
+  -- `F + |X| = w(r^(u_0)) + ∑_X w(r^(φ x)) + T`
+  have hcardX : ∑ k ∈ Finset.range (T + 1), (X.filter (fun x => π x = k)).card = X.card :=
+    (Finset.card_eq_sum_card_fiberwise hmaps).symm
+  have hpoint : ∀ k ∈ Finset.range (T + 1),
+      w 1 (f k) + (X.filter (fun x => π x = k)).card =
+        (if k = 0 then w 1 (r ^ u0) else 0) +
+          ∑ x ∈ X.filter (fun x => π x = k), w 1 (r ^ φ x) + (if k = 0 then 0 else 1) := by
+    intro k _
+    by_cases hk : k = 0
+    · subst hk; simp [hf, hfib0]
+    rcases hfib k with h | ⟨a, -, -, h⟩
+    · simp [hf, hk, h, w_zero]
+    · simp [hf, hk, h]
+  have hF : Fs 1 ((List.range (T + 1)).reverse.map f) + X.card =
+      w 1 (r ^ u0) + ∑ x ∈ X, w 1 (r ^ φ x) + T := by
+    rw [Fs_reverse_map_range, ← hcardX, ← Finset.sum_add_distrib, Finset.sum_congr rfl hpoint,
+      Finset.sum_add_distrib, Finset.sum_add_distrib,
+      Finset.sum_fiberwise_of_maps_to hmaps (fun x => w 1 (r ^ φ x))]
+    have h1 : ∑ k ∈ Finset.range (T + 1), (if k = 0 then w 1 (r ^ u0) else 0) = w 1 (r ^ u0) := by
+      simp
+    have h2 : ∑ k ∈ Finset.range (T + 1), (if k = 0 then 0 else 1) = T := by
+      rw [Finset.sum_range_succ']; simp
+    rw [h1, h2]
+  -- `∑_X w(r^(φ x)) + w(r^(u_0)) = 1 + ∑_X w(r^x)`
+  have hpay : ∑ x ∈ X, w 1 (r ^ φ x) + w 1 (r ^ u0) = 1 + ∑ x ∈ X, w 1 (r ^ x) := by
+    have h1 : ∑ x ∈ X, w 1 (r ^ φ x) = ∑ y ∈ X.image φ, w 1 (r ^ y) :=
+      (Finset.sum_image (f := fun y => w 1 (r ^ y)) fun x hx y hy h => hφ hx hy h).symm
+    have h0 : (0 : ℕ) ∉ X.erase u0 := fun h => by
+      have := (hX 0 (Finset.mem_of_mem_erase h)).1; omega
+    rw [h1, himage, Finset.sum_insert h0, pow_zero, w_one, add_assoc,
+      Finset.sum_erase_add _ _ hu0]
+  obtain ⟨x0, hx0, hx0T⟩ := hT
+  refine ⟨fun d hd => ?_, fun h => ?_, ?_⟩
+  · -- digits are below `b`
+    obtain ⟨k, -, rfl⟩ := List.mem_map.1 hd
+    rw [hf]
+    by_cases hk : k = 0
+    · subst hk
+      simp only [ite_true, hfib0, Finset.sum_empty, add_zero]
+      exact Nat.pow_lt_pow_right (by omega) (hX u0 hu0).2
+    · simp only [hk, ite_false, zero_add]
+      rcases hfib k with h | ⟨a, -, -, h⟩
+      · rw [h, Finset.sum_empty]; exact pow_pos hr0 _
+      · rw [h, Finset.sum_singleton]; exact Nat.pow_lt_pow_right (by omega) (hφt a)
+  · -- the leading digit is `f T ≠ 0`
+    have hT1 : 1 ≤ T := hx0T ▸ (hpos x0 hx0).1
+    have hhead : ((List.range (T + 1)).reverse.map f).head h = f T := by
+      simp [List.range_succ]
+    rw [hhead, hf]
+    simp only [show T ≠ 0 by omega, ite_false, zero_add]
+    rcases hfib T with h' | ⟨a, -, -, h'⟩
+    · exact absurd (Finset.mem_filter.2 ⟨hx0, hx0T⟩) (by rw [h']; simp)
+    · rw [h', Finset.sum_singleton]; exact (pow_pos hr0 _).ne'
+  · -- the value equals the weight sum
+    rw [hP]
+    omega
+
+/-- The 11-digit solution of base 64 (section 15.5): the chain `3 → 0` (`8` at position 0, `1`
+at position 4) with the self-paying digits 4 and 16 (the 1-cycles 2 and 4 of `φ`), and 7 zeros. -/
+example : IsSolution (2 ^ 6) 1
+    ((List.range (10 + 1)).reverse.map (chainDigit 2 6 3 {2, 3, 4})) := by
+  refine theorem15_14 (u0 := 3) (by norm_num) (by decide) (by decide) (by decide) ?_ ?_ (by decide)
+    ⟨4, by decide, by decide⟩ (by decide)
+  · intro x hx y hy h
+    simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_insert_iff,
+      Set.mem_singleton_iff] at hx hy
+    rcases hx with rfl | rfl | rfl <;> rcases hy with rfl | rfl | rfl <;> simp_all
+  · intro x hx y hy h
+    simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_insert_iff,
+      Set.mem_singleton_iff] at hx hy
+    rcases hx with rfl | rfl | rfl <;> rcases hy with rfl | rfl | rfl <;> simp_all
+
 end Munchausen
