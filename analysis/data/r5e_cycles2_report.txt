@@ -1,0 +1,6 @@
+# r5e_cycles2_report.py: near-2-cycles, bases 4 to 16, j = 1..30
+# summaries equal to r2c_cycles2.txt: 26 of 26
+even 0^0=0 bases 4-16: 2-cycles 1, near per offset 4.63, events 278, shared 0.76, phi 2.45; P(N <= obs) fixed 0.055, clustered 0.057
+even 0^0=1 bases 4-16: 2-cycles 3, near per offset 4.53, events 272, shared 0.90, phi 2.90; P(N <= obs) fixed 0.337, clustered 0.339
+odd 0^0=0 bases 5-15: 2-cycles 5, near per offset 7.22, events 433, shared 0.84, phi 2.52; P(N <= obs) fixed 0.274, clustered 0.277
+odd 0^0=1 bases 5-15: 2-cycles 4, near per offset 3.45, events 207, shared 0.87, phi 2.82; P(N <= obs) fixed 0.735, clustered 0.728
