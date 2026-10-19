@@ -94,6 +94,12 @@ coincidences and blind to identities. @ch-constructions tells this story.
   largest remaining deviation, 12% under $0^0 = 1$, is not a new kind of
   correction. Taken together, the P values of the library show selection,
   and the tests named in advance agree with the model (@sec-model-ledger).
+- The root heuristic for short strings and the per-base model for long
+  ones are one heuristic, averaged over the residue of the base in one case
+  and not in the other (@sec-short-arrangements). One ideal gives the
+  identity modulus of every number system (@sec-worlds-ideal). And every
+  base $b >= 27$ provably has a near-solution whose sum agrees with it in
+  about $sqrt(b slash e)$ top digits (@sec-model-existence).
 - Some of the questions connect to other fields: anti-concentration in
   probability, the map $x |-> x^x$ modulo a prime, and sums of two squares
   (@sec-open-connections).

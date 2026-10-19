@@ -787,6 +787,187 @@ The block route carries 0.039 of the expected 0.33, so blocks do not explain
 the excess. It stays an unexplained fluctuation at the level of
 $P approx 0.015$ #lib("22.4").
 
+=== Local factors and the per-base model <sec-short-arrangements>
+
+The root heuristic gives each string a factor at every small prime. The
+per-base model of @ch-model has only the factor of the identity modulo
+$b - 1$ (@sec-model-refined). The two look like different heuristics. They
+are one heuristic averaged in two ways, and the link is the way the
+arrangements of one multiset spread over the residues modulo $q$.
+
+Fix a base $b$, a modulus $q$ and a multiset $c$ of $k >= 3$ digits, and
+draw an arrangement of $c$ with a nonzero leading digit uniformly. Write
+$sigma(c)$ for the digit sum. If $q | b - 1$, every arrangement is
+congruent to $sigma(c)$ modulo $q$ (@thm-digit-sum). If $q | b$, the
+residue is fixed by the last digit. The remaining case is
+$gcd(q, b(b - 1)) = 1$. Since $b (b - 1)$ is even, such a $q$ is odd.
+
+#theorem(id: "short-thm-arrangements", title: "Arrangements spread over the residues", src: "35.1")[
+  Let $gcd(q, b(b - 1)) = 1$. Fix the leading digit, let the other
+  $k' = k - 1$ digits be $x_1, dots, x_(k')$, and put
+  $
+    gamma = max_(h equiv.not 0 med (mod q)) lr(|1 / k' sum_(i = 1)^(k') e(h x_i slash q)|).
+  $
+  Then for every residue $a$,
+  $
+    |q P(n equiv a med (mod q)) - 1| <= (q - 1) e^(1 slash 8) exp(-(1 - gamma)^2 (k - 1) slash 64).
+  $
+  The same holds without fixing the leading digit, with $gamma$ the largest
+  over the leading digits.
+]
+#sketch[
+  Pair the positions $(2j, 2j + 1)$. Exchanging the digits $u, v$ of a pair
+  moves $n$ by $(v - u) b^(2j) (1 - b)$, a unit times $v - u$ modulo $q$.
+  Exchange each pair or not by a fair coin. The arrangement stays uniform,
+  and the coins multiply $E thin e(h n slash q)$ by factors
+  $|cos(pi h delta_j slash q)|$. A pair is two distinct digits drawn from
+  those not yet used, so the mean of $cos^2$ is at most
+  $(1 + rho_j^2) slash 2$, with $rho_j$ close to $gamma$. Take about
+  $(1 - gamma) k slash 8$ pairs and sum over $h$ #lib("35.1").
+]
+
+The rate depends on the length and on how spread out the digits are, not
+on the order of $b$ modulo $q$, as question #q(91) expected. The proof
+uses nothing about $b$ except that $b$ and $b - 1$ are units modulo $q$.
+So it applies to every residue $r$ of the base with $r$ and $r - 1$ prime
+to $q$.
+
+#proposition(id: "short-prop-base-average", title: "The local factor is a base average", src: "35.1")[
+  For a string $s$ let $N_s (q)$ be the number of residues $r$ modulo $q$
+  with $P_s (r) equiv F(s) med (mod q)$. For every multiset $c$, the mean of
+  $N_s (q)$ over the arrangements $s$ of $c$ is
+  $
+    sum_(r med (mod q)) P(P_s (r) equiv F(c) med (mod q)).
+  $
+  The term $r = 1$ is 1 if $q$ divides $F(c) - sigma(c)$ and 0 otherwise.
+  The term $r = 0$ is the share of arrangements whose last digit is
+  congruent to $F(c)$. For a prime $q$ each other term is $1 slash q$ up to
+  the error of @short-thm-arrangements.
+]
+#proof[
+  Exchange the sum over $r$ and the mean over the arrangements. Then
+  $P_s (1) = sigma(c)$ and $P_s (0)$ is the last digit. For a prime $q$
+  every other $r$ has $r$ and $r - 1$ prime to $q$.
+]
+
+So the local factor of a string, averaged over its arrangements, is the
+per-base factor averaged over the residue of the base. The refined model
+keeps the residue of the actual base: at bases $b equiv 1$ it has the
+identity factor $q$ or 0, at the others the arrangement factor or the
+last-digit factor. The two heuristics agree on totals over many bases and
+differ base by base.
+
+#computation(id: "short-comp-arrangements", title: "How fast the arrangement factors approach 1", src: "35.1")[
+  Candidate multisets of $k$ digits in bases 9 to 30, 40 per base, under
+  $0^0 = 1$, with the shares computed exactly. RMS of
+  $q P(n equiv F(c)) - 1$ over the bases with $gcd(q, b(b - 1)) = 1$:
+
+  #align(center, btable(
+    columns: 7,
+    align: (left, right, right, right, right, right, right),
+    [$q$], [$k = 3$], [4], [6], [8], [10], [12],
+    [3], [0.76], [0.59], [0.28], [0.17], [0.087], [0.043],
+    [5], [0.93], [0.73], [0.30], [0.18], [0.082], [0.036],
+    [7], [1.14], [0.71], [0.30], [0.21], [0.075], [0.040],
+    [9], [1.48], [1.03], [0.51], [0.25], [0.12], [0.084],
+  ))
+
+  The spread falls like $e^(-0.35 k)$ and is below 0.1 from 10 digits on
+  for $q = 3, 5, 7$ and from 12 digits on for $q = 9$. The mean of the
+  factor is 0.98 to 1.04 in every cell from 5 digits on, and 0.87 to 1.05
+  at 3 and 4 digits.
+]
+
+The arrangement factors have mean 1. They add scatter to single strings,
+not an excess. So they cannot be why short solutions are more common than
+the basic model of @ch-model says, which was the lead of question #q(91).
+Part of the excess has another source. At a short length a sum of a few
+values $x^x - x$ of small digits is concentrated modulo the small primes
+of $b - 1$. For example $x^x equiv x med (mod 3)$ for 5 of every 6 digits
+$x >= 1$. So the identity factor $(b - 1) P((b - 1) | F(c) - sigma(c))$ is
+large at short lengths. The refined model contains it if it is computed at
+the short length itself.
+
+#computation(id: "short-comp-refined-short", title: "Short solutions against the exact refined model", src: "35.1")[
+  Expected and observed solutions, summed over the bases $max(9, d)$ to 41:
+
+  #align(center, btable(
+    columns: 6,
+    align: (right, right, right, right, right, right),
+    [$d$], [basic], [refined, $0^0 = 1$], [observed], [refined, $0^0 = 0$], [observed],
+    [3], [0.46], [0.72], [1], [0.97], [3],
+    [4], [0.39], [0.56], [2], [0.83], [2],
+    [5], [0.40], [0.45], [2], [0.61], [4],
+    [6], [0.38], [0.47], [1], [0.66], [2],
+    [8], [1.13], [1.23], [2], [1.74], [3],
+    [12], [1.12], [1.20], [3], [1.79], [2],
+  ))
+
+  The short exceptions of @sec-model-window (3 to 5 digits far below the
+  base, bases 10 to 41 and 43) have the basic expectation 0.96 and the
+  refined expectations 1.35 under $0^0 = 1$ and 1.86 under $0^0 = 0$,
+  against 5 and 9 observed.
+]
+
+Under $0^0 = 0$ the nine are mostly structured: self-paying zeros, block
+pairs and a family member. Under $0^0 = 1$ one of the five is a family
+member. The other four are 3435, $(6, 5, 3, 4)$ in base 20,
+$(3, 3, 6, 6, 1)$ in base 13 and $(2, 6, 0, 3, 6)$ in base 14. Against
+1.35 expected, four or more has probability 0.048, and two of the four are
+the 5-digit excess of @short-5-excess.
+
+#heuristic(id: "short-heur-one", title: "One heuristic for every length", src: "35.1")[
+  The root heuristic and the per-base refined model are two averages of
+  one local density. The root heuristic averages the per-base factors over
+  the residue of the base; the refined model keeps the residue of the
+  actual base. They agree on totals over many bases. Per base they differ
+  by the arrangement factors, which have mean 1 and an RMS of about
+  $e^(-0.35 k)$, and by the last-digit factor. The excess of short
+  solutions over the basic model has three parts: the identity factor
+  modulo $b - 1$ at the short length (1.1 to 2.1 for $x^x$), identity
+  families and self-paying blocks, and under $0^0 = 1$ a residual of about
+  3 times on four generic strings.
+]
+
+The medium lengths test this. For lengths 6 to 12 in bases 7 to 20 the
+library computed the root heuristic by sampling, the refined model exactly
+(with and without the forced top digit), and the base-by-base calibration
+of @short-calibration for lengths 6 to 10.
+
+#computation(id: "short-comp-medium", title: "The two heuristics at 6 to 12 digits", src: "35.2")[
+  Bases 7 to 20, all 83 cells of a length from 6 to 12:
+
+  #align(center, btable(
+    columns: 5,
+    align: (left, right, right, right, right),
+    [convention], [observed], [refined], [root, roots mod $p$], [root, roots mod $p^e$],
+    [$0^0 = 1$], [10], [8.85], [9.51], [9.74],
+    [$0^0 = 0$], [12], [12.72], [13.00], [14.19],
+  ))
+
+  Lengths 6 to 10 under $0^0 = 0$, split by the parity of the base:
+
+  #align(center, btable(
+    columns: 5,
+    align: (left, right, right, right, right),
+    [bases], [observed], [calibration], [refined, top digit forced], [root, roots mod $p$],
+    [even], [2], [2.38], [2.55], [4.37],
+    [odd], [8], [5.77], [5.56], [5.27],
+  ))
+
+  Cell by cell the refined model with the top digit forced correlates with
+  the calibration at 0.99 under $0^0 = 1$ and 0.94 under $0^0 = 0$.
+]
+
+So the two heuristics give the same totals, and both fit the census. Base
+by base only the refined model matches the calibration. The root heuristic
+averages the parity factor over even and odd bases, as
+@short-prop-base-average says it must. The forced top digit matters in
+single cells: in base 10 at 6 digits every candidate digit is at most 7,
+and one 7 makes $F >= 7^7 = 823 thin 543$, a top digit 8 or 9 that no
+candidate contains. No missing factor shows at these lengths, so the
+5-digit excess is not a factor that the medium lengths share.
+
 === What the heuristic cannot see
 
 The completeness of the lists can be estimated with the same heuristic: sum
@@ -1329,8 +1510,8 @@ absent from most bases in a whole range of lengths.
 
 For a fixed length the multiset count alone is weaker than
 @short-bases-k, because each window holds about $X slash (p k)$ integers.
-The digit-sum identity repairs this: $b - 1$ divides $F(c) - S(c)$, where
-$S(c)$ is the digit sum of $c$ (@thm-digit-sum).
+The digit-sum identity repairs this: $b - 1$ divides $F(c) - sigma(c)$, where
+$sigma(c)$ is the digit sum of $c$ (@thm-digit-sum).
 
 #lemma(id: "short-divisors", title: "Divisors in a short interval", src: "20.1")[
   Let $d_1 < dots < d_r$ be divisors of $m >= 1$ in an interval $(Y - h, Y]$
@@ -1351,9 +1532,69 @@ $S(c)$ is the digit sum of $c$ (@thm-digit-sum).
 Beyond $alpha = 1$ any argument that tests candidates one at a time stops,
 because the number of multisets itself exceeds $B$. Going further would need
 an equidistribution statement: that the integers
-$F(c) - S(c) = sum (d^d - d)$ spread evenly over residue classes modulo the
+$F(c) - sigma(c) = sum (d^d - d)$ spread evenly over residue classes modulo the
 integers $b - 1$ of a short window that depends on $F(c)$ itself. No method
 for this is known #lib("20.1").
+
+Question #q(101) asked whether averaging over the bases gets around this.
+Split a multiset into large digits and small digits, whose weights add up
+to less than $b - 1$. Given the large part and the base, the congruence
+$(b - 1) | F(c) - sigma(c)$ fixes the small part of $F(c) - sigma(c)$
+exactly, and dissociation (@sec-model-anticonc) bounds the number of small
+multisets with a given value. The count becomes a sum over the large parts
+and the bases of their windows. The gain is bounded, because most
+multisets have no small digit at all.
+
+#proposition(id: "short-prop-no-small", title: "Averaging gains a bounded factor", src: "35.4")[
+  Let $K = kappa L slash ln L$ with $kappa$ bounded, $X = X_K (B)$, and let
+  $z$ be the largest digit with $z^z <= B^A$ for a fixed $A > 0$. Among the
+  multisets of $K$ digits from $0, dots, X$, the share with no digit up to
+  $z$ is $e^(-2A + o(1))$. So the averaged count, with the window factor of
+  @short-multiset-count, is at least $e^(-2A - o(1))$ times the bound of
+  @short-multiset-count. Small weights stay below $b <= B$, so $A < 1$, and
+  averaging in this form gains at most a factor $e^(2 + o(1))$.
+]
+#sketch[
+  The share is $product_(i = 1)^K (1 - (z + 1) slash (X + i))$. From
+  $X ln X approx K L$ and $z ln z approx A L$ one gets
+  $K z slash X -> 2A$. A multiset without small digits enters the averaged
+  count exactly as in @short-multiset-count. The term $k = K$ carries
+  almost all of the sum over $k <= K$ #lib("35.4").
+]
+
+#computation(id: "short-comp-averaged", title: [The averaged bound at $B = 10^96$], src: "35.4")[
+  With $z = 30$, the averaged bound is $B^(0.9698)$ at $K = 48$ against
+  $B^(0.9725)$ for @short-multiset-count, a factor 1.8. Both stay below $B$
+  up to $K = 49$, and up to $K = 362$ at $B = 10^1000$.
+]
+
+The window does not see the small digits at all. That gives a range far
+beyond $ln b slash ln ln b$ for strings with few large digits.
+
+#theorem(id: "short-thm-few-large", title: "Few large digits", src: "35.4")[
+  Fix $C >= 1$ and $epsilon > 0$. Call a digit $x$ large when
+  $x^x >= sqrt(b)$. Almost all bases $b$ have no solution of length at most
+  $(ln b)^C$ with at most $(1 slash C - epsilon) ln b slash ln ln b$ large
+  digits, whatever the number of smaller digits. Up to $B$, at most
+  $B^(max(1 slash 2, 1 - C epsilon) + o(1))$ bases have one.
+]
+#sketch[
+  The small digits weigh less than $k sqrt(b)$ in all. That moves
+  $(F slash p)^(1 slash (k - 1))$ by less than 1, so the base lies in a
+  window fixed by the large digits, the length and the leading digit. Count
+  these data: the large part is one of
+  $binom(X + K', K')$ multisets with $K' = (1 slash C - epsilon) L slash ln L$
+  and $ln X <= (C + 1) ln L$, so its logarithm is at most
+  $(1 - C epsilon) L (1 + o(1))$. The other factors are $exp(O(ln L))$
+  #lib("35.4").
+]
+
+For $C = 1$ this reaches lengths up to $ln b$. Typical strings of that
+length have almost all digits large, so the theorem says nothing about
+them. It covers the structured strings: a few large digits padded with
+small ones, the shape of the self-paying and binomial families
+(@sec-cons-binomial). Those families live in sparse sets of bases, which
+agrees with the theorem.
 
 == Other roots: negative bases and rational roots <sec-short-roots>
 

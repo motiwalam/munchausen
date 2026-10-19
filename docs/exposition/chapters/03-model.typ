@@ -705,6 +705,45 @@ There is a second lesson in the comparison. In $FF_q [T]$ the near-solution chec
   Some solutions contain a block that pays for itself, such as $(3, 3, 6, 6, 1)$ in base 13, where $13 dot P_((3,3,6,6))(13) = 3^3 + 3^3 + 6^6 + 6^6$ (@sec-cons-blocks). In the model a solution ends in such a self-paying tail with probability $T_m (b) slash b^m$, where $T_m (b)$ counts the $m$-digit tails that pay for themselves. Under $0^0 = 1$, $T_1 (b) = 1$ (the digit 1) and $T_2 (b)$ is the number of 2-digit solutions, usually 0. So the block route is a share of about $1 slash b$ of the solutions, already counted. In bases 2 to 43 under $0^0 = 1$, 2 of the 59 solutions with at least 4 digits have an exact split at the last digit, against 3.38 expected #lib("22.5").
 ]
 
+=== Near-solutions exist in every base <sec-model-existence>
+
+The model puts many near-solutions with $|n - F(n)|$ of size $b$ in every base. Nothing of this is proved. But a weaker statement is: every large base has an $n$ whose sum $F(n)$ agrees with $n$ in about $sqrt(b slash e)$ top digits. It is the first existence statement of the library that is not an identity family (#q(100)).
+
+#theorem(id: "model-thm-near-exist", title: "Near-solutions in every base", src: "35.5")[
+  Let $b >= 3$ and $T >= 1$ satisfy
+  $T + 5 <= b (1 - e^(-1 + 1 slash b))$, $2(T + 4) <= b$ and
+  $
+    1 + T (e (T + 4) b / (b - T - 5) + 1) + (e b) / (b - 2) + 1 + T <= b - 2.
+  $
+  Then under each convention some $n$ with $b - 1$ digits has
+  $0 < |n - F(n)| < b^(b - 1 - T)$, and $n >= (b slash e - 1) b^(b - 2)$.
+]
+#sketch[
+  Start with one digit $b - 1$; its weight $(b - 1)^(b - 1) approx b^(b-1) slash e$ has $b - 1$ digits and a top digit near $b slash e$. Then steer the digits 2 to $T + 1$ of $F$ one by one. If digit $j$ lies in a forbidden zone of $z <= T + 4$ values near $b - 1$, add copies of the largest digit whose weight is at most $(b - z - 1) b^(b - 1 - j)$. One copy moves digit $j$ by less than one unit, or by a jump that clears the zone, so after at most about $e T$ copies it leaves the zone, and the carry into the earlier digits is at most 1. The conditions keep the number of copies below the length. Finally add the matched top digits $a_1, dots, a_T$ of $F$ to the multiset and fill with zeros. Their weights are too small to change the top $T$ digits, so the arrangement that starts with $a_1, dots, a_T$ agrees with its own $F$ there. If it is an exact solution, swapping the digit $b - 1$ with a zero gives a near-solution #lib("35.5").
+]
+
+#corollary(id: "model-cor-near-exist", title: "How close", src: "35.5")[
+  Let $T(b)$ be the largest $T$ allowed. It does not decrease with $b$, and $T(b) = sqrt(b slash e) - O(1)$: it is 1 at $b = 27$, 3 at 100, 16 at 1000 and 603 at $10^6$. So every base $b >= 27$ has a near-solution with $|n - F(n)| < n b^(-t)$, $t = T(b) - log_b (e b slash (b - e))$, and $t >= 2$ in every base $b >= 77$.
+]
+
+The thresholds 27 and 77 are computed and extend to every larger base because the conditions only get easier as $b$ grows. The proof never needs the base-$b$ digits of the real numbers that the top digits of $F$ approximate, which question #q(100) feared. The limit $sqrt(b)$ comes from the zone that the matched digits must avoid.
+
+#computation(id: "model-comp-near-exist", title: "The construction, run", src: "35.5")[
+  The construction in exact integers, with steering only when a digit falls into its zone, stopped at the first $T$ that does not fit:
+  #align(center, btable(columns: 5, align: (right, right, right, right, right),
+    [$b$], [$T(b)$], [largest $T$ reached], [copies used], [$t$ reached],
+    [30], [1], [15], [11], [14.76],
+    [100], [3], [24], [47], [23.95],
+    [200], [6], [47], [76], [47.22],
+    [500], [11], [134], [361], [134.38],
+    [1000], [16], [127], [583], [127.01],
+    [1500], [20], [255], [1229], [255.17],
+  ))
+  Every base from 10 to 200 reaches $T >= 0.17 b$, and the sampled bases 300 to 1500 reach $0.13 b$ to $0.27 b$.
+]
+
+Most digits never fall into their zone, so the construction does much better than the bound. Whether $t >= c b$ can be proved is open (@open-existence).
+
 == Near-solutions as evidence <sec-model-evidence>
 
 Almost every "chance" verdict in this document rests on near-solutions: a count at $D = 0$ is compared with its mean over many offsets in the class of 0. The library first treated the offsets as independent draws. They are not, and the reason is elementary.
@@ -1131,7 +1170,7 @@ The library first stated a cruder window, $b <= k + (1 + epsilon) ln k$, and dre
   ))
 ]
 
-The long exceptions agree with the model: 3 observed against about 1.2 expected, and one of the three lies in base 64, which has self-paying digits. The short exceptions do not: 9 against 1.0. That is expected, because the per-base model is the wrong tool for short strings. For a short string the base is the root of a polynomial (@thm-one-base), and the right question is whether that root is an integer. @sec-short-heuristic develops that heuristic. It explains the short solutions in the searched ranges, but it too misses the algebraic families.
+The long exceptions agree with the model: 3 observed against about 1.2 expected, and one of the three lies in base 64, which has self-paying digits. The short exceptions do not: 9 against 1.0. That is expected, because the per-base model is the wrong tool for short strings. For a short string the base is the root of a polynomial (@thm-one-base), and the right question is whether that root is an integer. @sec-short-heuristic develops that heuristic. It explains part of the short solutions in the searched ranges, and it too misses the algebraic families. The 0.96 is the basic model. The exact refined model, computed at the short lengths, expects 1.35 of the 5 under $0^0 = 1$, one of which is a family member; four generic ones against 1.35 have probability 0.048 (@sec-short-arrangements).
 
 For a fixed large length $k$, the model puts a $k$-digit solution in base $k$ with probability 8%, $k + 1$ with 55%, $k + 2$ with 23%, and so on. The expected number of bases with a $k$-digit solution is about 1, so a length has no base with probability about $e^(-1) = 37%$ and two or more with probability about 26%. Under $0^0 = 1$, 7 of the 29 lengths from 2 to 30 have no solution in any base up to 127, which is 24% #lib("3.4"). The missing lengths are missing only near the length: the binomial families supply every length in astronomically large bases.
 
