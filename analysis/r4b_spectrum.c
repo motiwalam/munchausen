@@ -176,8 +176,8 @@ int main(int argc, char **argv) {
             while (t % p == 0) { t /= p; pp *= p; }
             if (p >= 11) add_q(C, pp);
         }
-        /* class moduli: 2(b-1) times 4, 8, 9, 72, 1800, b, 16*27*25*49 */
-        ll extra[7] = {4, 8, 9, 72, 1800, b, 16LL * 27 * 25 * 49};
+        /* class moduli: 2(b-1) times 4, 8, 9, 72, b^2, b, 16*27*25*49 */
+        ll extra[7] = {4, 8, 9, 72, (ll)b * b, b, 16LL * 27 * 25 * 49};
         C->nc = 7;
         for (int j = 0; j < 7; j++) C->cm[j] = lcm(C->M2, extra[j]);
         rec(C, L - 1, 0);
