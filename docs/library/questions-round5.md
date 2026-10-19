@@ -1,6 +1,6 @@
 # Round 5: directions and questions
 
-DRAFT. A reading of the whole library, chapters 1 to 24 and the questions 1
+A reading of the whole library, chapters 1 to 24 and the questions 1
 to 71, produced this file. Part A names seven broad directions that the
 library has not explored or has only touched. Part B poses 18 concrete
 questions, numbered 72 to 89, each raised by a result of a named chapter. The
