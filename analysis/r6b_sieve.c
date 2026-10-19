@@ -16,6 +16,9 @@
    output: one line per family with the count of even x in [2, X0] tested,
    then "survivor p q pos m x" for each x that passes every prime.
 
+   With the argument "sq" the program tests the odd squares x = t^2 instead,
+   for odd t <= X0, with a wheel on t (t^2 mod L depends on t mod L).
+
    build: gcc -O3 -march=native -fopenmp -o r6b_sieve r6b_sieve.c
 */
 #include <stdio.h>
@@ -45,7 +48,8 @@ static uint64_t wmod(uint64_t d, int m, uint64_t l) {
     return powmod(d, d, l);
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+    int sq = argc > 1 && strcmp(argv[1], "sq") == 0;
     int n = 0;
     for (uint32_t c = 3; n < NP; c += 2) {
         int pr = 1;
@@ -94,7 +98,7 @@ int main(void) {
             uint8_t ok = 1;
             for (int i = 0; i < NW; i++) {
                 uint64_t L = (uint64_t)P[i] * (P[i] - 1);
-                ok &= tab[i][r % L];
+                ok &= tab[i][(sq ? r * r : r) % L];
             }
             wheel[r] = ok;
         }
@@ -102,9 +106,9 @@ int main(void) {
         #pragma omp parallel for schedule(dynamic, 1) reduction(+:tested)
         for (uint64_t blk = 0; blk <= X0 / WHEEL; blk++) {
             uint64_t base = blk * WHEEL;
-            for (uint64_t r = 0; r < WHEEL; r += 2) {
-                uint64_t x = base + r;
-                if (x < 2 || x > X0) continue;
+            for (uint64_t r = sq; r < WHEEL; r += 2) {
+                uint64_t t = base + r, x = sq ? t * t : t;
+                if (t < 2 - sq || t > X0) continue;
                 tested++;
                 if (!wheel[r]) continue;
                 int i;

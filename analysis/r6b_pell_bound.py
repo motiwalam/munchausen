@@ -23,7 +23,9 @@ Here eta is the fundamental unit of the ring of integers of Q(sqrt n).
 This script finds the largest even x that satisfies the inequality, for every
 non-square p <= P and q <= Q, both positions and both conventions.
 
-usage: r6b_pell_bound.py P Q   prints "p q pos m n eta_log X0"
+usage: r6b_pell_bound.py P Q [sq]   prints "p q pos m n eta_log X0"
+With "sq" it prints instead the bound T0 on t for odd square x = t^2
+(t0_square below).
 """
 import math
 import sys
@@ -137,6 +139,7 @@ def x0(p, q, pos, m, lam):
 
 def main():
     P, Q = int(sys.argv[1]), int(sys.argv[2])
+    bound = t0_square if sys.argv[3:] == ['sq'] else x0
     for p in range(2, P + 1):
         n, f = squarefree_part(p)
         if n == 1:
@@ -148,7 +151,53 @@ def main():
                     if q > 0 and m == 1:
                         continue  # the conventions differ only when q = 0
                     print(p, q, pos, m if q == 0 else '-', n, f'{lam:.4f}',
-                          x0(p, q, pos, m, lam))
+                          bound(p, q, pos, m, lam))
+
+
+
+def t0_square(p, q, pos, m, lam):
+    """The bound for odd square x = t^2, from Matveev's theorem.
+
+    Then x^x = (t^x)^2 and V = 2 f t^x. With beta' = U + V sqrt n = delta' eta'^m,
+    Lambda = log(4 f sqrt n) + x log t - log|delta'| + m' log eta
+    equals log|1 - beta/beta'|, so |Lambda| <= 2 |R| / (n V^2). Matveev
+    (Izv. Math. 64 (2000), Corollary 2.3) for four logarithms in a real
+    field of degree D = 2 gives
+    log|Lambda| > -1.4 30^7 4^4.5 D^2 (1 + log D) (1 + log B) A1 A2 A3 A4,
+    with A1 = log(16 f^2 n), A2 = 2 log t, A3 = log(|R| eta), A4 = log eta
+    and B = max(x, |m|). Returns the largest odd t not excluded.
+    """
+    n, f = squarefree_part(p)
+    C = 1.4 * 30 ** 7 * 4 ** 4.5 * 4 * (1 + math.log(2))
+
+    def ok(t):
+        x = t * t
+        if pos == 'last':
+            R = q * q + 4 * p * (w(p, m) + w(q, m) + x)
+        else:
+            R = x * x + 4 * p * (w(p, m) + w(q, m) + q)
+        lt = math.log(t)
+        mm = (math.log(4 * f * math.sqrt(n)) + x * lt + 1e-6) / lam + 0.5
+        B = max(x, mm)
+        A = (math.log(16 * f * f * n), 2 * lt, math.log(R) + lam, max(lam, 0.16))
+        A = [max(a, 0.16) for a in A]
+        rhs = C * (1 + math.log(B)) * A[0] * A[1] * A[2] * A[3]
+        lhs = 2 * x * lt - math.log(2 * R) + math.log(4 * f * f * n)
+        return lhs <= rhs
+
+    hi = 3
+    while ok(hi):
+        hi *= 2
+    lo = hi // 2
+    while hi - lo > 2:
+        mid = (lo + hi) // 2
+        if ok(mid):
+            lo = mid
+        else:
+            hi = mid
+    for t in range(hi, 4 * hi, max(1, hi // 1000)):
+        assert not ok(t), (p, q, pos, m, t)
+    return lo + 1 - (lo % 2)
 
 
 if __name__ == '__main__':

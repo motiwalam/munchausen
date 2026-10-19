@@ -295,9 +295,15 @@ A uniform treatment of a family of real quadratic fields, for example
 through results on `y^2 = a x^n + c` that are uniform in `n`, would settle
 the 3-digit case up to a finite computation.
 
-The abc conjecture does not help here, unlike for `(1, x, 1)` (Proposition
-18.13). In `x^x = p b^2 + q b + (x - C)` the radical of the right side
-contains `b`, which is about `x^(x/2)`, so the abc inequality is satisfied.
+The abc conjecture would close every regime at once, but only in the
+completed-square form. Written as `x^x = p b^2 + q b + (x - C)`, the
+radical contains `b`, about `x^(x/2)`, and abc says nothing. Written as
+`U^2 = N + R` with `N = 4 l x^x`, the radical of the three terms (after
+removing their common factor, which divides `R`) is at most
+`|R| * 4 l x * U`, about `x^(x/2 + 3) B^B`, while `U^2` is about `x^x`.
+The quality tends to 2, so abc bounds `x` for each `B`, in all positions
+and for both parities. This is question 102 of round 6. Theorem 1.2 and
+Proposition 1.6 prove parts of this unconditionally.
 
 ### 1.7 Four or more digits
 
