@@ -215,7 +215,9 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Lemma 20.1 | `lemma20_1`, `lemma20_1_root` [Window] | formalized |
-| Propositions 20.2, 20.5, Lemma 20.4, Theorem 20.3 | none | not formalized (counting; Lemma 20.4 is elementary) |
+| Proposition 20.2 | `prop20_2`, `card_multisets_le`, `sum_inv_le_harmonic`, `card_le_of_window` [Window] | formalized |
+| Lemma 20.4 | `lemma20_4`, `prod_le_lcm_mul_pow` [Window] | formalized (for `r ≥ 1`; see problem 7) |
+| Theorem 20.3, Proposition 20.5 | none | not formalized (asymptotics of the counts of Proposition 20.2 and Lemma 20.4) |
 | Lemma 20.6 | `multiple_mem_T` [Res] | formalized |
 | Lemma 20.7 | `lemma20_7`, `step_lemma20_7` [Res] | formalized (for every prime `p`; the library's "odd" is not needed) |
 | Theorem 20.8 | `theorem20_8`, `exists_start`, `exists_generator_avoiding` [Res] | formalized (`p = 7` by a finite check, `p ≥ 11` with three generators) |
