@@ -286,3 +286,28 @@ attack, in [questions-round3.md](questions-round3.md).
     (section 23.5)
 71. Do the long integer solutions under `0^0 = 0` really have fewer zeros
     than the model, 29 against 42.5 in bases 12 to 41? (section 24.6)
+
+## Round 5: directions and questions from the whole library
+
+Seven broad directions and the full statements of these questions, with
+their motivation and a first attack, are in
+[questions-round5.md](questions-round5.md).
+
+72. A pooled test of `D = 0` against the near-solutions.
+73. Near-solutions at different offsets are not independent.
+74. Why the Pisot bases exceed their near-solutions.
+75. The entropy bound for other orders.
+76. Certificates of emptiness in an oracle model.
+77. A constraint solver as a search that is not a tree.
+78. The law of subtree sizes.
+79. Bottom-up information in bases with a small radical.
+80. Assumption R when `b - 1` is prime.
+81. The length shares as a theorem in the model.
+82. Is `k(B)` always the number of factors of `B - 1`?.
+83. A model that keeps the Frobenius blocks.
+84. Open lengths in the factorial system.
+85. The image and in-degrees of `F`.
+86. A mixing statistic for every world.
+87. Narcissistic numbers in even bases 15 to 20.
+88. Chains with many self-paying digits under `0^0 = 1`.
+89. A prefix test for the Gaussian base `-4+i`.

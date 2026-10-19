@@ -36,7 +36,7 @@ statement is marked by its source:
 | [22. Self-paying blocks and binomial families](22-blocks-families.md) | infinitely many solutions of every length under `0^0 = 1`; self-paying blocks; the 5-digit excess recalibrated to about 9x and still unexplained |
 | [23. Factorions, empty negative bases, cycles and scatter](23-factorions-negative.md) | base 47 factorions; negative census to -38; near-2-cycles; lengths in base -1+i proven; where the per-base scatter comes from |
 | [24. Why the model misses in F_q[T]](24-ffield-gap.md) | Frobenius blocks make the digits of `F` far from uniform; the exact channel under `0^0 = 1`; short solutions counted for every degree; small effects on the integer model |
-| [Open questions](questions.md) | 71 research questions in four rounds, with priorities and answers |
+| [Open questions](questions.md) | 89 research questions in five rounds, with priorities and answers; [round 5 directions](questions-round5.md) |
 
 ## Main results
 
