@@ -28,6 +28,12 @@ independent Poisson variables with mean 1. A digit `b - y` weighs about
 - `d = b-j`, for `j >= 2`, needs no digit above `b-j` and at least one copy of
   `b-j`.
 
+Correction (chapter 29). The last condition is loose. The exact event for
+`d = b-j` needs fewer than `e^j` copies of `b-j`, or else no digit above
+`b-j-1` and more than `e^(j+1)` copies of `b-j-1` (section 29.1.1). The
+change is below `4 * 10^-6` and leaves every printed share unchanged.
+Theorem 29.1 proves that the shares below are the limits.
+
 These events do not overlap and together cover almost everything. So the
 expectations add up to exactly 1:
 

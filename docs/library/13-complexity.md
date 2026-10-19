@@ -537,6 +537,18 @@ Status of the pieces:
   get the factor 1 for odd primes. The prime 2 forces `kappa >= 2` in odd
   bases, and a proof of R with some constant `kappa` is the gap.
 
+Correction (chapter 29). Assumption R as stated, "for every `d`", is false
+(Lemma 29.14). In base 10 with `d = 2`, the only one-digit string whose `V`
+has 2 digits is the digit 3, so one residue class has share 1. Lemma 13.10
+uses the assumption only for `d >= ell >= b/2`, and it should be read with
+that restriction. Theorem 29.15 removes the conditioning on `G_d`: the
+refined case holds with `kappa = |H_0| + (b - 1) rho(b)^(ell - 2)`, where
+`rho(b)` is one exponential sum per base. A computation gives
+`rho(b) <= 0.82` for `12 <= b <= 6000`. So the refined case of Corollary
+13.11 is proven in that range, with `kappa <= |H_0| + 5`, and
+`kappa <= |H_0| + 0.0005` from base 100 on (Corollary 29.16). For larger
+bases it is still open (Conjecture 29.18).
+
 The constant 14.2 is crude. `analysis/thy_poisson.py` computes `b_2` in the
 refined model by sampling, with every partner checked by brute force over all
 shifts `|delta| <= 2b + 2`. It finds no partner other than twins, as
@@ -629,3 +641,9 @@ families of chapter 2, which the model does not describe.
 - The real weights. Theorem 13.8 is about the model. Section 11.1 found that
   the real counts behave like Poisson draws with each base's own mean. Whether
   this can be proven for `x^x` is the question of sections 8.5 and 6.4.
+
+Update (chapter 29). The limits of the means are now a theorem:
+`E_(b-j)(b) -> s_j` with an explicit error (Theorem 29.1), and the sum over
+all lengths tends to 1 (Corollary 29.6). Assumption R is proven for
+`12 <= b <= 6000` by computation and reduced to one number `rho(b)` per
+base in general (section 29.3).
