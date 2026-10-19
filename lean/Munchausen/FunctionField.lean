@@ -1195,6 +1195,126 @@ theorem corollary24_4_ffF {m : ZMod p} {B : (ZMod p)[X]} (hB : 0 < B.degree) (n 
   rw [hF]
   exact corollary24_4 hB i hi hdig e D hD
 
+/-! ### Proposition 24.11: the zero count under `0^0 = 1` -/
+
+/-- `F_1(n) = F_0(n) + z(n)`, with `z(n)` the number of zero digits. -/
+lemma ffF_one_eq (B n : (ZMod p)[X]) :
+    ffF 1 B n = ffF 0 B n + C (((polyDigits B n).count 0 : ℕ) : ZMod p) := by
+  unfold ffF
+  induction polyDigits B n with
+  | nil => simp
+  | cons d t ih =>
+    by_cases hd : d = 0
+    · subst hd
+      simp only [List.map_cons, List.sum_cons, ih, List.count_cons_self, ffw, ite_true]
+      push_cast
+      rw [map_add, C_0, C_1]; ring
+    · simp only [List.map_cons, List.sum_cons, ih, List.count_cons_of_ne hd, ffw, hd, ite_false]
+      ring
+
+lemma list_sum_map_sub {α R : Type*} [AddCommGroup R] (L : List α) (f g : α → R) :
+    (L.map fun a => f a - g a).sum = (L.map f).sum - (L.map g).sum := by
+  induction L with
+  | nil => simp
+  | cons a t ih => simp only [List.map_cons, List.sum_cons, ih]; abel
+
+/-- In characteristic `p`, `x - x^(p^j) = Y - Y^p` with `Y = ∑_(k<j) x^(p^k)`. -/
+lemma sub_pow_eq_sub_frob {L : Type*} [CommRing L] [CharP L p] (x : L) (j : ℕ) :
+    x - x ^ (p ^ j) = (∑ k ∈ Finset.range j, x ^ (p ^ k)) -
+      (∑ k ∈ Finset.range j, x ^ (p ^ k)) ^ p := by
+  rw [sum_pow_char, ← Finset.sum_sub_distrib]
+  have := Finset.sum_range_sub' (fun k => x ^ (p ^ k)) j
+  simp only [pow_zero, pow_one] at this
+  rw [← this]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  rw [← pow_mul, ← pow_succ]
+
+/-- **Proposition 24.11** (section 24.4.4). If `B - 1` has an irreducible factor `P` whose degree
+is prime to `p`, the solutions in base `B` under `0^0 = 1` are exactly the solutions under
+`0^0 = 0` whose number of zero digits is divisible by `p`. The proof iterates `y ↦ y^p` in the
+field `F_p[T]/(P)` in place of the trace. -/
+theorem prop24_11 {B n P : (ZMod p)[X]} (hB : 0 < B.degree) (hP : Irreducible P)
+    (hPB : P ∣ B - 1) (hdeg : ¬ p ∣ P.natDegree) :
+    IsFFSolution 1 B n ↔ IsFFSolution 0 B n ∧ p ∣ (polyDigits B n).count 0 := by
+  set z := (polyDigits B n).count 0
+  have hF := ffF_one_eq B n
+  constructor
+  · intro h
+    have hz : ((z : ℕ) : ZMod p) = 0 := by
+      have : Fact (Irreducible P) := ⟨hP⟩
+      set K := AdjoinRoot P
+      set φ := AdjoinRoot.mk P
+      have : CharP K p := charP_of_injective_algebraMap (algebraMap (ZMod p) K).injective p
+      have hφB : φ B = 1 := by
+        have := AdjoinRoot.mk_eq_zero.2 hPB
+        rw [map_sub, map_one, sub_eq_zero] at this; exact this
+      set Ls := polyDigits B n
+      have hval : ∀ L : List (ZMod p)[X], φ (ringVal B L) = (L.map φ).sum := by
+        intro L
+        induction L with
+        | nil => simp [ringVal]
+        | cons d t ih => simp [ringVal, ih, hφB]
+      have hn : φ n = (Ls.map φ).sum := by
+        conv_lhs => rw [← (polyDigits_spec hB n).1]
+        exact hval Ls
+      have hF0 : φ (ffF 0 B n) = (Ls.map fun d => φ d ^ (p ^ d.natDegree)).sum := by
+        unfold ffF
+        rw [map_list_sum, List.map_map]
+        congr 1
+        refine List.map_congr_left fun d _ => ?_
+        simp [ffw_zero_eq, ffWeight, map_pow]
+      -- `z = Y - Y^p` in `K`
+      have hc : (z : K) = (Ls.map fun d => φ d - φ d ^ (p ^ d.natDegree)).sum := by
+        have h1 := congrArg φ h
+        rw [IsFFSolution] at h
+        rw [hF, map_add, hF0, hn, AdjoinRoot.mk_C] at h1
+        rw [list_sum_map_sub]
+        simp only [map_natCast] at h1
+        linear_combination h1
+      set Y : K := (Ls.map fun d => ∑ k ∈ Finset.range d.natDegree, φ d ^ (p ^ k)).sum
+      have hY : (z : K) = Y - Y ^ p := by
+        rw [hc]
+        simp only [Y]
+        rw [list_sum_pow_char, List.map_map, ← list_sum_map_sub]
+        congr 1
+        refine List.map_congr_left fun d _ => ?_
+        exact sub_pow_eq_sub_frob (φ d) d.natDegree
+      -- iterate the Frobenius: `Y^(p^k) = Y - k z`
+      have hnat : ∀ m : ℕ, ((m : K)) ^ p = m := fun m => by
+        have := map_natCast (frobenius K p) m
+        rwa [frobenius_def] at this
+      have hiter : ∀ k : ℕ, Y ^ (p ^ k) = Y - ((k * z : ℕ) : K) := by
+        intro k
+        induction k with
+        | zero => simp
+        | succ k ih =>
+          rw [pow_succ, pow_mul, ih, sub_pow_char, hnat]
+          rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
+          linear_combination hY
+      -- `K` has `p^f` elements
+      have hfin : Module.Finite (ZMod p) K := (AdjoinRoot.powerBasis hP.ne_zero).finite
+      have : Finite K := Module.finite_of_finite (ZMod p)
+      let : Fintype K := Fintype.ofFinite K
+      have hcard : Fintype.card K = p ^ P.natDegree := by
+        rw [← Nat.card_eq_fintype_card, Module.natCard_eq_pow_finrank (K := ZMod p),
+          Nat.card_zmod, (AdjoinRoot.powerBasis hP.ne_zero).finrank, AdjoinRoot.powerBasis_dim]
+      have hfix := FiniteField.pow_card Y
+      rw [hcard, hiter] at hfix
+      have h0 : ((P.natDegree * z : ℕ) : K) = 0 := by linear_combination -hfix
+      have h0' : ((P.natDegree * z : ℕ) : ZMod p) = 0 := by
+        apply (algebraMap (ZMod p) K).injective
+        rw [map_natCast, map_zero]; exact h0
+      push_cast at h0'
+      rcases mul_eq_zero.1 h0' with h1 | h1
+      · exact absurd ((ZMod.natCast_eq_zero_iff _ p).1 h1) hdeg
+      · exact h1
+    refine ⟨?_, (ZMod.natCast_eq_zero_iff z p).1 hz⟩
+    rw [IsFFSolution] at h ⊢
+    rw [hF, hz, C_0, add_zero] at h
+    exact h
+  · rintro ⟨h, hz⟩
+    rw [IsFFSolution, hF, h, (ZMod.natCast_eq_zero_iff z p).2 hz, C_0, add_zero]
+
 end Solutions
 
 end Munchausen

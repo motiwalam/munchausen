@@ -289,7 +289,8 @@ stated.
 | Lemma 24.7 | `IsFFSolution.comp` [FF] | formalized |
 | Lemma 24.8 | `IsFFSolution.C_mul_add_C`, `C_mul_add_C_injective` [FF] | formalized |
 | Lemmas 24.9, 24.10 | none | not formalized |
-| Proposition 24.11, Corollary 24.12 | none | not formalized (traces) |
+| Proposition 24.11 | `prop24_11`, `ffF_one_eq`, `sub_pow_eq_sub_frob` [FF] | formalized for `q = p` prime (as all of [FF]); the proof iterates `y ↦ y^p` in `F_p[T]/(P)` in place of the trace |
+| Corollary 24.12 | none | not formalized ((1) needs the digits of the solutions of Theorem 21.7; (2) is computed) |
 | Proposition 24.13, Theorem 24.15, Corollary 24.16 | none | not formalized |
 
 ## Chapter 25. Identity families and 3-digit solutions
