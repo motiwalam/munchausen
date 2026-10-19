@@ -1,10 +1,10 @@
-# Round 5 model: theorems about the model
+# 29. Theorems about the model
 
-DRAFT. This file answers questions 81, 82, 80, 83 and 84 of
+This chapter answers questions 81, 82, 80, 83 and 84 of
 `questions-round5.md` (Theme XIII). Questions 81, 82 and 80 ask for proofs
 about the probabilistic model of chapter 5 and its variants. Questions 83
 and 84 ask for two corrected models, one in `F_q[T]` and one in the
-factorial system. Each statement is marked proved (a proof is here),
+factorial system. Each statement is marked proven (a proof is here),
 computed (an exact computation, with its range), heuristic (a model, or a
 judgment from data) or conjecture.
 
@@ -12,15 +12,15 @@ judgment from data) or conjecture.
 
 | question | answer | status |
 |---|---|---|
-| 81, length shares | Theorem 1.1: in the basic model, `E_(b-j)(b) -> s_j` for every fixed `j`, with `|E_(b-j) - s_j| <= ((j+1)^2 + 1)/b + (j+2)/floor(sqrt b)!` for `b >= b_0(j)`. The limits are explicit sums: 8.03%, 55.18%, 23.25%, 8.55%, 3.15%, 1.16%. The total over all lengths tends to 1 (Corollary 1.6). The first correction is `c_j / b` with `c_0 = -1/(4e)` (Proposition 1.7). | proved; computed check |
-| 82, `k(B)` | Theorem 2.3 and Corollary 2.4: `k(B) = omega(B-1)` whenever some irreducible factor of `B - 1` has degree prime to `e - 1`; so always when `e - 1` is a prime power. Theorem 2.5: in every case `k(B) <= omega(B-1) + 1`, with an exact criterion for the extra dimension; it never occurs for non-squarefree `B - 1`, nor for squarefree `B - 1` with `q <= e - 2`. Together with Remark 2.6 this proves `k = omega` for all `e <= 10` and for every census base. No counterexample among 110,654 bases and 379,700 polynomials of the open factor types. | proved for the cases listed; conjecture in general (first open type: `e = 11`, factors of degrees 5 and 6, `q >= 11`) |
-| 80, Assumption R | Assumption R as stated is false for short strings (Lemma 3.1); Lemma 13.10 only needs `d >= b/2`. Theorem 3.2 removes the conditioning on `G_d` and reduces R to one number per base, `rho(b)`. Computed: `rho(b) <= 0.82` for `10 <= b <= 6000`, so the refined Corollary 13.11 holds unconditionally there, with `kappa <= |H_0| + 5`, and `kappa <= |H_0| + 0.0005` for `100 <= b <= 6000`. The Poisson rate over all odd prime powers `q | b-1`, `b <= 20,000`, is at least 0.2143 (0.2308 for `b >= 10`); for `b - 1 = p` prime the sums show square-root cancellation. Proposition 3.6 proves the spread modulo every prime `p <= b^(2/3 - eps)`. No `o(p)` bound for the complete sums is in the literature I found. | proved; computed; conjecture for `b > 6000` |
+| 81, length shares | Theorem 29.1: in the basic model, `E_(b-j)(b) -> s_j` for every fixed `j`, with `|E_(b-j) - s_j| <= ((j+1)^2 + 1)/b + (j+2)/floor(sqrt b)!` for `b >= b_0(j)`. The limits are explicit sums: 8.03%, 55.18%, 23.25%, 8.55%, 3.15%, 1.16%. The total over all lengths tends to 1 (Corollary 29.6). The first correction is `c_j / b` with `c_0 = -1/(4e)` (Proposition 29.7). | proven; computed check |
+| 82, `k(B)` | Theorem 29.9 and Corollary 29.10: `k(B) = omega(B-1)` whenever some irreducible factor of `B - 1` has degree prime to `e - 1`; so always when `e - 1` is a prime power. Theorem 29.11: in every case `k(B) <= omega(B-1) + 1`, with an exact criterion for the extra dimension; it never occurs for non-squarefree `B - 1`, nor for squarefree `B - 1` with `q <= e - 2`. Together with Remark 29.12 this proves `k = omega` for all `e <= 10` and for every census base. No counterexample among 110,654 bases and 379,700 polynomials of the open factor types. | proven for the cases listed; conjecture in general (first open type: `e = 11`, factors of degrees 5 and 6, `q >= 11`) |
+| 80, Assumption R | Assumption R as stated is false for short strings (Lemma 29.14); Lemma 13.10 only needs `d >= b/2`. Theorem 29.15 removes the conditioning on `G_d` and reduces R to one number per base, `rho(b)`. Computed: `rho(b) <= 0.82` for `10 <= b <= 6000`, so the refined Corollary 13.11 holds unconditionally there, with `kappa <= |H_0| + 5`, and `kappa <= |H_0| + 0.0005` for `100 <= b <= 6000`. The Poisson rate over all odd prime powers `q | b-1`, `b <= 20,000`, is at least 0.2143 (0.2308 for `b >= 10`); for `b - 1 = p` prime the sums show square-root cancellation. Proposition 29.19 proves the spread modulo every prime `p <= b^(2/3 - eps)`. No `o(p)` bound for the complete sums is in the literature I found. | proven; computed; conjecture for `b > 6000` |
 | 83, Frobenius-block model | Keeping the blocks of Corollary 24.3 and the residue modulo `B - 1`, and drawing each `p_j` uniformly among digits of its degree, predicts the census within 17% for 16 of the 21 factor types, against 5 of 21 for the refined model. Totals: 31.6, 73.5, 58.7 against census 34.4, 76.3, 60.5 (refined 26.2, 64.8, 45.4). The irreducible quartic of `(5, 4)`: 8.8 against 10.0 (refined 4.9). The per-orbit Pearson statistic drops from 749 to 187 on 160 orbits for `(5, 4)`. | computed; heuristic |
-| 84, factorial system | A model that keeps the true top digits of `F` over the positions where the largest digit must sit (Lemma 5.1) closes about half the lengths. Open for `L <= 33`: 8, 10, 13, 14, 15, 18, 19, 20, 24, 26, 28, 29, 30, 32; for `34 <= L <= 100`: 11 to 14 lengths, among them 35 and 40. It closes all 8 lengths in 10..26 without near-solutions (plain model: 81 expected) and keeps open all 5 with them. It expects 3.85 solutions below `34!` (plain 4.6); with the cluster calibration from near-solutions the empty census has probability 0.22 to 0.39. Beyond `34!`: 0.29 expected up to `L = 40`, 2.5 up to `L = 100`. The census extension to `L = 40` was not run. | computed; heuristic |
+| 84, factorial system | A model that keeps the true top digits of `F` over the positions where the largest digit must sit (Lemma 29.21) closes about half the lengths. Open for `L <= 33`: 8, 10, 13, 14, 15, 18, 19, 20, 24, 26, 28, 29, 30, 32; for `34 <= L <= 100`: 11 to 14 lengths, among them 35 and 40. It closes all 8 lengths in 10..26 without near-solutions (plain model: 81 expected) and keeps open all 5 with them. It expects 3.85 solutions below `34!` (plain 4.6); with the cluster calibration from near-solutions the empty census has probability 0.22 to 0.39. Beyond `34!`: 0.29 expected up to `L = 40`, 2.5 up to `L = 100`. The census extension to `L = 40` was not run. | computed; heuristic |
 
-## 1. The length shares as a theorem (question 81)
+## 29.1 The length shares as a theorem (question 81)
 
-### 1.1 The model
+### 29.1.1 The model
 
 Fix a base `b >= 3` and a convention `m` in `{0, 1}`. Let `w(x) = x^x` for
 `x >= 1` and `w(0) = m`. A random `d`-digit string `n` has its leading
@@ -59,9 +59,9 @@ These are the shares of section 5.2. The second sum in `s_j` is the case
 it adds `3.8 * 10^-6` to `s_1` and less elsewhere. Section 5.2 and
 `model.limit_terms` leave it out, which does not change any printed digit.
 
-### 1.2 The theorem
+### 29.1.2 The theorem
 
-**Theorem 1.1** (proved). Fix `j >= 0` and let
+**Theorem 29.1** (proven). Fix `j >= 0` and let
 
     b_0(j) = max( e^(j+2), j + 1 + 2 (j+1)^2 / gamma_j, 64 / gamma_j^2 ).
 
@@ -73,13 +73,13 @@ In particular `E_(b-j)(b) -> s_j` as `b -> infinity`.
 
 The constant `b_0(j)` is crude (`b_0(0) = 919`, `b_0(1) = 23,000`). The
 proof needs it only to keep the threshold `e^y` away from the integers.
-The exact computation of section 1.4 shows the convergence already at
+The exact computation of section 29.1.4 shows the convergence already at
 `b = 30`.
 
 The proof has three steps: the weights, the localization of the event to
 the top `j + 2` counts, and the Poisson coupling.
 
-**Lemma 1.2** (weights, proved). For `0 <= y < b`,
+**Lemma 29.2** (weights, proven). For `0 <= y < b`,
 
     e^(-y) b^(b-y)  <=  w(b - y)  <=  e^(-y) b^(b-y) exp( y^2 / (2 (b - y)) ).
 
@@ -88,7 +88,7 @@ and `(1-t) ln(1-t) = -t + sum over k >= 2 of t^k / (k (k-1))`, a series with
 positive terms after the first. So the logarithm is at least `-y` and at
 most `-y + (y^2 / (2b)) sum over m >= 0 of t^m = -y + y^2 / (2 (b-y))`.
 
-**Lemma 1.3** (coupling, proved). Let `d = b - j` and `K = j + 1`. Let
+**Lemma 29.3** (coupling, proven). Let `d = b - j` and `K = j + 1`. Let
 `P_b` be the law of `(N_(b-1), ..., N_(b-K))` for the random `d`-digit
 string, and `Q` the law of `K` independent Poisson(1) variables. Then
 
@@ -109,7 +109,7 @@ Proof. Three steps, each bounded in total variation.
    Poisson(1) counts: the distance is
    `d_TV(Poi(Kd/b), Poi(K)) <= 1 - e^(-Kj/b) <= Kj/b`.
 
-**Lemma 1.4** (localization, proved). Let `b >= b_0(j)`, `d = b - j` and
+**Lemma 29.4** (localization, proven). Let `b >= b_0(j)`, `d = b - j` and
 `M = floor(sqrt b)`. Let `H` be the event that `N_(b-y) <= M` for
 `y = 1, ..., j+2`. On `H`,
 
@@ -120,7 +120,7 @@ Moreover `P(not H) <= (j+2) / M!`.
 Proof. All terms of `F` are nonnegative. Fix `y` in `{j, j+1}` with
 `y >= 1` and suppose `y_0 = y` and `N_(b-y) = k`. Write `F = k w(b-y) + R`,
 where `R` collects the digits below `b - y`. On `H`, the digit `b - y - 1`
-contributes at most `M w(b-y-1) <= M b^(b-y) / b` by Lemma 1.2, the other
+contributes at most `M w(b-y-1) <= M b^(b-y) / b` by Lemma 29.2, the other
 at most `b` digits contribute at most `b w(b-y-2) + b <= 2 b^(b-y) / b`.
 So
 
@@ -147,14 +147,14 @@ These cases give exactly `A_j`. For the bound on `H`, a fixed value occurs
 at most once in the leading position, so
 `P(N_x > M) <= P(Bin(d-1, 1/b) >= M) <= C(d-1, M) b^(-M) <= 1/M!`.
 
-Proof of Theorem 1.1. By Lemma 1.4, `|E_(b-j) - P_b(A_j)| <= P(not H)`.
-The event `A_j` depends only on the `K = j + 1` counts of Lemma 1.3. Under
+Proof of Theorem 29.1. By Lemma 29.4, `|E_(b-j) - P_b(A_j)| <= P(not H)`.
+The event `A_j` depends only on the `K = j + 1` counts of Lemma 29.3. Under
 `Q`, `P(y_0 = y, N_(b-y) = k) = (e^(-1))^(y-1) e^(-1) / k! = e^(-y) / k!`,
-so `Q(A_j) = s_j`. Lemma 1.3 bounds `|P_b(A_j) - Q(A_j)|`.
+so `Q(A_j) = s_j`. Lemma 29.3 bounds `|P_b(A_j) - Q(A_j)|`.
 
-### 1.3 The total
+### 29.1.3 The total
 
-**Theorem 1.5** (tails, proved). For `b >= 21` and `J >= 1`,
+**Theorem 29.5** (tails, proven). For `b >= 21` and `J >= 1`,
 
     sum over b/2 <= d <= b - J of E_d(b)  <=  5.6 e^(-J/3),
 
@@ -177,7 +177,7 @@ Summing over `j >= J` gives at most `e^0.45 e^(-0.3375 J) / (1 - e^(-0.3375))
 every digit `x >= b/4` satisfies `x < d ln b / (ln b - ln 4)`, which is
 below `0.6 b` for large `b`, and these terms are exponentially small.
 
-**Corollary 1.6** (proved). `sum over d = 1..b of E_d(b) -> 1`. So the
+**Corollary 29.6** (proven). `sum over d = 1..b of E_d(b) -> 1`. So the
 basic model expects one nontrivial-length solution per base and convention
 in the limit, as section 5.2 says, and the shares of the lengths are the
 `s_j`.
@@ -185,12 +185,12 @@ in the limit, as section 5.2 says, and the shares of the lengths are the
 Proof. `F(n) < b^b` always, so only `d <= b` count. The events `A_j`,
 `j >= 0`, partition the Poisson outcomes with `y_0` finite: an outcome with
 `y_0 = y` and `N_(b-y) = k` lies in `A_y` if `k < e^y` and in `A_(y-1)` if
-`k > e^y`. So `sum of s_j = 1`. Combine Theorem 1.1 for `j < J` with
-Theorem 1.5 and let `b`, then `J`, tend to infinity.
+`k > e^y`. So `sum of s_j = 1`. Combine Theorem 29.1 for `j < J` with
+Theorem 29.5 and let `b`, then `J`, tend to infinity.
 
-### 1.4 The first correction
+### 29.1.4 The first correction
 
-**Proposition 1.7** (proved, with the expansion sketched below; checked by
+**Proposition 29.7** (proven, with the expansion sketched below; checked by
 computation). For fixed `j`,
 
     E_(b-j)(b) = s_j + c_j / b + O_j(1/b^2),
@@ -212,7 +212,7 @@ O(k^4/b^2))`, and the weights `1/k!` make the sum of the errors
 `O(1/b^2)`. For `j = 0` the sums `sum k/k!`, `sum k(k-1)/k!`, `sum 1/k!`
 over `k >= 3` are `e - 2`, `e - 1`, `e - 5/2`, which give `-1/(4e)`.
 
-Table 1.1 (computed, `analysis/r5m_shares.py`, `analysis/data/r5m_shares.txt`).
+Table 29.1.1 (computed, `analysis/r5m_shares.py`, `analysis/data/r5m_shares.txt`).
 `E_(b-j)` from the exact law of the top counts, and `b (E_(b-j) - s_j)`.
 
 | `b` | `E_b` | `E_(b-1)` | `E_(b-2)` | `E_(b-3)` | `b(E-s)`, `j = 0..3` |
@@ -228,13 +228,13 @@ agrees within 1.5 standard errors at `b = 30` and `b = 100`, for example
 for base 100 (0.55, 0.24, 0.09, 0.08) are these numbers.
 
 So the shares are a theorem about random strings. Every later use of
-"about one per base" in the basic model rests on Corollary 1.6. The
-refined model adds the residue factor of section 5.3; section 3 below
+"about one per base" in the basic model rests on Corollary 29.6. The
+refined model adds the residue factor of section 5.3; section 29.3 below
 deals with that.
 
-## 2. The free residue dimension `k(B)` (question 82)
+## 29.2 The free residue dimension `k(B)` (question 82)
 
-### 2.1 Setting
+### 29.2.1 Setting
 
 Let `q` be a prime power, `B` in `F_q[T]` of degree `e >= 2`, and
 `M = B - 1`. Let `R = F_q[T]/(M)`, `t` the class of `T`, and
@@ -250,7 +250,7 @@ and `k(B) = e - dim J` (the term `j = 0` vanishes). Let
 irreducible factors of `M`. Write `M = prod P_i^(a_i)` with `f_i = deg P_i`
 and `R = prod R_i`, `R_i = F_q[T]/(P_i^(a_i))`.
 
-**Lemma 2.1** (proved).
+**Lemma 29.8** (proven).
 
 1. `ker(phi^j - 1)` on `R_i` has dimension `gcd(j, f_i)`. In particular
    `dim ker(phi - 1) = omega` and `I` has codimension `omega` (Berlekamp).
@@ -277,29 +277,29 @@ intersection of the fields `F_(q^gcd(j, f))`, which is `F_q` when
 (2) lifts this to `R_i`. (4)
 `phi^j - 1 = (phi - 1)(1 + phi + ... + phi^(j-1))`.
 
-### 2.2 A good factor decides
+### 29.2.2 A good factor decides
 
 Call an irreducible factor `P` of `B - 1` good if `gcd(deg P, e - 1) = 1`,
 and bad otherwise.
 
-**Theorem 2.3** (proved). If `B - 1` has a good factor, then
+**Theorem 29.9** (proven). If `B - 1` has a good factor, then
 `k(B) = omega(B - 1)`.
 
 Proof. The term `j = e - 1` has `W_(e-1) = R`, so
 `J >= (phi^(e-1) - 1) R`, which is the direct sum over `i` of the images on
-`R_i`. On a good `R_i` this image is `I_i` (Lemma 2.1 (3) with
+`R_i`. On a good `R_i` this image is `I_i` (Lemma 29.8 (3) with
 `S = {e-1}`). So `J` contains `I_good + 0`. Let `E` be the total degree of
 the bad part `R_bad`, the product of the bad `R_i`. There is a good
 factor, so `E <= e - 1`. For `j >= E - 1` the projection of `W_j` onto
 `R_bad = F_q[T]/(M_bad)` is onto, since polynomials of degree below `E`
 represent every class. So the projection of `J` onto `R_bad` contains
 `sum over j = max(E-1, 1)..e-1 of (phi^j - 1) R_bad`. This range holds two
-consecutive integers, because `E - 1 <= e - 2`, so by Lemma 2.1 (3) the
+consecutive integers, because `E - 1 <= e - 2`, so by Lemma 29.8 (3) the
 sum is `I_bad`. Since `J <= I = I_good + I_bad` and `J >= I_good + 0`,
 `J` is `I_good` plus its projection to `R_bad`, which is `I_bad`. So
 `J = I`.
 
-**Corollary 2.4** (proved). If `e - 1` is a prime power `r^s`, then
+**Corollary 29.10** (proven). If `e - 1` is a prime power `r^s`, then
 `k(B) = omega(B - 1)` for every `B` of degree `e`. This covers
 `e = 2, ..., 6, 8, 9, 10, 12, 14, 17, 18, 20, ...`.
 
@@ -309,14 +309,14 @@ Proof. If every factor is bad, `r` divides every `f_i`, hence
 The first degrees where all factors can be bad are `e = 7`
 (types `3 + 4`, `2 + 2 + 3`, `2^2 + 3`), `e = 11`, `13`, `15`, `16`.
 
-### 2.3 At most one extra dimension
+### 29.2.3 At most one extra dimension
 
 Let `ell : R -> F_q` be the coefficient of `t^(e-1)` (in the basis
 `1, ..., t^(e-1)`). The pairing `(x, y) -> ell(x y)` is nondegenerate, and
 the functionals vanishing on `W_j` are the `ell(h .)` with
 `deg h <= e - 2 - j`. In particular `W_(e-2)` is the kernel of `ell`.
 
-**Theorem 2.5** (proved).
+**Theorem 29.11** (proven).
 
 1. `k(B) <= omega(B - 1) + 1`.
 2. `k(B) = omega(B - 1) + 1` holds if and only if
@@ -375,7 +375,7 @@ then `P_2 = D + D phi(D)` contains `beta^2 t^(q+1)`. When `q + 1 <= e - 1`
 the polynomial is already reduced, of degree `q + 1 >= 3`, against
 `deg P_2 <= 2` (needs `e >= 5`).
 
-**Remark 2.6** (proved). Conditions (a) and (c) also give, for every orbit
+**Remark 29.12** (proven). Conditions (a) and (c) also give, for every orbit
 of size `f` with `r = (e - 1) mod f`, the relation
 `sum over m < r of u_m(beta) = 0`. So `r = 1` is impossible, and `r = 2`
 forces `D == -1` modulo that factor, hence `D = -1`, which the constant
@@ -386,14 +386,14 @@ on them, so `D = -1`.
 
 More generally, a squarefree type with a factor of degree 2, or with a
 factor of degree `f` and `(e - 1) mod f` in `{1, 2}`, never has an extra
-dimension. With Corollary 2.4 and Theorem 2.5 (3), (4), this settles every
+dimension. With Corollary 29.10 and Theorem 29.11 (3), (4), this settles every
 `e <= 10`.
 
-### 2.4 Computations
+### 29.2.4 Computations
 
 All computations use `analysis/r5m_kB.py` (all bases of a degree) and
 `analysis/r5m_kB_types.py` (only the types with every factor bad).
-`omega` is computed as the corank of `phi - 1` (Lemma 2.1 (1)), and checked
+`omega` is computed as the corank of `phi - 1` (Lemma 29.8 (1)), and checked
 against PARI/GP `factormod` for the types.
 
 - Census (computed, `analysis/r4f_census_q*e*m0.txt`, 1,111 orbits of all
@@ -408,7 +408,7 @@ against PARI/GP `factormod` for the types.
   `e = 7`; and `q = 7`, `e = 7` in full. 379,700 polynomials (some types
   of the first runs capped at 20,000), `k = omega` in each. For `q = 7`,
   `e = 7`, 42 of the 65,856 squarefree polynomials of type `3 + 4` have
-  `deg D <= 1`; Remark 2.6 excludes them by hand.
+  `deg D <= 1`; Remark 29.12 excludes them by hand.
 - Open types, random samples (computed, `analysis/r5m_kB_sample.py`,
   `analysis/data/r5m_kB_sample.txt`): `e = 11`, type `5 + 6`, 20,000
   polynomials each for `q = 11` and `q = 13`; `e = 13`, `q = 13`, types
@@ -417,30 +417,30 @@ against PARI/GP `factormod` for the types.
   `deg D <= 1`, which is where an exception would have to be.
 
 The `(2, 7)` census has 8 polynomials of the all-bad types (6 of type
-`3 + 4`, 2 of type `2^2 + 3`); Remark 2.6 and Theorem 2.5 (3) cover them.
+`3 + 4`, 2 of type `2^2 + 3`); Remark 29.12 and Theorem 29.11 (3) cover them.
 So every base of every census has `k(B) = omega(B - 1)` by proof, not only
 by computation.
 
-### 2.5 Verdict
+### 29.2.5 Verdict
 
 `k(B) = omega(B - 1)` is proved for every `B` with a good factor, for every
 non-squarefree `B - 1`, for squarefree `B - 1` with `q <= e - 2`, and for
 `e <= 10`. The computations find no exception anywhere.
 
-**Conjecture 2.7.** `k(B) = omega(B - 1)` for every `B`.
+**Conjecture 29.13.** `k(B) = omega(B - 1)` for every `B`.
 
 The open cases need a squarefree `M` all of whose factors are bad, no
 factor of degree 2, no factor with `(e - 1) mod deg P` in `{1, 2}`,
 `q >= e - 1`, and `M'^(q-1) (alpha + beta T) == 1 (mod M)`, plus the
-conditions of Theorem 2.5 (2). The first such type is `5 + 6` in degree
+conditions of Theorem 29.11 (2). The first such type is `5 + 6` in degree
 `e = 11`, with `q >= 11`.
 
 Section 24.4.5 shows that `kappa(B)` can exceed `k(B)`. That is a
 different map (`phi^(e-1) - 1` alone), and nothing above contradicts it.
 
-## 3. Assumption R (question 80)
+## 29.3 Assumption R (question 80)
 
-### 3.1 What Lemma 13.10 needs
+### 29.3.1 What Lemma 13.10 needs
 
 Let `m = b - 1` and `g(x) = x^x - x` for `x >= 1`, `g(0) = 0`. The refined
 model of section 13.2.1 uses the residue `sum c_x g(x) (mod m)`: the
@@ -449,7 +449,7 @@ string `Y_u + c_1` is congruent to `V(u) + c_1`, and the ones cancel, so
 `h g(x) == 0` for every digit `x`. Since every `g(x)` is even and
 `g(2) = 2`, `H_0 = {0, m/2}` for even `m` and `{0}` for odd `m`.
 
-**Lemma 3.1** (proved; a correction to section 13.2.3). Assumption R as
+**Lemma 29.14** (proven; a correction to section 13.2.4). Assumption R as
 stated, "for every `d`", is false. Example: `b = 10`, `d = 2`. A string of
 one digit whose `V` has 2 digits must be the digit 3 (`3^3 = 27`), so the
 share of the residue `g(3) = 24 == 6 (mod 9)` is 1, not at most
@@ -459,13 +459,13 @@ happens: the allowed digits number about `d ln b / ln(d ln b)`.
 Lemma 13.10 uses Assumption R only for `d >= ell >= b/2`. The statement
 should be restricted to these `d`. The theorem below needs even less.
 
-### 3.2 Removing the conditioning
+### 29.3.2 Removing the conditioning
 
 For `L <= b` let `psi_L(h) = (1/L) sum over x < L of e(h g(x) / m)`, and
 
     rho(b) = max over ceil(b/2) <= L <= b and h not in H_0 of |psi_L(h)|.
 
-**Theorem 3.2** (proved). Let `b >= 12` and `ell = ceil(b/2)`. In the
+**Theorem 29.15** (proven). Let `b >= 12` and `ell = ceil(b/2)`. In the
 refined coupled model, Lemma 13.10 and Corollary 13.11 hold with
 
     kappa(b) = |H_0| + (b - 1) rho(b)^(ell - 2).
@@ -491,9 +491,9 @@ So the conditioning on the length is harmless: one can replace `G_d` by
 a product event that contains it. Assumption R reduces to one number per
 base, `rho(b)`, and it suffices that `1 - rho(b) >= 3 ln b / b`.
 
-### 3.3 Computations
+### 29.3.3 Computations
 
-Table 3.1 (computed, `analysis/r5m_rho.c`, all `b` from 4 to 6000, every
+Table 29.3.1 (computed, `analysis/r5m_rho.c`, all `b` from 4 to 6000, every
 `L` in `[ceil(b/2), b]` and every `h` modulo `b - 1`;
 `analysis/data/r5m_rho_b6000.txt`, `r5m_rho_report.txt`).
 
@@ -505,7 +505,7 @@ Table 3.1 (computed, `analysis/r5m_rho.c`, all `b` from 4 to 6000, every
 | 100 to 999 | 0.7725 | `b = 100`, `L = 50`, `h = 33` | 0.00041 |
 | 1000 to 6000 | 0.7646 | `b = 1000`, `h = 333` | `10^-55` |
 
-**Corollary 3.3** (proved, computer-assisted). For every `b` with
+**Corollary 29.16** (proven, computer-assisted). For every `b` with
 `12 <= b <= 6000`, the refined case of Corollary 13.11 holds without
 Assumption R, with `kappa <= |H_0| + 5`, and with
 `kappa <= |H_0| + 0.0005` for `100 <= b <= 6000`. So `kappa` is 1 in even
@@ -516,7 +516,7 @@ the 1,967 bases with `3 | b - 1`, and `rho(b) <= 0.537` in the other 3,934
 bases (maximum at `b = 113`). The cause is Lemma 15.12 (3): modulo 3,
 `g(x)` is 2 for `x == 2 (mod 6)` and 0 otherwise.
 
-**Proposition 3.4** (proved). If `3 | b - 1` and `h = m/3`, then
+**Proposition 29.17** (proven). If `3 | b - 1` and `h = m/3`, then
 `psi_L(h) -> 5/6 + (1/6) e(2/3)` as `L -> infinity`. Its modulus is
 `sqrt(7/12) = 0.7638` and `1 - Re psi = 1/4`.
 
@@ -525,7 +525,7 @@ Proof. A share `1/6 + O(1/L)` of the `x < L` has `x == 2 (mod 6)`.
 So the computed `rho(b)` approaches 0.7638 from above, and the
 conjecture below has a reason in the 3-adic law, not only in data.
 
-The quantity of the question. Table 3.2 (computed,
+The quantity of the question. Table 29.3.2 (computed,
 `analysis/r5m_cosmin.py`, `analysis/data/r5m_cosmin_b20000.txt`,
 `r5m_cos_report.txt`): for every `b <= 20,000` and every odd prime power
 `q | b - 1` (45,534 pairs), the Poisson rate
@@ -551,16 +551,16 @@ for 3-digit `p`, 0.907 for 4-digit, 0.967 for 5-digit. For
 1.40 times `sqrt(p ln p)`, mean 1.00. This is the size of the maximum of
 `p` random sums of `p` unit vectors.
 
-**Conjecture 3.5.** `rho(b) <= 0.77` for every `b >= 100`. More
+**Conjecture 29.18.** `rho(b) <= 0.77` for every `b >= 100`. More
 precisely, for `b - 1 = p` prime, `max over h != 0 of
 |sum over x <= p of e(h (x^x - x)/p)| = O(sqrt(p log p))`.
 
 Either statement, or even `1 - rho(b) >= 3 ln b / b`, makes Corollary
 13.11 unconditional with `kappa = |H_0| + o(1)`.
 
-### 3.4 What is proved for large bases
+### 29.3.4 What is proved for large bases
 
-**Proposition 3.6** (proved). Let `p` be an odd prime dividing `b - 1`, let
+**Proposition 29.19** (proven). Let `p` be an odd prime dividing `b - 1`, let
 `3p <= L <= b`, and `h` not divisible by `p`. Then
 
     | (1/L) sum over x < L of e(h g(x) / p) |  <=  3 (1 + tau(p-1)) / sqrt(p)  +  p^(3/2) (1 + ln p) / L,
@@ -594,7 +594,7 @@ This does not cover the joint residue modulo all of `b - 1`, and it says
 nothing for a prime `p > b^(2/3)`, which is the case of question 80. At
 most one prime factor of `b - 1` exceeds `b^(2/3)`.
 
-### 3.5 The literature
+### 29.3.5 The literature
 
 I searched for nontrivial bounds on `sum over x <= p - 1 of e(a x^x / p)`.
 
@@ -615,13 +615,13 @@ I searched for nontrivial bounds on `sum over x <= p - 1 of e(a x^x / p)`.
 
 I found no pointwise `o(p)` bound for the complete sum, for `x^x` or for
 `x^x - x`. The needed statement is weaker than `o(p)`: the sum must stay
-below `p - 3 ln p` (in the normalization of Theorem 3.2), uniformly in `a`
+below `p - 3 ln p` (in the normalization of Theorem 29.15), uniformly in `a`
 and for every initial segment of length at least `p/2`. I found no result
 of that kind either.
 
-## 4. A model that keeps the Frobenius blocks (question 83)
+## 29.4 A model that keeps the Frobenius blocks (question 83)
 
-### 4.1 The model
+### 29.4.1 The model
 
 By Corollary 24.3, `F(x)` is assembled from `e` digits:
 `p_(e-1) = D_(e-1)`, `p_j = sigma(p_(j+1)) + D_j`, `p_0 = sigma(p_1) + D_0`
@@ -662,9 +662,9 @@ The basic block model gives 1.3 to 1.5 solutions per base on average (0 to
 to compare. Its mass is not the census in disguise: the exact solutions
 themselves contribute 1% to 2% of it (`block_res_self` in the data files).
 
-### 4.2 Results
+### 29.4.2 Results
 
-Table 4.1 (computed, `0^0 = 0`, per base; `analysis/data/r5m_block_q*.txt`,
+Table 29.4.1 (computed, `0^0 = 0`, per base; `analysis/data/r5m_block_q*.txt`,
 `analysis/r5m_block_report.py`). Type of `B - 1`: degrees and
 multiplicities of its irreducible factors.
 
@@ -716,9 +716,9 @@ the Pearson statistic `sum (c - E)^2 / E`:
 | (7, 3) | 63 | 48.5 | 13.8 (43) |
 | (5, 4) | 160 | 749.1 | 186.9 (155) |
 
-### 4.3 Verdict
+### 29.4.3 Verdict
 
-Heuristic 4.1. Keeping the forced structure exactly and randomizing the
+Heuristic 29.20. Keeping the forced structure exactly and randomizing the
 rest is enough in `F_q[T]` for most of the gap. The refined block model
 cuts the total error from 18% to 33% down to 3% to 9%, and the per-orbit
 misfit by a factor of 4. It needs no `kappa(B)`: the larger kernel of
@@ -737,17 +737,17 @@ it predicts 5 and 6. For
 deviations above a Poisson fit, so the block model is close to a complete
 description. The repeated factors are where the remaining structure sits:
 for them `R` has a nilradical, and the identity behaves differently on it
-(compare Theorem 2.5 (3)).
+(compare Theorem 29.11 (3)).
 
 So in a world where the forcing is strong, "keep the forced digits,
 randomize the rest" works when the forcing is kept in full: all `e`
 generating digits and their degrees, not only the top digit. This is the
 `F_q[T]` counterpart of the forced-top-digit correction of section 23.5,
-and it supports using the same recipe for the factorial system (section 5).
+and it supports using the same recipe for the factorial system (section 29.5).
 
-## 5. Open lengths in the factorial system (question 84)
+## 29.5 Open lengths in the factorial system (question 84)
 
-### 5.1 A model with the top digits kept
+### 29.5.1 A model with the top digits kept
 
 The question asks to fix the top digits of `F` from the large counts, as
 the search of `r3t_factorial.rs` does. A first attempt did exactly that:
@@ -774,7 +774,7 @@ positions `1..N` with the value `u` only at positions `>= u`. The board is
 a Ferrers board, so `A` is a product of binomials: place the values from
 the largest down, each into the free positions at or above it.
 
-**Lemma 5.1** (proved). Summed over `c`, the top-`K` model gives
+**Lemma 29.21** (proven). Summed over `c`, the top-`K` model gives
 
     E_L(K) = E_n [ 1(F(n) in W) P(top K digits of a random arrangement of c(n) = T) / P_W(top K digits = T) ],
 
@@ -797,7 +797,7 @@ adaptive `EA_L` by sampling `n`, with exact integers for `F`:
 `3 * 10^6` strings per length under `0^0 = 0`, `10^6` under `0^0 = 1`,
 `L = 3..100`.
 
-### 5.2 Open lengths
+### 29.5.2 Open lengths
 
 Call `L` open when `EA_L > 0.01` (computed, `analysis/data/r5m_fact_model_m*.txt`,
 `analysis/r5m_fact_report.py`, `analysis/data/r5m_fact_report.txt`).
@@ -812,7 +812,7 @@ Call `L` open when `EA_L > 0.01` (computed, `analysis/data/r5m_fact_model_m*.txt
   lengths where the plain model is already 10 times smaller
   (7, 12, 17, 22, 27, 33, 39, 45, ...).
 
-Table 5.1 (computed). Near-solutions at the offsets `D = 1000 j`,
+Table 29.5.1 (computed). Near-solutions at the offsets `D = 1000 j`,
 `j = 1..100` (section 21.5.3, `analysis/data/r3t_factorial_near1000.txt`),
 against 100 times the model. The offsets are below `9!`, so they leave the
 top digits of `F + D` unchanged except near a carry; the table uses the
@@ -839,17 +839,17 @@ model at `D = 0`.
 The model closes 8 of the 17 lengths, and all 8 are empty, where the plain
 model expects 81 near-solutions. Every length with near-solutions is open.
 Four open lengths (14, 18, 19, 24) are empty, against 40 expected; the
-near-solutions come in clusters (section 21.5.3 and the round 5 evidence
-draft, Lemma 1.3), so a few empty open lengths are ordinary. The totals
+near-solutions come in clusters (section 21.5.3 and
+Lemma 26.3), so a few empty open lengths are ordinary. The totals
 agree within 6%.
 
-Heuristic 5.2. The top-digit model explains where the coincidences of the
+Heuristic 29.22. The top-digit model explains where the coincidences of the
 factorial system can happen: a length is open when the true top digits of
 `F`, over the positions where the largest digit must sit, can be digits of
 the multiset. This is the "all or nothing" of section 21.5.3 in numbers.
 About half of the lengths are open, not "5 of 17".
 
-### 5.3 Calibration and prediction
+### 29.5.3 Calibration and prediction
 
 Expected solutions (the model mean; computed, with sampling errors):
 
@@ -890,20 +890,22 @@ nodes per length near `L = 40`.
 
 ## Library corrections
 
-- Section 13.2.3, Assumption R: "for every `d`" is false (Lemma 3.1,
+Each item below now has a note in the chapter it corrects.
+
+- Section 13.2.4, Assumption R: "for every `d`" is false (Lemma 29.14,
   `b = 10`, `d = 2`). Lemma 13.10 needs it only for `d >= ell >= b/2`, and
-  Theorem 3.2 replaces it by the number `rho(b)`.
+  Theorem 29.15 replaces it by the number `rho(b)`.
 - Section 13.2.6, "The limits of the means ... A proof would turn that
-  computation into a theorem": done (Theorem 1.1, Corollary 1.6).
+  computation into a theorem": done (Theorem 29.1, Corollary 29.6).
 - Section 5.2 describes the length `b - j`, `j >= 2`, as "no digit above
   `b - j` and at least one copy of `b - j`". The exact condition also needs
   fewer than `e^j` copies, plus the case of more than `e^(j+1)` copies of
-  `b - j - 1` (section 1.1). The table is right to its printed precision.
-- Question 80's lead "the minimum is at least 0.23" holds for `b >= 10`;
-  base 7 has 0.2143 (Table 3.2).
+  `b - j - 1` (section 29.1.1). The table is right to its printed precision.
+- Question 80 of `questions-round5.md`: its lead "the minimum is at least
+  0.23" holds for `b >= 10`; base 7 has 0.2143 (Table 29.3.2).
 - Section 21.1.4: "`k(B) = omega(B - 1)` for every one of the 4,426 bases
-  of the census (computed)" can now cite Theorem 2.3, Corollary 2.4 and
-  Theorem 2.5 (3): every census base is covered by proof.
+  of the census (computed)" can now cite Theorem 29.9, Corollary 29.10 and
+  Theorem 29.11 (3): every census base is covered by proof.
 
 ## Files
 
@@ -922,39 +924,40 @@ nodes per length near `L = 40`.
   `r5m_block_q5e4.txt`.
 - Question 84: `analysis/r5m_fact_model.py`, `analysis/r5m_fact_report.py`,
   and the depth-limited search `analysis/r5m_fact_open.py` (the approach of
-  section 5.1 that does not separate lengths); data
+  section 29.5.1 that does not separate lengths); data
   `analysis/data/r5m_fact_model_m0.txt`, `r5m_fact_model_m1.txt`,
   `r5m_fact_report.txt`.
 
-The draft is not yet in `lean/` or `docs/exposition/`. Theorem 1.1,
-Theorem 2.3, Corollary 2.4 and Theorem 2.5 (1), (3) are the natural
-candidates for formalization.
+The exposition covers Theorems 29.1 and 29.15 in its model chapter and
+Theorem 29.9, the block model and the factorial model in its chapter on
+other worlds. Theorem 29.1, Theorem 29.9, Corollary 29.10 and Theorem
+29.11 (1), (3) are the natural candidates for formalization in `lean/`.
 
 ## New questions
 
-1. The case left by Theorem 2.5: squarefree `B - 1` whose factors all
+1. The case left by Theorem 29.11: squarefree `B - 1` whose factors all
    share a divisor with `e - 1`, no factor of degree 2, `q >= e - 1`.
-   Does condition (b) of Theorem 2.5 (2) for `k = 2, 3` already force a
+   Does condition (b) of Theorem 29.11 (2) for `k = 2, 3` already force a
    contradiction, as the degree count does for `q <= e - 2`? The first
    test is `e = 11`, factors of degrees 5 and 6, `q = 11, 13`.
-2. Conjecture 3.5: is `max over h != 0 of |sum over x <= p of
+2. Conjecture 29.18: is `max over h != 0 of |sum over x <= p of
    e(h (x^x - x)/p)| = O(sqrt(p log p))`? A weaker target that suffices for
    Corollary 13.11: the sum is below `p - 3 ln p` for every `h` and every
    initial segment of length at least `p/2`. Can the method of
    Cilleruelo and Garaev (sums over subgroups along `x = u + kp`) give it
    for `p` close to `b`?
-3. The joint residue. Proposition 3.6 handles one prime at a time. Is
+3. The joint residue. Proposition 29.19 handles one prime at a time. Is
    there a proof of `rho(b) < 1 - c` for composite `b - 1` all of whose
    prime factors are below `b^(1/2)`, where every digit range covers full
    periods of `x mod p(p-1)`?
-4. The refined model's first-order term. Proposition 1.7 gives the basic
+4. The refined model's first-order term. Proposition 29.7 gives the basic
    model as `s_j + c_j / b`. What is the analog with the residue factor of
    section 5.3, and does `sum over j of c_j` (1.1046 numerically) have a
    closed form?
-5. The block model of section 4 misses the types with repeated roots
+5. The block model of section 29.4 misses the types with repeated roots
    (ratio 2.09 for two double roots in `(5, 4)`) and predicts 5 solutions
    for the triple root and the square of a quadratic, which have none. Is
-   there an exact obstruction on the nilradical, like Theorem 2.5 (3)?
+   there an exact obstruction on the nilradical, like Theorem 29.11 (3)?
 6. Factorial system: why is `L = 13` open with the largest model mean
    (0.80) but only 3 to 6 offsets with near-solutions? A finer model would
    keep the top digits over the positions of the two largest values.
