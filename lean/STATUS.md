@@ -19,7 +19,8 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
-(Examples), Conj (Conjectures).
+(Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
+(SearchRules).
 
 Counts of table rows at the time of writing: 109 formalized (one of them a
 list of computed solutions checked by `decide`), 8 partial, 10 rows of open
@@ -241,7 +242,7 @@ stated.
 | Proposition 21.3 | `ffWeight_add_C` [Other], `IsFFSolution.add_C` [FF] | formalized |
 | Proposition 21.4 | `ffWeight_eq_mul_pow_iff`, `ffWeight_C_mul_X_pow_iff`, `IsFFSolution.add_selfPaying` [FF] | formalized |
 | Proposition 21.5 | `sub_one_dvd_ringVal_sub_sum` [Other] | formalized (in any commutative ring) |
-| Theorem 21.6 | none | not formalized (traces) |
+| Theorem 21.6 (`k(B) ≥ ω(B - 1)`) | `theorem21_6`, `kDim`, `Jsum`, `finrank_ker_frobR`, `finrank_ker_le_kDim` [MT] | formalized (via Lemma 29.8 (4) and Berlekamp's count `dim R^φ = ω`, in place of traces) |
 | Theorem 21.7 | `theorem21_7`, `theorem21_7_card`, `theorem21_7_necessary` [FF] | formalized (the proof is shorter than the library's: once `B - 1 ∣ T^p - T`, the digit sum is `c + βT` and every `c` works) |
 | Proposition 21.8 | none | not formalized (cites the AFS representation theorem) |
 | Proposition 21.9 | none | not formalized |
@@ -326,6 +327,62 @@ stated.
 | Proposition 27.8 | `prop27_8`, `not_dvd_w_of_coprime` [Search] | formalized |
 | Corollary 27.9 | `corollary27_9` [Search] | formalized (as: if every unrevealed value below `k` has `b^L ∣ w(v)`, then `k ≤ 1`, and `k = 0` under `0^0 = 1`) |
 
+## Chapter 29. Theorems about the model
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 29.1, Lemmas 29.3, 29.4, Theorem 29.5, Corollary 29.6, Proposition 29.7 | none | not formalized (theorems about the probabilistic model; Lemma 29.3 cites the Barbour-Hall bound) |
+| Lemma 29.2 (weights) | none | not formalized (a real inequality; elementary) |
+| Lemma 29.8 | `finrank_ker_frobR`, `natCard_fixed_local`, `exists_C_of_dvd_pow_card_sub` (1); `range_pow_sub_one_le`, `Jsum_le_range` (4) [MT] | partial: (1) for `j = 1` (Berlekamp's count `dim R^φ = ω(B - 1)`, by the Chinese remainder theorem) and (4); (1) for `j ≥ 2`, (2) and (3) (traces) not formalized |
+| Theorem 29.9 | none | not formalized (needs Lemma 29.8 (3)) |
+| Corollary 29.10 | `exists_good_factor`, `exists_coprime_of_sum` [MT] | partial: a good factor exists when `e - 1` is a prime power; the conclusion `k = ω` needs Theorem 29.9 |
+| Theorem 29.11 | `theorem29_11_one`, `kDim_le`, `codim_le_finrank_ker_add_one`, `comp_pow_eq_of_codim_gt`, `theorem29_11_three`, `topCoeff`, `exists_topCoeff_mul_ne_zero` [MT] | partial: (1) and (3) in full; of (2), the necessity of (a) (`Λ_(e-2) = 0`, hence `ℓ ∘ φ^(e-1) = ℓ`); (b), (c), the converse of (2), and (4) are not formalized |
+| Remark 29.12 | none | not formalized |
+| Conjecture 29.13 (`k(B) = ω(B - 1)`) | `Conjecture29_13` [MT] | conjecture (proved for non-squarefree `B - 1` by `theorem29_11_three`) |
+| Lemma 29.14 (Assumption R fails at `b = 10`, `d = 2`) | `lemma29_14` [MT] | formalized (the digit 3 is the only 1-digit string with a 2-digit weight) |
+| Theorem 29.15, Corollary 29.16, Propositions 29.17, 29.19 | none | not formalized (model, computation, exponential sums) |
+| Conjecture 29.18 | none | not stated (exponential sums) |
+| Heuristic 29.20, Lemma 29.21 | none | not formalized (model) |
+
+## Chapter 30. Connections to other fields
+
+| result | Lean name | status |
+|---|---|---|
+| Lemma 30.1 (`g(z) ≥ 2 z g(z-1)`) | `lemma30_1`, `g`, `g_mono` [App] | formalized |
+| Lemma 30.2 (dissociation) | `lemma30_2`, `lemma30_2_mod` [App] | formalized |
+| Theorem 30.3 | none | not formalized (probability with Chernoff bounds; its counting core is Lemma 30.2) |
+| Lemma 30.4 | `lemma30_4`, `lemma30_4_allowed` [App] | formalized (`x^x < b^d` with `b ≤ 2d`, `b ≥ 12` forces `x ≤ 2d - 5`; every `x < b`, `x ≤ d` is allowed) |
+| Theorem 30.5, Corollary 30.8 | none | not formalized (model) |
+| Proposition 30.6 | `prop30_6_forced`, `prop30_6_step` [App] | partial: `x^d ≡ x (mod p)` for all `x` iff `p - 1 ∣ d - 1`, and `p^d - p ≡ -p (mod p^2)`; the limit law not formalized |
+| Proposition 30.7 | `prop30_7` [App] | partial: the two-step count (pairs with `f x + f y = r` are at most the collisions); the `k`-step form and the probability language not formalized |
+| Conjecture 30.9 | none | not stated |
+| Proposition 30.10 | `prop30_10`, `pow_self_modEq_self_iff`, `card_pow_modEq_self`, `sum_div_orderOf` [App] | formalized (the count `(p-1) + ∑_(d ∣ p-1) φ(d) (p-1)/d` over one period `1 ≤ c ≤ p(p-1)`) |
+| Corollary 30.11 | `corollary30_11_two`, `corollary30_11_two_solution`, `dvd_g_iff_modEq` [App] | partial: (2); (1) and (3) cite Kurlberg, Luca and Shparlinski |
+| correction: 7 has a fixed point (`4^4 ≡ 4 (mod 7)`) | example [App] | formalized |
+| Theorem 30.12 | `IsNarc2`, `isNarc2_iff`, `IsNarc2.swap` [App] | partial: the bijection with the representations `b^2 + 1 = A^2 + B^2`, `B ≥ 3` odd, and the pairing `s1 ↔ b - s1`; the count `τ(b^2 + 1) - 2` needs `r_2(N) = 4 ∑ χ(d)`, which is not in Mathlib |
+| Corollary 30.13 | `corollary30_13_one`, `corollary30_13_two`, `not_dvd_of_prime_sq_add_sq` [App] | partial: (1) with the two explicit numbers, and (2) in the direction "`b` even, `b^2 + 1` prime ⟹ none"; the converse, (3) and (4) (Iwaniec, Hooley) not formalized |
+| Proposition 30.14 | `card_divisors_sq_add_one` [App] | partial: the divisor pairing `τ(n^2 + 1) = 2 #{d ≤ n : d ∣ n^2 + 1}`; the asymptotics not formalized |
+
+## Chapter 31. Pruning by the residue
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 31.1 (the residue rule) | `theorem31_1`, `IsSolution.sum_g_modEq_zero`, `Fs_eq_sum_g_add_sum` [SR] | formalized |
+| Corollary 31.2 | none | not formalized (a statement about the engine; the rule it applies is Theorem 31.1) |
+| Lemma 31.4 (the interval is the hull) | `lemma31_4`, `lemma31_4_attained` [SR] | formalized |
+| Proposition 31.5 | `prop31_5_hi`, `prop31_5_lo` [SR] | formalized (the two interval inequalities; the claim about the nodes of the engine is about code) |
+| Heuristics 31.3, 31.6 | none | not formalized (heuristic) |
+
+## Chapter 32. The basic questions revisited
+
+| result | Lean name | status |
+|---|---|---|
+| Theorem 32.1 (Bugeaud and Laurent) | none | not formalized (cited) |
+| Theorem 32.2 | `pell_last`, `pell_middle`, `pell_last_R_ne_zero`, `pell_middle_R_ne_zero`, `two_pow_dvd_V` [SR] | partial: the reduction to `U^2 - n V^2 = R` with `V = 2 f x^(x/2)`, `R ≠ 0` for non-square `n`, and `2^(x/2+2) ∣ 2V`; the Baker step (heights, 2-adic logarithms, Theorem 32.1) is not formalized |
+| Theorem 32.3 | `isSolution_last_iff_disc`, `isSolution_mid_iff_disc`, `sieve_last`, `sieve_mid` [SR] | partial: the test `D = U^2` and the soundness of the sieve (`D` is a square modulo every `l`); the bound `X0` and the run are computations |
+| Corollary 32.4, Proposition 32.7 | none | not formalized (computation) |
+| Theorem 32.5, Proposition 32.6 | none | not formalized (Baker and Matveev bounds, class number formula) |
+
 ## Open questions stated as `Prop`s
 
 `FinitenessConjecture` (refuted), `MissingLengthsConjecture` (refuted),
@@ -333,8 +390,9 @@ stated.
 `NoFullLengthConjecture_one`, `BoundedCountOne`, `InfinitelyManyEmptyBases`,
 `EveryCountOccurs`, `Conjecture_10_3_lower`, `Question65`, `Question50`,
 `Question36`, `Question39`, `Question12`, `Question32`, `Question51_two`,
-`Question51_three`. All are in `Conjectures.lean`. The round 5 questions (72
-to 89) are research directions and are not stated.
+`Question51_three`, `Conjecture29_13`. All are in `Conjectures.lean`, except
+`Conjecture29_13`, which is in `ModelTheorems.lean`. The round 5 questions (72 to 89)
+are research directions and are not stated.
 
 ## Problems found
 
