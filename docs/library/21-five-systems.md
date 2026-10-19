@@ -161,6 +161,13 @@ Write `k(B)` for the codimension of the image of the map
 census (computed, `analysis/r3t_ffield_summary.py`). The refined model then
 predicts about `q^k(B)` times the basic count (heuristic).
 
+Update (chapter 29). Every census base is now covered by proof. `k(B) =
+omega(B - 1)` holds when some factor of `B - 1` has degree prime to `e - 1`
+(Theorem 29.9), so always when `e - 1` is a prime power (Corollary 29.10).
+In every case `k(B) <= omega(B - 1) + 1`, with equality impossible for
+non-squarefree `B - 1` (Theorem 29.11). Equality `k = omega` for all
+`B` is Conjecture 29.13.
+
 Under `0^0 = 1` the trace of the constant `z` is `z deg P`. So a factor of
 `B - 1` with degree prime to `p` forces `z == 0 (mod p)`: the analog of the
 even number of zeros in odd bases (proven).

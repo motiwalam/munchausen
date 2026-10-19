@@ -36,6 +36,9 @@ keeping in mind when judging which problems are realistic.
     [$b(b + x) = x^x + 1$ only for $x = 3, 7$?], st("open"), [proven for prime powers and $x <= 4 dot 10^9$; abc implies finitely many], [@cor-x-x],
     [$b(b + x) = x^n + 1$ with $n >= 4$], st("open"), [only $(7, 7)$ known; finite under abc], [@sec-dio-exponents],
     [Count of solutions per base], st("heuristic"), [Poisson with mean about 1 per convention, doubled in odd bases under $0^0 = 0$], [@sec-model-poisson],
+    [Length shares in the basic model], st("proven"), [8.0%, 55.2%, 23.3%, ... with error $O(1 slash b)$], [@thm-length-shares],
+    [Assumption R], st("open"), [false for short lengths as first stated; proven by computation for bases 12 to 6000], [@open-assumption-r],
+    [$k(B) = omega(B - 1)$ in $FF_q [T]$?], st("open"), [proven with a good factor, for $e <= 10$ and every census base; at most one more always], [@open-ffield],
     [Excess of $(b-1)$-digit solutions], st("heuristic"), [resolved: chance; the totals fit], [@sec-model-anomalies],
     [Empty bases $equiv 3 med (mod 8)$], st("computed"), [resolved: base 43 has a solution], [@sec-model-anomalies],
     [Excess of 5-digit solutions in bases 13 to 99], st("heuristic"), [unexplained fluctuation, $P approx 0.015$], [@sec-short-heuristic],
@@ -52,8 +55,8 @@ keeping in mind when judging which problems are realistic.
     [Galois groups of $Q_s$], st("proven"), [$S_(k-1)$ generically; classified for $k = 4, 5$], [@sec-short-galois],
     [Integers with three bases under $0^0 = 1$], st("open"), [none known], [@open-three-bases],
     [Lengths in base $-1 + i$], st("proven"), [exactly $equiv 1, 4 med (mod 8)$], [@worlds-minus1i],
-    [Finitely many solutions in the factorial system?], st("open"), [only 1, 2, 4, 5 below $34!$], [@open-factorial],
-    [Why the model misses in $FF_q [T]$], st("heuristic"), [Frobenius blocks and the $0^0 = 1$ channel proven; the $0^0 = 0$ mechanism heuristic], [@sec-worlds-ffield],
+    [Finitely many solutions in the factorial system?], st("open"), [only 1, 2, 4, 5 below $34!$; a top-digit model leaves 14 of 31 lengths open and finds the empty census ordinary], [@open-factorial],
+    [Why the model misses in $FF_q [T]$], st("heuristic"), [Frobenius blocks and the $0^0 = 1$ channel proven; a model that keeps the blocks closes most of the $0^0 = 0$ gap], [@sec-worlds-ffield],
   )
 ]
 
@@ -209,32 +212,29 @@ in bases 10 to 30, where 0 is observed ($P = 0.27$). So the evidence does
 not support the original conjecture that none exists, and a search with
 `--min-digits b` in bases near 50 is the natural test.
 
-#problem(id: "open-assumption-r", title: [Assumption R], src: ("13.2", "5.3"))[
-  Prove that the residues of $sum_x c_x (x^x - x)$ modulo the odd prime
-  powers dividing $b - 1$ are spread evenly over the multisets whose sum has
-  a given length, with an explicit constant. (#q(54))
+#problem(id: "open-assumption-r", title: [Assumption R], src: ("13.2", "29.3"))[
+  Prove that $rho(b) < 1 - 3 ln b slash b$ for every base $b > 6000$, where
+  $rho(b)$ is the largest normalized exponential sum of $x^x - x$ modulo
+  $b - 1$ over the digit ranges $[0, L)$ with $L >= b slash 2$. (#q(54),
+  #q(80), #q(112), #q(113))
 ]
 
 This is the only gap in the refined version of @thm-poisson, and it is the
-factor 1 for odd primes in @sec-model-refined. The 3-adic and 5-adic laws of
-@sec-short-coverings show where uniformity can fail: modulo $3^e$ and $5^e$
-the values of $x^x - x$ are thin. The hard case is a prime $p = b - 1$, where
-the digits see each residue of $x$ once, and the statement needed is a bound
-for the exponential sums $sum_(x < p) e(h x^x slash p)$ (#q(80)). A
-computation over every odd prime power dividing $b - 1$ for $b <= 20,000$
-finds the relevant minimum at least 0.23, so in the Poisson model the
-residue law is very close to uniform in that range.
+factor 1 for odd primes in @sec-model-refined. @model-thm-rho reduces
+Assumption R to this one number per base, and a computation proves it for
+$12 <= b <= 6000$ (@model-cor-r-small). The computed $rho(b)$ tends to
+0.7638, the 3-adic limit of @model-prop-rho3, and @model-conj-rho predicts
+$rho(b) <= 0.77$ from base 100 on. Small prime factors of $b - 1$ are
+handled by Gauss sums (@model-prop-small-p). The hard case is a prime
+$p = b - 1$, where the digits see each residue of $x$ once. There the sums
+$sum_(x < p) e(h (x^x - x) slash p)$ show square-root cancellation in the
+data, but no bound below $p$ for a single $h$ is known. Over every odd prime
+power dividing $b - 1$ for $b <= 20,000$, the Poisson rate of the residues
+is at least 0.2143, and at least 0.2308 from base 10 on.
 
-#problem(id: "open-length-shares", title: [The length shares as a theorem], src: ("5.2", "13.2"))[
-  Prove that in the basic model the expected number of solutions with
-  $b - j$ digits tends to the shares of @heur-length-law (8.0%, 55.2%,
-  23.2%, ...) as $b$ grows. (#q(81))
-]
-
-The statement is about random strings only. A natural route couples the
-digit counts with independent Poisson variables and shows that the length
-of the sum depends, up to probability $o(1)$, only on the counts of the
-digits above $b - C ln b$.
+The length shares of the basic model, once listed here, are now a theorem
+(@thm-length-shares). Its first-order correction $c_j slash b$ is known in
+the basic model but not in the refined one (#q(114)).
 
 #problem(id: "open-length-tail", title: [The length tail], src: "10.5")[
   Does the tail of the length law beyond $J = ln b + 1$, which supports
@@ -466,26 +466,32 @@ prime $x$ remains open.
 
 Only 1, 4, 5 under $0^0 = 0$ and 1, 2, 5 under $0^0 = 1$ exist below
 $34!$. No length bound and no residue are available, and the windows model
-fails there (@sec-worlds-factorial). A model that fixes the top digits from
-the large counts, as the search tree does, and a search past $34!$ with
-wider integers are the next steps. A concrete version (#q(84)): for which
-lengths $L$ up to 100 can the few possible top digits of the sum place the
-largest digit in a top position, and what does a model that counts only
-these open lengths predict beyond $34!$?
+fails there (@sec-worlds-factorial). A model that keeps the true top digits
+of the sum explains the failure: it leaves 14 of the 31 lengths up to 33
+open, closes every length without near-solutions, and makes the empty
+census an ordinary outcome (@worlds-fact-open). It expects about 0.3
+solutions for $34 <= L <= 40$ and 2.5 up to $L = 100$
+(@worlds-fact-predict). A census to $L = 40$ with integers wider than 128
+bits is the next test. Why $L = 13$ has the largest model mean but few
+near-solutions (#q(116)), and how to sample the model beyond $L = 50$
+(#q(117)), are open.
 
 #problem(id: "open-ffield", title: [A formula for $FF_q [T]$], src: ("21.1", "24.5"))[
   Find a formula, or a good heuristic, for the average number of solutions
   over all bases of degree $e >= 3$ in $FF_q [T]$. Is $k(B) = omega(B - 1)$
-  always? Which values of the leading coefficient pass the test of
+  always (@worlds-ff-kB-conj)? Which values of the leading coefficient pass the test of
   @worlds-ff-short for $e = 3$ and $q equiv 2 med (mod 3)$? Prove that
   $T^q$ has no zero digit in a non-square base of degree 2 with two roots of
-  $B - 1$. (#q(82), #q(83))
+  $B - 1$. (#q(111), #q(115))
 ]
 
-A model that keeps the Frobenius blocks exactly and treats only the
-remaining values as random would be the $FF_q [T]$ form of the forced top
-digits in the integers, and would show whether "keep the forced digits,
-randomize the rest" suffices where the forcing is strong.
+@worlds-ff-kB proves $k(B) = omega(B - 1)$ whenever $B - 1$ has a factor of
+degree prime to $e - 1$, and for every $e <= 10$; the first open case is
+$e = 11$ with factors of degrees 5 and 6. The block model of
+@worlds-ff-blockcomp, which keeps the Frobenius blocks and randomizes the
+rest, predicts the census within 3% to 9% in total. It still misses the
+bases where $B - 1$ has a repeated factor, and a formula would have to
+explain those.
 
 #problem(id: "open-gauss-lengths", title: [Length runs in Gaussian bases], src: ("14.5", "23.4"))[
   Prove the runs of lengths of positive integers in base $-n + i$ for

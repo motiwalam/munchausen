@@ -368,7 +368,8 @@ is that `x^x - x mod p` does not concentrate, for `x < p`. The unconditioned
 version reduces to
 `min over h != 0 of (1/b) sum over x < b of (1 - cos(2 pi h (x^x - x) / p)) >= c > 0`.
 Lead (computed, every odd prime power `q` dividing `b - 1`, `b <= 20,000`):
-the minimum is at least 0.23. The worst cases are the powers of 3 at
+the minimum is at least 0.23 (correction, chapter 29: for `b >= 10`;
+base 7 has 0.2143). The worst cases are the powers of 3 at
 `h = q/3`, where the rate tends to `1/4`, as Lemma 15.12 predicts (only
 `x == 2 (mod 6)` moves the residue mod 3). For primes `p >= 101` dividing
 `b - 1`, `b <= 6,000`, it is at least 0.757, and the worst cases are

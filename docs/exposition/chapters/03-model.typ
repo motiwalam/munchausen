@@ -63,7 +63,7 @@ so the largest digit present decides the length of $F(n)$. One copy of $b - 1$ w
   - $k = b$: the sum needs at least $b$ digits, so at least 3 copies of $b - 1$. The probability is $P("Poisson"(1) >= 3) = 1 - (5 slash 2) e^(-1) = 0.080$.
   - $k = b - 1$: one or two copies of $b - 1$ put $F$ between $b^(b-2)$ and $b^(b-1)$, with probability $(3 slash 2) e^(-1) = 0.552$.
   - $k = b - j$ for $j >= 2$: no digit above $b - j$ and at least one copy of $b - j$. This has probability $e^(-(j-1)) (1 - e^(-1))$, which gives 0.233, 0.086, 0.032 for $j = 2, 3, 4$.
-  The five numbers add up to 0.983, and the tail adds the rest to 1. In each case the event "$F(n)$ has $k$ digits" has the stated probability, and @model-prop-ek turns it into the expected count.
+  The five numbers add up to 0.983, and the tail adds the rest to 1. In each case the event "$F(n)$ has $k$ digits" has the stated probability, and @model-prop-ek turns it into the expected count. The third case is slightly loose: more than $e^j$ copies of $b - j$ push $F$ up one length, and more than $e^(j+1)$ copies of $b - j - 1$ push it up to $b - j$ digits. These rare cases move the shares by less than $10^(-5)$. @thm-length-shares below uses the exact events.
 ]
 
 The law holds well at finite $b$. @tab-model-length-law shows the exact model at bases 50 to 800 #lib("10.5"). For $J$ up to about $ln b$ the values match the limit. Beyond that they are about three times the limit, a bump that @sec-model-window explains.
@@ -83,6 +83,67 @@ The law holds well at finite $b$. @tab-model-length-law shows the exact model at
 #remark(id: "model-rem-universal-one")[
   The total of 1 does not depend on the details of $x^x$. It only needs the length of $F(n)$ to be nearly independent of the length of $n$ near the critical length, so that $sum_k P(ell(F_k) = k)$ is close to $sum_ell P(ell(F) = ell) = 1$. This is why "about one solution per base" holds in every number system of @ch-worlds where digits can move freely. The length shares, in contrast, depend on how high the top weight sits between two powers of the base, and they change from system to system (@sec-worlds-universal).
 ]
+
+=== The length shares are a theorem in the model <sec-model-shares>
+
+The sketch of @heur-length-law replaces the digit counts by independent Poisson variables and the weights by their limits. Both steps can be made exact, so in the basic model the shares are a theorem about random strings. Whether real bases follow the model is a separate question; the heuristic label of @heur-length-law refers to that.
+
+Fix $j >= 0$. For $y >= 1$ let $gamma(y) = (e^y - floor(e^y)) slash e^y$. It is positive because $e^y$ is not an integer, and it measures how far $e^y$ is from the integer below it. Let $gamma_j$ be the smaller of $gamma(j)$ and $gamma(j + 1)$ (only $gamma(1)$ when $j = 0$). Write $N_x$ for the number of copies of the value $x$ in a random string and $y_0$ for the distance of the largest digit from $b$, so that the largest digit is $b - y_0$. The limit share is
+$ s_j = sum_(1 <= k < e^j) e^(-j) / k! + sum_(k > e^(j+1)) e^(-(j+1)) / k! . $
+The first sum is "the largest digit is $b - j$, with fewer than $e^j$ copies". The second is "the largest digit is $b - j - 1$, with more than $e^(j+1)$ copies"; it adds $3.8 dot 10^(-6)$ to $s_1$ and less elsewhere. So $s_0 = e^(-1) (e - 5 slash 2)$, and $s_0, dots, s_5$ are 0.0803, 0.5518, 0.2325, 0.0855, 0.0315, 0.0116.
+
+The proof has three steps. The first makes the weights precise.
+
+#lemma(id: "model-lem-weights", title: "Top weights", src: "29.1")[
+  For $0 <= y < b$,
+  $ e^(-y) b^(b-y) <= (b - y)^(b - y) <= e^(-y) b^(b-y) exp(y^2 / (2(b - y))). $
+]
+#proof[
+  Put $t = y slash b$. Then $ln (b-y)^(b-y) - (b - y) ln b = b (1 - t) ln(1 - t)$, and $(1 - t) ln(1 - t) = -t + sum_(k >= 2) t^k slash (k(k-1))$, a series whose terms after the first are positive. So the left side is at least $-y$, and at most $-y + (y^2 slash 2b) sum_(m >= 0) t^m = -y + y^2 slash (2(b - y))$.
+]
+
+The second step compares the top counts with Poisson variables. It uses the total variation distance of @app-prob-def-tv and the coupling of @sec-app-prob-coupling.
+
+#lemma(id: "model-lem-coupling", title: "Poisson coupling of the top counts", src: "29.1")[
+  Let $d = b - j$ and $K = j + 1$. The vector $(N_(b-1), dots, N_(b-K))$ of a random $d$-digit string is within total variation distance $((j + 1)^2 + 1) slash b$ of $K$ independent Poisson(1) variables.
+]
+#sketch[
+  Replacing the leading digit by a uniform digit costs $1 slash b$. For $d$ uniform digits, given the total of the $K$ counts, the counts are multinomial with equal cells, and so are independent Poisson variables given their total. So only the totals need to be compared: a binomial total against a Poisson total costs at most $K slash b$ by @app-prob-barbour-hall, and moving the Poisson mean from $d K slash b$ to $K$ costs at most $1 - e^(-K j slash b) <= K j slash b$.
+]
+
+The third step shows that the length of $F(n)$ depends only on these counts, unless some top value occurs more than $sqrt(b)$ times, which is very unlikely.
+
+#theorem(id: "thm-length-shares", title: "Length shares in the basic model", src: ("29.1", "13.2"))[
+  Fix $j >= 0$ and let $b_0(j) = max(e^(j+2), j + 1 + 2(j+1)^2 slash gamma_j, 64 slash gamma_j^2)$. For every base $b >= b_0(j)$, under either convention, the expected number $E_(b-j)(b)$ of $(b - j)$-digit solutions in the basic model satisfies
+  $ |E_(b-j)(b) - s_j| <= ((j + 1)^2 + 1) / b + (j + 2) / (floor(sqrt(b)))! . $
+  In particular $E_(b-j)(b) -> s_j$.
+]
+#sketch[
+  Let $M = floor(sqrt(b))$ and let $H$ be the event that each of the values $b - 1, dots, b - j - 2$ occurs at most $M$ times. A value occurs more than $M$ times with probability at most $1 slash M!$, so $P("not" H) <= (j + 2) slash M!$. Suppose $H$ holds and the largest digit is $b - y$ with $k$ copies, $y in {j, j + 1}$. By @model-lem-weights, $F slash b^(b-y)$ lies between $k e^(-y)$ and $k e^(-y)$ times a factor close to 1, plus at most $(M + 2) slash b$ for the lower digits. The condition $b >= b_0(j)$ keeps all these error terms below $gamma_j$, the gap between $k e^(-y)$ and 1. So $F$ has $b - y + 1$ digits if $k > e^y$ and $b - y$ digits if $k < e^y$. A largest digit above $b - j$ makes $F$ too long, and one below $b - j - 1$ makes it too short. So on $H$ the event "$F$ has $b - j$ digits" depends only on the top $j + 1$ counts, and under independent Poisson(1) counts its probability is exactly $s_j$, because $P(y_0 = y, N_(b-y) = k) = e^(-y) slash k!$. @model-lem-coupling bounds the change from the true counts to the Poisson ones.
+]
+
+The constant $b_0(j)$ is crude: $b_0(0) = 919$ and $b_0(1) = 23,000$. It only keeps the threshold $e^y$ away from the integers. The exact values below show the convergence already at base 30.
+
+#corollary(id: "model-cor-total", title: "One solution per base", src: "29.1")[
+  In the basic model, $sum_(d = 1)^b E_d (b) -> 1$ as $b -> infinity$, and the share of the length $b - j$ tends to $s_j$.
+]
+#sketch[
+  The events of @thm-length-shares for $j = 0, 1, 2, dots$ split the Poisson outcomes, so $sum_j s_j = 1$. For the tail, on the event that $F$ has $b - j$ digits every digit $x$ satisfies $x^x < b^(b-j)$, which forces $x < b - 0.75 j$ for $b >= 21$. Each of the about $b$ digits must avoid $0.75 j - 1$ values, so the share of the lengths with $J <= j <= b slash 2$ is at most $5.6 e^(-J slash 3)$. The lengths below $b slash 2$ contribute $O(1 slash sqrt(b))$, because then every digit is below $max(2 d, sqrt(b))$. Let $b$ and then $J$ tend to infinity.
+]
+
+#computation(id: "model-comp-shares", title: "The shares at finite bases", src: "29.1")[
+  Exact values of $E_(b-j)(b)$ from the law of the top counts, and the scaled error $b (E_(b-j) - s_j)$:
+  #align(center, btable(columns: 6, align: (right,) * 5 + (left,),
+    [$b$], [$E_b$], [$E_(b-1)$], [$E_(b-2)$], [$E_(b-3)$], [$b(E - s)$ for $j = 0, 1, 2, 3$],
+    [30], [0.07735], [0.55501], [0.24203], [0.09693], [$-0.089, +0.096, +0.285, +0.341$],
+    [100], [0.07939], [0.55275], [0.23536], [0.08879], [$-0.091, +0.093, +0.282, +0.324$],
+    [1000], [0.08021], [0.55191], [0.23282], [0.08587], [$-0.092, +0.092, +0.281, +0.318$],
+    [100000], [0.08030], [0.55182], [0.23254], [0.08555], [$-0.092, +0.092, +0.281, +0.317$],
+  ))
+  A Monte Carlo of the model program itself agrees within 1.5 standard errors at bases 30 and 100.
+]
+
+The last column converges, so the error is $c_j slash b$ to first order. The library computes the constants exactly: $E_(b-j)(b) = s_j + c_j slash b + O(1 slash b^2)$ with $c_0 = -1 slash (4 e) = -0.092$ and $c_1, dots, c_5 = 0.092, 0.281, 0.317, 0.227, 0.136$ (Proposition 29.7 of #lib("29.1")). The base-100 numbers of @model-heur-base100 are these values. Every later use of "about one solution per base" in the basic model rests on @model-cor-total.
 
 == The digit-sum identity and the parity effect <sec-model-refined>
 
@@ -109,7 +170,7 @@ A multiset that meets the identity becomes $b - 1$ times as likely to be a solut
 
 So a large odd base expects two solutions under $0^0 = 0$ and about 1.135 under $0^0 = 1$, and a large even base expects one under each. Averaged over all bases, the model predicts 1.5 solutions per base under $0^0 = 0$ and about 1.07 under $0^0 = 1$ #lib("7.4").
 
-The factor 1 for odd primes is the one assumption of this section that is not obvious. It says that the residues of $x^x$ modulo the odd prime powers in $b - 1$ spread evenly over the multisets whose weight has the right length. @sec-model-poisson calls it Assumption R. It is open (@sec-open-list).
+The factor 1 for odd primes is the one assumption of this section that is not obvious. It says that the residues of $x^x$ modulo the odd prime powers in $b - 1$ spread evenly over the multisets whose weight has the right length. @sec-model-poisson calls it Assumption R. It reduces to one exponential sum per base, which a computation bounds for every base up to 6000; beyond that it is open (@sec-model-assumption-r).
 
 === The model against the data
 
@@ -369,17 +430,81 @@ Fix a minimal length $ell >= 6$. An index $alpha$ is a multiset with $ell <= k <
   $ d_"TV" ((N_0, N_1), (Z_s + Z_0, Z_s + Z_1)) <= 2 b_1 + b_2, $
   where $b_1 = sum_u sigma_u^2$ is the sum over clusters of the squared expected cluster counts, and $b_2 = 2 E[T]$ with $T$ the number of model solutions under convention 0 that end in 0. For $ell = ceil(b slash 2)$ and $b >= 12$, the basic coupled model gives
   $ d_"TV" <= 14.2 slash b + 16 b^2 (b + 1) ell! slash b^ell = O(1 slash b). $
-  The refined model gives the same with $14.2 kappa slash b$ in the first term and an extra factor $b - 1$ in the second term, under Assumption R below.
+  The refined model gives the same with $14.2 kappa slash b$ in the first term and an extra factor $b - 1$ in the second term, under Assumption R below. For $12 <= b <= 6000$ the refined case holds without the assumption (@model-cor-r-small).
 ]
 #sketch[
   Compare the family of indicators $X_alpha$ with independent Poisson variables $Z_alpha$ of the same means; the counts $(N_0, N_1)$ are sums of these. Clusters are independent in both families, and total variation is subadditive over independent blocks, so it suffices to bound one cluster. Inside a cluster, compare $X$ first with independent Bernoulli variables $B_alpha$, then $B$ with $Z$. Le Cam's inequality gives $d_"TV" (B, Z) <= sum p_alpha^2 <= sigma_u^2$. For $X$ against $B$, split the probabilities by the number of ones in the outcome vector: the outcomes with at least two ones have probability at most $P(K >= 2) + sigma_u^2 slash 2$, where $K$ is the number of solutions in the cluster, and the outcomes with zero or one ones differ by at most $E[K(K - 1)] + sigma_u^2$ in total. Summing over clusters, $sum E[K(K-1)]$ is the expected number of ordered pairs of solutions in one cluster, and by @model-lem-twins these are the twin pairs, so the sum is $2 E[T]$. The error terms come from two estimates. A cluster has at most $2(b + 1)$ relevant shifts $j$, and each has probability at most $2 D! slash b^(D - 1)$ to produce the upper part, which gives $sigma_u <= 4 b (b + 1) ell! slash b^ell$. And a convention-0 solution ending in 0 has its last digit fixed, which costs a factor $1 slash b$, while the chance that the other digits fit is summable over the lengths; this gives $E[T] <= 7.1 slash b$.
 ]
 
-#heuristic(id: "model-assump-r", title: "Assumption R", src: ("13.2", "5.3"))[
-  There is a constant $kappa$ such that for every length $k$ and every residue $r$, among uniform strings of $k - 1$ digits whose weight has $k$ digits, the share with $sum c_x (x^x - x) equiv r med (mod b - 1)$ is at most $kappa slash (b - 1)$.
+#heuristic(id: "model-assump-r", title: "Assumption R", src: ("13.2", "29.3"))[
+  There is a constant $kappa$ such that for every length $k >= b slash 2$ and every residue $r$, among uniform strings of $k - 1$ digits whose weight has $k$ digits, the share with $sum c_x (x^x - x) equiv r med (mod b - 1)$ is at most $kappa slash (b - 1)$.
 ]
 
-Assumption R is about the residues of $x^x$, not about the model's randomness. It is the same assumption that gives the factor 1 for odd primes in @model-heur-parity. In odd bases the prime 2 forces $kappa >= 2$. A proof with some constant $kappa$ is open; the residues of $x^x - x$ modulo $3^e$ and $5^e$ are thin (@sec-short-coverings), which shows where uniformity can fail.
+Assumption R is about the residues of $x^x$, not about the model's randomness. It is the same assumption that gives the factor 1 for odd primes in @model-heur-parity. In odd bases the prime 2 forces $kappa >= 2$. The proof of the theorem needs it only for $k >= b slash 2$. The library first stated it for every length, and that version is false: in base 10 the only one-digit string whose weight has 2 digits is the digit 3, since $3^3 = 27$, so one residue class modulo 9 gets the whole share. For a fixed short length and a large base the same happens, because few digits are small enough.
+
+=== Assumption R reduced to one sum <sec-model-assumption-r>
+
+Write $m = b - 1$ and $g(x) = x^x - x$ for $x >= 1$, with $g(0) = 0$. A residue condition modulo $m$ can be written with the additive characters $e(t) = e^(2 pi i t)$. For an integer $S$,
+$ 1/m sum_(h mod m) e(h (S - r) / m) = cases(1 & "if" S equiv r med (mod m), 0 & "otherwise,") $
+because the sum of all $m$-th roots of unity vanishes. Take expectations: $P(S equiv r) <= (1 slash m) sum_h |E e(h S slash m)|$. When $S$ is a sum of independent digits, $E e(h S slash m)$ is a product with one factor per digit. So Assumption R follows once these factors are bounded away from 1 in modulus.
+
+A few $h$ always give modulus 1. Every $g(x)$ is even and $g(2) = 2$, so the set $H_0$ of $h$ with $h g(x) equiv 0$ for all $x$ is ${0, m slash 2}$ for even $m$ and ${0}$ for odd $m$. These $h$ are the prime 2, the source of the parity factor. For the other $h$ and a digit range of length $L$ put
+$ psi_L (h) = 1/L sum_(x < L) e(h g(x) / m), quad rho(b) = max_(ceil(b slash 2) <= L <= b, h in.not H_0) |psi_L (h)| . $
+
+#theorem(id: "model-thm-rho", title: "Assumption R from one number", src: "29.3")[
+  Let $b >= 12$ and $ell = ceil(b slash 2)$. The refined case of @thm-poisson holds without Assumption R, with
+  $ kappa(b) = |H_0| + (b - 1) rho(b)^(ell - 2) . $
+  So it suffices that $1 - rho(b) >= 3 ln b slash b$.
+]
+#sketch[
+  The proof of @thm-poisson needs the residue only on the event that the weight of the top $k - 1$ digits has $k$ digits, with $k = b - j >= ell$. On that event every digit is below $L = b - theta j$ for a constant $theta >= 0.71$, because a larger digit $x$ has $x^x >= b^k$. Replace the length event by the larger event "every digit is below $L$". On it the digits are independent and uniform on ${0, dots, L - 1}$, the leading one on ${1, dots, L - 1}$. So each nonleading digit contributes the factor $psi_L (h)$, and the characters give at most $(1 slash m)(|H_0| + m rho(b)^(k - 2))$ for the share of one residue. The probabilities of the larger events still sum to at most 7.1, as in the original proof.
+]
+
+So the conditioning on the length does no harm, and Assumption R becomes a statement about one number per base.
+
+#computation(id: "model-comp-rho", title: [The number $rho(b)$], src: "29.3")[
+  For every base $b$ from 12 to 6000, every $L$ from $ceil(b slash 2)$ to $b$ and every $h$ modulo $b - 1$:
+  #align(center, btable(columns: 4, align: (left, right, left, right),
+    [bases], [largest $rho(b)$], [where], [$kappa(b) - |H_0|$ at most],
+    [12 to 19], [0.8197], [$b = 13, 16$, $h = m slash 3$], [4.6],
+    [20 to 49], [0.7954], [$b = 22$], [2.7],
+    [50 to 99], [0.7807], [$b = 52$], [0.134],
+    [100 to 999], [0.7725], [$b = 100$, $h = 33$], [0.00041],
+    [1000 to 6000], [0.7646], [$b = 1000$, $h = 333$], [$10^(-55)$],
+  ))
+]
+
+#corollary(id: "model-cor-r-small", title: "The refined Poisson theorem up to base 6000", src: "29.3")[
+  For $12 <= b <= 6000$ the refined case of @thm-poisson holds unconditionally, with $kappa <= |H_0| + 5$, and with $kappa <= |H_0| + 0.0005$ for $100 <= b <= 6000$. So $kappa$ is 1 in even bases and 2 in odd bases, up to $5 dot 10^(-4)$: the factors of @model-heur-parity.
+]
+
+From base 100 on, the worst $h$ is $m slash 3$ or $m slash 6$ in every base with $3 | b - 1$, and $rho(b) <= 0.537$ in all other bases. The prime 3 is the reason.
+
+#proposition(id: "model-prop-rho3", title: "The 3-adic limit", src: ("29.3", "15.4"))[
+  If $3 | b - 1$ and $h = m slash 3$, then $psi_L (h) -> 5 slash 6 + (1 slash 6) e(2 slash 3)$ as $L -> infinity$. The limit has modulus $sqrt(7 slash 12) = 0.7638$.
+]
+#proof[
+  Modulo 3, $g(x)$ is 2 for $x equiv 2 med (mod 6)$ and 0 otherwise. A share $1 slash 6 + O(1 slash L)$ of the $x < L$ has $x equiv 2 med (mod 6)$, and each of these contributes $e(2 slash 3)$; the others contribute 1.
+]
+
+So the computed $rho(b)$ approaches 0.7638 from above, which supports the following conjecture.
+
+#conjecture(id: "model-conj-rho", title: [$rho(b)$ for large bases], src: "29.3")[
+  $rho(b) <= 0.77$ for every $b >= 100$. For $b - 1 = p$ prime, $max_(h != 0) |sum_(x <= p) e(h (x^x - x) slash p)| = O(sqrt(p log p))$.
+]
+
+For $b - 1 = p$ prime with $1000 <= p <= 20,000$, the largest sum lies between 0.84 and 1.40 times $sqrt(p ln p)$, which is the size of the largest of $p$ sums of $p$ random unit vectors. For small prime factors of $b - 1$ there is a proof, which uses that $x^x$ modulo $p$ depends only on $x$ modulo $p (p - 1)$.
+
+#proposition(id: "model-prop-small-p", title: "Small primes spread", src: "29.3")[
+  Let $p$ be an odd prime dividing $b - 1$, let $3 p <= L <= b$ and let $p divides.not h$. Then
+  $ |1/L sum_(x < L) e(h g(x) / p)| <= (3 (1 + tau(p - 1))) / sqrt(p) + (p^(3 slash 2) (1 + ln p)) / L, $
+  where $tau$ counts divisors. So $g$ is close to uniform modulo every prime $p <= b^(2 slash 3 - epsilon)$ that divides $b - 1$.
+]
+#sketch[
+  Write $x = u + k p$. Since $p equiv 1 med (mod p - 1)$, $x^x equiv u^(u + k) med (mod p)$. For fixed $u$ the sum over $k$ runs along the powers of $u$, a subgroup of $FF_p^*$. Sums of $e(a y slash p)$ over a subgroup, twisted by a character, are at most $sqrt(p)$, because they expand into Gauss sums of modulus $sqrt(p)$. Grouping the $u$ by their order gives the bound.
+]
+
+This leaves out the joint residue modulo all of $b - 1$ and the case of a prime factor $p > b^(2 slash 3)$; at most one prime factor can be that large. The literature has bounds for the number of solutions of $x^x equiv lambda med (mod p)$ @balog-broughan-shparlinski2011 @cilleruelo-garaev2016, and these bound the sums $sum_(x < p) e(a x^x slash p)$ on average over $a$. No bound below $p$ for a single $a$ seems to be known, and that is what $rho(b)$ needs. The needed statement is weaker than $o(p)$: the sum must stay below $p - 3 ln p$ for every $a$ and every initial segment of length at least $p slash 2$ (#q(112)).
 
 === The correlation of the two conventions
 

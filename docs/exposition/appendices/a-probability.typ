@@ -2,7 +2,7 @@
 
 = Probability: Poisson approximation, Borel-Cantelli and entropy <app-prob>
 
-The probabilistic model of @ch-model treats a Munchausen number as a rare coincidence. Rare coincidences are counted with the Poisson law. This appendix collects the facts from probability that the main text uses: the Poisson limit and how good it is, the two Borel-Cantelli lemmas, the digit counts of a random number, the statistics that compare counts with a model, and the entropy argument behind the search bound of @sec-search-entropy. A good general reference is Durrett's textbook @durrett2019. For Poisson approximation the standard book is @barbour1992, and for entropy @cover-thomas2006.
+The probabilistic model of @ch-model treats a Munchausen number as a rare coincidence. Rare coincidences are counted with the Poisson law. This appendix collects the facts from probability that the main text uses: the Poisson limit and how good it is, the two Borel-Cantelli lemmas, the digit counts of a random number and their Poisson coupling, the statistics that compare counts with a model, and the entropy argument behind the search bound of @sec-search-entropy. A good general reference is Durrett's textbook @durrett2019. For Poisson approximation the standard book is @barbour1992, and for entropy @cover-thomas2006.
 
 == Rare events and the Poisson law <sec-app-prob-poisson>
 
@@ -86,6 +86,16 @@ This is the whole content of @heur-length-law. A digit $b - y$ weighs $(b - y)^(
 ))
 
 The probabilities add to 1, because the events cover almost every string. That is why the model expects about one solution per base and convention, before the parity effect of @sec-model-refined. The same computation with other weights gives other length laws (@sec-worlds-weights).
+
+=== Poisson coupling of several counts <sec-app-prob-coupling>
+
+The table treats the counts of the top values as independent Poisson(1) variables. In a finite base they are not: they come from one string of fixed length, so they are slightly dependent, and each is binomial. A _coupling_ makes the step exact. It bounds the total variation distance between the true law of the vector of counts and the law of independent Poisson variables. Every event that depends only on these counts then has the same probability under both laws, up to that distance. Two facts give the bound.
+
+#theorem(id: "app-prob-barbour-hall", title: "Binomial against Poisson", status: "cited")[
+  For every $n$ and $p$, $d_"TV" ("Bin"(n, p), "Poisson"(n p)) <= p$.
+]
+
+This is the bound of Barbour and Hall @barbour-hall1984; Le Cam's inequality gives the weaker $n p^2$. The second fact is a conditioning trick. Let $N_1, dots, N_K$ be the counts of $K$ fixed values in $d$ independent uniform digits. Given their total $M$, the counts are multinomial with $K$ equal cells. Independent Poisson variables with a common mean have the same property: given their total, they are multinomial with equal cells. So the distance between the two vectors equals the distance between their totals. The total $M$ is binomial with $d$ trials and success probability $K slash b$, and the Poisson total has mean $d K slash b$, so the distance is at most $K slash b$. The same trick compares Poisson($d slash b$) counts with Poisson(1) counts. With $d = b - j$ and the leading digit handled separately, the vector of the $K = j + 1$ top counts is within $((j+1)^2 + 1) slash b$ of independent Poisson(1) variables (Lemma 29.3 of #lib("29.1")). @thm-length-shares uses this to turn the table above into a theorem about the model.
 
 == Comparing counts with a model <sec-app-prob-stats>
 

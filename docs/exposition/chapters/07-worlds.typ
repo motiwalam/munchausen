@@ -968,10 +968,71 @@ free only modulo 2. Here it holds for free at every prime factor of $B - 1$.
 
 For a linear factor $T - a$ the statement reads $D(a^(q^j)) = D(a)$: every
 weight agrees with its digit at $a$, just as $x^x equiv x med (mod 2)$. Let
-$k(B)$ be the codimension of the image of the identity map; then
-$k(B) >= omega(B - 1)$, with equality in all 4,426 bases of the census of
-#lib("21.1"). The refined model predicts about $q^(k(B))$ times the basic
-count, the analogue of the factor 2.
+$k(B)$ be the codimension of the image of the identity map
+$D |-> sum_j (D_j (T^(q^j)) - D_j) mod (B - 1)$. Then
+$k(B) >= omega(B - 1)$, and the refined model predicts about $q^(k(B))$
+times the basic count, the analogue of the factor 2.
+
+=== The free residue dimension
+
+Is $k(B)$ exactly the number of factors? In most cases yes, and the proof
+is linear algebra with Frobenius on $R = FF_q [T] slash (B - 1)$
+(@sec-app-ffield-local). Let $t$ be the class of $T$ in $R$ and
+$phi(x) = x^q$. A class sum $D_j$ of degree at most $j$ is a polynomial in
+$t$ of degree at most $j$, and $D_j (T^(q^j))$ reduces to $phi^j (D_j)$. So
+the image of the identity map is
+$ J = sum_(j = 1)^(e - 1) (phi^j - 1) W_j, $
+where $W_j$ is the span of $1, t, dots, t^j$, and $k(B) = e - dim J$. Call
+an irreducible factor $P$ of $B - 1$ _good_ if $gcd(deg P, e - 1) = 1$.
+
+#theorem(id: "worlds-ff-kB", title: [$k(B)$ is the number of factors], src: "29.2")[
+  + If $B - 1$ has a good factor, then $k(B) = omega(B - 1)$.
+  + If $e - 1$ is a prime power, then $k(B) = omega(B - 1)$ for every base
+    $B$ of degree $e$. This covers $e = 2, dots, 6, 8, 9, 10, 12, 14, dots$.
+  + In every case $k(B) <= omega(B - 1) + 1$, and $k(B) = omega(B - 1)$
+    when $B - 1$ is not squarefree.
+]
+#sketch[
+  (1) Since $phi^j - 1 = (phi - 1)(1 + phi + dots + phi^(j-1))$, the space
+  $J$ lies in the image $I$ of $phi - 1$, which has codimension
+  $omega(B - 1)$ by fact 1 of @sec-app-ffield-local. The term $j = e - 1$
+  has $W_(e-1) = R$, and on a good factor its image is already the image of
+  $phi - 1$ (fact 4 with $S = {e - 1}$). The bad factors have total degree
+  at most $e - 1$, so the spaces $W_j$ with $j >= e - 2$ reach every class
+  modulo their product. There the two consecutive exponents $e - 2$ and
+  $e - 1$ give the image of $phi - 1$ again (fact 4). So $J$ contains the
+  good part of $I$ and projects onto the bad part of $I$, and therefore
+  $J = I$.
+  (2) If every factor were bad, a prime $r$ dividing $e - 1$ would divide
+  every degree, hence $e = sum a_i deg P_i$, and also $e - 1$.
+  (3) Pass to linear functionals. A functional vanishes on $J$ when it is
+  invariant under $phi^j$ on $W_j$ for each $j$. The difference
+  $lambda compose phi - lambda$ of such a functional is forced onto one
+  line, which gives at most one dimension beyond the $phi$-invariant
+  functionals. When $R$ has a nilradical, the conditions for that extra
+  dimension make a nondegenerate pairing vanish on it, which is impossible.
+]
+
+The library also excludes the extra dimension for squarefree $B - 1$ when
+$q <= e - 2$, and by hand for the remaining factor types of degree 7. So
+$k(B) = omega(B - 1)$ holds for every $e <= 10$ and for every base of every
+census, by proof (#lib("29.2")).
+
+#computation(id: "worlds-ff-kB-comp", title: [$k(B)$ by computation], src: "29.2")[
+  $k(B) = omega(B - 1)$ in all 110,654 monic bases of degree $e >= 3$ with
+  $q = 2$ and $e <= 13$, $q = 3$ and $e <= 8$, $q = 5$ and $e <= 6$, $q = 7$
+  and $e <= 5$, $q = 11$ and $e = 4$, $q = 13$ and $e <= 4$; in 379,700 polynomials of the
+  factor types with no good factor, up to $e = 22$ for $q = 2$; and in
+  random samples of the first open type.
+]
+
+#conjecture(id: "worlds-ff-kB-conj", title: [$k(B) = omega(B - 1)$], src: "29.2")[
+  $k(B) = omega(B - 1)$ for every base $B$.
+]
+
+An exception needs a squarefree $B - 1$ with no good factor, no factor of
+degree 2, and $q >= e - 1$. The first such case is $e = 11$, with factors of
+degrees 5 and 6 and $q >= 11$ (#q(111)).
 
 In degree 2 the count is a formula.
 
@@ -1201,6 +1262,61 @@ some factor of $B - 1$ has a degree that shares a divisor with $e - 1$.
   bases with a root and a quadratic factor have 242.0 against 169.7.
 ]
 
+=== A model that keeps the blocks
+
+The heuristic suggests a better model: keep the Frobenius blocks exactly
+and randomize only what they do not fix. By @worlds-ff-blocks, $F(x)$ is
+assembled from $e$ generating digits $p_0, dots, p_(e-1)$, with
+$p_(e-1) = D_(e-1)$ and $p_j = sigma(p_(j+1)) + D_j$, where $sigma$ is a
+fixed map on digits (#lib("24.2"), Corollary 24.3). The digit $p_j$ fills
+the positions from $q^(j-1)$ to $q^j - 1$ through its block. So the class
+sums of $F(x)$ are the class of $p_0$ plus one fixed function $K_j (p_j)$ for
+each $j >= 1$, and $x |-> (p_0, dots, p_(e-1))$ is a bijection.
+
+#definition(id: "worlds-ff-blockmodel", title: "Block model", src: "29.4")[
+  Keep the maps $K_j$, and replace each generating digit $p_j$ by a uniform
+  digit of the same degree (zero stays zero). In the refined block model
+  the random digits must also give the same value of $F$ modulo $B - 1$ as
+  the true ones.
+]
+
+The refined block model needs no $kappa(B)$: the larger kernel of
+@worlds-ff-generic is built in, because the generic sector keeps its
+degrees. A model solution also satisfies the identity modulo $B - 1$, as a
+true solution does. The expected count is an exact finite sum, which takes
+seconds per base orbit.
+
+#computation(id: "worlds-ff-blockcomp", title: "The block model against the census", src: "29.4")[
+  Mean number of solutions per base under $0^0 = 0$:
+  #align(center, btable(
+    columns: 5,
+    align: (left, right, right, right, right),
+    [$(q, e)$], [census], [refined model], [refined block model], [Pearson, per orbit],
+    [$(5, 3)$], [34.4], [26.2], [31.6], [26.5 to 6.6 (25 orbits)],
+    [$(7, 3)$], [76.3], [64.8], [73.5], [48.5 to 13.8 (63)],
+    [$(5, 4)$], [60.5], [45.4], [58.7], [749 to 187 (160)],
+  ))
+  The block model comes within 17% of the census in 16 of the 21 factor
+  types of $B - 1$, against 5 of 21 for the refined model. The irreducible
+  quartic of $(5, 4)$ gets 8.8 against a census of 10.0; the refined model
+  gives 4.9.
+]
+
+#heuristic(id: "worlds-ff-blockverdict", title: "Keep the forcing in full", src: "29.4")[
+  Keeping all $e$ generating digits and their degrees, and randomizing the
+  rest, explains most of the $FF_q [T]$ gap: the total error drops from 18%
+  to 33% down to 3% to 9%, and the misfit per orbit by a factor of 4. Keeping
+  only the top digit is not enough. The types with a repeated factor of
+  $B - 1$ still miss: two double roots in $(5, 4)$ have 2.09 times the block
+  model, and two types without solutions get 5 and 6 from the model.
+]
+
+For a repeated factor the ring $R$ has a nilradical, where the identity
+behaves differently, as in part 3 of @worlds-ff-kB (#q(115)). The recipe
+"keep the forced digits, randomize the rest" is the same one that the
+forced top digits apply in the integers (@sec-model-defects). The next
+section applies it to the factorial system.
+
 === Short solutions for every degree
 
 Call a solution short if $D_j$ is constant for every $j >= 2$. Then
@@ -1292,8 +1408,8 @@ the solutions are 1, $2 = (1, 0)$ and $5 = (2, 1)$.
 
 The windows model predicts $sum_(L = 3)^(33) E_L = 4.5$ solutions per
 convention in this range, and about 5.7 more between $34!$ and $301!$.
-Zero against 4.5 has probability 0.011. Near-solutions show that this is
-not chance: with offsets $D = 1, dots, 100$ there are none for
+Zero against 4.5 has probability 0.011. Near-solutions show that the model
+itself is wrong here: with offsets $D = 1, dots, 100$ there are none for
 $7 <= L <= 29$ except one cluster at $L = 26$, and with offsets $D = 1000 j$
 the hits sit in 5 of 17 lengths, in clusters of 10 to 50 offsets.
 
@@ -1310,9 +1426,80 @@ the hits sit in 5 of 17 lengths, in clusters of 10 to 50 offsets.
 
 The model's mean may still be about right: the near-solutions at
 $D = 1000 j$ total 218 and 263 against its 231. But their variance is far
-larger than Poisson. Whether the factorial system has finitely many
-solutions is open; no size argument and no residue are available
-(@sec-open-list).
+larger than Poisson.
+
+=== A model with the top digits kept
+
+The fix that works in $FF_q [T]$ also works here: keep the true top digits
+of $F$ and randomize the rest. For a multiset $c$ whose sum $F(c)$ lies in
+the window $[L!, (L + 1)!)$, let $T$ be the top $K$ factorial digits of
+$F(c)$. Treat only the digits at positions 1 to $L - K$ as random. The
+chance that the digits of $F(c)$ form $c$ is then
+$ bb(1)(T subset c) dot A(c - T, L - K) / (product_(i <= L - K) (i + 1)), $
+where $A(c, N)$ counts the ways to place a multiset of $N$ digits at the
+positions 1 to $N$ with each value $u$ only at a position $>= u$. These
+placements form a Ferrers board, so $A$ is a product of binomial
+coefficients: place the values from the largest down, each into the free
+positions at or above it.
+
+#proposition(id: "worlds-fact-topmodel", title: "The top-digit model", src: "29.5")[
+  Let $n$ be uniform in the window, $W = [L!, (L + 1)!)$. Summed over all
+  multisets, the top-$K$ model expects
+  $ E_L (K) = E_n [bb(1)(F(n) in W) dot r(n)] $
+  solutions of length $L$. Here $c(n)$ is the multiset of $n$, $T$ is the
+  top $K$ digits of $F(n)$, and $r(n)$ is the chance that a random
+  arrangement of $c(n)$ has the top digits $T$, divided by the chance that a
+  uniform member of $W$ has them. $E_L (0)$ is the plain model and
+  $E_L (L)$ is the exact number of solutions in $W$.
+]
+#proof[
+  The plain model is the sum over multisets $c$ with $F(c) in W$ of the
+  number of arrangements of $c$ in $W$, divided by $|W|$. So a sum over
+  multisets is an expectation over $n$, with weight $|W|$ over the number of
+  arrangements of $c(n)$. The ratio of $A(c - T, L - K)$ to the number of
+  arrangements is the chance that a random arrangement has top digits $T$,
+  and $|W|$ over the product is the inverse of the second chance. For $K = L$ the
+  indicator says that the digits of $F(c)$ are $c$.
+]
+
+The adaptive version keeps the positions where the largest digit $v$ of $n$
+can sit, $K = L - v + 1$: the forcing of @worlds-fact-failure. Call a
+length $L$ open if this model expects more than 0.01 solutions.
+
+#computation(id: "worlds-fact-open", title: "Open lengths", src: "29.5")[
+  By sampling, $3 dot 10^6$ strings per length under $0^0 = 0$ and $10^6$
+  under $0^0 = 1$, for $3 <= L <= 100$:
+  - for $L <= 33$, under both conventions, the open lengths are 8, 10, 13,
+    14, 15, 18, 19, 20, 24, 26, 28, 29, 30 and 32: 14 of 31;
+  - for $34 <= L <= 100$, 11 to 14 lengths are open, among them 35 and 40;
+  - among the lengths 10 to 26, all 8 closed lengths have no near-solution
+    at the offsets $D = 1000 j$, where the plain model expects 81; all 5
+    lengths with near-solutions are open;
+  - the model expects 3.85 solutions below $34!$ under $0^0 = 0$ and 3.90
+    under $0^0 = 1$, against 4.6 and 4.8 for the plain model.
+]
+
+So about half the lengths are open, not 5 of 17. The model moves the
+expected solutions between lengths and hardly changes their total. Under a
+Poisson law, no solution below $34!$ then has probability
+$e^(-3.85) = 0.021$. But coincidences come in clusters: the offsets that
+carry at least one near-solution are only 0.24 to 0.39 times the model mean,
+the rest being repeats of one multiset. With this calibration the empty
+census has probability 0.22 to 0.39, an ordinary outcome (heuristic).
+
+#heuristic(id: "worlds-fact-predict", title: "Beyond 34!", src: "29.5")[
+  For $34 <= L <= 40$ the top-digit model expects about 0.29 solutions, so
+  at least one with probability 0.07 to 0.10 after the cluster calibration.
+  The open lengths there are 35 and 40. Up to $L = 100$ it expects about
+  2.5, at least one with probability 0.45 to 0.6. Beyond $L = 50$ these
+  numbers are uncertain by a factor of 2.
+]
+
+A census to $L = 40$ needs integers wider than 128 bits and a few $10^8$
+tree nodes per length; it has not been run. Like the plain model, the
+top-digit model expects finitely many solutions, but it gives nothing a
+proof could use. Whether the factorial system has finitely many solutions
+is open; no size argument and no residue are available (@sec-open-list).
 
 == What is universal <sec-worlds-universal>
 

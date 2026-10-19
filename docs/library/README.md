@@ -40,7 +40,8 @@ statement is marked by its source:
 | [26. Near-solutions as evidence](26-near-solutions-evidence.md) | the swap lemma: near-solutions cluster across offsets; a corrected calibration; every chance verdict revisited; a pooled test across worlds |
 | [27. Limits of search](27-limits-of-search.md) | constraint solvers lose to the tree; the entropy floor holds for every order; certificates of emptiness; bottom digits do not pay; the law of work-unit sizes |
 | [28. A sharper z-score rule, length windows and the GPU](28-zscore-gpu.md) | `--zlaw cond` fixes the variance of the z-score test (1.1 to 1.3x fewer nodes at equal miss rate); length windows do not pay; the GPU runs the inexact search and shards |
-| [Open questions](questions.md) | 110 research questions in six rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [29. Theorems about the model](29-model-theorems.md) | the length shares of the basic model proven; `k(B) = omega(B - 1)` in `F_q[T]` for every `e <= 10`; Assumption R reduced to one number per base and checked up to base 6000; a block model for `F_q[T]`; open lengths in the factorial system |
+| [Open questions](questions.md) | 117 research questions in seven rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -118,6 +119,19 @@ Proven:
   needs at least the top-down entropy, so the `1.638^b` floor holds for all
   orders (Theorem 27.2). In an oracle model the exact tree is optimal up to
   a factor about linear in `b`, computed up to base 21 (section 27.3).
+- In the basic model, the expected number of solutions with `b - j` digits
+  tends to an explicit share `s_j` (8.0%, 55.2%, 23.3%, 8.6%, ...) with
+  error `O(1/b)`, and the sum over all lengths tends to 1 (Theorem 29.1,
+  Corollary 29.6). The proof couples the top digit counts with independent
+  Poisson variables.
+- In `F_q[T]`, the free residue dimension `k(B)` equals `omega(B - 1)`
+  whenever some factor of `B - 1` has degree prime to `e - 1`, so for every
+  `e` with `e - 1` a prime power (Theorem 29.9, Corollary 29.10). It is never
+  more than `omega(B - 1) + 1`, and equal to `omega(B - 1)` for every
+  `e <= 10` and every census base (Theorem 29.11, Remark 29.12).
+- Assumption R of chapter 13 is false as stated for short strings. The
+  refined Poisson theorem needs only one number per base, an exponential sum
+  `rho(b)` of `x^x - x` modulo `b - 1` (Theorem 29.15).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -144,6 +158,12 @@ Computed:
 - Under `0^0 = 1` no base up to `10^3301` has a 3-digit solution other than
   the six known ones, and every such base has at most two (Theorem 25.11,
   section 25.3).
+- `rho(b) <= 0.82` for every base from 12 to 6000. So the refined Poisson
+  theorem of chapter 13 holds without assumption in that range (Corollary
+  29.16, computer-assisted).
+- `k(B) = omega(B - 1)` in all 110,654 monic bases of the scanned degrees and in
+  379,700 polynomials of the factor types that the proofs leave open
+  (section 29.2.4).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 
@@ -182,6 +202,15 @@ Model:
   keeps `F` and moves the offset by a multiple of `b - 1` (Lemma 26.1). With
   the corrected calibration no verdict about the solutions changes, but the
   excess per-base scatter of the model is about half an artefact (chapter 26).
+- A model of `F_q[T]` that keeps the Frobenius blocks and randomizes only the
+  generating digits predicts the census within 3% to 9% in total, against
+  18% to 33% for the refined model (Heuristic 29.20). The types with a
+  repeated factor of `B - 1` are what it still misses.
+- In the factorial system, a model that keeps the true top digits of `F`
+  closes about half the lengths, among them all 8 lengths from 10 to 26
+  without near-solutions. Open below `34!`: lengths 8, 10, 13, 14, 15, 18,
+  19, 20, 24, 26, 28, 29, 30, 32. The empty census has probability 0.22 to
+  0.39 after a cluster calibration (section 29.5).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data

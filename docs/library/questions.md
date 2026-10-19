@@ -251,7 +251,7 @@ attack, in [questions-round3.md](questions-round3.md).
 52. (Partly answered in chapter 20: `n` bounded in terms of `x` and the class order; none for `x <= 10^4`.) Settle the case `x == 0 (mod 8)` of `b(b+x) = x^n + 1`. (proof; 18.1.9)
 53. (Answered in chapter 20 under GRH: `d | x` occurs, so only the Diophantine condition can close the loophole.) How large are the orders of mixed ideal classes in `Q(sqrt(x^2+4))`, the
     one loophole of Corollary 18.11? (computation)
-54. Prove Assumption R, which would make Corollary 13.11 unconditional. (proof)
+54. (Partly answered in chapter 29: R as stated is false for short strings; it reduces to one exponential sum `rho(b)` per base, and Corollary 13.11 holds unconditionally for `12 <= b <= 6000`.) Prove Assumption R, which would make Corollary 13.11 unconditional. (proof)
 55. Is the general weighted problem still NP-hard when solutions must be
     long? (proof; section 13.1.6)
 56. Does the length tail beyond `ln b` (Conjecture 10.3) hold in many
@@ -301,11 +301,11 @@ their motivation and a first attack, are in
 77. (Answered in chapter 27: CP-SAT and CaDiCaL grow 1.95 to 2.3 per base, worse than the engine.) A constraint solver as a search that is not a tree.
 78. (Answered in chapter 27: unit sizes are explained by their type; deeper units balance shards; `--unit-stats`.) The law of subtree sizes.
 79. (Answered in chapter 27: no; bottom digits make the tree 2.5 to 13 times larger in bases 16 and 32.) Bottom-up information in bases with a small radical.
-80. Assumption R when `b - 1` is prime.
-81. The length shares as a theorem in the model.
-82. Is `k(B)` always the number of factors of `B - 1`?
-83. A model that keeps the Frobenius blocks.
-84. Open lengths in the factorial system.
+80. (Partly answered in chapter 29: R reduced to `rho(b)` (Theorem 29.15), proven by computation up to base 6000; square-root cancellation seen for `b - 1` prime; no `o(p)` bound in the literature.) Assumption R when `b - 1` is prime.
+81. (Answered in chapter 29: proven with error `O(1/b)` (Theorem 29.1); the sum over lengths tends to 1.) The length shares as a theorem in the model.
+82. (Partly answered in chapter 29: yes when a factor has degree prime to `e - 1`, for non-squarefree `B - 1`, and for `e <= 10`; always at most one more; open from `e = 11`.) Is `k(B)` always the number of factors of `B - 1`?
+83. (Answered in chapter 29: the block model fits 16 of 21 factor types within 17% and cuts the per-orbit misfit by 4; repeated factors still miss.) A model that keeps the Frobenius blocks.
+84. (Answered in chapter 29: a top-digit model closes about half the lengths; open below `34!` are 8, 10, 13, 14, 15, 18, 19, 20, 24, 26, 28, 29, 30, 32; the census extension to `L = 40` was not run.) Open lengths in the factorial system.
 85. (Answered in chapter 26: image share 0.21 to 0.14; forced top digits close two thirds of the gap.) The image and in-degrees of `F`.
 86. (Answered in chapter 26, negatively: low-digit mixing does not track the model error.) A mixing statistic for every world.
 87. Narcissistic numbers in even bases 15 to 20.
@@ -340,3 +340,33 @@ problems found in the library are in
 108. One invariant-residue proposition for every positional system.
 109. Is anything about the middle digits cheap? (speculative)
 110. A last-digit factor in negative bases?
+
+## Round 7: questions raised by chapter 29
+
+111. In `F_q[T]`, can a squarefree `B - 1` whose factors all share a divisor
+     with `e - 1`, with no factor of degree 2 and `q >= e - 1`, have
+     `k(B) = omega(B - 1) + 1`? Does condition (b) of Theorem 29.11 (2) for
+     `k = 2, 3` already rule it out? First test: `e = 11`, factors of
+     degrees 5 and 6, `q = 11, 13`. (proof; section 29.2.5)
+112. Is `max over h != 0 of |sum over x <= p of e(h (x^x - x)/p)|` of size
+     `O(sqrt(p log p))` (Conjecture 29.18)? A weaker target suffices for
+     Corollary 13.11: the sum is below `p - 3 ln p` for every `h` and every
+     initial segment of length at least `p/2`. Can the subgroup sums of
+     Cilleruelo and Garaev give it? (proof; section 29.3.5)
+113. Prove `rho(b) < 1 - c` for composite `b - 1` whose prime factors are all
+     below `b^(1/2)`. Proposition 29.19 handles one prime at a time.
+     (proof; section 29.3.4)
+114. What is the first-order term `c_j / b` of Proposition 29.7 in the
+     refined model, and does `sum over j of c_j` (1.1046) have a closed
+     form? (proof; section 29.1.4)
+115. The block model misses the types of `B - 1` with a repeated factor
+     (ratio 2.09 for two double roots in `(5, 4)`) and predicts 5 to 6
+     solutions where there are none. Is there an exact obstruction on the
+     nilradical, like Theorem 29.11 (3)? (proof; section 29.4.3)
+116. Factorial system: why is `L = 13` open with the largest model mean
+     (0.80) but only 3 to 6 offsets with near-solutions? Keep the top digits
+     over the positions of the two largest values. (computation; section
+     29.5.2)
+117. Factorial system: reduce the variance of the top-digit model beyond
+     `L = 50`, for example by importance sampling on the largest digit and
+     its count. (computation; section 29.5.3)

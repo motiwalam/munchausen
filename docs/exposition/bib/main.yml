@@ -1,6 +1,44 @@
 # Bibliography of the exposition (Hayagriva format).
 # Add new works here. Keys are author-year in lower case.
 
+barbour-hall1984:
+  type: article
+  title: On the rate of Poisson convergence
+  author: ["Barbour, A. D.", "Hall, Peter"]
+  date: 1984
+  page-range: 473-480
+  parent:
+    type: periodical
+    title: Mathematical Proceedings of the Cambridge Philosophical Society
+    volume: 95
+    issue: 3
+
+balog-broughan-shparlinski2011:
+  type: article
+  title: On the number of solutions of exponential congruences
+  author: ["Balog, Antal", "Broughan, Kevin A.", "Shparlinski, Igor E."]
+  date: 2011
+  page-range: 93-103
+  parent:
+    type: periodical
+    title: Acta Arithmetica
+    volume: 148
+    issue: 1
+
+cilleruelo-garaev2016:
+  type: article
+  title: The congruence x^x = lambda (mod p)
+  author: ["Cilleruelo, Javier", "Garaev, Moubariz Z."]
+  date: 2016
+  page-range: 2411-2418
+  serial-number:
+    arxiv: "1503.02730"
+  parent:
+    type: periodical
+    title: Proceedings of the American Mathematical Society
+    volume: 144
+    issue: 6
+
 vanberkel2009:
   type: article
   title: On a curious property of 3435
