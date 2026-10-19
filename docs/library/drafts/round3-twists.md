@@ -26,9 +26,9 @@ then the world where the model fails (62).
 | question | world | answer | basis |
 |---|---|---|---|
 | 61 | `F_q[T]`, base `B` of degree `e`, `w(d) = d^(q^deg d)` | `F` depends only on the sums `D_j` of the digits of each degree, so the problem is finite and linear. Solutions come in families of `q`. For `e = 2` there are exactly `q(q-1)` solutions if `B - 1` has two roots in `F_q`, else none. For `e >= 3` the count depends on `B` through `k(B)`, the number of irreducible factors of `B - 1`: a free residue factor `q^k(B)` replaces the parity factor 2. | proven; computed for 4,426 bases |
-| 60 | rational bases `p/q` (AFS) | `q N == digit sum (mod p - q)`. When `p, q` are odd, the identity is free mod 2 under `0^0 = 0`, and near-solutions double: 17.8 against 21.9 over 20 other bases, per base 2.2 against 1.1. Solutions: 14 in 8 odd/odd bases against 17.7 expected. | proven; computed for all 37 bases with `p <= 10`, and `11/2` to `11/7` |
+| 60 | rational bases `p/q` (AFS) | `q N == digit sum (mod p - q)`. When `p, q` are odd, the identity is free mod 2 under `0^0 = 0`, and near-solutions double: 2.2 per base and offset in 9 odd/odd bases against 1.1 in 20 others, as the model predicts. Solutions: 14 in the odd/odd bases against 19.8 expected (P = 0.11). | proven; computed for all bases with `p <= 10`, and `11/2` to `11/7`, `11/9` |
 | 63 | Eisenstein bases `-n + omega` | The identity modulus `n^2 + 3n + 3` is odd, and nothing doubles: near-solutions per offset 1.03 and 1.27 under `0^0 = 0` against 1.07 and 1.13 under `0^0 = 1`. The Gaussian control `-2+i` doubles (2.57 against 1.07). | proven; computed for `n` = 1, 2, 3 (`n = 3` to 25 digits, 90% of the model) |
-| 59 | Pisot base `(x + sqrt(x^2+4))/2` | Expansions have at most `2 log N + 2` digits. `N == digit sum (mod x)`. Even `x` double under `0^0 = 0`: 31 solutions against 9 for odd `x` (x = 2 to 11), near-solutions 2.56 against 1.43 per offset. Twins exist; the model fits. | proven; computed for `x` = 1 to 12 |
+| 59 | Pisot base `(x + sqrt(x^2+4))/2` | Expansions have at most `2 log N + 2` digits. `N == digit sum (mod x)`. Even `x` double under `0^0 = 0`: 31 solutions against 9 for odd `x` (x = 2 to 12), near-solutions 2.65 against 1.43 per offset. Twins exist; the model fits. | proven; computed for `x` = 1 to 12 |
 | 62 | factorial number system | No residue identity exists. The only solutions up to `34!` are 1, 4, 5 (`0^0 = 0`) and 1, 2, 5 (`0^0 = 1`), all built from two self-paying digits. The plain model expects 4.5 more per convention by `34!` and fails. The reason: a digit `v` can only sit at a position `>= v`, so large digits sit in the top positions, which the large counts fix. Coincidences come in rare clusters. Finiteness stays open. | proven (structure); computed (census); heuristic (model failure) |
 
 ## The common frame
@@ -339,7 +339,7 @@ adds one digit weight, at most `W`.
 
 The tree has about `2 W / ln r` nodes, so the cost grows like `(p-1)^(p-1)`
 and is worst for `q` near `p`. Base `11/7` takes `6.5 * 10^10` nodes;
-`11/8` and `11/10` (about `10^11` and `2 * 10^11`) were not run. The engine
+`11/8` and `11/10` (about `10^11` and `2.5 * 10^11`) were not run. The engine
 reproduces every solution of `analysis/data/alg_afs_8.txt` (computed).
 
 ### 60.3 The model
@@ -350,7 +350,7 @@ the windows are the integers of each length. `r3t_afs model` samples
 
 ### 60.4 The census against the model
 
-All bases with `p <= 11` except `11/1`, `11/8`, `11/9`, `11/10`, both
+All bases with `p <= 11` except `11/1`, `11/8` and `11/10`, both
 conventions (`analysis/data/r3t_afs_search.txt`). "near" is the mean count
 of `N = F(N) + j (p - q)` over `j = 1..30`.
 
@@ -384,25 +384,25 @@ of `N = F(N) + j (p - q)` over `j = 1..30`.
 | 11/5 | 6 | yes | 3 | 2.10 | 1.83 | 2 | 1.06 | 0.87 |
 | 11/6 | 5 | | 2 | 1.07 | 0.83 | 1 | 1.07 | 1.33 |
 | 11/7 | 4 | yes | 0 | 2.09 | 2.30 | 1 | 1.05 | 1.23 |
+| 11/9 | 2 | yes | 0 | 2.08 | 2.10 | 1 | 1.04 | 1.00 |
 
 Totals over these bases with `q > 1` (computed; model heuristic):
 
 | group | bases | `0^0 = 0`: solutions | refined | basic | near, summed | `0^0 = 1`: solutions | refined | near, summed |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| `p, q` odd | 8 | 14 | 17.7 | 8.9 | 17.8 | 10 | 8.9 | 8.8 |
+| `p, q` odd | 9 | 14 | 19.8 | 10.0 | 19.9 | 11 | 9.9 | 9.8 |
 | others | 20 | 20 | 23.4 | 23.3 | 21.9 | 22 | 24.0 | 24.3 |
 
 Answer: yes, the count doubles in the bases with `p` and `q` odd. The
 near-solutions show it best: 2.2 per offset and base against 1.1, under
-`0^0 = 0` only, exactly as the model predicts (17.7 against the basic 8.9).
-The solutions themselves, 14 in 8 bases, are a Poisson draw from 17.7
-(`P(X <= 14) = 0.23`). The lead of section 16.5 (6 against 6 for `p <= 8`)
-was a small sample: with `p <= 11` the odd/odd bases have 1.75 solutions
+`0^0 = 0` only, exactly as the model predicts (19.8 against the basic 10.0).
+The solutions themselves, 14 in 9 bases, fall a little short of 19.8
+(`P(X <= 14) = 0.11`), while their near-solutions (19.9) do not. The lead of section 16.5 (6 against 6 for `p <= 8`)
+was a small sample: with `p <= 11` the odd/odd bases have 1.6 solutions
 each, the others 1.0. The integer bases `p/1` confirm the old law: odd `p`
 have near-solution rates 2.2 to 3.7, even `p` 0.9 to 1.5.
 
-Base 11/9 (about `10^11` nodes) was still running when this draft was
-written; its result, if any, is in `analysis/data/r3t_afs_search.txt`.
+Base 11/9 took `1.2 * 10^11` nodes (30 minutes on 3 threads).
 
 The identity modulus `p - q` has nothing to do with the digit range `p`.
 The doubling follows it all the same, which makes this the cleanest test of
@@ -580,7 +580,7 @@ All solutions with `x` = 1 to 12 (`analysis/data/r3t_pisot_search.txt`,
 | 9 | 405944671 | none |
 | 10 | 310, 421798810, 877154544, 1600837696, 1956350341, 1956350342 | 1956350342 |
 | 11 | 10405164675, 10405164721 | 1971580245, 10405164675, 10405164721 |
-| 12 | X12_0 | X12_1 |
+| 12 | none | none |
 
 Check of the first: `eps + eps^-2 = 2` for the golden ratio, and
 `w(1) + w(1) = 2`. The pairs `(N, N+1)` under `0^0 = 0` are the twins of
@@ -589,8 +589,7 @@ Proposition 59.3: 3/4, 9/10, 54/55, 6615/6616, 917942/917943,
 
 ### 59.4 Against the model
 
-`x = 1` is degenerate (modulus 1, weights 0 and 1). For `x >= 2` (`x = 12`
-in X12_NOTE):
+`x = 1` is degenerate (modulus 1, weights 0 and 1). For `x >= 2`:
 
 | `x` | `0^0 = 0` | twin pairs | `E_0` | basic | near | `0^0 = 1` | `E_1` | near |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -604,20 +603,21 @@ in X12_NOTE):
 | 9 | 1 | 0 | 1.23 | 1.17 | 2.13 | 0 | 1.17 | 1.83 |
 | 10 | 6 | 1 | 2.39 | 1.20 | 2.13 | 1 | 1.93 | 1.93 |
 | 11 | 2 | 0 | 1.15 | 1.14 | 1.67 | 3 | 1.14 | 1.63 |
+| 12 | 0 | 0 | 2.67 | 1.15 | 3.10 | 0 | 2.03 | 1.40 |
 
-| `x` from 2 to 11 | bases | `0^0 = 0` | twin pairs | `E_0` | basic | near per base | `0^0 = 1` | `E_1` | near per base |
+| `x` from 2 to 12 | bases | `0^0 = 0` | twin pairs | `E_0` | basic | near per base | `0^0 = 1` | `E_1` | near per base |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| even | 5 | 31 | 7 | 14.3 | 6.9 | 2.56 | 12 | 9.5 | 1.71 |
+| even | 6 | 31 | 7 | 17.0 | 8.0 | 2.65 | 12 | 11.6 | 1.66 |
 | odd | 5 | 9 | 1 | 5.4 | 6.2 | 1.43 | 10 | 6.4 | 1.35 |
 
 "near" counts `N = F(N) + j x`, `j = 1..30` (`j = 1..10` for `x = 12`).
 
 Answer: about one coincidence per base before the identity (basic 1.1 to
 1.8), and the identity modulo `x` doubles even `x` under `0^0 = 0`, as
-predicted: near-solutions 2.56 against 1.43 per offset, solutions 31
-against 9. The solutions exceed the model in even bases (31 against 14.3),
-but 7 twin pairs account for 7 of them, and the near-solutions (2.56) match
-the model (2.9 per base). Odd `x` with `3 | x` lose part of the mass
+predicted: near-solutions 2.65 against 1.43 per offset, solutions 31
+against 9. The solutions exceed the model in even bases (31 against 17.0),
+but 7 twin pairs account for 7 of them, and the near-solutions (2.65) match
+the model (2.8 per base). Odd `x` with `3 | x` lose part of the mass
 (`E_0 = 0.73` for `x = 3`), because `d^d - d (mod 3)` is biased. Under
 `0^0 = 1` the even bases gain a smaller factor, since the number of zeros
 must be even (Proposition 59.2), as in section 5.3. The first non-integer
@@ -682,7 +682,8 @@ The model predicts `sum_{L=3..33} E_L = 4.5` per convention, and
 `L = 170` (heuristic). In the model the large digits must avoid the top
 `L - v ~ L / ln L` positions, which costs about `exp(-L / (2 ln^2 L))`, so
 the sum converges and the model predicts finitely many solutions. But it
-expects about FACT_TAIL more beyond `34!`.
+expects about 5.7 more per convention between `34!` and `301!`
+(`E_L = 0.004` at `L = 300`), and more beyond.
 
 The census refutes the model's rate: no solution for `3 <= L <= 33` where it
 expects 4.5 (`P = 0.011` per convention). Near-solutions confirm that this
@@ -754,7 +755,7 @@ the data put at about 5 lengths in 17.
 | question | answer | status |
 |---|---|---|
 | 61 | class-sum linearity, families of `q`, self-paying digits, free factor `q^k(B)` with `k(B) >= omega(B-1)`; exact count for `e = 2`; census of 4,426 bases | proven; computed; model off by a factor 0.5 to 1.5 for odd `q`, cause open |
-| 60 | doubling in odd/odd bases | proven identity; computed `p <= 11` except `11/8, 11/9, 11/10` |
+| 60 | doubling in odd/odd bases | proven identity; computed `p <= 11` except `11/1, 11/8, 11/10` |
 | 63 | no doubling, as the odd modulus predicts; Gaussian control doubles | proven identity; computed `n <= 3` (`n = 3` to 25 digits) |
 | 59 | length bound, identity, twins; even `x` double | proven; computed `x <= 12` |
 | 62 | only 1, 4, 5 and 1, 2, 5 below `34!`; model fails for a structural reason | proven structure; computed census; finiteness open |

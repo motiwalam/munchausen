@@ -1,6 +1,6 @@
 """The Pisot base eps_x (question 59): census against the model.
 
-Reads analysis/data/r3t_pisot_search.txt and analysis/data/r3t_pisot_model.txt.
+Reads analysis/data/r3t_pisot_search.txt, r3t_pisot_search12.txt and analysis/data/r3t_pisot_model.txt.
 Per x: nontrivial solutions per convention, twin pairs (N, N+1) under 0^0 = 0,
 the refined model, and the mean number of near-solutions N = F(N) + j x,
 j = 1..J. Then totals for even x against odd x, for x >= 2.
@@ -12,7 +12,7 @@ from math import exp, factorial
 sols = {}
 near = {}
 done = set()
-for line in open('analysis/data/r3t_pisot_search.txt'):
+for line in open('analysis/data/r3t_pisot_search.txt').read().splitlines() + open('analysis/data/r3t_pisot_search12.txt').read().splitlines():
     m = re.match(r'sol x (\d+) m (\d) T (\d+) N (\d+) digits (\S+)', line)
     if m:
         x, mm, T, N = map(int, m.groups()[:4])
