@@ -16,8 +16,8 @@ logarithms, in its 2-adic form.
 |---|---|---|
 | 1 | For fixed digits `p, q` with `p` not a square and `x` even, the strings `(p, q, x)` and `(p, x, q)` are solutions for only finitely many `x`, with an explicit bound `X0(p, q)` | proven (Theorem 1.2) |
 | 1 | The bound is uniform: `x <= C B^(3/2) (log 3B)^4` when `p, q <= B` | proven, `C` effective (Theorem 1.5) |
-| 1 | For `p, q <= 10` (and `<= 20`, see Theorem 1.3) no such string is a solution in any base, under either convention | proven and computed (Theorem 1.3) |
-| 1 | Every 3-digit solution in any base with two digits at most 10 and the third digit even and not leading is `(1,2,6)` in base 215 or a member of the binomial family | proven and computed (Corollary 1.4) |
+| 1 | For `p, q <= 20` no such string is a solution in any base, under either convention | proven and computed (Theorem 1.3) |
+| 1 | Every 3-digit solution in any base with two digits at most 20 and the third digit even and not leading is in the lists of chapter 3 or a member of the binomial family | proven and computed (Corollary 1.4) |
 | 1 | The three regimes: `N` a square (elementary), the square class of `N` fixed (Baker), the class varying (open) | proven for the first two (section 1.6) |
 | 2 | What counting can and cannot prove about empty bases, and what the families add | discussion (section 2) |
 | 3 | Searching by multisets across bases saves at most about 2.1x on a sweep, and nothing on one base | proven bound, heuristic gain (section 3) |
@@ -184,10 +184,9 @@ Remarks.
 
 ### 1.4 The computation
 
-Theorem 1.3 (proven and computed). Let `p <= 10` be a non-square
-(`2, 3, 5, 6, 7, 8, 10`), let `q <= 10`, and let `x >= 2` be even. Then
-neither `(p, q, x)` nor `(p, x, q)` is a solution in any base, under
-either convention.
+Theorem 1.3 (proven and computed). Let `p <= 20` be a non-square, let
+`q <= 20`, and let `x >= 2` be even. Then neither `(p, q, x)` nor
+`(p, x, q)` is a solution in any base, under either convention.
 
 Method. `r6b_pell_bound.py 10 10` gives `X0` for each of the 168 cases
 (family, position, convention for `q = 0`). The largest is
@@ -195,8 +194,9 @@ Method. `r6b_pell_bound.py 10 10` gives `X0` for each of the 168 cases
 `r6b_sieve.c` tests every even `x <= X0`: the string is a solution exactly
 when `D = U^2` is a perfect square, and `D` must be a square modulo each odd
 prime. The sieve uses 150 odd primes, with tables of period `l (l-1)` for
-`x^x mod l`. It tested `2.48 * 10^10` values of `x` in about 15 minutes on
-6 threads (`data/r6b_sieve10.txt`). Three values passed every prime:
+`x^x mod l`. For `p, q <= 10` it tested `2.48 * 10^10` values of `x` in about 15
+minutes on 6 threads (`data/r6b_sieve10.txt`). Three values passed every
+prime:
 `(3,1,2)`, `(3,2,2)` and `(3,2,2)` with `x` in the middle, all with
 `D = U^2` and root `b = 3`. In base 3 the digit 3 is not allowed, so none
 is a solution. (They are the strings of section 12.4 with an integer root
@@ -206,20 +206,24 @@ Validation. For `p, q <= 12`, both positions and even `x <= 80`, the sieve
 survivors agree exactly with an exact test of `D` for squareness in Python.
 Known family members survive: `(1,2,6)` and `(1,6,46666)`.
 
-The run for `p, q <= 20` is in progress (`data/r6b_sieve20.txt`); see the
-note at the end of this section.
+The 536 further cases with `p, q <= 20` have bounds up to
+`X0 = 2,448,584,564` (for `n = 19`, whose unit `170 + 39 sqrt 19` is large).
+The sieve tested `1.73 * 10^11` values of `x` in about 3 hours on 5 shared
+threads, and no value passed every prime (`data/r6b_sieve20.txt`). In total
+704 cases and `1.98 * 10^11` values of `x`.
 
 Corollary 1.4 (proven and computed). Let `s` be a 3-digit solution in some
 base, under either convention, whose leading digit and one other digit are
-at most 10, and whose third digit `x` is even and not leading. Then `s` is
+at most 20, and whose third digit `x` is even and not leading. Then `s` is
 in the complete 3-digit lists of chapter 3, or `s = (c^2, 2ce, x)` with
 `x = w(c^2) + w(2ce) + e^2` and `x^x = (c b + e)^2`: case (i) of Theorem
 25.7, the binomial family of Theorem 22.6 with `j = 2`.
 
 Proof. If `p` is not a square, Theorem 1.3 applies. Let `p` be a square. If
-`x < 24`, then `p b^2 <= F < 2 * 10^10 + 22^22`, so `b < 10^15`, inside the
-lists of chapter 3 (every 3-digit solution in bases up to `10^51`, both
-conventions). If `x >= 24 = 2 * 10 + 4`, Theorem 25.7 applies with `B = 10`.
+`x < 44`, then `p b^2 <= F < 2 * 20^20 + 42^42`, so `b < 2 * 10^34`, inside
+the lists of chapter 3 (every 3-digit solution in bases up to `10^51`, both
+conventions). If `x >= 44 = 2 * 20 + 4`, Theorem 25.7 applies with
+`B = 20`.
 `N = 4 p x^x` is a square, so case (iii) is empty, case (ii) has no solution,
 and case (i) is the family.
 
@@ -336,7 +340,7 @@ What the families add. The bases with a 3-digit solution are now better
 known. Under `0^0 = 1` they are 4, 25, 91, 215, 904, the bases of the
 binomial family, and possibly bases above `10^3301` with two large digits
 (Theorem 25.11). Theorem 1.3 removes from that last set every solution with
-an even, non-leading large digit and the two other digits at most 10. So the
+an even, non-leading large digit and the two other digits at most 20. So the
 set of bases with a solution of length 3 is known except for strings with
 two large digits or odd ones.
 
@@ -401,8 +405,8 @@ each node. Whether this narrows the gap is a measurement, not a theorem.
    fields `Q(sqrt(p x))`, `x` odd? This would close the 3-digit problem up to
    computation. Lead: the results on `y^2 = a x^n + c` uniform in `n`.
 2. The odd squares. Run the real (Matveev) bound and the sieve for odd
-   square `x = t^2` and `p, q <= 10`: about `3 * 10^8` values of `t` per
-   family.
+   square `x = t^2` and `p, q <= 10`: `1.2 * 10^11` values of `t` in all
+   (`r6b_pell_bound.py 10 10 sq`, `r6b_sieve sq`).
 3. Four digits with a binomial prefix. Carry out section 1.7 for
    `(p, q, r, x)` with `q^2 = 3 p r` and `x` even, `3 | x`: a Thue equation
    in `Q(p^(1/3))` with a 2-adic bound.
