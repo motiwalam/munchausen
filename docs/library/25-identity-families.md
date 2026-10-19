@@ -326,7 +326,7 @@ part of `p`. A 2-adic bound for linear forms in two logarithms then bounds
 `x` (Theorem 32.2), uniformly as `x <= C B^(3/2) (log 3B)^4`
 (Theorem 32.5). A sieve up to that bound shows that no such string with
 `p, q <= 20` is a solution in any base (Theorem 32.3). Matveev's bound and
-the same sieve exclude an odd square `x = t^2 >= 9` for `p, q <= 10`
+the same sieve exclude an odd square `x = t^2 >= 9` for `p, q <= 20`
 (Proposition 32.7). What remains open in case (iii) is the part where the
 field changes with `x`: odd `x` that does not lead, and even `x` that
 leads (section 32.1.6).
@@ -404,7 +404,7 @@ Evidence.
 Update (chapter 32). Part (b) is now proven for a slice of the 3-digit
 strings in every base. A 3-digit solution with two digits at most 20 and an
 even third digit that does not lead is in the lists of chapter 3 or a
-member of Theorem 22.6 (Corollary 32.4). For two digits at most 10 the same
+member of Theorem 22.6 (Corollary 32.4). For two digits at most 20 the same
 holds when the third digit is an odd square (Proposition 32.7). For larger
 small digits, a solution with an even, non-leading large digit
 `x > C B^(3/2) (log 3B)^4` is a member (Theorem 32.5 with Theorem 25.7).
@@ -541,7 +541,7 @@ Answer to question 65.
 Update (chapter 32). The computation now reaches every base for two kinds
 of strings with one large digit `x` and two digits at most `B`. With
 `B = 20`, `x` even and not leading, every solution is in the lists of
-chapter 3 or a binomial member (Corollary 32.4). With `B = 10` the same
+chapter 3 or a binomial member (Corollary 32.4). With `B = 20` the same
 holds for an odd square `x` (Proposition 32.7). Both rest on a proven bound
 for `x` (Theorem 32.2, and Matveev's theorem in Proposition 32.7), not on
 the heuristic. The strings with two digits above 200 are untouched, so the

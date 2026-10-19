@@ -440,7 +440,7 @@ problems found in the library are in
      on `y^2 = a x^n + c` that are uniform in `n`. (proof; section 32.1.6)
 130. Other square classes. Proposition 32.6 gives finiteness for odd `x` in
      any fixed square class `x = lam t^2`, and Proposition 32.7 closes
-     `lam = 1` for `p, q <= 10`. For `lam > 1` the linear form has five
+     `lam = 1` for `p, q <= 20`. For `lam > 1` the linear form has five
      logarithms and the bound on `t` is about `10^10`. Is there a better
      route, for example an `l`-adic bound at a prime `l` dividing `lam`?
      (proof and computation; section 32.1.6)

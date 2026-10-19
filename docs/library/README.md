@@ -162,7 +162,7 @@ Proven:
   a 2-adic bound for linear forms in two logarithms: all the Pell
   equations live in one field `Q(sqrt p)`.
 - With a sieve up to the bound: for `p, q <= 20` none of these strings is
-  a solution in any base, and for `p, q <= 10` none is with `x` an odd
+  a solution in any base, and none is with `x` an odd
   square (Theorem 32.3, Proposition 32.7, computer-assisted). So every
   3-digit solution with two digits at most 20 and an even third digit that
   does not lead is in the lists of chapter 3 or a binomial member

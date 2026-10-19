@@ -1314,11 +1314,13 @@ that leads.
 ]
 
 #computation(id: "short-comp-oddsq", title: "Odd squares", src: "32.1")[
-  For every non-square $p <= 10$, every $q <= 10$ and every odd $t >= 3$,
+  For every non-square $p <= 20$, every $q <= 20$ and every odd $t >= 3$,
   neither $(p, q, t^2)$ nor $(p, t^2, q)$ is a solution in any base, under
-  either convention. Matveev's bound gives $t <= 2.4 dot 10^9$ in these
-  cases, and the sieve tested all $1.18 dot 10^(11)$ values of $t$. So
-  @short-cor-even holds for digits at most 10 with "even" replaced by
+  either convention. Matveev's bound gives $t <= 3.94 dot 10^9$ in these
+  cases, and the sieve tested all $6.07 dot 10^(11)$ values of $t$. The
+  only survivors have $t = 1$; among them are the solutions $(p, 0, 1)$ in
+  base $p^((p - 1) slash 2)$ for odd non-square $p$, with $0^0 = 0$. So
+  @short-cor-even holds for digits at most 20 with "even" replaced by
   "even or an odd square".
 ]
 
