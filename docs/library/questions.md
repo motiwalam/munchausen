@@ -325,13 +325,13 @@ problems found in the library are in
 93. Where the 12% excess under `0^0 = 1` sits.
 94. Do near-solutions share the zero deficit of question 71?
 95. Bijective numeration: no zero, and a self-paying digit in every base.
-96. A criterion for identity families.
-97. Three-digit factorions are finite, except for a Brocard case.
-98. Factorions of every length under GRH.
-99. Long structured solutions under `0^0 = 1` (speculative).
+96. (Answered in chapter 33: a sufficient condition for every weight (Theorem 33.12); under abc exact for solutions with one dominant digit (Corollary 33.15); `x!` never meets it (Proposition 33.13).) A criterion for identity families.
+97. (Answered in chapter 33: finite for a large last or middle digit, with explicit bounds (Theorems 33.4, 33.5); a leading digit reduces to `4x x! + s^2 = U^2`; complete for the other digits up to 10 except that case (Theorem 33.6); two large digits reduce to Brocard type under GRH (Proposition 33.8).) Three-digit factorions are finite, except for a Brocard case.
+98. (Answered in chapter 33: no for `k = 2`, infinitely many (Proposition 33.9); under GRH a large last digit leaves only `x` with `G_x` intersective, rational roots for `k <= 5` (Theorem 33.10); GRH alone does not give finiteness for `k >= 4`; abc does for each prefix (Theorem 33.19).) Factorions of every length under GRH.
+99. (Partly answered in chapter 33: none found up to `t = 10^5`; one-step chains give only base 64 (Proposition 33.22); the length is `c + O(log b)` (Proposition 33.21); longer chains need a coincidence (Heuristic 33.23).) Long structured solutions under `0^0 = 1` (speculative).
 100. Near-solutions that provably exist (speculative).
 101. Beyond `ln b / ln ln b` by averaging over bases.
-102. (Partly answered in chapter 32: abc bounds `x` for one large digit in every position and parity (section 32.1.6); unconditional for an even large digit behind a non-square leading digit (Theorem 32.2) and for a fixed square class (Proposition 32.6); two large digits open.) The abc conjecture and the 3-digit list.
+102. (Partly answered in chapter 32: abc bounds `x` for one large digit in every position and parity (section 32.1.6); unconditional for an even large digit behind a non-square leading digit (Theorem 32.2) and for a fixed square class (Proposition 32.6); two large digits open. Answered in chapter 33 for one large digit: under abc `x <= (2 + O(eps)) B + C_eps` when `R != 0` (Theorem 33.16), every length in Theorem 33.19; with `c < rad^(7/4)` the list is complete for two digits up to 200 (Corollary 33.18); two large digits `u >= v` remain only for `v` above about `u/2` (Proposition 33.20).) The abc conjecture and the 3-digit list.
 103. A ledger of P values.
 104. A pre-registered census of bases 42 to 46.
 105. The first `b`-digit solution under `0^0 = 1`.
@@ -452,3 +452,31 @@ problems found in the library are in
      constant factor (section 31.3.2).) A fixed-point bound for the exact
      tree: how many nodes does the iterated interval remove? (computation;
      section 32.3)
+
+## Round 11: questions raised by chapter 33
+
+133. The leading Brocard case. Is `4x x! + s^2 = U^2` with
+     `s^2 = q^2 + 4Ax` solvable for any `x > 10`? Push the sieve of section
+     33.1.4 to `x = 10^9`, as Berndt and Galway did for Brocard. This would
+     also reach the Laishram-Shorey bound for digits up to about `10^6`.
+     (computation; section 33.1.5)
+134. Sharper unconditional bounds. For `|K|` linear in `x` the bound
+     `Delta^0.45` is far from the truth: the least inert prime up to
+     `4 * 10^6` is at most 79. An explicit Burgess bound for imaginary
+     quadratic characters would cut `X0(B)` of the last position from a
+     power of `B!` to about `(B!)^(1/4)`. (proof; section 33.1.3)
+135. Two large digits in the factorion world. Run the GRH reduction of
+     Proposition 33.8 as a computation for `u, v <= 10^4`. How many pairs
+     have `K_A` or `K_B` a square, and do any survive a sieve?
+     (computation; section 33.1.6)
+136. The comparable range for `x^x`. Proposition 33.20 leaves
+     `u/2 <~ v <= u`. Is there a conditional statement that covers it, such
+     as a 4-term abc with a better exponent for this shape, or Vojta's
+     conjecture for the surface `U^2 = 4l (u^u + v^v) + R`? (proof; section
+     33.4.4)
+137. Intersective polynomials for `k >= 6`. Are there prefixes `t` for which
+     `G_x` is intersective without a rational root for infinitely many `x`?
+     (proof; section 33.2.2)
+138. Theorem 15.14 with cycles. Proposition 33.22 used only self-paying
+     digits. Do swaps (2-cycles of `phi`) allow a family with a one-step
+     chain? (proof and computation; section 33.5)

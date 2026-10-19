@@ -809,6 +809,10 @@ $lambda - 1 approx -1 slash ln b$.
   factorions and the even bases from 10 to 40 have 22: no parity effect.
 ]
 
+For a fixed number of digits, short factorions obey exact theorems
+(@sec-worlds-short-factorions). For example, every $x >= 3$ gives the
+2-digit factorion $(1, x)$ in base $x! - x + 1$.
+
 === Narcissistic numbers
 
 A $d$-digit _narcissistic number_ equals the sum of the $d$-th powers of its
@@ -939,6 +943,274 @@ digits) number 3 under $w(0) = 0$ and 4 under $w(0) = 1$, against about
   calibration gave about 0.05. The library counts it as an unexplained
   fluctuation.
 ]
+
+The local arguments of @sec-worlds-short-factorions do not reach this
+question. They need one digit much larger than the others, and a long
+factorion has many digits of similar size.
+
+== Short factorions and Brocard's problem <sec-worlds-short-factorions>
+
+For a fixed number of digits, a factorion is a root of one polynomial
+equation in the base, as in @ch-short. For the weight $x!$ this equation
+has a feature that $x^x$ lacks: $x!$ is divisible by every prime up to
+$x$. This gives congruences that get stronger as the digit grows, and with
+them theorems about short factorions in all bases at once #lib("33.1",
+"33.2"). Where the congruences stop, a famous open problem takes over:
+Brocard's equation $n! + 1 = m^2$. In this section $w(x) = x!$ for
+$x >= 1$, and $w(0) = 1$ (the usual $0! = 1$) or $w(0) = 0$.
+
+=== Two digits
+
+#proposition(id: "worlds-fact-two", title: "Infinitely many 2-digit factorions", src: "33.2")[
+  For every $x >= 3$ the string $(1, x)$ is a factorion in base
+  $b = x! - x + 1$, under either convention.
+]
+#proof[
+  The value is $b + x = x! + 1 = w(1) + w(x)$, and $b > x$ for $x >= 3$.
+]
+
+So 2-digit factorions are infinitely many, as 2-digit Munchausen numbers
+are (@sec-cons-two-digit). The interesting lengths start at 3.
+
+=== Three digits: a square modulo every small prime
+
+Take a 3-digit string with a large digit $x$ and two digits at most $B$.
+Multiply the equation by 4 times the leading digit and complete the square,
+as in @sec-short-square. For a large last digit, $(p, q, x)$ in base $b$,
+$
+  (2 p b + q)^2 = 4 p dot x! + K(x), quad K(x) = q^2 + 4 p (w(p) + w(q) - x).
+$
+The other positions give the same shape with another $K$:
+- middle, $(p, x, r)$: $(2 p b + x)^2 = 4 p dot x! + K(x)$ with
+  $K(x) = x^2 + 4 p A$ and $A = w(p) + w(r) - r$;
+- leading, $(x, q, r)$: $(2 x b + q)^2 = 4 x dot x! + K(x)$ with
+  $K(x) = q^2 + 4 x A$ and $A = w(q) + w(r) - r$.
+
+In all three cases $K(x)$ is small: of size about $x$ or $x^2$. The
+dominant term is a multiple of $x!$.
+
+#lemma(id: "worlds-fact-local", title: "A square modulo every small prime", src: "33.1")[
+  If $U^2 = c dot x! + K$ for integers $U$, $c$ and $K$, then $K$ is a
+  square modulo every prime $ell <= x$. In particular, if some odd prime
+  $ell <= x$ does not divide $K$ and $K$ is not a square modulo $ell$, then
+  there is no solution.
+]
+#proof[
+  A prime $ell <= x$ divides $x!$, so $U^2 equiv K med (mod ell)$.
+]
+
+The library uses a sharper form with $ell$-adic numbers (@app-padic). It
+also covers primes that divide $K$ to a low power, and the prime 2
+(Lemmas 33.1 and 33.2 of #lib("33.1")). For the weight $x^x$ nothing of the
+kind holds. The term $4 p x^x$ is divisible only by the primes of $p$ and
+$x$, so modulo most primes it runs through many residues as $x$ varies, and
+no finite set of congruences bounds the large digit (@sec-short-local).
+
+So everything depends on one question: if $K(x)$ is not a perfect square,
+is there a prime $ell <= x$ modulo which it is not a square? Write
+$K = f^2 D$ with $D$ squarefree. A prime that is inert in the quadratic
+field $QQ(sqrt(D))$ and does not divide $f$ does the job. The least inert
+prime of a quadratic field is small: below 80 for every discriminant up to
+$4 dot 10^6$ in absolute value, and at most a small power of the
+discriminant in general (@sec-app-quadratic-inert). Since $abs(K(x))$ grows
+only like $x$ or $x^2$, the least inert prime is far below $x$ once $x$ is
+large.
+
+#theorem(id: "worlds-fact-three", title: "Three-digit factorions with one large digit", src: "33.1")[
+  Fix the convention, the position of the large digit $x$, and the two
+  other digits.
+  + If $x$ is the last or the middle digit, only finitely many $x$ give a
+    factorion, and there is an explicit bound.
+  + If $x$ is the leading digit, the same holds for the $x$ with $K(x)$ not
+    a perfect square. If $K(x) = s^2$, the string is a factorion exactly
+    when $4 x dot x! + s^2 = U^2$ for an integer $U equiv q med (mod 2x)$
+    with $(U - q) slash (2x) > x$. There are infinitely many such $x$,
+    about $sqrt(X)$ of them up to $X$.
+  When the two other digits are at most $B$, the bounds hold uniformly in
+  $B$. They grow like a power of $B!$, and like a polynomial in $B$ under
+  the generalized Riemann hypothesis (@sec-app-galois-effective).
+]
+#sketch[
+  First the $x$ with $K(x)$ a perfect square. In the last position
+  $K(x) < 0$ once $x > w(p) + w(q) + q^2 slash (4p)$, so these $x$ are
+  finitely many. In the middle, $x^2 + 4 p A = t^2$ means
+  $(t - x)(t + x) = 4 p A$ with $A >= 1$, which has finitely many solutions.
+  In front, $q^2 + 4 A x = s^2$ holds for every $x = (s^2 - q^2) slash (4A)$
+  that is an integer, infinitely often. (If $A = 0$, which happens only
+  under $w(0) = 0$, then $4 x dot x!$ would be a square. But by Bertrand's
+  postulate a prime in $(x slash 2, x)$ divides it exactly once.)
+
+  For the other $x$, apply @worlds-fact-local with the least inert prime
+  $ell_0$ of $QQ(sqrt(K(x)))$. The bounds of @sec-app-quadratic-inert give
+  $ell_0$ of size at most about $x^(0.9)$, below $x$ for large $x$. If
+  $ell_0$ divides $f$, the field has a smaller discriminant, and the
+  $ell$-adic form of the lemma excludes $x$ once $x$ is a little larger
+  than $ell_0 log_(ell_0) abs(K)$. A computer finds the point $X_0$ beyond
+  which all of this holds.
+]
+
+#tablefig(caption: [The bound $X_0 (B)$ beyond which a 3-digit factorion with one large digit and the other two at most $B$ needs $K(x)$ to be a perfect square, unconditionally and under GRH #lib("33.1").], id: "tab-worlds-fact-x0")[
+  #btable(columns: 7, align: (right, right, right, right, right, right, right),
+    [$B$], [last], [last, GRH], [middle], [middle, GRH], [leading], [leading, GRH],
+    [5], [60,640], [241], [1,340], [1,340], [137], [137],
+    [10], [$1.28 dot 10^6$], [2,158], [17,560], [2,158], [$4.42 dot 10^6$], [4,626],
+    [20], [$3.0 dot 10^(12)$], [23,380], [$3.8 dot 10^9$], [23,380], [$2.1 dot 10^(16)$], [37,650],
+    [100], [$3.9 dot 10^(83)$], [$6.5 dot 10^6$], [$4.6 dot 10^(72)$], [$6.5 dot 10^6$], [$3.4 dot 10^(130)$], [$7.1 dot 10^6$],
+  )
+]
+
+Below the bound, the remaining $x$ can be checked one by one. This gives
+the complete list for small digits, up to the leading case.
+
+#computation(id: "worlds-fact-list", title: "Three-digit factorions with two digits at most 10", src: "33.1")[
+  Let $s$ be a 3-digit factorion, under either convention, whose digits
+  other than one digit $x$ are at most 10. Then $s$ is one of
+  - $(1, 4, 4)$ in base 5, $(1, 4, 5)$ in base 10, $(6, 6, 1)$ and
+    $(6, 6, 2)$ in base 15, $(7, 2, 5)$ in base 27, $(1, 6, 6)$ in base
+    35, $(2, 4, 10)$ in base 1346,
+  - $(6, 6, 0)$ in base 15 under $w(0) = 0$,
+  or $s = (x, q, r)$ with $x > 4","103","641$, $K(x) = s'^2$ a perfect square
+  and $4 x dot x! + s'^2$ a perfect square.
+
+  The check covers 679 cases (convention, position, two digits). Every
+  $x <= 400$ is tested exactly. Every $x$ up to $X_0$ with $K(x)$ not a
+  square is excluded by a prime below 300 or, for a few $x$, by a larger
+  prime. The 211,668 values of $x$ with $K(x)$ a square and $x > 3000$
+  are sieved: $c dot x! + s^2$ must be a square modulo 40 primes above $x$,
+  where $x!$ is a unit. None survives.
+]
+
+The solution $(2, 4, 10)$ in base 1346 is the square case of the last
+position: $K(10) = 144 = 12^2$, and the equation reads
+$10! slash 2 + 9 = 1347^2$. Its digits are small, so earlier searches over
+all strings with digits up to 150 already found it. What is new is that no
+large third digit, in any base, adds a factorion, except possibly in the
+leading case.
+
+=== Brocard's problem
+
+In 1876 Brocard asked for all solutions of $n! + 1 = m^2$. The known ones
+are $n = 4, 5, 7$, and Berndt and Galway found no other with
+$n <= 10^9$ @berndt-galway2000. Whether there are finitely many is open.
+The leading case of @worlds-fact-three is a problem of the same kind:
+$4 x dot x! + s^2 = U^2$ asks for two divisors $U - s$ and $U + s$ of
+$4 x dot x!$ that differ by only $2s$, about $4 sqrt(A x)$. Brocard's
+equation asks for two divisors $m - 1$ and $m + 1$ of $n!$ that differ
+by 2.
+
+The argument of @worlds-fact-local is due, for a fixed constant, to
+Dabrowski @dabrowski1996: $x! + A = y^2$ has finitely many solutions when
+$A$ is not a square, by one fixed prime $ell$ modulo which $A$ is not a
+square. Here $K(x)$ moves with $x$, so one needs a bound for the least
+inert prime instead of one fixed prime. When $A$ is a square, as in
+Brocard's equation, no prime helps: every $U^2 = c dot x! + s^2$ is
+solvable modulo every prime. This is where congruences stop.
+
+Under the abc conjecture (@app-abc), Brocard's equation has only finitely
+many solutions (Overholt @overholt1993), and so does the leading case.
+
+#corollary(id: "worlds-fact-abc", title: "The Brocard case under abc", status: "conditional", src: "33.1")[
+  Assume the abc conjecture. Then for fixed $q$ and $r$ only finitely many
+  leading digits $x$ give a factorion $(x, q, r)$. Assume the explicit form
+  $c < "rad"(a b c)^(7 slash 4)$ (@sec-app-abc-explicit). Then the leading
+  case of @worlds-fact-list does not occur, and the list there is
+  complete.
+]
+#sketch[
+  Put $N = 4 x dot x!$ and $R = s^2$, and divide $N + R = U^2$ by
+  $g = gcd(N, R)$. The radical of the triple is at most
+  $"rad"(N) dot U dot R$. Here $"rad"(N)$ is the product of the primes up
+  to $x$, about $e^x$, while $ln N$ is about $x ln x - x$, and $U$ is about
+  $sqrt(N)$. So abc gives
+  $(x ln x - x) slash 2 lt.tilde (1 + epsilon) x + O(ln x)$, which bounds
+  $x$. With the
+  exponent $7 slash 4$ the inequality reads
+  $ln N < 7 ln 2 + 14 ln("rad"(N) R)$. Since $ln "rad"(N) < 1.01624 x$
+  @rosser-schoenfeld1962, this fails for $x > 4","103","641$, where
+  $x ln x - x$ overtakes $14.23 x$.
+]
+
+So for three digits the factorion problem is solved up to a question of
+Brocard type, and that question is finite under abc. This is as far as
+current methods go.
+
+Two large digits $u <= v$ and one small digit lead to the same kind of
+equation. Under GRH the congruence argument works with $M = 4 d (u! + v!)$
+when $v$ is at most about $u^3$, and with $M = 4 d dot v!$ above that,
+where $d$ is the leading digit. What it leaves are equations
+$U^2 - t^2 = 4 d (u! + v!)$ and $U^2 - t^2 = 4 d dot v!$, again of Brocard
+type (Proposition 33.8 of #lib("33.1")). Without GRH a range between
+$v approx u^(1.1)$ and $v approx (u!)^(0.45)$ is out of reach.
+
+=== Longer factorions
+
+For $k >= 4$ digits the completed square is no longer available, but the
+congruence argument still works with the polynomial of the string. Fix a
+prefix $t = (t_0, dots, t_(k-2))$ of digits at most $B$, with $t_0 >= 1$,
+and let the last digit $x$ be large. With $P_t$ the value polynomial of
+the prefix (@sec-basics-polynomial) and $F(t)$ the sum of its weights, the
+string $(t, x)$ is a factorion in base $b$ exactly when
+$
+  G_x (b) = x!, quad G_x (r) = r P_t (r) + x - F(t).
+$
+If $G_x$ has no root modulo some prime $ell <= x$, there is no solution. By
+the Chebotarev density theorem (@app-galois), $G_x$ has no root modulo a
+positive share of the primes, unless it has a root modulo every prime. The
+question is whether such a prime lies below $x$.
+
+#theorem(id: "worlds-fact-grh", title: "A large last digit under GRH", status: "conditional", src: "33.2")[
+  Assume the generalized Riemann hypothesis. Let $k >= 3$ and let the
+  prefix $t$ have digits at most $B$. There is an effective constant $c_k$
+  with the following property. If
+  $x >= c_k (ln x + B ln B)^2 (ln ln x + ln B)^2$ and $G_x$ has no root
+  modulo some prime, then $(t, x)$ is a factorion in no base. For
+  $k <= 5$, $G_x$ has a root modulo every prime only when it has a rational
+  root. Up to $X$ this happens for $O(X^(1 slash (k-1)))$ values of $x$.
+]
+#sketch[
+  The discriminant of $G_x$ has logarithm of order $ln x + B ln B$. Under
+  GRH, Lagarias and Odlyzko @lagarias-odlyzko1977 count the primes up to
+  $X$ whose Frobenius element fixes no root, with an error of order
+  $sqrt(X)$ times logarithms. For $X$ of the stated size this count exceeds
+  the number of primes that divide the discriminant. So some prime
+  $ell <= x$ has no root of $G_x$ and divides $x!$, a contradiction. For
+  degree at most 4, Jordan's theorem (@app-galois-jordan) and a short
+  check of products of two quadratics show that a fixed-point-free element
+  exists unless $G_x$ has a linear factor. A rational root $-u slash v$ has
+  $v | t_0$, and then $x$ is a polynomial of degree $k - 1$ in $u$.
+]
+
+For $k = 3$ the rational-root values of $x$ are finitely many, and
+@worlds-fact-three is the unconditional form. For $k = 4$ and 5 they are
+infinitely many. For such $x$ the polynomial factors as
+$G_x (r) = (v r + u) H(r)$, and the factorion equation becomes
+$(v b + u) H(b) = v dot x!$: two factors of a factorial in a fixed
+proportion, a problem of Brocard type again. So GRH alone does not prove
+that 4-digit factorions are finitely many. The abc conjecture does, for
+each fixed prefix (@cons-abc-dominant with @cons-factorial-powers).
+
+#computation(id: "worlds-fact-four", title: "Four-digit factorions with a large last digit", src: "33.2")[
+  For all prefixes $(p, q, s)$ with digits up to 6, both conventions and
+  $2 <= x <= 1500$ (881,412 strings), there is no 4-digit factorion. Where
+  a prime $ell <= x$ without a root of $G_x$ exists, the least one is at
+  most 101, and 2, 3 and 5 settle 65% of these strings. Every $x >= 76$
+  without such a prime has $G_x$ with a rational root, as
+  @worlds-fact-grh says.
+]
+
+The GRH bound is far from tight here. The least prime without a root
+behaves like a random variable with a geometric tail, not like
+$(ln x)^2$.
+
+#conjecture(id: "worlds-fact-finite", title: "Finitely many factorions of each length", src: "33.2")[
+  For each $k >= 3$ there are only finitely many $k$-digit factorions.
+]
+
+The root heuristic (@sec-short-heuristic) gives a string with largest
+digit $M$ a chance of about $(M!)^(-(k-2) slash (k-1))$, and there are
+about $M^(k-1)$ such strings. The sum over $M$ converges very fast. Unlike
+for $x^x$, no identity family can make it diverge, because $x!$ is almost
+never a power (@cons-factorial-powers).
 
 == Function fields, and why the model misses there <sec-worlds-ffield>
 

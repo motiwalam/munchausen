@@ -105,6 +105,10 @@
 
 #term[Factorion][A number equal to the sum of the factorials of its digits.][@sec-worlds-weights]
 
+#term[Inert prime][A prime that stays prime in a quadratic field $QQ(sqrt(D))$; for odd primes not dividing the discriminant, one modulo which the discriminant is not a square.][@sec-app-quadratic-inert]
+
+#term[Brocard's problem][The question whether $n! + 1 = m^2$ has solutions other than $n = 4, 5, 7$. The leading case of 3-digit factorions is a problem of the same kind.][@sec-worlds-short-factorions]
+
 #term[Narcissistic number][A $k$-digit number equal to the sum of the $k$-th powers of its digits.][@sec-worlds-weights]
 
 #term[Frobenius block][In $FF_q [T]$, the $q$ digits that one base-$B$ digit becomes under $n |-> n^q$.][@sec-worlds-ffield]

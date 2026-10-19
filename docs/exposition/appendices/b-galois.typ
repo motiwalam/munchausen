@@ -68,6 +68,14 @@ For reducible polynomials the theorem can fail. A polynomial that has a root mod
 
 In Galois terms, the group of a product $g h$ acts on the roots of $g$ and of $h$ together, and an element can move every root of both factors even when each factor alone always keeps a root. The library proves that no Munchausen polynomial with $k <= 5$ is intersective without a rational root, and gives an exact criterion for $k = 6$: a quadratic and a cubic factor with the same quadratic field, the shape of the example above (#lib("16.3")). No such string is known. So in practice a string that passes every local test has a rational root, and the rational roots that are not bases are the "roots too small to be bases" of @sec-short-roots.
 
+== Effective Chebotarev and the generalized Riemann hypothesis <sec-app-galois-effective>
+
+Chebotarev's theorem says how often a Frobenius class occurs among all primes. Some arguments need more: a prime with a given class below an explicit bound. The bound depends on the zeros of the Dedekind zeta function of the splitting field.
+
+The Riemann hypothesis says that the nontrivial zeros of the Riemann zeta function have real part $1 slash 2$. The generalized Riemann hypothesis (GRH) says the same for the $L$-functions of Dirichlet characters and the zeta functions of number fields. It is open, and widely believed. Under GRH, Lagarias and Odlyzko @lagarias-odlyzko1977 count the primes up to $X$ in a Frobenius class with an error of order $sqrt(X) ln(d_L X^n)$, where $d_L$ is the discriminant and $n$ the degree of the splitting field. As a consequence, the least prime in a given class is at most a constant times $(ln d_L)^2$. Bach @bach1990 and Bach and Sorenson @bach-sorenson1996 give explicit constants. Without GRH the known bounds are a power of $d_L$, far weaker.
+
+@worlds-fact-grh uses this for the polynomial $G_x$ of a factorion with a large last digit: under GRH a prime without a root of $G_x$ comes below a power of $ln x$, so below $x$, and it divides $x!$. For quadratic fields the same idea bounds the least inert prime (@sec-app-quadratic-inert).
+
 == Further reading <sec-app-galois-reading>
 
 The Chebotarev theorem and its history are in @stevenhagen-lenstra1996. Jordan's original paper is @jordan1872, and @serre2003 surveys its descendants. Hilbert irreducibility is in @serre-topics2008. Ritt's decomposition theory starts with @ritt1922.

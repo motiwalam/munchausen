@@ -565,6 +565,13 @@ coincidence between `pi(u)` and `r^(u_0)`). A base with `N_1(b) >= 6` from
 constructions alone would need the multiplicity mechanism above, and the
 search found no instance of it.
 
+Update (chapter 33). The search now covers `r <= 40` with `t <= 20,000`,
+and `r <= 7` with `t <= 10^5`. It finds no construction beyond the
+`(a, 1)` family other than the 11-digit solution of base 64. The
+constructions whose chain has one step are proven finite, and base 64 is
+the only one (Proposition 33.22). The length of a construction is `c`, the
+digit at position 0, up to `O(log b)` (Proposition 33.21).
+
 ## 15.6 Integers with several bases
 
 Proposition 15.15 (proven). Under `0^0 = 0`, let `c = r^u` with `r` not a

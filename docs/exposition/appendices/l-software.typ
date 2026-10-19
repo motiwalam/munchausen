@@ -163,6 +163,7 @@ them. Each library chapter ends with a table of its scripts and data files.
     [`r6a_`], [anti-concentration, collisions of $x^x - x$, fixed points, 2-digit narcissistic numbers], [L30],
     [`r6s_`], [the residue rule, nodes by free slots, cycle counts, shard balance], [L31],
     [`r6b_`], [the 2-adic bound for 3-digit families and the sieve below it], [L32],
+    [`r6f_`], [least inert primes, 3-digit factorions, the Brocard sieve, 4-digit factorions, identity census, explicit abc bounds, chains], [L33],
   ),
 )
 

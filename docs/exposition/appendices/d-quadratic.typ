@@ -50,6 +50,29 @@ For real quadratic fields the class number and the regulator are tied by the cla
 $ h dot mu_0 = sqrt(Delta) / 2 dot L(1, chi), $
 where $Delta$ is the discriminant and $L(1, chi)$ is the value at 1 of the $L$-function of the quadratic character $chi$. The value $L(1, chi)$ is of moderate size, roughly between $Delta^(-epsilon)$ and $ln Delta$. So a small regulator forces a large class number, and the reverse. In $QQ(sqrt(x^2 + 4))$ the regulator is at most $ln x$ or so, and the class number can be as large as about $x slash ln x$, which is why the class group conditions of @cor-x-x cannot be excluded by size alone (#lib("20.5")).
 
+== The least inert prime <sec-app-quadratic-inert>
+
+The splitting law above has a compact form. For a quadratic field with discriminant $Delta$, the Kronecker symbol $chi(ell) = (Delta slash ell)$ is $1$ if the prime $ell$ splits, $-1$ if it stays prime (is _inert_), and 0 if it ramifies. For odd $ell$ that does not divide $Delta$, $ell$ is inert exactly when $Delta$ is not a square modulo $ell$. Half of all primes are inert, by the Chebotarev density theorem (@app-galois). The question is how soon the first one comes.
+
+#definition(id: "app-quadratic-def-inert", title: "Least inert prime")[
+  The least inert prime $ell_0 (Delta)$ is the smallest prime $ell$ with $chi(ell) = -1$.
+]
+
+@sec-worlds-short-factorions needs a bound for $ell_0$ that is much smaller than $abs(Delta)$. The truth is far smaller than what can be proven.
+
+#theorem(id: "app-quadratic-inert", title: "Bounds for the least inert prime", status: "cited")[
+  + For every fundamental discriminant with $1 < abs(Delta) <= 4 dot 10^6$, $ell_0 (Delta) <= 79$ (computed, #lib("33.1")).
+  + Trevino @trevino2012: for $Delta > 1596$, $ell_0 (Delta) <= Delta^(0.45)$. This improves the bound $sqrt(Delta) slash 2$ of Granville, Mollin and Williams @granville-mollin-williams2000.
+  + For $Delta < 0$, the Polya-Vinogradov inequality in the explicit form of Pomerance @pomerance2011 gives $ell_0 (Delta) <= C sqrt(abs(Delta)) (ln abs(Delta))^2$ with an explicit $C$.
+  + Under the generalized Riemann hypothesis, Bach @bach1990: for a character modulo $m >= 10^8$ that is not trivial, the least prime $ell$ with $chi(ell) != 1$ is below $(1.17 ln m - 6.36)^2$.
+]
+
+The idea behind (iii) is short. If no prime up to $y$ were inert, then $chi(n) = 1$ for every $n <= y$ prime to $Delta$, since $chi$ is multiplicative. So the sum $sum_(n <= y) chi(n)$ would be about $y$. The Polya-Vinogradov inequality says that this sum is at most about $sqrt(abs(Delta)) ln abs(Delta)$, so $y$ cannot be larger. Under GRH the same argument works with sums over primes, and the bound drops to a power of $ln abs(Delta)$.
+
+#example(title: "How the bound is used")[
+  For the 3-digit factorion $(p, q, x)$ the quantity $K(x)$ of @sec-worlds-short-factorions is of size about $x$. If $K(x)$ is not a square, the least inert prime of $QQ(sqrt(K(x)))$ is at most about $x^(0.45)$ by (ii), or a power of $ln x$ under GRH. Either way it is below $x$ for large $x$, so it divides $x!$, and @worlds-fact-local excludes the string.
+]
+
 == Cyclotomic polynomials, Gauss sums and Ramanujan sums <sec-app-quadratic-cyclotomic>
 
 The cyclotomic polynomial $Phi_m (t)$ is the monic polynomial whose roots are the primitive $m$-th roots of unity. It has integer coefficients and degree $phi(m)$, and $t^n - 1 = product_(d | n) Phi_d (t)$. For odd $x$,

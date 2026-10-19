@@ -348,6 +348,16 @@ The quality tends to 2, so abc bounds `x` for each `B`, in all positions
 and for both parities. This is question 102. Theorem 32.2 and
 Proposition 32.6 prove parts of this unconditionally.
 
+Update (chapter 33). Theorem 33.16 proves this. Under abc every 3-digit
+string with two digits at most `B` and `R != 0` has
+`x <= (2 + O(eps)) B + C_eps`, for every position of `x`, both parities and
+both conventions. The row "`n` varies" of the table is therefore finite
+under abc. With the explicit form `c < rad(abc)^(7/4)` the bound is
+about `x <= 10.5 B` for `10 <= B <= 1000` (Table 33.4.1). Every 3-digit
+solution under `0^0 = 1` with two digits at most 200 is then one of the six
+known ones or a family member (Corollary 33.18).
+Under abc the open part is two comparable large digits (Proposition 33.20).
+
 ### 32.1.7 Four or more digits
 
 The same method applies when the polynomial is a perfect power up to a small

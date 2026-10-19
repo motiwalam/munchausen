@@ -345,6 +345,14 @@ with the weights `x^(x+1)`, `x!` and `x^d`. Theorem 25.2 needs only
 
 Kind: proof and computation.
 
+Correction (chapter 33). "The weights `x^d` give only the thin set of
+perfect powers" is wrong for `k = 3`. The weight `x^3` has the infinite
+family `(a, 0, a^3)` in base `a^4` under `0^0 = 0`, because the large digit
+`a^3 = w(a)` is a cube by construction (section 33.3.4). Chapter 33 answers
+the question: Theorem 33.12 gives a sufficient condition for families of
+every length, and Corollary 33.15 makes the criterion exact under abc for
+solutions with one dominant digit.
+
 ### 97. Three-digit factorions are finite, except for a Brocard case
 
 Prove that for each pair of small digits, the 3-digit factorions whose third
@@ -386,6 +394,15 @@ reaches.
 
 Kind: proof.
 
+Correction (chapter 33). This would not be the library's first
+unconditional finiteness theorem of this kind. Theorem 15.13 (a covering
+prefix makes the last digit impossible in every base) and Theorem 32.2 (a
+2-adic Baker bound for `x^x`) came first. The Dabrowski reference is
+A. Dabrowski, On the Diophantine equation x! + A = y^2, Nieuw Arch. Wisk.
+(4) 14 (1996) 321-324. Chapter 33 proves the statement (Theorems 33.4 and
+33.5) and decides digits up to 10 except the leading Brocard case
+(Theorem 33.6).
+
 ### 98. Factorions of every length under GRH
 
 Assume GRH. For a fixed prefix of `k - 1` digits, are the `k`-digit
@@ -408,6 +425,13 @@ bounds the usable primes. Check the bounds against a `kdigit` run with
 factorial weights; the masks of section 11.5 work for any weights.
 
 Kind: proof (conditional) and computation.
+
+Correction (chapter 33). The hope that factorions are "the first world of
+the library where every length provably (under GRH) has finitely many
+solutions" fails at `k = 2`: `(1, x)` is a factorion in base `x! - x + 1`
+for every `x >= 3` (Proposition 33.9). For `k >= 4` GRH alone does not give
+finiteness: it leaves the values of `x` for which `G_x` has a rational root
+(Theorem 33.10). Under abc each prefix has finitely many (Theorem 33.19).
 
 ### 99. Long structured solutions under `0^0 = 1` (speculative)
 
@@ -710,6 +734,8 @@ Workload 2: factorials against `x^x`. (PARI/GP, Python, one day.)
 
 1. Question 97. Likely provable, and the library's first unconditional
    finiteness theorem for short strings with a free digit.
+   Correction (chapter 33): not the first. Theorem 15.13 and Theorem 32.2
+   came before it.
 2. Question 98. The same argument for every length, under GRH.
 3. Question 96. The criterion that explains why `x^x` has families and `x!`
    does not.

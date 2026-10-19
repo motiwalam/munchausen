@@ -563,6 +563,16 @@ There is no parity effect: `x! == 0 (mod 2)` for `x >= 2`, so the identity
 modulo `b-1` gives no free factor. The census agrees: 15 factorions in the 16
 odd bases from 11 to 41, 22 in the 16 even bases from 10 to 40.
 
+Update (chapter 33). For short factorions the polynomial view now gives
+theorems. Every `x >= 3` gives the 2-digit factorion `(1, x)` in base
+`x! - x + 1` (Proposition 33.9), so 2-digit factorions are infinitely many.
+A 3-digit factorion with one large digit `x` has `x` below an explicit
+bound when `x` is last or in the middle (Theorems 33.4 and 33.5), because
+`x!` is divisible by every prime up to `x`. With the two other digits at
+most 10 the 3-digit factorions are the 7 known ones (8 under `w(0) = 0`),
+except a leading `x > 4,103,641` with `4x x! + s^2` a square, a problem of
+Brocard type (Theorem 33.6).
+
 ### 14.6.3 What is universal
 
 - Universal (model, confirmed in all four systems): about one solution per
@@ -607,3 +617,6 @@ Open questions raised here:
 - Short factorions and short negative-base solutions are much more common
   than the per-base model says, as for short Munchausen numbers. The
   polynomial heuristic of section 11.4 is the natural tool for them.
+  (For factorions, chapter 33 proves more: 2-digit factorions are
+  infinitely many (Proposition 33.9), and the 3-digit ones with one large
+  digit are finite except a leading case of Brocard type (Theorem 33.4).)

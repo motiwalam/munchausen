@@ -409,6 +409,12 @@ holds when the third digit is an odd square (Proposition 32.7). For larger
 small digits, a solution with an even, non-leading large digit
 `x > C B^(3/2) (log 3B)^4` is a member (Theorem 32.5 with Theorem 25.7).
 
+Update (chapter 33). Under abc, part (a) holds for 3 digits in the range of
+one dominant digit. Every 3-digit solution, under either convention, whose
+largest digit exceeds `(2 + eps) max(B_eps, B)` is a member of case (i) of
+Theorem 25.7 (Corollary 33.17). For every `k >= 3`, abc gives a power
+identity once the largest digit exceeds `C_k max(2, B)` (Theorem 33.19).
+
 The conjecture fails under `0^0 = 0`, where the self-paying digits and the
 swaps of chapter 2 give further identity families, with polynomials
 `x r^m` and identities `x b^m = x^x`.
@@ -540,6 +546,13 @@ holds for an odd square `x` (Proposition 32.7). Both rest on a proven bound
 for `x` (Theorem 32.2, and Matveev's theorem in Proposition 32.7), not on
 the heuristic. The strings with two digits above 200 are untouched, so the
 answer to question 65 is unchanged.
+
+Update (chapter 33). Under the explicit abc form `c < rad(abc)^(7/4)`, part
+(b) of Theorem 25.11 holds in every base: every 3-digit solution under
+`0^0 = 1` with two digits at most 200 is one of the six or a member of
+case (i) of Theorem 25.7 (Corollary 33.18). Under abc, the strings with two
+large digits `u >= v` that remain have `v` at least about `u/2`
+(Proposition 33.20).
 
 ## 25.3 At most two 3-digit solutions per base (question 50)
 

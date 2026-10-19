@@ -194,12 +194,42 @@ the digit 1 at position $pi(3) = floor(24 slash 6) = 4$; the fixed points
 $u = 2$ and $u = 4$ of $phi$ give the self-paying 4 and 16. The family
 $(a, 1)$ in base $a^(a-1)$ is the degenerate case without zeros.
 
-#computation(id: "cons-chain-census", title: "Chain solutions", src: "15.5")[
+#computation(id: "cons-chain-census", title: "Chain solutions", src: ("15.5", "33.5"))[
   For all bases $r^t$ with $2 <= r <= 40$, $r$ not a perfect power, and
   $2 <= t <= 300$, the construction of @cons-chains gives 43 solutions. 42 of
   them are $(a, 1)$ in base $a^(a-1)$, and the other one is the 11-digit
-  solution of base 64. No base gets more than 2.
+  solution of base 64. No base gets more than 2. A later search, for
+  $r <= 40$ with $t <= 20","000$ and for $r <= 7$ with $t <= 10^5$, finds no
+  further solution.
 ]
+
+Could the construction give long solutions, with a length that grows like
+$log b$ or faster (#q(99))? Two facts limit it #lib("33.5"). First, the
+count of zeros fixes the length. A solution with a chain of $j$ steps and
+a set $S$ of self-paying digits has $c + j + abs(S)$ digits, and $abs(S)$
+is at most about $log_r b$. So the length is $c + O(log b)$, where
+$c = r^(u_0)$ is the last digit, and some position of a chain digit or a
+self-paying digit must land within $O(log b)$ of $c$. Second, for the
+shortest chains this coincidence happens only once.
+
+#proposition(id: "cons-chain-one-step", title: "One-step chains", src: "33.5")[
+  The solutions of @cons-chains whose chain has one step, $u_0 -> 0$, are
+  finitely many. The only one is the 11-digit solution of base 64.
+]
+#sketch[
+  With one step the digit 1 sits at position $u_0 c slash t < c$, so the
+  top position belongs to a self-paying digit $r^v$, and the zero count
+  gives $v (r^v - 1) slash t = c + abs(S)$. Comparing this with
+  $abs(S) <= v$ and reducing modulo $c$ gives $c <= (u_0 + 1) v$ and
+  $r^v <= 2 u_0 (u_0 + 1)^2 v^2$. These leave $u_0 <= 7$, $v < 25$ and
+  $t < 1000$, all inside the search above.
+]
+
+For longer chains each solution needs a position to land in a window of
+width $O(log b)$ around $c$, with a chance of about $log b slash (c ln r)$.
+Summed over the bases this converges (heuristic). So the library expects
+no infinite family of long structured solutions under $0^0 = 1$ from this
+construction.
 
 Swaps also show that the cores of @thm-structure-m0 can sit in bases with
 self-paying digits in infinitely many ways.
@@ -668,7 +698,113 @@ only partly settled. An exhaustive sieve finds no 3-digit solution in the
 bases from 905 to $10^(3301)$ other than the known ones, and the strings that
 remain below $46666^(23333) - 3$ have two digits above 200 and a digit above
 2000; the root heuristic gives them an expected $10^(-3294)$ solutions
-(@sec-short-lists, @sec-short-square).
+(@sec-short-lists, @sec-short-square). Under an explicit form of the abc
+conjecture the strings with two digits at most 200 are settled in every
+base (@short-abc-explicit).
+
+=== Which weights have families <sec-cons-weights>
+
+The binomial families exist because $x^x$ is a $j$-th power whenever $j$
+divides $x$. Factorials are almost never powers, and they have no such
+families. The library shows that this is the whole difference
+#lib("33.3"), #q(96). The construction of @thm-binomial works for any
+weight $w$ on the digits.
+
+#theorem(id: "cons-weights-sufficient", title: "A sufficient condition for families", src: "33.3")[
+  Let $w$ be a weight and $j >= 2$. Suppose there is an integer $M >= 1$
+  such that for all large $x$ divisible by $M$:
+  + $w(x) = y^j$ for an integer $y = y(x)$ divisible by $M$;
+  + $M$ divides $w(d)$ for every $d >= 1$ divisible by $M$;
+  + $y > M (x + x^(1 slash j)) + 1$.
+  For an integer $u >= 1$ put $t_i = M^(j-i) binom(j, i) (M u)^i$ for
+  $0 <= i < j$ and $x = (M u)^j + sum_i w(t_i)$. Then for every large $u$
+  the string $(t_0, dots, t_(j-1), x)$ is a solution with $j + 1$ digits in
+  base $b = (y(x) - M u) slash M$, under either value of $w(0)$. So length
+  $j + 1$ has infinitely many solutions.
+]
+#proof[
+  Every $t_i$ is a positive multiple of $M$, so by (ii) $x$ is a multiple
+  of $M$, and (i) gives $w(x) = y^j$ with $M | y$. So $b$ is an integer and
+  $M b + M u = y$. By the binomial theorem the value of the string is
+  $ sum_(i < j) t_i b^(j - i) + x = (M b + M u)^j - (M u)^j + x = y^j + sum_i w(t_i), $
+  which is the sum of the weights of its digits. Condition (iii) and
+  $M u <= x^(1 slash j)$ give $b > x$, so every digit is below the base.
+]
+
+For $x^x$ take $M = j$ and $y = x^(x slash j)$; this is @thm-binomial.
+The weights $x^(x + t)$ with $j | t$ work the same way, and so do the
+powers $x^d$ when $j$ divides $d$ and $j < d$. For factorials condition (i)
+fails for every $j$.
+
+#proposition(id: "cons-factorial-powers", title: "Factorials are almost never powers", src: "33.3")[
+  Let $x! = lambda y^j$ with $j >= 2$ and positive rationals $lambda$ and
+  $y$. Then every prime in $(x slash 2, x]$ divides the numerator or the
+  denominator of $lambda$. In particular $x < 2 P$, where $P$ is the
+  largest such prime.
+]
+#proof[
+  By Bertrand's postulate there is a prime $ell$ with $x slash 2 < ell <= x$
+  for $x >= 2$. It divides $x!$ exactly once, since $2 ell > x$. In
+  $lambda y^j$ the exponent of $ell$ is the exponent in $lambda$ plus a
+  multiple of $j$. So the exponent in $lambda$ is not a multiple of $j$,
+  and in particular not 0.
+]
+
+So for each $lambda$ only finitely many $x!$ lie in $lambda$ times the
+$j$-th powers, while for $x^x$ a whole progression does. A census of the
+linear identity shapes of @cons-identity-census confirms the contrast.
+
+#computation(id: "cons-weights-census", title: "Identity members for five weights", src: "33.3")[
+  For the linear shapes $r P_t (r) + C = lambda (c r + e)^(k-1)$ with prefix
+  digits up to 60 ($k = 3$) and 20 ($k = 4$), the number of shapes with
+  $w(x) = lambda y^(k-1)$, and of those that give solutions:
+  #align(center, btable(columns: 3, align: (left, right, right),
+    [weight], [$k = 3$], [$k = 4$],
+    [$x^x$], [38 / 31], [3 / 2],
+    [$x^(x+1)$], [73 / 65], [14 / 14],
+    [$x!$], [0 / 0], [0 / 0],
+    [$x^2$], [83 / 0], [19 / 0],
+    [$x^3$], [62 / 62], [4 / 0],
+  ))
+]
+
+For $x^2$ the base is never above $x$, as condition (iii) predicts. For
+$x^3$ and three digits the members are mostly $(a, 0, a^3)$ in base $a^4$
+under $w(0) = 0$: here $a b^2 = a^9 = w(a^3)$, so the large digit is
+itself a weight and a cube by construction.
+
+The converse direction needs a conjecture, and it reaches only solutions
+with one dominant digit.
+
+#theorem(id: "cons-abc-dominant", title: "One dominant digit under abc", status: "conditional", src: "33.4")[
+  Assume the abc conjecture. Let $w$ be $x^x$ or $x!$, under either
+  convention, and let $k >= 3$. There is a constant $C_k$ such that every
+  $k$-digit solution whose largest digit $x$ exceeds $C_k max(2, B)$, where
+  $B$ is the second largest digit, comes from a power identity: $x$ is the
+  last digit, and the other digits are the coefficients of
+  $lambda (c r + e)^(k-1)$ apart from the constant term. Under $w(0) = 0$
+  the self-paying shapes $(x, 0, dots, 0, s)$ with $w(s) = s$ are also
+  possible.
+]
+#sketch[
+  Let $d = k - 1$. Completing the $d$-th power, as one completes the square
+  for 3 digits, writes the equation as $Y^d + E = C w(x)$ with $Y$ linear
+  in $b$, a constant $C$, and a remainder $E$ that is small compared with
+  $Y^d$. If $E != 0$, abc applied to this triple bounds $w(x)$ in terms of
+  $w(B)$, because the radical of $w(x)$ is tiny: at most $x$ for $x^x$, and
+  about $e^x$ for $x!$, against a size of about $x^x$. This gives
+  $x <= C_k B$. If $E = 0$, the polynomial of the string is a power
+  identity.
+]
+
+For factorials, $E = 0$ needs $C x! = Y^d$, which @cons-factorial-powers
+rules out for large $x$. So under abc each length has only finitely many
+factorions with one dominant digit, and for $x^x$ every solution with one
+dominant digit is a family member. This proves the criterion of #q(96) in
+the dominant-digit range, under abc: a weight has such families of length
+$k$ exactly when the values $x$ produced by the binomial shapes meet the
+set where $w(x)$ is $lambda$ times a $(k-1)$-th power infinitely often.
+Strings whose digits are all of similar size are outside every method here.
 
 == Self-paying blocks <sec-cons-blocks>
 

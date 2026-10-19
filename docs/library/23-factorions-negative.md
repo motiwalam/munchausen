@@ -122,6 +122,14 @@ values of sections 17.4 and 19.5. I count it as an unexplained fluctuation.
 Base 49 (expected 1.1 per convention) would add little; ten more odd bases
 would.
 
+Update (chapter 33). Chapter 33 excludes factorions by local arguments:
+`x!` is divisible by every prime up to `x`, so a 3-digit string with one
+large digit `x` must make a fixed quadratic expression a square modulo all
+these primes (Lemma 33.2). This works for a string with one dominant digit,
+across all bases. A long factorion has many digits of comparable size, and
+section 33.3.3 notes that such strings are outside every method there. So
+chapter 33 does not explain the shortfall of this section.
+
 ## 23.2 Empty negative bases (question 42)
 
 ### 23.2.1 Census of -36 and -37 (computed)
