@@ -170,8 +170,8 @@ theorem lemma30_4 {b d x : ℕ} (hb : 12 ≤ b) (hbd : b ≤ 2 * d) (hx : x ^ x 
       _ ≤ x ^ (x - 4) := Nat.pow_le_pow_left hx8 _
   omega
 
-/-- **Lemma 30.4**, lower part: in a base `b ≥ 2`, every digit `x < b` with `x ≤ d` (and `d ≥ 1`) has `x^x < b^d`,
-so `M_d ≥ d - 1` and, for `d ≥ ⌈b/2⌉`, `M_d ≥ b/2`. -/
+/-- **Lemma 30.4**, lower part: in a base `b ≥ 2`, every digit `x < b` with `x ≤ d` (and
+`d ≥ 1`) has `x^x < b^d`, so `M_d ≥ d - 1` and, for `d ≥ ⌈b/2⌉`, `M_d ≥ b/2`. -/
 theorem lemma30_4_allowed {b d x : ℕ} (hb : 2 ≤ b) (hxb : x < b) (hxd : x ≤ d) (hd : 1 ≤ d) :
     x ^ x < b ^ d := by
   rcases Nat.eq_zero_or_pos x with rfl | hx
@@ -234,8 +234,9 @@ theorem corollary30_11_two {p c : ℕ} [hp : Fact p.Prime] (h8 : p % 8 = 3)
     have hsq' : u * u = 1 := by rw [← sq]; exact hsq
     rcases mul_self_eq_one_iff.1 hsq' with h1 | h1
     · have := hcast c (by omega) h1; omega
-    · have hc : (c : ZMod p) + 1 = 0 := by show u + 1 = 0; rw [h1]; ring
-      have : p ∣ c + 1 := by exact_mod_cast (ZMod.natCast_eq_zero_iff (c + 1) p).1 (by push_cast; exact hc)
+    · have hc : u + 1 = 0 := by rw [h1]; ring
+      have : p ∣ c + 1 :=
+        (ZMod.natCast_eq_zero_iff (c + 1) p).1 (by push_cast; exact hc)
       have hcp' : c = p - 1 := by
         have := Nat.le_of_dvd (by omega) this
         omega

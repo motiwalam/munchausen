@@ -19,3 +19,4 @@ import Munchausen.ThreeDigits
 import Munchausen.ThreeDigitBases
 import Munchausen.Search
 import Munchausen.Applications
+import Munchausen.ModelTheorems
