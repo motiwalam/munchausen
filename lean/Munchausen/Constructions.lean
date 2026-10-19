@@ -8,7 +8,9 @@ import Munchausen.Congruences
   and 2.5;
 * swaps, section 2.3;
 * the complete description of 2-digit solutions, Proposition 2.6, and its four families;
-* solutions of every length under `0^0 = 0`, Proposition 2.7.
+* solutions of every length under `0^0 = 0`, Proposition 2.7;
+* the converse of Proposition 2.2, Proposition 8.5 and its corollary in section 8.3;
+* splits and blocks (Lemmas 22.1, 22.3, 22.4, 22.9), Theorem 22.6 and Corollary 22.7.
 -/
 
 namespace Munchausen
@@ -568,5 +570,176 @@ theorem infinite_solutions_of_length (m : ℕ) {k : ℕ} (hk : 3 ≤ k) :
     isSolution_corollary_22_7 m hj (by omega : 1 ≤ u + 1)⟩
   simp [f, corDigits, length_binomDigits]
   omega
+
+/-! ### Self-paying digits: the converse of Proposition 2.2 and Proposition 8.5 -/
+
+/-- **Proposition 2.2**, converse (section 2.2). A self-paying digit and its base are powers of
+one integer `c ≥ 2`: `a = c^s`, `b = c^t` with `1 ≤ s < t` and `t k = s (c^s - 1)`. -/
+theorem SelfPaying.exists_pow {b a k : ℕ} (h : SelfPaying b a k) :
+    ∃ c s t, 2 ≤ c ∧ 1 ≤ s ∧ s < t ∧ a = c ^ s ∧ b = c ^ t ∧ t * k = s * (c ^ s - 1) := by
+  obtain ⟨ha, hk, hab, heq⟩ := h
+  have hpow : a ^ (a - 1) = b ^ k := by
+    have haa : a ^ a = a * a ^ (a - 1) := by rw [← pow_succ']; congr 1; omega
+    rw [haa] at heq
+    exact (Nat.eq_of_mul_eq_mul_left (by omega) heq).symm
+  obtain ⟨c, hac, hbc⟩ := Nat.exists_eq_pow_of_pow_eq_pow (Or.inl (by omega : a - 1 ≠ 0)) hpow
+  set g := Nat.gcd (a - 1) k with hg
+  have hg0 : 0 < g := Nat.gcd_pos_of_pos_left _ (by omega)
+  have hs : 1 ≤ k / g := Nat.div_pos (Nat.le_of_dvd (by omega) (Nat.gcd_dvd_right _ _)) hg0
+  have hc2 : 2 ≤ c := by
+    rcases Nat.lt_or_ge c 2 with hc | hc
+    · interval_cases c
+      · rw [zero_pow (by omega)] at hac; omega
+      · rw [one_pow] at hac; omega
+    · exact hc
+  refine ⟨c, k / g, (a - 1) / g, hc2, hs, ?_, hac, hbc, ?_⟩
+  · have : c ^ (k / g) < c ^ ((a - 1) / g) := by rw [← hac, ← hbc]; exact hab
+    exact (Nat.pow_lt_pow_iff_right (by omega)).1 this
+  · rw [← hac]
+    have h1 : g ∣ a - 1 := Nat.gcd_dvd_left _ _
+    have h2 : g ∣ k := Nat.gcd_dvd_right _ _
+    obtain ⟨A', hA'⟩ := h1
+    obtain ⟨K', hK'⟩ := h2
+    rw [hA', hK', Nat.mul_div_cancel_left _ hg0, Nat.mul_div_cancel_left _ hg0]
+    ring
+
+/-- Every `b ≥ 2` has a root `r` such that every `c ≥ 2` with a power equal to `b` is a power
+of `r` (the `r` of Proposition 2.2, not a perfect power). -/
+theorem exists_primitive_root {b : ℕ} (hb : 2 ≤ b) :
+    ∃ r t, 2 ≤ r ∧ 1 ≤ t ∧ r ^ t = b ∧
+      ∀ c j, 2 ≤ c → 1 ≤ j → c ^ j = b → ∃ i, c = r ^ i := by
+  classical
+  have hex : ∃ r, 2 ≤ r ∧ ∃ t, 1 ≤ t ∧ r ^ t = b := ⟨b, hb, 1, le_rfl, pow_one b⟩
+  set r := Nat.find hex with hr
+  obtain ⟨hr2, t, ht, hrt⟩ := Nat.find_spec hex
+  refine ⟨r, t, hr2, ht, hrt, fun c j hc hj hcj => ?_⟩
+  have h : c ^ j = r ^ t := hcj.trans hrt.symm
+  obtain ⟨e, hce, hre⟩ := Nat.exists_eq_pow_of_pow_eq_pow (Or.inl (by omega : j ≠ 0)) h
+  set g := Nat.gcd j t
+  have hg0 : 0 < g := Nat.gcd_pos_of_pos_left _ (by omega)
+  have hjg : 1 ≤ j / g := Nat.div_pos (Nat.le_of_dvd (by omega) (Nat.gcd_dvd_left _ _)) hg0
+  have he2 : 2 ≤ e := by
+    rcases Nat.lt_or_ge e 2 with he | he
+    · interval_cases e
+      · rw [zero_pow (by omega)] at hre; omega
+      · rw [one_pow] at hre; omega
+    · exact he
+  -- `e` is a root of `b`, so `r ≤ e` by minimality; and `r = e ^ (j/g) ≥ e`
+  have hroot : 2 ≤ e ∧ ∃ t', 1 ≤ t' ∧ e ^ t' = b :=
+    ⟨he2, (j / g) * t, Nat.mul_pos hjg ht, by rw [pow_mul, ← hre, hrt]⟩
+  have hle : r ≤ e := Nat.find_min' hex hroot
+  have hre' : r = e := by
+    have : e ^ 1 ≤ e ^ (j / g) := Nat.pow_le_pow_right (by omega) hjg
+    rw [pow_one, ← hre] at this
+    omega
+  exact ⟨t / g, by rw [hce, hre']⟩
+
+/-- **Proposition 8.5**, arithmetic core (section 8.3). For `r ≥ 2` and `1 ≤ s < u`,
+`u (r^u - 1) > r s (r^s - 1)`. -/
+lemma prop8_5_ineq {r s u : ℕ} (hr : 2 ≤ r) (hs : 1 ≤ s) (hsu : s < u) :
+    r * (s * (r ^ s - 1)) < u * (r ^ u - 1) := by
+  have h1 : r ^ (s + 1) ≤ r ^ u := Nat.pow_le_pow_right (by omega) hsu
+  have h2 : s + 1 < r ^ (s + 1) := Nat.lt_pow_self (by omega)
+  have h3 : 1 ≤ r ^ s := Nat.one_le_pow _ _ (by omega)
+  have e : r ^ (s + 1) = r * r ^ s := by ring
+  zify [h3, (show 1 ≤ r ^ u from Nat.one_le_pow _ _ (by omega))]
+  have h1' : (r : ℤ) ^ (s + 1) ≤ (r : ℤ) ^ u := by exact_mod_cast h1
+  have h2' : (s : ℤ) + 1 < (r : ℤ) ^ (s + 1) := by exact_mod_cast h2
+  have e' : (r : ℤ) ^ (s + 1) = r * (r : ℤ) ^ s := by ring
+  have hu : (s : ℤ) + 1 ≤ u := by exact_mod_cast hsu
+  have hr' : (2 : ℤ) ≤ r := by exact_mod_cast hr
+  nlinarith
+
+/-- **Proposition 8.5** (section 8.3). If `a < a'` are self-paying in base `b` at positions `k`
+and `k'`, then `k' ≥ 2 k + 1`. So no two self-paying digits sit at adjacent positions. -/
+theorem SelfPaying.position_gt {b a a' k k' : ℕ} (h : SelfPaying b a k) (h' : SelfPaying b a' k')
+    (haa : a < a') : 2 * k + 1 ≤ k' := by
+  have hb : 2 ≤ b := by have := h.1; have := h.2.2.1; omega
+  obtain ⟨r, T, hr, hT, hrT, hroot⟩ := exists_primitive_root hb
+  obtain ⟨c, s, t, hc, hs, hst, rfl, hbc, htk⟩ := h.exists_pow
+  obtain ⟨c', s', t', hc', hs', hst', rfl, hbc', htk'⟩ := h'.exists_pow
+  obtain ⟨i, rfl⟩ := hroot c t hc (by omega) hbc.symm
+  obtain ⟨i', rfl⟩ := hroot c' t' hc' (by omega) hbc'.symm
+  have hi : 1 ≤ i := by
+    rcases Nat.eq_zero_or_pos i with rfl | h; · simp at hc
+    exact h
+  have hi' : 1 ≤ i' := by
+    rcases Nat.eq_zero_or_pos i' with rfl | h; · simp at hc'
+    exact h
+  simp only [← pow_mul] at hbc hbc' htk htk' haa
+  -- the exponents of `b`
+  have hinj := Nat.pow_right_injective hr
+  have hτ : i * t = i' * t' := hinj (hbc.symm.trans hbc')
+  have hσ : i * s < i' * s' := (Nat.pow_lt_pow_iff_right (by omega)).1 haa
+  have e1 : (i * t) * k = (i * s) * (r ^ (i * s) - 1) := by rw [mul_assoc, htk]; ring
+  have e2 : (i * t) * k' = (i' * s') * (r ^ (i' * s') - 1) := by rw [hτ, mul_assoc, htk']; ring
+  have hineq := prop8_5_ineq hr (Nat.mul_pos hi hs) hσ
+  rw [← e1, ← e2] at hineq
+  have hτ0 : 0 < i * t := Nat.mul_pos hi (by omega)
+  have : r * k < k' := by
+    have : (i * t) * (r * k) < (i * t) * k' := by linarith [hineq]
+    exact Nat.lt_of_mul_lt_mul_left this
+  nlinarith
+
+/-- Under `0^0 = 1`, a placement of `d` at position `e ≥ 1` has zero balance only when `d` is
+self-paying there. -/
+lemma selfPaying_of_balance {b d e : ℕ} (hb : 2 ≤ b) (hdb : d < b) (he : 1 ≤ e)
+    (h : d * b ^ e = w 1 d) : SelfPaying b d e := by
+  rcases Nat.lt_or_ge d 2 with hd | hd
+  · interval_cases d
+    · simp at h
+    · simp only [w_one, one_mul] at h
+      have : b ^ 1 ≤ b ^ e := Nat.pow_le_pow_right (by omega) he
+      simp at this; omega
+  · exact ⟨hd, he, hdb, by rwa [w_of_ne_zero 1 (by omega)] at h⟩
+
+/-- **Section 8.3**, corollary of Proposition 8.5. Under `0^0 = 1`, a solution made only of
+zero-balance placements is `(1)` or `(a, 1)` with `a` self-paying at position 1, that is in
+base `a^(a-1)`. -/
+theorem zero_balance_solution {b : ℕ} {s : List ℕ} (hb : 2 ≤ b) (hs : IsSolution b 1 s)
+    (hbal : ∀ i (hi : i < s.length), s[i] * b ^ (s.length - 1 - i) = w 1 s[i]) :
+    s = [] ∨ s = [1] ∨ ∃ a, s = [a, 1] ∧ SelfPaying b a 1 := by
+  -- the last digit is 1
+  have hlast : ∀ (hne : 0 < s.length), s[s.length - 1] = 1 := by
+    intro hne
+    have h := hbal (s.length - 1) (by omega)
+    rw [show s.length - 1 - (s.length - 1) = 0 by omega, pow_zero, mul_one] at h
+    set d := s[s.length - 1]
+    rcases Nat.lt_or_ge d 2 with hd | hd
+    · interval_cases d
+      · simp at h
+      · rfl
+    · rw [w_of_ne_zero 1 (by omega)] at h
+      have : d ^ 1 < d ^ d := Nat.pow_lt_pow_right (by omega) (by omega)
+      simp at this; omega
+  have hsp : ∀ i (hi : i + 1 < s.length), SelfPaying b s[i] (s.length - 1 - i) := fun i hi =>
+    selfPaying_of_balance hb (hs.lt_base _ (List.getElem_mem _)) (by omega) (hbal i (by omega))
+  match s, hs, hlast, hsp with
+  | [], _, _, _ => exact Or.inl rfl
+  | [d], _, hl, _ => right; left; simpa using hl (by simp)
+  | [a, d], _, hl, hsp' =>
+    right; right
+    refine ⟨a, ?_, by simpa using hsp' 0 (by simp)⟩
+    simpa using hl (by simp)
+  | d₁ :: d₂ :: d₃ :: t, _, _, hsp' =>
+    exfalso
+    -- the digits at positions 2 and 1 would be adjacent self-paying digits
+    have hx := hsp' t.length (by simp)
+    have hy := hsp' (t.length + 1) (by simp)
+    simp only [List.length_cons] at hx hy
+    rw [show t.length + 1 + 1 + 1 - 1 - t.length = 2 by omega] at hx
+    rw [show t.length + 1 + 1 + 1 - 1 - (t.length + 1) = 1 by omega] at hy
+    generalize (d₁ :: d₂ :: d₃ :: t)[t.length] = x at hx
+    generalize (d₁ :: d₂ :: d₃ :: t)[t.length + 1] = y at hy
+    rcases lt_trichotomy x y with hxy | rfl | hxy
+    · have := hx.position_gt hy hxy; omega
+    · have h2 := hx.2.2.2
+      have h1 := hy.2.2.2
+      rw [← h1] at h2
+      have hx2 := hx.1
+      have : b ^ 2 = b ^ 1 := Nat.eq_of_mul_eq_mul_left (by omega) h2
+      have := Nat.pow_right_injective hb this
+      omega
+    · have := hy.position_gt hx hxy; omega
 
 end Munchausen
