@@ -203,6 +203,11 @@ the totals at `D = 0` are 42 against 52 (all bases) and 10 against 17.3
 (multiples of 3). The last digit is not the cause of the empty multiples
 of 3: it acts on all bases alike.
 
+Update (chapter 26). With the clustered calibration of section 26.3 the
+P values of this section become 0.11 (negative bases, 42 against 52) and
+0.056 (multiples of 3), and the fewer near-solutions at offsets with step `b`
+are about 2.9 standard deviations, not 4. The verdicts do not change.
+
 ## 23.3 2-cycles in even bases under `0^0 = 0` (question 35)
 
 ### 23.3.1 Near-2-cycles (computed)
@@ -355,6 +360,14 @@ candidates are the low digits: for `x^x`, `F mod b` is a function of the
 counts, and the offsets `j (b-1)` move it, so `lambda` averages the
 last-digit factor over residues. A model with forced top and bottom digits
 together, and local factors for the short lengths, is the natural next step.
+
+Update (chapter 26). Section 23.5 used the sample variance of the offset
+means, which near-solution clusters inflate (Lemma 26.1). With the corrected
+variance the chi-squares become 41 and 43 (P 0.005, 0.003) at `t = 0` and
+28 to 35 (P 0.03 to 0.14) with the top digits forced. Base 19 drops to
+`z = -2.9`, one case of 42, so it is no longer a separate anomaly. The 12%
+excess under `0^0 = 1` survives at `z = 3.0`. The factorion P values of
+section 23.1 move from about 0.05 to about 0.09 combined. See section 26.4.
 
 ## New questions
 

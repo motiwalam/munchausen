@@ -753,7 +753,9 @@ The near-solution test of section 11.1 uses offsets `D = j (b-1)` with even
 `-j` and `+j`, but it changes `F` by `w(d_0 - j) - w(d_0) + w(d_1 + j) -
 w(d_1)`, which is not 0. So the integer offsets have no analog of Lemmas 24.9
 and 24.10: an integer near-solution is a different multiset, a genuine second
-draw.
+draw. (Correction, chapter 26: this holds only for the near-solutions that
+share no multiset with another offset. Rearrangements link about two thirds
+of them across offsets, Lemma 26.1.)
 
 Each integer near-solution event asks whether the digits of `F(c) + D` form
 `c`. For small `D` these share all but the bottom 2 or 3 digits with

@@ -1,6 +1,6 @@
-# Round 5 evidence: near-solutions as calibration
+# 26. Near-solutions as evidence
 
-DRAFT. This file answers questions 73, 72, 74, 85 and 86 of
+This chapter answers questions 73, 72, 74, 85 and 86 of
 `questions-round5.md`. Questions 73 and 72 test the tool that the library
 uses for every "chance" verdict: the count of near-solutions
 `n = F(n) + D` at offsets `D` in the class of 0. Question 74 looks at the
@@ -13,15 +13,15 @@ model, or a judgment from data).
 
 | question | answer | status |
 |---|---|---|
-| 73, offsets are not independent | A rearrangement of the digits keeps `F` and moves `D` by `n' - n`, a multiple of `b-1` (Lemma 1.1). So the near-solutions of one multiset form a cluster across offsets. In bases 12 to 26, 43% to 88% of the near-solutions share their multiset with another offset; the variance of a sum over offsets is 1.5 to 3.5 times the Poisson value, and 60 offsets are worth 26 to 29 independent ones. The swap lemma predicts the design effect within a few percent (Heuristic 1.6). Offsets with no two a transposition apart cut the sharing to 15% (Table 2.2). The P values of `D = 0` against the offsets barely move, because the noise of the single count `N_0` dominates. The per-base precision of the offset means changes a lot: the chi-square of `lambda / model` drops from 97 to 41 on 21 bases, and base 19 goes from 4.6 to 2.9 standard errors. | proven (lemma); computed |
+| 73, offsets are not independent | A rearrangement of the digits keeps `F` and moves `D` by `n' - n`, a multiple of `b-1` (Lemma 26.1). So the near-solutions of one multiset form a cluster across offsets. In bases 12 to 26, 43% to 88% of the near-solutions share their multiset with another offset; the variance of a sum over offsets is 1.5 to 3.5 times the Poisson value, and 60 offsets are worth 26 to 29 independent ones. The swap lemma predicts the design effect within a few percent (Heuristic 26.6). Offsets with no two a transposition apart cut the sharing to 15% (Table 2.2). The P values of `D = 0` against the offsets barely move, because the noise of the single count `N_0` dominates. The per-base precision of the offset means changes a lot: the chi-square of `lambda / model` drops from 97 to 41 on 21 bases, and base 19 goes from 4.6 to 2.9 standard errors. | proven (lemma); computed |
 | 72, a pooled test | 284 solutions against 297 to 304 expected in eight worlds. The worlds disagree more than chance allows: heterogeneity `Q = 23.3` on 7 degrees of freedom with the library's Pisot calibration (P = 0.002), and 17.2 (P = 0.016) with the Pisot offsets in the class of 0 modulo `2x`. Two worlds drive it: the odd-base factorions (ratio 0.33) and the Pisot bases (1.34 to 1.56). Without these two, the other six fit one common ratio, 0.91 (P = 0.60 for heterogeneity). | computed, heuristic |
 | 74, the Pisot excess | No pairing move other than the twins links solutions; twins are as common among near-solutions. Two calibration faults explain part of the excess: for even `x` the offsets `j x` with odd `j` carry 1.4 to 2.4 times fewer near-solutions under `0^0 = 0` than those with even `j`, and the defect spectrum is higher near `D = 0` than at the far offsets (14.8 against 9.7 per offset). Against a local calibration in the class of 0 modulo `2x`, the even bases have 25 solutions against 14.8 (P = 0.05 with the calibration error). | computed; the class effect is unexplained |
-| 85, image and in-degrees | The image shares are 0.21 (base 10) to 0.14 (base 16), against 0.50 for the formula of question 85 and 0.31 to 0.38 for the weighted random mapping. Exact coincidences of the sums `S(c)` explain part of the gap (Proposition 7.1), and the forced top digits of `S` explain about two thirds of the rest (Table 7.3). The in-degrees of distinct sums are overdispersed: variance / mean 3.6 to 6.3 against 2.3 to 3.8. | proven; computed |
+| 85, image and in-degrees | The image shares are 0.21 (base 10) to 0.14 (base 16), against 0.50 for the formula of question 85 and 0.31 to 0.38 for the weighted random mapping. Exact coincidences of the sums `S(c)` explain part of the gap (Proposition 26.10), and the forced top digits of `S` explain about two thirds of the rest (Table 7.3). The in-degrees of distinct sums are overdispersed: variance / mean 3.6 to 6.3 against 2.3 to 3.8. | proven; computed |
 | 86, a mixing statistic | The low digits of `F(c)` agree with `c` at the rate of random digits within 1.6% in the integers, base -20, the factorions and the factorial system, and within 3.7% in the Pisot base 6. `F_q[T]` is the one world with a clear excess, 2.2% to 3.4% per value over 125 values. The statistic does not follow the model error: it flags `F_q[T]` with the same sign under both conventions, where the model error changes sign, and it misses the factorial failure, which sits in the top digits. A top-digit factor is lowest in the factorial system (0.53 to 0.55), but also below 1 in the Pisot base, where the count is 3 times the model. | computed; negative answer |
 
-## 1. The swap lemma (question 73)
+## 26.1 The swap lemma (question 73)
 
-### 1.1 Setting
+### 26.1.1 Setting
 
 Fix a world with digits, a weight `w` and a convention for `w(0)`. For a
 digit multiset `c`, let `S(c)` be the sum of its weights. For an offset `D`,
@@ -35,9 +35,9 @@ and so on.
 The library compares `N_0` with the mean `lambda = (1/J) sum over D in O of
 N_D`. It treats the `J` counts as independent draws.
 
-### 1.2 The lemma
+### 26.1.2 The lemma
 
-Lemma 1.1 (proven, the swap lemma). Let `n` and `n'` have the same digit
+Lemma 26.1 (proven, the swap lemma). Let `n` and `n'` have the same digit
 multiset in base `b`, both without a leading zero. Then `F(n') = F(n)` and
 
     n' - F(n') = (n - F(n)) + (n' - n),   n' - n == 0 (mod b - 1).
@@ -55,20 +55,20 @@ Proof. `F` depends only on the multiset, so `F(n') = F(n)`. Every power of
 the two digit sums are equal. For the transposition, only positions `i`
 and `j` change: `n' - n = y b^i + x b^j - x b^i - y b^j`.
 
-Corollary 1.2 (proven, the class). The transposition of Lemma 1.1 keeps
+Corollary 26.2 (proven, the class). The transposition of Lemma 26.1 keeps
 `D` in its class modulo `2(b-1)` exactly when `(x - y) b^i R_(j-i)` is
 even. In an odd base this means `(x - y)(j - i)` even, since `b^i` is odd
 and `R_s == s (mod 2)`. In an even base it means `i >= 1` or `x == y
 (mod 2)`, since `R_s` is odd.
 
-Lemma 1.3 (proven, the fibre). Let `O` be a set of offsets. The
+Lemma 26.3 (proven, the fibre). Let `O` be a set of offsets. The
 near-solutions with multiset `c` at offsets in `O` are exactly the
 rearrangements `n'` of `c` without a leading zero and with
 `n' - S(c)` in `O`. Their number `K_c` is fixed by `c` and `O`. Each pair
 `(c, D)` gives at most one near-solution, `n = S(c) + D`.
 
 Proof. `n` has multiset `c` and `n = S(c) + D` with `D` in `O`. Conversely,
-such a rearrangement is a near-solution at `D = n' - S(c)` by Lemma 1.1.
+such a rearrangement is a near-solution at `D = n' - S(c)` by Lemma 26.1.
 
 So a near-solution comes with all its rearrangements whose offsets fall
 in `O`. In a window of offsets below `b^t`, these are
@@ -76,12 +76,12 @@ rearrangements of the bottom few digits. One coincidence, a multiset whose
 sum lies close to one of its own arrangements, is counted at several
 offsets.
 
-Lemma 1.4 (proven, other systems). The same holds in every positional
+Lemma 26.4 (proven, other systems). The same holds in every positional
 world where `F` depends on the multiset:
 
 - Base `-b`: `n' - n == 0 (mod b + 1)`. Exchanging the digits `x` at
   position 1 and `y` at position 0 moves `D` by `(x - y)(b + 1)`.
-- Factorions, weight `x!`: as Lemma 1.1, with the same class `b - 1`.
+- Factorions, weight `x!`: as Lemma 26.1, with the same class `b - 1`.
 - The factorial system: positions `i < j` move `n` by `(x - y)(j! - i!)`,
   if both digits are allowed at both positions. Positions 1 and 2 give
   steps of 1, so the offsets `D = 1..100` of section 21.5.3 are linked.
@@ -103,9 +103,9 @@ the Pisot base, elements of `Z[eps]`), and `n' - n = sum e_i beta_i`. For
 `sum e_i F_(i-1) + eps sum e_i F_i`, which is an integer exactly when
 `sum e_i F_i = 0`. The values of `F_i` follow from `eps^(-1) = eps - x`.
 
-### 1.3 What the dependence changes
+### 26.1.3 What the dependence changes
 
-Proposition 1.5 (proven, under the usual independence of distinct
+Proposition 26.5 (proven, under the usual independence of distinct
 multisets). Let `X_(c,D)` be the indicator that `c` is a near-solution at
 `D`, and assume that distinct multisets are independent. Then:
 
@@ -125,9 +125,9 @@ multisets). Let `X_(c,D)` be the indicator that `c` is a near-solution at
    of `(N_0, N_D for D in O)` is exchangeable, whatever the dependence.
 
 Proof. Parts 1 and 2 hold because each pair `(c, D)` gives at most one
-near-solution (Lemma 1.3) and the means are equal by assumption. For part
+near-solution (Lemma 26.3) and the means are equal by assumption. For part
 3, `T = sum over c of K_c`, and the `K_c` are independent. Part 4 is
-Lemma 1.3 at `D = 0`. Part 5 is the usual permutation argument.
+Lemma 26.3 at `D = 0`. Part 5 is the usual permutation argument.
 
 So the statement of question 73 needs one correction. The spread of a
 single offset count is Poisson; the spread of sums and means over offsets
@@ -137,11 +137,11 @@ changes little, since `Var lambda = phi lambda / J` is small next to
 itself change a lot: per-base comparisons of `lambda` with the model,
 comparisons between two offset families, and z-scores of one base.
 
-### 1.4 The design effect predicted
+### 26.1.4 The design effect predicted
 
-Heuristic 1.6. For a near-solution picked at random, `phi = 1 + E[number
+Heuristic 26.6. For a near-solution picked at random, `phi = 1 + E[number
 of partners]`, where a partner is a rearrangement whose offset lies in `O`
-(Lemma 1.3). If the bottom digits are uniform (Table 24.6.1) and `D` is
+(Lemma 26.3). If the bottom digits are uniform (Table 24.6.1) and `D` is
 uniform in `O`, the expected number of partners is a finite sum over the
 rearrangements of the bottom 4 or 5 digits. `analysis/r5e_swap_model.py`
 computes it by sampling (20,000 strings per base). For `O = {2j(b-1):
@@ -153,12 +153,12 @@ window.
 
 Table 2.1 compares this with the measurement. Under `0^0 = 1` the mean
 measured design effect is 1.045 times the prediction over bases 12 to 26.
-Under `0^0 = 0` it is 1.21 times, because the twins of Proposition 2.1
+Under `0^0 = 0` it is 1.21 times, because the twins of Proposition 26.7
 join two clusters.
 
-## 2. Measurements (computed)
+## 26.2 Measurements (computed)
 
-### 2.1 Integer bases 12 to 26
+### 26.2.1 Integer bases 12 to 26
 
 `analysis/r5e_int_offsets.py` reran `fast search b --offset D --min-digits
 b-6` for `D = 2j(b-1)`, `j = 0..60`, bases 12 to 26, with every string
@@ -168,9 +168,9 @@ groups the events by multiset and by twins (`analysis/r5e_cluster.py`).
 Table 2.1 (computed). Near-solutions under `0^0 = 1`, at least `b-6`
 digits, 60 offsets. "Shared" is the share of near-solutions whose multiset
 is also a near-solution at another offset. The free family is that of
-section 2.2.
+section 26.2.2.
 
-| b | events | shared | phi | free: events | shared | phi | Heuristic 1.6: phi | free phi |
+| b | events | shared | phi | free: events | shared | phi | Heuristic 26.6: phi | free phi |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 12 | 53 | 0.74 | 2.51 | 80 | 0.26 | 1.30 | 2.60 | 1.36 |
 | 13 | 130 | 0.88 | 2.89 | 127 | 0.31 | 1.36 | 2.46 | 1.29 |
@@ -194,21 +194,21 @@ Pooled over bases 12 to 26: shared 0.67 and 0.66, `phi` = 2.48 and 2.14,
 `J_eff` = 26.8 and 28.0 of 60 (`0^0 = 0` and 1). This confirms the lead of
 the question (41% to 65% shared in bases 14 to 18).
 
-The partner pairs sit at the moves of Lemma 1.1: 43% at a swap of the last
+The partner pairs sit at the moves of Lemma 26.1: 43% at a swap of the last
 two digits (`|j - j'| <= b - 1`), 20% at positions 0 and 2, 18% at
 positions 1 and 2, and 19% at longer rearrangements. Of the 52 solutions in
 these bases, 29 have a rearrangement that is a near-solution in the window.
 
-The counts per offset stay Poisson, as Proposition 1.5 says: the group
+The counts per offset stay Poisson, as Proposition 26.5 says: the group
 totals per offset have variance / mean 0.68 to 0.93. A sum over offsets
 does not: its clustered variance is 2.1 times the naive one (median over
 42 cases; range 1.3 to 3.5).
 
-### 2.2 Offsets with no transposition between them
+### 26.2.2 Offsets with no transposition between them
 
-Definition 2.1. For base `b`, let `Tr(b)` be the set of values
+Definition 26.7. For base `b`, let `Tr(b)` be the set of values
 `t b^i R_s` with `1 <= t <= b-1`, `i >= 0`, `s >= 1`: the moves
-`|n' - n| / (b-1)` of single transpositions (Lemma 1.1). The transposition
+`|n' - n| / (b-1)` of single transpositions (Lemma 26.1). The transposition
 free family takes `k_0 = 0` and adds the next even `k` whose distance to
 every chosen `k` is not in `Tr(b)`, until 61 values are chosen. The offsets
 are `D = k (b-1)`, in the class of 0 modulo `2(b-1)`.
@@ -227,10 +227,10 @@ two families against `D = 0`.
 
 The two families agree on the mean within 4%. The free family keeps 15% of
 shared near-solutions; all of them come from rearrangements of three or
-more digits, which Definition 2.1 does not exclude. Heuristic 1.6 predicts
+more digits, which Definition 26.7 does not exclude. Heuristic 26.6 predicts
 its design effect as well (Table 2.1, last column).
 
-### 2.3 The other worlds
+### 26.2.3 The other worlds
 
 Table 2.3 (computed). Design effects of every offset family of the
 library that has strings or that I reran with them.
@@ -263,11 +263,11 @@ Three remarks.
 - For the 5-digit window of section 22.4, 93% of the 257 hits share their
   multiset with another hit.
 
-## 3. A correct calibration
+## 26.3 A correct calibration
 
-### 3.1 The clustered P value
+### 26.3.1 The clustered P value
 
-Definition 3.1. Let `T` be the offset total over `J` offsets, `phi` the
+Definition 26.8. Let `T` be the offset total over `J` offsets, `phi` the
 design effect and `p_k` the law of the clump size at one offset (twins give
 `k = 2`, factorion triples `k = 3`). The clustered P value of `N_0` is
 
@@ -280,31 +280,31 @@ predictive P value with a Jeffreys prior; with `J` large it is the Poisson
 P value. `analysis/r5e_lib.py` implements it (`p_low_c`, `p_high_c`).
 
 The gamma law has variance `phi lambda / J`, the clustered variance of
-Proposition 1.5. The clumps matter more than `phi` for small `N_0`: three
+Proposition 26.5. The clumps matter more than `phi` for small `N_0`: three
 factorions against 10.8 per offset give 0.0056 as a Poisson count, 0.0077
 as a compound count with the measured triples, and 0.0089 with the
 calibration error added.
 
-### 3.2 Which tool to use
+### 26.3.2 Which tool to use
 
-- To compare one count `N_0` with its offsets, use Definition 3.1 with the
+- To compare one count `N_0` with its offsets, use Definition 26.8 with the
   measured `phi` and clump law. Report the rank P value
   `(1 + #{D : N_D <= N_0}) / (J + 1)` as well. It is exact under
-  exchangeability (Proposition 1.5, part 5), but it cannot go below
+  exchangeability (Proposition 26.5, part 5), but it cannot go below
   `1/(J+1)`.
 - To compare offset means between bases or families, use the clustered
   variance `sum over clusters of K_c^2`, not the sample variance of the
   counts. The sample variance estimates the variance of one offset count,
   which is about `psi lambda`, and misses the factor `phi / psi`.
 - For new runs, choose offsets with no transposition between them
-  (Definition 2.1) or with steps divisible by many small numbers (the
+  (Definition 26.7) or with steps divisible by many small numbers (the
   `lcm` family). Both keep the mean (Table 2.2) and double `J_eff`.
 - Keep the strings. Every rerun in this file needed them.
 
-## 4. Every chance verdict revisited
+## 26.4 Every chance verdict revisited
 
 Table 4.1 lists every P value and every z-score of the library that rests
-on near-solutions at offsets, with the value recomputed by Definition 3.1
+on near-solutions at offsets, with the value recomputed by Definition 26.8
 or by the clustered variance. "Fixed" means the old method (Poisson with
 `lambda` known, or the sample variance of the counts). Scripts:
 `r5e_int_report.py`, `r5e_scatter.py`, `r5e_fact_report.py`,
@@ -345,10 +345,10 @@ Table 4.1 (computed).
 | offsets `j step b` against `j step`, other bases, `0^0 = 0` | 23.2 | about 4 SD | 2.9 SD (2.3 SD on bases -10 to -24) | weaker, survives as a lean |
 | 2-cycles, even bases, `0^0 = 0`, 2 against 5.25 | 23.3 | 0.10 | 0.11 | unchanged |
 | rational bases, `p, q` odd, 14 against 19.9 near | 21.2 | 0.11 (model) | 0.12 | unchanged |
-| Pisot, even `x`, near-solutions "match the model" | 21.4 | none | see section 6 | changes: the class `j x` is wrong for even `x` |
+| Pisot, even `x`, near-solutions "match the model" | 21.4 | none | see section 26.6 | changes: the class `j x` is wrong for even `x` |
 | `F_q[T]` near-solutions as independent draws | 21.1.6 | none | Lemma 24.9 | already withdrawn in chapter 24 |
 | integer near-solutions as "a genuine second draw" | 24.6.3 | none | 66% share a multiset | changes: the sentence is wrong |
-| factorial system, clusters of 10 to 50 offsets | 21.5.3 | none | Lemma 1.4 | explains the clusters |
+| factorial system, clusters of 10 to 50 offsets | 21.5.3 | none | Lemma 26.4 | explains the clusters |
 
 What changes:
 
@@ -382,13 +382,13 @@ error is small next to the Poisson noise of a count of 3 to 60. The clumps
 at one offset (twins, triples) move the small P values more than the
 clusters across offsets do.
 
-## 5. A pooled test (question 72)
+## 26.5 A pooled test (question 72)
 
-### 5.1 Data
+### 26.5.1 Data
 
 `analysis/r5e_pooled.py` collects `N_0` and the offset total per base and
 convention in eight worlds, from the files of chapters 11, 17, 19, 21 and
-23. The design effects come from section 2 where strings exist. For the
+23. The design effects come from section 26.2 where strings exist. For the
 rational and Eisenstein bases, which have no strings, `phi = 2` is
 assumed; with `J = 30` the results do not depend on it.
 
@@ -412,16 +412,16 @@ summed over the bases. z corrected uses
 | Eisenstein | -2+w, -3+w | 6 | 4.5 | +0.71 | +0.68 | 2.0 | 1.0 |
 | 2-cycles | 4 to 18 | 16 | 22.4 | -1.36 | -1.33 | 1.4 | 1.0 |
 
-### 5.2 Results
+### 26.5.2 Results
 
-Proposition 5.1 (computed, heuristic in its reading). With the library's
+Proposition 26.9 (computed, heuristic in its reading). With the library's
 Pisot offsets: 284 solutions against 297.2, common ratio 0.956. The
 heterogeneity statistic is `Q = 23.3` on 7 degrees of freedom (P = 0.001
 by chi-square, 0.002 by a parametric bootstrap of 20,000 draws). A random
 effect per world on `log theta` has standard deviation `tau = 0.29`; the
 likelihood ratio test of `tau = 0` gives P = 0.007.
 
-With the Pisot offsets in the class of 0 modulo `2x` (section 6.2): 284
+With the Pisot offsets in the class of 0 modulo `2x` (section 26.6.2): 284
 against 303.6, common ratio 0.935, `Q = 17.2` (P = 0.016 by chi-square,
 0.018 by bootstrap), `tau = 0.22`, P = 0.06 for `tau = 0`.
 
@@ -446,9 +446,9 @@ mostly from the negative, rational and 2-cycle worlds, each about one
 standard deviation low. So outside the two named worlds there is no sign
 that `D = 0` is special.
 
-## 6. The Pisot excess (question 74)
+## 26.6 The Pisot excess (question 74)
 
-### 6.1 Pairs of solutions
+### 26.6.1 Pairs of solutions
 
 `analysis/r5e_pisot_pairs.py` lists the 62 solutions with `x >= 2`
 (`r3t_pisot_search*.txt`) and every pair at distance at most `2x`.
@@ -471,7 +471,7 @@ Apart from the twins of Proposition 21.13, only the tiny solutions of
 `x = 2` (`N <= 14`) pair up. One pair at a larger distance has a visible
 structure: 3423 and 3475 in base `eps_6` differ at positions 2, 1, -1 and
 -2. The digits at 1 and -1 swap (5 and 1), which moves `N` by `-4 x =
--24` (Lemma 1.4), and the digits at 2 and -2 both go from 1 to 3, which
+-24` (Lemma 26.4), and the digits at 2 and -2 both go from 1 to 3, which
 adds `2(x^2 + 2) = 76` to `N` and `2(3^3 - 1) = 52` to `F`. The sum of the
 two moves changes `N` and `F` by 52 each. I found no second such pair.
 
@@ -492,7 +492,7 @@ the solutions. So the near-solutions pair at least as often as the
 solutions. No move other than the twins pairs solutions with solutions
 and not near-solutions with near-solutions.
 
-### 6.2 The calibration
+### 26.6.2 The calibration
 
 Two faults of the offsets `j x` appear in the data.
 
@@ -553,9 +553,9 @@ They rest on the tiny solutions of `x <= 5`, where every calibration is
 crude. The class factor modulo `2x` is a new structure, and its cause is
 open.
 
-## 7. The image and the in-degrees of F (question 85)
+## 26.7 The image and the in-degrees of F (question 85)
 
-### 7.1 The run
+### 26.7.1 The run
 
 `dyn_cycles --image` (new) visits every multiset `c` of 1 to `b` digits
 with a nonzero digit, as the cycle pass does, and counts the in-degree of
@@ -563,7 +563,7 @@ the multiset of `S(c)`. A second pass groups the multisets by class
 (length and digit sum modulo `b-1`) and adds the model predictions. It
 runs on one thread.
 
-Proposition 7.1 (proven). (1) The image is the same under both
+Proposition 26.10 (proven). (1) The image is the same under both
 conventions. (2) Under `0^0 = 0`, multisets that differ only in their
 zeros have the same `S`; under `0^0 = 1`, multisets that differ only in the
 split of `c_0 + c_1` have the same `S`.
@@ -581,7 +581,7 @@ The program collects the distinct values of `S` (bases up to 16, where
 `S < 2^64`). It needs 2 bytes per multiset and 8 bytes per zero-free
 multiset.
 
-### 7.2 The image
+### 26.7.2 The image
 
 Table 7.2 (computed, `analysis/data/r5e_image_summary.txt`,
 `r5e_image_report.txt`). Image share: the multisets with in-degree at
@@ -609,7 +609,7 @@ to 36% of the prediction, and it grows with the length: in base 16 the
 image is 0.98 of the distinct-sums prediction at 4 digits, 0.68 to 0.72
 at 8 or 9 digits and 0.56 to 0.69 at 11 to 16 digits.
 
-### 7.3 The forced top digits
+### 26.7.3 The forced top digits
 
 `analysis/r5e_image_sim.py` keeps every distinct value of `S`, replaces
 its digits below the top `t` by random digits with the same length and
@@ -629,7 +629,7 @@ gap. So the values of `S` share their leading digits far more than random
 integers do, which makes their multisets collide. This is the forced top
 digits of section 11.2, seen on all multisets at once.
 
-### 7.4 The in-degrees
+### 26.7.4 The in-degrees
 
 The in-degree of a multiset counted over distinct sums is overdispersed.
 Its variance / mean is 3.60, 4.06, 4.52, 5.24, 5.33, 6.02, 6.33 for bases
@@ -639,14 +639,14 @@ share with in-degree at least 4 is 0.036 to 0.039 against 0.025 to 0.032.
 Answer (computed). The class-lumped random mapping does not predict the
 image. The formula of question 85 overestimates it by a factor 2.4 to 3.7.
 Two structures explain most of the gap: exact coincidences of the sums
-(Proposition 7.1 and others, a factor 1.44) and the forced top digits
+(Proposition 26.10 and others, a factor 1.44) and the forced top digits
 (about two thirds of the remaining factor 1.3 to 1.6). The test confirms the picture
 of chapters 11, 23 and 24: the top digits of `S` are not random, the rest
 nearly is. It does not show a new correlation between `c` and `S(c)`.
 
-## 8. A mixing statistic for every world (question 86)
+## 26.8 A mixing statistic for every world (question 86)
 
-### 8.1 The statistic
+### 26.8.1 The statistic
 
 `analysis/r5e_mixing.py`. In each world, draw random strings `c` of the
 dominant length whose sum `F(c)` has the same length and meets the identity
@@ -660,7 +660,7 @@ at random. The agreement ratio is the mean agreement of `F` over that of
 samples whose top 3 digits of `F(c)` lie inside `c`, over the same share
 for the top 3 digits of an independent string of the world.
 
-### 8.2 Results
+### 26.8.2 Results
 
 Table 8.1 (computed; 20,000 samples per world, 2,000 for `F_q[T]` per base,
 4,000 for Pisot). Model ratio: observed over model, from the chapters.
@@ -720,9 +720,9 @@ system) and in a single channel, the zero count (`F_q[T]` under
 
 ## Open ends
 
-- The class factor modulo `2x` in even Pisot bases (section 6.2): which
+- The class factor modulo `2x` in even Pisot bases (section 26.6.2): which
   identity makes even `j` carry more near-solutions under `0^0 = 0`?
-- Heuristic 1.6 for the other worlds: a closed form of `phi` for
+- Heuristic 26.6 for the other worlds: a closed form of `phi` for
   factorions, negative bases and Pisot bases.
 - A model of the image (section 7) with the top digits forced and the
   coincidences of `S` counted exactly.

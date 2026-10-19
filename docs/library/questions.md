@@ -278,11 +278,11 @@ attack, in [questions-round3.md](questions-round3.md).
     and to the long solutions of bases 12 to 40, as a check on section 11.1.
 67. Factorions: what could separate `D = 0` from every small offset that keeps
     all residues up to `b+1` and mod `b^3`? (chapter 23)
-68. Why is base 19 low in its near-solutions under `0^0 = 0`, not only in its
+68. (Answered in chapter 26: with the corrected variance base 19 is at `z = -2.9`, one case of 42.) Why is base 19 low in its near-solutions under `0^0 = 0`, not only in its
     solutions? (section 23.5)
 69. Prove the length runs of positive integers in base `-n+i` for `n >= 2`.
     (section 23.4)
-70. Why is the model about 12% low under `0^0 = 1` in every parity?
+70. (Partly answered in chapter 26: it survives the corrected variance at `z = 3.0`.) Why is the model about 12% low under `0^0 = 1` in every parity?
     (section 23.5)
 71. Do the long integer solutions under `0^0 = 0` really have fewer zeros
     than the model, 29 against 42.5 in bases 12 to 41? (section 24.6)
@@ -293,9 +293,9 @@ Seven broad directions and the full statements of these questions, with
 their motivation and a first attack, are in
 [questions-round5.md](questions-round5.md).
 
-72. A pooled test of `D = 0` against the near-solutions.
-73. Near-solutions at different offsets are not independent.
-74. Why the Pisot bases exceed their near-solutions.
+72. (Answered in chapter 26: 284 against 297 to 304; the worlds disagree, driven by odd-base factorions and Pisot bases.) A pooled test of `D = 0` against the near-solutions.
+73. (Answered in chapter 26: the swap lemma; design effect 1.5 to 3.5; no verdict about `D = 0` changes.) Near-solutions at different offsets are not independent.
+74. (Partly answered in chapter 26: a class mod `2x` in even `x`; the excess shrinks to P about 0.05.) Why the Pisot bases exceed their near-solutions.
 75. The entropy bound for other orders.
 76. Certificates of emptiness in an oracle model.
 77. A constraint solver as a search that is not a tree.
@@ -306,8 +306,8 @@ their motivation and a first attack, are in
 82. Is `k(B)` always the number of factors of `B - 1`?
 83. A model that keeps the Frobenius blocks.
 84. Open lengths in the factorial system.
-85. The image and in-degrees of `F`.
-86. A mixing statistic for every world.
+85. (Answered in chapter 26: image share 0.21 to 0.14; forced top digits close two thirds of the gap.) The image and in-degrees of `F`.
+86. (Answered in chapter 26, negatively: low-digit mixing does not track the model error.) A mixing statistic for every world.
 87. Narcissistic numbers in even bases 15 to 20.
 88. Chains with many self-paying digits under `0^0 = 1`.
 89. A prefix test for the Gaussian base `-4+i`.

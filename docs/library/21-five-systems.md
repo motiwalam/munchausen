@@ -629,6 +629,11 @@ the model (2.8 per base). Odd `x` with `3 | x` lose part of the mass
 must be even (Proposition 21.12), as in section 5.3. The first non-integer
 base of the library therefore follows both universal laws.
 
+Update (chapter 26). For even `x` under `0^0 = 0` the offsets `j x` mix two
+classes: even `j` carry 1.4 to 2.4 times as many near-solutions as odd `j`.
+Calibrated in the class of 0 modulo `2x`, even `x` have 25 solutions against
+14.8 expected (P about 0.05). See section 26.6.
+
 ## 21.5 The factorial number system
 
 ### 21.5.1 Definitions and structure

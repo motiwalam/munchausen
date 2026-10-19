@@ -133,6 +133,13 @@ The same effect shows in the lengths. Near-solutions in bases 24 and 28
 digits of `F` are fixed by one or two large digits, so all offsets share the
 same luck.
 
+Update (chapter 26). Near-solutions at different offsets are clustered:
+rearranging digits keeps `F` and moves `D` by a multiple of `b - 1`
+(Lemma 26.1). Measured against the sample variance of the offset means, the
+per-base scatter above is about half an artefact. With the corrected variance
+and the top 3 or 4 digits forced it is noise under `0^0 = 0` (P 0.09 to 0.14)
+and marginal under `0^0 = 1` (P 0.03). See section 26.4.
+
 ## 11.3 Local obstructions
 
 A digit string `s` with `k` digits is a solution in base `b` exactly when

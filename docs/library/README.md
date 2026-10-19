@@ -37,6 +37,7 @@ statement is marked by its source:
 | [23. Factorions, empty negative bases, cycles and scatter](23-factorions-negative.md) | base 47 factorions; negative census to -38; near-2-cycles; lengths in base -1+i proven; where the per-base scatter comes from |
 | [24. Why the model misses in F_q[T]](24-ffield-gap.md) | Frobenius blocks make the digits of `F` far from uniform; the exact channel under `0^0 = 1`; short solutions counted for every degree; small effects on the integer model |
 | [25. Identity families and 3-digit solutions](25-identity-families.md) | where the large digits of an identity sit; a second infinite family `(c^j, 0, ..., 0, x)`; no other 3-digit solution up to `10^3301`; at most 30 three-digit solutions in almost every base |
+| [26. Near-solutions as evidence](26-near-solutions-evidence.md) | the swap lemma: near-solutions cluster across offsets; a corrected calibration; every chance verdict revisited; a pooled test across worlds |
 | [Open questions](questions.md) | 89 research questions in five rounds, with priorities and answers; [round 5 directions](questions-round5.md) |
 
 ## Main results
@@ -168,6 +169,10 @@ Model:
 - In `F_q[T]` the model fails because Frobenius makes the digits of `F` far
   from uniform. The integer analog is only the forced top digits, a correction
   of a few percent (chapter 24).
+- Near-solutions at different offsets are not independent: rearranging digits
+  keeps `F` and moves the offset by a multiple of `b - 1` (Lemma 26.1). With
+  the corrected calibration no verdict about the solutions changes, but the
+  excess per-base scatter of the model is about half an artefact (chapter 26).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data
