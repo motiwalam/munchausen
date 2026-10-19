@@ -42,9 +42,9 @@ At a node for digit $v$, the children try $c_v = p + e$ for $e = 0, 1, dots, r$,
 
 === Both conventions in one pass
 
-The conventions differ only in what a zero adds to the sum. The interval above is wide enough for both: $"lo" = t$ is the smallest sum under $0^0 = 0$, and hi adds 1 for each known zero, which covers $0^0 = 1$. The extra width is at most $k$, tiny next to $(v - 1)^(v - 1)$ except at the bottom of the tree. So one tree serves both conventions, and the leaves check each convention exactly. A combined run of base 28 visits 19,362,129 nodes, a run for one convention 19,361,945 #lib("6.1").
+The conventions differ only in what a zero adds to the sum. The interval above is wide enough for both: $"lo" = t$ is the smallest sum under $0^0 = 0$, and hi adds 1 for each known zero, which covers $0^0 = 1$. The extra width is at most $k$, tiny next to $(v - 1)^(v - 1)$ except at the bottom of the tree. So one tree serves both conventions, and the leaves check each convention exactly. A combined run of base 28 visits 19,362,129 nodes, a run for one convention 19,361,945 (`docs/algorithm.md`).
 
-#proposition(id: "search-prop-exact", title: "The search misses nothing", src: "6.1")[
+#proposition(id: "search-prop-exact", title: "The search misses nothing")[
   The prefix-pruned search finds every solution of every length in base $b$, under both conventions.
 ]
 #proof[
@@ -157,7 +157,7 @@ The proof says which nodes to keep: those whose probability is close to $e^(-H)$
   For planted solutions the miss rate of `--zscore 3` stays between 1% and 3% from base 30 to base 300. On the 54 real solutions with at least $b - 6$ digits in bases 20 to 43 it misses 2.
 ]
 
-The miss rate is what makes this rule better than the deficit rule, whose miss rate grew from 2% to 10% over the same range. The measured growth, 1.75, lies above the bound of 1.55 for these bases because the kept band has width $c sqrt(V)$, which grows like $sqrt(b)$ and adds a factor of about $e^(c sqrt(V) slash (2 b))$ per base, 1.15 at base 35. That factor tends to 1, so the rule's growth tends to the bound. In the limit it saves $1.22^b$ against the exact search with a fixed miss rate.
+The gain of this rule is speed at a fixed miss rate. At the thresholds that miss a few percent at base 30, the miss rate of the deficit rule grows with $b$: for `--deficit 2` it is 2.5% at base 30 and 11.5% at base 100, and $P(z_min < -2) = 0.317$ at base 300. A deficit threshold of 3 also stays near 1%, but it keeps 77% to 92% of the exact tree in bases 24 to 32, while `--zscore 3` grows like 1.75 per base #lib("9.4", "9.5"). The measured growth, 1.75, lies above the bound of 1.55 for these bases because the kept band has width $c sqrt(V)$, which grows like $sqrt(b)$ and adds a factor of about $e^(c sqrt(V) slash (2 b))$ per base, 1.15 at base 35. That factor tends to 1, so the rule's growth tends to the bound. In the limit it saves $1.22^b$ against the exact search with a fixed miss rate.
 
 == Ideas that do not help <sec-search-fail>
 
@@ -233,7 +233,7 @@ Between the free weights and $x^x$ sits the problem with weights $w(x) = x^(e(x)
   Consequently, a weight table $x^(e(x))$ with $k$ item digits at distinct positions, as the reduction needs, has $k <= 25.2 max(ln(2 e_max) + 0.38, 10)^2 ln b + log_2 b$. If $b$ is polynomial in $k$, the largest exponent must be at least $exp(c sqrt(k slash log k))$, which is not polynomial.
 ]
 #sketch[
-  An item digit needs $x^(e-1)$ close to $b^P$: $|(e - 1) ln x - P ln b| < b^(L + 1 - P)$. If $x$ and $b$ are multiplicatively independent, Laurent's lower bound for linear forms in two logarithms #cite(<laurent2008>) bounds this form from below, which bounds $P - L - 1$. If they are powers of one integer, the form is a multiple of the log of that integer, so it vanishes and the item is exact; a base has fewer than $log_2 b$ exact items, by the spacing of self-paying digits (@sec-cons-selfpaying). Items at distinct positions above $L + 1$ need $P - L - 1$ at least their number minus one, and $P <= e$.
+  An item digit needs $x^(e-1)$ close to $b^P$: $|(e - 1) ln x - P ln b| < b^(L + 1 - P)$. If $x$ and $b$ are multiplicatively independent, Laurent's lower bound for linear forms in two logarithms #cite(<laurent2008>) bounds this form from below, which bounds $P - L - 1$. If they are powers of one integer, the form is a multiple of the log of that integer, so it vanishes and the item is exact; an exact item $x^(e-1) = b^P$ forces $x = r^s$ with $s < t$, where $b = r^t$ and $r$ is not a perfect power, so a base has fewer than $t <= log_2 b$ exact items #lib("18.6"). Items at distinct positions above $L + 1$ need $P - L - 1$ at least their number minus one, and $P <= e$.
 ]
 
 So the hardness of the power variants is a question about the digits of powers, the same arithmetic that @ch-short and @ch-diophantine meet. One candidate for a gadget remains: digits near $b$, where $(b - c)^e = sum_i binom(e, i) (-c)^(e-i) b^i$ has explicit digits for small $c$ and $e$. No one has found a gadget of that kind, or an argument that excludes one.
@@ -259,7 +259,7 @@ So the cost per base is a power of $log b$, and a single enumeration covers all 
 
 The enumeration is fast, but most of its time goes into exact root computations with numbers of hundreds of digits. A cheap test removes almost all strings first. If $Q_s = P_s - F(s)$ has no root modulo some integer $q$, then $s$ is a solution in no base (@thm-local). The test splits over positions: for a fixed prefix of $k - 1$ digits, the values of the prefix part of $Q_s$ modulo $q$, over all residues $r$, form a bit mask, and the last digit $x$ passes when $w(x) - x$ lies in the mask. So the test costs a few bit operations per string and modulus #lib("11.5").
 
-The first version tested the 18 primes up to 61 and passed about 3 strings in 10,000. It reproduced the lists of @sec-short-lists and ran about 150 times faster than the Python enumeration. The second version uses one power of each prime: a composite modulus with two prime factors tests nothing new by the Chinese remainder theorem, and a root modulo $p^e$ reduces to a root modulo $p^f$ for $f < e$. The powers of 2 and 3 gain most: modulo 2 the last digit moves $Q_s$ by even amounts only, because $x^x equiv x$, while modulo 32 the test sees much more, and modulo 27 it sees the coverings of @thm-covering #lib("19.1").
+The first version tested the 18 primes up to 61. It passed about 3 strings in 10,000 for $k = 3$ (140 of 524,880) and 6 to 12 in 10,000 for $k = 4$ to 6. It reproduced the lists of @sec-short-lists and ran about 150 times faster than the Python enumeration. The second version uses one power of each prime: a composite modulus with two prime factors tests nothing new by the Chinese remainder theorem, and a root modulo $p^e$ reduces to a root modulo $p^f$ for $f < e$. The powers of 2 and 3 gain most: modulo 2 the last digit moves $Q_s$ by even amounts only, because $x^x equiv x$, while modulo 32 the test sees much more, and modulo 27 it sees the coverings of @thm-covering #lib("19.1").
 
 #computation(id: "search-comp-sieve", title: "The prime-power sieve", src: "19.1")[
   The default moduli are 32, 27, 25, 49 and the primes 11 to 127. Masks are built lazily, only while some last digit is alive, and residues are added as bytes without division. Against the prime sieve, on 4 threads:

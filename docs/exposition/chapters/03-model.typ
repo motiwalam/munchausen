@@ -14,7 +14,7 @@ The exhaustive search of @ch-search has found every solution in bases 2 to 41 an
 - The longest solution usually has $b - 1$ digits: in 23 of the 29 bases from 10 to 41 that have a solution #lib("4.3"). Only bases 15 and 16 have a $b$-digit solution, both under $0^0 = 0$.
 - Odd bases have more solutions under $0^0 = 0$. Over bases 10 to 41, odd bases average 2.56 solutions and even bases 1.56. Under $0^0 = 1$ the averages are 1.81 and 1.69 #lib("4.3").
 - The counts of the two conventions are correlated, 0.56 over bases 10 to 41. A solution without the digit 0 counts under both conventions (@thm-conventions), and 35 of the 56 solutions under $0^0 = 1$ in these bases are zero-free.
-- Bases 19, 27 and 35 have no solution under either convention. They are the only empty bases from 3 to 43.
+- Bases 19, 27 and 35 have no solution under either convention. They are the only empty bases from 3 to 41, and base 43 has solutions.
 
 If each base had a Poisson number of solutions with the mean of the refined model of @sec-model-refined, bases 10 to 39 would show the distribution of @tab-model-poisson-shape. The counts follow the Poisson shape roughly. The upper tail is heavier, because twins and constructed solutions come in groups and small bases have extra solutions.
 
@@ -124,7 +124,7 @@ The factor 1 for odd primes is the one assumption of this section that is not ob
   ))
 ]
 
-The refined model explains the large difference between odd and even bases under $0^0 = 0$: the basic model predicts the same for both, the data show more than twice as many in odd bases, and the refined model predicts that. The remaining surplus sits in small bases, which contain the algebraic families of @ch-constructions. For bases 20 to 38 under $0^0 = 1$ the basic model expects 20.6 and 26 occur, 1.2 standard deviations.
+The refined model explains the large difference between odd and even bases under $0^0 = 0$: the basic model predicts the same for both, the data show nearly twice as many in odd bases (38 against 22), and the refined model predicts a factor of 1.88. The remaining surplus sits in small bases, which contain the algebraic families of @ch-constructions. For bases 20 to 38 under $0^0 = 1$ the basic model expects 20.6 and 26 occur, 1.2 standard deviations.
 
 The model was built before bases 39 to 41 were searched, so these bases are a fair test. The model expected 5.19 solutions under $0^0 = 0$ and 3.38 under $0^0 = 1$; the search found 6 and 4 #lib("5.7"). All six new solutions have $b - 1$ digits, the most likely length.
 
@@ -166,7 +166,7 @@ The sharpest test forces the residues. The option `--set-residue r` raises each 
   #align(center, btable(columns: 4, align: (right, right, left, left),
     [$r$], [$z$], [condition on a solution], [allowed lengths],
     [0], [0], [none], [all],
-    [0], [1], [$c_0 equiv 0 med (mod b - 1)$], [all, with no zero],
+    [0], [1], [$c_0 equiv 0 med (mod b - 1)$], [all, with no zero (or $b - 1$ zeros)],
     [1], [1], [$k equiv 0 med (mod b - 1)$], [only $k = b - 1$],
     [1], [0], [$k - c_0 equiv 0 med (mod b - 1)$], [$k = b - 1$ without zeros, or $k = b$ with one zero],
   ))
@@ -209,7 +209,7 @@ Let the digit 0 weigh $m$ under the second convention, for $m$ from $-2$ to 3. F
   ))
 ]
 
-The parity factor follows the parity of $m$, as predicted. Zero-free solutions are set aside in this table because they are solutions for every $m$ at once and would be counted six times. There are 24 of them in these bases, against 16.5 expected; this excess is part of the 12% surplus under $0^0 = 1$ discussed in @sec-model-anomalies.
+The parity factor follows the parity of $m$, as predicted. Zero-free solutions are set aside in this table because they are solutions for every $m$ at once and would be counted six times. There are 24 of them in these bases, against 16.5 expected #lib("17.3").
 
 == Near-solutions and the defect spectrum <sec-model-defects>
 
@@ -298,7 +298,7 @@ Fix a minimal length $ell >= 6$. An index $alpha$ is a multiset with $ell <= k <
   $ d_"TV" ((N_0, N_1), (Z_s + Z_0, Z_s + Z_1)) <= 2 b_1 + b_2, $
   where $b_1 = sum_u sigma_u^2$ is the sum over clusters of the squared expected cluster counts, and $b_2 = 2 E[T]$ with $T$ the number of model solutions under convention 0 that end in 0. For $ell = ceil(b slash 2)$ and $b >= 12$, the basic coupled model gives
   $ d_"TV" <= 14.2 slash b + 16 b^2 (b + 1) ell! slash b^ell = O(1 slash b). $
-  The refined model gives the same with $14.2 kappa slash b$ under Assumption R below.
+  The refined model gives the same with $14.2 kappa slash b$ in the first term and an extra factor $b - 1$ in the second term, under Assumption R below.
 ]
 #sketch[
   Compare the family of indicators $X_alpha$ with independent Poisson variables $Z_alpha$ of the same means; the counts $(N_0, N_1)$ are sums of these. Clusters are independent in both families, and total variation is subadditive over independent blocks, so it suffices to bound one cluster. Inside a cluster, compare $X$ first with independent Bernoulli variables $B_alpha$, then $B$ with $Z$. Le Cam's inequality gives $d_"TV" (B, Z) <= sum p_alpha^2 <= sigma_u^2$. For $X$ against $B$, split the probabilities by the number of ones in the outcome vector: the outcomes with at least two ones have probability at most $P(K >= 2) + sigma_u^2 slash 2$, where $K$ is the number of solutions in the cluster, and the outcomes with zero or one ones differ by at most $E[K(K - 1)] + sigma_u^2$ in total. Summing over clusters, $sum E[K(K-1)]$ is the expected number of ordered pairs of solutions in one cluster, and by @model-lem-twins these are the twin pairs, so the sum is $2 E[T]$. The error terms come from two estimates. A cluster has at most $2(b + 1)$ relevant shifts $j$, and each has probability at most $2 D! slash b^(D - 1)$ to produce the upper part, which gives $sigma_u <= 4 b (b + 1) ell! slash b^ell$. And a convention-0 solution ending in 0 has its last digit fixed, which costs a factor $1 slash b$, while the chance that the other digits fit is summable over the lengths; this gives $E[T] <= 7.1 slash b$.
@@ -326,7 +326,7 @@ In odd bases zero-free strings meet the parity rule of $0^0 = 1$ automatically, 
 
 == Empty bases <sec-model-empty>
 
-A base is empty if it has no nontrivial solution under either convention. Bases 19, 27 and 35 are the only empty bases from 3 to 43.
+A base is empty if it has no nontrivial solution under either convention. Bases 19, 27 and 35 are the only empty bases from 3 to 41, and base 43 has solutions.
 
 #heuristic(id: "model-heur-empty", title: "The emptiness law", src: "9.7")[
   Let $E_0$ and $E_1$ be the expected numbers of solutions under the two conventions and $E_s$ the expected number of zero-free solutions, which count under both. If solutions occur independently, a base is empty with probability $exp(-(E_0 + E_1 - E_s))$. For bases 10 to 41 this is 14% to 18% for even bases and 4% to 9% for odd bases; at base 40, 17% and 8%.
@@ -403,7 +403,7 @@ Solutions are the fixed points of $n |-> F(n)$. The other cycles of this map are
   A multiset with at most $b$ digits has $S(c) <= b(b - 1)^(b-1) < b^b$, so $S(c)$ has at most $b$ digits, and it has a nonzero digit because $S(c) >= 1$. $F$ depends only on the multiset, so a cycle of integers gives a cycle of multisets of the same length. Two members of an integer cycle with the same multiset have the same image, and a cycle is a bijection on its members, so they are equal. Conversely, a multiset cycle gives the cycle of the integers $S(c)$.
 ]
 
-$|cal(M)_b| = binom(2b, b) - 1$, so a full census is a walk over about $4^b slash sqrt(pi b)$ points. The engine walks each multiset once, with 2 bits of state per multiset; base 17 takes 670 seconds per convention, and base 18 about an hour #lib("15.1", "23.3").
+$|cal(M)_b| = binom(2b, b) - b - 1$,#footnote[The multisets with at most $b$ digits over the values $0, dots, b - 1$ number $binom(2b, b)$, counting the empty one. The library's section 15.1.1 subtracts only the empty multiset and gives $binom(2b, b) - 1$. It forgets the $b$ multisets made of zeros only. The asymptotics do not change.] so a full census is a walk over about $4^b slash sqrt(pi b)$ points. The engine walks each multiset once, with 2 bits of state per multiset; base 17 takes 670 seconds per convention, and base 18 about an hour #lib("15.1", "23.3").
 
 The parity invariant of @thm-parity-invariant splits the map in odd bases under $0^0 = 0$: even numbers map to even numbers and odd ones to odd ones. A map from a finite nonempty set to itself has a cycle, so every odd base has a cycle of even numbers, and so a cycle besides the fixed point 1 #lib("15.1").
 
