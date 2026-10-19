@@ -238,7 +238,8 @@ solution.
 Algebraic solutions show up as in positive bases. Under `0^0 = 0` the twins
 `(...,0)` and `(...,1)` of section 2.1 appear in bases -2, -7, -8, -10,
 -25 and -32. `(4,0,0)` in base -8 and `(5,0,0)` in base -25 are the family
-`(x,0,0)` in base `-x^((x-1)/2)` of section 12.3. The 13-digit pair in base
+`(x,0,0)` in base `-x^((x-1)/2)` of section 12.3, which needs `x` odd or a
+square. The 13-digit pair in base
 -32 is `(16,0,...,0)` and `(16,0,...,0,1)`: the digit 16 pays for itself at
 position 12, because `16 * 32^12 = 2^64 = 16^16` and `(-32)^12 > 0`.
 
@@ -582,7 +583,7 @@ odd bases from 11 to 41, 22 in the 16 even bases from 10 to 40.
 | question | answer | status |
 |---|---|---|
 | 5. invariant residues in base `-b` | only the divisors of `b+1` (Proposition 14.4) | proven |
-| 5. identity, parity, length | `sum (w(x) - x) == 0 (mod b+1)`; parity doubling in odd `b`; odd lengths up to `b+1` (Propositions 1.5, 1.6) | proven |
+| 5. identity, parity, length | `sum (w(x) - x) == 0 (mod b+1)`; parity doubling in odd `b`; odd lengths up to `b+1` (Propositions 14.5, 14.6) | proven |
 | 5. length shares | even `b`: 8.0/78.4/11.7%; odd `b`: 63.2/31.8/4.3% (Proposition 14.7) | model |
 | 5. census | bases -2 to -35, both conventions (section 14.3) | computed |
 | 5. census against model | counts within 1 standard deviation; parity doubling confirmed | computed |

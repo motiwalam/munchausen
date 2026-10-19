@@ -109,16 +109,18 @@ offset. Even bases make up for it with 11 solutions at `L(b) - 1` against
 6.2 at the offsets, so their total is normal.
 
 Verdict (heuristic). A mechanism would have to separate `D = 0` from every
-small offset that keeps all residues up to `b+1` and mod `b^3`. By
-Proposition 10.2 the only residue of `n` that the digit multiset fixes is
-`n mod (b-1)`; any other modulus acts through the low digits (powers of
-`b`, covered up to `b^3`) or through the arrangement, which a fixed
-multiset does not control. I see no candidate. The in-sample
-shortfall has P about 0.005 per convention against the offsets'
-calibration; after the choice among about 16 groups it is about 0.05 to
-0.1, and the fresh bases add P = 0.13. Fisher's combination gives about
-0.05. I count it as an unexplained fluctuation. Base 49 (expected 1.1 per
-convention) would add little; ten more odd bases would.
+small offset that keeps all residues up to `b+1` and mod `b^3`. By Proposition
+10.2 the only residue of `n` that the digit multiset fixes is `n mod (b-1)`;
+any other modulus acts through the low digits (powers of `b`, covered up to
+`b^3`) or through the arrangement, which a fixed multiset does not control. I
+see no candidate. The in-sample shortfall has P about 0.005 per convention
+against the offsets' calibration, between the 0.002 of section 17.4 (against
+the refined model) and the 0.006 of section 19.5 (against the narrow offsets).
+After the choice among about 16 groups it is about 0.05 to 0.1, and the fresh
+bases add P = 0.13. Fisher's combination gives about 0.05. This supersedes the
+values of sections 17.4 and 19.5. I count it as an unexplained fluctuation.
+Base 49 (expected 1.1 per convention) would add little; ten more odd bases
+would.
 
 ## 23.2 Empty negative bases (question 42)
 
@@ -260,7 +262,7 @@ give 10.4 against 9.4).
 
 ## 23.4 Lengths in base -1+i (question 43)
 
-Theorem R2.1 (proven). In base `beta = -1+i` (digits 0 and 1), the
+Theorem 23.1 (proven). In base `beta = -1+i` (digits 0 and 1), the
 representation of a rational integer `n` is its base -4 representation with
 each base -4 digit `B` written as the block `(B mod 2, 0, [B >= 2], [B >= 2])`
 at positions `4j` to `4j+3` (least significant first). So a positive integer
@@ -288,7 +290,7 @@ This answers question 43 and the first open question of section 14.7.
 and 100,000 random integers below `10^60` (computed,
 `analysis/data/r2c_gauss_m1i.txt`).
 
-Corollary R2.2 (proven). The ones of a positive `n` number the base -4 digit
+Corollary 23.2 (proven). The ones of a positive `n` number the base -4 digit
 sum `s(n)`, and its digits number `8m + 1` or `8m + 4`. So the Munchausen
 numbers of base -1+i are:
 
@@ -356,17 +358,17 @@ together, and local factors for the short lengths, is the natural next step.
 
 ## New questions
 
-- R2.a. Is there any arithmetic difference between `n = F(n)` and
+- 23.a. Is there any arithmetic difference between `n = F(n)` and
   `n = F(n) + D` for small `D` that keeps every residue up to `b+1`? For
   factorions in odd bases the solutions run at 0.3 to 0.5 times their
   near-solutions in two disjoint base ranges.
-- R2.b. Why is base 19 low under `0^0 = 0` in its near-solutions, not just
+- 23.b. Why is base 19 low under `0^0 = 0` in its near-solutions, not just
   in its solutions? The top-digit model does not explain it.
-- R2.c. Prove the length runs of positive integers in base `-n+i`, `n >= 2`.
-- R2.d. In negative bases, keeping the last digit (offsets `j step b`)
+- 23.c. Prove the length runs of positive integers in base `-n+i`, `n >= 2`.
+- 23.d. In negative bases, keeping the last digit (offsets `j step b`)
   lowers the near-solution rate by 10 to 25%. Which digits of `F mod b`
   cause it, and does the refined model need a last-digit factor?
-- R2.e. Under `0^0 = 1` the per-base rate is 12% above the refined model in
+- 23.e. Under `0^0 = 1` the per-base rate is 12% above the refined model in
   both parities. Is this the short lengths, the zeros, or something else?
 
 ## Files

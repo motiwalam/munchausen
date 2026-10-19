@@ -575,7 +575,7 @@ random integer. So each prime contributes a factor, the number of roots.
 #heuristic(id: "short-root-heuristic", title: "Root heuristic with local factors", src: ("11.4", "19.3"))[
   The expected number of $k$-digit solutions is
   $
-    E = sum_s product_p N_s (p^e) / Q'_s (b^*),
+    E = sum_s (product_p N_s (p^e)) / (Q'_s (b^*)),
   $
   capped at 1 per string, where $N_s (p^e)$ is the number of roots of $Q_s$
   modulo a high power $p^e$ of each small prime $p$.

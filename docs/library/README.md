@@ -86,7 +86,7 @@ Proven:
 - Under `0^0 = 1`, base 3 is the only base with two 2-digit solutions
   (Theorem 15.7).
 - The Aurifeuillian factors `L < M` of `x^x + 1` satisfy `M / L -> e^2`
-  (Theorem 16.1). This explains `(1,7,1)` in base 904 and why no larger `x`
+  (Theorem 16.2). This explains `(1,7,1)` in base 904 and why no larger `x`
   works the same way; `b(b+x) = x^x + 1` has no further solution for `x` up to
   `4 * 10^9`, and the abc conjecture would rule them out entirely.
 - For `x` a prime power, the only solutions of `b(b+x) = x^n + 1` with
@@ -130,14 +130,15 @@ Computed:
 - Under `0^0 = 1` no new 7-digit solution exists in bases up to `10^7.2`,
   nor an 8-digit one up to base 23,364 (section 19.1.5).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
-  and 16) and true under `0^0 = 1` up to base 41.
+  and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 
 Model:
 
 - A large base has about one nontrivial solution per convention, with `b-1`
   digits in 55% of cases. Odd bases have twice as many under `0^0 = 0`.
   Perturbed weights show that the residues of `x^x` cause this (section 9.6).
-- About 17% of even and 8% of odd bases have no solution (section 9.7).
+- About 17% of even and 8% of odd bases near base 40 have no solution
+  (section 9.7). The large-base limits are 20% and 9% (section 4.5).
 - The number of solutions in a base is a Poisson draw with the mean of its
   near-solution counts `n - F(n) = D` (section 11.1).
 - The random-polynomial view, with local factors, explains the short

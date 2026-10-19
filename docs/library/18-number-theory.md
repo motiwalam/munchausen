@@ -156,7 +156,7 @@ For `r = 1` the bound is much stronger: `n` is about `s x log x / 2`. The
 known solution `(7, 7)` has `s = 1` and `mu0 / log z = 6.97`.
 
 The diagonal `n = x` is now clear. By (3), `x log z` lies slightly below 2,
-so `n = x` forces `s mu0` close to 2. This is the `e^2` of Theorem 16.1 seen
+so `n = x` forces `s mu0` close to 2. This is the `e^2` of Theorem 16.2 seen
 from the unit side: `mu0 = log eps` is about `log x`, and `log x = 2` near
 `x = e^2 = 7.39`.
 
@@ -246,7 +246,8 @@ Proof. Even `n >= 4` is excluded by Proposition 18.1.
 - `n >= 5` odd, `x` odd: every solution is pure, and Theorem 18.7 applies.
 - `n >= 5` odd, `x = 2^a`: by Proposition 18.1, `a >= 3`. With `V = U/2`,
   `V^2 = 2^(a n) + 2^(2a - 2) + 1`. Szalay's theorem (cited: L. Szalay,
-  `2^a + 2^b + 1 = x^2`, Publ. Math. Debrecen 2000; shorter proof by
+  The equations `2^N +- 2^M +- 2^L = z^2`, Indag. Math. (N.S.) 13 (2002)
+  131-142; shorter proof by
   R. Scott, arXiv math/0608796) says that the solutions with `A >= B >= 1`
   of `2^A + 2^B + 1 = V^2` are `(A, B) = (2t, t + 1)`, `(5, 4)` and `(9, 4)`.
   `(a n, 2a - 2) = (2t, t + 1)` gives `a (4 - n) = 6`, so `n <= 3`. The other
@@ -311,7 +312,7 @@ factors, the solution is mixed, `B` is not principal, and the order `d` of
 its class divides `x` with `x / d < 3.3 * 10^4 log x`. In particular the
 class number of `Q(sqrt(x^2 + 4))` is at least `x / (3.3 * 10^4 log x)`.
 
-Proof. Even and square `x`: Proposition 16.3. `x <= 4 * 10^9`: the sieve
+Proof. Even and square `x`: Proposition 16.5. `x <= 4 * 10^9`: the sieve
 of section 16.2.3. Prime powers: Theorem 18.8. Pure solutions:
 Proposition 18.6. Principal `B`: Theorem 18.10 with `d = 1` allows only
 `x <= 747,069` (`r2nt_principal.py`). Otherwise `3 <= d` divides `x`, and
@@ -364,7 +365,8 @@ So the Mordell-Weil rank is probably 3, larger than the genus. Then neither
 Chabauty-Coleman (rank below genus) nor quadratic Chabauty (rank equal to
 genus) applies. What remains is Baker's method for integral points on
 hyperelliptic curves with a Mordell-Weil basis and the Mordell-Weil sieve
-(Bugeaud, Mignotte, Siksek, Stoll, Tengely, Compositio 2008). That needs a
+(Bugeaud, Mignotte, Siksek, Stoll, Tengely, Algebra & Number Theory 2
+(2008) 859-885). That needs a
 2-descent on the Jacobian and a saturated basis, which PARI and Sage do not
 provide here. For `n = 5` the question is therefore decidable but not
 decided.
@@ -602,7 +604,7 @@ Then `Phi_m(s t^2)` splits in `Z[t]` as `+- c G(t) G(-t)` (Aurifeuillian
 factorization). At `t = y` the two values are the Aurifeuillian factors
 `L <= M` of `Phi_m(s y^2)`. Homogeneously: for `a = s A^2`, `b = B^2` and
 `y = A/B`, they are the Aurifeuillian factors of the part
-`b^phi(m) Phi_m(a/b)` of `a^n +- b^n`. Theorem 16.1 is the case `k = 1`,
+`b^phi(m) Phi_m(a/b)` of `a^n +- b^n`. Theorem 16.2 is the case `k = 1`,
 `y = 1`. Define the twisted Ramanujan sum
 
     g_k(j) = sum over r | gcd(j, k) of r mu(k/r) chi(k/r) chi(j/r).
@@ -623,7 +625,7 @@ root with exponent `a` to the root with exponent `c a` or `c a + m`. Since
 sign under a shift by `|D|/2` when `D` is even), the set
 `A = {a : chi(a) = 1}` is Galois stable and `a -> a + m` maps it to its
 complement. So `G(t) = prod over a in A of (t - zeta^a / sqrt s)` has rational
-coefficients up to a constant, and as in Theorem 16.1
+coefficients up to a constant, and as in Theorem 16.2
 
     log(M/L) = | 2 Re sum over odd j of S_j / (j (y sqrt s)^j) |,
     S_j = sum over a in A of zeta^(a j) = (c_2m(j) + c_chi(j)) / 2,
@@ -652,15 +654,15 @@ Corollary 18.21 (proven). `g_k(1) = mu(k) chi(k)`. So
 using `|g_k(j)| <= sigma(j)`. Hence:
 
 - if `k` is squarefree and prime to `D`, `M/L -> e^(2/y)` as `s` grows; for
-  `y = 1` this is the `e^2` of Theorem 16.1, now for every such `m`;
+  `y = 1` this is the `e^2` of Theorem 16.2, now for every such `m`;
 - if `k` is not squarefree or shares a prime with `D`, `M/L -> 1`.
 
-Examples at `y = 1`: `s = 7, m = 14` (Theorem 16.1): 8.06; `s = 7, m = 42`
+Examples at `y = 1`: `s = 7, m = 14` (Theorem 16.2): 8.06; `s = 7, m = 42`
 (`k = 3`): 6.06; `s = 3, m = 18` (`k = 3`, `gcd(k, D) > 1`): 1.95;
 `s = 6, m = 36`: 1.40. Since the leading term is `2/y`, an Aurifeuillian pair
 of `Phi_m(s y^2)` with `y >= 2` is balanced within a factor `e^(1 + o(1))`.
 For (1) with `x = s y^2` this means that such pairs come close to the
-balance `b ~ b + x` only through the cyclotomic degrees, as in Theorem 16.2;
+balance `b ~ b + x` only through the cyclotomic degrees, as in Theorem 16.4;
 the `e^2` coincidence of `x = 7` needs `y = 1`.
 
 ## 18.6 Powers as weights (question 40)
@@ -701,10 +703,10 @@ constant `c > 0`, which is not polynomial. The reduction of Theorem 13.3 has
 no polynomial-size analogue with pure powers.
 
 Proof. Exact items (`x^(e-1) = b^P`) are powers of the integer of which `b`
-is a power, so there are fewer than `log2 b` of them (Proposition 13.8). The
-others have distinct positions above `L + 1`, so the largest `P - L - 1` is
-at least their number minus 1, and `P <= e log x / log b <= e`, so
-`b' <= 2e`. Apply Proposition 18.22.
+is a power, so there are fewer than `log2 b` of them (as in the proof of
+Proposition 8.5). The others have distinct positions above `L + 1`, so the
+largest `P - L - 1` is at least their number minus 1, and
+`P <= e log x / log b <= e`, so `b' <= 2e`. Apply Proposition 18.22.
 
 What remains open. A reduction must control long expansions instead of short
 ones. Digits near `b` are a candidate: `(b - c)^e` equals

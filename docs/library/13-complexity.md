@@ -258,9 +258,10 @@ NP-hardness is open in both versions. The reduction of Theorem 13.3 needs about
 `k` digit values whose weights have a prescribed base-`b` expansion: one
 digit at a chosen position plus a low part that the solution can control. For
 a pure power this means that `x^(e-1)` equals `b^P` exactly, or nearly.
-Exactly: then `x` and `b` are powers of one integer (Proposition 13.8 of the
-library), and a base has fewer than `log2 b` such digits, while `k` items need
-a base of size `2^(Omega(k))`, which is not polynomial in unary. Nearly: the
+Exactly: then `x` and `b` are powers of one integer (as in the proof of
+Proposition 2.2), and a base has fewer than `log2 b` such digits (the count
+of Proposition 8.5). But `k` items need a base of size `2^(Omega(k))`, which
+is not polynomial in unary. Nearly: the
 difference `x^e - x b^P` is itself a long number whose digits nobody controls,
 and each of them must match the multiset. So the hardness of the power
 variants is a question about the digits of powers, the same arithmetic that
@@ -513,7 +514,7 @@ In the refined model the same holds with `14.2 kappa / b` and an extra factor
 `b - 1` in the last term, under Assumption R. In either case the joint law of
 `(N_0, N_1)` is within `O(1/b)` of a bivariate Poisson law.
 
-Proof. Combine Theorem 13.8 with Lemmas 2.3 and 2.4. It remains to bound
+Proof. Combine Theorem 13.8 with Lemmas 13.9 and 13.10. It remains to bound
 `lambda = lambda_s + lambda_0 + lambda_1`. In the basic model,
 `p_alpha` is at most the probability that a uniform `d`-digit string has the
 multiset of `alpha` (the case `D_u = d - 1` is excluded by `|u| >= 2`, as in

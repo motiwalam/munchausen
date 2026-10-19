@@ -28,7 +28,9 @@ The results agree with the exhaustive searches for every base up to 38.
 
 ## 3.2 Under `0^0 = 1`
 
-Every solution with 3 to 6 digits, in every base in the range above:
+Every solution with 3 to 6 digits, in every base in the range above, and
+with 7 and 8 digits in the ranges of section 19.1.5 (bases up to `10^7.2` for
+7 digits and `10^4.4` for 8 digits):
 
 | length | solutions (base: digits) |
 |---:|---|
@@ -36,6 +38,8 @@ Every solution with 3 to 6 digits, in every base in the range above:
 | 4 | 10: `(3,4,3,5)`; 20: `(6,5,3,4)` |
 | 5 | 6: `(2,2,3,5,2)`, `(2,3,4,5,2)`; 7: `(1,3,4,5,4)`; 13: `(3,3,6,6,1)`; 14: `(2,6,0,3,6)`; 48: `(3,8,6,2,0)` |
 | 6 | 9: `(1,5,6,2,6,2)` |
+| 7 | 9: `(1,6,5,6,5,4,7)` |
+| 8 | 11: `(1,8,4,5,3,2,7,8)`, `(1,8,4,5,3,4,8,7)` |
 
 So 3435, the famous base-10 example, is one of only two 4-digit solutions in
 all bases up to `10^18`. The other one is `(6,5,3,4)` in base 20.
@@ -43,16 +47,17 @@ all bases up to `10^18`. The other one is `(6,5,3,4)` in base 20.
 Two of the 3-digit solutions fit a pattern. `(1, x, 1)` is a solution when
 `b^2 + x b = x^x + 1`. That needs `x^2 + 4 (x^x + 1)` to be a perfect square.
 This holds for `x = 3` (`121 = 11^2`, base 4) and `x = 7` (`1815^2`, base 904),
-and for no other `x` up to 80.
+and for no other `x` up to 80. Chapter 16 extends this to `x <= 4 * 10^9`.
 
 Two-digit solutions are plentiful under both conventions (section 2.4). Under
-`m = 1`, only base 3 has more than one of them, among all bases up to
-`10^54`.
+`m = 1`, only base 3 has more than one of them. The search above showed this
+for all bases up to `10^54`, and Theorem 15.7 proves it for every base.
 
 ## 3.3 Under `0^0 = 0`
 
-Under `m = 0` the solutions with 3 to 6 digits are the self-paying families of
-section 2.5, the swaps of section 2.3, and these others:
+Under `m = 0` the solutions with 3 to 8 digits, in the same ranges as in
+section 3.2, are the self-paying families of section 2.5, the swaps of section
+2.3, and these others:
 
 | length | solutions (base: digits) |
 |---:|---|
@@ -60,6 +65,8 @@ section 2.5, the swaps of section 2.3, and these others:
 | 4 | 5: `(2,0,2,4)`; 10: `(3,4,3,5)`; 20: `(6,5,3,4)`; 128: `(8,0,2,4)` |
 | 5 | 6: `(2,2,3,5,2)`, `(2,3,4,5,2)`; 7: `(1,3,4,5,4)`; 11: `(6,6,5,0,0)`, `(6,6,5,0,1)`; 13: `(3,3,6,6,0)`, `(3,3,6,6,1)` |
 | 6 | 9: `(1,5,6,2,6,2)`; 11: `(5,1,7,5,0,3)` |
+| 7 | 9: `(1,6,4,7,0,6,3)`, `(1,6,5,6,5,4,7)` |
+| 8 | 9: `(3,4,6,6,4,0,8,4)`; 11: `(1,8,4,5,3,2,7,8)`, `(1,8,4,5,3,4,8,7)` |
 
 `(8,0,2,4)` in base 128 is the self-paying 8 at position 3 on top of the
 2-digit solution `(2,4)`.

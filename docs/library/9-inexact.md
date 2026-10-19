@@ -253,7 +253,9 @@ base is empty with probability `exp(-(E_0 + E_1 - E_s))`.
 | odd, 10 to 41 | 2.4 to 3.2 | 4% to 9% |
 
 Odd bases are rarely empty, because the parity effect doubles `E_0`. At base
-40 the chance is 17% for an even base and 8% for an odd one.
+40 the chance is 17% for an even base and 8% for an odd one. As `b` grows,
+the short lengths contribute less, and the chances rise to the large-base
+limits of section 4.5, 20% and 9%.
 
 The perturbed weights of section 9.6 test this law. In 240 runs on even bases
 16 to 27, 47 were empty, against 44.8 predicted. In 240 runs on odd bases, 16
@@ -284,9 +286,11 @@ What can be said for certain about empty bases:
 - Every other base is empty or not by coincidence. Proving that a base is
   empty takes a full search, and chapter 8 explains why no argument can cover
   infinitely many bases at once with current methods.
-- If the model is right, about one base in eight is empty, so infinitely many
-  are. The data agree for odd bases. For even bases they show fewer empty bases
-  than expected, at a level that chance explains with probability 0.06.
+- If the model is right, about one base in eight near base 40 is empty (the
+  average of 17% and 8%), and one in seven in the large-base limit (20% and
+  9%, section 4.5). So infinitely many are. The data agree for odd bases. For
+  even bases they show fewer empty bases than expected, at a level that chance
+  explains with probability 0.06.
 
 ## 9.8 Bases with many solutions are far apart
 
@@ -323,13 +327,20 @@ Most records are bases `(C+2)^(C+1)` from Theorem 9.2. The others are powers of
 
 These bases are rare.
 
-Proposition 9.3. At most `X^(1/(c+1))` bases up to `X` have `c` or more
-self-paying digits.
+Proposition 9.3. Let `c >= 1`. At most
+`X^(1/(c+1)) + X^(1/(c+2)) log2 X` bases up to `X` have `c` or more
+self-paying digits. So their number is `X^(1/(c+1)) (1 + o(1))`.
 
 Proof. By Proposition 2.2, a base with a self-paying digit is `r^t`, where `r`
 is not a perfect power, and its self-paying digits are `r^s` with
-`1 <= s < t`. So `c` of them need `t >= c + 1`, and `b` is a perfect
-`(c+1)`-th power. There are at most `X^(1/(c+1))` of those up to `X`.
+`1 <= s < t`. So `c` of them need `t >= c + 1`. Such a base need not be a
+perfect `(c+1)`-th power: base `8 = 2^3` has the self-paying digit 4, and 8
+is not a square. For each `t`, at most `X^(1/t)` bases `r^t` lie below `X`,
+and `t <= log2 X`. The sum over `t >= c + 1` is at most
+`X^(1/(c+1)) + X^(1/(c+2)) log2 X`.
+
+Up to `X = 10^9` the counts for `c = 1, 2, 3, 4` are 16,540, 419, 76 and 24,
+below `X^(1/(c+1))` (computed).
 
 So the structure that produces many solutions lives on a set of density zero,
 and its counts grow only like `b^(O(1/ln ln b))`. The average count in the
@@ -402,10 +413,11 @@ is `k+1` or `k+2` for most `k`. The exceptions are `k = 11` (base 64) and
   Cipu (2019) proved that `x^y + y^x = z^z` has no solution with
   `min(x, y) > 1`. These proofs use the multiplicative structure of a few
   terms. A sum of many weights, as in `F(n)`, has none.
-- Mahler (1968) proved that `(3/2)^k` stays at distance more than `c^k` from
-  the nearest integer, for every `c < 1` and large `k`, without an effective
-  bound. Zudilin (2007) gave the effective constant 0.5803. These are the
-  closest known results to the near-integer problems of section 8.2.
+- Mahler (Mathematika 4, 1957) proved that `(3/2)^k` stays at distance more
+  than `c^k` from the nearest integer, for every `c < 1` and large `k`,
+  without an effective bound. Zudilin (2007) gave the effective constant
+  0.5803. These are the closest known results to the near-integer problems of
+  section 8.2.
 - Berman (1978) and Mahaney (1982) give the results on sparse languages used in
   section 8.1.
 
@@ -417,6 +429,6 @@ is `k+1` or `k+2` for most `k`. The exceptions are `k = 11` (base 64) and
 | how often it misses | measured on real solutions up to base 43 and on planted ones up to base 200 (9.4, 9.5) |
 | the parity effect | caused by the residues of `x^x` (experiment, 9.6) |
 | excess of `(b-1)`-digit solutions | resolved: the total over the bulk lengths fits the model (9.6) |
-| bases without solutions | about 18% of even and 7% of odd bases in the model, confirmed in the perturbed world; real even bases have fewer, with probability 0.06 (9.7) |
+| bases without solutions | 14% to 18% of even and 4% to 9% of odd bases from 10 to 41 in the model (20% and 9% in the large-base limit), confirmed in the perturbed world; real even bases have fewer, with probability 0.06 (9.7) |
 | bases with many solutions | at least `2^(n-1) - 2` in base `n^(n-1)`; on a set of density zero (9.8) |
 | length against base | `J = b - k` falls like `e^(-J)`; conjectured window `k < b <= k + (1 + eps) ln k` under `0^0 = 1` (9.9) |

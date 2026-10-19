@@ -382,6 +382,8 @@ leading-digit test.
 ### Limits
 
 Each extra base costs about 1.9x more time. Base 37 takes 205 seconds on the
-test laptop. At that rate, base 40 takes about 25 minutes and base 45 about
-10 hours. Numbers with more than 62 digits need wider digit vectors. Bases
-from 63 to 127 work with `--max-digits 62` or less.
+test laptop with the build of 17 October 2026. At that rate, base 40 takes
+about 25 minutes and base 45 about 10 hours. These are estimates. The first
+build measured 36 minutes for base 40, on a machine shared with other jobs
+(`docs/comparison.md`). Numbers with more than 62 digits need wider digit
+vectors. Bases from 63 to 127 work with `--max-digits 62` or less.

@@ -17,9 +17,12 @@ run by sampling with the exact weights of the experiment.
 | 10 | `x^(x+t)` keeps the length law and the parity factor. `x!` keeps about one solution per base, has no parity factor, and has a different length law. | model and computed |
 
 The surprise: factorions are rare in odd bases. Bases 14 to 36 have 3
-long factorions under `w(0) = 0` where the model expects 11.9 (P = 0.002). The
-near-factorions at 30 offsets in the same bases match the model. So the
-shortfall belongs to the offset 0 alone, and I have no explanation.
+long factorions under `w(0) = 0` where the model expects 11.9 (P = 0.002 for
+a Poisson count with the model's mean, before any correction for the choice
+of the group). The near-factorions at 30 offsets in the same bases match the
+model. So the shortfall belongs to the offset 0 alone, and I have no
+explanation. Sections 19.5 and 23.1 test it further. The latest assessment,
+in section 23.1, is a combined P of about 0.05.
 
 ## 17.1 The engine (question 26)
 
@@ -306,9 +309,13 @@ Two explanations fail:
 
 So the shortfall is either a fluctuation or a property of the exact equation
 `n = F(n)` that the offsets do not share. The two conventions share their
-zero-free solutions, so the two P values are not independent. I looked at
-about 16 groups before I saw this one, which makes a P of 0.002 worth about
-0.03.
+zero-free solutions, so the two P values are not independent. The P values
+in the table are `P(X <= observed)` for a Poisson count with the refined
+model's mean. I looked at about 16 groups before I saw this one, which makes a
+P of 0.002 worth about 0.03. Section 19.5 calibrates the count with
+near-factorions instead of the model (P = 0.006 and 0.02, about 0.1 after the
+same correction). Section 23.1 adds fresh bases and gives the latest
+assessment: a combined P of about 0.05.
 
 Fresh odd bases, searched after the shortfall was found (computed, 290 s
 and 1148 s on 3 threads): base 43 has one long factorion, 30 digits long and

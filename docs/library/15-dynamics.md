@@ -16,10 +16,10 @@ Notation follows chapter 1. `w(x) = x^x` for `x >= 1`, `w(0) = m`, and
 |---|---|---|
 | 20, cycle census | bases 3 to 17, both conventions. The only invariant residue is `n mod 2` in odd bases under `0^0 = 0`. A class-lumped random mapping predicts the cycle counts within 10% per group. The 2-cycle pattern of the lead does not persist: bases 13 and 15 have none, base 16 has one. | proven (invariant), computed (census), heuristic (model) |
 | 13, two 2-digit solutions | only base 3 under `0^0 = 1`. Under `0^0 = 0` only base 3 and the twin bases `a^(a-1)`. | proven (Theorem 15.7) |
-| 16, cores in self-paying bases | infinitely many 2-digit cores lie in self-paying bases: the swaps `(a, a^a)`. Apart from swaps, only `(1,3)` in base 25 for `a <= 200`, `c <= 3000`. Finiteness of the rest follows from abc in a large range. | proven (16.1, 16.2), computed, conditional (16.3) |
+| 16, cores in self-paying bases | infinitely many 2-digit cores lie in self-paying bases: the swaps `(a, a^a)`. Apart from swaps, only `(1,3)` in base 25 for `a <= 200`, `c <= 3000`. Finiteness of the rest follows from abc in a large range. | proven (Proposition 15.8, Theorem 15.9), computed, conditional (Theorem 15.10) |
 | 14, coverings | coverings beyond parity exist and are common. The cause is the 3-adic rule `x^x - x == 2 (mod 27)` for `x == 2 (mod 6)`. About 8% of all prefixes make the last digit hopeless. | proven (Lemma 15.12, Theorem 15.13), computed |
 | 15, power identities | a chain-and-cycle construction covers the base-64 example. Bases `r^t` with `r <= 40`, `t <= 300` get at most 2 such solutions. No base with 6 found. | proven (Theorem 15.14), computed |
-| 30, several bases | under `0^0 = 0` the number of bases is unbounded; `2^2048 + 1` has exactly 26. Under `0^0 = 1` at most two 2-digit bases, and no known integer has a third base. | proven (30.1, 30.2), computed |
+| 30, several bases | under `0^0 = 0` the number of bases is unbounded; `2^2048 + 1` has exactly 26. Under `0^0 = 1` at most two 2-digit bases, and no known integer has a third base. | proven (Propositions 15.15, 15.16), computed |
 
 ## 15.1 Cycles of `n -> F(n)`
 
@@ -38,15 +38,17 @@ cycle with the same multiset have the same image, and a cycle is a
 bijection on its members, so they are equal. The converse maps a multiset
 cycle to the integers `S(c)`.
 
-`|M_b| = C(2b, b) - 1`. A multiset of size at most `b` is a multiset of size
-`b` over `0..b`. The sorted sequence `x_1 <= ... <= x_b` gives the subset
-`y_i = x_i + i - 1` of `[0, 2b)`, which the combinatorial number system
-ranks. `fast/src/bin/dyn_cycles.rs` walks the map with 2 bits of state per
-multiset. Each multiset is entered once. Base 16 takes 165 s, base 17 takes
-670 s per convention. Base 18 needs about 45 minutes per convention, so I
-stopped at 17. Bases 3 to 9 agree with `analysis/questioner/cyc.py`. The
-fixed points agree with the solution counts of chapter 4 plus the trivial
-solution 1.
+`|M_b| = C(2b, b) - b - 1`. A multiset of size at most `b` is a multiset of
+size `b` over `0..b`, where the extra value `b` marks an empty place. These
+number `C(2b, b)`. Removing the `b + 1` multisets with no nonzero digit (the
+empty one and those made of zeros only) leaves `M_b`. The sorted sequence
+`x_1 <= ... <= x_b` gives the subset `y_i = x_i + i - 1` of `[0, 2b)`, which
+the combinatorial number system ranks. `fast/src/bin/dyn_cycles.rs` walks the
+map with 2 bits of state per multiset. Each multiset is entered once. Base 16
+takes 165 s, base 17 takes 670 s per convention. This chapter stops at 17.
+Section 23.3 ran base 18 in about 3200 s per convention. Bases 3 to 9 agree
+with `analysis/questioner/cyc.py`. The fixed points agree with the solution
+counts of chapter 4 plus the trivial solution 1.
 
 ### 15.1.2 The census (computed)
 
@@ -581,7 +583,8 @@ both 0 and 1. `(a, 0)` needs `a | 1`, so it is `(1, 0)` in base 2 with
 Proposition 2.6 gives the divisibility conditions.
 
 So `N = c^c + 1`, with `(1, c)` and `(c, 1)`, has two bases for every
-`c >= 2`. A third base needs a representation with 3 or more digits.
+`c >= 3`. For `c = 2` the string `(2, 1)` would need base 2. A third base
+needs a representation with 3 or more digits.
 
 Proposition 15.17 (proven). Let `X` be the largest integer with `X^X <= N`.
 If `N` is a solution in base `b` with `k` digits and leading digit `p`, then
@@ -620,8 +623,8 @@ cannot exist.
 
 1. (from 20) Even bases under `0^0 = 0` have 1 2-cycle against 3.5
    expected in bases 4 to 16. Is there a second invariant, or is this
-   chance? Base 18 (45 minutes per convention) and a 2-cycle search by
-   meet in the middle would tell.
+   chance? Base 18 (about 3200 s per convention, done in section 23.3)
+   and a 2-cycle search by meet in the middle would tell.
 2. (from 20) Six of the short cycles are zero-free and so shared between
    conventions. The model predicts about `e^(-L)` of `L`-cycles to be
    zero-free. Is the observed share larger?

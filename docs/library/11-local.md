@@ -77,10 +77,11 @@ too, and they predict slightly fewer solutions, not more (11.0 and 13.1 under
 even-base deficit of section 9.7 as chance.
 
 Missing `b`-digit solutions. No base from 3 to 45 has a `b`-digit solution
-under `0^0 = 1`, and only bases 15 and 16 have one under `0^0 = 0`. The refined
-model expects 3.6 and 5.0. The spectrum shows that the model overestimates
-this length. With offsets restricted to exactly `b` digits
-(`analysis/bdigit_spectrum.py`, bases 10 to 30, 40 offsets each):
+under `0^0 = 1`, and only bases 15 and 16 have one under `0^0 = 0`. The
+refined model expects 3.6 and 5.0 (the basic model 3.2 under `0^0 = 1`). The
+spectrum shows that the model overestimates this length. With offsets
+restricted to exactly `b` digits (`analysis/bdigit_spectrum.py`, bases 10 to
+30, 40 offsets each):
 
 | bases 10-30 | `b`-digit solutions | predicted by the offsets | refined model |
 |---|---:|---:|---:|

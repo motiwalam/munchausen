@@ -19,16 +19,16 @@ an idle machine. Each comparison of two programs alternated their runs.
 |---|---|---|
 | 47, the sieve | Any modulus up to 128 works; only one power of each prime adds information. 32 removes 22 to 34% of the candidates where 2 removes 1 to 9%, and 27 removes 35 to 42% where 3 removes 20 to 28%. A rewritten `kdigit` (byte residues without division, masks built only while a last digit is alive, bit-set filters) is about 11 times faster and passes 300 to 800 times fewer strings to the exact step. The output is unchanged on all lists. | proven (method), computed |
 | 47, longer lists | 7 digits complete for bases up to `10^7.2` (was `10^5.5`), 8 digits up to 23,364 (was 127). No new solution under `0^0 = 1`. | computed |
-| 49 | `kdigit --offset D`. For 4 digits, 200 offsets `D = j` are Poisson draws that match the root heuristic within 7% (primes) or 1% (p-adic), and the two 4-digit solutions are an ordinary draw. For 5 digits the heuristic fits in bases below 13. In bases 13 to 99 the far offsets `D = j L` fall below it (10 against 16), so the three 5-digit solutions there are an excess of about 17 times (P about 0.005 after the choice of range). Near offsets show algebraic families, self-paying blocks and clusters. | computed against heuristic |
+| 49 | `kdigit --offset D`. For 4 digits, 200 offsets `D = j` are Poisson draws that match the root heuristic within 7% (primes) or 1% (p-adic), and the two 4-digit solutions are an ordinary draw. For 5 digits the heuristic fits in bases below 10. In bases 10 to 99 the far offsets `D = j L` fall below it (10 against 16), so the three 5-digit solutions in bases 13 to 99 are an excess of about 17 times (P about 0.005 after the choice of range; chapter 22 recalibrates this to about 9 times). Near offsets show algebraic families, self-paying blocks and clusters. | computed against heuristic |
 | 48 | The right factor is the number of roots mod `p^e`; it averages exactly 1. It is stable from `2^4, 3^3, 5^2` on. It moves the predictions for 3, 4 and 5 digits from 5.09, 1.39, 2.42 to 5.59, 0.75, 3.32. It fits the 4-digit offsets better, but it does not explain the 5-digit excess. | proven (factor), heuristic |
 | 58 | `fast search --power d` finds all narcissistic numbers; bases 3 to 13 match OEIS. The refined model predicts 671 against 760 observed (basic model 253). In the cells with `x^d == x (mod b-1)` for all digits, `d >= 6`, it predicts 208.5 against 207 (basic model 24). | computed against heuristic |
-| 57 | The offsets `D = j b (b-1)` keep the last digit and have the normal count, 0.91 times the model. The factorion shortfall at `D = 0` (3 and 4 against about 11) is not a last-digit effect. It stays a fluctuation of P = 0.006 to 0.02 per convention, about 0.1 after the look-elsewhere factor. | computed against heuristic |
+| 57 | The offsets `D = j b (b-1)` keep the last digit and have the normal count, 0.91 times the model. The factorion shortfall at `D = 0` (3 and 4 against about 11) is not a last-digit effect. It stays a fluctuation of P = 0.006 to 0.02 per convention against the near-factorion mean, about 0.1 after the look-elsewhere factor. Section 23.1 adds fresh bases: combined P about 0.05. | computed against heuristic |
 
 ## 19.1 Prime powers in the sieve of `kdigit`
 
 ### 19.1.1 Any modulus works, and only prime powers add anything (proven)
 
-Proposition 19.1 holds for every modulus `q`, with the same proof: if
+Proposition 11.1 holds for every modulus `q`, with the same proof: if
 `Q_s(b) = 0`, then `b mod q` is a root of `Q_s` modulo `q`. `Q_s(r) mod q`
 depends only on `r mod q`, because `Q_s` has integer coefficients. The mask
 method of section 11.5 therefore works for any `q`. It needs `w(x) mod q`
@@ -80,7 +80,8 @@ candidates that one modulus removes when it is tested first
 
 The last row is the share of polynomials of degree `n = k - 1` over a large
 prime field with no root, `sum_{j <= n} (-1)^j / j!` (proven, by
-inclusion and exclusion over the roots). The large primes match it to 0.002.
+inclusion and exclusion over the roots). The prime 127 matches it to 0.004,
+and 61 to 0.015.
 Section 11.3 used `1/e` for all lengths.
 
 What the table shows:
@@ -363,15 +364,15 @@ Is the count of short solutions a Poisson draw with the mean of its offsets?
   the counts are Poisson (variance / mean 0.97) and match the heuristic
   within 7% (primes) or 1% (p-adic) in bases below 100. The two 4-digit
   solutions are an ordinary draw: 2 against 0.6 to 1.4, P = 0.13 to 0.42.
-- Five digits, bases below 13: yes. There the heuristic with primes matches
+- Five digits, bases below 10: yes. There the heuristic with primes matches
   the offsets to 0.1% (354 against 353.7), and `D = 0` has 3 against 1.9.
-- Five digits, bases 13 to 99: no clear answer. The offsets `D = j` are
+- Five digits, bases 10 to 99: no clear answer. The offsets `D = j` are
   inflated by clusters and families, and the offsets `D = j L` say the
   heuristic is if anything too high there (10 against 16). Against that
   calibration, the 3 solutions of `D = 0` in bases 13, 14 and 48 are an
-  excess of about 17 times (chapter 22 recalibrates this to about 9 times,
-  with P about 0.005), with P about 0.001, or 0.005 after the choice
-  of the range.
+  excess of about 17 times, with P about 0.001, or 0.005 after the choice
+  of the range. Chapter 22 recalibrates this to about 9 times, with P about
+  0.005.
 
 So the 5-digit excess (6 against 2.42) is not a missing local factor that
 all offsets share: the p-adic factor and the offsets together put the
@@ -384,9 +385,10 @@ lower-order version of the self-paying digits. I have not counted how often
 they occur.
 
 The calibration to "about 5%" that the question hoped for holds only where
-the counts are large: bases below 13 for both lengths. Above that, the
-offsets `D = j L` have 10 hits per length, and the systematic errors of the
-heuristic (the cap at 1, the clusters) are larger than 5%.
+the counts are large: bases below 100 for 4 digits and below 10 for 5
+digits. Above that, the offsets `D = j L` have 10 hits per length, and the
+systematic errors of the heuristic (the cap at 1, the clusters) are larger
+than 5%.
 
 ## 19.3 p-adic local factors in the root heuristic
 
@@ -652,6 +654,11 @@ one, which turns 0.006 into about 0.1. I do not see a property of the exact
 equation `n = F(n)` that the offsets lack. So I would close question 41 as
 "a fluctuation of about 2.5 standard deviations", with fresh bases as the
 only test left. Bases 43 and 45 (section 17.4) fit both readings.
+
+These P values use the mean of the narrow offsets as the expected count. The
+P = 0.002 of section 17.4 uses the refined model's mean instead, which is a
+little higher. Section 23.1 adds the fresh bases 37 to 47 and gives the
+latest assessment, a combined P of about 0.05.
 
 ## Files
 

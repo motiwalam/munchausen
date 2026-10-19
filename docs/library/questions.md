@@ -8,7 +8,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme I. The polynomial Q_s as an algebraic object
 
-1. (Answered in chapter 16: the Aurifeuillian ratio M/L tends to e^2 (Theorem 16.1), so x = 3 and 7 are the only algebraic cases.) Is the base-904 solution an Aurifeuillian factorization? `(1,x,1)` under
+1. (Answered in chapter 16: the Aurifeuillian ratio M/L tends to e^2 (Theorem 16.2), so x = 3 and 7 are the only algebraic cases.) Is the base-904 solution an Aurifeuillian factorization? `(1,x,1)` under
    `0^0 = 1` (and `(1,x,0)` under `0^0 = 0`) is a solution exactly when
    `b (b + x) = x^x + 1`, so it needs a divisor of `x^x + 1` within `x` of its
    square root. For squarefree `x == 3 (mod 4)`, `Phi_2x(x)` splits into
@@ -121,7 +121,8 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 17. (Answered in section 11.2: the model overestimates `b` digits by about
     1.6x at these bases because of the forced top digits; the data are
     normal.) The missing `b`-digit solution under `0^0 = 1`. Bases 3 to 45 have none
-    against about 3.2 expected (P about 0.04). Is there a suppression
+    against 3.2 expected in the basic model (P about 0.04) and 3.6 in the
+    refined model (P about 0.03). Is there a suppression
     mechanism for this shape (leading digit 1, 3 to 5 copies of `b-1`)? Check
     the parity of zeros and the residue mod `b-1` against the exact finite-`b`
     model. Then hunt with `--min-digits b --zscore 3` in bases 46 to 52.
@@ -198,7 +199,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Round 2: questions raised by the answers
 
-31. (Answered in chapter 18: yes, with a twisted Ramanujan sum; M/L tends to e^(2/y) or 1 (Theorem 18.20).) Does the exact series for `M / L` (Theorem 16.1) extend to Aurifeuillian
+31. (Answered in chapter 18: yes, with a twisted Ramanujan sum; M/L tends to e^(2/y) or 1 (Theorem 18.20).) Does the exact series for `M / L` (Theorem 16.2) extend to Aurifeuillian
     factors of `a^n +- b^n` in general? (chapter 16)
 32. (Partly answered in chapter 18: solved for prime powers x (Theorem 18.8) and odd x <= 1001 (Theorem 18.12); none for n even; finite under abc; n = 5 open.) Is the set of solutions `(x, n)` of `b (b + x) = x^n + 1` with `n >= 4`
     finite? Only `(7, 7)` is known. (chapter 16)

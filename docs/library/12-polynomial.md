@@ -33,10 +33,11 @@ Hilbert's irreducibility theorem leads one to expect for a polynomial whose
 constant term `F(s)` is unrelated to its other coefficients.
 
 The one exception among the 240 strings is `(9, 18, 18, 9, 15)`, with share
-0.631. Its digit polynomial is `9 r (r + 1)(r^2 + r + 1) = 9 u (u + 1)` with
-`u = r^2 + r`. So `Q_s` is a polynomial in `r^2 + r`, and its Galois group lies
-in the dihedral group `D_4`, whose derangement share is `5/8 = 0.625`. Such
-decomposable digit polynomials are the natural source of smaller groups.
+0.631. Its digit polynomial is
+`P_s(r) = 9 r (r + 1)(r^2 + r + 1) + 15 = 9 u (u + 1) + 15` with
+`u = r^2 + r`. So `Q_s` is a polynomial in `r^2 + r`, and its Galois group
+lies in the dihedral group `D_4`, whose derangement share is `5/8 = 0.625`.
+Such decomposable digit polynomials are the natural source of smaller groups.
 
 This also explains the sieve of section 11.5. A random polynomial mod `p` of
 degree `n` has no root with probability close to `D_n / n!`, which tends to
@@ -108,8 +109,9 @@ in base 215 and `(1,7,1)` in base 904. Their partners are bases -7, -217 and
 not a base.
 
 Under `0^0 = 0` the families of chapter 2 appear again with negative bases.
-For odd `x`, `(x, 0, 0)` and `(x, 0, 1)` are solutions in base
-`-x^((x-1)/2)` as well as in base `x^((x-1)/2)`. A swap-like solution is
+If `x^(x-1)` is a square, that is if `x` is odd or a square, then `(x, 0, 0)`
+and `(x, 0, 1)` are solutions in base `-x^((x-1)/2)` as well as in base
+`x^((x-1)/2)`. For `x = 4` this is base -8. A swap-like solution is
 `(3, 0, 0, 0, 27)` in base `-3^20`: `3 * 3^80 = 27^27`.
 
 Complete lists for small negative bases. `analysis/negabase.py` checks every

@@ -66,9 +66,11 @@ output, so `-m 1` takes as long as `both`.
 
 ### Long runs
 
-Each base takes about 1.9x as long as the one before. On the test laptop,
-base 37 takes 205 seconds, so base 40 takes about 25 minutes. Use `--journal`
-for long runs. The program appends a line to the journal when a work unit
+Each base takes about 1.9x as long as the one before. On the test laptop, base
+37 takes 205 seconds with the build of 17 October 2026, so base 40 takes about
+25 minutes (an estimate). The first build measured 36 minutes for base 40, on
+a machine shared with other jobs (`docs/comparison.md`). Use `--journal` for
+long runs. The program appends a line to the journal when a work unit
 finishes. It appends another line for each solution, as soon as it finds it.
 If a run stops, run the same command again. The program reads the journal and
 skips the finished units.

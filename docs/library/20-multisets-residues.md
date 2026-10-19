@@ -41,7 +41,7 @@ Proposition 10.4 count strings. This section counts multisets and doubles the
 range of Theorem 11.2.
 
 Notation. `L = ln B`. `X_k(B)` is the largest `X` with `X^X < B^k`; by
-Proposition 20.2 every digit of a `k`-digit solution in a base `b <= B` is at
+Proposition 1.2 every digit of a `k`-digit solution in a base `b <= B` is at
 most `X_k(B)`. `S(c)` is the digit sum of `c`, `M` its largest digit, and
 `H_k = 1 + 1/2 + ... + 1/k`. "Solution" means a nontrivial solution with at
 least 2 digits, under a fixed convention.
@@ -220,7 +220,7 @@ solution with these data lies in `(Y - h, Y]` (Lemma 20.1), and `b - 1`
 divides `m = n - S(c)` (section 1.6). For `k >= 3`, `m >= 1`: all weights
 satisfy `w(d) >= d`, with equality for every digit only if all digits are 0 or
 1, and then `n <= k < 2^(k-1) <= b^(k-1)`. Suppose `k` such bases exist. Lemma
-1.4 with the divisors `b - 1` in `(Y - 1 - h, Y - 1]` gives
+20.4 with the divisors `b - 1` in `(Y - 1 - h, Y - 1]` gives
 `p Y^(k-1) = n > m > (Y - h - 1)^k / h^(k(k-1)/2)`. If `Y >= 2 (h + 1)`, this
 gives `Y < 2^k p h^(k(k-1)/2) <= 2^k ((M + 1)/(k - 1))^(k(k-1)/2)`, since
 `p >= 1`. Now `M^M <= n < b^k <= Y^k` gives `M ln M < k ln Y`, so
@@ -402,14 +402,14 @@ reduce to all squares modulo `5^(e-2)`. The count of squares modulo `p^k` is
 classical.
 
 Computed (`analysis/r3nt_tq.py`). The laws agree with a direct computation of
-`T(3^e)` for `e <= 10`, `T(5^e)` for `e <= 7`, and `T(2^e)` (even residues) for
-`e <= 12`. `T(p^e) = Z/p^e` for `p = 7` (`e <= 5`), 11 and 13 (`e <= 4`),
+`T(3^e)` for `e <= 10`, `T(5^e)` for `e <= 7`, and `T(2^e)` (even residues)
+for `e <= 12`. `T(p^e) = Z/p^e` for `p = 7` (`e <= 5`), 11 and 13 (`e <= 4`),
 17, 19 and 23 (`e <= 3`), and every prime `7 <= p < 100` at `e = 2`. Lemma
-2.2 holds class by class for `(p, e) = (3, 6), (5, 5), (7, 4), (11, 3), (13, 3)`.
-The leads of the question are all confirmed: the residues prime to 3 are `{2}`
-mod 27, `{2, 29}` mod 81 and `2 + 27 j`, `j` in `{0, 1, 3, 4, 6, 7}` mod 243;
-`T(5^e)` misses 4 of the 5 classes `== 3` mod 25, 22 of 25 mod 125 and 114 of
-125 mod 625.
+20.7 holds class by class for
+`(p, e) = (3, 6), (5, 5), (7, 4), (11, 3), (13, 3)`. The leads of the question
+are all confirmed: the residues prime to 3 are `{2}` mod 27, `{2, 29}` mod 81
+and `2 + 27 j`, `j` in `{0, 1, 3, 4, 6, 7}` mod 243; `T(5^e)` misses 4 of the
+5 classes `== 3` mod 25, 22 of 25 mod 125 and 114 of 125 mod 625.
 
 ### 20.2.3 Coverings with 81 and 125
 
@@ -823,8 +823,8 @@ solutions of `b (b + x) = x^n + 25` with `n >= 3` are exactly
 `(x, n, b) = (5, 3, 10)`, `(7, 3, 16)` and `(3, 6, 26)`.
 
 Proof. `n = 3`: the elliptic curve. `n >= 4` even, or `x` a square: Lemma
-4.2(a). `x = 5^e`: Proposition 20.25. Otherwise every solution is pure: `n <= 15`
-by the sieve (`x <= 10^7`), `n >= 17` by Theorem 20.27.
+20.21(a). `x = 5^e`: Proposition 20.25. Otherwise every solution is pure:
+`n <= 15` by the sieve (`x <= 10^7`), `n >= 17` by Theorem 20.27.
 
 So the method of chapter 18 does not need a unit of norm -1. It needs a fixed
 power of the ideal `P` of norm `x` with an explicit generator whose logarithm
@@ -878,7 +878,7 @@ obstacle for `c = 3`: the regulator of `Z[theta]` is not bounded by `log x`.
 
 The question suggested the case `3 | x`, where `x^2 + 12` is of
 Richaud-Degert type with the unit `1 + (x/3) theta = theta^2 / 3`. By Lemma
-4.2(b) that case has no solution at all, so it gives no foothold.
+20.21(b) that case has no solution at all, so it gives no foothold.
 
 For a fixed `x` the method still works, because it only needs `mu0`.
 

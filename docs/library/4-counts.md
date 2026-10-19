@@ -158,11 +158,15 @@ What is known:
   For large bases that is about 37% of even bases and 32% of odd bases under
   `0^0 = 1`, and about 37% of even bases and 14% of odd bases under
   `0^0 = 0`. With both conventions together, about 20% of large even bases and
-  9% of large odd bases are expected to be empty.
+  9% of large odd bases are expected to be empty. These are the limits as
+  `b -> infinity`, with the shared zero-free solutions counted once (section
+  13.2.5). At finite bases the short lengths add solutions, and the chances
+  are lower: 17% and 8% at base 40 (section 9.7).
 
 An observation, not a result: 19, 27 and 35 are all `== 3 (mod 8)`, and so is
 11, which does have solutions. In the model, an odd base is empty under both
-conventions with probability about 0.06. Three empty bases among the four
+conventions with probability about 0.06 (the range 4% to 9% of section 9.7
+for bases 10 to 41). Three empty bases among the four
 `== 3 (mod 8)` bases from 11 to 35 then has probability about `10^-3`. But I
 noticed the residue class after seeing the data, and across all 15 odd bases
 from 11 to 39, three empty ones has probability about 6%. I know of no
@@ -175,4 +179,6 @@ mechanism. Base 43, the next one, is a direct test.
   families of section 2.4 give infinitely many, and under `0^0 = 0` so do the
   self-paying digits.
 - Whether infinitely many bases have no solution is open. The model says that
-  about 15% of bases do, under both conventions together.
+  about 20% of even and 9% of odd bases do in the large-base limit, under both
+  conventions together (section 4.5). That is about 15% of all bases. Near
+  base 40 the rates are 17% and 8% (section 9.7).

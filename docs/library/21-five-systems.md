@@ -242,11 +242,14 @@ So the count depends on `B`, not only on `e`, and mostly through `k(B)`:
 each factor of `B - 1` multiplies the count by about `q` (computed and
 heuristic). The refined model tracks this factor over a range of 30.
 
-The model is not exact, though. For odd `q` it is 1.3 to 1.5 times too low
-under `0^0 = 0` and about 2 times too high under `0^0 = 1`. Near-solutions
-`n = F(n) + (B - 1) g`, with `g` running over the nonzero polynomials of
-small degree, settle whether this is chance (`analysis/data/r3t_ffield_near.txt`,
-at least 3 digits):
+The model is not exact, though. For the odd `q` of the table below, `(3, 3)`,
+`(3, 4)` and `(5, 3)`, it is 1.25 to 1.47 times too low under `0^0 = 0` and
+1.4 to 2.1 times too high under `0^0 = 1`. Chapter 24 extends the census to
+`q = 17`. There the ratio under `0^0 = 0` is 1.03 to 1.47 and moves toward 1
+for large `q`, and the ratio under `0^0 = 1` falls to 0.025 (Statement
+24.3.1). Near-solutions `n = F(n) + (B - 1) g`, with `g` running over the
+nonzero polynomials of small degree, settle whether this is chance
+(`analysis/data/r3t_ffield_near.txt`, at least 3 digits):
 
 | `q` | `e` | offsets `g` | `0^0 = 0`: solutions | near, summed over bases | refined | `0^0 = 1`: solutions | near | refined |
 |---:|---:|---|---:|---:|---:|---:|---:|---:|
@@ -259,11 +262,11 @@ at least 3 digits):
 The solutions match their near-solutions within 15% in every row, and the
 near-solutions share the deviation from the model. So the solutions are
 ordinary draws, as in section 11.1, and the model misses a factor near 1.3
-under `0^0 = 0` and near 0.5 under `0^0 = 1` for odd `q` (computed). Its
-cause is open. One candidate is the length law: 63% of the solutions with
-`(q, e) = (3, 4)` have the maximal 21 digits, so the top degree class is
-almost always present, and the model's law for the number of zeros is then
-off.
+under `0^0 = 0` and near 0.5 under `0^0 = 1` for these odd `q` (computed).
+Chapter 24 traces the gap to the digits of `F`, which are not independent. One
+candidate is the length law: 63% of the solutions with `(q, e) = (3, 4)` have
+the maximal 21 digits, so the top degree class is almost always present, and
+the model's law for the number of zeros is then off.
 
 ### 21.1.7 Contrast: the weight `d^(deg d)`
 
@@ -320,7 +323,7 @@ If `p` and `q` are odd, `p - q` is even and `q w(a) - a == w(a) - a == 0`
 (mod 2) under `0^0 = 0`. So the identity is free modulo 2 and the model
 doubles (heuristic). Under `0^0 = 1` each zero adds `q`, which is odd, so a
 solution has an even number of zeros (proven). If `p` or `q` is even,
-`p - q` is odd and no factor 2 arises. Proposition 16.11 (no twins for
+`p - q` is odd and no factor 2 arises. Proposition 16.16 (no twins for
 `q > 1`) still holds.
 
 ### 21.2.2 The search
@@ -563,7 +566,7 @@ irrational amount to the value.
 to the bound, keeps those with every `x` followed by a 0
 (`c_x <= c_0 + 1`), filters by Proposition 21.12, and compares the expansion
 of `F` exactly. It needs `F` in `[eps^((T-2)/2), eps^T)`, which Proposition
-59.1 justifies. It agrees with a direct expansion of every `N` up to the
+21.11 justifies. It agrees with a direct expansion of every `N` up to the
 bound for `x` = 1 to 7 (computed). The model samples integers in each window
 `eps^k <= N < eps^(k+1)`.
 
@@ -748,7 +751,7 @@ the data put at about 5 lengths in 17.
   makes the weights agree with the digits at every prime.
 - Universal where digits can move: about one coincidence per base and
   convention, and solutions behave like near-solutions (sections 11.1,
-  61.6, 60.4).
+  21.1.6, 21.2.4).
 - Not universal: the coincidence model itself. It needs a digit value to be
   free to appear at many positions. The factorial system confines large
   digits to the top, where the sum is not random, and the model fails there.
@@ -757,7 +760,7 @@ the data put at about 5 lengths in 17.
 
 | question | answer | status |
 |---|---|---|
-| 61 | class-sum linearity, families of `q`, self-paying digits, free factor `q^k(B)` with `k(B) >= omega(B-1)`; exact count for `e = 2`; census of 4,426 bases | proven; computed; model off by a factor 0.5 to 1.5 for odd `q`, cause open |
+| 61 | class-sum linearity, families of `q`, self-paying digits, free factor `q^k(B)` with `k(B) >= omega(B-1)`; exact count for `e = 2`; census of 4,426 bases | proven; computed; model off by a factor 0.5 to 1.5 for odd `q` here; chapter 24 traces the gap to the digits of `F` |
 | 60 | doubling in odd/odd bases | proven identity; computed `p <= 11` except `11/1, 11/8, 11/10` |
 | 63 | no doubling, as the odd modulus predicts; Gaussian control doubles | proven identity; computed `n <= 3` (`n = 3` to 25 digits) |
 | 59 | length bound, identity, twins; even `x` double | proven; computed `x <= 12` |
@@ -767,6 +770,8 @@ Open questions raised here:
 
 - `F_q[T]`: is `k(B) = omega(B - 1)` always? Why is the model 1.3 times
   too low under `0^0 = 0` and 2 times too high under `0^0 = 1` for odd `q`?
+  (Answered in chapter 24: the digits of `F` are not independent, and
+  Proposition 24.11 accounts for the whole gap under `0^0 = 1`.)
 - Factorial system: a model with top digits fixed by the large counts, and
   a search past `34!` with wider integers. Is the set finite?
 - Rational bases `11/8` to `11/10` and `p >= 12` need a better pruning

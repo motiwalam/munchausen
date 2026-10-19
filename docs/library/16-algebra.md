@@ -17,7 +17,7 @@ output is in `analysis/data/alg_*`.
 
 | question | what is now known | status |
 |---|---|---|
-| 1. Aurifeuillian origin of 904 | `log(M/L) = 2 sum psi(j) / (j x^((j-1)/2))` exactly, so `M/L -> e^2`; only x = 3 and 7 split `x^x + 1` into algebraic factors that differ by `x`; a factor pair for every 3-digit solution | proven (Theorems 1, 2), computed (tables) |
+| 1. Aurifeuillian origin of 904 | `log(M/L) = 2 sum psi(j) / (j x^((j-1)/2))` exactly, so `M/L -> e^2`; only x = 3 and 7 split `x^x + 1` into algebraic factors that differ by `x`; a factor pair for every 3-digit solution | proven (Theorems 16.2, 16.4), computed (tables) |
 | 1. two large digits | no new 3-digit solution with two digits up to 1000 and one up to 30 | computed |
 | 12. `b(b+x) = x^x + 1` | no solution for even `x`, odd square `x`, or `x` up to `4 * 10^9` other than 3 and 7; no finite set of primes can finish the proof; any further solution is an abc triple of quality above 1.99999999 | proven, computed |
 | 2. reducible `Q_s` | for k = 5, reducible means a rational root or a decomposable `P_s`, for all digits; for k = 6, 7 the other splits occur only for `M <= 4` (searched up to 9 and 6) | proven (k = 5), computed |
@@ -67,7 +67,7 @@ Aurifeuillian factors `L < M` with `L M = Phi_2x(x)`. For squarefree
 Let `psi` be the quadratic character of `Q(sqrt x)`, that is
 `psi(j) = (D / j)` with `D = 4x` or `x` its discriminant.
 
-Theorem 1. For squarefree `x > 1`, `x` odd,
+Theorem 16.2. For squarefree `x > 1`, `x` odd,
 
     log(M / L) = 2 * sum over odd j >= 1 with gcd(j, x) = 1 of psi(j) / (j x^((j-1)/2)).
 
@@ -116,31 +116,33 @@ to 0 when `3 | x`. This is the observed range 6.98 to 8.06 of question 1.
 
 ### 16.1.3 Why x = 7 works and nothing larger does
 
-Proposition 2. For squarefree `x == 3 (mod 4)`,
+Proposition 16.3. For squarefree `x == 3 (mod 4)`,
 `L == 1 - x + x (x + mu(x)) / 2` and `M == 1 + x + x (x + mu(x)) / 2 (mod x^2)`.
 So `M - L == 2x (mod x^2)`, and `E = M - (x+1) L - x` is divisible by `x^2`.
 
 Proof. `L = +-prod over a in A of (sqrt x - zeta^a)`. Expand in powers of
 `sqrt x`: the coefficient of `(sqrt x)^j` is `+-e_j`, the `j`-th elementary
 symmetric function of the `zeta^a`, an integer of `Q(sqrt x)`. Terms with
-`j >= 3` are divisible by `x^2`. From the proof of Theorem 16.1,
+`j >= 3` are divisible by `x^2`. From the proof of Theorem 16.2,
 `e_1 = S_1 = sqrt x`, and `e_2 = (S_1^2 - S_2) / 2 = (x + mu(x)) / 2`, since
 `S_2 = -mu(x)` by the same Ramanujan-sum computation. `L == 1 (mod x)` fixes
 the sign. `M` is the same with `-zeta^a`.
 
 So the Aurifeuillian pair `((x+1) L, M)` satisfies (1) to precision `x^2`
 for every prime `x == 3 (mod 4)`: `b (b + x) == N (mod x^2)` holds by
-structure. A solution needs `E = 0`. By Theorem 16.1,
+structure. A solution needs `E = 0`. By Theorem 16.2,
 `M - (x+1) L = L (M/L - x - 1)`, and `M/L < 8.1 < x + 1` for `x >= 11`, so
 `E < 0`. For x = 7, `M/L = 8.06` is within `x/L` of `x + 1 = 8`, and
 `E = 0`. For x = 3, `L = 1` and `E = 0`.
 
-Computed: for every squarefree `x == 3 (mod 4)` up to 300 other than 3 and 7,
-the largest power of `x` dividing `E` is exactly `x^2`.
+Computed: for every squarefree `x == 3 (mod 4)` up to 400 other than 3 and 7,
+the largest power of `x` dividing `E` is exactly `x^2`, and both congruences
+of Proposition 16.3 hold (PARI/GP, composite `x` such as 15, 35 and 39
+included).
 
 So (1,7,1) in base 904 is Aurifeuillian in a precise sense. The identity
 gives the factor pair and the congruence mod `x^2`. What remains is the
-numerical coincidence `e^2 + 0.67/7 = 8.06`, close to `x + 1 = 8`.
+numerical coincidence `M/L = e^(2 + 0.61/7) = 8.06`, close to `x + 1 = 8`.
 
 ### 16.1.4 No other algebraic factor pair
 
@@ -149,7 +151,7 @@ of irreducible factors in `Z[t]` of `Phi_2d(s t^2)`, where `x = s y^2`, `s`
 squarefree and `d | x`. These are the cyclotomic values `Phi_2d(x)` and the
 Aurifeuillian halves.
 
-Theorem 2. Let `x >= 3` be odd. If `b (b + x) = x^x + 1` and `b` is a product
+Theorem 16.4. Let `x >= 3` be odd. If `b (b + x) = x^x + 1` and `b` is a product
 of algebraic factors, then `x = 3` or `x = 7`.
 
 Proof. Write `log Phi_2d(x) = phi(d) log x + eps_d`. Then
@@ -164,7 +166,7 @@ because the degrees add up to `x`.
 
 - No pair split: `|D log x| <= tau(x)/(x - 1) + x^(2 - x/2)`, false for all
   `x >= 3` since `tau(x) <= x - 1`.
-- `y = 1`, so one pair, `rho = 2 + O(1/x)` by Theorem 16.1:
+- `y = 1`, so one pair, `rho = 2 + O(1/x)` by Theorem 16.2:
   `|D log x +- rho| <= tau(x)/(x-1) + x^(2-x/2)`. For `x >= 11`,
   `log x - 2 - 2/(3(x-1)) > tau(x)/(x-1) + x^(2-x/2)`, which excludes
   `|D| = 1`, and `|D| >= 3` is excluded since `3 log x > 2.2 + 1`. Below 11
@@ -221,11 +223,11 @@ they are those, the self-paying families `(x,0,0)`, `(x,0,1)`, and the swaps
 `10^1500`.
 
 Answer (question 1). The pair `(8 * 113, 911)` is the Aurifeuillian pair
-`((x+1) L, M)` of `7^7 + 1`. Theorem 16.1 gives the exact law
+`((x+1) L, M)` of `7^7 + 1`. Theorem 16.2 gives the exact law
 `log(M/L) = 2 sum psi(j) / (j x^((j-1)/2))`, so `M/L = e^2 (1 + 2(x/3)/(3x) + ...)`.
-The pair always satisfies (1) modulo `x^2` (Proposition 16.2). It satisfies (1)
+The pair always satisfies (1) modulo `x^2` (Proposition 16.3). It satisfies (1)
 exactly only when `M/L` is within about `x/L` of `x + 1`, which happens for
-x = 3 and 7 and never again. By Theorem 16.2 no other algebraic factor pair of
+x = 3 and 7 and never again. By Theorem 16.4 no other algebraic factor pair of
 `x^x + 1` solves (1). Among the six 3-digit solutions, five have an
 algebraic factor pair; `(6,1,5)` in base 91 is the counterexample candidate
 and indeed has none.
@@ -237,7 +239,7 @@ square of `U = 2b + x`.
 
 ### 16.2.1 What is proven
 
-Proposition 3. (1) has no solution with `x` even or with `x` an odd square.
+Proposition 16.5. (1) has no solution with `x` even or with `x` an odd square.
 
 Proof. In both cases `x^x = Y^2` is a square. Then
 `(2Y)^2 < f(x) < (2Y + 1)^2`, because `0 < x^2 + 4 < 4Y + 1` for `x >= 2`.
@@ -247,7 +249,7 @@ So only odd non-squares remain. For odd `x`, `f(x) == 1 (mod 8)`, and
 of `x`. Proposition 16.1 is the factor form for prime `x`. Three more
 reformulations follow.
 
-Proposition 16.4 (x-adic form). Let `x` be an odd prime and `beta` the root of
+Proposition 16.6 (x-adic form). Let `x` be an odd prime and `beta` the root of
 `t^2 + x t - 1 = 0` in `Z_x` with `beta == 1 (mod x)`. Let `R` be the residue
 of `beta` mod `x^x` in `[0, x^x)`. Then (1) has a solution exactly when
 `R < x^(x/2)`, and then `b = R`.
@@ -263,7 +265,7 @@ primes up to 59, `R` lies between `x^(x - 0.8)` and `x^x`, as a random
 residue would (`alg_abc171.py`). Heuristically
 this happens with probability `x^(-x/2)`.
 
-Proposition 16.5 (unit form). Let `x == 3 (mod 4)` be squarefree with `x^2 + 4`
+Proposition 16.7 (unit form). Let `x == 3 (mod 4)` be squarefree with `x^2 + 4`
 prime, and `epsilon` the fundamental unit of `Z[sqrt x]`. A solution of (1)
 gives `(2b + x) + 2 x^((x-1)/2) sqrt x = +-(x + 2 +- 2 sqrt x) epsilon^k` for
 some integer `k`.
@@ -280,12 +282,12 @@ For x = 3: `11 + 6 sqrt 3 = (5 - 2 sqrt 3)(2 + sqrt 3)^2`. For x = 7:
 equation in a recurrence, with finitely many solutions (Petho, Shorey and
 Tijdeman). The difficulty is that the field changes with `x`.
 
-Theorem 16.2 (section 16.1.4) is a fourth partial result: no solution comes from
+Theorem 16.4 (section 16.1.4) is a fourth partial result: no solution comes from
 an algebraic factorization, except x = 3 and 7.
 
 ### 16.2.2 Local tests cannot finish the proof
 
-Proposition 6. (a) The primes 3 and 5 never exclude an odd `x`.
+Proposition 16.8. (a) The primes 3 and 5 never exclude an odd `x`.
 (b) For every finite set `S` of primes, the `x == 1 (mod lcm(p - 1 : p in S))`
 pass the test at every `p` in `S`. They have positive density. So no finite
 set of congruences proves that (1) has no solution with `x > 7`.
@@ -321,7 +323,7 @@ Exact densities (`alg_density171.py`). For the 31 primes `p` with
 `x mod 20160`. The exact share of odd `x` that pass all 31 tests is 0.00029.
 So all but a density `1.5 * 10^-4` of all integers `x` are excluded by
 congruences (proven). The share flattens near `1 / 10080` because of the
-class `x == 1 (mod 20160)` of Proposition 6.
+class `x == 1 (mod 20160)` of Proposition 16.8.
 
 Other exponents (`alg_exponents171.py`, `data/alg_exponents171.txt`). The
 equation `b (b + x) = x^n + 1` for `x <= 3000`, `2 <= n <= 1500` has these
@@ -334,7 +336,7 @@ sporadic set once.
 
 ### 16.2.4 A reduction to the abc conjecture
 
-Proposition 7. A solution of (1) with odd `x` gives the abc triple
+Proposition 16.9. A solution of (1) with odd `x` gives the abc triple
 `(x^2 + 4) + 4 x^x = (2b + x)^2`. Its quality is at least
 `log(4x^x) / log(2x (x^2 + 4)(2 x^(x/2) + 1))`, which exceeds 1.6299 for
 `x >= 29` and tends to 2.
@@ -357,16 +359,16 @@ finiteness, Overholt 1993), but (1) needs much less than abc.
 
 1. The equation is a Pell equation `U^2 - 4x Y^2 = x^2 + 4` with the extra
    condition `Y = x^((x-1)/2)`. For fixed `x` it is an S-unit question in a
-   binary recurrence (Proposition 16.5), solved by Baker's method. The field
+   binary recurrence (Proposition 16.7), solved by Baker's method. The field
    `Q(sqrt x)`, its unit and the recurrence all change with `x`. No method
    handles a family of recurrences whose fields vary.
-2. Congruences fail for a structural reason (Proposition 16.6).
+2. Congruences fail for a structural reason (Proposition 16.8).
 3. The factor form (Proposition 16.1) asks for a divisor of `Phi_2x(x)` in a
    window of relative width `x^(1 - x/2)`. Results on divisors of cyclotomic
    values (Zsigmondy, Bilu-Hanrot-Voutier) control which primes occur, not
-   where the divisors lie. Theorem 16.2 handles the divisors that come from
+   where the divisors lie. Theorem 16.4 handles the divisors that come from
    identities; the others behave like random numbers.
-4. The x-adic form (Proposition 16.4) asks that `(x-1)/2` consecutive digits of
+4. The x-adic form (Proposition 16.6) asks that `(x-1)/2` consecutive digits of
    an algebraic `x`-adic number vanish. Statements of this kind are open
    even for a fixed base.
 
@@ -378,7 +380,7 @@ square `x`, for `x` in residue classes covering all but density
 `1.5 * 10^-4` of the integers, and none from an algebraic factorization. For
 prime `x` the problem is a divisor of `Phi_2x(x)` near
 `sqrt(Phi / (x+1))`. Computed: none for `x <= 4 * 10^9` except 3 and 7. No
-finite set of congruences can finish the proof (Proposition 16.6). Any further
+finite set of congruences can finish the proof (Proposition 16.8). Any further
 solution would be an abc triple of quality above 1.99999999, so a weak abc
 inequality implies the result.
 
@@ -386,7 +388,7 @@ inequality implies the result.
 
 ### 16.3.1 Degree at most 4
 
-Proposition 8. If `k <= 5` and `Q_s` has a root modulo all but finitely many
+Proposition 16.10. If `k <= 5` and `Q_s` has a root modulo all but finitely many
 primes, then `Q_s` has a rational root. So no `Q_s` with `k <= 5` is
 intersective without a rational root, and the local test is complete for
 `k <= 5`.
@@ -397,7 +399,7 @@ product of two irreducible quadratics with fields `Q(sqrt D_1)` and
 are equal, the primes inert in it (density 1/2) give no root. If they
 differ, the primes inert in both (density 1/4) give no root.
 
-Proposition 16.9 (k = 6). `Q_s` of degree 5 has a root modulo almost every
+Proposition 16.11 (k = 6). `Q_s` of degree 5 has a root modulo almost every
 prime but no rational root exactly when `Q_s = g h` with `g` an irreducible
 quadratic, `h` an irreducible cubic with group `S_3`, and
 `Q(sqrt disc g) = Q(sqrt disc h)`.
@@ -419,7 +421,7 @@ Let `a = s_2/s_1`, `b = s_3/s_1`, `c = s_4/s_1`, `d = s_5/s_1`,
 `q = 0` exactly when `P_s(r)` is a polynomial in `(r + a/4)^2`, that is,
 when `P_s` is decomposable.
 
-Theorem 3. If `Q_s` (k = 5) is a product of two quadratics over `Q` and
+Theorem 16.12. If `Q_s` (k = 5) is a product of two quadratics over `Q` and
 `q != 0`, then
 `F <= s_1 (d - B^2/4 - aq/4 + s_1^2 q^2 + max(C, 0)^2)`. This bound is below
 `F(s)` for every string with `M >= 3`.
@@ -438,7 +440,7 @@ and `C u - u^2/4 <= C^2`. For `M >= 7` each term is at most a power of `M`:
 `M^7/8 < M^M <= F`. For `3 <= M <= 12` an exact check of all strings
 (`alg_k5bound.py`) gives a largest ratio bound/F of 0.84.
 
-Corollary. For k = 5 and every string with `M >= 3`, `Q_s` is reducible
+Corollary 16.13. For k = 5 and every string with `M >= 3`, `Q_s` is reducible
 exactly when it has a rational root, or when `P_s = s_1 G((r + a/4)^2)` and
 either `G(u) - F/s_1` has rational roots or, for a root `theta`,
 `theta + a^2/16` is a square in `Q(theta)` (Capelli). With the computation
@@ -471,7 +473,7 @@ about `(F/s_1)^(1/(k-1))`. None of them has a root modulo every prime below
 3000, so none is intersective. For k = 6 the degree is prime, so `P_s` is
 always indecomposable, and no 2+3 split has `M >= 5`.
 
-The method of Theorem 16.3 does not extend. For k = 6 the same elimination
+The method of Theorem 16.12 does not extend. For k = 6 the same elimination
 gives a curve of genus 1 instead of a rational one, and the integrality step
 needs the root sum `Z cos(2 pi/5) + ...` to be near a rational with bounded
 denominator, which is a Diophantine approximation question.
@@ -479,9 +481,9 @@ denominator, which is a Diophantine approximation question.
 Answer (question 2). For k = 5 the conjecture is a theorem: reducibility
 comes only from a rational root or a decomposition `P_s = G(h)`, and the
 near-binomial case is part of the decomposition case. No `Q_s` with `k <= 5`
-is intersective without a rational root (Proposition 16.8). For k = 6 an
+is intersective without a rational root (Proposition 16.10). For k = 6 an
 intersective `Q_s` needs a 2+3 split with equal quadratic fields
-(Proposition 16.9); none exists with digits up to 9. Conjecture, refined: for
+(Proposition 16.11); none exists with digits up to 9. Conjecture, refined: for
 every `k` there is a polynomial bound `F <= C_k M^(c_k)` outside which every
 factorization of `Q_s` without a linear factor comes from a decomposition of
 `P_s`. If true, no `Q_s` with large digits is intersective unless it is
@@ -489,7 +491,7 @@ decomposable.
 
 ## 16.4 Galois groups (question 4)
 
-Theorem 4. (a) For k = 4 and `M >= 5`, every irreducible `Q_s` has group
+Theorem 16.14. (a) For k = 4 and `M >= 5`, every irreducible `Q_s` has group
 `S_3`. (b) For k = 5 and `M >= 6`, every irreducible `Q_s` has group `S_4`,
 unless `P_s` is decomposable, and then the group lies in `D_4`.
 
@@ -528,7 +530,7 @@ from `r^5` and `D_5`.
 
 ## 16.5 Rational roots and rational bases (question 11)
 
-Proposition 16.10 (k = 3). If `Q_s` (k = 3) has a rational root `p/q` in lowest
+Proposition 16.15 (k = 3). If `Q_s` (k = 3) has a rational root `p/q` in lowest
 terms, its other root `p'/q'` is rational with `q q' = s_1`, and the roots
 have opposite signs.
 
@@ -554,7 +556,7 @@ Sakarovitch with base `p/q`, every `N >= 1` has a unique expansion
 many, and the search is finite (`alg_afs.c`, `data/alg_afs_8.txt`, all 49
 verified with exact fractions).
 
-Proposition 11. For `q > 1` there are no twins: changing the last digit by 1
+Proposition 16.16. For `q > 1` there are no twins: changing the last digit by 1
 changes the value by `1/q`, not an integer.
 
 Under `0^0 = 1`, the bases `p/q` with `q > 1` and `p <= 8` have 17 Munchausen
@@ -587,7 +589,7 @@ finite in each base, and have no twins.
 
 ### 16.6.1 Three digits
 
-By Proposition 16.10 the two roots of a quadratic `Q_s` are a solution in base
+By Proposition 16.15 the two roots of a quadratic `Q_s` are a solution in base
 `b` and a non-partner negative-base solution only if `s_1` does not divide
 `s_2` or the partner root is at most `M`.
 
@@ -601,7 +603,7 @@ and `(3,0,27)`, are partners with `delta = 0`.
 
 ### 16.6.2 Five digits and more
 
-Theorem 5. Let `k` be odd and `s` a solution in base `b` and in base `-c`.
+Theorem 16.17. Let `k` be odd and `s` a solution in base `b` and in base `-c`.
 Then `c >= b` and `delta = c - b < 4M/s_1`. If moreover
 `P_s(r) != P_s(-r - delta)` as polynomials, then
 `b <= 1 + 2 k M (1 + delta)^(k-1)`. For k = 5 this forces `M <= 30`.
@@ -637,14 +639,14 @@ expect none at all (heuristic).
 ## 16.7 New questions
 
 1. Is there a closed form for `sum psi(j) z^j / j` at `z = x^(-1/2)` that
-   gives `M/L` directly, and does Theorem 16.1 extend to the Aurifeuillian
+   gives `M/L` directly, and does Theorem 16.2 extend to the Aurifeuillian
    factors of `a^n +- b^n` in general (Brent's and Stevenhagen's
    formulas)?
 2. The diagonal `n = x` of `b(b+x) = x^n + 1` meets the sporadic set only at
    (7, 7) for `n >= 4`. Is the set of `(x, n)` with `n >= 4` finite?
    For `n = 5` the curve `U^2 = 4x^5 + x^2 + 4` has genus 2, so this is
    decidable for each `n`.
-3. Theorem 16.3 for every `k`: is every split of `Q_s` without a linear factor
+3. Theorem 16.12 for every `k`: is every split of `Q_s` without a linear factor
    decomposable once `F > C_k M^(c_k)`? The k = 6 case reduces to
    approximating `cos(2 pi/5) Z` by rationals with bounded denominator.
 4. Why do 3-digit negative bases have no non-partner solution, while
@@ -654,7 +656,7 @@ expect none at all (heuristic).
 
 | script | output |
 |---|---|
-| `alg_aurifeuille.py` | `data/alg_aurifeuille_300.txt`: `M/L`, the series, Proposition 16.2 |
+| `alg_aurifeuille.py` | `data/alg_aurifeuille_300.txt`: `M/L`, the series, Proposition 16.3 |
 | `alg_algebraic171.py` | `data/alg_algebraic171_201.txt`: best algebraic split of `x^x + 1` |
 | `alg_twolarge.py` | `data/alg_twolarge_1000_30.txt`, `data/alg_3digit_all_200.txt` |
 | `alg_sieve171.c` | `data/alg_sieve171_4e9.txt` |
@@ -662,7 +664,7 @@ expect none at all (heuristic).
 | `alg_exponents171.py` | `data/alg_exponents171.txt` |
 | `alg_abc171.py` | `data/alg_abc171.txt`: abc quality and the x-adic residues |
 | `alg_reducible.py` | `data/alg_reducible_k5_9.txt`, `_k6_9.txt`, `_k7_6.txt` |
-| `alg_k5bound.py` | the bounds of Theorems 3 and 4 against `F` |
+| `alg_k5bound.py` | the bounds of Theorems 16.12 and 16.14 against `F` |
 | `alg_galois.py` | `data/alg_galois_k4_10.txt`, `_k5_8.txt`, `_k6_5.txt` |
 | `alg_rational.py` | `data/alg_rational_k3_80.txt`, `_k4_44.txt` |
 | `alg_afs.c` | `data/alg_afs_8.txt` |

@@ -193,7 +193,7 @@ $g_k (j) = sum_(r | gcd(j, k)) r mu(k slash r) chi(k slash r) chi(j slash r)$.
 #theorem(id: "dio-general-series", title: "The ratio in general", src: "18.5")[
   For $s y^2 > 1$,
   $
-    ln (M / L) = 2 lr(| sum_(j "odd") g_k (j) / (j s^((j-1) slash 2) y^j) |).
+    ln (M / L) = 2 lr(| sum_(j "odd") (g_k (j)) / (j s^((j-1) slash 2) y^j) |).
   $
   Since $g_k (1) = mu(k) chi(k)$, $M slash L -> e^(2 slash y)$ as $s$ grows
   when $k$ is squarefree and prime to $D$, and $M slash L -> 1$ otherwise.

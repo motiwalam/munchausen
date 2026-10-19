@@ -56,7 +56,7 @@ The implementation in Rust stores each number as one byte per base-$b$ digit in 
 == The cost of the exact search <sec-search-cost>
 
 #computation(id: "search-comp-growth", title: "Growth of the exact search", src: ("6.1", "9.1"))[
-  The prefix-pruned tree grows by a factor of about 1.87 to 1.90 per base: 1.87 from base 16 to 23 and 1.90 from base 30 to 43. Base 37 takes 205 seconds on the test laptop and base 40 about 25 to 36 minutes. An exact search of base 44 would take about 7 hours on 8 threads.
+  The prefix-pruned tree grows by a factor of about 1.87 to 1.90 per base: 1.87 from base 16 to 23 and 1.90 from base 30 to 43. Base 37 takes 205 seconds on the test laptop with the build of 17 October 2026, so base 40 takes about 25 minutes; the first build measured 36 minutes for base 40 on a machine shared with other jobs. An exact search of base 44 would take about 7 hours on 8 threads.
 ]
 
 Where does the tree come from? At the top the search fixes the counts of the largest digits. The leading digits of the interval are then mostly small digits, and a small digit only adds a lower bound on its own count. So the top levels prune almost nothing. In base 21 and $k = 20$, a node at the widest level has 15 children on average #lib("6.2").

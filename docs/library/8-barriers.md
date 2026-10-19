@@ -186,11 +186,12 @@ for infinitely many bases at once. The tools of this library cannot give one:
   them are not solutions.
 - The constructions of chapter 2 only show that bases have solutions, never
   that they lack them.
-- In the model, each base is empty with probability about 15%, independently of
-  the others. A proof that infinitely many are empty would have to control
-  these chance events in infinitely many bases. That is a statement of the same
-  kind as the finiteness questions of section 8.2, about the absence of
-  coincidences between powers, and no method for it is known.
+- In the model, each base is empty with probability about 20% (even bases) or
+  9% (odd bases) in the large-base limit, independently of the others
+  (sections 4.5 and 9.7). A proof that infinitely many are empty would have to
+  control these chance events in infinitely many bases. That is a statement of
+  the same kind as the finiteness questions of section 8.2, about the absence
+  of coincidences between powers, and no method for it is known.
 
 The opposite statement, "every large base has a solution", is as far out
 of reach, and the model says it is false.

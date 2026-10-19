@@ -133,7 +133,8 @@ large terms, and abc does not apply.
   convention?
 ]
 
-The model says yes: about 17% of even and 8% of odd bases are empty. The
+The model says yes: about 17% of even and 8% of odd bases near base 40 are
+empty, and 20% and 9% in the large-base limit. The
 data agree: bases 19, 27 and 35 are the empty ones up to 41 (base 43 has solutions), and each base's
 own near-solution spectrum predicts its chance of being empty. A proof would
 have to exclude a coincidence in infinitely many bases at once. Congruences

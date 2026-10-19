@@ -566,11 +566,10 @@ These bases are rare.
 
 #proposition(id: "cons-rare", title: "Rich bases are rare", src: "9.8")[
   The number of bases up to $X$ with $c$ or more self-paying digits is at
-  most $X^(1 slash (c + 1)) (1 + o(1))$ as $X -> infinity$.#footnote[The
-  library (#lib("9.8"), Proposition 9.3) states the bound $X^(1 slash (c+1))$
-  without the factor $1 + o(1)$, and argues that such a base is a perfect
-  $(c+1)$-th power. That is not true: base $8 = 2^3$ has the self-paying digit
-  4 but is not a square.]
+  most $X^(1 slash (c + 1)) (1 + o(1))$ as $X -> infinity$.#footnote[Such a
+  base need not be a perfect $(c+1)$-th power: base $8 = 2^3$ has the
+  self-paying digit 4 but is not a square. So the bound needs the sum over all
+  exponents $t >= c + 1$.]
 ]
 #proof[
   By @thm-self-paying the self-paying digits of $b = r^t$, with $r$ not a

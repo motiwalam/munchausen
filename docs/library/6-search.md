@@ -12,8 +12,12 @@ lower it, and what this means for base 100.
 | combinations the Python search checks | `nb7` in `src/nb.py` | 3.9 |
 | nodes of the prefix-pruned tree | measured | 1.87 |
 
-Base 38 takes 520 seconds on the test laptop, base 40 takes 36 minutes, and
-each further base costs about 1.9x more.
+With the first `fast` build, base 38 took 520 seconds on the test laptop and
+base 40 took 36 minutes, while other jobs shared the machine
+(`docs/comparison.md`). The speedups of 17 October 2026 (`fast/README.md`,
+"Speed") changed constant factors only. With them, base 37 takes 205 seconds,
+and base 40 takes about 25 minutes by extrapolation. Each further base costs
+about 1.9x more.
 
 ## 6.2 Where the tree comes from
 

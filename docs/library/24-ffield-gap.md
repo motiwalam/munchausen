@@ -206,7 +206,7 @@ New cases against chapter 21: `(2,6)`, `(2,7)`, `(3,5)`, `(5,4)`, `(7,3)`,
 `(11,3)`, `(13,3)`, `(17,3)`. The largest, `(17, 3)` under `0^0 = 0`, takes
 2 minutes on 4 threads; `(2, 7)` takes 6.
 
-Statement 3.1 (computed). Under `0^0 = 0` the ratio is 1.03 to 1.47 for odd
+Statement 24.3.1 (computed). Under `0^0 = 0` the ratio is 1.03 to 1.47 for odd
 `q`, and every odd case has `z > 0`; together the nine odd cases give a
 combined `z` of about 5 (the sum of the `z` divided by 3). For `q = 2` the
 ratios scatter on both sides of 1.
@@ -229,7 +229,7 @@ the size of the families of Lemma 24.8.
 For `q = 3` the average is `37/27`. The bases with `k = 3` follow the model
 within 2%. The excess sits in `k = 2`, and `k = 1` scatters on both sides.
 
-Statement 3.2 (computed). The exact average for `e = 3`, divided by
+Statement 24.3.2 (computed). The exact average for `e = 3`, divided by
 `q(q-1)`, is `37/27, 43/25, 89/49, 24/11, 441/169, 911/289` for
 `q = 3, 5, 7, 11, 13, 17`. Its ratio to the model moves up and down with `q`
 (1.31, 1.18, 1.03, 1.07, 1.03 for `q >= 5`), and the column `k = 1` is not
@@ -666,7 +666,7 @@ normalized pairs `(gamma, lambda)` that pass, out of `(q-1)(q-2)`.
 
 For `q == 2 (mod 3)` about 2 pairs pass per `gamma`; for `q == 1 (mod 3)`
 the binomial cosets add a whole row. The average is erratic in `q`, which is
-one reason why Statement 3.2 finds no formula.
+one reason why Statement 24.3.2 finds no formula.
 
 ### 24.5.3 What is exact and what is not
 
@@ -724,7 +724,7 @@ percent:
   (Table 24.6.1);
 - the parity factor under `0^0 = 1` in odd bases, computed with the true zero
   law of `S(c)`, is 2% to 4% above the model's for 5 of the 6 bases (Table
-  6.1; the sampling error is about 1%);
+  24.6.1; the sampling error is about 1%);
 - the forced-top correction of section 11.2 is 0.86 to 0.91 for `b`-digit
   solutions and near 1 for `b-1` and `b-2` digits (cited). With the 8% share
   of `b` digits this lowers the total by about 1%.

@@ -130,8 +130,10 @@ continues weakly in fresh data, and the question stays open.
   nontrivial solutions per convention: 0.55 with 99 digits, 0.24 with 98, 0.09
   with 97, 0.08 with 100, and 0.06 with fewer.
 - A `b`-digit solution under `0^0 = 1` is expected in about 8% of large bases.
-  Bases 3 to 41 have none, against 2.9 expected. Under the model that happens
-  about 5% of the time. So I expect a counterexample to the conjecture of
+  Bases 3 to 45 have none, against 3.2 expected in the basic model and 3.6 in
+  the refined model. Under the model that happens 4% or 3% of the time. Section
+  11.2 finds that the model overestimates this length at these bases, so the
+  gap is weaker than it looks. I expect a counterexample to the conjecture of
   chapter 7 in some larger base.
 - Under `0^0 = 0` the model expects about 1.5 solutions per base on average,
   because odd bases count double.

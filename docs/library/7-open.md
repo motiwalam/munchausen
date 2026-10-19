@@ -12,15 +12,17 @@ Conjecture (original). For `b > 2` no base has a `b`-digit solution.
 
 - Under `0^0 = 0` it is false: base 15 has `(1,2,4,3,14,14,13,3,4,1,9,1,1,0,14)`
   and base 16 has `(1,2,3,11,2,3,0,9,15,15,5,7,2,15,6,11)` (computed).
-- Under `0^0 = 1` it holds for bases 3 to 43 (computed; base 42 only for
-  `b`-digit numbers).
+- Under `0^0 = 1` it holds for bases 3 to 45 (computed; bases 42, 44 and 45
+  only for `b`-digit numbers, section 8.6).
 - For `b >= 7`, a `b`-digit solution contains the digit `b-1` at least three
   times (proven, Proposition 1.6). Both counterexamples contain it exactly
   three times.
 - The model expects a `b`-digit solution in about 8% of large bases. Bases 3 to
-  41 have none under `0^0 = 1`, against 2.9 expected, which happens about 5% of
-  the time under the model. I expect the conjecture to fail under `0^0 = 1`
-  too.
+  45 have none under `0^0 = 1`. The basic model expects 3.2 there and the
+  refined model 3.6, so none happens with probability 0.04 or 0.03. Section
+  11.2 shows that the model overestimates this length at these bases, by about
+  1.6x. With that correction, none is an ordinary outcome. I expect the
+  conjecture to fail under `0^0 = 1` too.
 
 ## 7.2 Finitely many short solutions under `0^0 = 1` (refuted)
 
@@ -75,14 +77,16 @@ statement for bases near the length, where the evidence below applies: no
   the count in one base follows a Poisson law. The families of chapter 2 make
   the tails heavier.
 - Are there infinitely many bases without solutions? The model says that
-  about 17% of even and 8% of odd bases have none under either convention
-  (section 9.7). Bases 19, 27 and 35
+  about 17% of even and 8% of odd bases near base 40 have none under either
+  convention (section 9.7), and 20% and 9% in the large-base limit (section
+  4.5). Bases 19, 27 and 35
   are the empty ones up to 41. Section 8.5 explains why no uniform method is
   available. No even base from 10 to 41 is empty, against 2.6 expected
   (probability 0.06), and base 44 has a solution.
 - How far apart are the bases with many solutions? Base `n^(n-1)` has at least
   `2^(n-1) - 2` solutions under `0^0 = 0`, and the bases with `c` self-paying
-  digits are perfect `(c+1)`-th powers (section 9.8).
+  digits are powers `r^t` with `t >= c + 1`, at most
+  `X^(1/(c+1)) (1 + o(1))` of them up to `X` (section 9.8).
 - For `N_1(b)`, self-paying digits only help together with near-solutions of
   small defect (Proposition 8.6).
 

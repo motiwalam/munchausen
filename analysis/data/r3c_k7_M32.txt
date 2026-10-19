@@ -1,5 +1,5 @@
 # fast/target/release/kdigit 7 32 at commit ecffb0c (RAYON_NUM_THREADS=3, load average 41)
-# k=7 M=32: 15 solutions; 41326975008 strings, 36309 passed the test with the default moduli (4.39e-7); 564.9s; complete for bases b with b^7 <= 33^33, that is b <= about 10^7.2
+# k=7 M=32: 15 solutions; 41326975008 strings, 36309 passed the test with the default moduli (4.39e-7 of the 82653950016 candidates, one per string and convention; 8.79e-7 per string); 564.9s; complete for bases b with b^7 <= 33^33, that is b <= about 10^7.2
 7 0 9 1,6,4,7,0,6,3
 7 0 9 1,6,5,6,5,4,7
 7 0 169 13,0,0,0,0,0,0
