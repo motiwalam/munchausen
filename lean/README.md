@@ -51,7 +51,7 @@ use `decide`, which the kernel checks.
 | `Munchausen/BaseWindow.lean` | Lemma 20.1 and Proposition 15.17 (the window of the base), Proposition 20.2, Lemma 20.4 |
 | `Munchausen/Polynomial.lean` | `Q_s`, local obstructions (11.1, 19.1), the test modulo 2 (15.11), negative bases (12.2, 12.3), rational roots (16.15) |
 | `Munchausen/Residues.lean` | residues of `x^x - x` modulo 27 and 81, Lemmas 20.6, 20.7, Theorem 20.8, the coverings 15.13 and 20.13 |
-| `Munchausen/AdicLaws.lean` | Theorem 20.11 (the 3-adic law) and part of Theorem 20.12 (the 5-adic law) |
+| `Munchausen/AdicLaws.lean` | Theorem 20.11 (the 3-adic law), Theorem 20.12 (the 5-adic law) and Lemma 15.12 (1) |
 | `Munchausen/ShortEquations.lean` | Propositions 18.1, 16.5, 20.20, Lemma 18.14, Theorem 15.7 |
 | `Munchausen/LocalTests.lean` | Proposition 16.8, section 19.1.1, Lemma 20.21, the families of 11.3 and 12.3 |
 | `Munchausen/ThreeDigits.lean` | Theorem 8.3, Theorem 25.2, Corollary 25.3, Theorem 25.7 (ii) and (iii), Lemma 25.13, Corollary 25.14 |
@@ -62,6 +62,7 @@ use `decide`, which the kernel checks.
 | `Munchausen/Applications.lean` | chapter 30: Lemmas 30.1, 30.2, 30.4, Propositions 30.6, 30.7, 30.10, Corollaries 30.11, 30.13, Theorem 30.12 (the completed square), Proposition 30.14 (the divisor pairing) |
 | `Munchausen/ModelTheorems.lean` | chapter 29: Lemma 29.2, `k(B)` and Berlekamp's count, Theorems 21.6 and 29.11 (1), (3), Corollary 29.10 (the factor), Lemma 29.14 |
 | `Munchausen/SearchRules.lean` | chapters 31 and 32: the residue rule (31.1), the interval (31.4, 31.5), the Pell form of `(p, q, x)` and `(p, x, q)`, the sieve |
+| `Munchausen/Factorials.lean` | chapter 33: factorions and other weights (33.9, 33.12, 33.13), the completed square, Lemmas 33.1, 33.2, Theorem 33.4 (b), (d), Proposition 33.21, and the abc step of Theorem 33.16 with abc as a hypothesis |
 | `Munchausen/Examples.lean` | concrete solutions checked by `decide`, and `(1,6,46666)` in base `46666^23333 - 3` |
 | `Munchausen/Conjectures.lean` | open problems as named `Prop`s, and proofs that refuted conjectures are false |
 

@@ -20,7 +20,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
-(SearchRules).
+(SearchRules), Fact (Factorials).
 
 Counts of table rows at the time of writing: 133 formalized (one of them a
 list of computed solutions checked by `decide`), 19 partial, 11 rows of open
@@ -389,6 +389,30 @@ stated.
 | Theorem 32.3 | `isSolution_last_iff_disc`, `isSolution_mid_iff_disc`, `sieve_last`, `sieve_mid` [SR] | partial: the test `D = U^2` and the soundness of the sieve (`D` is a square modulo every `l`); the bound `X0` and the run are computations |
 | Corollary 32.4, Proposition 32.7 | none | not formalized (computation) |
 | Theorem 32.5, Proposition 32.6 | none | not formalized (Baker and Matveev bounds, class number formula) |
+
+## Chapter 33. Factorials against `x^x`
+
+| result | Lean name | status |
+|---|---|---|
+| factorions, weights in general | `IsWSolution`, `fw`, `isSolution_iff_isWSolution` [Fact] | formalized (definitions) |
+| the completed square `U^2 = M + K` (table of chapter 33) | `three_digit_iff_sq`, `factorion_last_iff` [Fact] | formalized |
+| Lemma 33.1 | `lemma33_1`, `lemma33_1_two`, `sq_eq_pow_mul` [Fact] | formalized (in finite form: `v` even and the unit part a square modulo `l`, or `≡ 1 (mod 8)` for `l = 2`; that is "`K` is a square in `Q_l`" without citing Hensel) |
+| Lemma 33.2 | `lemma33_2`, `pow_div_dvd_factorial` [Fact] | partial: the obstruction behind (a) and (c) (`K = l^v k` not an `l`-adic square and `l^(v+1) ∣ x!`, with `l^(x/l) ∣ x!`); the discriminant bound of (b) and the explicit forms with `log |K|` are not stated |
+| Lemma 33.3 | none | not formalized (cites Trevino, Pomerance, Bach; computed) |
+| Theorem 33.4 | `theorem33_4_b`, `theorem33_4_d_A`, `theorem33_4_d`, `factorion_last_iff` [Fact] | partial: (b) (`x < 2 p A`) and (d) in full, and the equivalence with `U^2 = M + K`; the bounds `X0` of (a) to (c) need Lemma 33.3 |
+| Theorems 33.5, 33.6, Table 33.1.1 | none | not formalized (computation) |
+| Corollary 33.7 | `ABC`, `theorem33_16_abc` [Fact] | not formalized (the abc step is `theorem33_16_abc`; the bound on `rad(x!)` is cited and the rest is computed) |
+| Proposition 33.8, Theorem 33.10 | none | not formalized (GRH, Chebotarev) |
+| Proposition 33.9 | `prop33_9`, `infinite_two_digit_factorions` [Fact] | formalized |
+| Conjecture 33.11 | `Conjecture33_11` [Fact] | conjecture |
+| Theorem 33.12 | `theorem33_12`, `theorem33_12_member` [Fact] | formalized (every `u ≥ j` gives a member, since then `t_i ≤ (M u)^j ≤ x`; (S3) is stated as `y > M (x + v)` whenever `v^j ≤ x`) |
+| Proposition 33.13 | `prop33_13`, `prop33_13_lt`, `prop33_13_identity` [Fact] | formalized (the consequence for identities with `lam` an integer dividing `t_0`, as the normalization of Corollary 25.3 gives) |
+| Theorem 33.14, Corollary 33.15, Theorem 33.19 | none | not formalized (conditional on abc; the Tschirnhaus reduction is not stated) |
+| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `abc_div_gcd` [Fact] | partial: under abc, `N ≤ K (rad(N) U |R|)^(1+ε)` and `N^((1-ε)/2) ≤ 2 K (rad(N) |R|)^(1+ε)` for `0 < |R| ≤ N`; the bounds on `rad(N)` and `|R|` and the final bound on `x` are not formalized |
+| Corollaries 33.17, 33.18, Proposition 33.20, Table 33.4.1 | none | not formalized (conditional on abc; computation) |
+| Proposition 33.21 | `prop33_21`, `prop33_21_card` [Fact] | formalized (the arithmetic; Theorem 15.14 itself is not formalized) |
+| Proposition 33.22 | none | not formalized (inequalities closed by a computation) |
+| Heuristic 33.23, the census of 33.3.4 | none | not formalized (heuristic, computed) |
 
 ## Open questions stated as `Prop`s
 
