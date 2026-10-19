@@ -92,7 +92,7 @@ Proven:
   algorithm for real Munchausen numbers must use the arithmetic of `x^x`.
 - The residues of `x^x - x` cover everything modulo `p^e` for `p >= 7`; modulo
   powers of 3 and 5 they follow explicit laws (Theorems 20.8, 20.11, 20.12).
-  So coverings can use only the moduli 2^e, 81 and powers of 5.
+  Beyond 81, single powers of 3 give no new coverings.
 - Infinitely many digit strings are excluded in every base by covering
   congruences with moduli `3^e` and `2^e`; `(2,1,x)` is never a solution
   (chapter 15).
