@@ -6,7 +6,7 @@
 #import "template.typ": *
 
 // Update this date when the content changes.
-#let version = "18 October 2026"
+#let version = "19 October 2026"
 
 #show: conf.with(
   title: "Munchausen numbers",
