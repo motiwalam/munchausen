@@ -19,9 +19,9 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 72 formalized (one of them a
+Counts of table rows at the time of writing: 74 formalized (one of them a
 list of computed solutions checked by `decide`), 9 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 78 not formalized and 2 not
+problems (13 `Prop`s), 4 refuted conjectures, 76 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -148,13 +148,13 @@ stated.
 | Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
 | Proposition 15.11 | `exists_root_mod_two_iff` [Poly] | formalized |
 | Lemma 15.12 (1) | `pow_self_modEq_two` [Cong], `multiple_mem_T` [Res] | partial: `x^x - x` is even, and every multiple of 2 occurs modulo `2^e` |
-| Lemma 15.12 (2) (`T(p)` is everything for `p ≥ 5`) | none | not formalized (primitive roots and CRT) |
+| Lemma 15.12 (2) (`T(p)` is everything for `p ≥ 5`, `T(3) = {0, 2}`) | `T_prime_eq_univ`, `T_three` [Res] | formalized |
 | Lemma 15.12 (3) | `pow_self_modEq_27`, `pow_self_modEq_three_of_ne` [Res] | formalized |
 | Theorem 15.13 | `covering_27` [Res] | formalized |
 | example `(2,1,x)` | `not_isSolution_two_one` [Res] | formalized |
 | Theorem 15.14 (chains and cycles) | none | not formalized |
 | Proposition 15.15 | none | not formalized |
-| Proposition 15.16 (needs `c ≥ 3` for the pair `(c,1)`) | none | not formalized |
+| Proposition 15.16 (needs `c ≥ 3` for the pair `(c,1)`) | `prop15_16`, `pow_self_pair`, `pow_self_injective` [Short] | formalized |
 | Proposition 15.17 | none | not formalized (same as Lemma 20.1) |
 
 ## Chapter 16. Algebra of the polynomial
@@ -342,8 +342,8 @@ In order of value and effort:
    `q = 2 lam c e` when `R = 0`), then Propositions 25.16 and 25.17.
 2. Theorem 25.15 (at most 30 three-digit solutions per base).
 3. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
-4. Lemma 15.12 (2) and Theorem 20.8 (primitive roots, lifting).
-5. Theorem 15.7 under `0^0 = 0`, Propositions 15.16 and 18.16 / 18.17.
+4. Lemma 20.7 and Theorem 20.8 (lifting modulo `p^e`).
+5. Theorem 15.7 under `0^0 = 0`, Lemma 18.16 and Corollary 18.17.
 6. The real-root count in Proposition 9.3 and the asymptotics of
    Theorem 11.2.
 7. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and

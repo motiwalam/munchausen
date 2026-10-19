@@ -6,7 +6,8 @@ import Munchausen.Residues
 * Proposition 18.1: elementary exclusions for `b (b + x) = x^n + 1`; Proposition 16.5;
 * Proposition 20.20: `(1, 2, x)` is a solution only for `x = 6`;
 * Lemma 18.14: the base of a 2-digit solution is at least `M^(M-1)`;
-* Theorem 15.7: under `0^0 = 1`, only base 3 has two 2-digit solutions.
+* Theorem 15.7: under `0^0 = 1`, only base 3 has two 2-digit solutions;
+* Proposition 15.16: two 2-digit representations of one integer are `(a, c)` and `(c, a)`.
 -/
 
 namespace Munchausen
@@ -611,5 +612,129 @@ theorem theorem15_7 {b : ℕ} {s t : List ℕ} (hs : s.length = 2) (ht : t.lengt
 /-- Base 3 has the two 2-digit solutions `(1, 2)` and `(2, 2)` under `0^0 = 1`
 (Theorem 15.7). -/
 example : IsSolution 3 1 [1, 2] ∧ IsSolution 3 1 [2, 2] := by decide
+
+/-! ### Proposition 15.16: integers with two 2-digit representations -/
+
+/-- `x ↦ x^x` is injective on `x ≥ 1`. -/
+lemma pow_self_injective {x y : ℕ} (hx : 1 ≤ x) (hy : 1 ≤ y) (h : x ^ x = y ^ y) : x = y := by
+  by_contra hne
+  rcases Nat.lt_or_gt_of_ne hne with hlt | hlt
+  · have := mul_pow_self_le hx hlt
+    have : x ^ x < y * x ^ x := by
+      have : 1 ≤ x ^ x := Nat.one_le_pow _ _ (by omega)
+      nlinarith
+    omega
+  · have := mul_pow_self_le hy hlt
+    have : y ^ y < x * y ^ y := by
+      have : 1 ≤ y ^ y := Nat.one_le_pow _ _ (by omega)
+      nlinarith
+    omega
+
+lemma one_le_pow_self (u : ℕ) : 1 ≤ u ^ u := by
+  rcases Nat.eq_zero_or_pos u with rfl | hu
+  · simp
+  · exact Nat.one_le_pow _ _ hu
+
+/-- `2 u^u < (u+1)^(u+1)` for `u ≥ 1`. -/
+lemma two_pow_self_lt (u : ℕ) (hu : 1 ≤ u) : 2 * u ^ u < (u + 1) ^ (u + 1) := by
+  have h1 : u ^ u < (u + 1) ^ u := Nat.pow_lt_pow_left (by omega) (by omega)
+  have e : (u + 1) ^ (u + 1) = (u + 1) * (u + 1) ^ u := by ring
+  have h2 : 2 * (u + 1) ^ u ≤ (u + 1) * (u + 1) ^ u := Nat.mul_le_mul_right _ (by omega)
+  omega
+
+/-- The larger weight of a sum of two weights is determined (proof of Proposition 15.16):
+if `x^x + y^y = u^u + v^v` with `y ≤ x` and `v ≤ u`, then `x^x = u^u`. -/
+lemma pow_self_pair {x y u v : ℕ} (hyx : y ≤ x) (hvu : v ≤ u)
+    (h : x ^ x + y ^ y = u ^ u + v ^ v) : x ^ x = u ^ u := by
+  -- a larger top weight exceeds twice the other top weight
+  have key : ∀ x y u v : ℕ, y ≤ x → v ≤ u → x ^ x + y ^ y = u ^ u + v ^ v →
+      ¬ u ^ u < x ^ x := by
+    intro x y u v hyx hvu h hlt
+    have hvv : v ^ v ≤ u ^ u := by
+      rcases Nat.eq_zero_or_pos v with rfl | hv
+      · simpa using one_le_pow_self u
+      · calc v ^ v ≤ u ^ v := Nat.pow_le_pow_left hvu v
+          _ ≤ u ^ u := Nat.pow_le_pow_right (by omega) hvu
+    have hux : u < x := by
+      by_contra hc
+      have : x ^ x ≤ u ^ u := by
+        rcases Nat.eq_zero_or_pos x with rfl | hx
+        · simpa using one_le_pow_self u
+        · calc x ^ x ≤ u ^ x := Nat.pow_le_pow_left (by omega) x
+            _ ≤ u ^ u := Nat.pow_le_pow_right (by omega) (by omega)
+      omega
+    have hx1 : (u + 1) ^ (u + 1) ≤ x ^ x :=
+      (Nat.pow_le_pow_left hux _).trans (Nat.pow_le_pow_right (by omega) hux)
+    rcases Nat.eq_zero_or_pos u with rfl | hu
+    · -- `u = v = 0`, weights 1 + 1 = 2, but `x^x > 1` forces `x ≥ 2`
+      have hv0 : v = 0 := by omega
+      subst hv0
+      simp at h hlt
+      have : 2 ≤ x := by
+        by_contra hc
+        interval_cases x <;> simp at hlt
+      have : 2 ^ 2 ≤ x ^ x :=
+        (Nat.pow_le_pow_left this 2).trans (Nat.pow_le_pow_right (by omega) this)
+      have : 1 ≤ y ^ y := by
+        rcases Nat.eq_zero_or_pos y with rfl | hy
+        · simp
+        · exact Nat.one_le_pow _ _ hy
+      omega
+    · have := two_pow_self_lt u hu
+      omega
+  rcases Nat.lt_trichotomy (x ^ x) (u ^ u) with hlt | heq | hgt
+  · exact absurd hlt (key u v x y hvu hyx h.symm)
+  · exact heq
+  · exact absurd hgt (key x y u v hyx hvu h)
+
+/-- Under `0^0 = 1`, a 2-digit solution `(a, 0)` is `(1, 0)` in base 2, with value 2. -/
+lemma two_digit_zero {a b : ℕ} (h : IsSolution b 1 [a, 0]) : P b [a, 0] = 2 := by
+  have ha : 1 ≤ a := Nat.one_le_iff_ne_zero.2 (h.head_ne_zero (by simp))
+  obtain ⟨-, -, heq⟩ := (isSolution_two_iff ha).1 h
+  simp only [w_zero, Nat.sub_zero] at heq
+  have hdvd : a ∣ 1 := by
+    have : a ∣ a ^ a := dvd_pow_self a (by omega)
+    exact (Nat.dvd_add_right this).1 ⟨b, heq.symm⟩
+  have ha1 : a = 1 := Nat.dvd_one.1 hdvd
+  subst ha1
+  simp at heq
+  simp [heq]
+
+/-- **Proposition 15.16** (section 15.6). Under `0^0 = 1`, two different 2-digit
+representations of the same integer `N ≥ 3` are `(a, c)` and `(c, a)`. So `N` has at most two
+2-digit representations, and `N = a^a + c^c`. -/
+theorem prop15_16 {a c a' c' b b' : ℕ} (h : IsSolution b 1 [a, c]) (h' : IsSolution b' 1 [a', c'])
+    (hN : P b [a, c] = P b' [a', c']) (hN3 : 3 ≤ P b [a, c]) (hne : [a, c] ≠ [a', c']) :
+    a' = c ∧ c' = a := by
+  have ha : 1 ≤ a := Nat.one_le_iff_ne_zero.2 (h.head_ne_zero (by simp))
+  have ha' : 1 ≤ a' := Nat.one_le_iff_ne_zero.2 (h'.head_ne_zero (by simp))
+  have hc : 1 ≤ c := by
+    rcases Nat.eq_zero_or_pos c with rfl | hc
+    · have := two_digit_zero h; omega
+    · exact hc
+  have hc' : 1 ≤ c' := by
+    rcases Nat.eq_zero_or_pos c' with rfl | hc'
+    · have := two_digit_zero h'; omega
+    · exact hc'
+  -- `a^a + c^c = a'^a' + c'^c'`
+  have hw : a ^ a + c ^ c = a' ^ a' + c' ^ c' := by
+    have e1 := h.eq
+    have e2 := h'.eq
+    simp only [Fs_pair, w_one_eq_pow] at e1 e2
+    omega
+  have hinj := @pow_self_injective
+  rcases le_total c a with h1 | h1 <;> rcases le_total c' a' with h2 | h2
+  · have e := pow_self_pair h1 h2 hw
+    have haa := hinj ha ha' e
+    have hcc := hinj hc hc' (by omega)
+    exact absurd (by rw [haa, hcc]) hne
+  · have e := pow_self_pair h1 h2 (by rw [hw, add_comm])
+    exact ⟨hinj ha' hc (by omega), hinj hc' ha e.symm⟩
+  · have e := pow_self_pair h1 h2 (by rw [add_comm, hw])
+    exact ⟨(hinj hc ha' e).symm, hinj hc' ha (by omega)⟩
+  · have e := pow_self_pair h1 h2 (by rw [add_comm, hw, add_comm])
+    have hcc := hinj hc hc' e
+    have haa := hinj ha ha' (by omega)
+    exact absurd (by rw [haa, hcc]) hne
 
 end Munchausen
