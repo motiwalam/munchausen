@@ -114,6 +114,10 @@ and `(x, 0, 1)` are solutions in base `-x^((x-1)/2)` as well as in base
 `x^((x-1)/2)`. For `x = 4` this is base -8. A swap-like solution is
 `(3, 0, 0, 0, 27)` in base `-3^20`: `3 * 3^80 = 27^27`.
 
+Correction (Lean formalization). The family `(x, 0, 0)`, `(x, 0, 1)` in base
+`-x^((x-1)/2)` needs `x >= 4`. For `x = 3` the base is -3, and 3 is not a
+digit of base -3.
+
 Complete lists for small negative bases. `analysis/negabase.py` checks every
 digit multiset in bases -2 to -10 (all lengths). A number with `d` digits in
 base `-b` can be as small as about `b^(d-2)`, so lengths up to `b + 1` occur,

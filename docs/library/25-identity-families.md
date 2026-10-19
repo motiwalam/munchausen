@@ -655,6 +655,14 @@ and tests the equations modulo 24 primes above `10^9`. Every candidate
 fails modulo some prime. So in these 80 bases, among them
 `46666^23333 - 3`, the member is the only 3-digit solution.
 
+Correction (Lean formalization). The proof of Proposition 25.17 uses
+`w(q) >= 4`, that is `q >= 2`, in the step `x >= w(p) + w(q) >= p^p + 4`.
+This holds because `e >= 1` for every member: with `e = 0` we get `q = 0`
+and `x = w(p) + w(0)`, which is prime to `p` for `p >= 2` under either
+convention (and `x = 2` or `x = 1` for `p = 1`), so `c | x^(x/2)` forces
+`c = 1` and the base is 2, as in the proof of Theorem 25.10. The Lean
+formalization proves this step separately (`member_e_pos`).
+
 ### 25.3.4 The answer
 
 - Proven: the largest digit takes at most two values per base
