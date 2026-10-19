@@ -120,6 +120,8 @@
   lean: auto,
   style: "box",
 ) = {
+  // A string title may contain math such as "$0^0 = 0$".
+  let title = if type(title) == str { eval(title, mode: "markup") } else { title }
   let srcs = if src == none { () } else if type(src) == array { src } else { (src,) }
   let lean-name = if lean == auto {
     if id != none { lean-names.at(id, default: none) } else { none }
