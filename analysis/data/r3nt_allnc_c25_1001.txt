@@ -1,0 +1,3 @@
+  ***   Warning: new maximum stack size = 2000003072 (1907.352 Mbytes).
+c = 25: 388 odd x <= 1001 (not squares, prime to 5); 0 excluded because some p | x does not split; 1306 ideals B, 658 not principal; largest n allowed by Laurent: 4602762713
+candidates with n >= 17 [x, n, choice, d, is a solution]: List([])

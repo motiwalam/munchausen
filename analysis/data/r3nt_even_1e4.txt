@@ -1,0 +1,16 @@
+  ***   Warning: new maximum stack size = 2000003072 (1907.352 Mbytes).
+x = 1000: configurations 518, largest Matveev bound 773375269516862139
+x = 2000: configurations 1138, largest Matveev bound 2096727910313155041
+x = 3000: configurations 1754, largest Matveev bound 4008497409541340461
+x = 4000: configurations 2420, largest Matveev bound 7167016800466001756
+x = 5000: configurations 3150, largest Matveev bound 7167016800466001756
+x = 6000: configurations 3892, largest Matveev bound 7584772375698293226
+  *** bnfisprincipal: Warning: increasing stack size to 16000000.
+x = 7000: configurations 4592, largest Matveev bound 12347321433171441038
+  *** bnfisprincipal: Warning: increasing stack size to 32000000.
+x = 8000: configurations 5296, largest Matveev bound 13155105022537057728
+x = 9000: configurations 6072, largest Matveev bound 14579774138362895516
+x = 8m <= 10000 with m > 1 odd, x not a square; exact check of odd n in [5, 301]
+configurations (Q, B, n0): 6794; reduced: 6794; failed: 0
+largest Matveev bound for j: 14579774138362895516
+solutions or problems: List([])

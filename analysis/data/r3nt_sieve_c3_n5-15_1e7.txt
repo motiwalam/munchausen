@@ -1,0 +1,7 @@
+# fast/target/r3nt_sieve 4 1 0 12 n 10000000: b(b+x) = x^n + 3, all x in [2, 10^7]
+n = 5: survivor 2 tested 9999999 values of x in [2, 10000000] (step 1, offset 0): 3750000 excluded mod 64, 1 survivors; largest prime needed 103 (x = 581249) 
+n = 7: tested 9999999 values of x in [2, 10000000] (step 1, offset 0): 3750000 excluded mod 64, 0 survivors; largest prime needed 83 (x = 3626754) 
+n = 9: tested 9999999 values of x in [2, 10000000] (step 1, offset 0): 3750000 excluded mod 64, 0 survivors; largest prime needed 89 (x = 8798229) 
+n = 11: tested 9999999 values of x in [2, 10000000] (step 1, offset 0): 3750000 excluded mod 64, 0 survivors; largest prime needed 79 (x = 3913698) 
+n = 13: tested 9999999 values of x in [2, 10000000] (step 1, offset 0): 3750000 excluded mod 64, 0 survivors; largest prime needed 89 (x = 5628957) 
+n = 15: tested 9999999 values of x in [2, 10000000] (step 1, offset 0): 3750000 excluded mod 64, 0 survivors; largest prime needed 107 (x = 4935629) 

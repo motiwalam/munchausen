@@ -1,0 +1,9 @@
+# fast: analysis/r3nt_pure25.gp in four ranges
+odd x in [3, 150001] prime to 5, not squares: 59846; largest n allowed by Laurent: 7823550378
+candidates [x, n, is a solution]: List([])
+odd x in [150001, 280001] prime to 5, not squares: 51944; largest n allowed by Laurent: 15267586479
+candidates [x, n, is a solution]: List([])
+odd x in [280001, 400001] prime to 5, not squares: 47960; largest n allowed by Laurent: 21216932711
+candidates [x, n, is a solution]: List([])
+odd x in [400001, 507211] prime to 5, not squares: 42853; largest n allowed by Laurent: 30084171571
+candidates [x, n, is a solution]: List([])

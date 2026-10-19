@@ -1,0 +1,1 @@
+75000 pairs (x, n) with x == 0 mod 8, x <= 100000, n = 5, 7, ..., 15; solutions: []
