@@ -26,12 +26,12 @@ the library chapters.
 | 46, `p = 5` | `T(5^e)` misses exactly the `v == 3 (mod 5)` outside `A (1 - 25 s/2)`, `s` a square, `A = 1 - sqrt(-1)`; counts 1, 3, 11, 53, 261, 1303 | proven (Theorem 2.7) |
 | 46, coverings | 81 raises the covered share from 11.2% to 11.6% (3 digits) and 8.4% to 8.5% (6 digits); a single 5-power covers only special prefixes | proven (Corollary 2.8, Proposition 2.9), computed |
 | 52 | `(gamma) = Q^(a n - 2) B^n`; `Q^j` is not principal for `j <= log2 x - 3`; the linear form has three logarithms, so Laurent and Proposition 18.4 do not apply; Matveev gives `n < 4.1 * 10^12 (d+1)^2 (log x)^2 (1 + log n)`; a bound of `x` by `n` only in one pure configuration (`x < 2^(2n+1)`) | proven (section 3) |
-| 52, small `x` | EVEN-SUMMARY | computed (Theorem 3.5) |
+| 52, small `x` | no solution with `n >= 5` for `x <= 10^4` (all `n`), nor with `5 <= n <= 15` for `x <= 10^8` | computed (Theorem 3.5) |
 | 51, `(1, 2, x)` | a solution only for `x = 6` (base 215) | proven (Proposition 4.1) |
 | 51, `c = 25` | `sqrt D - 10` generates `P^2`, so Propositions 18.4 and 18.6 have analogues; `(1, x, 3)` is a solution for no prime power `x`; for odd prime powers `x` the solutions with `n >= 3` are `(5, 3)`, `(7, 3)`, `(3, 6)` | proven, with computations (Theorems 4.7, 4.8, Corollary 4.9) |
 | 51, `c = 3` | no explicit generator; the regulator of `Z[theta]` is not bounded by `log x`, so the analogue of Theorem 18.10 fails even for prime `x`; every prime factor of `x` is `+-1 (mod 12)` | proven (Lemma 4.2, Proposition 4.10) |
 | 51, computed | `(1, x, 2)` and `(1, x, 3)`: no solution for `x <= 10^9`; all `n` for odd `x <= 1001`: none for `c = 3`, only `(7, 3)` and `(3, 6)` for `c = 25` | computed (Theorem 4.11) |
-| 53 | `d \| x` occurs (from `x = 15`, `d = 3`, up to `d = 34,333` at `x = 514,995`); the share of such `x` falls like MIXED-FIT-SHORT; the class group conditions of Corollary 18.11 are expected to hold for infinitely many `x` | computed (GRH), heuristic |
+| 53 | `d \| x` occurs (from `x = 15`, `d = 3`, up to `d = 34,333` at `x = 514,995`); the share of such `x` falls like `6.7 x^(-0.54)`; the class group conditions of Corollary 18.11 are expected to hold for infinitely many `x` | computed (GRH), heuristic |
 
 ## 1. Counting multisets (question 45)
 
@@ -332,7 +332,7 @@ Proof. For `y` in `1 + p Z_p` and an integer `x`, `y^x = exp(x log y)`, and
 Since `t | x`, `x^x = zeta^x (e^a)^x = exp(x a) = exp(zeta a e^a)`. Expand
 `exp(zeta a e^a) = sum over m, l of zeta^m m^l a^(m+l) / (m! l!)`; the terms
 tend to 0 because `v_p(a^n / (m! l!)) >= n - n/(p - 1)`, so the double series
-may be regrouped by `n = m + l`. Subtract `x = zeta sum a^n / n!`.
+can be regrouped by `n = m + l`. Subtract `x = zeta sum a^n / n!`.
 
 For `zeta = -1`: `c_0, c_1, ... = 2, 0, 0, 1/2, 5/12, 1/24, -47/360, ...`. For
 `zeta = i`, a square root of -1: `c_0 = 1 - i`, `c_1 = 0`, `c_2 = (i - 1)/2`
@@ -614,13 +614,15 @@ be a square.
 - (a) For `x <= 10^8` there is no solution with `n` in {5, 7, ..., 15}
   (`fast/target/r3nt_sieve`, `data/r3nt_sieve_even_n5-15_1e8.txt`; the
   exact check `analysis/r3nt_even_direct.py` confirms `x <= 10^5`).
-- (b) EVEN-ALLN
+- (b) For `x <= 10^4` there is no solution with any odd `n >= 5`
+  (`analysis/r3nt_even.gp`, `data/r3nt_even_1e4.txt`: 1,219 values of `x`,
+  6,794 configurations `(Q, B, n0)`, every one reduced, no candidate).
 
 The method of (b), `analysis/r3nt_even.gp`. For each `x` the script builds
 `K` with a certified class group (`bnfcertify`), and for each of the two
 primes `Q` above 2 and each of the `2^omega(m)` choices of `B` it computes `d`,
 every `n0` with `n0 [C] = 2 [Q]`, and generators `rho`, `eta` in compact
-form. Theorem 3.4 then bounds `j` by `J` (at most `EVEN-J`). The reduction
+form. Theorem 3.4 then bounds `j` by `J` (at most `1.5 * 10^19`). The reduction
 lemma of Dujella and Petho (cited: A. Dujella, A. Petho, Quart. J. Math.
 Oxford 49 (1998) 291-306, Lemma 5a) with a convergent `p/q` of
 `th / (2 mu0)`, `q > 6 J`, and `eps_1 = ||q lam/(2 mu0)|| - J ||q th/(2 mu0)|| > 0`
@@ -808,7 +810,13 @@ as in Part A of Theorem 18.7 Laurent's bound gives
 `Q(sqrt 2)`, the only ones with a unit below `e`, need `5 | x` or `x` even),
 `x <= 507,211`.
 
-PURE25-COMPUTED
+Computed part (`analysis/r3nt_pure25.gp`, `data/r3nt_pure25_507211.txt`).
+For each of the 202,603 odd `x <= 507,211` prime to 5 and not a square, the
+script computes `mu0` with `quadregulator` (continued fractions, no GRH),
+bounds `n` by Laurent's theorem (largest bound `3.0 * 10^10`), and tests the
+convergents of `l / mu0` (Legendre, since `2 n tau_n < mu0` for `n >= 17`).
+No candidate with `n >= 17` appears. The exponents `5 <= n <= 15` are covered
+by the sieve for all `x <= 10^7` (`data/r3nt_sieve_c25_n5-15_1e7.txt`).
 
 Corollary 4.9 (proven, with computations). For an odd prime power `x`, the
 solutions of `b (b + x) = x^n + 25` with `n >= 3` are exactly
@@ -861,7 +869,11 @@ inequality gives `mu0 > x / (404 M^2)`, which is larger than `log x`; so
 number formula makes the first case implausible: with `mu0 > log x`,
 `h(R) mu0` is about `sqrt D L(1, chi) / 2` with `L(1, chi)` of size
 `log x`, so `h(R)` is at most about `x / 2` (heuristic; I did not write out the
-explicit constants). The second case is the generic one. This is the
+explicit constants). The second case is the generic one. Computed
+(`analysis/r3nt_c3_primes.gp`, `data/r3nt_c3_primes.txt`, GRH): of the 1,121
+primes `x == +-1 (mod 12)` up to `2 * 10^4`, 621 have a principal prime above
+`x`, and all 621 have a regulator above the bound of Proposition 4.10 (median
+`mu0 / sqrt x` = 27); no class of order `x` occurs (largest order 56). This is the
 obstacle for `c = 3`: the regulator of `Z[theta]` is not bounded by `log x`.
 
 The question suggested the case `3 | x`, where `x^2 + 12` is of
@@ -914,11 +926,22 @@ Below `10^6`, `3.3 * 10^4 log x > x / 3`, so there the condition is simply
 
 Computed (`analysis/r3nt_mixed_orders.gp`, `data/r3nt_mixed_orders.txt`;
 `bnfinit` under GRH, which is enough for statistics; `analysis/r3nt_mixed_stats.py`
-for the tables). MIXED-RANGE For each odd non-square `x` with at least two prime
+for the tables). All odd `x` in `[3, 200001]`, and five windows near `2.5`, `4`, `5.5`, `7` and `8.5 * 10^5` (the runs there were stopped early; each window is complete). For each odd non-square `x` with at least two prime
 factors the script lists the order `d` of every mixed ideal, one per
 conjugate pair (`B` and `B'` have inverse classes).
 
-MIXED-TABLE
+| range of `x` | values | mixed pairs | pairs with `d \| x` | `x` with some `d \| x` | with `d >= x/100` | with `d >= x/1000` | largest `d/x` | largest `h/x` |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `[3, 10^4)` | 3,712 | 6,560 | 337 (5.1%) | 241 (6.5%) | 59 | 193 | 0.200 | 0.200 |
+| `[10^4, 10^5)` | 36,520 | 82,464 | 1,000 (1.2%) | 689 (1.9%) | 27 | 228 | 0.110 | 0.118 |
+| `[10^5, 2 * 10^5]` | 41,539 | 103,123 | 546 (0.53%) | 417 (1.0%) | 5 | 74 | 0.094 | 0.102 |
+| `[2, 2.58] * 10^5` | 24,252 | 62,332 | 264 (0.42%) | 191 (0.79%) | 1 | 24 | 0.085 | 0.094 |
+| `[3.5, 4.04] * 10^5` | 22,934 | 61,188 | 213 (0.35%) | 145 (0.63%) | 2 | 18 | 0.083 | 0.090 |
+| `[5, 5.52] * 10^5` | 21,879 | 59,905 | 175 (0.29%) | 120 (0.55%) | 1 | 10 | 0.081 | 0.089 |
+| `[6.5, 6.99] * 10^5` | 20,871 | 58,163 | 116 (0.20%) | 88 (0.42%) | 0 | 8 | 0.077 | 0.088 |
+| `[8, 8.49] * 10^5` | 21,012 | 59,426 | 105 (0.18%) | 78 (0.37%) | 0 | 6 | 0.081 | 0.087 |
+
+Only `x = 15` has `d >= x/10`.
 
 Observations:
 
@@ -928,10 +951,10 @@ Observations:
   on one.
 - When `d | x`, `d` is usually small: the median of `log(x/d) / log x` is
   about 0.74 in every range, so a typical such `d` is about `x^(0.26)`.
-- The share of `x` with some mixed `d | x` falls like MIXED-FIT. The share of
+- The share of `x` with some mixed `d | x` falls like `6.7 x^(-0.54)` (least squares over the ranges). The share of
   `x` with some `d | x` and cofactor `x/d <= G` is close to `c(G) / x`, with
-  `c(1000)` about 0.27 * 1000 and `c(10^4)` about 0.12 * 10^4 (table of
-  `r3nt_mixed_stats.py`).
+  `c(1000)` about 0.27 * 1000 and `c(10^4)` about 0.11 * 10^4, stable across
+  the ranges (`data/r3nt_mixed_stats.txt`).
 - The largest `d / x` is about 0.08 near `10^6`, just below the largest
   `h / x`. Both fall slowly, like `h ~ x L(1, chi) / (2 log x)` predicts
   for these fields, whose regulator is about `log x`.
@@ -965,6 +988,7 @@ expected number of solutions beyond `4 * 10^9` stays far below 1.
 | `analysis/r3nt_allnc.gp` | question 51: all `n` for `c = 3, 25`, odd `x <= 1001` (Theorem 4.11): `data/r3nt_allnc_c3_1001.txt`, `data/r3nt_allnc_c25_1001.txt` |
 | `analysis/r3nt_mixed_orders.gp` | question 53: class orders of mixed ideals: `data/r3nt_mixed_orders.txt` |
 | `analysis/r3nt_mixed_stats.py` | question 53: the statistics of section 5: `data/r3nt_mixed_stats.txt` |
+| `analysis/r3nt_c3_primes.gp` | question 51: principal primes and regulators for `c = 3`: `data/r3nt_c3_primes.txt` |
 
 Build the sieve with `cc -O2 -o fast/target/r3nt_sieve analysis/r3nt_sieve.c`.
 For example `fast/target/r3nt_sieve 4 1 0 100 0 1000000000` sieves

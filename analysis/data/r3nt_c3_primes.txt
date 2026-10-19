@@ -1,0 +1,2 @@
+1121 primes x == +-1 (mod 12) in [5, 20000]; class of a prime above x principal for 621; of these, regulator above the bound of Proposition 4.10: 621; class of order x: 0; largest order: 56
+regulator / sqrt(x) for the principal cases: median 27.019203461089147574221759850591438461, 10% quantile 5.0565950817264292726960920634428415730, 90% quantile 63.307642447314674635886971902722340466
