@@ -12,7 +12,7 @@ run by sampling with the exact weights of the experiment.
 | question | answer | basis |
 |---|---|---|
 | 26 | `fast search` takes `--zero m`, `--shift t`, `--factorial` and `--set-residue r`. The default search is unchanged. | computed |
-| 19 | Forced residues `w(x) == x` multiply the count of long solutions by 18.9 against 17.0 = mean `b-1`. Residues `x + 1` leave only `(b-1)`-digit solutions, 0.583 `(b-1)` per base against 0.557 predicted. | proven and computed |
+| 19 | Forced residues `w(x) == x` multiply the count of long solutions under `0^0 = 0` by 19.9, against 16.9 in the model and 17.0 = mean `b-1`. Residues `x + 1` leave only `(b-1)`-digit solutions, 0.583 `(b-1)` per base against 0.557 predicted. | proven and computed |
 | 9 | The odd-base factor is 2.0 for even `m` and 1.2 for odd `m`. The data agree within 1.4 standard deviations once the shared zero-free solutions are split off. | model and computed |
 | 10 | `x^(x+t)` keeps the length law and the parity factor. `x!` keeps about one solution per base, has no parity factor, and has a different length law. | model and computed |
 
@@ -137,13 +137,20 @@ weights of each run. Long means `d >= b-6`.
 | `--set-residue 1` | `0^0 = 1` | 1030 | 984.7 | 0.583 | 0.557 | 0.552 |
 | `--set-residue 1` | `0^0 = 0` | 454 | 453.1 | 0.257 | 0.256 | 0.233 |
 
-Forcing `w(x) == x` multiplies the count by 1955 / 103.5 = 18.9. The model
-predicts 1891.4 / 111.8 = 16.9, and the mean of `b-1` is 17.0. With
+Under `0^0 = 0`, forcing `w(x) == x` multiplies the count by
+1955 / 98 = 19.9. The model predicts 1891.4 / 111.8 = 16.9, and the mean of
+`b-1` is 17.0. With
 `w(x) == x + 1` and `0^0 = 1`, all 1030 solutions have exactly `b-1`
 digits, as the identity demands. Their number is 0.583 `(b-1)` per base,
 against 0.557 from the model and 0.552 in the limit. All four forced cases
 lie within 7% of the model. That is a 17-fold change in the count,
 predicted to a few percent.
+
+Correction. An earlier version gave the ratio as 1955 / 103.5 = 18.9. That
+divides a count under `0^0 = 0` by the mean of both conventions under
+`--perturb` (98 and 109). Under one convention the ratio is 19.9, against
+16.9 in the model. The comparison of each row with the model on the same
+weights, which the conclusion uses, is not affected.
 
 Two details differ from a Poisson law:
 

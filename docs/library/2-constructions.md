@@ -123,9 +123,16 @@ Infinite families:
 - Any `a`, and every `c == 0` or `c == 1 (mod a)`, because then `a` divides
   `c^c - c`. For example `(2, c)` in base `(c^c - c + 4) / 2` for every `c >= 2`.
 
-There are 2,637 two-digit solutions with digits up to 60. Of these, 119 have
-the form `(1, c)` and 118 the form `(c, c)`. Another 174 end in 0 or 1, and the
-other 2,226 are pairs with `a | c^c - c`.
+With digits up to 60 there are 1,347 two-digit solutions under `m = 0` and
+1,290 under `m = 1`. Under `m = 0`, 59 have the form `(1, c)` and 59 the
+form `(c, c)`. Another 116 end in 0 or 1, and the other 1,113 are pairs with
+`a | c^c - c`. Under `m = 1` the counts are 60, 59, 58 and 1,113. Both
+conventions together give 2,637 solutions, with 119 strings `(1, c)` and
+118 strings `(c, c)` (`analysis/r6p_two_digit.py`).
+
+Under each convention, about 35% of the 2-digit strings with digits up to
+60 are solutions in some base. Up to 200 the share is about 21%, and up to
+600 about 12.5%.
 
 ## 2.5 Solutions of every length under `0^0 = 0`
 

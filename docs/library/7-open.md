@@ -105,15 +105,28 @@ statement for bases near the length, where the evidence below applies: no
 ## 7.6 Structure
 
 - Under `0^0 = 1`, is there an infinite family of solutions with 3 or more
-  digits? Every known infinite family relies on zeros that weigh nothing, or
-  has 2 digits. Theorem 8.3 rules out families with a large leading digit in
-  the square class. Under `0^0 = 1` the only solutions made of zero-balance
-  placements alone are `(a, 1)` (section 8.3).
+  digits? Answered: yes. The binomial families give infinitely many
+  solutions of every length `k >= 3` (Theorem 22.6, Corollary 22.7).
+  Theorem 25.5 gives a second family, `(c^j, 0, ..., 0, x)`, for every
+  length `k >= 4`. Its zeros weigh 1 each, and the last digit pays for them.
+  All these members lie in astronomically large bases. Theorem 8.3 rules
+  out families with a large leading digit in the square class, and in every
+  power identity the large digit is the last digit (Theorem 25.2). Under
+  `0^0 = 1` the only solutions made of zero-balance placements alone are
+  `(a, 1)` (section 8.3).
 - Can every solution under `0^0 = 1` be explained as a coincidence, apart from
-  the self-paying digits, swaps and 2-digit families? The catalog of chapter 3
-  has no other structured example.
-- Do Munchausen numbers have a general form? Only the families of chapter 2
-  are known. The solutions near `b` digits show no structure.
+  the self-paying digits, swaps, 2-digit families and the identity families
+  above? The catalog of chapter 3 has no structured example beyond these.
+  Section 15.5 explains one more: the 11-digit solution of base 64 is a
+  chain of power identities plus the self-paying digits 4 and 16. That
+  construction gave no other solution beyond `(a, 1)` in bases `r^t` with
+  `r <= 40` and `t <= 300`.
+- Do Munchausen numbers have a general form? The known families are those of
+  chapter 2, the binomial families of chapter 22, the family of Theorem 25.5
+  and the chains of section 15.5. Conjecture 25.8 says that, for each length
+  `k >= 3`, all but finitely many solutions under `0^0 = 1` belong to the
+  two linear identity families (question 64). The solutions near `b` digits
+  show no structure.
 
 ## 7.7 Complexity
 
