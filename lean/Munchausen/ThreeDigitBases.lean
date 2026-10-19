@@ -539,4 +539,549 @@ theorem prop25_17_card {b p q x : ℕ} (hs : IsSolution b 1 [p, q, x])
         have := Finset.card_union_le ({[p, q, x]} : Finset (List ℕ)) S2; omega
     _ ≤ 3 := by rw [Finset.card_singleton]; omega
 
+/-! ### Theorem 25.15 -/
+
+/-- A finite set of naturals with pairwise gaps at most `k` has at most `k + 1` elements. -/
+lemma card_le_of_close (S : Finset ℕ) (k : ℕ) (h : ∀ a ∈ S, ∀ c ∈ S, a ≤ c + k) :
+    S.card ≤ k + 1 := by
+  rcases S.eq_empty_or_nonempty with rfl | hne
+  · simp
+  · have hsub : S ⊆ Finset.Icc (S.min' hne) (S.min' hne + k) := fun a ha =>
+      Finset.mem_Icc.2 ⟨S.min'_le a ha, h a ha _ (S.min'_mem hne)⟩
+    have := Finset.card_le_card hsub
+    simp only [Nat.card_Icc] at this
+    omega
+
+/-- The equation of a 3-digit solution, in `ℤ`. -/
+lemma IsSolution.eq_three {b m u v y : ℕ} (hs : IsSolution b m [u, v, y]) :
+    (u : ℤ) * b ^ 2 + v * b + y = w m u + w m v + w m y := by
+  have heq := hs.eq
+  simp only [P_cons, P_nil, List.length_cons, List.length_nil, Nat.cast_id, Fs_cons, Fs_nil,
+    add_zero, zero_add, pow_zero, pow_one, mul_one] at heq
+  rw [show (1 : ℕ) + 1 = 2 from rfl] at heq
+  have : u * b ^ 2 + v * b + y = w m u + w m v + w m y := by omega
+  exact_mod_cast this
+
+/-- The leading digit of a 3-digit solution is `floor(F / b^2)`: `u b^2 ≤ F < (u + 1) b^2`. -/
+lemma IsSolution.lead_bounds {b m u v y : ℕ} (hs : IsSolution b m [u, v, y]) :
+    u * b ^ 2 ≤ w m u + w m v + w m y ∧ w m u + w m v + w m y < (u + 1) * b ^ 2 := by
+  have heq := hs.eq
+  simp only [P_cons, P_nil, List.length_cons, List.length_nil, Nat.cast_id, Fs_cons, Fs_nil,
+    add_zero, zero_add, pow_zero, pow_one, mul_one] at heq
+  rw [show (1 : ℕ) + 1 = 2 from rfl] at heq
+  have hvb := hs.lt_base v (by simp)
+  have hyb := hs.lt_base y (by simp)
+  have e1 : (v + 1) * b ≤ b * b := Nat.mul_le_mul_right _ (by omega)
+  have e2 : (u + 1) * b ^ 2 = u * b ^ 2 + b * b := by ring
+  have e3 : (v + 1) * b = v * b + b := by ring
+  constructor <;> omega
+
+/-- Strings on which `f` is injective and `G ∘ f` is constant: at most one (`g` is
+injective). -/
+lemma card_le_one_of_G {A : Finset (List ℕ)} (f : List ℕ → ℕ) (hf : Set.InjOn f A) (c : ℤ)
+    (hA : ∀ s ∈ A, G (f s) = c) : A.card ≤ 1 :=
+  Finset.card_le_one.2 fun s hs t ht => hf hs ht (G_injective ((hA s hs).trans (hA t ht).symm))
+
+/-- Strings on which `f` is injective and `a^a - a B` is constant at `a = f s`: at most two
+(a convex function takes each value at most twice). -/
+lemma card_le_two_of_pow_sub {A : Finset (List ℕ)} (f : List ℕ → ℕ) (hf : Set.InjOn f A)
+    (B c : ℤ) (hA : ∀ s ∈ A, (f s : ℤ) ^ f s - f s * B = c) : A.card ≤ 2 := by
+  rw [← Finset.card_image_of_injOn hf]
+  refine card_le_two_of_convex (fun a => (a : ℤ) ^ a - a * B)
+    (fun a => by simpa using pow_self_sub_convex B a) c _ ?_
+  intro a ha
+  obtain ⟨s, hs, rfl⟩ := Finset.mem_image.1 ha
+  exact hA s hs
+
+/-- A big digit `d` (with `w(d) > 2 K`) outweighs two copies of any smaller digit by more
+than `K`: `w(d) - 2 w(x) ≥ w(d) / 2`. -/
+lemma big_sub {K d x : ℕ} (hK : 1 ≤ K) (hd : 2 * K < w 1 d) (hx : x < d) :
+    (K : ℤ) < w 1 d - 2 * w 1 x := by
+  have hd2 : 2 ≤ d := by
+    by_contra h
+    interval_cases d <;> simp at hd <;> omega
+  have h1 := two_mul_pow_self_le (show 1 ≤ d - 1 by omega) (show d - 1 < d by omega)
+  have h2 := w_le_of_le (m := 1) le_rfl (show x ≤ d - 1 by omega)
+  rw [w_one_eq_pow (d - 1)] at h2
+  rw [w_one_eq_pow d] at hd ⊢
+  have h3 : 4 * (d - 1) ^ (d - 1) ≤ d ^ d := by
+    have : 4 * (d - 1) ^ (d - 1) ≤ 2 * d * (d - 1) ^ (d - 1) :=
+      Nat.mul_le_mul_right _ (by omega)
+    omega
+  have e1 : ((w 1 x : ℕ) : ℤ) ≤ ((d - 1) ^ (d - 1) : ℕ) := by exact_mod_cast h2
+  have e2 : 4 * (((d - 1) ^ (d - 1) : ℕ) : ℤ) ≤ ((d ^ d : ℕ) : ℤ) := by exact_mod_cast h3
+  have e3 : 2 * (K : ℤ) < ((d ^ d : ℕ) : ℤ) := by exact_mod_cast hd
+  push_cast at e1 e2 e3 ⊢
+  linarith
+
+/-- Two pairs of digits with nearly equal weight sums, `|Δ| < K`, share their largest digit
+when it is big (`w > 2 K`) (proof of Theorem 25.15, shape `(M, u, v)`). -/
+lemma max_eq_of_big {K u v u' v' : ℕ} (hK : 1 ≤ K)
+    (hΔ : |((w 1 u : ℤ) + w 1 v) - (w 1 u' + w 1 v')| < K) (hbig : 2 * K < w 1 (max u v)) :
+    max u' v' = max u v := by
+  have hw : ∀ a c : ℕ, (w 1 (max a c) : ℤ) ≤ w 1 a + w 1 c := fun a c => by
+    rcases max_choice a c with h | h <;> rw [h] <;> simp
+  have hw2 : ∀ a c : ℕ, (w 1 a : ℤ) + w 1 c ≤ 2 * w 1 (max a c) := fun a c => by
+    have h1 : w 1 a ≤ w 1 (max a c) := w_le_of_le le_rfl (le_max_left a c)
+    have h2 : w 1 c ≤ w 1 (max a c) := w_le_of_le le_rfl (le_max_right a c)
+    have : ((w 1 a : ℕ) : ℤ) ≤ w 1 (max a c) := by exact_mod_cast h1
+    have : ((w 1 c : ℕ) : ℤ) ≤ w 1 (max a c) := by exact_mod_cast h2
+    linarith
+  rw [abs_lt] at hΔ
+  by_contra hne
+  rcases Nat.lt_or_gt_of_ne hne with h | h
+  · have := big_sub hK hbig h
+    linarith [hw u v, hw2 u' v']
+  · have hbig' : 2 * K < w 1 (max u' v') :=
+      lt_of_lt_of_le hbig (w_le_of_le le_rfl h.le)
+    have := big_sub hK hbig' h
+    linarith [hw u' v', hw2 u v]
+
+/-- **Theorem 25.15**, the shape `(M, u, v)` (section 25.3.2). The solutions `(M, u, v)` with
+`u, v < M` in base `b` number at most 3, unless no digit is big, in which case
+`|b^2 - M^(M-1)| ≤ 5 (b + 1)` and there are at most `M` of them. -/
+lemma card_shape_Muv {b M : ℕ} (hb : 2 ≤ b) (hM : 1 ≤ M) {A : Finset (List ℕ)}
+    (hA : ∀ s ∈ A, ∃ u v, u < M ∧ v < M ∧ s = [M, u, v] ∧ IsSolution b 1 s) :
+    A.card ≤ 3 ∨ (|(b : ℤ) ^ 2 - M ^ (M - 1)| ≤ 5 * (b + 1) ∧ A.card ≤ M) := by
+  classical
+  set K := M * (b + 1) with hKdef
+  have hK : 1 ≤ K := by
+    rw [hKdef]; exact Nat.one_le_iff_ne_zero.2 (mul_ne_zero (by omega) (by omega))
+  -- the common value `Θ = M b^2 - w(M)` of `w(u) + w(v) - u b - v`
+  have hΘ : ∀ s ∈ A, ∃ u v, u < M ∧ v < M ∧ s = [M, u, v] ∧
+      (w 1 u : ℤ) + w 1 v - u * b - v = M * b ^ 2 - w 1 M := by
+    intro s hs
+    obtain ⟨u, v, hu, hv, rfl, hsol⟩ := hA s hs
+    exact ⟨u, v, hu, hv, rfl, by linarith [hsol.eq_three]⟩
+  have hΔ : ∀ s ∈ A, ∀ t ∈ A, ∀ u v u' v', s = [M, u, v] → t = [M, u', v'] →
+      |((w 1 u : ℤ) + w 1 v) - (w 1 u' + w 1 v')| < K := by
+    intro s hs t ht u v u' v' hsu htu
+    obtain ⟨u₁, v₁, hu, hv, hs1, e⟩ := hΘ s hs
+    obtain ⟨u₂, v₂, hu', hv', ht1, e'⟩ := hΘ t ht
+    rw [hsu] at hs1; rw [htu] at ht1
+    simp only [List.cons.injEq, and_true, true_and] at hs1 ht1
+    obtain ⟨rfl, rfl⟩ := hs1
+    obtain ⟨rfl, rfl⟩ := ht1
+    have h1 : ((u : ℤ) - u') * b ≤ (M - 1) * b :=
+      mul_le_mul_of_nonneg_right (by omega) (by positivity)
+    have h2 : -((M : ℤ) - 1) * b ≤ ((u : ℤ) - u') * b :=
+      mul_le_mul_of_nonneg_right (by omega) (by positivity)
+    rw [abs_lt, hKdef]
+    push_cast
+    constructor <;> nlinarith
+  by_cases hex : ∃ s ∈ A, ∃ u v, s = [M, u, v] ∧ 2 * K < w 1 (max u v)
+  · -- every solution has the same big largest digit `h`
+    left
+    obtain ⟨s₀, hs₀, u₀, v₀, hs₀e, hbig⟩ := hex
+    set h := max u₀ v₀
+    have hmax : ∀ s ∈ A, ∃ u v, s = [M, u, v] ∧ max u v = h ∧ u < M ∧ v < M ∧
+        (w 1 u : ℤ) + w 1 v - u * b - v = M * b ^ 2 - w 1 M := by
+      intro s hs
+      obtain ⟨u, v, hu, hv, rfl, e⟩ := hΘ s hs
+      exact ⟨u, v, rfl, max_eq_of_big hK (hΔ s₀ hs₀ _ hs u₀ v₀ u v hs₀e rfl) hbig, hu, hv, e⟩
+    let B1 := A.filter fun s => s.getD 1 0 = h
+    let B2 := A.filter fun s => s.getD 1 0 ≠ h
+    have hB1 : B1.card ≤ 1 := by
+      refine card_le_one_of_G (fun s => s.getD 2 0) ?_ ((M : ℤ) * b ^ 2 - w 1 M - w 1 h + h * b) ?_
+      · intro s hs t ht hst
+        obtain ⟨u, v, rfl, -⟩ := hmax s (Finset.mem_filter.1 hs).1
+        obtain ⟨u', v', rfl, -⟩ := hmax t (Finset.mem_filter.1 ht).1
+        have h1 := (Finset.mem_filter.1 hs).2
+        have h2 := (Finset.mem_filter.1 ht).2
+        simp only [List.getD_cons_succ, List.getD_cons_zero] at h1 h2 hst
+        rw [h1, h2, hst]
+      · intro s hs
+        obtain ⟨u, v, rfl, -, -, -, e⟩ := hmax s (Finset.mem_filter.1 hs).1
+        have h1 : u = h := (Finset.mem_filter.1 hs).2
+        change G v = _
+        rw [← w_one_sub, ← h1]
+        linarith
+    have hB2 : B2.card ≤ 2 := by
+      refine card_le_two_of_pow_sub (fun s => s.getD 1 0) ?_ b
+        ((M : ℤ) * b ^ 2 - w 1 M - w 1 h + h) ?_
+      · intro s hs t ht hst
+        obtain ⟨u, v, rfl, hm, -⟩ := hmax s (Finset.mem_filter.1 hs).1
+        obtain ⟨u', v', rfl, hm', -⟩ := hmax t (Finset.mem_filter.1 ht).1
+        have h1 : u ≠ h := (Finset.mem_filter.1 hs).2
+        have h2 : u' ≠ h := (Finset.mem_filter.1 ht).2
+        simp only [List.getD_cons_succ, List.getD_cons_zero] at hst
+        have : v = h := by omega
+        have : v' = h := by omega
+        subst hst
+        rw [‹v = h›, ‹v' = h›]
+      · intro s hs
+        obtain ⟨u, v, rfl, hm, -, -, e⟩ := hmax s (Finset.mem_filter.1 hs).1
+        have h1 : u ≠ h := (Finset.mem_filter.1 hs).2
+        have hv : v = h := by omega
+        change (u : ℤ) ^ u - u * b = _
+        rw [← hv]
+        rw [w_one_eq_pow u] at e
+        push_cast at e
+        linarith
+    have : B1.card + B2.card = A.card := Finset.card_filter_add_card_filter_not _
+    omega
+  · -- no big digit: `Θ` is small, and `u` determines `v`
+    push Not at hex
+    rcases A.eq_empty_or_nonempty with hA0 | ⟨s₀, hs₀⟩
+    · left; simp [hA0]
+    right
+    constructor
+    · obtain ⟨u, v, hu, hv, rfl, e⟩ := hΘ s₀ hs₀
+      have hsmall := hex _ hs₀ u v rfl
+      have hwu : w 1 u ≤ w 1 (max u v) := w_le_of_le le_rfl (le_max_left u v)
+      have hwv : w 1 v ≤ w 1 (max u v) := w_le_of_le le_rfl (le_max_right u v)
+      have hwM : (w 1 M : ℤ) = M * M ^ (M - 1) := by
+        rw [w_one_eq_pow]; push_cast
+        rw [← pow_succ']; congr 1; omega
+      have e1 : ((w 1 u : ℕ) : ℤ) + w 1 v ≤ 4 * K := by
+        have : w 1 u + w 1 v ≤ 4 * K := by omega
+        exact_mod_cast this
+      have e2 : (u : ℤ) * b ≤ (M - 1) * b :=
+        mul_le_mul_of_nonneg_right (by omega) (by positivity)
+      have e0 : (0 : ℤ) ≤ u * b := by positivity
+      have hK' : (K : ℤ) = M * (b + 1) := by rw [hKdef]; push_cast; ring
+      -- `M (b^2 - M^(M-1))` lies in `[-K, 4 K]`
+      have h1 : (M : ℤ) * ((b : ℤ) ^ 2 - M ^ (M - 1)) ≤ M * (4 * (b + 1)) := by
+        nlinarith [Nat.zero_le (w 1 u), Nat.zero_le (w 1 v)]
+      have h2 : (M : ℤ) * (-(b + 1)) ≤ M * ((b : ℤ) ^ 2 - M ^ (M - 1)) := by
+        nlinarith [Nat.zero_le (w 1 u), Nat.zero_le (w 1 v)]
+      have hM0 : (0 : ℤ) < M := by exact_mod_cast hM
+      have h1' := le_of_mul_le_mul_left h1 hM0
+      have h2' := le_of_mul_le_mul_left h2 hM0
+      rw [abs_le]
+      constructor <;> linarith
+    · -- `s ↦ u` is injective and lands below `M`
+      calc A.card ≤ (Finset.range M).card := by
+            refine Finset.card_le_card_of_injOn (fun s => s.getD 1 0) ?_ ?_
+            · intro s hs
+              obtain ⟨u, v, hu, -, rfl, -⟩ := hΘ s hs
+              simpa using hu
+            · intro s hs t ht hst
+              obtain ⟨u, v, -, -, rfl, e⟩ := hΘ s hs
+              obtain ⟨u', v', -, -, rfl, e'⟩ := hΘ t ht
+              simp only [List.getD_cons_succ, List.getD_cons_zero] at hst
+              subst hst
+              have : G v = G v' := by rw [← w_one_sub, ← w_one_sub]; linarith
+              rw [G_injective this]
+        _ = M := Finset.card_range M
+
+/-- In the shapes `(u, M, v)` and `(u, v, M)` with `u, v < M`, `F` lies in
+`[w(M), w(M) + 2 w(M - 1)]` and `w(M) < M b^2`, so the leading digits `floor(F / b^2)` of two
+solutions differ by at most 1. -/
+lemma lead_le_succ {b M u F u' F' : ℕ} (hM : 2 ≤ M) (hu : u < M) (h2 : F < (u + 1) * b ^ 2)
+    (hF : w 1 M ≤ F) (h1' : u' * b ^ 2 ≤ F') (hF' : F' ≤ w 1 M + 2 * w 1 (M - 1)) :
+    u' ≤ u + 1 := by
+  have h3 := two_mul_pow_self_le (show 1 ≤ M - 1 by omega) (show M - 1 < M by omega)
+  rw [← w_one_eq_pow (M - 1), ← w_one_eq_pow M] at h3
+  have h4 : M * (2 * w 1 (M - 1)) < M * b ^ 2 := by
+    calc M * (2 * w 1 (M - 1)) = 2 * M * w 1 (M - 1) := by ring
+      _ ≤ w 1 M := h3
+      _ ≤ F := hF
+      _ < (u + 1) * b ^ 2 := h2
+      _ ≤ M * b ^ 2 := Nat.mul_le_mul_right _ hu
+  have h5 := Nat.lt_of_mul_lt_mul_left h4
+  have h6 : u' * b ^ 2 < (u + 2) * b ^ 2 := by
+    have : (u + 2) * b ^ 2 = (u + 1) * b ^ 2 + b ^ 2 := by ring
+    omega
+  have := Nat.lt_of_mul_lt_mul_right h6
+  omega
+
+/-- **Theorem 25.15**, the shapes `(u, M, v)` and `(u, v, M)` (section 25.3.2): the leading
+digit takes at most two values, so with at most `k` solutions per leading digit there are at
+most `2 k`. -/
+lemma card_shape_lead {b M k : ℕ} (hM : 2 ≤ M) {A : Finset (List ℕ)}
+    (hA : ∀ s ∈ A, ∃ u z, u < M ∧ z < M ∧ (s = [u, M, z] ∨ s = [u, z, M]) ∧ IsSolution b 1 s)
+    (hfib : ∀ a, (A.filter fun s => s.getD 0 0 = a).card ≤ k) : A.card ≤ 2 * k := by
+  classical
+  have hlead : ∀ s ∈ A, s.getD 0 0 < M ∧ s.getD 0 0 * b ^ 2 ≤ Fs 1 s ∧
+      Fs 1 s < (s.getD 0 0 + 1) * b ^ 2 ∧ w 1 M ≤ Fs 1 s ∧
+      Fs 1 s ≤ w 1 M + 2 * w 1 (M - 1) := by
+    intro s hs
+    obtain ⟨u, z, hu, hz, hsz, hsol⟩ := hA s hs
+    have hwu : w 1 u ≤ w 1 (M - 1) := w_le_of_le le_rfl (by omega)
+    have hwz : w 1 z ≤ w 1 (M - 1) := w_le_of_le le_rfl (by omega)
+    rcases hsz with rfl | rfl
+    · have := hsol.lead_bounds
+      simp only [Fs_cons, Fs_nil, add_zero, List.getD_cons_zero]
+      omega
+    · have := hsol.lead_bounds
+      simp only [Fs_cons, Fs_nil, add_zero, List.getD_cons_zero]
+      omega
+  have himg : (A.image fun s => s.getD 0 0).card ≤ 2 := by
+    apply card_le_of_close _ 1
+    intro a ha c hc
+    obtain ⟨s, hs, rfl⟩ := Finset.mem_image.1 ha
+    obtain ⟨t, ht, rfl⟩ := Finset.mem_image.1 hc
+    obtain ⟨-, hs1, -, -, hs4⟩ := hlead s hs
+    obtain ⟨ht0, -, ht2, ht3, -⟩ := hlead t ht
+    exact lead_le_succ hM ht0 ht2 ht3 hs1 hs4
+  calc A.card ≤ k * (A.image fun s => s.getD 0 0).card :=
+        Finset.card_le_mul_card_image A k (fun a _ => hfib a)
+    _ ≤ k * 2 := Nat.mul_le_mul_left _ himg
+    _ = 2 * k := by ring
+
+open Classical in
+/-- The 3-digit solutions in base `b` (under `0^0 = 1`) whose largest digit is `M`. -/
+noncomputable def solsTop (b M : ℕ) : Finset (List ℕ) :=
+  (solStrings b 1 3).filter fun s => M ∈ s ∧ ∀ d ∈ s, d ≤ M
+
+lemma mem_solsTop {b M : ℕ} (hb : 1 ≤ b) {s : List ℕ} :
+    s ∈ solsTop b M ↔ ∃ u v y, s = [u, v, y] ∧ IsSolution b 1 [u, v, y] ∧
+      (u = M ∨ v = M ∨ y = M) ∧ u ≤ M ∧ v ≤ M ∧ y ≤ M := by
+  unfold solsTop
+  rw [Finset.mem_filter, mem_solStrings hb]
+  constructor
+  · rintro ⟨⟨hlen, hsol⟩, hM, hle⟩
+    obtain ⟨u, v, y, rfl⟩ := List.length_eq_three.1 hlen
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hM
+    exact ⟨u, v, y, rfl, hsol, by omega, hle u (by simp), hle v (by simp), hle y (by simp)⟩
+  · rintro ⟨u, v, y, rfl, hsol, hM, hu, hv, hy⟩
+    refine ⟨⟨rfl, hsol⟩, ?_, ?_⟩
+    · simp only [List.mem_cons, List.not_mem_nil, or_false]; omega
+    · intro d hd; simp only [List.mem_cons, List.not_mem_nil, or_false] at hd; omega
+
+/-- A largest digit `M` with `b^2 ≤ 3 w(M)` and `b ≥ 5` is at least 3. -/
+lemma three_le_of_sq_le {b M : ℕ} (hb : 5 ≤ b) (h : b ^ 2 ≤ 3 * w 1 M) : 3 ≤ M := by
+  by_contra hM
+  have : w 1 M ≤ 4 := by interval_cases M <;> simp [w]
+  have : 25 ≤ b ^ 2 := by nlinarith
+  omega
+
+/-- **Theorem 25.15** for one largest digit (section 25.3.2). For `b ≥ 5`, the 3-digit
+solutions of base `b` with largest digit `M` number at most 15, or else
+`b^2 ≤ 3 w(M) < 3 (M + 1) b^2`, `|b^2 - M^(M-1)| ≤ 5 (b + 1)` and there are at most `12 + M`
+of them. The shapes `(M,M,M)`, `(M,M,u)`, `(M,u,M)`, `(u,M,M)`, `(u,M,v)`, `(u,v,M)` give at
+most 1, 1, 2, 2, 2 and 4, and `(M,u,v)` at most 3, or `M` in the exceptional case. -/
+theorem card_solsTop {b M : ℕ} (hb : 5 ≤ b) :
+    (solsTop b M).card ≤ 15 ∨ (b ^ 2 ≤ 3 * w 1 M ∧ w 1 M < (M + 1) * b ^ 2 ∧
+      |(b : ℤ) ^ 2 - M ^ (M - 1)| ≤ 5 * (b + 1) ∧ (solsTop b M).card ≤ 12 + M) := by
+  classical
+  set S := solsTop b M
+  rcases S.eq_empty_or_nonempty with hS | ⟨s₀, hs₀⟩
+  · left; simp [hS]
+  obtain ⟨u₀, v₀, y₀, rfl, hsol₀, hM₀, hu₀, hv₀, hy₀⟩ := (mem_solsTop (by omega)).1 hs₀
+  obtain ⟨hb3, hb3'⟩ := lemma25_13 (M := M) le_rfl hsol₀
+    (by simp only [List.mem_cons, List.not_mem_nil, or_false]; omega)
+    (by intro d hd; simp only [List.mem_cons, List.not_mem_nil, or_false] at hd; omega)
+  have hM3 : 3 ≤ M := three_le_of_sq_le hb hb3
+  have hsolS : ∀ s ∈ S, IsSolution b 1 s := fun s hs => by
+    obtain ⟨u, v, y, rfl, h, -⟩ := (mem_solsTop (by omega)).1 hs
+    exact h
+  -- the seven shapes
+  let A1 := S.filter fun s => s = [M, M, M]
+  let A2 := S.filter fun s => ∃ u, u < M ∧ s = [M, M, u]
+  let A3 := S.filter fun s => ∃ u, u < M ∧ s = [M, u, M]
+  let A4 := S.filter fun s => ∃ u, u < M ∧ s = [u, M, M]
+  let A5 := S.filter fun s => ∃ u v, u < M ∧ v < M ∧ s = [u, M, v]
+  let A6 := S.filter fun s => ∃ u v, u < M ∧ v < M ∧ s = [u, v, M]
+  let A7 := S.filter fun s => ∃ u v, u < M ∧ v < M ∧ s = [M, u, v]
+  have hcover : S ⊆ A1 ∪ A2 ∪ A3 ∪ A4 ∪ A5 ∪ A6 ∪ A7 := by
+    intro s hs
+    have hs' := hs
+    obtain ⟨u, v, y, rfl, -, hM, hu, hv, hy⟩ := (mem_solsTop (by omega)).1 hs'
+    simp only [Finset.mem_union, Finset.mem_filter, A1, A2, A3, A4, A5, A6, A7]
+    rcases eq_or_lt_of_le hu with hu | hu <;> rcases eq_or_lt_of_le hv with hv | hv <;>
+      rcases eq_or_lt_of_le hy with hy | hy
+    · exact Or.inl (Or.inl (Or.inl (Or.inl (Or.inl (Or.inl ⟨hs, by rw [hu, hv, hy]⟩)))))
+    · exact Or.inl (Or.inl (Or.inl (Or.inl (Or.inl (Or.inr ⟨hs, y, hy, by rw [hu, hv]⟩)))))
+    · exact Or.inl (Or.inl (Or.inl (Or.inl (Or.inr ⟨hs, v, hv, by rw [hu, hy]⟩))))
+    · exact Or.inr ⟨hs, v, y, hv, hy, by rw [hu]⟩
+    · exact Or.inl (Or.inl (Or.inl (Or.inr ⟨hs, u, hu, by rw [hv, hy]⟩)))
+    · exact Or.inl (Or.inl (Or.inr ⟨hs, u, y, hu, hy, by rw [hv]⟩))
+    · exact Or.inl (Or.inr ⟨hs, u, v, hu, hv, by rw [hy]⟩)
+    · omega
+  have hsum : S.card ≤ A1.card + A2.card + A3.card + A4.card + A5.card + A6.card + A7.card := by
+    have h0 := Finset.card_le_card hcover
+    have u1 := Finset.card_union_le A1 A2
+    have u2 := Finset.card_union_le (A1 ∪ A2) A3
+    have u3 := Finset.card_union_le (A1 ∪ A2 ∪ A3) A4
+    have u4 := Finset.card_union_le (A1 ∪ A2 ∪ A3 ∪ A4) A5
+    have u5 := Finset.card_union_le (A1 ∪ A2 ∪ A3 ∪ A4 ∪ A5) A6
+    have u6 := Finset.card_union_le (A1 ∪ A2 ∪ A3 ∪ A4 ∪ A5 ∪ A6) A7
+    omega
+  have c1 : A1.card ≤ 1 := Finset.card_le_one.2 fun s hs t ht => by
+    rw [(Finset.mem_filter.1 hs).2, (Finset.mem_filter.1 ht).2]
+  have c2 : A2.card ≤ 1 := by
+    refine card_le_one_of_G (fun s => s.getD 2 0) ?_ ((M : ℤ) * b ^ 2 + M * b - 2 * w 1 M) ?_
+    · intro s hs t ht hst
+      obtain ⟨u, -, rfl⟩ := (Finset.mem_filter.1 hs).2
+      obtain ⟨u', -, rfl⟩ := (Finset.mem_filter.1 ht).2
+      simp only [List.getD_cons_succ, List.getD_cons_zero] at hst
+      rw [hst]
+    · intro s hs
+      have hsol := hsolS s (Finset.mem_filter.1 hs).1
+      obtain ⟨u, -, rfl⟩ := (Finset.mem_filter.1 hs).2
+      have e := hsol.eq_three
+      change G u = _
+      rw [← w_one_sub]; linarith
+  have c3 : A3.card ≤ 2 := by
+    refine card_le_two_of_pow_sub (fun s => s.getD 1 0) ?_ b
+      ((M : ℤ) * b ^ 2 + M - 2 * w 1 M) ?_
+    · intro s hs t ht hst
+      obtain ⟨u, -, rfl⟩ := (Finset.mem_filter.1 hs).2
+      obtain ⟨u', -, rfl⟩ := (Finset.mem_filter.1 ht).2
+      simp only [List.getD_cons_succ, List.getD_cons_zero] at hst
+      rw [hst]
+    · intro s hs
+      have hsol := hsolS s (Finset.mem_filter.1 hs).1
+      obtain ⟨u, -, rfl⟩ := (Finset.mem_filter.1 hs).2
+      have e := hsol.eq_three
+      rw [w_one_eq_pow u] at e
+      push_cast at e
+      change (u : ℤ) ^ u - u * b = _
+      linarith
+  have c4 : A4.card ≤ 2 := by
+    refine card_le_two_of_pow_sub (fun s => s.getD 0 0) ?_ ((b : ℤ) ^ 2)
+      ((M : ℤ) * b + M - 2 * w 1 M) ?_
+    · intro s hs t ht hst
+      obtain ⟨u, -, rfl⟩ := (Finset.mem_filter.1 hs).2
+      obtain ⟨u', -, rfl⟩ := (Finset.mem_filter.1 ht).2
+      simp only [List.getD_cons_zero] at hst
+      rw [hst]
+    · intro s hs
+      have hsol := hsolS s (Finset.mem_filter.1 hs).1
+      obtain ⟨u, -, rfl⟩ := (Finset.mem_filter.1 hs).2
+      have e := hsol.eq_three
+      rw [w_one_eq_pow u] at e
+      push_cast at e
+      change (u : ℤ) ^ u - u * b ^ 2 = _
+      linarith
+  have c5 : A5.card ≤ 2 := by
+    have := card_shape_lead (k := 1) (A := A5) (b := b) (M := M) (by omega)
+      (fun s hs => by
+        obtain ⟨u, v, hu, hv, rfl⟩ := (Finset.mem_filter.1 hs).2
+        exact ⟨u, v, hu, hv, Or.inl rfl, hsolS _ (Finset.mem_filter.1 hs).1⟩)
+      (fun a => by
+        refine card_le_one_of_G (fun s => s.getD 2 0) ?_
+          ((a : ℤ) * b ^ 2 + M * b - w 1 a - w 1 M) ?_
+        · intro s hs t ht hst
+          have ha := (Finset.mem_filter.1 hs).2
+          have ha' := (Finset.mem_filter.1 ht).2
+          obtain ⟨u, v, -, -, rfl⟩ := (Finset.mem_filter.1 (Finset.mem_filter.1 hs).1).2
+          obtain ⟨u', v', -, -, rfl⟩ := (Finset.mem_filter.1 (Finset.mem_filter.1 ht).1).2
+          simp only [List.getD_cons_succ, List.getD_cons_zero] at hst ha ha'
+          rw [ha, ha', hst]
+        · intro s hs
+          have ha := (Finset.mem_filter.1 hs).2
+          have hsol := hsolS s (Finset.mem_filter.1 (Finset.mem_filter.1 hs).1).1
+          obtain ⟨u, v, -, -, rfl⟩ := (Finset.mem_filter.1 (Finset.mem_filter.1 hs).1).2
+          simp only [List.getD_cons_zero] at ha
+          subst ha
+          have e := hsol.eq_three
+          change G v = _
+          rw [← w_one_sub]; linarith)
+    simpa using this
+  have c6 : A6.card ≤ 4 := by
+    have := card_shape_lead (k := 2) (A := A6) (b := b) (M := M) (by omega)
+      (fun s hs => by
+        obtain ⟨u, v, hu, hv, rfl⟩ := (Finset.mem_filter.1 hs).2
+        exact ⟨u, v, hu, hv, Or.inr rfl, hsolS _ (Finset.mem_filter.1 hs).1⟩)
+      (fun a => by
+        refine card_le_two_of_pow_sub (fun s => s.getD 1 0) ?_ b
+          ((a : ℤ) * b ^ 2 + M - w 1 a - w 1 M) ?_
+        · intro s hs t ht hst
+          have ha := (Finset.mem_filter.1 hs).2
+          have ha' := (Finset.mem_filter.1 ht).2
+          obtain ⟨u, v, -, -, rfl⟩ := (Finset.mem_filter.1 (Finset.mem_filter.1 hs).1).2
+          obtain ⟨u', v', -, -, rfl⟩ := (Finset.mem_filter.1 (Finset.mem_filter.1 ht).1).2
+          simp only [List.getD_cons_succ, List.getD_cons_zero] at hst ha ha'
+          rw [ha, ha', hst]
+        · intro s hs
+          have ha := (Finset.mem_filter.1 hs).2
+          have hsol := hsolS s (Finset.mem_filter.1 (Finset.mem_filter.1 hs).1).1
+          obtain ⟨u, v, -, -, rfl⟩ := (Finset.mem_filter.1 (Finset.mem_filter.1 hs).1).2
+          simp only [List.getD_cons_zero] at ha
+          subst ha
+          have e := hsol.eq_three
+          rw [w_one_eq_pow v] at e
+          push_cast at e
+          change (v : ℤ) ^ v - v * b = _
+          linarith)
+    simpa using this
+  have c7 := card_shape_Muv (b := b) (M := M) (A := A7) (by omega) (by omega)
+    (fun s hs => by
+      obtain ⟨u, v, hu, hv, rfl⟩ := (Finset.mem_filter.1 hs).2
+      exact ⟨u, v, hu, hv, rfl, hsolS _ (Finset.mem_filter.1 hs).1⟩)
+  rcases c7 with c7 | ⟨hΘ, c7⟩
+  · left; omega
+  · right; exact ⟨hb3, hb3', hΘ, by omega⟩
+
+/-- The exceptional bases: from `|b^2 - N| ≤ 5 (b + 1)` and `b ≥ 5`, `|b - √N| ≤ 6`. -/
+lemma abs_sub_sqrt_le {b N : ℕ} (hb : 5 ≤ b) (h : |(b : ℤ) ^ 2 - N| ≤ 5 * (b + 1)) :
+    |(b : ℝ) - Real.sqrt N| ≤ 6 := by
+  have h' : |(b : ℝ) ^ 2 - N| ≤ 5 * (b + 1) := by exact_mod_cast h
+  have hs0 : 0 ≤ Real.sqrt N := Real.sqrt_nonneg _
+  have hs2 : Real.sqrt N ^ 2 = N := Real.sq_sqrt (Nat.cast_nonneg _)
+  have hb5 : (5 : ℝ) ≤ b := by exact_mod_cast hb
+  rw [← hs2] at h'
+  rw [abs_le] at h' ⊢
+  obtain ⟨h1, h2⟩ := h'
+  constructor
+  · by_contra hc
+    nlinarith
+  · by_contra hc
+    nlinarith
+
+/-- At most 13 bases lie within 6 of a real number (Theorem 25.15: at most 13 exceptional
+bases for each `M`). -/
+lemma card_le_thirteen {r : ℝ} (S : Finset ℕ) (hS : ∀ b ∈ S, |(b : ℝ) - r| ≤ 6) :
+    S.card ≤ 13 :=
+  card_le_of_close S 12 fun a ha c hc => by
+    have h1 := abs_le.1 (hS a ha)
+    have h2 := abs_le.1 (hS c hc)
+    have : (a : ℝ) ≤ c + 12 := by linarith
+    exact_mod_cast this
+
+/-- **Theorem 25.15** (section 25.3.2). Let `b ≥ 5`. Under `0^0 = 1`, base `b` has at most 30
+three-digit solutions, unless `|b - M^((M-1)/2)| ≤ 6` for a value `M` with
+`b^2 / 3 ≤ w(M) < (M + 1) b^2`; then it has at most `2 M + 24`. By `card_le_thirteen`, at most
+13 bases are exceptional for each `M`. -/
+theorem theorem25_15 {b : ℕ} (hb : 5 ≤ b) :
+    (solStrings b 1 3).card ≤ 30 ∨
+      ∃ M, b ^ 2 ≤ 3 * w 1 M ∧ w 1 M < (M + 1) * b ^ 2 ∧
+        |(b : ℝ) - Real.sqrt ((M : ℝ) ^ (M - 1))| ≤ 6 ∧
+        (solStrings b 1 3).card ≤ 2 * M + 24 := by
+  classical
+  rcases (solStrings b 1 3).eq_empty_or_nonempty with h0 | ⟨s₀, hs₀⟩
+  · left; simp [h0]
+  have hex : ∃ M, (solsTop b M).Nonempty := by
+    obtain ⟨hlen, hsol⟩ := (mem_solStrings (by omega)).1 hs₀
+    obtain ⟨u, v, y, rfl⟩ := List.length_eq_three.1 hlen
+    exact ⟨max u (max v y), _, (mem_solsTop (by omega)).2
+      ⟨u, v, y, rfl, hsol, by omega, by omega, by omega, by omega⟩⟩
+  set M₀ := Nat.find hex with hM₀def
+  obtain ⟨t, ht⟩ := Nat.find_spec hex
+  obtain ⟨p, q, r, rfl, hsolt, hMt, hpt, hqt, hrt⟩ := (mem_solsTop (by omega)).1 ht
+  have hmemt : M₀ ∈ [p, q, r] := by
+    simp only [List.mem_cons, List.not_mem_nil, or_false]; omega
+  have hmaxt : ∀ d ∈ [p, q, r], d ≤ M₀ := by
+    intro d hd; simp only [List.mem_cons, List.not_mem_nil, or_false] at hd; omega
+  have hM₀3 : 3 ≤ M₀ := three_le_of_sq_le hb (lemma25_13 le_rfl hsolt hmemt hmaxt).1
+  -- every solution has largest digit `M₀` or `M₀ + 1` (Corollary 25.14)
+  have hsub : solStrings b 1 3 ⊆ solsTop b M₀ ∪ solsTop b (M₀ + 1) := by
+    intro s hs
+    obtain ⟨hlen, hsol⟩ := (mem_solStrings (by omega)).1 hs
+    obtain ⟨u, v, y, rfl⟩ := List.length_eq_three.1 hlen
+    have hmem : [u, v, y] ∈ solsTop b (max u (max v y)) := (mem_solsTop (by omega)).2
+      ⟨u, v, y, rfl, hsol, by omega, by omega, by omega, by omega⟩
+    have h1 : M₀ ≤ max u (max v y) := Nat.find_min' hex ⟨_, hmem⟩
+    have h2 : max u (max v y) ≤ M₀ + 1 := corollary25_14 le_rfl hsolt hmemt hmaxt hsol
+      (by simp only [List.mem_cons, List.not_mem_nil, or_false]; omega)
+      (by intro d hd; simp only [List.mem_cons, List.not_mem_nil, or_false] at hd; omega) h1
+    rcases (show max u (max v y) = M₀ ∨ max u (max v y) = M₀ + 1 by omega) with h | h
+    · exact Finset.mem_union_left _ (h ▸ hmem)
+    · exact Finset.mem_union_right _ (h ▸ hmem)
+  have hcard := (Finset.card_le_card hsub).trans (Finset.card_union_le _ _)
+  have hsqrt : ∀ M : ℕ, |(b : ℤ) ^ 2 - M ^ (M - 1)| ≤ 5 * (b + 1) →
+      |(b : ℝ) - Real.sqrt ((M : ℝ) ^ (M - 1))| ≤ 6 := fun M h => by
+    have := abs_sub_sqrt_le (N := M ^ (M - 1)) hb (by push_cast; exact h)
+    push_cast at this
+    exact this
+  rcases card_solsTop (M := M₀) hb with h0 | ⟨h0a, h0b, h0c, h0⟩ <;>
+    rcases card_solsTop (M := M₀ + 1) hb with h1 | ⟨h1a, h1b, h1c, h1⟩
+  · left; omega
+  · right; exact ⟨M₀ + 1, h1a, h1b, hsqrt _ h1c, by omega⟩
+  · right; exact ⟨M₀, h0a, h0b, hsqrt _ h0c, by omega⟩
+  · right; exact ⟨M₀ + 1, h1a, h1b, hsqrt _ h1c, by omega⟩
+
 end Munchausen
