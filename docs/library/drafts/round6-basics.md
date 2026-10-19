@@ -27,7 +27,7 @@ logarithms, in its 2-adic form.
 ### 1.1 Setting
 
 Chapter 1 shows that a string is a solution in at most one base
-(Proposition 1.3), and chapter 12 that a string whose polynomial `Q_s` has no
+(Proposition 1.3), and chapter 11 that a string whose polynomial `Q_s` has no
 root modulo some prime is a solution in no base (Proposition 11.1). So each
 single string is decided by a finite computation. The question is about
 infinite families: which families of strings contain no solution, or only
@@ -42,8 +42,8 @@ Two kinds of argument were known.
 
 This section adds a third kind, which is global: a bound from transcendence
 theory, followed by a finite sieve. It excludes infinite families that have
-no covering. Each member of these families is excluded by some prime, but no
-finite set of primes excludes them all.
+no known covering. Each member of these families is excluded by some prime,
+and heuristically no finite set of primes excludes them all.
 
 Fix the convention `m` and write `w(0) = m`, `w(d) = d^d` for `d >= 1`.
 Take a 3-digit string with leading digit `p >= 1`, a second small digit
@@ -129,6 +129,9 @@ range. `delta` is an algebraic integer, so
     |m| log eta = log|delta| - log|beta| <= log(2 V sqrt n + 1) + (1/2) log eta
 
 once `V sqrt n >= |R|` (then `U <= V sqrt n + 1`). This gives `|m| <= M`.
+If instead `V sqrt n < |R|`, then `|R| > 2 x^(x/2)`, so
+`log2 |R| > x/2 + 1` for `x >= 2`, the left side of the claim is below 1, and
+the claim holds trivially.
 
 Step 2: the 2-adic closeness. Let `v` be the 2-adic valuation on an
 algebraic closure of `Q_2`, with `v(2) = 1`, restricted to `K` through one
