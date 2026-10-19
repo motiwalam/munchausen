@@ -190,7 +190,7 @@ With $r = 0$ and $z = 0$ the identity holds for every multiset, so the refined m
   ))
 ]
 
-Forcing $w(x) equiv x$ multiplies the count by $1955 slash 103.5 = 18.9$; the model predicts 16.9, and the mean of $b - 1$ is 17.0. With $w(x) equiv x + 1$ under $0^0 = 1$, all 1030 solutions have exactly $b - 1$ digits, as the identity demands. All four forced cases lie within 7% of the model. A seventeen-fold change in the count, predicted to a few percent by a model with no fitted parameter, is the best evidence that the model captures the mechanism.
+Under $0^0 = 0$, forcing $w(x) equiv x$ multiplies the count by $1955 slash 98 = 19.9$; the model predicts $1891.4 slash 111.8 = 16.9$, and the mean of $b - 1$ is 17.0. With $w(x) equiv x + 1$ under $0^0 = 1$, all 1030 solutions have exactly $b - 1$ digits, as the identity demands. All four forced cases lie within 7% of the model. A seventeen-fold change in the count, predicted to a few percent by a model with no fitted parameter, is the best evidence that the model captures the mechanism.
 
 Two details differ from a Poisson law, and both are structural. The counts per run scatter twice as much as Poisson counts, because forced residues fix the small weights and create families: in base 21 with `--set-residue 1`, $w(2) - w(1) = w(3) - w(2) = b$, so a digit 1, 2 or 3 in the second-to-last place gives three solutions at once. And short solutions become four times too common under `--set-residue 0`, for an algebraic reason: writing $w(x) = x + k_x (b - 1)$, a 2-digit string $(a, c)$ is a solution exactly when $a = k_a + k_c$, and $k_1 = 0$, $k_2 = 1$ for every $b >= 4$, so $(1, 2)$ and $(2, 2)$ are solutions in every base and for every seed #lib("17.2").
 
@@ -442,7 +442,7 @@ The limit law says that the expected number with $J >= j$ falls like $e^(-(j-1))
   - infinitely many lie in a base $b > k + ln k + (1 - epsilon) ln ln k$.
 ]
 
-The reason is the pair of Borel-Cantelli lemmas (@app-prob). The expected number of solutions in base $b$ with $J > ln b + a ln ln b$ is about $C slash (b (ln b)^a)$. The sum over $b$ is finite for $a > 1$, so by the first lemma only finitely many bases have such a solution. It is infinite for $a <= 1$, and in the model the bases are independent, so by the second lemma infinitely many do. This is the same law as for the longest run of heads in $n$ coin flips, which is $log_2 n + O(log log n)$.
+The reason is the pair of Borel-Cantelli lemmas (@app-prob). The expected number of solutions in base $b$ with $J > ln b + a ln ln b$ is about $C slash (b (ln b)^a)$. The sum over $b$ is finite for $a > 1$, so by the first lemma only finitely many bases have such a solution. It is infinite for $a <= 1$, and in the model the bases are independent, so by the second lemma infinitely many do. That independence is an assumption of the model; no test of it exists yet. This is the same law as for the longest run of heads in $n$ coin flips, which is $log_2 n + O(log log n)$.
 
 The library first stated a cruder window, $b <= k + (1 + epsilon) ln k$, and drew from it that each length has only finitely many solutions under $0^0 = 1$. The binomial families of @thm-every-length-m1 refute that: they give infinitely many solutions of every length $k >= 3$, in bases far above $k$, for an algebraic reason the model cannot see. Hence the exception for algebraic families in the conjecture.
 

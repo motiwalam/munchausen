@@ -244,9 +244,13 @@ Infinite families follow at once.
   for every $c >= 2$.
 
 #computation(id: "cons-two-digit-count", title: "Two-digit solutions with small digits", src: "2.4")[
-  There are 2,637 two-digit solutions with digits up to 60. Of these, 119 have
-  the form $(1, c)$, 118 the form $(c, c)$, 174 end in 0 or 1, and the other
-  2,226 are pairs with $a divides c^c - c$.
+  With digits up to 60 there are 1,347 two-digit solutions under $0^0 = 0$
+  and 1,290 under $0^0 = 1$. Under $0^0 = 0$, 59 have the form $(1, c)$, 59
+  the form $(c, c)$, 116 end in 0 or 1, and the other 1,113 are pairs with
+  $a divides c^c - c$. Under $0^0 = 1$ the counts are 60, 59, 58 and 1,113.
+  Under each convention about 35% of the 2-digit strings with digits up to
+  60 are solutions in some base, about 21% up to 200 and about 12.5% up to
+  600.
 ]
 
 So two-digit solutions are plentiful: the condition $a divides g(c)$ holds

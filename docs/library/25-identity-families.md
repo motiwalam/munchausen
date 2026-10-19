@@ -33,9 +33,9 @@ functions of one digit appear often: `g(d) = w(d) - d` and
 | 64, conjecture | For each `k >= 3`, all but finitely many `k`-digit solutions are members of the two linear families, and every `k`-digit solution in a base above the largest base of the complete lists is one. | heuristic, computed evidence (Conjecture 25.8) |
 | 65, families | `(1,6,46666)` is the next power-identity member after `(1,2,6)`. The 1,267 members with `x < 10^6605.8` are listed in order of base; all have `lam = 1` and even `x`. | proven (Theorem 25.10), computed (list) |
 | 65, other strings | No 3-digit solution in bases from 905 to `10^3301` beyond the six known ones. In bases below `46666^23333 - 3`, any other 3-digit solution has two digits above 200 and one above 2000. | computed (Theorem 25.11) |
-| 65, the rest | The expected number of such solutions is below `10^-3000`. So `(1,6,46666)` is the next 3-digit solution, but only the family part is proven. | heuristic (2.4) |
+| 65, the rest | The expected number of such solutions is below `10^-3000`. So `(1,6,46666)` is the next 3-digit solution, but only the family part is proven. | heuristic (Heuristic 25.12) |
 | 50, structure | The largest digits of the 3-digit solutions of one base take at most two consecutive values. Every base has at most 30 three-digit solutions, except at most 13 bases near `M^((M-1)/2)` for each `M`, which have at most `2M + 24`. | proven (Theorem 25.15) |
-| 50, family bases | A base has at most one power-identity member, and a base with a member has at most 3 three-digit solutions. In the bases of the 80 members with `x < 10^300` the member is the only one. | proven (Propositions 3.4, 3.5), computed |
+| 50, family bases | A base has at most one power-identity member, and a base with a member has at most 3 three-digit solutions. In the bases of the 80 members with `x < 10^300` the member is the only one. | proven (Propositions 25.16, 25.17), computed |
 | 50, data | Every base up to `10^3301` has at most two 3-digit solutions; only base 4 has two. | computed |
 | 50, the rest | A third solution in one base needs three independent coincidences. At most two is expected for every base, but no proof is known. | heuristic, open |
 
@@ -116,7 +116,7 @@ Theorem 25.4 (proven). In this situation:
 
 - (a) If `lam = mu^j` is a `j`-th power, the members are those of Theorem
   22.6 with `c' = mu c` and `e' = mu e` when `e >= 1`, and those of Theorem
-  1.5 below when `e = 0`. The condition is that `x^x = y^j` for an integer
+  25.5 below when `e = 0`. The condition is that `x^x = y^j` for an integer
   `y` and that `mu c` divides `y - mu e`. When `j | x` this is a
   congruence condition on the parameters.
 - (b) If `lam` is not a `j`-th power, then `j` does not divide `x`.
@@ -217,7 +217,7 @@ polynomial of degree `d >= 2` is about `y^(1/d - 1)`. So these members are
 coincidences, like the strings of section 3.5. The other mechanisms of
 question 64 reduce to the same two cases.
 
-- Decomposable `P_s = G(h(r))`, chapter 12.1 and section 16.3. A power
+- Decomposable `P_s = G(h(r))`, section 12.1 and section 16.3. A power
   identity of the form `G(u) - E = lam (c u + e)^j` gives
   `A = c h + e`, which is nonlinear, so Proposition 25.6 applies. Without
   such an identity a root is a coincidence of the usual kind. The census

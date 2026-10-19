@@ -268,6 +268,15 @@ candidate is the length law: 63% of the solutions with `(q, e) = (3, 4)` have
 the maximal 21 digits, so the top degree class is almost always present, and
 the model's law for the number of zeros is then off.
 
+Correction (chapters 24 and 26). The conclusion that "the solutions are
+ordinary draws" is withdrawn. The offsets `(B - 1) g` in the table above
+map most solutions to near-solutions one to one (Lemmas 24.9 and 24.10).
+So these near-solutions were mostly the solutions again, not independent
+draws: for `q = 5`, `e = 3` the near count 17,200 equals the solution count.
+Offsets that perturb 5 low digits bring the near count down to the model
+(section 24.4.3). The table of section 26.4 lists the claim as withdrawn.
+The model gap itself stands. Chapter 24 traces it to the additive `F`.
+
 ### 21.1.7 Contrast: the weight `d^(deg d)`
 
 With `w(d) = d^(deg d)` the weights are no longer linear (nonzero constants

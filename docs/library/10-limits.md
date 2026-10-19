@@ -230,6 +230,11 @@ for `a > 1` and infinite for `a <= 1`. In the model the bases are independent,
 so the two Borel-Cantelli lemmas give the two statements. This is the same law
 as for the longest run of heads in coin flips.
 
+Correction. The second half uses the second Borel-Cantelli lemma, which
+needs the events in different bases to be independent. The model assumes
+this, but no test of it exists (question 106 of `questions-round6.md`). The
+first half needs no independence.
+
 The data split into two kinds of exceptions. Count the solutions with `k >= 3`
 and `J > ln b + 2` (`analysis/length_window2.py`):
 

@@ -597,7 +597,9 @@ odd bases from 11 to 41, 22 in the 16 even bases from 10 to 40.
 Open questions raised here:
 
 - A proof of the set of lengths that positive integers take in base -n+i.
-  For -1+i the data say lengths `== 1` or `4 (mod 8)`.
+  For -1+i the data say lengths `== 1` or `4 (mod 8)`. (Proved for -1+i
+  in chapter 23: Theorem 23.1 gives exactly the lengths `8m + 1` and
+  `8m + 4`, both for every `m`. The bases -n+i with `n >= 2` remain open.)
 - A search for base -4+i past 22 digits needs the top digits of a real
   interval, which are not an interval. A tile-based prefix test might work.
 - Base -3+i has 4 solutions under `0^0 = 1` against 1.11 expected, three of

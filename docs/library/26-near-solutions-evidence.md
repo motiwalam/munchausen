@@ -13,10 +13,10 @@ model, or a judgment from data).
 
 | question | answer | status |
 |---|---|---|
-| 73, offsets are not independent | A rearrangement of the digits keeps `F` and moves `D` by `n' - n`, a multiple of `b-1` (Lemma 26.1). So the near-solutions of one multiset form a cluster across offsets. In bases 12 to 26, 43% to 88% of the near-solutions share their multiset with another offset; the variance of a sum over offsets is 1.5 to 3.5 times the Poisson value, and 60 offsets are worth 26 to 29 independent ones. The swap lemma predicts the design effect within a few percent (Heuristic 26.6). Offsets with no two a transposition apart cut the sharing to 15% (Table 2.2). The P values of `D = 0` against the offsets barely move, because the noise of the single count `N_0` dominates. The per-base precision of the offset means changes a lot: the chi-square of `lambda / model` drops from 97 to 41 on 21 bases, and base 19 goes from 4.6 to 2.9 standard errors. | proven (lemma); computed |
+| 73, offsets are not independent | A rearrangement of the digits keeps `F` and moves `D` by `n' - n`, a multiple of `b-1` (Lemma 26.1). So the near-solutions of one multiset form a cluster across offsets. In bases 12 to 26, 43% to 88% of the near-solutions share their multiset with another offset; the variance of a sum over offsets is 1.5 to 3.5 times the Poisson value, and 60 offsets are worth 26 to 29 independent ones. The swap lemma predicts the design effect within a few percent (Heuristic 26.6). Offsets with no two a transposition apart cut the sharing to 15% (Table 26.2.2). The P values of `D = 0` against the offsets barely move, because the noise of the single count `N_0` dominates. The per-base precision of the offset means changes a lot: the chi-square of `lambda / model` drops from 97 to 41 on 21 bases, and base 19 goes from 4.6 to 2.9 standard errors. | proven (lemma); computed |
 | 72, a pooled test | 284 solutions against 297 to 304 expected in eight worlds. The worlds disagree more than chance allows: heterogeneity `Q = 23.3` on 7 degrees of freedom with the library's Pisot calibration (P = 0.002), and 17.2 (P = 0.016) with the Pisot offsets in the class of 0 modulo `2x`. Two worlds drive it: the odd-base factorions (ratio 0.33) and the Pisot bases (1.34 to 1.56). Without these two, the other six fit one common ratio, 0.91 (P = 0.60 for heterogeneity). | computed, heuristic |
 | 74, the Pisot excess | No pairing move other than the twins links solutions; twins are as common among near-solutions. Two calibration faults explain part of the excess: for even `x` the offsets `j x` with odd `j` carry 1.4 to 2.4 times fewer near-solutions under `0^0 = 0` than those with even `j`, and the defect spectrum is higher near `D = 0` than at the far offsets (14.8 against 9.7 per offset). Against a local calibration in the class of 0 modulo `2x`, the even bases have 25 solutions against 14.8 (P = 0.05 with the calibration error). | computed; the class effect is unexplained |
-| 85, image and in-degrees | The image shares are 0.21 (base 10) to 0.14 (base 16), against 0.50 for the formula of question 85 and 0.31 to 0.38 for the weighted random mapping. Exact coincidences of the sums `S(c)` explain part of the gap (Proposition 26.10), and the forced top digits of `S` explain about two thirds of the rest (Table 7.3). The in-degrees of distinct sums are overdispersed: variance / mean 3.6 to 6.3 against 2.3 to 3.8. | proven; computed |
+| 85, image and in-degrees | The image shares are 0.21 (base 10) to 0.14 (base 16), against 0.50 for the formula of question 85 and 0.31 to 0.38 for the weighted random mapping. Exact coincidences of the sums `S(c)` explain part of the gap (Proposition 26.10), and the forced top digits of `S` explain about two thirds of the rest (Table 26.7.3). The in-degrees of distinct sums are overdispersed: variance / mean 3.6 to 6.3 against 2.3 to 3.8. | proven; computed |
 | 86, a mixing statistic | The low digits of `F(c)` agree with `c` at the rate of random digits within 1.6% in the integers, base -20, the factorions and the factorial system, and within 3.7% in the Pisot base 6. `F_q[T]` is the one world with a clear excess, 2.2% to 3.4% per value over 125 values. The statistic does not follow the model error: it flags `F_q[T]` with the same sign under both conventions, where the model error changes sign, and it misses the factorial failure, which sits in the top digits. A top-digit factor is lowest in the factorial system (0.53 to 0.55), but also below 1 in the Pisot base, where the count is 3 times the model. | computed; negative answer |
 
 ## 26.1 The swap lemma (question 73)
@@ -151,7 +151,7 @@ window of fixed size it tends to 1, because the chance that a swap of the
 last two digits lands in the window falls like `1/b` once `b` exceeds the
 window.
 
-Table 2.1 compares this with the measurement. Under `0^0 = 1` the mean
+Table 26.2.1 compares this with the measurement. Under `0^0 = 1` the mean
 measured design effect is 1.045 times the prediction over bases 12 to 26.
 Under `0^0 = 0` it is 1.21 times, because the twins of Proposition 26.7
 join two clusters.
@@ -165,7 +165,7 @@ b-6` for `D = 2j(b-1)`, `j = 0..60`, bases 12 to 26, with every string
 kept (`analysis/data/r5e_int_std.txt`). `analysis/r5e_int_report.py`
 groups the events by multiset and by twins (`analysis/r5e_cluster.py`).
 
-Table 2.1 (computed). Near-solutions under `0^0 = 1`, at least `b-6`
+Table 26.2.1 (computed). Near-solutions under `0^0 = 1`, at least `b-6`
 digits, 60 offsets. "Shared" is the share of near-solutions whose multiset
 is also a near-solution at another offset. The free family is that of
 section 26.2.2.
@@ -215,7 +215,7 @@ are `D = k (b-1)`, in the class of 0 modulo `2(b-1)`.
 (`r5e_lib.swap_free_ks`; for base 12 the values are 0, 14, 28, 42, 56,
 70, 168, ..., 2070.)
 
-Table 2.2 (computed, `analysis/data/r5e_int_free.txt`, bases 12 to 26). The
+Table 26.2.2 (computed, `analysis/data/r5e_int_free.txt`, bases 12 to 26). The
 two families against `D = 0`.
 
 | family | convention | `N_0` | mean per offset | shared | phi | `J_eff` of 60 | P(at least `N_0`), clustered |
@@ -228,11 +228,11 @@ two families against `D = 0`.
 The two families agree on the mean within 4%. The free family keeps 15% of
 shared near-solutions; all of them come from rearrangements of three or
 more digits, which Definition 26.7 does not exclude. Heuristic 26.6 predicts
-its design effect as well (Table 2.1, last column).
+its design effect as well (Table 26.2.1, last column).
 
 ### 26.2.3 The other worlds
 
-Table 2.3 (computed). Design effects of every offset family of the
+Table 26.2.3 (computed). Design effects of every offset family of the
 library that has strings or that I reran with them.
 
 | world, family | section | data | shared | phi | psi | `J_eff` |
@@ -298,12 +298,12 @@ calibration error added.
   which is about `psi lambda`, and misses the factor `phi / psi`.
 - For new runs, choose offsets with no transposition between them
   (Definition 26.7) or with steps divisible by many small numbers (the
-  `lcm` family). Both keep the mean (Table 2.2) and double `J_eff`.
+  `lcm` family). Both keep the mean (Table 26.2.2) and double `J_eff`.
 - Keep the strings. Every rerun in this file needed them.
 
 ## 26.4 Every chance verdict revisited
 
-Table 4.1 lists every P value and every z-score of the library that rests
+Table 26.4.1 lists every P value and every z-score of the library that rests
 on near-solutions at offsets, with the value recomputed by Definition 26.8
 or by the clustered variance. "Fixed" means the old method (Poisson with
 `lambda` known, or the sample variance of the counts). Scripts:
@@ -311,7 +311,7 @@ or by the clustered variance. "Fixed" means the old method (Poisson with
 `r5e_nega_report.py`, `r5e_kdigit_report.py`, `r5e_short_spectrum.py`,
 `r5e_cycles2_report.py`, `r5e_pooled.py`.
 
-Table 4.1 (computed).
+Table 26.4.1 (computed).
 
 | statement | section | old | new | verdict |
 |---|---|---:|---:|---|
@@ -393,10 +393,10 @@ rational and Eisenstein bases, which have no strings, `phi = 2` is
 assumed; with `J = 30` the results do not depend on it.
 
 The questioner's lead removed the 7 Pisot twin pairs from the solutions
-but not from the near-solutions, which also contain twins (Table 6.2).
+but not from the near-solutions, which also contain twins (Table 26.6.2).
 Here both sides keep their twins, and `psi` carries the clumping.
 
-Table 5.1 (computed; model heuristic). `O` solutions, `E` offset means
+Table 26.5.1 (computed; model heuristic). `O` solutions, `E` offset means
 summed over the bases. z corrected uses
 `Var(O - E) = psi E + phi E / J`.
 
@@ -438,7 +438,7 @@ allow, and the corrected variance does not remove it: it lowers the sum of
 squared z-scores from 27.7 to 23.0 (library Pisot offsets) or from 20.6 to
 17.4 (class offsets). Two worlds drive it. The odd-base factorions are the
 shortfall of question 41, found after looking at 16 groups; after that
-choice its P value is about 0.13 (Table 4.1). The Pisot
+choice its P value is about 0.13 (Table 26.4.1). The Pisot
 bases are the subject of question 74. Without these two worlds the other
 six fit one common ratio, 0.91, with `Q = 3.6` on 5 degrees of freedom
 (P = 0.60). That ratio is 1.3 standard deviations below 1, and it comes
@@ -453,7 +453,7 @@ that `D = 0` is special.
 `analysis/r5e_pisot_pairs.py` lists the 62 solutions with `x >= 2`
 (`r3t_pisot_search*.txt`) and every pair at distance at most `2x`.
 
-Table 6.1 (computed). All pairs of solutions with `|N - N'| <= 2x`.
+Table 26.6.1 (computed). All pairs of solutions with `|N - N'| <= 2x`.
 
 | `x` | `0^0` | pair | change | kind |
 |---:|---:|---|---|---|
@@ -475,7 +475,7 @@ structure: 3423 and 3475 in base `eps_6` differ at positions 2, 1, -1 and
 adds `2(x^2 + 2) = 76` to `N` and `2(3^3 - 1) = 52` to `F`. The sum of the
 two moves changes `N` and `F` by 52 each. I found no second such pair.
 
-Table 6.2 (computed, offsets `j x`, `j = 1..30`, `x = 2..10`,
+Table 26.6.2 (computed, offsets `j x`, `j = 1..30`, `x = 2..10`,
 `r5e_pisot_list_*.txt`). Pairs within one offset.
 
 | group | twin pairs per offset | other pairs within `2x`, per offset | twin pairs at `D = 0` | other pairs at `D = 0` |
@@ -522,7 +522,7 @@ The peak at 0. `r3t_pisot defects` counts `N - F(N)` for every
 `N <= N_max` (`N_max` = `10^5` to `3 * 10^7`, which holds every solution
 for `x <= 8`). The spectrum is higher near 0 than far from it.
 
-Table 6.3 (computed, `analysis/data/r5e_pisot_defects.txt`, `x = 2..8`,
+Table 26.6.3 (computed, `analysis/data/r5e_pisot_defects.txt`, `x = 2..8`,
 lengths `T >= 2`). Solutions against five calibrations, mean per offset.
 "Local" is `D = +-2jx`, `j = 1..3`; "far" is `D = +-2jx`, `j = 11..20`.
 
@@ -534,7 +534,7 @@ lengths `T >= 2`). Solutions against five calibrations, mean per offset.
 | odd `x`, `0^0 = 1` | 7 | 3.27 | 3.40 | 2.88 | 2.17 | 2.90 |
 
 The clustered P values of `N_0` for even `x` under `0^0 = 0` (Definition
-3.1 with `phi = 2.5` and twins) are 0.0016 (all `j`), 0.0095 (even `j`)
+26.8 with `phi = 2.5` and twins) are 0.0016 (all `j`), 0.0095 (even `j`)
 and 0.049 (local). The peak sits in a few lengths. For `x = 6` at length
 `T = 9` under `0^0 = 0`, the 11 even offsets with `-14 <= j <= 8`,
 `j != 0`, hold 3.4 near-solutions each, and the even offsets with
@@ -583,7 +583,7 @@ multiset.
 
 ### 26.7.2 The image
 
-Table 7.2 (computed, `analysis/data/r5e_image_summary.txt`,
+Table 26.7.2 (computed, `analysis/data/r5e_image_summary.txt`,
 `r5e_image_report.txt`). Image share: the multisets with in-degree at
 least 1, divided by all multisets. "Uniform" is the formula of question
 85. "Weighted" draws the image inside its class with probability
@@ -615,7 +615,7 @@ at 8 or 9 digits and 0.56 to 0.69 at 11 to 16 digits.
 its digits below the top `t` by random digits with the same length and
 digit sum modulo `b-1`, and counts the distinct multisets.
 
-Table 7.3 (computed, 5 seeds each).
+Table 26.7.3 (computed, 5 seeds each).
 
 | b | true image | `t = 0` | `t = 1` | `t = 2` | `t = 3` | gap closed by `t = 3` |
 |---:|---:|---:|---:|---:|---:|---:|
@@ -662,7 +662,7 @@ for the top 3 digits of an independent string of the world.
 
 ### 26.8.2 Results
 
-Table 8.1 (computed; 20,000 samples per world, 2,000 for `F_q[T]` per base,
+Table 26.8.1 (computed; 20,000 samples per world, 2,000 for `F_q[T]` per base,
 4,000 for Pisot). Model ratio: observed over model, from the chapters.
 
 | world | agreement ratio `F / U` | `R`, product over values | top factor | model ratio: solutions | near-solutions |
@@ -724,7 +724,7 @@ system) and in a single channel, the zero count (`F_q[T]` under
   identity makes even `j` carry more near-solutions under `0^0 = 0`?
 - Heuristic 26.6 for the other worlds: a closed form of `phi` for
   factorions, negative bases and Pisot bases.
-- A model of the image (section 7) with the top digits forced and the
+- A model of the image (section 26.7) with the top digits forced and the
   coincidences of `S` counted exactly.
 - Rerun the rational and Eisenstein offsets with strings, to replace the
-  assumed `phi = 2` of Table 5.1.
+  assumed `phi = 2` of Table 26.5.1.

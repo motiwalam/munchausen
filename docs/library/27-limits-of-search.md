@@ -23,11 +23,11 @@ leave the default output unchanged:
 
 | section | question | result | status |
 |---|---|---|---|
-| 1 | 77, a constraint solver | CP-SAT and CaDiCaL list all solutions with `b - 1` digits correctly for bases 8 to 20 and 8 to 18. Their conflicts grow 1.95 and 1.96 per base, as fast as the engine's nodes (1.89), at 2 to 5 (CP-SAT, with the interval made visible) and 57 to 153 (CaDiCaL) conflicts per engine node, and `10^4` to `10^5` times the engine's time. Without the interval, CP-SAT grows 4 times per base. Learned clauses do not cut across branches. | computed; heuristic (why) |
-| 2 | 75, other orders | In the model, every order of revealing counts, fixed or chosen node by node, has at each level `m` at least the entropy of the top-down order at level `m` (Theorem 27.2). So the floor `1.638^b` of Theorem 10.1 covers all of them, and top-down is the only order that reaches it. Bottom-up, middle-out and random orders peak near `1.30 b` nats, that is `3.6^b`; the best order by residue mod 2 peaks at `0.70 b`. | proven (in the model); computed |
-| 3 | 76, certificates | In an oracle model where a query reveals the interval of `S` for a partial assignment of counts, every certificate of emptiness needs at least `N_k` queries for every level `k` (Theorem 27.5, a fooling-set bound that needs no model). For bases 5 to 21, `max_k N_k` is at least 0.86 times the widest level of the exact tree. So no oracle method beats the exact tree by more than a polynomial factor: the smallest certificate for `b = 10` has 414 queries, the top-down tree uses 794. | proven; computed |
-| 4 | 79, bottom digits in base `2^k` | The bottom `L` digits of `S` are fixed only once the counts of all odd values, of 0 and of a few small even values are known: at least `b/2 + 2` values (Proposition 27.8). A top-down tree learns them only at its leaves, so a bottom check prunes nothing there (Corollary 27.9). Orders that reveal the odd counts early lose more than they gain: in base 16 the hybrid tree is 2.5 times and the odd-first tree 307 times the plain tree; in base 32 the hybrid tree is 13.3 times the plain tree (`3.4 * 10^9` against `2.5 * 10^8` nodes, exact) and the odd-first tree about `10^11` to `10^12` (estimate). The answer is no. | proven; computed |
-| 5 | 78, work units | With `--unit-stats` (new), bases 24 to 34: the largest 1% of the units hold 47% to 81% of the work, and the pooled law has a power-like tail. The type of a unit (digits, free slots, known digits) explains 93% to 97% of the variance of `ln(nodes)`; within a type the law is light-tailed, and each free slot multiplies the size by 1.93. Scheduling on 8 threads is within 0.1% of ideal; shards of 64 are up to 2.6 times unbalanced at depth 4. A weighted progress estimate (new in `--progress`) is off by at most 0.10 against 0.49 for the unit count. | computed; heuristic |
+| 27.1 | 77, a constraint solver | CP-SAT and CaDiCaL list all solutions with `b - 1` digits correctly for bases 8 to 20 and 8 to 18. Their conflicts grow 1.95 and 1.96 per base, as fast as the engine's nodes (1.89), at 2 to 5 (CP-SAT, with the interval made visible) and 57 to 153 (CaDiCaL) conflicts per engine node, and `10^4` to `10^5` times the engine's time. Without the interval, CP-SAT grows 4 times per base. Learned clauses do not cut across branches. | computed; heuristic (why) |
+| 27.2 | 75, other orders | In the model, every order of revealing counts, fixed or chosen node by node, has at each level `m` at least the entropy of the top-down order at level `m` (Theorem 27.2). So the floor `1.638^b` of Theorem 10.1 covers all of them, and top-down is the only order that reaches it. Bottom-up, middle-out and random orders peak near `1.30 b` nats, that is `3.6^b`; the best order by residue mod 2 peaks at `0.70 b`. | proven (in the model); computed |
+| 27.3 | 76, certificates | In an oracle model where a query reveals the interval of `S` for a partial assignment of counts, every certificate of emptiness needs at least `N_k` queries for every level `k` (Theorem 27.5, a fooling-set bound that needs no model). For bases 5 to 21, `max_k N_k` is at least 0.86 times the widest level of the exact tree. So no oracle method beats the exact tree by more than a polynomial factor: the smallest certificate for `b = 10` has 414 queries, the top-down tree uses 794. | proven; computed |
+| 27.4 | 79, bottom digits in base `2^k` | The bottom `L` digits of `S` are fixed only once the counts of all odd values, of 0 and of a few small even values are known: at least `b/2 + 2` values (Proposition 27.8). A top-down tree learns them only at its leaves, so a bottom check prunes nothing there (Corollary 27.9). Orders that reveal the odd counts early lose more than they gain: in base 16 the hybrid tree is 2.5 times and the odd-first tree 307 times the plain tree; in base 32 the hybrid tree is 13.3 times the plain tree (`3.4 * 10^9` against `2.5 * 10^8` nodes, exact) and the odd-first tree about `10^11` to `10^12` (estimate). The answer is no. | proven; computed |
+| 27.5 | 78, work units | With `--unit-stats` (new), bases 24 to 34: the largest 1% of the units hold 47% to 81% of the work, and the pooled law has a power-like tail. The type of a unit (digits, free slots, known digits) explains 93% to 97% of the variance of `ln(nodes)`; within a type the law is light-tailed, and each free slot multiplies the size by 1.93. Scheduling on 8 threads is within 0.1% of ideal; shards of 64 are up to 2.6 times unbalanced at depth 4. A weighted progress estimate (new in `--progress`) is off by at most 0.10 against 0.49 for the unit count. | computed; heuristic |
 
 Scripts: `analysis/r5l_cpsat.py`, `analysis/r5l_sat.py` and
 `analysis/r5l_engine_baseline.py` (section 27.1), `analysis/r5l_orders.py` and
@@ -85,7 +85,7 @@ Every run found exactly the solutions of `output/b2-41-1.txt` with
 
 ### 27.1.2 Growth (computed)
 
-Table 1.1. `d = b - 1`, `0^0 = 1`. The engine column is
+Table 27.1.1. `d = b - 1`, `0^0 = 1`. The engine column is
 `fast search b --min-digits b-1 --max-digits b-1 -j 1`, which also covers
 `0^0 = 0`.
 
@@ -247,7 +247,7 @@ unrevealed for `b/2` levels.
 ### 27.2.3 The best adaptive tree in small bases (computed)
 
 Section 27.3 computes, for small bases, the smallest exact tree that chooses the
-value to branch on node by node (column "best adaptive tree" of Table 3.1).
+value to branch on node by node (column "best adaptive tree" of Table 27.3.1).
 It is 0.83 to 0.91 times the top-down tree for `b = 5` to 10.
 `analysis/r5l_optchoice.py` walks this optimal tree: it branches on the
 largest unrevealed value at 78% to 86% of its internal nodes. So in small
@@ -371,7 +371,7 @@ dynamic programming over all cylinders), the top-down certificate (the
 failing cylinders that the top-down tree evaluates, with the same test), and
 `max_k N_k` from Theorem 27.5.
 
-Table 3.1. True weights `x^x`. All covers are proven optimal by CP-SAT.
+Table 27.3.1. True weights `x^x`. All covers are proven optimal by CP-SAT.
 
 | `b` | `\|C_d\|` | top-down nodes | top-down certificate | best adaptive tree | smallest certificate | `max_k N_k` |
 |---:|---:|---:|---:|---:|---:|---:|
@@ -390,7 +390,7 @@ So in these bases a certificate that is not a tree saves a factor 1.6 to 1.9
 over the top-down tree, and an adaptive tree saves 9% to 20%. The bound of
 Theorem 27.5 is 0.18 times the optimum for `b = 8` to 10, with no trend.
 
-Table 3.2. The bound of Corollary 27.7 against the top-down tree, true
+Table 27.3.2. The bound of Corollary 27.7 against the top-down tree, true
 weights, `d = b - 1` (`r5l_cert.py --tree-only`).
 
 | `b` | top-down nodes | widest level | witness bound on `N_k` | bound / widest level | certificate / bound |
@@ -418,7 +418,7 @@ tree. In the model the widest level holds about `C(L + m, m)` nodes with
 witness share stays bounded below as it does up to base 21 (heuristic), the
 answer to question 76 is yes: the smallest certificate is of the order of the
 exact tree, up to a polynomial factor. Section 9.1 argued this; Theorem
-3.3 proves it for the oracle model.
+27.5 proves it for the oracle model.
 
 A faster exact method must therefore use what the oracle hides: the low
 digits of `S`, that is the arithmetic of `x^x`. Section 27.1 tests a solver
@@ -520,7 +520,7 @@ size of the unit. `analysis/r5l_units.py run` makes these runs, and adds the
 nodes that build the unit list (a `--shard` with no units). The sum of the
 unit sizes equals the node count of the run in every base.
 
-Table 5.1. All bases, both conventions, unit depth 4 (the default). The
+Table 27.5.1. All bases, both conventions, unit depth 4 (the default). The
 makespan columns simulate list scheduling in unit order without splitting a
 unit, relative to the ideal `total / P`. The shard columns give the largest
 `--shard i/n` part relative to the mean.
@@ -577,7 +577,7 @@ its standard deviation grows with `b`.
 
 ### 27.5.3 Scheduling and unit depth (computed)
 
-Table 5.2. Base 30 at every unit depth from 2 to 7.
+Table 27.5.2. Base 30 at every unit depth from 2 to 7.
 
 | b | depth | units | nodes | largest unit | top 1% of units | sd of ln(nodes) | type explains | within-type sd | makespan 64 / 512 threads | 16 / 64 shards, max / mean |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -601,8 +601,8 @@ the ideal time in every base from 24 to 34, even without the splitting
 inside a unit that `fast` also does (`--par-depth`). Up to 64 threads it
 stays within 12%. Only at 512 parallel workers do the largest units bound the
 run: the makespan is 5 to 7 times the ideal at depth 4, because one unit
-holds about 1% of the work. Deeper units fix this (Table 5.2). A rule that
-fits Table 5.2: choose the unit depth at which the largest unit holds less
+holds about 1% of the work. Deeper units fix this (Table 27.5.2). A rule that
+fits Table 27.5.2: choose the unit depth at which the largest unit holds less
 than `1/(4P)` of the work for `P` workers or shards. In base 30 that is
 depth 4 up to about 16 workers, depth 6 for 64 and depth 7 for about
 400.
@@ -611,7 +611,7 @@ Shards are the weak point. `--shard i/n` takes every `n`-th unit, and with
 units this uneven a shard of 16 can get 1.16 to 1.45 times the mean work, a
 shard of 64 up to 2.6 times. A shard cannot be smaller than its largest
 unit. For many machines, use a deeper unit depth: in base 30, 64 shards
-are within 1.22 of the mean at depth 6 (Table 5.2). An assignment
+are within 1.22 of the mean at depth 6 (Table 27.5.2). An assignment
 by predicted size (longest first, with the size predicted from the type)
 helps less than the deeper units: for 64 shards at depth 4 it gives 1.40 to
 1.47 instead of 1.85 to 2.56, in bases 28 to 33.
@@ -660,5 +660,5 @@ factor in speed is available from scheduling on one machine.
 Open: a proof that the witness share of Corollary 27.7 stays bounded below
 as `b` grows, which would make the `2^(b - O(log b))` bound of question 76 a
 theorem in the oracle model. And an oracle that also reveals low digits:
-Theorem 27.5 says nothing about methods that use them, and sections 27.1 and 4
+Theorem 27.5 says nothing about methods that use them, and sections 27.1 and 27.4
 only show that the two natural ones lose.

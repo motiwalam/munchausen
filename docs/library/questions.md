@@ -133,7 +133,7 @@ it belongs to and mark it here. Quick-check scripts by the questioner are in
 
 ## Theme IV. The model, probability and dynamics
 
-19. (Answered in chapter 17: forced residues multiply the count by 18.9 against 16.9 predicted.) A sharp test of the model: force `w'(x) == x (mod b-1)` in perturbed
+19. (Answered in chapter 17: forced residues multiply the count by 19.9 under `0^0 = 0` against 16.9 predicted.) A sharp test of the model: force `w'(x) == x (mod b-1)` in perturbed
     weights. The refined model then predicts about `b-1` times as many
     solutions. Forcing `w'(x) == x + 1 (mod b-1)` should leave only
     `(b-1)`-digit solutions, about `0.55 (b-1)` per base. Bases 12 to 24.
