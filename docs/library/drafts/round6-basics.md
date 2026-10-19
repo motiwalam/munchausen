@@ -352,7 +352,15 @@ many bases must use the size and the digits together, as Theorem 25.7 (ii)
 does for 3 digits. For long strings no such structure is known, and the
 model says that none should exist: the per-base events look independent with
 probability about `e^(-E)`. I regard question 2 as out of reach in the
-present state of knowledge. The useful targets are its pieces with a fixed
+present state of knowledge.
+
+A model case shows how hard it is. For two-digit narcissistic numbers
+(weights `x^2`), base `b` has exactly `tau(b^2 + 1) - 2` of them, and an
+even base has none exactly when `b^2 + 1` is prime (section 3 of
+`drafts/round6-applications.md`). So "infinitely many empty bases" is
+Landau's problem on primes of the form `n^2 + 1` in that toy world, one of
+the oldest open problems in number theory. The Munchausen question has the
+same shape with a far less tractable weight. The useful targets are its pieces with a fixed
 shape, as in section 1.
 
 ## 3. Faster search

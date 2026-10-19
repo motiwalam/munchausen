@@ -357,7 +357,7 @@ Kind: computation.
 
 ### 80. Assumption R when `b - 1` is prime
 
-Prove Assumption R of section 13.2.3 when `b - 1 = p` is prime, using bounds
+Prove Assumption R of section 13.2.4 when `b - 1 = p` is prime, using bounds
 for exponential sums of the self-power map, `sum over x < p of e(h x^x / p)`.
 
 Why: This sharpens question 54. When `b - 1` has only small prime factors, the
