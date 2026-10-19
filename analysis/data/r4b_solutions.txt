@@ -1,0 +1,611 @@
+# 0^0 = 1
+## 3 digits, base 4, digits (1, 3, 1), 0^0 = 1
+n = 29; weights, largest first: 3^3=27, 1^1=1, 1^1=1; largest weight / n = 0.9310, two largest / n = 0.9655
+  split m = 1: top (1, 3), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (1,), tail (3, 1): R = 15, R / b^m = +0.9375, |R| / Q' = 1.88e+00
+  exact blocks inside (substring, shift): (1, 3)@1, (1,)@0
+  binomial prefix (c, e): None
+## 3 digits, base 4, digits (3, 1, 3), 0^0 = 1
+n = 55; weights, largest first: 3^3=27, 3^3=27, 1^1=1; largest weight / n = 0.4909, two largest / n = 0.9818
+  split m = 1: top (3, 1), tail (3,): R = 24, R / b^m = +6.0000, |R| / Q' = 9.60e-01
+  split m = 2: top (3,), tail (1, 3): R = 21, R / b^m = +1.3125, |R| / Q' = 8.75e-01
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 3 digits, base 25, digits (5, 1, 3), 0^0 = 1
+n = 3153; weights, largest first: 5^5=3125, 3^3=27, 1^1=1; largest weight / n = 0.9911, two largest / n = 0.9997
+  split m = 1: top (5, 1), tail (3,): R = 24, R / b^m = +0.9600, |R| / Q' = 9.56e-02
+  split m = 2: top (5,), tail (1, 3): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (5,)@2, (1, 3)@0
+  binomial prefix (c, e): None
+## 3 digits, base 91, digits (6, 1, 5), 0^0 = 1
+n = 49782; weights, largest first: 6^6=46656, 5^5=3125, 1^1=1; largest weight / n = 0.9372, two largest / n = 1.0000
+  split m = 1: top (6, 1), tail (5,): R = 3120, R / b^m = +34.2857, |R| / Q' = 2.85e+00
+  split m = 2: top (6,), tail (1, 5): R = 3030, R / b^m = +0.3659, |R| / Q' = 2.77e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 3 digits, base 215, digits (1, 2, 6), 0^0 = 1
+n = 46661; weights, largest first: 6^6=46656, 2^2=4, 1^1=1; largest weight / n = 0.9999, two largest / n = 1.0000
+  split m = 1: top (1, 2), tail (6,): R = 46650, R / b^m = +216.9767, |R| / Q' = 1.08e+02
+  split m = 2: top (1,), tail (2, 6): R = 46224, R / b^m = +1.0000, |R| / Q' = 1.07e+02
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): (1, 1)
+## 3 digits, base 904, digits (1, 7, 1), 0^0 = 1
+n = 823545; weights, largest first: 7^7=823543, 1^1=1, 1^1=1; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (1, 7), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (1,), tail (7, 1): R = 817215, R / b^m = +1.0000, |R| / Q' = 4.52e+02
+  exact blocks inside (substring, shift): (1, 7)@1, (1,)@0
+  binomial prefix (c, e): None
+## 4 digits, base 10, digits (3, 4, 3, 5), 0^0 = 1
+n = 3435; weights, largest first: 5^5=3125, 4^4=256, 3^3=27, 3^3=27; largest weight / n = 0.9098, two largest / n = 0.9843
+  split m = 1: top (3, 4, 3), tail (5,): R = 3120, R / b^m = +312.0000, |R| / Q' = 3.17e+00
+  split m = 2: top (3, 4), tail (3, 5): R = 3117, R / b^m = +31.1700, |R| / Q' = 3.18e+00
+  split m = 3: top (3,), tail (4, 3, 5): R = 2973, R / b^m = +2.9730, |R| / Q' = 3.30e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 4 digits, base 20, digits (6, 5, 3, 4), 0^0 = 1
+n = 50064; weights, largest first: 6^6=46656, 5^5=3125, 4^4=256, 3^3=27; largest weight / n = 0.9319, two largest / n = 0.9943
+  split m = 1: top (6, 5, 3), tail (4,): R = 252, R / b^m = +12.6000, |R| / Q' = 3.40e-02
+  split m = 2: top (6, 5), tail (3, 4): R = 219, R / b^m = +0.5475, |R| / Q' = 2.96e-02
+  split m = 3: top (6,), tail (5, 3, 4): R = 1344, R / b^m = +0.1680, |R| / Q' = 1.87e-01
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 6, digits (2, 2, 3, 5, 2), 0^0 = 1
+n = 3164; weights, largest first: 5^5=3125, 3^3=27, 2^2=4, 2^2=4, 2^2=4; largest weight / n = 0.9877, two largest / n = 0.9962
+  split m = 1: top (2, 2, 3, 5), tail (2,): R = 2, R / b^m = +0.3333, |R| / Q' = 1.01e-03
+  split m = 2: top (2, 2, 3), tail (5, 2): R = 3097, R / b^m = +86.0278, |R| / Q' = 1.56e+00
+  split m = 3: top (2, 2), tail (3, 5, 2): R = 3016, R / b^m = +13.9630, |R| / Q' = 1.55e+00
+  split m = 4: top (2,), tail (2, 3, 5, 2): R = 2588, R / b^m = +1.9969, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 6, digits (2, 3, 4, 5, 2), 0^0 = 1
+n = 3416; weights, largest first: 5^5=3125, 4^4=256, 3^3=27, 2^2=4, 2^2=4; largest weight / n = 0.9148, two largest / n = 0.9898
+  split m = 1: top (2, 3, 4, 5), tail (2,): R = 2, R / b^m = +0.3333, |R| / Q' = 9.50e-04
+  split m = 2: top (2, 3, 4), tail (5, 2): R = 3097, R / b^m = +86.0278, |R| / Q' = 1.47e+00
+  split m = 3: top (2, 3), tail (4, 5, 2): R = 3209, R / b^m = +14.8565, |R| / Q' = 1.56e+00
+  split m = 4: top (2,), tail (3, 4, 5, 2): R = 2588, R / b^m = +1.9969, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 7, digits (1, 3, 4, 5, 4), 0^0 = 1
+n = 3665; weights, largest first: 5^5=3125, 4^4=256, 4^4=256, 3^3=27, 1^1=1; largest weight / n = 0.8527, two largest / n = 0.9225
+  split m = 1: top (1, 3, 4, 5), tail (4,): R = 252, R / b^m = +36.0000, |R| / Q' = 1.34e-01
+  split m = 2: top (1, 3, 4), tail (5, 4): R = 3342, R / b^m = +68.2041, |R| / Q' = 1.79e+00
+  split m = 3: top (1, 3), tail (4, 5, 4): R = 3402, R / b^m = +9.9184, |R| / Q' = 1.88e+00
+  split m = 4: top (1,), tail (3, 4, 5, 4): R = 2400, R / b^m = +0.9996, |R| / Q' = 1.75e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 13, digits (3, 3, 6, 6, 1), 0^0 = 1
+n = 93367; weights, largest first: 6^6=46656, 6^6=46656, 3^3=27, 3^3=27, 1^1=1; largest weight / n = 0.4997, two largest / n = 0.9994
+  split m = 1: top (3, 3, 6, 6), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (3, 3, 6), tail (6, 1): R = 46578, R / b^m = +275.6095, |R| / Q' = 1.66e+00
+  split m = 3: top (3, 3), tail (6, 6, 1): R = 92220, R / b^m = +41.9754, |R| / Q' = 3.31e+00
+  split m = 4: top (3,), tail (3, 6, 6, 1): R = 85656, R / b^m = +2.9991, |R| / Q' = 3.25e+00
+  exact blocks inside (substring, shift): (3, 3, 6, 6)@1, (1,)@0
+  binomial prefix (c, e): None
+## 5 digits, base 14, digits (2, 6, 0, 3, 6), 0^0 = 1
+n = 93344; weights, largest first: 6^6=46656, 6^6=46656, 3^3=27, 2^2=4, 0^0=1; largest weight / n = 0.4998, two largest / n = 0.9997
+  split m = 1: top (2, 6, 0, 3), tail (6,): R = 46650, R / b^m = +3332.1429, |R| / Q' = 1.83e+00
+  split m = 2: top (2, 6, 0), tail (3, 6): R = 46635, R / b^m = +237.9337, |R| / Q' = 1.83e+00
+  split m = 3: top (2, 6), tail (0, 3, 6): R = 46636, R / b^m = +16.9956, |R| / Q' = 1.83e+00
+  split m = 4: top (2,), tail (6, 0, 3, 6): R = 76828, R / b^m = +1.9999, |R| / Q' = 3.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 48, digits (3, 8, 6, 2, 0), 0^0 = 1
+n = 16823904; weights, largest first: 8^8=16777216, 6^6=46656, 3^3=27, 2^2=4, 0^0=1; largest weight / n = 0.9972, two largest / n = 1.0000
+  split m = 1: top (3, 8, 6, 2), tail (0,): R = 1, R / b^m = +0.0208, |R| / Q' = 7.23e-07
+  split m = 2: top (3, 8, 6), tail (2, 0): R = -91, R / b^m = -0.0395, |R| / Q' = 6.58e-05
+  split m = 3: top (3, 8), tail (6, 2, 0): R = 32741, R / b^m = +0.2961, |R| / Q' = 2.37e-02
+  split m = 4: top (3,), tail (8, 6, 2, 0): R = 15925221, R / b^m = +3.0000, |R| / Q' = 1.20e+01
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 6 digits, base 9, digits (1, 5, 6, 2, 6, 2), 0^0 = 1
+n = 96446; weights, largest first: 6^6=46656, 6^6=46656, 5^5=3125, 2^2=4, 2^2=4, 1^1=1; largest weight / n = 0.4838, two largest / n = 0.9675
+  split m = 1: top (1, 5, 6, 2, 6), tail (2,): R = 2, R / b^m = +0.2222, |R| / Q' = 4.09e-05
+  split m = 2: top (1, 5, 6, 2), tail (6, 2): R = 46604, R / b^m = +575.3580, |R| / Q' = 9.53e-01
+  split m = 3: top (1, 5, 6), tail (2, 6, 2): R = 46446, R / b^m = +63.7119, |R| / Q' = 9.51e-01
+  split m = 4: top (1, 5), tail (6, 2, 6, 2): R = 88728, R / b^m = +13.5235, |R| / Q' = 1.87e+00
+  split m = 5: top (1,), tail (5, 6, 2, 6, 2): R = 59048, R / b^m = +1.0000, |R| / Q' = 1.80e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 7 digits, base 9, digits (1, 6, 5, 6, 5, 4, 7), 0^0 = 1
+n = 923362; weights, largest first: 7^7=823543, 6^6=46656, 6^6=46656, 5^5=3125, 5^5=3125, 4^4=256, 1^1=1; largest weight / n = 0.8919, two largest / n = 0.9424
+  split m = 1: top (1, 6, 5, 6, 5, 4), tail (7,): R = 823536, R / b^m = +91504.0000, |R| / Q' = 1.45e+00
+  split m = 2: top (1, 6, 5, 6, 5), tail (4, 7): R = 823756, R / b^m = +10169.8272, |R| / Q' = 1.45e+00
+  split m = 3: top (1, 6, 5, 6), tail (5, 4, 7): R = 826476, R / b^m = +1133.7119, |R| / Q' = 1.46e+00
+  split m = 4: top (1, 6, 5), tail (6, 5, 4, 7): R = 868758, R / b^m = +132.4124, |R| / Q' = 1.54e+00
+  split m = 5: top (1, 6), tail (5, 6, 5, 4, 7): R = 839078, R / b^m = +14.2099, |R| / Q' = 1.52e+00
+  split m = 6: top (1,), tail (6, 5, 6, 5, 4, 7): R = 531440, R / b^m = +1.0000, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+
+# 0^0 = 0
+## 3 digits, base 4, digits (1, 3, 0), 0^0 = 0
+n = 28; weights, largest first: 3^3=27, 1^1=1, 0^0=0; largest weight / n = 0.9643, two largest / n = 1.0000
+  split m = 1: top (1, 3), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (1,), tail (3, 0): R = 15, R / b^m = +0.9375, |R| / Q' = 1.88e+00
+  exact blocks inside (substring, shift): (1, 3)@1
+  binomial prefix (c, e): None
+## 3 digits, base 4, digits (1, 3, 1), 0^0 = 0
+n = 29; weights, largest first: 3^3=27, 1^1=1, 1^1=1; largest weight / n = 0.9310, two largest / n = 0.9655
+  split m = 1: top (1, 3), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (1,), tail (3, 1): R = 15, R / b^m = +0.9375, |R| / Q' = 1.88e+00
+  exact blocks inside (substring, shift): (1, 3)@1, (1,)@0
+  binomial prefix (c, e): None
+## 3 digits, base 4, digits (3, 1, 3), 0^0 = 0
+n = 55; weights, largest first: 3^3=27, 3^3=27, 1^1=1; largest weight / n = 0.4909, two largest / n = 0.9818
+  split m = 1: top (3, 1), tail (3,): R = 24, R / b^m = +6.0000, |R| / Q' = 9.60e-01
+  split m = 2: top (3,), tail (1, 3): R = 21, R / b^m = +1.3125, |R| / Q' = 8.75e-01
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 3 digits, base 5, digits (1, 0, 3), 0^0 = 0
+n = 28; weights, largest first: 3^3=27, 1^1=1, 0^0=0; largest weight / n = 0.9643, two largest / n = 1.0000
+  split m = 1: top (1, 0), tail (3,): R = 24, R / b^m = +4.8000, |R| / Q' = 2.40e+00
+  split m = 2: top (1,), tail (0, 3): R = 24, R / b^m = +0.9600, |R| / Q' = 2.40e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): (1, 0)
+## 3 digits, base 8, digits (4, 0, 0), 0^0 = 0
+n = 256; weights, largest first: 4^4=256, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (4, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (4,), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (4,)@2, (4, 0)@1
+  binomial prefix (c, e): (2, 0)
+## 3 digits, base 8, digits (4, 0, 1), 0^0 = 0
+n = 257; weights, largest first: 4^4=256, 1^1=1, 0^0=0; largest weight / n = 0.9961, two largest / n = 1.0000
+  split m = 1: top (4, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (4,), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (4,)@2, (4, 0)@1, (1,)@0
+  binomial prefix (c, e): (2, 0)
+## 3 digits, base 25, digits (5, 0, 0), 0^0 = 0
+n = 3125; weights, largest first: 5^5=3125, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (5, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (5,), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (5,)@2, (5, 0)@1
+  binomial prefix (c, e): None
+## 3 digits, base 25, digits (5, 0, 1), 0^0 = 0
+n = 3126; weights, largest first: 5^5=3125, 1^1=1, 0^0=0; largest weight / n = 0.9997, two largest / n = 1.0000
+  split m = 1: top (5, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (5,), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (5,)@2, (5, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 3 digits, base 25, digits (5, 1, 3), 0^0 = 0
+n = 3153; weights, largest first: 5^5=3125, 3^3=27, 1^1=1; largest weight / n = 0.9911, two largest / n = 0.9997
+  split m = 1: top (5, 1), tail (3,): R = 24, R / b^m = +0.9600, |R| / Q' = 9.56e-02
+  split m = 2: top (5,), tail (1, 3): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (5,)@2, (1, 3)@0
+  binomial prefix (c, e): None
+## 3 digits, base 91, digits (6, 1, 5), 0^0 = 0
+n = 49782; weights, largest first: 6^6=46656, 5^5=3125, 1^1=1; largest weight / n = 0.9372, two largest / n = 1.0000
+  split m = 1: top (6, 1), tail (5,): R = 3120, R / b^m = +34.2857, |R| / Q' = 2.85e+00
+  split m = 2: top (6,), tail (1, 5): R = 3030, R / b^m = +0.3659, |R| / Q' = 2.77e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 3 digits, base 215, digits (1, 2, 6), 0^0 = 0
+n = 46661; weights, largest first: 6^6=46656, 2^2=4, 1^1=1; largest weight / n = 0.9999, two largest / n = 1.0000
+  split m = 1: top (1, 2), tail (6,): R = 46650, R / b^m = +216.9767, |R| / Q' = 1.08e+02
+  split m = 2: top (1,), tail (2, 6): R = 46224, R / b^m = +1.0000, |R| / Q' = 1.07e+02
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): (1, 1)
+## 3 digits, base 343, digits (7, 0, 0), 0^0 = 0
+n = 823543; weights, largest first: 7^7=823543, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (7, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (7,), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (7,)@2, (7, 0)@1
+  binomial prefix (c, e): None
+## 3 digits, base 343, digits (7, 0, 1), 0^0 = 0
+n = 823544; weights, largest first: 7^7=823543, 1^1=1, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (7, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (7,), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (7,)@2, (7, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 3 digits, base 904, digits (1, 7, 0), 0^0 = 0
+n = 823544; weights, largest first: 7^7=823543, 1^1=1, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (1, 7), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (1,), tail (7, 0): R = 817215, R / b^m = +1.0000, |R| / Q' = 4.52e+02
+  exact blocks inside (substring, shift): (1, 7)@1
+  binomial prefix (c, e): None
+## 3 digits, base 904, digits (1, 7, 1), 0^0 = 0
+n = 823545; weights, largest first: 7^7=823543, 1^1=1, 1^1=1; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (1, 7), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (1,), tail (7, 1): R = 817215, R / b^m = +1.0000, |R| / Q' = 4.52e+02
+  exact blocks inside (substring, shift): (1, 7)@1, (1,)@0
+  binomial prefix (c, e): None
+## 3 digits, base 6561, digits (9, 0, 0), 0^0 = 0
+n = 387420489; weights, largest first: 9^9=387420489, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (9, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (9,), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (9,)@2, (9, 0)@1
+  binomial prefix (c, e): (3, 0)
+## 3 digits, base 6561, digits (9, 0, 1), 0^0 = 0
+n = 387420490; weights, largest first: 9^9=387420489, 1^1=1, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (9, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (9,), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (9,)@2, (9, 0)@1, (1,)@0
+  binomial prefix (c, e): (3, 0)
+## 3 digits, base 161051, digits (11, 0, 0), 0^0 = 0
+n = 285311670611; weights, largest first: 11^11=285311670611, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (11, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (11,), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (11,)@2, (11, 0)@1
+  binomial prefix (c, e): None
+## 3 digits, base 161051, digits (11, 0, 1), 0^0 = 0
+n = 285311670612; weights, largest first: 11^11=285311670611, 1^1=1, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (11, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (11,), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (11,)@2, (11, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 4 digits, base 5, digits (2, 0, 2, 4), 0^0 = 0
+n = 264; weights, largest first: 4^4=256, 2^2=4, 2^2=4, 0^0=0; largest weight / n = 0.9697, two largest / n = 0.9848
+  split m = 1: top (2, 0, 2), tail (4,): R = 252, R / b^m = +50.4000, |R| / Q' = 1.66e+00
+  split m = 2: top (2, 0), tail (2, 4): R = 246, R / b^m = +9.8400, |R| / Q' = 1.64e+00
+  split m = 3: top (2,), tail (0, 2, 4): R = 246, R / b^m = +1.9680, |R| / Q' = 1.64e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 4 digits, base 10, digits (3, 4, 3, 5), 0^0 = 0
+n = 3435; weights, largest first: 5^5=3125, 4^4=256, 3^3=27, 3^3=27; largest weight / n = 0.9098, two largest / n = 0.9843
+  split m = 1: top (3, 4, 3), tail (5,): R = 3120, R / b^m = +312.0000, |R| / Q' = 3.17e+00
+  split m = 2: top (3, 4), tail (3, 5): R = 3117, R / b^m = +31.1700, |R| / Q' = 3.18e+00
+  split m = 3: top (3,), tail (4, 3, 5): R = 2973, R / b^m = +2.9730, |R| / Q' = 3.30e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 4 digits, base 20, digits (6, 5, 3, 4), 0^0 = 0
+n = 50064; weights, largest first: 6^6=46656, 5^5=3125, 4^4=256, 3^3=27; largest weight / n = 0.9319, two largest / n = 0.9943
+  split m = 1: top (6, 5, 3), tail (4,): R = 252, R / b^m = +12.6000, |R| / Q' = 3.40e-02
+  split m = 2: top (6, 5), tail (3, 4): R = 219, R / b^m = +0.5475, |R| / Q' = 2.96e-02
+  split m = 3: top (6,), tail (5, 3, 4): R = 1344, R / b^m = +0.1680, |R| / Q' = 1.87e-01
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 4 digits, base 49, digits (7, 0, 0, 0), 0^0 = 0
+n = 823543; weights, largest first: 7^7=823543, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (7, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (7, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (7,), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (7,)@3, (7, 0)@2, (7, 0, 0)@1
+  binomial prefix (c, e): None
+## 4 digits, base 49, digits (7, 0, 0, 1), 0^0 = 0
+n = 823544; weights, largest first: 7^7=823543, 1^1=1, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (7, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (7, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (7,), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (7,)@3, (7, 0)@2, (7, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 4 digits, base 128, digits (8, 0, 0, 0), 0^0 = 0
+n = 16777216; weights, largest first: 8^8=16777216, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (8, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (8, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (8,), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (8,)@3, (8, 0)@2, (8, 0, 0)@1
+  binomial prefix (c, e): (2, 0)
+## 4 digits, base 128, digits (8, 0, 0, 1), 0^0 = 0
+n = 16777217; weights, largest first: 8^8=16777216, 1^1=1, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (8, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (8, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (8,), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (8,)@3, (8, 0)@2, (8, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): (2, 0)
+## 4 digits, base 128, digits (8, 0, 2, 4), 0^0 = 0
+n = 16777476; weights, largest first: 8^8=16777216, 4^4=256, 2^2=4, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (8, 0, 2), tail (4,): R = 252, R / b^m = +1.9688, |R| / Q' = 6.41e-04
+  split m = 2: top (8, 0), tail (2, 4): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (8,), tail (0, 2, 4): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (8,)@3, (8, 0)@2, (2, 4)@0
+  binomial prefix (c, e): None
+## 4 digits, base 1000, digits (10, 0, 0, 0), 0^0 = 0
+n = 10000000000; weights, largest first: 10^10=10000000000, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (10, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (10, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (10,), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (10,)@3, (10, 0)@2, (10, 0, 0)@1
+  binomial prefix (c, e): None
+## 4 digits, base 1000, digits (10, 0, 0, 1), 0^0 = 0
+n = 10000000001; weights, largest first: 10^10=10000000000, 1^1=1, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (10, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (10, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (10,), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (10,)@3, (10, 0)@2, (10, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 4 digits, base 28561, digits (13, 0, 0, 0), 0^0 = 0
+n = 302875106592253; weights, largest first: 13^13=302875106592253, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (13, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (13, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (13,), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (13,)@3, (13, 0)@2, (13, 0, 0)@1
+  binomial prefix (c, e): None
+## 4 digits, base 28561, digits (13, 0, 0, 1), 0^0 = 0
+n = 302875106592254; weights, largest first: 13^13=302875106592253, 1^1=1, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (13, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (13, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (13,), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (13,)@3, (13, 0)@2, (13, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 5 digits, base 6, digits (2, 2, 3, 5, 2), 0^0 = 0
+n = 3164; weights, largest first: 5^5=3125, 3^3=27, 2^2=4, 2^2=4, 2^2=4; largest weight / n = 0.9877, two largest / n = 0.9962
+  split m = 1: top (2, 2, 3, 5), tail (2,): R = 2, R / b^m = +0.3333, |R| / Q' = 1.01e-03
+  split m = 2: top (2, 2, 3), tail (5, 2): R = 3097, R / b^m = +86.0278, |R| / Q' = 1.56e+00
+  split m = 3: top (2, 2), tail (3, 5, 2): R = 3016, R / b^m = +13.9630, |R| / Q' = 1.55e+00
+  split m = 4: top (2,), tail (2, 3, 5, 2): R = 2588, R / b^m = +1.9969, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 6, digits (2, 3, 4, 5, 2), 0^0 = 0
+n = 3416; weights, largest first: 5^5=3125, 4^4=256, 3^3=27, 2^2=4, 2^2=4; largest weight / n = 0.9148, two largest / n = 0.9898
+  split m = 1: top (2, 3, 4, 5), tail (2,): R = 2, R / b^m = +0.3333, |R| / Q' = 9.50e-04
+  split m = 2: top (2, 3, 4), tail (5, 2): R = 3097, R / b^m = +86.0278, |R| / Q' = 1.47e+00
+  split m = 3: top (2, 3), tail (4, 5, 2): R = 3209, R / b^m = +14.8565, |R| / Q' = 1.56e+00
+  split m = 4: top (2,), tail (3, 4, 5, 2): R = 2588, R / b^m = +1.9969, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 7, digits (1, 3, 4, 5, 4), 0^0 = 0
+n = 3665; weights, largest first: 5^5=3125, 4^4=256, 4^4=256, 3^3=27, 1^1=1; largest weight / n = 0.8527, two largest / n = 0.9225
+  split m = 1: top (1, 3, 4, 5), tail (4,): R = 252, R / b^m = +36.0000, |R| / Q' = 1.34e-01
+  split m = 2: top (1, 3, 4), tail (5, 4): R = 3342, R / b^m = +68.2041, |R| / Q' = 1.79e+00
+  split m = 3: top (1, 3), tail (4, 5, 4): R = 3402, R / b^m = +9.9184, |R| / Q' = 1.88e+00
+  split m = 4: top (1,), tail (3, 4, 5, 4): R = 2400, R / b^m = +0.9996, |R| / Q' = 1.75e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 5 digits, base 11, digits (6, 6, 5, 0, 0), 0^0 = 0
+n = 96437; weights, largest first: 6^6=46656, 6^6=46656, 5^5=3125, 0^0=0, 0^0=0; largest weight / n = 0.4838, two largest / n = 0.9676
+  split m = 1: top (6, 6, 5, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (6, 6, 5), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (6, 6), tail (5, 0, 0): R = 2520, R / b^m = +1.8933, |R| / Q' = 7.39e-02
+  split m = 4: top (6,), tail (6, 5, 0, 0): R = 41190, R / b^m = +2.8133, |R| / Q' = 1.29e+00
+  exact blocks inside (substring, shift): (6, 6, 5)@2, (6, 6, 5, 0)@1
+  binomial prefix (c, e): None
+## 5 digits, base 11, digits (6, 6, 5, 0, 1), 0^0 = 0
+n = 96438; weights, largest first: 6^6=46656, 6^6=46656, 5^5=3125, 1^1=1, 0^0=0; largest weight / n = 0.4838, two largest / n = 0.9676
+  split m = 1: top (6, 6, 5, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (6, 6, 5), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (6, 6), tail (5, 0, 1): R = 2520, R / b^m = +1.8933, |R| / Q' = 7.39e-02
+  split m = 4: top (6,), tail (6, 5, 0, 1): R = 41190, R / b^m = +2.8133, |R| / Q' = 1.29e+00
+  exact blocks inside (substring, shift): (6, 6, 5)@2, (6, 6, 5, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 5 digits, base 13, digits (3, 3, 6, 6, 0), 0^0 = 0
+n = 93366; weights, largest first: 6^6=46656, 6^6=46656, 3^3=27, 3^3=27, 0^0=0; largest weight / n = 0.4997, two largest / n = 0.9994
+  split m = 1: top (3, 3, 6, 6), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (3, 3, 6), tail (6, 0): R = 46578, R / b^m = +275.6095, |R| / Q' = 1.66e+00
+  split m = 3: top (3, 3), tail (6, 6, 0): R = 92220, R / b^m = +41.9754, |R| / Q' = 3.31e+00
+  split m = 4: top (3,), tail (3, 6, 6, 0): R = 85656, R / b^m = +2.9991, |R| / Q' = 3.25e+00
+  exact blocks inside (substring, shift): (3, 3, 6, 6)@1
+  binomial prefix (c, e): None
+## 5 digits, base 13, digits (3, 3, 6, 6, 1), 0^0 = 0
+n = 93367; weights, largest first: 6^6=46656, 6^6=46656, 3^3=27, 3^3=27, 1^1=1; largest weight / n = 0.4997, two largest / n = 0.9994
+  split m = 1: top (3, 3, 6, 6), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (3, 3, 6), tail (6, 1): R = 46578, R / b^m = +275.6095, |R| / Q' = 1.66e+00
+  split m = 3: top (3, 3), tail (6, 6, 1): R = 92220, R / b^m = +41.9754, |R| / Q' = 3.31e+00
+  split m = 4: top (3,), tail (3, 6, 6, 1): R = 85656, R / b^m = +2.9991, |R| / Q' = 3.25e+00
+  exact blocks inside (substring, shift): (3, 3, 6, 6)@1, (1,)@0
+  binomial prefix (c, e): None
+## 5 digits, base 81, digits (9, 0, 0, 0, 0), 0^0 = 0
+n = 387420489; weights, largest first: 9^9=387420489, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (9, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (9, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (9, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (9,), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (9,)@4, (9, 0)@3, (9, 0, 0)@2, (9, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 5 digits, base 81, digits (9, 0, 0, 0, 1), 0^0 = 0
+n = 387420490; weights, largest first: 9^9=387420489, 1^1=1, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (9, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (9, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (9, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (9,), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (9,)@4, (9, 0)@3, (9, 0, 0)@2, (9, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 5 digits, base 2197, digits (13, 0, 0, 0, 0), 0^0 = 0
+n = 302875106592253; weights, largest first: 13^13=302875106592253, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (13, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (13, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (13, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (13,), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (13,)@4, (13, 0)@3, (13, 0, 0)@2, (13, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 5 digits, base 2197, digits (13, 0, 0, 0, 1), 0^0 = 0
+n = 302875106592254; weights, largest first: 13^13=302875106592253, 1^1=1, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (13, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (13, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (13, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (13,), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (13,)@4, (13, 0)@3, (13, 0, 0)@2, (13, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 5 digits, base 32768, digits (16, 0, 0, 0, 0), 0^0 = 0
+n = 18446744073709551616; weights, largest first: 16^16=18446744073709551616, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (16, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (16, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (16, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (16,), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (16,)@4, (16, 0)@3, (16, 0, 0)@2, (16, 0, 0, 0)@1
+  binomial prefix (c, e): (2, 0)
+## 5 digits, base 32768, digits (16, 0, 0, 0, 1), 0^0 = 0
+n = 18446744073709551617; weights, largest first: 16^16=18446744073709551616, 1^1=1, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (16, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (16, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (16, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (16,), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (16,)@4, (16, 0)@3, (16, 0, 0)@2, (16, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): (2, 0)
+## 5 digits, base 83521, digits (17, 0, 0, 0, 0), 0^0 = 0
+n = 827240261886336764177; weights, largest first: 17^17=827240261886336764177, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (17, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (17, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (17, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (17,), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (17,)@4, (17, 0)@3, (17, 0, 0)@2, (17, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 5 digits, base 83521, digits (17, 0, 0, 0, 1), 0^0 = 0
+n = 827240261886336764178; weights, largest first: 17^17=827240261886336764177, 1^1=1, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (17, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (17, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (17, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (17,), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (17,)@4, (17, 0)@3, (17, 0, 0)@2, (17, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 6 digits, base 9, digits (1, 5, 6, 2, 6, 2), 0^0 = 0
+n = 96446; weights, largest first: 6^6=46656, 6^6=46656, 5^5=3125, 2^2=4, 2^2=4, 1^1=1; largest weight / n = 0.4838, two largest / n = 0.9675
+  split m = 1: top (1, 5, 6, 2, 6), tail (2,): R = 2, R / b^m = +0.2222, |R| / Q' = 4.09e-05
+  split m = 2: top (1, 5, 6, 2), tail (6, 2): R = 46604, R / b^m = +575.3580, |R| / Q' = 9.53e-01
+  split m = 3: top (1, 5, 6), tail (2, 6, 2): R = 46446, R / b^m = +63.7119, |R| / Q' = 9.51e-01
+  split m = 4: top (1, 5), tail (6, 2, 6, 2): R = 88728, R / b^m = +13.5235, |R| / Q' = 1.87e+00
+  split m = 5: top (1,), tail (5, 6, 2, 6, 2): R = 59048, R / b^m = +1.0000, |R| / Q' = 1.80e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 6 digits, base 11, digits (5, 1, 7, 5, 0, 3), 0^0 = 0
+n = 829821; weights, largest first: 7^7=823543, 5^5=3125, 5^5=3125, 3^3=27, 1^1=1, 0^0=0; largest weight / n = 0.9924, two largest / n = 0.9962
+  split m = 1: top (5, 1, 7, 5, 0), tail (3,): R = 24, R / b^m = +2.1818, |R| / Q' = 6.42e-05
+  split m = 2: top (5, 1, 7, 5), tail (0, 3): R = 24, R / b^m = +0.1983, |R| / Q' = 6.42e-05
+  split m = 3: top (5, 1, 7), tail (5, 0, 3): R = 2544, R / b^m = +1.9113, |R| / Q' = 6.80e-03
+  split m = 4: top (5, 1), tail (7, 5, 0, 3): R = 816770, R / b^m = +55.7865, |R| / Q' = 2.20e+00
+  split m = 5: top (5,), tail (1, 7, 5, 0, 3): R = 802130, R / b^m = +4.9806, |R| / Q' = 2.19e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 6 digits, base 121, digits (11, 0, 0, 0, 0, 0), 0^0 = 0
+n = 285311670611; weights, largest first: 11^11=285311670611, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (11, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (11, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (11, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (11, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (11,), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (11,)@5, (11, 0)@4, (11, 0, 0)@3, (11, 0, 0, 0)@2, (11, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 6 digits, base 121, digits (11, 0, 0, 0, 0, 1), 0^0 = 0
+n = 285311670612; weights, largest first: 11^11=285311670611, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (11, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (11, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (11, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (11, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (11,), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (11,)@5, (11, 0)@4, (11, 0, 0)@3, (11, 0, 0, 0)@2, (11, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 6 digits, base 4096, digits (16, 0, 0, 0, 0, 0), 0^0 = 0
+n = 18446744073709551616; weights, largest first: 16^16=18446744073709551616, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (16, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (16, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (16, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (16, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (16,), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (16,)@5, (16, 0)@4, (16, 0, 0)@3, (16, 0, 0, 0)@2, (16, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 6 digits, base 4096, digits (16, 0, 0, 0, 0, 1), 0^0 = 0
+n = 18446744073709551617; weights, largest first: 16^16=18446744073709551616, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (16, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (16, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (16, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (16, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (16,), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (16,)@5, (16, 0)@4, (16, 0, 0)@3, (16, 0, 0, 0)@2, (16, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 6 digits, base 194481, digits (21, 0, 0, 0, 0, 0), 0^0 = 0
+n = 5842587018385982521381124421; weights, largest first: 21^21=5842587018385982521381124421, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (21, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (21, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (21, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (21, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (21,), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (21,)@5, (21, 0)@4, (21, 0, 0)@3, (21, 0, 0, 0)@2, (21, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 6 digits, base 194481, digits (21, 0, 0, 0, 0, 1), 0^0 = 0
+n = 5842587018385982521381124422; weights, largest first: 21^21=5842587018385982521381124421, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (21, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (21, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (21, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (21, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (21,), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (21,)@5, (21, 0)@4, (21, 0, 0)@3, (21, 0, 0, 0)@2, (21, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 7 digits, base 9, digits (1, 6, 4, 7, 0, 6, 3), 0^0 = 0
+n = 917139; weights, largest first: 7^7=823543, 6^6=46656, 6^6=46656, 4^4=256, 3^3=27, 1^1=1, 0^0=0; largest weight / n = 0.8979, two largest / n = 0.9488
+  split m = 1: top (1, 6, 4, 7, 0, 6), tail (3,): R = 24, R / b^m = +2.6667, |R| / Q' = 4.25e-05
+  split m = 2: top (1, 6, 4, 7, 0), tail (6, 3): R = 46626, R / b^m = +575.6296, |R| / Q' = 8.26e-02
+  split m = 3: top (1, 6, 4, 7), tail (0, 6, 3): R = 46626, R / b^m = +63.9588, |R| / Q' = 8.26e-02
+  split m = 4: top (1, 6, 4), tail (7, 0, 6, 3): R = 865066, R / b^m = +131.8497, |R| / Q' = 1.54e+00
+  split m = 5: top (1, 6), tail (4, 7, 0, 6, 3): R = 839078, R / b^m = +14.2099, |R| / Q' = 1.52e+00
+  split m = 6: top (1,), tail (6, 4, 7, 0, 6, 3): R = 531440, R / b^m = +1.0000, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 7 digits, base 9, digits (1, 6, 5, 6, 5, 4, 7), 0^0 = 0
+n = 923362; weights, largest first: 7^7=823543, 6^6=46656, 6^6=46656, 5^5=3125, 5^5=3125, 4^4=256, 1^1=1; largest weight / n = 0.8919, two largest / n = 0.9424
+  split m = 1: top (1, 6, 5, 6, 5, 4), tail (7,): R = 823536, R / b^m = +91504.0000, |R| / Q' = 1.45e+00
+  split m = 2: top (1, 6, 5, 6, 5), tail (4, 7): R = 823756, R / b^m = +10169.8272, |R| / Q' = 1.45e+00
+  split m = 3: top (1, 6, 5, 6), tail (5, 4, 7): R = 826476, R / b^m = +1133.7119, |R| / Q' = 1.46e+00
+  split m = 4: top (1, 6, 5), tail (6, 5, 4, 7): R = 868758, R / b^m = +132.4124, |R| / Q' = 1.54e+00
+  split m = 5: top (1, 6), tail (5, 6, 5, 4, 7): R = 839078, R / b^m = +14.2099, |R| / Q' = 1.52e+00
+  split m = 6: top (1,), tail (6, 5, 6, 5, 4, 7): R = 531440, R / b^m = +1.0000, |R| / Q' = 1.50e+00
+  exact blocks inside (substring, shift): none
+  binomial prefix (c, e): None
+## 7 digits, base 169, digits (13, 0, 0, 0, 0, 0, 0), 0^0 = 0
+n = 302875106592253; weights, largest first: 13^13=302875106592253, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (13, 0, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (13, 0, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (13, 0, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (13, 0, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (13, 0), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (13,), tail (0, 0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (13,)@6, (13, 0)@5, (13, 0, 0)@4, (13, 0, 0, 0)@3, (13, 0, 0, 0, 0)@2, (13, 0, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 7 digits, base 169, digits (13, 0, 0, 0, 0, 0, 1), 0^0 = 0
+n = 302875106592254; weights, largest first: 13^13=302875106592253, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (13, 0, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (13, 0, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (13, 0, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (13, 0, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (13, 0), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (13,), tail (0, 0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (13,)@6, (13, 0)@5, (13, 0, 0)@4, (13, 0, 0, 0)@3, (13, 0, 0, 0, 0)@2, (13, 0, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 7 digits, base 1024, digits (16, 0, 0, 0, 0, 0, 0), 0^0 = 0
+n = 18446744073709551616; weights, largest first: 16^16=18446744073709551616, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (16, 0, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (16, 0, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (16, 0, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (16, 0, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (16, 0), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (16,), tail (0, 0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (16,)@6, (16, 0)@5, (16, 0, 0)@4, (16, 0, 0, 0)@3, (16, 0, 0, 0, 0)@2, (16, 0, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 7 digits, base 1024, digits (16, 0, 0, 0, 0, 0, 1), 0^0 = 0
+n = 18446744073709551617; weights, largest first: 16^16=18446744073709551616, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (16, 0, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (16, 0, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (16, 0, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (16, 0, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (16, 0), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (16,), tail (0, 0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (16,)@6, (16, 0)@5, (16, 0, 0)@4, (16, 0, 0, 0)@3, (16, 0, 0, 0, 0)@2, (16, 0, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 7 digits, base 6859, digits (19, 0, 0, 0, 0, 0, 0), 0^0 = 0
+n = 1978419655660313589123979; weights, largest first: 19^19=1978419655660313589123979, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (19, 0, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (19, 0, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (19, 0, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (19, 0, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (19, 0), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (19,), tail (0, 0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (19,)@6, (19, 0)@5, (19, 0, 0)@4, (19, 0, 0, 0)@3, (19, 0, 0, 0, 0)@2, (19, 0, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 7 digits, base 6859, digits (19, 0, 0, 0, 0, 0, 1), 0^0 = 0
+n = 1978419655660313589123980; weights, largest first: 19^19=1978419655660313589123979, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (19, 0, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (19, 0, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (19, 0, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (19, 0, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (19, 0), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (19,), tail (0, 0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (19,)@6, (19, 0)@5, (19, 0, 0)@4, (19, 0, 0, 0)@3, (19, 0, 0, 0, 0)@2, (19, 0, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+## 7 digits, base 390625, digits (25, 0, 0, 0, 0, 0, 0), 0^0 = 0
+n = 88817841970012523233890533447265625; weights, largest first: 25^25=88817841970012523233890533447265625, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (25, 0, 0, 0, 0, 0), tail (0,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (25, 0, 0, 0, 0), tail (0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (25, 0, 0, 0), tail (0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (25, 0, 0), tail (0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (25, 0), tail (0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (25,), tail (0, 0, 0, 0, 0, 0): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (25,)@6, (25, 0)@5, (25, 0, 0)@4, (25, 0, 0, 0)@3, (25, 0, 0, 0, 0)@2, (25, 0, 0, 0, 0, 0)@1
+  binomial prefix (c, e): None
+## 7 digits, base 390625, digits (25, 0, 0, 0, 0, 0, 1), 0^0 = 0
+n = 88817841970012523233890533447265626; weights, largest first: 25^25=88817841970012523233890533447265625, 1^1=1, 0^0=0, 0^0=0, 0^0=0, 0^0=0, 0^0=0; largest weight / n = 1.0000, two largest / n = 1.0000
+  split m = 1: top (25, 0, 0, 0, 0, 0), tail (1,): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 2: top (25, 0, 0, 0, 0), tail (0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 3: top (25, 0, 0, 0), tail (0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 4: top (25, 0, 0), tail (0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 5: top (25, 0), tail (0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  split m = 6: top (25,), tail (0, 0, 0, 0, 0, 1): R = 0, R / b^m = +0.0000, |R| / Q' = 0.00e+00  EXACT BLOCK
+  exact blocks inside (substring, shift): (25,)@6, (25, 0)@5, (25, 0, 0)@4, (25, 0, 0, 0)@3, (25, 0, 0, 0, 0)@2, (25, 0, 0, 0, 0, 0)@1, (1,)@0
+  binomial prefix (c, e): None
+
