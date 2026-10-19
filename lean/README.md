@@ -15,7 +15,7 @@ lake exe cache get   # only once, downloads the Mathlib build
 lake build
 ```
 
-A full build of the project takes about 3 minutes after Mathlib is cached. The
+A full build of the project takes about 5 minutes after Mathlib is cached. The
 build has no `sorry`, no new `axiom` and no `native_decide`. Concrete examples
 use `decide`, which the kernel checks.
 
@@ -42,9 +42,9 @@ use `decide`, which the kernel checks.
 | file | contents |
 |---|---|
 | `Munchausen/Defs.lean` | weights, `F`, `IsMunchausen`, strings, `P`, `IsSolution`, `Q`, self-paying digits |
-| `Munchausen/Basic.lean` | chapter 1: length bound, finitely many solutions per base, digit bound, one base per string, the two conventions |
+| `Munchausen/Basic.lean` | chapter 1: length bound, finitely many solutions per base, digit bound, one base per string, the two conventions, the top digit (1.7) |
 | `Munchausen/Congruences.lean` | section 1.6, Proposition 10.2, Theorem 15.2, Corollary 15.3 |
-| `Munchausen/Constructions.lean` | chapter 2 (twins, self-paying digits, swaps, 2-digit solutions, Proposition 2.7) and chapter 22 (splits, blocks, binomial families) |
+| `Munchausen/Constructions.lean` | chapter 2 (twins, self-paying digits and the converse of 2.2, swaps, 2-digit solutions, Corollary 2.4, Proposition 2.7), Propositions 4.2 and 8.5, Theorems 9.2 and 15.9, chapter 22 (splits, blocks, binomial families) and Theorem 25.5 |
 | `Munchausen/Polynomial.lean` | `Q_s`, local obstructions (11.1, 19.1), the test modulo 2 (15.11), negative bases (12.2, 12.3) |
 | `Munchausen/Residues.lean` | residues of `x^x - x` modulo 27 and 81, Lemma 20.6, the coverings 15.13 and 20.13 |
 | `Munchausen/ShortEquations.lean` | Propositions 18.1, 16.5, 20.20, Lemma 18.14, Theorem 15.7 |
