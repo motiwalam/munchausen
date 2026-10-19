@@ -276,6 +276,16 @@ binomial families of chapter 22 give infinitely many short exceptions, in
 bases above `10^108942`. So the short exceptions are not a finite list. The
 long ones follow Conjecture 10.3.
 
+Update (chapter 35). The expectation 0.96 for 3 to 5 digits in bases 10 to
+41 and 43 is the basic model. The exact refined model, with the identity
+factor modulo `b - 1` at the short length, gives 1.35 under `0^0 = 1` and
+1.86 under `0^0 = 0`. Observed are 5 (the first row of the table) and 9
+(under `0^0 = 0`, a different nine from the total above). Most of these
+nine are structured (self-paying zeros, blocks, a family member). Under
+`0^0 = 1` one of the five is a family member, and the other four against
+1.35 have P = 0.048. The arrangement factors of the root heuristic have
+mean 1 and do not explain the rest (section 35.1.4).
+
 Fixed length. For a large `k`, the bases with a `k`-digit solution are
 `b = k` with probability 8%, `k+1` with 55%, `k+2` with 23%, `k+3` with 9%, and
 so on. The expected number of such bases is about 1. So a length has no base

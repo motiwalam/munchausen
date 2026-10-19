@@ -1,6 +1,6 @@
 """Question 100: near-solutions that provably exist in every base.
 
-The construction of Theorem 5.1 of drafts/round6-existence.md, in exact
+The construction of Theorem 35.13 of docs/library/35-existence.md, in exact
 integers. For a base b and a target T:
 
   1. L starts as one copy of b - 1. F(L) has b - 1 digits.
@@ -14,7 +14,7 @@ integers. For a base b and a target T:
      agree in their top T digits, so |n - F(n)| < b^(b-1-T).
 
     python3 r6h_near.py check BMIN BMAX [STEP]   run the construction
-    python3 r6h_near.py bound BMIN BMAX [STEP]   the guaranteed T of Theorem 5.1
+    python3 r6h_near.py bound BMIN BMAX [STEP]   the guaranteed T of Theorem 35.13
 
 check prints, per base: the guaranteed T, the largest T for which the
 construction fits in b - 1 digits, the copies used, and a verification of
@@ -117,7 +117,7 @@ def verify(b, T, L, a):
 
 
 def guaranteed(b):
-    """Largest T allowed by the cost bound of Theorem 5.1."""
+    """Largest T allowed by the cost bound of Theorem 35.13."""
     best = 0
     for T in range(1, b):
         z = T + 4

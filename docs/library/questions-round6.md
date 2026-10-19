@@ -79,6 +79,18 @@ strings with one free digit that is never a solution excluded by one of
 these two kinds, as in a Hasse principle? The families of chapter 22 are the exceptions that pass
 both tests, and they are identities.
 
+Correction (chapter 35). The arrangement factors at `q` prime to
+`b (b - 1)` do not explain the excess of short solutions. They have mean 1
+at every length and only add scatter (Proposition 35.3, Table 35.1.3.1).
+Part of the excess is the identity factor modulo `b - 1` at the short
+length, which the exact refined model contains (a factor 1.4 to 2.1 at 3
+and 4 digits, Table 35.1.4.1). Identity families and self-paying blocks
+explain most of the rest under `0^0 = 0`. Under `0^0 = 1` four generic
+short exceptions remain against 1.35 expected (P = 0.048). The two
+heuristics are one in this sense: the root heuristic is the per-base
+refined model averaged over the residue of the base (Heuristic 35.4), and
+they agree on totals at lengths 6 to 12 (section 35.2).
+
 ### A3. The digit zero
 
 Many loose ends pass through the digit 0. It carries the convention. It
@@ -126,6 +138,14 @@ every base with a few top digits matched (question 100), averages over the
 base, which may also push Theorem 20.3 past its barrier at
 `ln b / ln ln b` (question 101), and long structured solutions under
 `0^0 = 1` (question 99).
+
+Update (chapter 35). Every base `b >= 27` has an `n` of `b - 1` digits with
+`0 < |n - F(n)| < b^(b-1-T)` and `T` about `sqrt(b / e)` (Theorem 35.13).
+This is the library's first existence statement for near-solutions.
+Averaging over the base does not pass the barrier of Theorem 20.3
+(Corollary 35.10), but it excludes, for almost all bases, solutions of
+length up to `(ln b)^C` with few digits of weight at least `sqrt(b)`
+(Theorem 35.12).
 
 ### A6. The evidence as a whole
 
@@ -228,6 +248,26 @@ compare it with the factors `rho_s(q)` of `analysis/root_local.py`.
 
 Kind: proof and computation.
 
+Status (chapter 35): answered. Theorem 35.1 and Corollary 35.2 prove
+`|q P(n == a) - 1| <= (q - 1) e^(1/8) exp(-(1 - gamma)^2 (k - 1)/64)` for
+every residue `a`, where `gamma` measures how concentrated the digits are
+modulo `q`. The crossover, where the measured RMS of the factor falls below
+0.1, is 10 digits for `q` = 3, 5, 7 and 12 for `q = 9` (Table 35.1.3.1).
+
+Correction (chapter 35). Three points of the question do not hold.
+
+- Since `b (b - 1)` is even, a `q` prime to it is odd. The moduli 4 and 8
+  of the attack never qualify.
+- The rate does not involve `ord_q(b)`. Exchanging two adjacent digits moves
+  `n` by a unit times their difference, so the proven rate depends on `k`
+  and the spread of the digits only (Theorem 35.1).
+- The "why" is wrong. The arrangement factors have mean 1 at every length,
+  so they cannot make short solutions run 2 to 4 times above the per-base
+  model. See the correction under direction A2 and section 35.1.4.
+
+Here `S(c)` is the weight sum `F(c)`, as in chapter 5. In question 101 and
+chapter 20 the same letter is the digit sum.
+
 ### 92. The two heuristics at medium lengths
 
 For lengths 6 to 12 in bases 7 to 20, do the root heuristic with p-adic
@@ -248,6 +288,13 @@ to 20. Extend `analysis/r2c_top_model.py` to all lengths. Use
 cell by cell with the counts of `output/b2-41-*.txt`.
 
 Kind: computation.
+
+Status (chapter 35): answered. The two heuristics predict the same totals
+(8.85 against 9.51 and 9.74 under `0^0 = 1`, 12.72 against 13.00 and 14.19
+under `0^0 = 0`; observed 10 and 12). Cell by cell and by parity only the
+refined model with the top digit forced matches the window calibration,
+because the root heuristic averages the parity factor over both parities.
+No missing factor shows (section 35.2).
 
 ## Theme XVI. The digit zero
 
@@ -352,6 +399,11 @@ bijective length windows and the residue modulo `b - 1`, and add the pairing
 exactly.
 
 Kind: twist (proof and computation).
+
+Update (chapter 35). Proposition 35.5 gives the invariant residues: the
+identity modulus is `b - 1` (checked for bases 2 to 10 in Table 35.3.2.1).
+In odd bases every `g(x) = x^x - x` is even, so the residue factor is 2
+with no convention to choose (Proposition 35.7).
 
 ## Theme XVII. Why some weights have families
 
@@ -513,6 +565,20 @@ base-`b` digits of such numbers. That is where the method may stop.
 
 Kind: proof.
 
+Status (chapter 35): answered. Every base `b >= 27` has an `n` of `b - 1`
+digits with `0 < |n - F(n)| < b^(b-1-T)`, where `T = T(b)` is explicit and
+equals `sqrt(b / e) - O(1)` (Theorem 35.13). So `t` grows like
+`sqrt(b / e)`, and `t >= 2` holds in every base `b >= 77` (Corollary
+35.14).
+
+Correction (chapter 35). The "why" and the attack underestimate the
+method. The steering needs no control of the base-`b` digits of
+`b^b sum m_y e^(-y) b^(-y)`. It is enough that one copy of a steering digit
+moves the steered digit of `F` by less than one unit, or by a jump that
+clears a forbidden zone. So the method does not stop after a few digits: it
+matches about `sqrt(b / e)` of them. The limit comes from the zone of
+values that the matched digits must avoid (section 35.5.1).
+
 ### 101. Beyond `ln b / ln ln b` by averaging over bases
 
 Can one prove that almost all bases have no solution with at most
@@ -536,6 +602,22 @@ partitions of `N` into parts `x^x - x`. Evaluate the bound at `B = 10^96` as
 in section 20.1.3, and see whether it stays below `B` beyond `K = 49`.
 
 Kind: proof.
+
+Status (chapter 35): answered, negatively for this route. The multisets
+with no small digit are a share `e^(-2A + o(1))` of all multisets in the
+range of Theorem 20.3 (Proposition 35.9), and for them the averaged count
+is the count of Theorem 20.3. So the averaged bound is at least
+`e^(-2A - o(1))` times the bound of Proposition 20.2, a bounded gain
+(Corollary 35.10). At `B = 10^96` the range stays `K = 49` (Table
+35.4.2.1). Averaging over the window does give a new statement: almost all
+bases have no solution of length up to `(ln b)^C` with at most
+`(1/C - eps) ln b / ln ln b` digits of weight at least `sqrt(b)`
+(Theorem 35.12).
+
+Note (chapter 35). Here `S(c)` is the digit sum, as in chapter 20. In
+question 91, direction A2 and chapter 5 the same letter is the weight sum
+`F(c)`. Also, the small part of `F(c) - S(c)` lies in `[0, b - 2]`, so the
+divisibility fixes it to one value, not two (Proposition 35.8).
 
 ### 102. The abc conjecture and the 3-digit list
 
@@ -675,6 +757,12 @@ from the two tables and compare it with section 26.6.2.
 
 Kind: proof and computation.
 
+Update (chapter 35). The class is not an invariant of the multiset. For
+`x = 4, 6, 8` and `N < 8000` the gcd of the differences within multiset
+groups is `2x` only at length 4 and `x` at every other length (section
+35.3.3). So the effect is a bias of the greedy expansions, as this question
+supposes.
+
 ### 108. One invariant-residue proposition for every positional system
 
 In a positional system with place values `beta_i` (integers, or algebraic
@@ -697,6 +785,23 @@ a graph of allowed exchanges. Apply it to the Pisot base and check whether
 the restricted exchanges give the class modulo `2x`.
 
 Kind: proof.
+
+Status (chapter 35): answered. The invariant ideal is generated by
+`(x - y)(beta_i - beta_j)` over the allowed exchanges, and equals
+`(beta - 1)` for geometric place values once two adjacent positions can
+exchange digits that differ by a unit (Proposition 35.5). Its rational
+integers are `|f(1)| Z` for the minimal polynomial `f` of `beta`
+(Proposition 35.6), and the limit residue factor is an index (Proposition
+35.7). The predicted modulus is the gcd found in all 67 systems of Table
+35.3.2.1. In the Pisot bases the restricted exchanges give `2x` only at
+length 4, so they do not explain question 107 (section 35.3.3).
+
+Correction (chapter 35). "Exactly when `I` contains every difference
+`beta_i - beta_j`" is not right as stated. The ideal is generated by the
+differences times the digit differences `x - y`, and it equals the ideal of
+the exchanges only when the admissible strings of each multiset are
+connected by exchanges. With all digits even, for example, the ideal is
+`2 (beta - 1)` (Proposition 35.5 (2) and the remark after it).
 
 ### 109. Is anything about the middle digits cheap? (speculative)
 
@@ -800,6 +905,9 @@ Workload 4: one heuristic and existence. (Proofs, with small computations.)
 
 Why this grouping: the first three unify existing results, the last two try
 statements in a direction the library has not touched.
+
+Done in chapter 35. Questions 91, 92, 100 and 108 are answered, and
+question 101 is answered negatively for the route it proposes.
 
 Left for later: question 109.
 

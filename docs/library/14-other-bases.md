@@ -559,6 +559,14 @@ are roots of a low-degree polynomial in `b`, where the per-base model does not
 apply. The two `L+1` factorions sit in bases 17 and 5, where `theta` is 0.83
 and 0.97, as Proposition 14.11 requires.
 
+Correction (chapter 35). "As are the short Munchausen numbers of section
+10.5" compares those with the basic model. Against the exact refined
+model, which contains the identity factor modulo `b - 1` at the short
+length, the short exceptions of bases 10 to 41 and 43 are 5 against 1.35
+under `0^0 = 1`, and one of the five is a member of a binomial family. So
+the Munchausen factor is about 3 on generic strings, not 4 to 5, and part
+of it is the 5-digit excess of section 22.4.3 (section 35.1.4).
+
 There is no parity effect: `x! == 0 (mod 2)` for `x >= 2`, so the identity
 modulo `b-1` gives no free factor. The census agrees: 15 factorions in the 16
 odd bases from 11 to 41, 22 in the 16 even bases from 10 to 40.
@@ -586,6 +594,12 @@ Brocard type (Theorem 33.6).
 - Universal: the identity modulo the "digit-sum modulus" (`b-1`, `b+1`,
   `(n+1)^2 + 1`) and the parity factor 2 whenever that modulus is even and
   `w(x) == x (mod 2)`.
+
+  Update (chapter 35): one proposition covers every system. The invariant
+  ideal is `(beta - 1)` for geometric place values, its rational integers
+  are `|f(1)| Z` for the minimal polynomial `f` of `beta`, and the limit
+  residue factor is an index (Propositions 35.5 to 35.7). The predicted
+  modulus is the one found in all 67 systems of Table 35.3.2.1.
 - Not universal: the length shares. They depend on the height of the top
   weight between powers of the base and on the cost of one digit value less.
   `x^x` and `x^(x+t)` give 8/55/23%; even negative bases give 8/78/12%; odd

@@ -103,6 +103,12 @@ the Pisot base, elements of `Z[eps]`), and `n' - n = sum e_i beta_i`. For
 `sum e_i F_(i-1) + eps sum e_i F_i`, which is an integer exactly when
 `sum e_i F_i = 0`. The values of `F_i` follow from `eps^(-1) = eps - x`.
 
+Update (chapter 35). Proposition 35.5 states this once for every system:
+the offsets of equivalent strings are congruent modulo the ideal generated
+by `(x - y)(beta_i - beta_j)` over the allowed exchanges, which is
+`(beta - 1)` for geometric place values. In the Pisot bases the restricted
+exchanges give `2x` only at length 4 (section 35.3.3).
+
 ### 26.1.3 What the dependence changes
 
 Proposition 26.5 (proven, under the usual independence of distinct

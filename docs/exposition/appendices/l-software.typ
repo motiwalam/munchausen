@@ -22,7 +22,7 @@ number; the badges $L x.y$ lead to it.
     [`analysis/`], [Python, PARI/GP, Sage and C scripts for the model, the number theory and the experiments],
     [`analysis/data/`], [the output of every script, cited by file name in the library],
     [`docs/algorithm.md`], [the search algorithm in detail],
-    [`docs/library/`], [the library: 34 chapters and the open questions],
+    [`docs/library/`], [the library: 35 chapters and the open questions],
     [`docs/exposition/`], [this document],
     [`lean/`], [the Lean 4 formalization (@app-lean)],
   ),
@@ -165,6 +165,7 @@ them. Each library chapter ends with a table of its scripts and data files.
     [`r6b_`], [the 2-adic bound for 3-digit families and the sieve below it], [L32],
     [`r6f_`], [least inert primes, 3-digit factorions, the Brocard sieve, 4-digit factorions, identity census, explicit abc bounds, chains], [L33],
     [`r6q_`], [the exact refined model by zero class, the length matrix and its trace, characters, perturbed worlds, the ledger of P values, neighbouring bases], [L34],
+    [`r6h_`], [arrangements modulo $q$, the root heuristic against the refined model, invariant ideals of 67 systems, the averaged multiset count, near-solutions in every base], [L35],
   ),
 )
 

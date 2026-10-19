@@ -47,6 +47,11 @@ keeping in mind when judging which problems are realistic.
     [The 12% excess under $0^0 = 1$], st("heuristic"), [not a third correction: zero-free surplus in odd bases, one cell in even bases, about 2 standard deviations], [@model-heur-excess],
     [Are the P values of the library uniform?], st("computed"), [no, through selection; the 12 groups named in advance look uniform], [@sec-model-ledger],
     [Are neighbouring bases independent?], st("computed"), [no dependence found once the top digits are forced; the two conventions of one base correlate at 0.78], [@sec-model-neighbours],
+    [Do the arrangements of a multiset spread over the residues?], st("proven"), [yes for $q$ prime to $b(b - 1)$, at a rate set by the length and the spread of the digits, not by the order of $b$], [@short-thm-arrangements],
+    [Are the root heuristic and the per-base model one heuristic?], st("heuristic"), [yes on totals: the root heuristic is the refined model averaged over the residue of the base; base by base only the refined model fits], [@short-heur-one],
+    [One invariant ideal for every number system?], st("proven"), [yes: the ideal of the exchanges, $(beta - 1)$ for geometric place values; the predicted modulus in all 67 systems tested], [@worlds-prop-ideal],
+    [Past $ln b slash ln ln b$ by averaging over bases?], st("proven"), [not for multiset counts: the gain is bounded; strings with few large digits are excluded up to length $(ln b)^C$], [@short-prop-no-small],
+    [Near-solutions in every base?], st("proven"), [yes: $|n - F(n)| < n b^(-t)$ with $t = sqrt(b slash e) - O(1)$ for every $b >= 27$; $t$ of order $b$ open], [@model-thm-near-exist],
     [Assumption R], st("open"), [false for short lengths as first stated; proven by computation for bases 12 to 6000; not needed for the Poisson law in the limit], [@open-assumption-r],
     [Infinitely many bases without 2-digit narcissistic numbers?], st("open"), [equivalent to Landau's problem on primes $n^2 + 1$], [@worlds-narc-two-cor],
     [$k(B) = omega(B - 1)$ in $FF_q [T]$?], st("open"), [proven with a good factor, for $e <= 10$ and every census base; at most one more always], [@open-ffield],
@@ -303,6 +308,27 @@ The answers decide how much of the remaining scatter is a property of
 $x^x$. So far the data need no correction beyond the residues and the top
 digits (@sec-model-excess).
 
+#problem(id: "open-existence", title: [Existence and averages], src: "35")[
+  + Can near-solutions with $|n - F(n)| < n b^(-c b)$ be proved in every
+    base? @model-thm-near-exist stops at $t approx sqrt(b slash e)$ because
+    of the zone that the matched digits must avoid. (#q(144))
+  + Is there a closed form for the identity factor modulo $b - 1$ at short
+    lengths, in the small primes of $b - 1$, that gives the short-solution
+    rates of all weights at once? (#q(145))
+  + Prove that sums of $K$ weights $x^x$ with no small digit avoid the
+    residue 0 modulo $b - 1$ for all but a share $B^(-theta)$ of the pairs
+    of a multiset and a base of its window. That would extend
+    @thm-almost-all to $alpha = 1 + theta$. (#q(146))
+  + Sharpen @short-thm-arrangements for small digits and large $q$, where
+    $gamma$ is close to 1 but the arrangements still spread. (#q(147))
+  + Combine @short-thm-few-large with the congruence modulo $b - 1$ for
+    strings with a long, dissociated small part. (#q(148))
+]
+
+The first question asks for existence in the range where the model
+predicts it. The others ask whether the residues can push the counting
+arguments past their present limits.
+
 #problem(id: "open-length-tail", title: [The length tail], src: "10.5")[
   Does the tail of the length law beyond $J = ln b + 1$, which supports
   @conj-window, appear in many perturbed worlds? (#q(56))
@@ -367,7 +393,9 @@ The congruence of @worlds-pisot-mod2x ties the parity of $(N - sum d_i) slash x$
 to the arrangement of the digits, not to their multiset, so it does not
 give the factor by itself. With the offsets in the class modulo $2x$ and a
 local calibration, the Pisot excess has $P approx 0.05$
-(@sec-worlds-pisot).
+(@sec-worlds-pisot). The class is not an invariant of the multiset: the gcd of
+the differences within multiset groups is $2x$ only at length 4
+(@sec-worlds-pisot). So a bias of the greedy expansions must cause it.
 
 #problem(id: "open-cycles", title: [Cycles of $n |-> F(n)$], src: ("15.1", "23.3"))[
   The full census of cycles stops at base 17; base 18 was searched only for
