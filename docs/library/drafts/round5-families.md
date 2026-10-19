@@ -217,10 +217,11 @@ polynomial of degree `d >= 2` is about `y^(1/d - 1)`. So these members are
 coincidences, like the strings of section 3.5. The other mechanisms of
 question 64 reduce to the same two cases.
 
-- Decomposable `P_s = G(h(r))`, chapter 12.1 and section 16.3. If
-  `G(u) - F` has a structural root, then `G(u) - E` is `lam (c u + e)^j`,
-  and `A = c h + e` is nonlinear: Proposition 1.7. Otherwise the root is a
-  coincidence of the usual kind.
+- Decomposable `P_s = G(h(r))`, chapter 12.1 and section 16.3. A power
+  identity of the form `G(u) - E = lam (c u + e)^j` gives
+  `A = c h + e`, which is nonlinear, so Proposition 1.7 applies. Without
+  such an identity a root is a coincidence of the usual kind. The census
+  of section 1.5 contains every decomposable prefix in its ranges.
 - Products. A 3-digit identity `b (p b + q) = F - r` with two algebraic
   factors is the same as `(2 p b + q)^2 = 4 p (F - r) + q^2`, so it is a
   square identity, covered by Theorem 1.8. The Aurifeuillian pair of
@@ -238,7 +239,8 @@ question 64 reduce to the same two cases.
   digits). With `rho = e/c`, the first condition and `x > lam e^j` give
   `rho^(j-i) < C(j, i)`, and then `w(lam c^j) <= x` gives
   `(lam c^j)^(lam c^j - 1) < 2^(j + j^2)`. So `lam c^j` is bounded, and
-  only finitely many small strings remain for each `j`.
+  only finitely many small strings remain for each `j`. (If `i = 0`, then
+  `x = lam c^j >= w(t_1)` forces `e = 0`, and then `x = j - 1`.)
 - A self-paying digit with a paying tail, as `(5,1,3)` in base 25. The base
   `a^((a-1)/m)` must have a solution of the tail, which is a coincidence
   (section 18.2).
@@ -585,10 +587,11 @@ solutions of this shape share the digits above `T`.
   give `(u - v)(b - 1) = 0`. At most 1 solution.
 - One digit `L` above `T`: `(L, v)` fixes `g(v)`, and `(u, L)` fixes
   `h_b(u)`. At most 3 solutions.
-- No digit above `T`: then `|Theta| <= 2 w(T) + T (b + 1) <= 5 M (b + 1)`,
-  so `|b^2 - M^(M-1)| <= 5 (b + 1)` and `|b - M^((M-1)/2)| <= 6`. Each
-  `u <= T` gives at most one `v`, so there are at most `T + 1 <= M`
-  solutions.
+- No digit above `T`: then `w(u) + w(v) <= 2 w(T) <= 4 M (b + 1)` and
+  `u b + v <= M (b + 1)`, so `|Theta| <= 5 M (b + 1)`. Since
+  `Theta = M (b^2 - M^(M-1))`, this gives `|b^2 - M^(M-1)| <= 5 (b + 1)`
+  and `|b - M^((M-1)/2)| <= 6`. Each `u < M` gives at most one `v`, so
+  there are at most `M` solutions.
 
 So each `M` gives at most `12 + 3 = 15` solutions, or `12 + M` in the
 exceptional bases, and two values of `M` give at most 30, or `2M + 24`.
@@ -628,11 +631,12 @@ three-digit solutions.
 
 Proof. Here `w(x) = lam (c b + e)^2 = p b^2 + q b + lam e^2`, so
 `K = w(x) / b^2` lies in `[p, p + 1/2)`. By Lemma 3.1 the largest digit
-`M` of another solution has `w(M) < (M + 1) b^2`. `M = x + 1` fails, since
-`w(x + 1) >= 2 (x + 1) w(x) >= (x + 2) b^2`. `M <= x - 1` fails, since
-`w(x - 1) <= w(x) / (2x) < (p + 1) b^2 / (2x) < b^2 / 3`. So `M = x`. If
+`M` of another solution has `b^2 / 3 <= w(M) < (M + 1) b^2`. `M >= x + 1`
+fails, since `w(x + 1) >= 2 (x + 1) w(x) >= (x + 2) b^2`. `M <= x - 1`
+fails, since `w(x - 1) <= w(x) / (2x) < (p + 1) b^2 / (2x) < b^2 / 3`,
+because `2x > 3 (p + 1)`. So `M = x`. If
 `x` occurs three times, the leading digit is `x = floor(3K) <= 3p + 1`,
-but `x >= w(p) + w(q) > 3p + 1`. If it occurs twice, `F / b^2` lies in
+but `x >= w(p) + w(q) >= p^p + 4 > 3p + 1`. If it occurs twice, `F / b^2` lies in
 `[2p, 2p + 3/2)`, so the leading digit is `2p` or `2p + 1`, not `x`. The
 string is `(u, x, x)`, and its equation
 `(u - 2p) b^2 + (x - 2q) b + x - 2 lam e^2 - w(u) = 0` fails: for
@@ -683,15 +687,16 @@ fails modulo some prime. So in these 80 bases, among them
   The table of section 22.3.2 is also not the smallest for 5 and 6 digits
   (Table 1.6). Section 22.3.2 states that its search leaves out other
   shapes, so the table is not wrong, but the summary claim is.
-- README ("the next 3-digit one is `(1,6,46666)`"), chapter 2, section
-  2.5, and chapter 3, section 3.5: this is proven only among the
-  power-identity members. For all strings it is heuristic, with the
-  computed range of Theorem 2.3.
+- README and chapter 2, section 2.5: "the next 3-digit one is
+  `(1,6,46666)`". In context this means the next family member, and that
+  is correct (Theorem 2.2). Read as "the next 3-digit solution" it is
+  heuristic, with the computed range of Theorem 2.3. A word such as
+  "member" would remove the ambiguity.
 - Chapter 3, section 3.5, says the 3-digit list is complete up to
-  `10^51.5`. Theorem 2.3 extends it to `10^3301`.
-- Section 22.4.2 says the self-paying digits, Theorem 22.6 and the
-  families of section 19.2 are the structures the root heuristic cannot
-  see. Theorem 1.5 is another one; its `c = 1` case is the family
+  `10^51.5`. That is correct; Theorem 2.3 extends it to `10^3301`.
+- Section 22.4.2 lists the self-paying digits, Theorem 22.6 and the
+  families of section 19.2 as the structures the root heuristic cannot
+  see. Theorem 1.5 is one more. Its `c = 1` case is the family
   `(1, 0, 0, x)` of section 19.2, which misses `D = 0` only because
   `c = 1`.
 
