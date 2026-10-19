@@ -156,7 +156,7 @@ stated.
 | Theorem 15.13 | `covering_27` [Res] | formalized |
 | example `(2,1,x)` | `not_isSolution_two_one` [Res] | formalized |
 | Theorem 15.14 (chains and cycles) | none | not formalized |
-| Proposition 15.15 | none | not formalized |
+| Proposition 15.15 | `prop15_15` [Cons] | partial: `c^c + 1` is a solution in every base `r^t` with `u < t`, `t ∣ u (c - 1)`, and in base `c^c - c + 1`; that the number of such `t` is unbounded is not formalized |
 | Proposition 15.16 (needs `c ≥ 3` for the pair `(c,1)`) | `prop15_16`, `pow_self_pair`, `pow_self_injective` [Short] | formalized |
 | Proposition 15.17 | `prop15_17` [Window] | formalized |
 
