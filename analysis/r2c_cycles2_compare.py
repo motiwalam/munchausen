@@ -21,10 +21,20 @@ from collections import defaultdict
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 SUMDIR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'fast', 'target', 'r2c', 'cyc')
+DATA = os.path.join(HERE, 'data', 'r2c_cycles2.txt')
 
 
 def load_summaries():
     out = {}
+    if not os.path.isdir(SUMDIR):
+        for line in open(DATA):
+            if line.startswith('summary'):
+                b = int(re.search(r' b=(\d+)', line).group(1))
+                m = int(re.search(r' m=(\d+)', line).group(1))
+                A = list(map(int, re.search(r' A=([\d,]+)', line).group(1).split(',')))
+                B = list(map(int, re.search(r' B=([\d,]+)', line).group(1).split(',')))
+                out[b, m] = (A, B)
+        return out
     for fn in sorted(os.listdir(SUMDIR)):
         m = re.match(r'sum_(\d+)_(\d)\.txt$', fn)
         if not m:
@@ -66,6 +76,10 @@ def pois_le(k, lam):
 def main():
     S = load_summaries()
     E = load_model()
+    for line in open(DATA):
+        mm = re.match(r'model b=(\d+) m=(\d) E1=([\d.]+) E2=([\d.]+)', line)
+        if mm:
+            E[int(mm.group(1)), int(mm.group(2))] = (float(mm.group(3)), float(mm.group(4)))
     for (b, m) in S:
         if (b, m) not in E and os.path.exists(os.path.join(SUMDIR, f'mat_{b}_{m}.txt')):
             E[b, m] = model_from_matrix(b, m)

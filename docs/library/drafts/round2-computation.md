@@ -209,14 +209,19 @@ as the offsets of section 11.1 are for fixed points. The same pass builds
 the class matrix of section 15.1.5, so the model `E_2` of base 18 comes from
 `analysis/dyn_cycle_model.py`. Its values for bases 12, 16 and 17 match
 `analysis/data/dyn_cycle_model.txt`. The run is journaled in batches. Base
-18 took 3182 s per convention on one thread. The 2-cycle counts agree with
+18 took about 3200 s per convention on one thread. The 2-cycle counts agree with
 the census of chapter 15 for bases 4 to 17.
 
 Base 18 under `0^0 = 0` has one 2-cycle (computed):
 
     (2,13,4,8,1,3,17,8,10,0,12,6,2,0,12,12) <-> (6,14,11,1,5,13,13,1,3,12,5,6,4,12,10,16,10)
 
-Base 18 under `0^0 = 1`: CYC18_1.
+Base 18 under `0^0 = 1` also has one 2-cycle (computed):
+
+    (13,11,5,7,4,5,9,15,17,10,2,1,6,7,4,2,10) <-> (6,14,12,4,6,4,14,17,5,1,15,14,7,7,8,17,0)
+
+It has a zero, so it is not shared with `0^0 = 0`. The model expects 0.51
+2-cycles per convention in base 18.
 
 Groups, bases 4 to 18 (`analysis/r2c_cycles2_compare.py`,
 `analysis/data/r2c_cycles2.txt`):
@@ -224,7 +229,7 @@ Groups, bases 4 to 18 (`analysis/r2c_cycles2_compare.py`,
 | group | 2-cycles | model `E_2` | P(X <= obs) | near-2-cycles per offset |
 |---|---:|---:|---:|---:|
 | even, `0^0 = 0` | 2 | 4.02 | 0.24 | 5.25 |
-| even, `0^0 = 1` | CYC_E1 | | | |
+| even, `0^0 = 1` | 4 | 4.30 | 0.57 | 4.97 |
 | odd, `0^0 = 0` | 6 | 7.23 | 0.42 | 8.32 |
 | odd, `0^0 = 1` | 4 | 3.88 | 0.65 | 3.92 |
 
