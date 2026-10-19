@@ -1108,6 +1108,93 @@ theorem prop24_6_one {B d : (ZMod p)[X]} (hB : 0 < B.degree) (hd : d.degree < B.
   calc t * p ≤ (e - 2) * p := Nat.mul_le_mul_right _ (by omega)
     _ < r * e := hr
 
+lemma degree_ffDigit_lt {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X]) (i : ℕ) :
+    (ffDigit B n i).degree < B.degree := by
+  unfold ffDigit
+  by_cases h : i < (polyDigits B n).length
+  · rw [List.getD_eq_getElem _ _ h]
+    exact (polyDigits_spec hB n).2.1 _ (List.getElem_mem h)
+  · rw [List.getD_eq_default _ _ (by omega)]
+    exact lt_of_le_of_lt bot_le hB
+
+/-- **Corollary 24.4** (forced zeros, section 24.2.2), for any digits `D_j`: the digit of
+`∑_j D_j(T^(p^j))` at a position `i ≥ 1` is 0 whenever some base-`p` digit `r` of `i` exceeds
+`R = ⌊(e-1) p / e⌋`, that is `(e - 1) p < r e`. -/
+theorem corollary24_4 {B : (ZMod p)[X]} (hB : 0 < B.degree) (i : ℕ) (hi : 1 ≤ i)
+    (hdig : ∃ r ∈ Nat.digits p i, (B.natDegree - 1) * p < r * B.natDegree) :
+    ∀ (n : ℕ) (D : ℕ → (ZMod p)[X]), (∀ j, (D j).degree < B.degree) →
+      ffDigit B (∑ j ∈ Finset.range n, expand (ZMod p) (p ^ j) (D j)) i = 0 := by
+  have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
+  induction i using Nat.strong_induction_on with
+  | _ i ih =>
+  intro n D hD
+  rcases n with _ | n
+  · simp [ffDigit]
+  rw [prop24_2, ffDigit_add hB]
+  have h0 : ffDigit B (D 0) i = 0 := by
+    apply ffDigit_eq_zero_of_natDegree_lt hB
+    have := natDegree_lt_of_digit (hD 0) hB
+    nlinarith
+  rw [h0, zero_add]
+  set G := ∑ j ∈ Finset.range n, expand (ZMod p) (p ^ j) (D (j + 1))
+  have hi' : i = p * (i / p) + i % p := (Nat.div_add_mod i p).symm
+  have hr : i % p < p := Nat.mod_lt _ (by omega)
+  rw [hi']
+  unfold ffDigit
+  rw [lemma24_1 hB G (i / p) hr]
+  obtain ⟨r, hr_mem, hrR⟩ := hdig
+  rw [Nat.digits_def' hp1 (by omega), List.mem_cons] at hr_mem
+  rcases hr_mem with rfl | hmem
+  · exact lemma24_1_zero hB (degree_ffDigit_lt hB G (i / p)) hrR
+  · have hs1 : 1 ≤ i / p := by
+      rcases Nat.eq_zero_or_pos (i / p) with h | h
+      · rw [h, Nat.digits_zero] at hmem; simp at hmem
+      · exact h
+    have hlt : i / p < i := Nat.div_lt_self (by omega) hp1
+    have := ih (i / p) hlt hs1 ⟨r, hmem, hrR⟩ n (fun j => D (j + 1)) (fun j => hD (j + 1))
+    unfold ffDigit at this
+    rw [this, map_zero, polyDigits_zero, List.getD_nil]
+
+/-- **Corollary 24.4** for `F`: the digit of `F(n)` at a position `i ≥ 1` is 0 whenever some
+base-`p` digit `r` of `i` has `(e - 1) p < r e`. -/
+theorem corollary24_4_ffF {m : ZMod p} {B : (ZMod p)[X]} (hB : 0 < B.degree) (n : (ZMod p)[X])
+    {i : ℕ} (hi : 1 ≤ i) (hdig : ∃ r ∈ Nat.digits p i, (B.natDegree - 1) * p < r * B.natDegree) :
+    ffDigit B (ffF m B n) i = 0 := by
+  set e := B.natDegree
+  have he : 1 ≤ e := by have := natDegree_pos_iff_degree_pos.2 hB; omega
+  set L := polyDigits B n
+  have hL : ∀ d ∈ L, d.natDegree < e := fun d hd =>
+    natDegree_lt_of_digit ((polyDigits_spec hB n).2.1 d hd) hB
+  set D : ℕ → (ZMod p)[X] := fun j =>
+    if j = 0 then classSum L 0 + C (m * L.count 0) else if j < e then classSum L j else 0
+  have hB0 : B ≠ 0 := by rintro rfl; simp at hB
+  have key : ∀ f : (ZMod p)[X], f.natDegree < e → f.degree < B.degree := fun f hf => by
+    rw [degree_eq_natDegree hB0]; exact degree_le_natDegree.trans_lt (by exact_mod_cast hf)
+  have hD : ∀ j, (D j).degree < B.degree := by
+    intro j
+    apply key
+    simp only [D]
+    split_ifs with h1 h2
+    · subst h1
+      refine (natDegree_add_le _ _).trans_lt (max_lt ?_ ?_)
+      · exact (natDegree_classSum_le L 0).trans_lt he
+      · rw [natDegree_C]; exact he
+    · exact (natDegree_classSum_le L j).trans_lt h2
+    · rw [natDegree_zero]; exact he
+  have hF : ffF m B n = ∑ j ∈ Finset.range e, expand (ZMod p) (p ^ j) (D j) := by
+    rw [ffF, sum_ffw_eq m e L hL, show e = e - 1 + 1 by omega, Finset.sum_range_succ',
+      Finset.sum_range_succ']
+    have h1 : ∀ j ∈ Finset.range (e - 1), expand (ZMod p) (p ^ (j + 1)) (D (j + 1)) =
+        expand (ZMod p) (p ^ (j + 1)) (classSum L (j + 1)) := by
+      intro j hj
+      rw [Finset.mem_range] at hj
+      simp only [D, Nat.succ_ne_zero, ↓reduceIte, show j + 1 < e by omega]
+    rw [Finset.sum_congr rfl h1]
+    simp only [D, ↓reduceIte, pow_zero, expand_one]
+    ring
+  rw [hF]
+  exact corollary24_4 hB i hi hdig e D hD
+
 end Solutions
 
 end Munchausen

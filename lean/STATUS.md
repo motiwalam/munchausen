@@ -282,7 +282,8 @@ stated.
 |---|---|---|
 | Lemma 24.1 (Frobenius blocks) | `lemma24_1`, `lemma24_1_zero`, `frobBlock` [FF], `expand_ringVal` [Other] | formalized |
 | Proposition 24.2 (Horner form) | `prop24_2` [FF] | formalized |
-| Corollaries 24.3, 24.4 | none | not formalized (the iterated blocks; within reach of `lemma24_1`) |
+| Corollary 24.3 | none | not formalized (the assembly of all digits from `p_0, ..., p_(e-1)`) |
+| Corollary 24.4 (forced zeros) | `corollary24_4`, `corollary24_4_ffF` [FF] | formalized (for every Horner sum of digits, and for `F(n)`) |
 | Lemma 24.5 | `lemma24_5`, `lemma24_5_zero_block` [FF] | formalized |
 | Proposition 24.6 | `prop24_6_one`, `ffDigit_add`, `ffDigit_C_mul` [FF] | partial: (1) (`β_r(d) = d_(e-1) τ_r`, from the `F_p`-linearity of the digits); (2) not formalized |
 | Lemma 24.7 | `IsFFSolution.comp` [FF] | formalized |
