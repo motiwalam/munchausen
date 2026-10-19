@@ -869,3 +869,149 @@ mahler1957:
     title: Mathematika
     volume: 4
     issue: 2
+
+kurlberg-luca-shparlinski2015:
+  type: article
+  title: On the fixed points of the map x -> x^x modulo a prime
+  author: ["Kurlberg, Par", "Luca, Florian", "Shparlinski, Igor E."]
+  date: 2015
+  page-range: 141-168
+  serial-number:
+    arxiv: "1402.4464"
+  parent:
+    type: periodical
+    title: Mathematical Research Letters
+    volume: 22
+    issue: 1
+
+felix-kurlberg2017:
+  type: article
+  title: On the fixed points of the map x -> x^x modulo a prime, II
+  author: ["Felix, Adam Tyler", "Kurlberg, Par"]
+  date: 2017
+  page-range: 141-159
+  parent:
+    type: periodical
+    title: Finite Fields and Their Applications
+    volume: 48
+
+holden-moree2006:
+  type: article
+  title: Some heuristics and results for small cycles of the discrete logarithm
+  author: ["Holden, Joshua", "Moree, Pieter"]
+  date: 2006
+  page-range: 419-449
+  parent:
+    type: periodical
+    title: Mathematics of Computation
+    volume: 75
+    issue: 253
+
+holden-robinson2012:
+  type: article
+  title: Counting fixed points, two-cycles, and collisions of the discrete exponential function using p-adic methods
+  author: ["Holden, Joshua", "Robinson, Margaret M."]
+  date: 2012
+  page-range: 163-178
+  parent:
+    type: periodical
+    title: Journal of the Australian Mathematical Society
+    volume: 92
+    issue: 2
+
+erdos1945:
+  type: article
+  title: On a lemma of Littlewood and Offord
+  author: Erdos, Paul
+  date: 1945
+  page-range: 898-902
+  parent:
+    type: periodical
+    title: Bulletin of the American Mathematical Society
+    volume: 51
+    issue: 12
+
+halasz1977:
+  type: article
+  title: Estimates for the concentration function of combinatorial number theory and probability
+  author: Halasz, Gabor
+  date: 1977
+  page-range: 197-211
+  parent:
+    type: periodical
+    title: Periodica Mathematica Hungarica
+    volume: 8
+    issue: 3-4
+
+tao-vu2009:
+  type: article
+  title: Inverse Littlewood-Offord theorems and the condition number of random discrete matrices
+  author: ["Tao, Terence", "Vu, Van H."]
+  date: 2009
+  page-range: 595-632
+  parent:
+    type: periodical
+    title: Annals of Mathematics
+    volume: 169
+    issue: 2
+
+nguyen-vu2011:
+  type: article
+  title: Optimal inverse Littlewood-Offord theorems
+  author: ["Nguyen, Hoi H.", "Vu, Van H."]
+  date: 2011
+  page-range: 5298-5319
+  parent:
+    type: periodical
+    title: Advances in Mathematics
+    volume: 226
+    issue: 6
+
+janson-luczak-rucinski2000:
+  type: book
+  title: Random Graphs
+  author: ["Janson, Svante", "Luczak, Tomasz", "Rucinski, Andrzej"]
+  publisher: Wiley
+  date: 2000
+
+hooley1963:
+  type: article
+  title: On the number of divisors of a quadratic polynomial
+  author: Hooley, Christopher
+  date: 1963
+  page-range: 97-114
+  parent:
+    type: periodical
+    title: Acta Mathematica
+    volume: 110
+
+iwaniec1978:
+  type: article
+  title: Almost-primes represented by quadratic polynomials
+  author: Iwaniec, Henryk
+  date: 1978
+  page-range: 171-188
+  parent:
+    type: periodical
+    title: Inventiones Mathematicae
+    volume: 47
+    issue: 2
+
+hough2015:
+  type: article
+  title: Solution of the minimum modulus problem for covering systems
+  author: Hough, Bob
+  date: 2015
+  page-range: 361-382
+  parent:
+    type: periodical
+    title: Annals of Mathematics
+    volume: 181
+    issue: 1
+
+kushilevitz-nisan1997:
+  type: book
+  title: Communication Complexity
+  author: ["Kushilevitz, Eyal", "Nisan, Noam"]
+  publisher: Cambridge University Press
+  date: 1997

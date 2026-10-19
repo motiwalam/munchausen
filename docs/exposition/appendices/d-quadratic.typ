@@ -2,7 +2,7 @@
 
 = Quadratic fields, Pell equations and cyclotomic factors <app-quadratic>
 
-@ch-diophantine studies the equation $b(b + x) = x^n + c$. Completing the square turns it into $U^2 = 4 x^n + x^2 + 4c$ with $U = 2b + x$, and the natural place to factor $U^2 - (x^2 + 4c)$ is a quadratic field. The same chapter explains the solution $(1, 7, 1)$ in base 904 by a special factorization of $7^7 + 1$. This appendix collects the algebraic number theory behind both. Marcus @marcus1977 and Ireland and Rosen @ireland-rosen1990 are good textbooks; Niven, Zuckerman and Montgomery @niven-zuckerman-montgomery1991 cover continued fractions; Cohen @cohen1993 covers the computations with PARI @pari2024.
+@ch-diophantine studies the equation $b(b + x) = x^n + c$. Completing the square turns it into $U^2 = 4 x^n + x^2 + 4c$ with $U = 2b + x$, and the natural place to factor $U^2 - (x^2 + 4c)$ is a quadratic field. The same chapter explains the solution $(1, 7, 1)$ in base 904 by a special factorization of $7^7 + 1$. This appendix collects the algebraic number theory behind both, and the facts on sums of two squares that count 2-digit narcissistic numbers in @sec-worlds-weights. Marcus @marcus1977 and Ireland and Rosen @ireland-rosen1990 are good textbooks; Niven, Zuckerman and Montgomery @niven-zuckerman-montgomery1991 cover continued fractions; Cohen @cohen1993 covers the computations with PARI @pari2024.
 
 == Quadratic fields and their integers <sec-app-quadratic-fields>
 
@@ -83,3 +83,26 @@ These illustrate how the tools above combine. Both are proven in #lib("16.2").
 
 - The $x$-adic form. Let $x$ be an odd prime. The polynomial $t^2 + x t - 1$ has the simple root $t equiv 1$ modulo $x$, so by Hensel's lemma (@app-padic) it has a root $beta in ZZ_x$ with $beta equiv 1$. Let $R$ be the residue of $beta$ modulo $x^x$, in $[0, x^x)$. Then the equation has a solution exactly when $R < x^(x slash 2)$, and then $b = R$. For $x = 7$, $R = 904$ and $7^(3.5) approx 907.5$. For a random residue this happens with probability about $x^(-x slash 2)$.
 - The unit form. Let $x equiv 3 med (mod 4)$ be squarefree with $x^2 + 4$ prime, and $epsilon$ the fundamental unit of $ZZ[sqrt(x)]$. A solution gives $(2b + x) + 2 x^((x-1) slash 2) sqrt(x) = plus.minus (x + 2 plus.minus 2 sqrt(x)) epsilon^k$. For $x = 7$: $1815 + 686 sqrt(7) = (9 + 2 sqrt(7))(8 + 3 sqrt(7))^2$. So the equation asks whether one coordinate of the sequence $gamma epsilon^k$ ever equals $2 x^((x-1) slash 2)$. For fixed $x$ this is a problem for linear forms in logarithms (@app-baker). The difficulty is that the field changes with $x$.
+
+== Sums of two squares and the divisors of $n^2 + 1$ <sec-app-quadratic-two-squares>
+
+@worlds-narc-two counts the 2-digit narcissistic numbers of base $b$ by the divisors of $b^2 + 1$. This section collects the facts behind it. The first one is classical @ireland-rosen1990. The others are research results.
+
+#theorem(id: "app-quadratic-r2", title: "Sums of two squares", status: "cited")[
+  Let $r_2(N)$ be the number of pairs of integers $(A, B)$ with $A^2 + B^2 = N$, counting signs and order. Then
+  $ r_2(N) = 4 sum_(d | N) chi(d), $
+  where $chi(d)$ is 0 for even $d$, 1 for $d equiv 1 med (mod 4)$ and $-1$ for $d equiv 3 med (mod 4)$.
+]
+
+The proof works in the Gaussian integers $ZZ[i]$, where $A^2 + B^2 = (A + B i)(A - B i)$ is a norm. The ring $ZZ[i]$ has unique factorization. A prime $p equiv 1 med (mod 4)$ splits into two conjugate Gaussian primes, a prime $p equiv 3 med (mod 4)$ stays prime, and $2 = -i (1 + i)^2$. Counting the elements of norm $N$ prime by prime gives the formula.
+
+For $N = n^2 + 1$ the formula is simple. If an odd prime $p$ divides $n^2 + 1$, then $-1$ is a square modulo $p$, so $p equiv 1 med (mod 4)$. And 4 never divides $n^2 + 1$. So every odd divisor has $chi = 1$, and $r_2(n^2 + 1) = 4 tau(m)$, where $m$ is the odd part of $n^2 + 1$ and $tau$ counts divisors.
+
+The size of $tau(n^2 + 1)$ is a classical topic. Its divisors pair up as $d$ and $(n^2 + 1) slash d$, with exactly one of each pair at most $n$, so $tau(n^2 + 1)$ is twice the number of divisors $d <= n$. A given $d$ divides $n^2 + 1$ for $nu(d)$ residues of $n$ modulo $d$, where $nu(d)$ is the number of square roots of $-1$ modulo $d$. The values $nu(d)$ are bounded on average, so summing over $n <= X$ gives about $X sum_(d <= X) nu(d) slash d$, which grows like $X ln X$. Three results make this precise or show its limits.
+
+- Hooley @hooley1963 proved $sum_(n <= X) tau(n^2 + 1) = (3 slash pi) X ln X + O(X)$. So a typical $n^2 + 1$ has about $(3 slash pi) ln n$ divisors.
+- Landau's problem. Is $n^2 + 1$ prime for infinitely many $n$? Landau listed it in 1912 among four problems on primes that he considered out of reach, and it is still open. The heuristic of Hardy and Littlewood predicts about $0.69 X slash ln X$ such $n <= X$.
+- Iwaniec @iwaniec1978 proved the best result in this direction: $n^2 + 1$ has at most two prime factors, counted with multiplicity, for infinitely many $n$.
+
+So questions about $tau(n^2 + 1)$ on average are solved, while questions about single values, such as how often $tau(n^2 + 1) = 2$, are among the hardest open problems in number theory. @worlds-narc-two-cor shows that the question "are there infinitely many bases without a 2-digit narcissistic number" is exactly of the second kind.
+

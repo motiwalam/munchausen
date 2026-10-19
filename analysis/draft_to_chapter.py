@@ -43,7 +43,7 @@ def convert(text, N, title, internal_lines, single=False):
     # also start a line.
     ids, k = {}, 0
     for l in lines:
-        m = re.match(r'^(\*\*)?' + KINDS + r' (\d+\.\d+)(\*\*)?(\s*\(|\.(\s|$))', l)
+        m = re.match(r'^(\*\*)?' + KINDS + r' (\d+\.\d+)(\*\*)?(\s*\(|\.(\*\*)?(\s|$))', l)
         if m and m.group(3) not in ids and m.group(3).split('.')[0] in hmap:
             k += 1
             ids[m.group(3)] = f'{N}.{k}'

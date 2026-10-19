@@ -134,6 +134,16 @@ Under each convention, about 35% of the 2-digit strings with digits up to
 60 are solutions in some base. Up to 200 the share is about 21%, and up to
 600 about 12.5%.
 
+Update (chapter 30). For `c >= 1` the condition `a | w(c) - c` says that
+`c` is a fixed point of `x -> x^x` modulo `a`. For a prime `a = p` these
+`c` have density `(1 + sum over d | p-1 of phi(d)/d) / p` (Proposition
+30.10). Averaged over `a <= Y`, the density of these `c` predicts the
+shares above: 0.374 against 0.353 up to 60, and 0.217 against 0.212 up to
+200 (Table 30.2.2). A theorem of Kurlberg, Luca and Shparlinski gives a
+solution `(p, c)` with `2 <= c <= p - 1` for almost all primes
+`p`, and none when `p == 3 (mod 8)` and `(p-1)/2` is prime (Corollary
+30.11).
+
 ## 2.5 Solutions of every length under `0^0 = 0`
 
 Proposition 2.7. Under `m = 0`, every length `k >= 2` has infinitely many

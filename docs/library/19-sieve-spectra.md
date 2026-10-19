@@ -608,6 +608,13 @@ factor, which reaches `b - 1 = 13` in some cells, is confirmed to a few
 percent. The deviations are the short lengths, as for `x^x`, and an excess
 of about 20% in the even bases, which comes mostly from bases 8 and 10.
 
+Update (chapter 30). Length 2 is now exact. Base `b` has
+`tau(b^2 + 1) - 2` two-digit narcissistic numbers (Theorem 30.12). Their
+mean grows like `ln b`, while the refined model gives a bounded mean. In
+bases 3 to 14 the 2-digit counts sum to 22, against 14.4 in the refined
+model: 7.6 of the excess of 42.7 at `d <= 5`. The missing factor is a
+product of local factors over the primes of `b^2 + 1` (section 30.3.4).
+
 ## 19.5 The factorion shortfall in a narrower offset class
 
 ### 19.5.1 The run (computed)

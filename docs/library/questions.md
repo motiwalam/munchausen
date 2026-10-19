@@ -251,7 +251,7 @@ attack, in [questions-round3.md](questions-round3.md).
 52. (Partly answered in chapter 20: `n` bounded in terms of `x` and the class order; none for `x <= 10^4`.) Settle the case `x == 0 (mod 8)` of `b(b+x) = x^n + 1`. (proof; 18.1.9)
 53. (Answered in chapter 20 under GRH: `d | x` occurs, so only the Diophantine condition can close the loophole.) How large are the orders of mixed ideal classes in `Q(sqrt(x^2+4))`, the
     one loophole of Corollary 18.11? (computation)
-54. (Partly answered in chapter 29: R as stated is false for short strings; it reduces to one exponential sum `rho(b)` per base, and Corollary 13.11 holds unconditionally for `12 <= b <= 6000`.) Prove Assumption R, which would make Corollary 13.11 unconditional. (proof)
+54. (Partly answered in chapter 29: R as stated is false for short strings; it reduces to one exponential sum `rho(b)` per base, and Corollary 13.11 holds unconditionally for `12 <= b <= 6000`. Answered in its qualitative form in chapter 30: the refined Poisson law holds in the limit for every base without R (Theorem 30.5); the rate `O(1/b)` is open.) Prove Assumption R, which would make Corollary 13.11 unconditional. (proof)
 55. Is the general weighted problem still NP-hard when solutions must be
     long? (proof; section 13.1.6)
 56. Does the length tail beyond `ln b` (Conjecture 10.3) hold in many
@@ -301,7 +301,7 @@ their motivation and a first attack, are in
 77. (Answered in chapter 27: CP-SAT and CaDiCaL grow 1.95 to 2.3 per base, worse than the engine.) A constraint solver as a search that is not a tree.
 78. (Answered in chapter 27: unit sizes are explained by their type; deeper units balance shards; `--unit-stats`.) The law of subtree sizes.
 79. (Answered in chapter 27: no; bottom digits make the tree 2.5 to 13 times larger in bases 16 and 32.) Bottom-up information in bases with a small radical.
-80. (Partly answered in chapter 29: R reduced to `rho(b)` (Theorem 29.15), proven by computation up to base 6000; square-root cancellation seen for `b - 1` prime; no `o(p)` bound in the literature.) Assumption R when `b - 1` is prime.
+80. (Partly answered in chapter 29: R reduced to `rho(b)` (Theorem 29.15), proven by computation up to base 6000; square-root cancellation seen for `b - 1` prime; no `o(p)` bound in the literature. Chapter 30: R follows from `O(p)` collisions of `x^x - x` modulo `p` (Corollary 30.8); computed about `2 (p - 1)` for `p < 10^5`.) Assumption R when `b - 1` is prime.
 81. (Answered in chapter 29: proven with error `O(1/b)` (Theorem 29.1); the sum over lengths tends to 1.) The length shares as a theorem in the model.
 82. (Partly answered in chapter 29: yes when a factor has degree prime to `e - 1`, for non-squarefree `B - 1`, and for `e <= 10`; always at most one more; open from `e = 11`.) Is `k(B)` always the number of factors of `B - 1`?
 83. (Answered in chapter 29: the block model fits 16 of 21 factor types within 17% and cuts the per-orbit misfit by 4; repeated factors still miss.) A model that keeps the Frobenius blocks.
@@ -353,7 +353,7 @@ problems found in the library are in
      Corollary 13.11: the sum is below `p - 3 ln p` for every `h` and every
      initial segment of length at least `p/2`. Can the subgroup sums of
      Cilleruelo and Garaev give it? (proof; section 29.3.5)
-113. Prove `rho(b) < 1 - c` for composite `b - 1` whose prime factors are all
+113. (Bypassed in chapter 30 for the Poisson limit: anti-concentration works for any modulus, at the rate `exp(-c ln b / ln ln b)` (Theorem 30.5).) Prove `rho(b) < 1 - c` for composite `b - 1` whose prime factors are all
      below `b^(1/2)`. Proposition 29.19 handles one prime at a time.
      (proof; section 29.3.4)
 114. What is the first-order term `c_j / b` of Proposition 29.7 in the
@@ -370,3 +370,31 @@ problems found in the library are in
 117. Factorial system: reduce the variance of the top-digit model beyond
      `L = 50`, for example by importance sampling on the largest digit and
      its count. (computation; section 29.5.3)
+
+## Round 8: questions raised by chapter 30
+
+118. Prove `#{x, y <= p - 1 : x^x - x == y^y - y (mod p)} <= p^(2 - delta)`
+     for some `delta > 0`. By Corollary 30.8 this gives Assumption R with a
+     power rate for prime `b - 1`. The method of Cilleruelo and Garaev
+     handles `x^x`; the shift needs a new idea for the fibres
+     `x^x == x + c`, `c != 0`. (proof; Conjecture 30.9)
+119. An inverse Littlewood-Offord theorem for random choices. If a sum of
+     `k` independent steps, each uniform on a fixed multiset of `M`
+     residues modulo `q`, hits one class with probability above `K/q`, must
+     most of the multiset lie in a short progression? Then Assumption R
+     would follow from a statement about `x^x - x` alone. (proof; section
+     30.1.6)
+120. Can the dissociation argument of Theorem 30.5 also use the digits near
+     `b`, whose weights are known modulo a prime `b - 1 = p`
+     (`(p - t)^(p-t) == (-t)^(1-t)`), and push `rho*(b)` below a power of
+     `b`? (proof; section 30.1.4)
+121. What is the asymptotic of `(1/Y) sum over a <= Y of f(a)`, the density
+     of fixed points of `x -> x^x mod a` averaged over `a`? The data suggest
+     `Y^(-0.44)` for `Y <= 300`. (proof; section 30.2.4)
+122. Three-digit narcissistic numbers: is there an exact count, or an
+     average order, for `s2 b^2 + s1 b + s0 = s2^3 + s1^3 + s0^3`? The model
+     says a bounded mean; the cubic surface suggests local factors again.
+     (proof; section 30.3.4)
+123. Write the coupled model of section 13.2 for factorions (weights `x!`)
+     and check that Theorem 30.3 gives its Poisson limit, as section 30.1.5
+     claims. (proof; section 30.1.5)

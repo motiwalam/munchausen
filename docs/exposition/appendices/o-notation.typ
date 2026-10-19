@@ -32,6 +32,8 @@
   [$d_"TV"$], [total variation distance between two laws], [@sec-app-prob-poisson],
   [$e(t)$], [$e^(2 pi i t)$, an additive character], [@sec-model-assumption-r],
   [$rho(b)$], [the largest normalized exponential sum of $x^x - x$ modulo $b - 1$; Assumption R holds when it is below $1 - 3 ln b slash b$], [@sec-model-assumption-r],
+  [$rho^*(b)$], [the largest share of one residue class modulo $b - 1$ among the strings of the refined coupled model], [@sec-model-anticonc],
+  [$tau(n)$], [the number of divisors of $n$], [@sec-app-quadratic-two-squares],
   [$L(b)$], [the number of digits of $(b-1)!$, for factorions], [@sec-worlds-weights],
   [$k(B)$], [the free residue dimension of a base $B$ in $FF_q [T]$; equal to $omega(B - 1)$ in most cases], [@sec-worlds-ffield],
   [$omega(B - 1)$], [the number of distinct monic irreducible factors of $B - 1$], [@sec-worlds-ffield],

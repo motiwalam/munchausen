@@ -338,6 +338,11 @@ For `zeta = -1`: `c_0, c_1, ... = 2, 0, 0, 1/2, 5/12, 1/24, -47/360, ...`. For
 `zeta = i`, a square root of -1: `c_0 = 1 - i`, `c_1 = 0`, `c_2 = (i - 1)/2`
 (computed exactly in `r3nt_tq.py`).
 
+Update (chapter 30). Holden and Robinson (J. Aust. Math. Soc. 92, 2012)
+count solutions of `x^x` congruences modulo `p^e` by the same p-adic
+interpolation. The full-period images `T(p^e)` of Theorems 20.8, 20.11 and
+20.12 are not in their paper or in the other papers of section 30.2.1.
+
 Theorem 20.11 (the 3-adic law, proven). For `e >= 4`,
 
     T(3^e) = { v : v == 0 (mod 3) }  together with  { v : v == 2 (mod 27), v != 56 (mod 81) }.

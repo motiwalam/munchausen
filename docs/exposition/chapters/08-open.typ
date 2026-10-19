@@ -37,7 +37,8 @@ keeping in mind when judging which problems are realistic.
     [$b(b + x) = x^n + 1$ with $n >= 4$], st("open"), [only $(7, 7)$ known; finite under abc], [@sec-dio-exponents],
     [Count of solutions per base], st("heuristic"), [Poisson with mean about 1 per convention, doubled in odd bases under $0^0 = 0$], [@sec-model-poisson],
     [Length shares in the basic model], st("proven"), [8.0%, 55.2%, 23.3%, ... with error $O(1 slash b)$], [@thm-length-shares],
-    [Assumption R], st("open"), [false for short lengths as first stated; proven by computation for bases 12 to 6000], [@open-assumption-r],
+    [Assumption R], st("open"), [false for short lengths as first stated; proven by computation for bases 12 to 6000; not needed for the Poisson law in the limit], [@open-assumption-r],
+    [Infinitely many bases without 2-digit narcissistic numbers?], st("open"), [equivalent to Landau's problem on primes $n^2 + 1$], [@worlds-narc-two-cor],
     [$k(B) = omega(B - 1)$ in $FF_q [T]$?], st("open"), [proven with a good factor, for $e <= 10$ and every census base; at most one more always], [@open-ffield],
     [Excess of $(b-1)$-digit solutions], st("heuristic"), [resolved: chance; the totals fit], [@sec-model-anomalies],
     [Empty bases $equiv 3 med (mod 8)$], st("computed"), [resolved: base 43 has a solution], [@sec-model-anomalies],
@@ -199,6 +200,9 @@ have to exclude a coincidence in infinitely many bases at once. Congruences
 remove only a fixed share of the candidates, and constructions only show that
 bases have solutions. The opposite statement, that every large base has a
 solution, is equally out of reach and false in the model.
+The analogue for 2-digit narcissistic numbers shows how hard such questions
+are: there it is equivalent to Landau's problem whether $n^2 + 1$ is prime
+infinitely often (@worlds-narc-two-cor).
 
 #problem(id: "open-bdigit", title: [$b$-digit solutions under $0^0 = 1$], src: ("7.1", "8.6", "11.2"))[
   Does some base $b$ have a solution with $b$ digits under $0^0 = 1$?
@@ -216,7 +220,7 @@ not support the original conjecture that none exists, and a search with
   Prove that $rho(b) < 1 - 3 ln b slash b$ for every base $b > 6000$, where
   $rho(b)$ is the largest normalized exponential sum of $x^x - x$ modulo
   $b - 1$ over the digit ranges $[0, L)$ with $L >= b slash 2$. (#q(54),
-  #q(80), #q(112), #q(113))
+  #q(80), #q(112), #q(113), #q(118), #q(119), #q(120))
 ]
 
 This is the only gap in the refined version of @thm-poisson, and it is the
@@ -231,6 +235,19 @@ $sum_(x < p) e(h (x^x - x) slash p)$ show square-root cancellation in the
 data, but no bound below $p$ for a single $h$ is known. Over every odd prime
 power dividing $b - 1$ for $b <= 20,000$, the Poisson rate of the residues
 is at least 0.2143, and at least 0.2308 from base 10 on.
+
+The Poisson law in the limit no longer needs Assumption R. Anti-concentration
+of the small digits gives it for every base, at the slow rate
+$exp(-c ln b slash ln ln b)$ (@model-thm-anticonc). So what remains open is
+the rate $O(1 slash b)$. Two reformulations may help. For prime $b - 1$ it
+suffices to count the collisions of $x^x - x$ modulo $p$, which the data put
+at the value of a random map (@model-conj-collide, #q(118)). An inverse
+Littlewood-Offord theorem for steps drawn from a fixed set of residues would
+reduce Assumption R to a statement about $x^x - x$ alone (#q(119)). The
+dissociation argument might also use the digits near $b$, whose weights are
+known modulo a prime $b - 1$ (#q(120)). The same argument should give the
+Poisson limit of a coupled model for factorions, which is not yet written
+out (#q(123)).
 
 The length shares of the basic model, once listed here, are now a theorem
 (@thm-length-shares). Its first-order correction $c_j slash b$ is known in
@@ -458,6 +475,12 @@ $x$ has an explicit generator. For $(1, x, 2)$ no such generator is known,
 and the regulator of the quadratic order is not bounded by $log x$, so even
 prime $x$ remains open.
 
+#problem(id: "open-short-mean", title: [Short solutions as mean-value problems], src: ("30.2", "30.3"))[
+  What is the asymptotic of the mean density of the fixed points of $x |-> x^x$ modulo $a$, averaged over $a <= Y$? It governs the share of 2-digit strings that are solutions. Is there an exact count, or an average order, for 3-digit narcissistic numbers, $s_2 b^2 + s_1 b + s_0 = s_2^3 + s_1^3 + s_0^3$? (#q(121), #q(122))
+]
+
+The data suggest that the mean density falls like $Y^(-0.44)$ for $Y <= 300$ (@cons-comp-fixed). The density is not multiplicative in $a$, because the exponent ties the primes of $a$ together. For 2-digit narcissistic numbers the count is $tau(b^2 + 1) - 2$ (@worlds-narc-two). For 3 digits the equation is a cubic surface for each $b$, and the model predicts a bounded mean, but the local factors that give $tau(b^2 + 1)$ at length 2 suggest that they matter again.
+
 === Other number systems
 
 #problem(id: "open-factorial", title: [The factorial number system], src: "21.5")[
@@ -536,3 +559,16 @@ number of 9-digit solutions in larger bases, outside algebraic families, at
 $10^(-29)$. In bases up to 127, lengths 31 to 45 have not been surveyed
 against the model's prediction that about 37% of long lengths are missing
 (#q(18)).
+
+== Connections to other fields <sec-open-connections>
+
+Library chapter 30 reads the problem against other fields #lib("30.4"). Three transfers have proofs and appear in the earlier chapters: anti-concentration gives the Poisson law of the refined model in the limit (@sec-model-anticonc), the self-power map $x |-> x^x$ modulo a prime describes 2-digit solutions (@cons-prop-fixed-density), and sums of two squares count 2-digit narcissistic numbers (@worlds-narc-two). The other connections are analogies so far. Each could become a route to one of the problems above.
+
+- Random mappings. The map $x |-> x^x$ modulo $p$ has more fixed points and shorter cycles than a random map @kurlberg-luca-shparlinski2015, and $n |-> F(n)$ has a smaller image than a random map (@sec-model-cycles). In both cases the map factors through a coarser object, the order of $x$ or the digit multiset, which a random-mapping model must keep. After the shift to $x^x - x$ the collisions are those of a random map (@model-comp-collide).
+- Covering systems. The coverings of @sec-short-coverings exclude digit strings in every base by congruences modulo powers of 2 and 3, as Sierpinski excluded primes of the form $k 2^n + 1$. The modern theory of coverings, such as Hough's solution of the minimum modulus problem @hough2015, is about distinct moduli and does not apply.
+- Knapsacks and lattices. A $k$-digit solution is a choice of one digit per position with balances that sum to 0 (@sec-basics-balance), a multiple-choice subset sum of density near 1. Lattice attacks need density well below 1 @lagarias-odlyzko1985, and generic knapsack algorithms cost about $b^(0.3 b)$. The tree beats them because it works with multisets and the order of the weights.
+- Communication complexity. The lower bound for certificates of emptiness (@sec-search-entropy) is a fooling-set argument in the sense of Kushilevitz and Nisan @kushilevitz-nisan1997. Nothing new follows yet.
+- Singular series. The local factors of the root heuristic (@sec-short-heuristic) play the role of the singular series of Hardy and Littlewood. The 2-digit narcissistic numbers are the simplest case where the product of local factors gives the exact count, through $tau(b^2 + 1)$.
+- Function fields. The free residues of $FF_q [T]$ (@sec-worlds-ffield) are additive Hilbert 90 for the Frobenius of $FF_q [T] slash (B - 1)$, and the weights there are additive polynomials in the digits.
+- Cryptography. Some signature schemes use the map $x |-> x^x$ modulo $p$, so its collisions matter there @balog-broughan-shparlinski2011. The library adds data on the shifted map but nothing about those schemes.
+- Perfect powers and S-units. Self-paying digits solve $a^(a - 1) = b^k$, and the identity families use that $x^x$ is a $j$-th power on a progression, like the families of Ko for $x^x y^y = z^z$ @ko1940. S-unit theorems give finiteness for equations with a fixed number of terms. The Munchausen equation has as many terms as digits, and no transfer is known.

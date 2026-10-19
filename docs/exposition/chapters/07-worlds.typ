@@ -847,6 +847,57 @@ cells the residue factor reaches $b - 1 = 13$, and the model is right to
 and the basic model 0.69. The deviations are the short lengths, as for
 $x^x$, and an excess of about 18% in even bases, mostly from bases 8 and 10.
 
+Length 2 can be solved exactly, and the answer comes from the theory of sums of two squares (@sec-app-quadratic-two-squares). The 2-digit narcissistic numbers are also the 2-digit fixed points of the map "sum of the squares of the digits", known from happy numbers.
+
+#theorem(id: "worlds-narc-two", title: "Two-digit narcissistic numbers", src: "30.3")[
+  For every $b >= 2$, base $b$ has exactly $tau(b^2 + 1) - 2$ two-digit narcissistic numbers, where $tau$ counts divisors.
+]
+#proof[
+  A 2-digit narcissistic number satisfies $s_1 b + s_0 = s_1^2 + s_0^2$ with digits $1 <= s_1 <= b - 1$ and $0 <= s_0 <= b - 1$. Multiply by 4 and complete the squares:
+  $ (2 s_1 - b)^2 + (2 s_0 - 1)^2 = b^2 + 1 . $
+  So a solution gives a representation $b^2 + 1 = A^2 + B^2$ with $B = 2 s_0 - 1$ odd. Conversely, take a representation with $B$ odd and positive. Then $A^2 equiv b^2 med (mod 2)$, so $s_1 = (A + b) slash 2$ is an integer. If $B = 1$, then $A = plus.minus b$, and $s_1$ is 0 or $b$, not a digit. If $B >= 3$, then $|A| <= b - 2$, so $s_1$ is a digit, and $B <= b$ makes $s_0 = (B + 1) slash 2$ a digit. So the solutions correspond to the representations with $B$ odd and positive, minus the two with $B = 1$.
+
+  Count them with @app-quadratic-r2. If $b$ is even, $b^2 + 1$ is odd, $r_2 = 4 tau(b^2 + 1)$, and exactly one of $A$, $B$ is odd. Swapping $A$ and $B$, and changing the sign of $B$, shows that a quarter of the representations have $B$ odd and positive: $tau(b^2 + 1)$ of them. If $b$ is odd, $b^2 + 1 = 2 m$ with $m$ odd, $r_2 = 4 tau(m)$, both $A$ and $B$ are odd, and half of the representations have $B > 0$: that is $2 tau(m) = tau(b^2 + 1)$. In both cases subtract 2.
+]
+
+Base 10 has none, because 101 is prime. That is why the base-10 list of narcissistic numbers jumps from 9 to 153 @oeis-a005188.
+
+#corollary(id: "worlds-narc-two-cor", title: "Empty bases and Landau's problem", src: "30.3")[
+  + Every odd base $b >= 3$ has at least two 2-digit narcissistic numbers.
+  + An even base has none exactly when $b^2 + 1$ is prime. So "infinitely many bases have no 2-digit narcissistic number" is equivalent to Landau's open problem whether $n^2 + 1$ is prime for infinitely many $n$.
+  + Infinitely many bases have at most two.
+  + The mean number over the bases $b <= X$ is $(3 slash pi) ln X + O(1)$.
+]
+#proof[
+  (1) $b^2 + 1 = 2 m$ with $m > 1$ odd, so $tau(b^2 + 1) >= 4$. (2) The count is 0 exactly when $tau(b^2 + 1) = 2$, that is, when $b^2 + 1$ is prime. For odd $b > 1$ the number $b^2 + 1$ is even and larger than 2, so only even $b$ can give a prime. (3) By Iwaniec's theorem, infinitely many $b^2 + 1$ have at most two prime factors, and then $tau(b^2 + 1) <= 4$. (4) Hooley's theorem. Both theorems are in @sec-app-quadratic-two-squares.
+]
+
+The parity effect of @model-heur-parity is a theorem here.
+
+#proposition(id: "worlds-narc-parity", title: "The parity doubling is exact", src: "30.3")[
+  The mean number of 2-digit narcissistic numbers is $(2 slash pi) ln X + O(1)$ over the even bases $b <= X$, and $(4 slash pi) ln X + O(1)$ over the odd ones.
+]
+#sketch[
+  Write $tau(n^2 + 1)$ as twice the number of divisors $d <= n$, and let $nu(d)$ be the number of square roots of $-1$ modulo $d$. Summing over $n <= X$ of one parity and exchanging the sums gives sums of $nu(d) slash d$ over $d$, up to $O(X)$. An odd $d$ divides $n^2 + 1$ equally often for even and odd $n$. An even $d$ is $2 d'$ with $d'$ odd, because 4 never divides $n^2 + 1$, and it forces $n$ odd. The even $d$ add $X sum_(d' <= X slash 2) nu(d') slash d'$ to the odd $n$, which equals the share of the odd $d$ up to $O(X)$. So the odd bases get twice the sum of the even bases, up to $O(X)$, and Hooley's total fixes the constants.
+]
+
+So the factor 2 of odd bases is the prime 2 dividing $b^2 + 1$, which happens exactly when $b$ is odd. In the refined model the same factor comes from $x^2 equiv x med (mod 2)$.
+
+#computation(id: "worlds-narc-two-comp", title: [Two-digit narcissistic numbers up to $10^6$], src: "30.3")[
+  Means of $tau(b^2 + 1) - 2$ over the bases $b <= X$:
+  #align(center, btable(columns: 6, align: (right,) * 6,
+    [$X$], [even $b$], [$(2 slash pi) ln X$], [odd $b$], [$(4 slash pi) ln X$], [even $b$ with none],
+    [$10^2$], [1.720], [2.932], [5.102], [5.863], [36.0%],
+    [$10^3$], [3.136], [4.398], [7.896], [8.795], [22.2%],
+    [$10^4$], [4.630], [5.863], [10.797], [11.727], [16.8%],
+    [$10^5$], [6.088], [7.329], [13.735], [14.659], [13.3%],
+    [$10^6$], [7.555], [8.795], [16.670], [17.590], [10.8%],
+  ))
+  A brute force over all digit pairs agrees with @worlds-narc-two for every $b <= 400$.
+]
+
+Both means grow at the predicted rates, with constant terms of about $-1.2$ and $-0.9$. The coincidence model misses this growth. It gives a 2-digit string a chance that does not depend on $b^2 + 1$, so its mean stays bounded, while the truth grows like $ln b$. The missing factor is local. Modulo an odd prime $ell$, the conic $A^2 + B^2 equiv b^2 + 1$ has $ell - chi(ell)$ points if $ell divides.not b^2 + 1$. If $ell | b^2 + 1$, it splits into the two lines $A equiv plus.minus i B$ and has $2 ell - 1$ points. So each prime factor of $b^2 + 1$ roughly doubles the expected count. These are the local factors of the root heuristic (@sec-short-heuristic) in their simplest exact case. In bases 3 to 14 the 2-digit counts sum to 22, against 14.4 in the refined model. That is part of the excess of short narcissistic numbers in @worlds-narcissistic. No analogue of @worlds-narc-two is known for 3 digits, where the equation is a cubic surface (#q(122)).
+
 === The factorion shortfall in odd bases
 
 One deviation in the factorion data resisted every explanation the library
