@@ -97,6 +97,33 @@ The library tests the model with simple statistics. Three of them recur.
 
 Many apparent anomalies of the data turned out to be chance after one of these corrections, or after fresh data. @sec-model-anomalies tells these stories.
 
+== Clustered samples and the design effect <sec-app-prob-design>
+
+The near-solution test of @sec-model-defects estimates the expected number of solutions of a base by the mean count of near-solutions $n = F(n) + D$ over $J$ offsets $D$. If the offset counts were independent Poisson draws, that mean would have variance $lambda slash J$. They are not independent. A rearrangement of the digits of $n$ keeps $F(n)$ and moves $n$ by a multiple of $b - 1$, so one multiset whose sum lies close to its own arrangements is a near-solution at several offsets at once (Lemma 26.1 of #lib("26.1")). The counts come in clusters. Survey statistics has a standard language for this.
+
+#definition(id: "app-prob-def-icc", title: "Intraclass correlation and design effect")[
+  Suppose that $n$ observations fall into clusters of $m$ each, all with variance $sigma^2$, and that two observations in one cluster have correlation $rho$ while observations in different clusters are independent. The number $rho$ is the intraclass correlation. The mean of all $n m$ observations has variance
+  $ sigma^2 / (n m) (1 + (m - 1) rho) . $
+  The factor $"deff" = 1 + (m - 1) rho$ is the design effect, and $n m slash "deff"$ is the effective sample size: the number of independent observations that would give the same precision.
+]
+
+With $rho = 0$ nothing changes. With $rho = 1$ every cluster repeats one value, the design effect is $m$, and only the $n$ clusters count. Ignoring a positive $rho$ makes an estimate look more precise than it is.
+
+For rare events the clusters have random sizes, and a cleaner form applies. Write the total over the offsets as $T = sum_c K_c$, where $K_c$ is the number of offsets at which the multiset $c$ is a near-solution. Different multisets are independent in the model, and each one is a near-solution only rarely, so
+$ "Var" T approx sum_c E[K_c^2] = phi E[T], quad phi = E[K^2] / E[K], $
+with the moments taken over the multisets that appear at least once. The design effect $phi$ is the mean cluster size seen from a random near-solution. A Poisson variance, $E[T]$, understates the scatter of $T$ by the factor $phi$, and the mean over $J$ offsets is worth only $J_"eff" = J slash phi$ independent offsets. If several near-solutions can also clump at one offset, such as twins under $0^0 = 0$ (@thm-twins), each single count has variance $psi lambda$ with $psi = E["clump"^2] slash E["clump"]$, a compound Poisson law, and $J_"eff" = J psi slash phi$ (Proposition 26.5 of #lib("26.1")).
+
+#example(title: "The integer offsets")[
+  In bases 12 to 26, with the 60 offsets $D = 2 j (b - 1)$, about two thirds of the near-solutions share their multiset with another offset. The design effect is 2.1 to 2.5, so the 60 offsets are worth about 27 independent ones (#lib("26.2")). A swap of the last two digits explains the largest share of the partner pairs, and a simple count of partners predicts $phi$ within a few percent. Offsets chosen so that no two differ by a single transposition cut the shared share to about 15% and nearly double $J_"eff"$, with the same mean.
+]
+
+How the P values change depends on the question. A single offset count is still Poisson, because each multiset is a near-solution at a given offset at most once. So when one compares the count $N_0$ of true solutions with the offset mean $hat(lambda)$, the variance of the difference is $psi lambda + phi lambda slash J$, and the first term dominates for $J >= 20$. Most "chance" verdicts of the library therefore stand (Table 4.1 of #lib("26.4")). Comparisons of the offset means themselves change a lot, because there the second term is everything. The chi-square of $lambda slash "model"$ over 21 bases falls from about 97 to about 42 once the clustered variance is used, and the low near-solution rate of base 19 goes from 4.6 to 2.9 standard errors. The library also uses a rank P value, $(1 + \#{D : N_D <= N_0}) slash (J + 1)$, which is exact when the counts at $D = 0$ and at the offsets are exchangeable, whatever the clusters, but cannot go below $1 slash (J + 1)$ (#lib("26.3")).
+
+Two tools combine evidence across groups.
+
+- Fisher's method. If $p_1, dots, p_k$ are independent P values, then under the null hypothesis $-2 sum_i ln p_i$ has the chi-square law with $2k$ degrees of freedom. The library uses it to combine an in-sample P value, after the look-elsewhere correction, with the P value of fresh bases; for the factorion shortfall the combined value moved from about 0.05 to about 0.09 with the clustered calibration (#lib("23.1", "26.4")).
+- Pooled ratios and heterogeneity. Each group $i$ gives an observed count $O_i$ and an offset estimate $E_i$, with a variance $v_i$ that includes the design effect. A common ratio $theta = O slash E$ is estimated by weighting each group by $1 slash v_i$. Cochran's statistic $Q = sum_i (O_i - hat(theta) E_i)^2 slash v_i$ has about the chi-square law with $k - 1$ degrees of freedom if all groups share one ratio. Over eight number systems the library finds $Q = 23.3$ on 7 degrees of freedom (P about 0.002). Without the odd-base factorions and the Pisot bases, the other six worlds fit one ratio, 0.91, with $Q = 3.6$ on 5 degrees of freedom (P = 0.60) (#lib("26.5")). So outside two named worlds the solutions behave like their near-solutions, which is the claim of @ch-model.
+
 == Entropy and the asymptotic equipartition property <sec-app-prob-entropy>
 
 #definition(id: "app-prob-def-entropy", title: "Entropy and varentropy")[
