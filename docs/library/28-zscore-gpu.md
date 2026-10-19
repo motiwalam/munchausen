@@ -115,7 +115,7 @@ deviation of the z-score of planted solutions, by level fraction
 | 200 | `poisson` | -0.03, 0.59 | -0.04, 0.77 | -0.07, 0.89 | -0.12, 1.02 |
 | 200 | `cond` | +0.04, 0.99 | +0.03, 1.01 | +0.04, 1.00 | +0.15, 0.96 |
 
-Observation 1.1 (computed). Under `cond` the z-score of a solution's path is
+Observation 28.1.1 (computed). Under `cond` the z-score of a solution's path is
 close to a standard normal variable at every level from `u = 0.3` to 0.9,
 in every base from 30 to 200. Under `poisson` its spread shrinks to 0.5 at
 the lower levels. So the default rule with threshold 3 cuts at about 6
@@ -136,7 +136,7 @@ and weights the string by the forced-top ratio of `analysis/forced_top.py`
 (0 when the top digits do not fit the multiset). 24% of the draws have a
 nonzero weight at base 40.
 
-Observation 1.2 (computed, `analysis/data/r5p_calib.txt`,
+Observation 28.1.2 (computed, `analysis/data/r5p_calib.txt`,
 `analysis/data/r5p_planted.txt`). The weighted z-score law of order 2
 agrees with order 1 within two standard errors at bases 30 to 200. At base
 40 and threshold 3 the miss rates of orders 1 and 2 are 1.78% and 1.98%
@@ -211,7 +211,7 @@ The evaluations gain less than the nodes. A likely reason: the calibrated
 rule cuts more at the lower levels, where a node has few children, and
 less near the top of the tested range, where a cursor evaluates many values
 of `e`. Section
-1.7 measures the time.
+28.1.7 measures the time.
 
 The planted miss rate is a model quantity. On the real solutions the two
 rules behave alike (`analysis/r5p_realmiss.py`). Of the 86 distinct
@@ -271,7 +271,7 @@ rate.
 | base 36, 8 threads, 3 runs | 1% | 1 to 14 | 36.4 s, 202.0 s CPU | 38.5 s, 184.9 s CPU | 1.09x CPU |
 | base 42, `--hybrid`, 1 run | 2% | 9 to 10 | 229.4 s, `9.21 * 10^9` nodes | 206.2 s, `7.03 * 10^9` nodes | 1.11x |
 
-Observation 1.6 (computed). The time follows the interval evaluations, not
+Observation 28.1.3 (computed). The time follows the interval evaluations, not
 the nodes: the calibrated rule saves 1.07x to 1.18x of the time where it
 saves 1.10x to 1.31x of the nodes. The base 42 runs use `--zscore 2.94` and
 `--zscore 3.4 --zlaw cond`.
@@ -301,7 +301,7 @@ on the base, so one threshold serves every base. The default rule becomes
 stricter in miss rate and looser in nodes as the base grows: at base 200 it
 needs `c` near 2.65 to miss 2%, and at that threshold its band covers more
 of the lower levels than the calibrated band. So the gain of Proposition
-1.3, which grows from 1.10x to 1.34x between bases 30 and 40, keeps growing
+28.2, which grows from 1.10x to 1.34x between bases 30 and 40, keeps growing
 above 40. I have no node counts there to say by how much.
 
 ## 28.2 Length windows
@@ -507,8 +507,8 @@ setting, 2.1% against 1.7% planted. At equal miss rate the law gives about
 | `analysis/r5p_ztable.py` | the `E / T` table for `--ztable` |
 | `analysis/r5p_realmiss.py` | the real solutions cut by each rule |
 | `analysis/r5p_planted.py` | Table 28.1.5 |
-| `analysis/r5p_lengths.py` | Tables 2.1 and 2.2 |
-| `analysis/r5p_timing.py` | Tables 1.4 and 3.3, `data/r5p_timing.txt` |
+| `analysis/r5p_lengths.py` | Tables 28.2.1 and 28.2.2 |
+| `analysis/r5p_timing.py` | Tables 28.1.4 and 28.3.3, `data/r5p_timing.txt` |
 | `analysis/data/r5p_zhist/` | the `--zhist` histograms, `b<base>_<law>_<zfrom>[_s<slope>].txt`, `b<base>_table_1.txt` for `E / T`, `b<base>_exact.txt` for the exact tree, and the logs of the runs |
 | `analysis/data/r5p_tree_b32_cond5.txt`, `r5p_tree_b36_cond5.txt` | `--tree-stats` at `--zscore 5 --zlaw cond --zfrom 1` |
 | `analysis/data/r5p_ztable_b32.txt`, `r5p_ztable_b36.txt` | the `E / T` tables |
