@@ -343,6 +343,35 @@ theorem prop30_7 {α A : Type*} [DecidableEq A] [AddCommGroup A] (X : Finset α)
   rw [← Finset.mul_sum, Finset.sum_add_distrib] at this
   omega
 
+/-- **Proposition 30.6**, the forced primes (section 30.1.5): for a prime `p` and `d ≥ 1`,
+`x^d ≡ x (mod p)` for every `x` exactly when `p - 1` divides `d - 1`. -/
+theorem prop30_6_forced {p d : ℕ} [hp : Fact p.Prime] (hd : 1 ≤ d) :
+    (∀ x : ZMod p, x ^ d = x) ↔ p - 1 ∣ d - 1 := by
+  constructor
+  · intro h
+    obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ZMod p)ˣ)
+    have hord : orderOf g = p - 1 := by
+      rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.card_eq_fintype_card, ZMod.card_units]
+    have h1 : (g : ZMod p) ^ (d - 1) = 1 := by
+      have := h g
+      rw [show d = d - 1 + 1 by omega, pow_succ] at this
+      exact mul_right_cancel₀ g.ne_zero (this.trans (one_mul _).symm)
+    have h2 : g ^ (d - 1) = 1 := Units.ext (by simpa using h1)
+    rw [← hord]
+    exact orderOf_dvd_of_pow_eq_one h2
+  · rintro ⟨t, ht⟩ x
+    rcases eq_or_ne x 0 with rfl | hx
+    · exact zero_pow (by omega)
+    · rw [show d = (p - 1) * t + 1 by omega, pow_succ, pow_mul, ZMod.pow_card_sub_one_eq_one hx,
+        one_pow, one_mul]
+
+/-- **Proposition 30.6**, the size of the step: `p^d - p ≡ -p (mod p^2)` for `d ≥ 2`, so the
+steps `x^d - x` generate exactly `p Z/p^e` when `p - 1 ∣ d - 1`. -/
+theorem prop30_6_step {p d : ℕ} (hd : 2 ≤ d) : ((p : ℤ) ^ d - p) ≡ -p [ZMOD p ^ 2] := by
+  have : (p : ℤ) ^ 2 ∣ (p : ℤ) ^ d := pow_dvd_pow _ hd
+  have h := (Int.modEq_zero_iff_dvd.2 this).sub_right (p : ℤ)
+  rwa [zero_sub] at h
+
 /-! ### Section 30.3: two-digit narcissistic numbers -/
 
 /-- A 2-digit narcissistic number `(s1, s0)` in base `b` (section 30.3.1): `1 ≤ s1 < b`,

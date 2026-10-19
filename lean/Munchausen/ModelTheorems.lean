@@ -583,6 +583,14 @@ theorem theorem29_11_three (hB : 2 ≤ B.natDegree) (hsq : ¬ Squarefree (B - 1)
 
 end NotSquarefree
 
+/-- **Conjecture 29.13** (section 29.2.5): `k(B) = ω(B - 1)` for every base `B` of degree at
+least 2 over every finite field. Proved here for `B - 1` not squarefree
+(`theorem29_11_three`); the library also proves it when `B - 1` has a factor of degree prime to
+`e - 1` and for `e ≤ 10`. -/
+def Conjecture29_13 : Prop :=
+  ∀ (K : Type) [Field K] [Fintype K] [DecidableEq K] (B : K[X]), 2 ≤ B.natDegree →
+    kDim B = omegaF (B - 1)
+
 /-! ### Corollary 29.10: a good factor exists when `e - 1` is a prime power -/
 
 /-- The counting step of **Corollary 29.10** (section 29.2.2). If `e - 1 = r^s` with `r` prime
