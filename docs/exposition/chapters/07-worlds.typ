@@ -1205,8 +1205,10 @@ $n = sum_i w(d_i)$. This world has neither a length bound nor an identity.
   $(a, i) = (1, 1)$ and $(2, 2)$.
 ]
 #proof[
-  We need $a^(a-1) = i!$. For $i >= 3$, Bertrand's postulate gives a prime
-  $p$ with $i slash 2 < p <= i$, which divides $i!$ exactly once. Then
+  We need $a^(a-1) = i!$. For $i >= 3$ take a prime $p >= 3$ with
+  $i slash 2 < p <= i$: for $i = 3$ take $p = 3$, and for $i >= 4$ Bertrand's
+  postulate gives a prime in that range, which is at least 3. It divides $i!$
+  exactly once. Then
   $p | a$, so $p$ divides $a^(a-1)$ at least $a - 1 >= p - 1 >= 2$ times, a
   contradiction. For $i <= 2$, $i!$ is 1 or 2.
 ]
