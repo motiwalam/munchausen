@@ -363,8 +363,9 @@ solutions in positive bases.
 
 The small bases show the same algebraic structure as positive bases.
 Under $0^0 = 0$ twins appear in bases $-2$, $-7$, $-8$, $-10$, $-25$ and
-$-32$. For $x$ odd or a square, $(x, 0, 0)$ and $(x, 0, 1)$ are solutions in base
-$-x^((x-1) slash 2)$ as well as in base $x^((x-1) slash 2)$, which gives
+$-32$. For $x >= 4$ odd or a square, $(x, 0, 0)$ and $(x, 0, 1)$ are solutions in base
+$-x^((x-1) slash 2)$ as well as in base $x^((x-1) slash 2)$ (for $x = 3$ the
+base is $-3$, which has no digit 3). This gives
 $(4, 0, 0)$ in base $-8$ and $(5, 0, 0)$ in base $-25$. In base $-32$ the
 digit 16 pays for itself at position 12, because
 $16 dot 32^12 = 2^64 = 16^16$ and $(-32)^12 > 0$. The solutions with $b + 1$
