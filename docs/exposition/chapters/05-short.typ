@@ -86,7 +86,7 @@ from these families the lists are short.
     align: (right, left),
     [$k$], [solutions (base: digits)],
     [3], [4: $(1,3,0)$, $(1,3,1)$, $(3,1,3)$; 5: $(1,0,3)$; 25: $(5,1,3)$; 91: $(6,1,5)$; 215: $(1,2,6)$; 904: $(1,7,0)$, $(1,7,1)$; $3^(40)$: $(3,0,27)$ (swap)],
-    [4], [5: $(2,0,2,4)$; 10: $(3,4,3,5)$; 20: $(6,5,3,4)$; 128: $(8,0,2,4)$ (self-paying 8 on the swap $(2,4)$); $2^(682)$: $(4,0,0,256)$ (swap)],
+    [4], [5: $(2,0,2,4)$; 10: $(3,4,3,5)$; 20: $(6,5,3,4)$; 128: $(8,0,2,4)$ (self-paying 8 on the swap $(2,4)$); $2^(682)$: $(4,0,0,256)$ (swap; this base, about $10^(205.3)$, lies outside the complete range)],
     [5], [6: $(2,2,3,5,2)$, $(2,3,4,5,2)$; 7: $(1,3,4,5,4)$; 11: $(6,6,5,0,0)$, $(6,6,5,0,1)$; 13: $(3,3,6,6,0)$, $(3,3,6,6,1)$; $3^(20)$: $(3,0,0,0,27)$ (swap)],
     [6], [9: $(1,5,6,2,6,2)$; 11: $(5,1,7,5,0,3)$; $3^(16)$: $(3,0,0,0,0,27)$ (swap), $(3,0,0,0,9,27)$ (swap with the self-paying 9)],
     [7], [9: $(1,6,4,7,0,6,3)$, $(1,6,5,6,5,4,7)$],
@@ -159,8 +159,8 @@ $
   sum_(j = 0)^n (-1)^j / j! quad -> quad e^(-1) approx 0.368,
 $
 which is $1 slash 2$, $1 slash 3$, $3 slash 8$ and $11 slash 30$ for
-$n = 1, 2, 3, 4$ #lib("19.1"). The large primes of the sieve match these
-values to within 0.002 (@tab-short-moduli). @sec-short-galois explains why:
+$n = 2, 3, 4, 5$, the degrees $k - 1$ for $k = 3, dots, 6$ #lib("19.1").
+The large primes of the sieve match these values to within 0.004 (@tab-short-moduli). @sec-short-galois explains why:
 the Galois group of $Q_s$ is almost always the full symmetric group, and the
 share of permutations without a fixed point is exactly this sum.
 
@@ -199,7 +199,7 @@ vanishes modulo $p$ for many strings. Modulo 2 it is worse.
 Since $x^x equiv x med (mod 2)$, the last digit moves $Q_s$ only by even
 amounts modulo 2. Modulo $2^e$ the even digits $x >= e$ have
 $x^x equiv 0$, so the test sees the value of $x$ itself. That is why 32
-removes ten times as much as 2. The powers of 3 gain for a reason explained
+removes 3 to 25 times as much as 2. The powers of 3 gain for a reason explained
 in @sec-short-coverings: the values of $x^x - x$ modulo 27 fill only 10
 residues.
 
@@ -252,7 +252,8 @@ modulus $q$ can never exclude a last digit on its own.
   (1) $x^x equiv x med (mod 2)$, and even $x >= e$ give $x^x equiv 0$, so
   $-x$ runs over all even residues.
   (2) Modulo $p$, $x^x$ depends on $u = x mod p$ and $j = x mod (p - 1)$,
-  which are independent by the Chinese remainder theorem. For a target
+  which are independent by the Chinese remainder theorem. The residue 0
+  comes from $x equiv 0 med (mod p)$. For a target
   $v != 0$, pick a primitive root $u != -v$; then $u + v$ is a unit, so
   $u + v = u^j$ for some $j$, and the matching $x$ gives $x^x - x equiv v$.
   A prime $p >= 5$ has at least two primitive roots.
@@ -288,8 +289,10 @@ modulus $q$ can never exclude a last digit on its own.
   Among the 3-digit families with fixed digits up to 10, 27 of 341 are
   covered under $0^0 = 1$, and 22 of them need a modulus other than 2. For
   random prefixes with digits in $[3, 10^6]$, the last digit is excluded in
-  every base for 11.2% of 3-digit prefixes and 7.2% to 8.4% of prefixes
-  with 4 to 6 digits. Almost all of this comes from @thm-covering. Adding
+  every base for 11.2% of 3-digit prefixes and 7.2% to 8.6% of prefixes
+  with 4 to 6 digits, using the moduli 16, 27, 25 and 7. The modulus 27
+  alone gives 11.2% and 7.2% to 8.4%, so almost all of this comes from
+  @thm-covering. Adding
   the modulus 81 raises the shares by 0.2 to 0.4 percentage points.
 ]
 
@@ -393,7 +396,7 @@ So the 5-adic gaps matter only together with other moduli. The prime powers
 $2^e$ and $3^e$ carry the coverings, because of the coupling between
 $x mod 3^e$ and $x mod 2 dot 3^(e-1)$. An open question (#q(38)) asks
 whether every covering needs a modulus on which $x^x - x$ misses residues,
-that is a power of 2, 3 or 5.
+that is a power of 2 or 3, or a power of 5 from 25 on.
 
 == Galois groups and reducibility <sec-short-galois>
 
@@ -421,7 +424,8 @@ So $Q_s$ generically has the full symmetric Galois group, as Hilbert's
 irreducibility theorem leads one to expect: the constant term $F(s)$ is
 unrelated to the other coefficients. The one exception among the 240
 strings is $(9, 18, 18, 9, 15)$, with a share of 0.631. Its value polynomial
-is $9 r (r + 1)(r^2 + r + 1) = 9 u (u + 1)$ with $u = r^2 + r$. So $Q_s$ is a
+satisfies $P_s (r) - 15 = 9 r (r + 1)(r^2 + r + 1) = 9 u (u + 1)$ with
+$u = r^2 + r$. So $Q_s$ is a
 polynomial in $r^2 + r$, its group lies in the dihedral group $D_4$, and the
 derangement share of $D_4$ is $5 slash 8$. Decomposable value polynomials
 are the natural source of smaller groups.
@@ -639,9 +643,10 @@ in base $x^(x slash 3) - 1$. These identities hold with certainty where they
 hold, so the comparison above leaves out the bases of 100 and more, where
 15 of 16 pairs belong to such families #lib("19.2").
 
-For five digits the offsets agree with the heuristic in bases below 13, 354
-against 353.7. In bases 13 to 99 they show clusters: groups of about four
-hits with a common prefix of three digits. Some clusters come from exact
+For five digits the offsets agree with the heuristic in bases below 10, 354
+against 353.7. In bases 10 to 99 they show about twice the predicted count,
+mostly in clusters: groups of about four hits with a common prefix of three
+digits. Some clusters come from exact
 identities, such as $6 dot 11^4 + 6 dot 11^3 + 5 dot 11^2 = 6^6 + 6^6 + 5^5$,
 the self-paying block of @sec-cons-blocks. The cleanest calibration is base
 by base.
@@ -787,7 +792,7 @@ $x^((x-1) slash (k-1))$ comes within about $B slash x$ of an integer.
 
 Such questions are beyond current methods. Even for the single sequence
 $(3 slash 2)^n$ it is unknown whether the fractional parts are dense in
-$[0, 1]$. Mahler @mahler1968 proved that $(3 slash 2)^k$ stays at
+$[0, 1]$. Mahler @mahler1957 proved that $(3 slash 2)^k$ stays at
 distance more than $c^k$ from the nearest integer for every $c < 1$ and
 large $k$, without an effective bound, and Zudilin @zudilin2007 gave the
 effective constant 0.5803. No published result handles equations where
@@ -1100,7 +1105,9 @@ base below $10^(51)$ has at most one.
 
 #problem(id: "short-q50", title: "At most two 3-digit solutions", src: "18.2")[
   Under $0^0 = 1$, does every base have at most two 3-digit solutions?
-  (Question #q(50).) In one base each leading digit allows at most two
-  values of the largest digit, so only the case where the largest digit
-  leads needs a new argument.
+  (Question #q(50).) In one base each leading digit $p$ allows at most two
+  values of the largest digit. When the largest digit is not the leading
+  one, this leaves at most two strings per leading digit. But a base has
+  many possible leading digits, so this alone does not bound the count by
+  two, and when the largest digit leads, up to $p$ strings remain.
 ]

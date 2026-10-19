@@ -133,23 +133,31 @@ $3 | x$. For $x = 7$ it is $+0.610$, so $M slash L = 8.0619$.
 === Why $x = 7$ works and nothing larger does
 
 #proposition(id: "dio-mod-x2", title: [The pair is a solution modulo $x^2$], src: "16.1")[
-  For squarefree $x equiv 3 med (mod 4)$,
-  $L equiv 1 - x + x (x + mu(x)) slash 2$ and
-  $M equiv 1 + x + x(x + mu(x)) slash 2 med (mod x^2)$, with $mu$ the
-  Moebius function. So $E = M - (x + 1) L - x$ is divisible by $x^2$, and the
-  pair $b = (x + 1) L$, $b + x = M$ satisfies $b(b + x) equiv x^x + 1$
-  modulo $x^2$.
+  For a prime $x equiv 3 med (mod 4)$,
+  $L equiv 1 - x + x (x - 1) slash 2$ and
+  $M equiv 1 + x + x (x - 1) slash 2 med (mod x^2)$. So
+  $E = M - (x + 1) L - x$ is divisible by $x^2$, and the pair
+  $b = (x + 1) L$, $b + x = M$ satisfies $b(b + x) equiv x^x + 1$ modulo
+  $x^2$.
 ]
 
-So the Aurifeuillian pair always solves the equation to precision $x^2$. A
+The proof expands $L$ and $M$ in powers of $sqrt(x)$; the coefficients are
+the elementary symmetric functions of the roots of unity in the set $A$ of
+@thm-aurifeuille.#footnote[The library states the congruences for $L$ and
+$M$ for squarefree $x equiv 3 med (mod 4)$, with $(x + mu(x)) slash 2$ in
+place of $(x - 1) slash 2$. Only prime $x$ matters here: for composite $x$
+the product $(x + 1) L M$ is not $x^x + 1$, because $x^x + 1$ has further
+cyclotomic factors.]
+So for every prime $x equiv 3 med (mod 4)$ the Aurifeuillian pair solves the
+equation to precision $x^2$. A
 true solution needs $E = 0$. By @thm-aurifeuille,
 $M - (x + 1) L = L (M slash L - x - 1)$, and $M slash L < 8.1 < x + 1$ for
 $x >= 11$, so $E < 0$. For $x = 7$, $M slash L = 8.06$ lies within $x slash L$
 of $x + 1 = 8$, and $E = 0$. For $x = 3$, $L = 1$ and $E = 0$. So
 $(1, 7, 1)$ in base 904 is Aurifeuillian in a precise sense: the identity
 gives the factor pair and the congruence modulo $x^2$, and what remains is
-the numerical coincidence $e^2 + 0.67 slash 7 approx 8.06$, close to
-$x + 1 = 8$.
+the numerical coincidence $M slash L = e^(2 + 0.61 slash 7) approx 8.06$,
+close to $x + 1 = 8$.
 
 #theorem(id: "dio-no-algebraic", title: "No other algebraic factor pair", src: "16.1")[
   Let $x >= 3$ be odd. If $b(b + x) = x^x + 1$ and $b$ is a product of
@@ -192,8 +200,9 @@ $g_k (j) = sum_(r | gcd(j, k)) r mu(k slash r) chi(k slash r) chi(j slash r)$.
 ]
 
 The proof for even $D$ is the Gauss-sum computation above, with the
-standard formula for Gauss sums of induced characters. The odd case was
-checked numerically. In 456 cases ($s <= 40$, odd $k <= 15$, $y <= 4$) the
+standard formula for Gauss sums of induced characters. The odd case follows
+by the same computation with the character $chi(a)(-1)^a$ on the exponents.
+Both cases were checked numerically: in 456 cases ($s <= 40$, odd $k <= 15$, $y <= 4$) the
 series agrees with the factored polynomial to within $2 dot 10^(-62)$
 #lib("18.5"). For the equation this says that an Aurifeuillian pair with
 $y >= 2$ is balanced within a factor $e^(1 + o(1))$, so the $e^2$
@@ -225,7 +234,7 @@ gets very far.
 
 #computation(id: "dio-sieve", title: [The sieve to $4 dot 10^9$], src: "16.2")[
   For every $x$ from 2 to $4 dot 10^9$ other than 3 and 7, some odd prime
-  $p < 229$ makes $4 x^x + x^2 + 4$ a quadratic non-residue modulo $p$. So
+  $p <= 229$ makes $4 x^x + x^2 + 4$ a quadratic non-residue modulo $p$. So
   $b(b + x) = x^x + 1$ has no further solution with $x <= 4 dot 10^9$, that
   is with $b$ up to about $10^(1.9 dot 10^(10))$. The 31 primes $p$ with
   $p - 1 | 20160$ exclude all but a density $1.5 dot 10^(-4)$ of all
@@ -356,7 +365,9 @@ $b > x^(n slash 2) - x slash 2$,
 $
   0 < Lambda_0 < tau_n = sqrt(D) / (x^(n slash 2) - x slash 2 - 1),
 $ <eq-dio-tau>
-which is tiny. Let $z = (epsilon + 1) slash (epsilon - 1)$. The exact series
+which is tiny: for $x >= 3$ and $n >= 5$, $tau_n < 0.276$. Let
+$z = (epsilon + 1) slash (epsilon - 1)$. Then $ln z = 2 op("artanh")(1 slash epsilon) < 2.2 slash x$
+for $x >= 3$, and the exact series
 $x ln z = 2 - sum_(i >= 1) 4 epsilon^(-2i) slash ((2i - 1)(2i + 1))$ shows
 that $x ln z$ lies just below 2.
 
@@ -506,8 +517,12 @@ principal, and its class has order $d = 3 = n$.
 #proof[
   Even $x$ and squares: @dio-elementary. $x <= 4 dot 10^9$: @dio-sieve.
   Prime powers: @thm-prime-powers. Pure solutions: @dio-diagonal-pure.
-  Principal $B$: @dio-mixed with $d = 1$ allows only $x <= 747 thin 069$.
-  Otherwise $3 <= d$ divides $x$, and @dio-mixed bounds $x slash d$.
+  Principal $B$: the inequality behind @dio-mixed, evaluated with $d = 1$
+  by the script `r2nt_principal.py`, allows only $x <= 747 thin 069$.
+  Otherwise $3 <= d$ divides $x$. The same computation shows that for
+  $x >= 4 dot 10^9$ and $d >= 3$ the inequality gives
+  $n slash (d ln x) < 32 thin 500$; with $n = x$ this is the bound on
+  $x slash d$.
 ]
 
 So under $0^0 = 1$, the string $(1, x, 1)$ is a solution for no odd prime
@@ -533,7 +548,8 @@ $x$ and is large. Does that happen at all?
 
 #computation(id: "dio-class-orders", title: "Orders of mixed ideal classes", src: "20.5")[
   Assuming GRH for the class group computations: for all odd composite
-  non-square $x$ up to $200 thin 001$ and five windows near $10^6$, the
+  non-square $x$ up to $200 thin 001$ and five windows near $2.5$, $4$,
+  $5.5$, $7$ and $8.5 dot 10^5$, the
   order $d$ of a mixed ideal class divides $x$ for some ideal in 6.5% of
   the $x$ below $10^4$ and 0.37% near $8.5 dot 10^5$. The share falls like
   $6.7 x^(-0.54)$. The smallest case is $x = 15$, $d = 3$, and the largest
@@ -716,8 +732,10 @@ plays the role of $epsilon + 1$: a fixed power of the ideal of norm $x$ with
 a generator whose logarithm is about $C slash x$ #lib("20.4").
 
 #proposition(id: "dio-c25-pure", title: [Pure solutions for $c = 25$], src: "20.4")[
-  Let $x$ be odd and prime to 5, $n >= 5$ odd, and $b$ a pure solution of
-  $b(b + x) = x^n + 25$. Then $|n ell - s mu_0| < tau_n$ for an integer
+  Let $x$ be odd and prime to 5, $n >= 5$ odd ($n >= 7$ if $x = 3$), and
+  $b$ a pure solution of $b(b + x) = x^n + 25$. Put $D = x^2 + 100$ and
+  $tau_n = sqrt(D) slash (x^(n slash 2) - x slash 2 - 25)$. Then
+  $|n ell - s mu_0| < tau_n$ for an integer
   $s >= 1$, so $n > (mu_0 - tau_n) x slash 10$. For odd $x >= 22 thin 027$
   prime to 5 there is no pure solution with $n = x$.
 ]
@@ -807,7 +825,9 @@ cores #lib("15.3"). The question is whether anything else does.
 ]
 
 The theorem leaves out the balanced case $a^a approx c^c$, where four large
-terms appear (#q(37)). One family is settled unconditionally.
+terms appear (#q(37)). Part of one family is settled unconditionally: the
+case $t | c$ of $(1, c)$. It does not cover $(1, 3)$ in base $25 = 5^2$,
+where $t = 2$ does not divide $c = 3$.
 
 #proposition(id: "dio-cores-1c", title: [The family $(1, c)$], src: "15.3")[
   For $t | c$, the base $c^c - c + 1$ of $(1, c)$ is not a $t$-th power.
