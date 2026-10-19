@@ -20,3 +20,4 @@ import Munchausen.ThreeDigitBases
 import Munchausen.Search
 import Munchausen.Applications
 import Munchausen.ModelTheorems
+import Munchausen.SearchRules
