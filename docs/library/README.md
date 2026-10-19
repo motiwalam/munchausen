@@ -45,7 +45,8 @@ statement is marked by its source:
 | [31. Pruning by the residue and balanced shards](31-search-rules.md) | the congruence mod `b - 1` prunes the nodes with one free slot (12% to 25% fewer nodes, 1.1x to 1.2x faster); the forcing loop already reaches its fixed point, the exact hull of the sums; the other count and residue results do not pay; `--shard-by size` balances shards |
 | [32. The basic questions revisited](32-basic-questions.md) | a 2-adic Baker bound and a sieve exclude 3-digit strings with an even large digit behind a non-square leading digit; the three regimes of 3-digit strings; what can be said about empty bases; searching by multisets across bases saves little |
 | [33. Factorials against x^x](33-factorials.md) | 3-digit factorions with one large digit are finite except a leading case of Brocard type, with a complete list for the other digits up to 10; 2-digit factorions are infinite; GRH for a large last digit; a sufficient condition for identity families, which `x!` never meets; abc bounds every 3-digit solution of `x^x` with `R != 0`; one-step chains of Theorem 15.14 give only base 64 |
-| [Open questions](questions.md) | 138 research questions in eleven rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [34. Is the refined model complete?](34-model-complete.md) | the exact refined model by zero class; the 12% excess under `0^0 = 1` is a zero-free surplus in odd bases and one cell in even bases, about 2 standard deviations once the between-world scatter is counted; no zero deficit among near-solutions; the basic count is the trace of a stochastic length matrix, `1 + C/b` with `C = 1.1046` one eigenvalue; the refined count as a sum over characters; a ledger of 241 P values; neighbouring bases look independent |
+| [Open questions](questions.md) | 143 research questions in twelve rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -190,6 +191,16 @@ Proven:
   needs a polynomial `G_x` with a root modulo every prime (Theorem 33.10).
 - The constructions of Theorem 15.14 with a one-step chain give only the
   11-digit solution of base 64 (Proposition 33.22).
+- In the basic model the law of the length of `F` for a string of `b - j`
+  digits tends to one limit `(s_j')` for every fixed `j` (Theorem 34.6). The
+  expected count over the lengths 2 to `b` is the trace of the length
+  matrix without its first entry (Proposition 34.5), and its first-order
+  term is `C/b` with `C = e/(e-1)^2 + 1/(2e) + 2.2 * 10^-5 = 1.104636`
+  (Proposition 34.8, proved for every partial trace). For odd `b` under
+  `0^0 = 1` the character of order 2 of the refined count tends to `e^-2`
+  (Theorem 34.12).
+- The refined model can be computed exactly, split by the number of zeros
+  (Proposition 34.1).
 - A node of the exact search with one free slot can be dropped when no
   digit completes the residue mod `b - 1` (Theorem 31.1). The interval of a
   node is the exact hull of the sums its counts allow (Lemma 31.4).
@@ -236,6 +247,20 @@ Computed:
   digit at most 1500 (section 33.2.2). The constructions of Theorem 15.14
   with `r <= 40` and `t <= 20,000`, or `r <= 7` and `t <= 10^5`, give no
   solution beyond base 64 and the `(a, 1)` family (section 33.5.1).
+- The 12% excess of near-solutions under `0^0 = 1` (bases 12 to 26) has
+  two parts: zero-free near-solutions in odd bases, 1.26 times the model
+  under both conventions, and one-zero near-solutions in even bases, 1.30
+  times the model. Five perturbed worlds show no gap between the
+  conventions, and their ratios scatter 1.3 to 1.5 times more than the
+  clustered error allows (section 34.1).
+- The long solutions under `0^0 = 0` in bases 12 to 43 have 29 zeros
+  against 43.1 in the exact model. The near-solutions show no deficit in
+  even bases (section 34.2).
+- Of 56 groups of tests in the library, 14 have P below 0.05, all known
+  anomalies or selected patterns. The 12 groups named before the data were
+  seen look uniform, Fisher P = 0.74 (section 34.4). Neighbouring bases
+  show no correlation once the top digits are forced, and no multiset is a
+  near-solution in two bases (section 34.5).
 - The conjecture "no `b`-digit solution" is false under `0^0 = 0` (bases 15
   and 16) and true under `0^0 = 1` up to base 45 (section 8.6).
 
@@ -258,7 +283,12 @@ Model:
   3.1x faster than CPU `--zscore 3` at base 38 (chapter 28).
 - The exact tree grows like `2^b` in the limit (section 10.1).
 - Under `0^0 = 1`, long solutions lie within `ln k + ln ln k` of their length
-  `k`, apart from algebraic families (Conjecture 10.3).
+  `k`, apart from algebraic families (Conjecture 10.3). The independence of
+  bases that its second half needs is all the model assumes (Heuristic
+  34.15).
+- The refined count tends to 1, 2 and `1 + e^-2` if the characters of
+  `Z/(b-1)` other than the trivial one and the one of order 2 vanish in the
+  limit (Conjecture 34.13). At `25 < b <= 128` they add at most 0.11.
 - Narcissistic numbers (weights `x^d`) fit the refined model where residues
   are forced: 207 found against 208.5 predicted (section 19.4).
 - In every number system with a residue identity, the count factor follows

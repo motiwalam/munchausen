@@ -319,11 +319,11 @@ motivation, a first attack and leads, four proposed workloads and a list of
 problems found in the library are in
 [questions-round6.md](questions-round6.md).
 
-90. The expected count is the trace of a stochastic matrix.
+90. (Answered in chapter 34: the count over lengths 2 to `b` is the trace without the first entry (Proposition 34.5); the rows converge (Theorem 34.6); `tr = 1 + C/b` with `C = 1.104636`, one eigenvalue (Proposition 34.8, Heuristic 34.9); the refined count is a sum over characters (Proposition 34.10), with `e^-2` for the order-2 character under `0^0 = 1` (Theorem 34.12); the lead's `3/b` is the length-1 entry.) The expected count is the trace of a stochastic matrix.
 91. Arrangements and the local factor.
 92. The two heuristics at medium lengths.
-93. Where the 12% excess under `0^0 = 1` sits.
-94. Do near-solutions share the zero deficit of question 71?
+93. (Answered in chapter 34: zero-free near-solutions in odd bases (1.26) and one zero under `0^0 = 1` in even bases (1.30); perturbed worlds show no gap between the conventions; with the between-world scatter the excess is about 2 standard deviations and not a third kind of correction (Heuristic 34.4).) Where the 12% excess under `0^0 = 1` sits.
+94. (Answered in chapter 34, negatively: no deficit in even bases; in odd bases the deficit is the zero-free surplus of question 93; the forced top digits do not lower the expected zeros (section 34.2).) Do near-solutions share the zero deficit of question 71?
 95. Bijective numeration: no zero, and a self-paying digit in every base.
 96. (Answered in chapter 33: a sufficient condition for every weight (Theorem 33.12); under abc exact for solutions with one dominant digit (Corollary 33.15); `x!` never meets it (Proposition 33.13).) A criterion for identity families.
 97. (Answered in chapter 33: finite for a large last or middle digit, with explicit bounds (Theorems 33.4, 33.5); a leading digit reduces to `4x x! + s^2 = U^2`; complete for the other digits up to 10 except that case (Theorem 33.6); two large digits reduce to Brocard type under GRH (Proposition 33.8).) Three-digit factorions are finite, except for a Brocard case.
@@ -332,10 +332,10 @@ problems found in the library are in
 100. Near-solutions that provably exist (speculative).
 101. Beyond `ln b / ln ln b` by averaging over bases.
 102. (Partly answered in chapter 32: abc bounds `x` for one large digit in every position and parity (section 32.1.6); unconditional for an even large digit behind a non-square leading digit (Theorem 32.2) and for a fixed square class (Proposition 32.6); two large digits open. Answered in chapter 33 for one large digit: under abc `x <= (2 + O(eps)) B + C_eps` when `R != 0` (Theorem 33.16), every length in Theorem 33.19; with `c < rad^(7/4)` the list is complete for two digits up to 200 (Corollary 33.18); two large digits `u >= v` remain only for `v` above about `u/2` (Proposition 33.20).) The abc conjecture and the 3-digit list.
-103. A ledger of P values.
+103. (Answered in chapter 34: 241 rows, 56 groups; far from uniform as a whole (Fisher P `2 * 10^-9`) because of selection; the 12 groups named in advance look uniform (Fisher P = 0.74); no lean toward deficits (Heuristic 34.14).) A ledger of P values.
 104. A pre-registered census of bases 42 to 46.
 105. The first `b`-digit solution under `0^0 = 1`.
-106. Are neighbouring bases independent?
+106. (Answered in chapter 34: no correlation of neighbouring residuals once the top digits are forced; no shared near-solution multisets; uncorrelated top digits; but the two conventions in one base correlate at +0.78 (section 34.5, Heuristic 34.15).) Are neighbouring bases independent?
 107. The class modulo `2x` in even Pisot bases.
 108. One invariant-residue proposition for every positional system.
 109. Is anything about the middle digits cheap? (speculative)
@@ -356,7 +356,7 @@ problems found in the library are in
 113. (Bypassed in chapter 30 for the Poisson limit: anti-concentration works for any modulus, at the rate `exp(-c ln b / ln ln b)` (Theorem 30.5).) Prove `rho(b) < 1 - c` for composite `b - 1` whose prime factors are all
      below `b^(1/2)`. Proposition 29.19 handles one prime at a time.
      (proof; section 29.3.4)
-114. What is the first-order term `c_j / b` of Proposition 29.7 in the
+114. (Partly answered in chapter 34: `sum over j of c_j = C = e/(e-1)^2 + 1/(2e)` plus a series of size `2.2 * 10^-5` (Proposition 34.8); the refined model's term is open.) What is the first-order term `c_j / b` of Proposition 29.7 in the
      refined model, and does `sum over j of c_j` (1.1046) have a closed
      form? (proof; section 29.1.4)
 115. The block model misses the types of `B - 1` with a repeated factor
@@ -480,3 +480,33 @@ problems found in the library are in
 138. Theorem 15.14 with cycles. Proposition 33.22 used only self-paying
      digits. Do swaps (2-cycles of `phi`) allow a family with a one-step
      chain? (proof and computation; section 33.5)
+
+## Round 12: questions raised by chapter 34
+
+139. Between-world variance. In perturbed worlds the ratio `lambda / model`
+     of one parity and convention ranges from 0.84 to 1.16 across seeds,
+     even with the top digits forced. That is 1.3 to 1.5 times the
+     clustered sampling error. What carries this variance? Candidates are
+     the short lengths of small bases (base 13 alone moves the odd
+     zero-free cell by 0.1), the fourth and later top digits, and the low
+     digits of `F` modulo `b`. The answer fixes the error bar of every
+     world-level ratio in the library. (computation; section 34.1.5)
+140. The zero-free surplus in odd bases. Zero-free near-solutions in odd
+     bases 12 to 26 are 1.26 times the model (1.17 without base 13). Does
+     the surplus hold in odd bases 27 to 41, with a rerun of
+     `r5e_int_offsets.py` that keeps the strings? Is it a local factor of
+     short lengths, as section 11.4 has for short solutions? (computation;
+     section 34.1.3)
+141. Uniform first-order trace. Prove `tr M_b - E_1 = 1 + C/b + o(1/b)` by
+     bounding `|E_(b-j) - s_j - c_j/b|` uniformly for `j <= C' ln b`. With
+     Theorem 29.5 this would finish Proposition 34.8. (proof; section
+     34.3.3)
+142. The other characters. Which property of `b - 1` makes
+     `sum over t not in {0, q/2} of tau_t(b)` large (0.36 at `b = 13`, 0.19
+     at 25, 0.06 at 64)? Is it bounded by a function of the largest powers
+     of 2 and 3 that divide `b - 1`? (proof and computation; section
+     34.3.4)
+143. A pre-registered ledger. Before the runs of question 104, write down
+     the model's prediction and a two-sided test for every group of Table
+     34.4.2.1 that extends to fresh bases. Add the results to the set named
+     in advance. (computation; section 34.4)
