@@ -7,3 +7,4 @@ import Munchausen.Examples
 import Munchausen.Conjectures
 import Munchausen.Residues
 import Munchausen.ShortEquations
+import Munchausen.OtherSystems
