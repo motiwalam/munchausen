@@ -1,0 +1,24 @@
+p in [11, 1000): 164 primes
+  I/HM  mean 0.9772  min 0.7340  max 1.2297
+  offdiag Ng/(p-1) mean 1.0537  min 0.8571  max 1.4286
+  Nd0/(p+1) mean 2.1304 max 3.0000;  Nd1/(p+1) mean 2.0871 max 2.6667
+  max fibre of g: max 15;  fixed points F(p): mean 4.70 max 15; share of p with max fibre = F(p): 0.512
+  I/(p-1) mean 2.5636
+p in [1000, 10000): 1061 primes
+  I/HM  mean 0.9971  min 0.9476  max 1.0493
+  offdiag Ng/(p-1) mean 1.0146  min 0.9248  max 1.3194
+  Nd0/(p+1) mean 2.0222 max 2.3822;  Nd1/(p+1) mean 2.0183 max 2.3505
+  max fibre of g: max 33;  fixed points F(p): mean 7.60 max 33; share of p with max fibre = F(p): 0.560
+  I/(p-1) mean 2.6362
+p in [10000, 50000): 3904 primes
+  I/HM  mean 0.9995  min 0.9680  max 1.0212
+  offdiag Ng/(p-1) mean 1.0043  min 0.9569  max 1.0877
+  Nd0/(p+1) mean 2.0058 max 2.0985;  Nd1/(p+1) mean 2.0051 max 2.0930
+  max fibre of g: max 48;  fixed points F(p): mean 9.23 max 48; share of p with max fibre = F(p): 0.550
+  I/(p-1) mean 2.6403
+p in [50000, 1000000000): 4459 primes
+  I/HM  mean 0.9997  min 0.9892  max 1.0118
+  offdiag Ng/(p-1) mean 1.0020  min 0.9805  max 1.0516
+  Nd0/(p+1) mean 2.0025 max 2.0547;  Nd1/(p+1) mean 2.0022 max 2.0531
+  max fibre of g: max 51;  fixed points F(p): mean 10.43 max 51; share of p with max fibre = F(p): 0.570
+  I/(p-1) mean 2.6440
