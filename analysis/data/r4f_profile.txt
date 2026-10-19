@@ -1,0 +1,8 @@
+# q 2 e 4 m 0: bases 16 per base: real 2.3750 refined 3.1962 profile 3.3750
+# q 2 e 4 m 1: bases 16 per base: real 1.8750 refined 2.6677 profile 2.1875
+# q 3 e 3 m 0: bases 54 per base: real 8.2222 refined 6.4795 profile 9.7500
+# q 3 e 3 m 1: bases 54 per base: real 4.1111 refined 5.4766 profile 5.8704
+# q 5 e 3 m 0: bases 500 per base: real 34.4000 refined 26.2301 profile 26.2870
+# q 5 e 3 m 1: bases 500 per base: real 11.8400 refined 23.3379 profile 9.1435
+# q 2 e 5 m 0: bases 32 per base: real 3.7500 refined 4.0706 profile 3.8086
+# q 2 e 5 m 1: bases 32 per base: real 2.1250 refined 3.1832 profile 2.1045
