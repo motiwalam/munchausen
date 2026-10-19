@@ -90,9 +90,11 @@ most 30 digits:
 For these lengths, larger bases are very unlikely to help. A 9-digit solution
 in a base `b >= 128` can only use digits `x` with `x^x < b^9`. Under the
 random model of chapter 5, the chance of a 9-digit solution in base 128 is
-below `10^-8`, and it falls quickly with `b`. So I expect that these lengths
-have no solution under `m = 1` in any base. A proof would need to rule out
-algebraic families like those of chapter 2.
+below `10^-8`, and it falls quickly with `b`. Algebraic families escape this
+estimate, and they exist: the binomial families of chapter 22 give solutions
+of every length `k >= 3` under `m = 1`, these lengths included, in bases far
+beyond any search (Corollary 22.7). So these lengths are missing only in the
+bases searched, and, by the model, in all bases of moderate size.
 
 The model also predicts how many lengths are missing. For large `k`, the
 expected number of `k`-digit solutions, summed over all bases, tends to 1

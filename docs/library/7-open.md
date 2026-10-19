@@ -50,8 +50,13 @@ every solution beyond some size belongs to such a family (question 64).
 
 ## 7.3 Lengths without solutions
 
-Conjecture. Under `0^0 = 1` no base has a solution with 9 digits. The same
-holds for 18, 21, 22, 24, 26 and 28 digits.
+Conjecture (refuted as stated). Under `0^0 = 1` no base has a solution with
+9 digits. The same holds for 18, 21, 22, 24, 26 and 28 digits.
+
+The binomial families of chapter 22 give solutions of every length, these
+included, in astronomically large bases (Corollary 22.7). What survives is the
+statement for bases near the length, where the evidence below applies: no
+9-digit solution in bases up to 100,000.
 
 - No base up to 100,000 has a 9-digit solution, and no base up to 10,000 has
   one with the other lengths (computed, section 3.4).
