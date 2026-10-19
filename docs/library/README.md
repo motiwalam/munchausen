@@ -32,6 +32,7 @@ statement is marked by its source:
 | [18. The equation b(b+x) = x^n + 1 and more](18-number-theory.md) | `b(b+x) = x^n + 1` solved for prime powers and odd `x <= 1001`; the M/L series in general; bases with 2- and 3-digit solutions; integers with three bases; signs of roots; powers as weights |
 | [19. A faster sieve and short-string spectra](19-sieve-spectra.md) | prime powers in the `kdigit` sieve (11x faster); defect spectra for 4 and 5 digits; p-adic local factors; narcissistic numbers as a model test; the factorion shortfall is chance |
 | [20. Multisets and the residues of x^x - x](20-multisets-residues.md) | almost all bases have no solution with up to about `ln b / ln ln b` digits; the 3-adic and 5-adic laws of `x^x - x`; `b(b+x) = x^n + c` for `x == 0 (mod 8)` and `c = 3, 25`; mixed ideal classes |
+| [21. Five more number systems](21-five-systems.md) | function fields `F_q[T]`, rational bases, Eisenstein bases, a Pisot base, the factorial system; the residue factor follows the identity modulus everywhere; the model fails in the factorial system |
 | [Open questions](questions.md) | 63 research questions in three rounds, with priorities and answers |
 
 ## Main results
@@ -140,6 +141,10 @@ Model:
   `k` (Conjecture 10.3).
 - Narcissistic numbers (weights `x^d`) fit the refined model where residues
   are forced: 207 found against 208.5 predicted (section 19.4).
+- In every number system with a residue identity, the count factor follows
+  its modulus: doubling exactly when it is even, a factor `q` per prime factor
+  in `F_q[T]`. The coincidence model fails in the factorial number system,
+  where large digits are tied to top positions (chapter 21).
 - Base 100 is expected to have about one solution, most likely with 99 digits.
 
 ## Scripts and data

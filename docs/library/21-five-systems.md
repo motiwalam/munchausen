@@ -1,10 +1,10 @@
-# Round 3 twists: five more number systems
+# 21. Five more number systems
 
-DRAFT. Answers the twist questions 59 to 63 of `questions-round3.md`.
+This chapter answers the twist questions 59 to 63 of `questions-round3.md`.
 
 Each statement carries one mark:
 
-- proven: a proof is in this draft;
+- proven: a proof is in this chapter;
 - cited: a published result, with its source;
 - computed: an exact search, with its range;
 - heuristic: the model of chapter 5, adapted to the number system.
@@ -50,9 +50,9 @@ as likely. The parity doubling of section 5.3 appears when `M` is even and
 `w(d) == d (mod 2)` for every digit, so the identity holds for free modulo 2
 under `0^0 = 0`.
 
-## 61. A function-field analogue
+## 21.1 A function-field analogue
 
-### 61.1 Definitions
+### 21.1.1 Definitions
 
 Let `q` be prime (the proofs work for prime powers; the programs use primes)
 and `B in F_q[T]` of degree `e >= 2`, with any nonzero leading coefficient.
@@ -63,9 +63,9 @@ with remainder). The weight of a digit is `w(d) = d^|d|` with
 `w(c) = c`. The `q - 1` constants are the one-digit solutions, and no other
 digit is one, since `deg w(d) = j q^j > j` for `deg d = j >= 1`.
 
-### 61.2 Linearity
+### 21.1.2 Linearity
 
-Proposition 61.1 (proven). For `deg d = j`, `w(d) = d(T^(q^j))`. Hence
+Proposition 21.1 (proven). For `deg d = j`, `w(d) = d(T^(q^j))`. Hence
 
     F(n) = sum_{j=0..e-1} D_j(T^(q^j)) + m z,
 
@@ -76,7 +76,7 @@ Proof. In characteristic `p` the map `x -> x^q` is additive, and it fixes
 the coefficients, which lie in `F_q`. So `d^(q^j) = d(T^(q^j))`, and this is
 linear in `d`.
 
-Corollary 61.2 (proven). `n` is a solution exactly when its class sums
+Corollary 21.2 (proven). `n` is a solution exactly when its class sums
 `(D_0, ..., D_(e-1), z mod p)` are a fixed point of
 
     (D, z) -> class sums of  sum_j D_j(T^(q^j)) + m z.
@@ -97,9 +97,9 @@ enumerates all digit multisets with weights computed by real powering. The
 two modes give the same solutions and the same model sums for every base
 with `(q, e)` = (2, 2..4), (3, 2..3), (5, 2), both conventions (computed).
 
-### 61.3 Families and self-paying digits
+### 21.1.3 Families and self-paying digits
 
-Proposition 61.3 (translates, proven). Under `0^0 = 0`, if `n` is a
+Proposition 21.3 (translates, proven). Under `0^0 = 0`, if `n` is a
 solution, then so is `n + c` for every constant `c`. So solutions come in
 families of exactly `q`, which differ only in the last digit.
 
@@ -112,7 +112,7 @@ This replaces the twins of Proposition 2.1: every constant weighs itself, so
 the last digit can take all `q` constant shifts. The census confirms it:
 every family found has exactly `q` members (computed, all bases below).
 
-Proposition 61.4 (self-paying digits, proven). A digit `d` of degree
+Proposition 21.4 (self-paying digits, proven). A digit `d` of degree
 `j >= 1` pays for itself at position `k` when `w(d) = d B^k`, that is
 `d^(q^j - 1) = B^k`. In base `T^e` and for `d = c T^j` this happens exactly
 when `e` divides `j (q^j - 1)`, at `k = j (q^j - 1)/e`. Under `0^0 = 0` such
@@ -124,9 +124,9 @@ The census finds such digits in 2 of 8 bases for `(q, e) = (2, 3)`, in 18 of
 162 for `(3, 4)`, and in 20 of 500 for `(5, 3)`
 (`analysis/r3t_ffield_structure.py`).
 
-### 61.4 The identity and the free residues
+### 21.1.4 The identity and the free residues
 
-Proposition 61.5 (proven). Every `n` satisfies `n == sum d_i (mod B - 1)`.
+Proposition 21.5 (proven). Every `n` satisfies `n == sum d_i (mod B - 1)`.
 So a solution satisfies
 
     sum_j ( D_j(T^(q^j)) - D_j ) + m z == 0   (mod B - 1).
@@ -136,7 +136,7 @@ multiset fixes, for numbers with at least 3 digits: swapping the last two
 digits `x, y` with `x - y = 1` changes `n` by `B - 1` (proven, as in
 Proposition 14.4; here every digit can sit at every position).
 
-Theorem 61.6 (free residues, proven). Let `P` be an irreducible factor of
+Theorem 21.6 (free residues, proven). Let `P` be an irreducible factor of
 `B - 1`, and let `Tr` be the trace from `F_q[T]/(P)` to `F_q`. Then for all
 class sums `D`,
 
@@ -165,16 +165,16 @@ Under `0^0 = 1` the trace of the constant `z` is `z deg P`. So a factor of
 `B - 1` with degree prime to `p` forces `z == 0 (mod p)`: the analog of the
 even number of zeros in odd bases (proven).
 
-### 61.5 Degree 2: the exact count
+### 21.1.5 Degree 2: the exact count
 
-Theorem 61.7 (proven). Let `e = 2` and `0^0 = 0`. Base `B` has exactly
+Theorem 21.7 (proven). Let `e = 2` and `0^0 = 0`. Base `B` has exactly
 `q (q - 1)` nontrivial solutions if `B - 1` has two distinct roots in
 `F_q`, and none otherwise. They are the numbers `c + beta T^q` with
 `beta != 0`, in `q - 1` families of `q`.
 
 Proof. Write `D_1 = alpha + beta T` and `c = D_0 + alpha`. Then
 `F = c + beta T^q`. If `beta = 0`, `F` is a constant, with one digit. So
-`beta != 0`, and the identity (Proposition 61.5) gives
+`beta != 0`, and the identity (Proposition 21.5) gives
 `(B - 1) | beta (T^q - T)`. Since `T^q - T` is the product of all `T - a`,
 `B - 1` must have two distinct roots in `F_q`.
 
@@ -204,7 +204,7 @@ because for `e = 2` the identity decides everything. Under `0^0 = 1` the
 count is `q (q - 2)` in every base with two roots for `q` = 5, 7, 11, 13, 5
 for `q = 3`, 2 for `q = 2`, and 0 otherwise (computed).
 
-### 61.6 The census for `e >= 3`
+### 21.1.6 The census for `e >= 3`
 
 All bases of degree `e` (any nonzero leading coefficient), both conventions
 (`analysis/data/r3t_ffield_frob.txt`). The model sums are exact, not
@@ -262,7 +262,7 @@ cause is open. One candidate is the length law: 63% of the solutions with
 almost always present, and the model's law for the number of zeros is then
 off.
 
-### 61.7 Contrast: the weight `d^(deg d)`
+### 21.1.7 Contrast: the weight `d^(deg d)`
 
 With `w(d) = d^(deg d)` the weights are no longer linear (nonzero constants
 weigh 1). The degree of `F` is at most `(e-1)^2`, so solutions are short:
@@ -283,21 +283,21 @@ remain in part, because `x^k = x` holds in `F_2` for all `k >= 1` and in
 roots of `B - 1`. Without Frobenius the world looks like a short-solution
 regime of the integers.
 
-### 61.8 What this world shows
+### 21.1.8 What this world shows
 
 - The "one per base" law survives exactly: the basic model gives 0.6 to 1.0
   per base, independent of `B` (computed, exact sums).
 - The parity factor generalizes to a factor `q` per prime of `B - 1`
-  (Theorem 61.6), and the counts follow it (computed).
+  (Theorem 21.6), and the counts follow it (computed).
 - Twins become families of `q`, and self-paying digits exist (proven).
 - With additive weights the problem is finite and its solutions are the
   fixed points of an explicit map on a group of size `q^(e(e+1)/2)`. In
-  degree 2 the count is a formula (Theorem 61.7). The coincidence model
+  degree 2 the count is a formula (Theorem 21.7). The coincidence model
   still describes `e >= 3` within a factor 2.
 
-## 60. Parity in rational bases
+## 21.2 Parity in rational bases
 
-### 60.1 Definitions and the identity
+### 21.2.1 Definitions and the identity
 
 Base `p/q` with `gcd(p, q) = 1` and `1 <= q < p`. Every `N >= 1` has exactly
 one expansion `N = sum (a_i / q) (p/q)^i` with digits `0 <= a_i < p`, from
@@ -305,7 +305,7 @@ one expansion `N = sum (a_i / q) (p/q)^i` with digits `0 <= a_i < p`, from
 Sakarovitch, Israel J. Math. 168 (2008)). The base `p/1` is the integer base
 `p`. Section 16.5 found the first solutions with `alg_afs.c`.
 
-Proposition 60.1 (identity, proven). Every `N` satisfies
+Proposition 21.8 (identity, proven). Every `N` satisfies
 `q N == sum a_i (mod p - q)`. A solution satisfies
 `sum (q w(a) - a) == 0 (mod p - q)`.
 
@@ -320,14 +320,14 @@ solution has an even number of zeros (proven). If `p` or `q` is even,
 `p - q` is odd and no factor 2 arises. Proposition 16.11 (no twins for
 `q > 1`) still holds.
 
-### 60.2 The search
+### 21.2.2 The search
 
 The expansion of `N` is that of its parent `(q N - a_0)/p` followed by `a_0`.
 So the integers form a tree, and a walk from the root carries
 `F(N) = F(parent) + w(a_0)` at constant cost per node.
 `fast/src/bin/r3t_afs.rs` walks it with one pruning rule.
 
-Proposition 60.2 (pruning, proven). Let `r = p/q` and `W = (p-1)^(p-1)`.
+Proposition 21.9 (pruning, proven). Let `r = p/q` and `W = (p-1)^(p-1)`.
 The descendants of `N` at depth `t` lie in `[N r^t, (N+1) r^t)`, and their
 sums are at most `F(N) + t W`. So the subtree holds no solution when
 `g(t) = N r^t - F(N) - t W > 0` for every `t >= 1`. The function `g` is
@@ -342,13 +342,13 @@ and is worst for `q` near `p`. Base `11/7` takes `6.5 * 10^10` nodes;
 `11/8` and `11/10` (about `10^11` and `2.5 * 10^11`) were not run. The engine
 reproduces every solution of `analysis/data/alg_afs_8.txt` (computed).
 
-### 60.3 The model
+### 21.2.3 The model
 
 Lengths are nondecreasing in `N` (the parent map is monotone, proven), so
 the windows are the integers of each length. `r3t_afs model` samples
 400,000 integers per window (`analysis/data/r3t_afs_model.txt`).
 
-### 60.4 The census against the model
+### 21.2.4 The census against the model
 
 All bases with `p <= 11` except `11/1`, `11/8` and `11/10`, both
 conventions (`analysis/data/r3t_afs_search.txt`). "near" is the mean count
@@ -408,9 +408,9 @@ The identity modulus `p - q` has nothing to do with the digit range `p`.
 The doubling follows it all the same, which makes this the cleanest test of
 the parity law in the library.
 
-## 63. Eisenstein bases
+## 21.3 Eisenstein bases
 
-### 63.1 Definitions and the identity
+### 21.3.1 Definitions and the identity
 
 Let `omega^2 + omega + 1 = 0` and `beta = -n + omega`, `n >= 1`. Then `beta`
 is a root of `t^2 + (2n+1) t + (n^2 + n + 1)`, and a quadratic
@@ -425,7 +425,7 @@ conjugation, since `B^2 - 4C = -3` forces `B` odd and `C = (B^2+3)/4`
 The last digit of `a + b omega` is `(a + n b) mod (n^2 + n + 1)`, because
 `omega == n (mod beta)`.
 
-Proposition 63.1 (proven). `beta - 1 = -(n+1) + omega` is primitive of norm
+Proposition 21.10 (proven). `beta - 1 = -(n+1) + omega` is primitive of norm
 `M = n^2 + 3n + 3`. So a rational integer solution satisfies
 `sum (w(x) - x) == 0 (mod M)`. `M = n(n+3) + 3` is odd for every `n`, so the
 parity doubling never applies (heuristic consequence).
@@ -434,7 +434,7 @@ The length bound of Proposition 14.10 carries over with
 `|z|^2 = a^2 - ab + b^2`: lengths at most 19, 20 and 30 for `n` = 1, 2, 3
 (proven with a finite computation, in the program).
 
-### 63.2 The census
+### 21.3.2 The census
 
 `fast/src/bin/r3t_eisen.rs` is `gauss.rs` with the Eisenstein digit map, a
 switch to run the Gaussian base as a control, and near-solution counts at
@@ -476,7 +476,7 @@ each convention. So the second law of section 14.6.3 holds in the sharpest form:
 factor 2 follows the parity of the identity modulus, not the shape of the
 base (computed and heuristic).
 
-### 63.3 Lengths of positive integers
+### 21.3.3 Lengths of positive integers
 
 As in section 14.5.1, positive integers skip some lengths
 (`analysis/r3t_eisen_lengths.py`, all integers up to `10^6`, and 3,000
@@ -499,9 +499,9 @@ The first version of this table missed lengths near `10^6` to `10^7`
 because it sampled only from `10^7` on, as `wld_gauss_lengths.py` does. A
 denser rerun of the Gaussian table of section 14.5.1 confirms it unchanged.
 
-## 59. The Pisot base `eps_x`
+## 21.4 The Pisot base `eps_x`
 
-### 59.1 Definitions
+### 21.4.1 Definitions
 
 Let `x >= 1` and `eps = (x + sqrt(x^2 + 4))/2`, the dominant root of
 `t^2 - x t - 1`, a Pisot unit with conjugate `-1/eps`. Since
@@ -518,9 +518,9 @@ nonincreasing digits). The digit string of `N` runs from its top position
 `a + b eps`. The sign of `a + b eps` follows from the sign of the conjugate
 `a - b/eps` and of the norm `a^2 + x a b - b^2`.
 
-### 59.2 Length and identity
+### 21.4.2 Length and identity
 
-Proposition 59.1 (proven). An integer `N >= 1` with `T` digits in base
+Proposition 21.11 (proven). An integer `N >= 1` with `T` digits in base
 `eps` has `T <= 2 log_eps N + 2`.
 
 Proof. Let the expansion run from position `k` to `-m`. Then
@@ -540,12 +540,12 @@ after the point (computed, same range). So a solution has `N = F <= T x^x`
 and `T <= 2 log_eps(T (x^x + 1)) + 2`, which bounds `T`: 11 for `x = 2`, 24
 for `x = 10`, 28 for `x = 12` (proven, with the arithmetic in the program).
 
-Proposition 59.2 (identity, proven). `eps - 1` has norm `-x`, so
+Proposition 21.12 (identity, proven). `eps - 1` has norm `-x`, so
 `Z[eps]/(eps - 1) = Z/x`, and `eps == eps^-1 == 1` modulo `eps - 1`. Hence
 `N == sum d_i (mod x)`, and a solution has `sum (w(d) - d) == 0 (mod x)`.
 For even `x` and `0^0 = 1`, a solution has an even number of zeros.
 
-Proposition 59.3 (twins, proven). Under `0^0 = 0`, if `N` is a solution
+Proposition 21.13 (twins, proven). Under `0^0 = 0`, if `N` is a solution
 whose digit at position 0 is 0, and the digit at position 1 is not `x`, then
 `N + 1` is a solution, with the 0 replaced by 1. For `x = 1` the digit at
 position -1 must also be 0. The new string is admissible, so it is the
@@ -554,11 +554,11 @@ greedy expansion of `N + 1`, and `F` grows by `w(1) - w(0) = 1`.
 There are no self-paying digits: a digit at position `k != 0` adds an
 irrational amount to the value.
 
-### 59.3 The search and the census
+### 21.4.3 The search and the census
 
 `r3t_pisot search` enumerates every digit multiset of every length `T` up
 to the bound, keeps those with every `x` followed by a 0
-(`c_x <= c_0 + 1`), filters by Proposition 59.2, and compares the expansion
+(`c_x <= c_0 + 1`), filters by Proposition 21.12, and compares the expansion
 of `F` exactly. It needs `F` in `[eps^((T-2)/2), eps^T)`, which Proposition
 59.1 justifies. It agrees with a direct expansion of every `N` up to the
 bound for `x` = 1 to 7 (computed). The model samples integers in each window
@@ -584,10 +584,10 @@ All solutions with `x` = 1 to 12 (`analysis/data/r3t_pisot_search.txt`,
 
 Check of the first: `eps + eps^-2 = 2` for the golden ratio, and
 `w(1) + w(1) = 2`. The pairs `(N, N+1)` under `0^0 = 0` are the twins of
-Proposition 59.3: 3/4, 9/10, 54/55, 6615/6616, 917942/917943,
+Proposition 21.13: 3/4, 9/10, 54/55, 6615/6616, 917942/917943,
 96959/96960, 1956350341/1956350342.
 
-### 59.4 Against the model
+### 21.4.4 Against the model
 
 `x = 1` is degenerate (modulus 1, weights 0 and 1). For `x >= 2`:
 
@@ -620,18 +620,18 @@ but 7 twin pairs account for 7 of them, and the near-solutions (2.65) match
 the model (2.8 per base). Odd `x` with `3 | x` lose part of the mass
 (`E_0 = 0.73` for `x = 3`), because `d^d - d (mod 3)` is biased. Under
 `0^0 = 1` the even bases gain a smaller factor, since the number of zeros
-must be even (Proposition 59.2), as in section 5.3. The first non-integer
+must be even (Proposition 21.12), as in section 5.3. The first non-integer
 base of the library therefore follows both universal laws.
 
-## 62. The factorial number system
+## 21.5 The factorial number system
 
-### 62.1 Definitions and structure
+### 21.5.1 Definitions and structure
 
 Every `n >= 1` has exactly one expansion `n = sum_{i=1..L} d_i i!` with
 `0 <= d_i <= i` and `d_L >= 1`, so `L! <= n < (L+1)!` (proven: mixed-radix
 division). A solution is `n = sum w(d_i)`.
 
-Proposition 62.1 (no invariant residue, proven). No modulus `M >= 2` makes
+Proposition 21.14 (no invariant residue, proven). No modulus `M >= 2` makes
 `n mod M` a function of the digit multiset on numbers with 3 or more
 digits. Proof: `(1,0,1) = 7` and `(1,1,0) = 8` have the same multiset.
 
@@ -640,7 +640,7 @@ depend on positions, like `n == d_1 (mod 2)`, do not give a factor
 (heuristic: the condition holds for about half of the arrangements of a
 multiset).
 
-Proposition 62.2 (self-paying digits, proven). A digit `a` at position `i`
+Proposition 21.15 (self-paying digits, proven). A digit `a` at position `i`
 pays for itself when `a * i! = a^a`, that is `a^(a-1) = i!`. The only cases
 are `(a, i) = (1, 1)` and `(2, 2)`.
 
@@ -654,7 +654,7 @@ nonempty combinations of these two digits, and 4, 5 are twins (the digit at
 position 1 is 0 or 1, proven as in Proposition 2.1). Under `0^0 = 1` the
 solutions are 1, 2 = `(1,0)` and 5 = `(2,1)`.
 
-### 62.2 The search
+### 21.5.2 The search
 
 `fast/src/bin/r3t_factorial.rs` fixes `L` and decides the digit counts from
 the largest value down, as `fast` does. The numbers with fixed digits at
@@ -670,7 +670,7 @@ Computed (`analysis/data/r3t_factorial_census.txt`): for `L <= 33`, that is
 whole census takes `1.4 * 10^8` tree nodes per convention. `u128` stops at
 `L = 33`.
 
-### 62.3 The model, and why it fails
+### 21.5.3 The model, and why it fails
 
 `E_L = P(F(n) in [L!, (L+1)!))` for `n` uniform in the same window. Only the
 largest digit `v` decides whether `F` can land there (`v^v <= F <= L v^v`),

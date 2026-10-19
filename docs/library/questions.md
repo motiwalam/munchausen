@@ -259,8 +259,8 @@ attack, in [questions-round3.md](questions-round3.md).
     `n mod b`? (computation; question 41)
 58. (Answered in chapter 19: the refined model fits forced-residue cells, 207 against 208.5; short lengths run 1.5x high.) Narcissistic numbers (weights `x^d`) as a model test: residue factors
     that change with the length, and doubling in odd bases. (twist)
-59. Munchausen numbers in the Pisot base `(x + sqrt(x^2+4)) / 2`. (twist)
-60. Parity doubling in AFS rational bases. (twist; section 16.5)
-61. A function-field analogue in `F_q[T]` with weights `d^|d|`. (twist)
-62. Are there finitely many solutions in the factorial number system? (twist)
-63. Eisenstein bases `-n + omega`: no parity doubling predicted. (twist)
+59. (Answered in chapter 21: `N == digit sum (mod x)`; even `x` double; the model fits.) Munchausen numbers in the Pisot base `(x + sqrt(x^2+4)) / 2`. (twist)
+60. (Answered in chapter 21: odd/odd bases double, as the model predicts.) Parity doubling in AFS rational bases. (twist; section 16.5)
+61. (Answered in chapter 21: the problem is linear and finite; exact count for degree 2; a free factor `q` per factor of `B - 1`.) A function-field analogue in `F_q[T]` with weights `d^|d|`. (twist)
+62. (Partly answered in chapter 21: only 1, 2, 4, 5 up to `34!`; the model fails; finiteness open.) Are there finitely many solutions in the factorial number system? (twist)
+63. (Answered in chapter 21: no doubling, as predicted.) Eisenstein bases `-n + omega`: no parity doubling predicted. (twist)
