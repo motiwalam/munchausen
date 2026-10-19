@@ -3,7 +3,10 @@
 = Formalization in Lean <app-lean>
 
 A formalization of the library in Lean 4 with Mathlib @lean4 is being built
-in the directory `lean/` of the repository. A statement of this document
+in the directory `lean/` of the repository. Its record, `lean/STATUS.md`,
+maps every proven result of the library to a Lean declaration or gives the
+reason why it is not formalized: usually a heuristic statement, a large
+computation, or a deep cited theorem such as Chebotarev's or Laurent's. A statement of this document
 that has a formal proof carries a green Lean badge, and its box ends with the
 name of the Lean declaration. The index of results (@app-index) lists all of
 them.
@@ -14,11 +17,8 @@ them.
   let metas = query(<stmt-meta>).filter(m => m.value.lean != none)
   if metas.len() == 0 [
     As of this version no statement of the document is marked as formalized.
-    The Lean project contains the Mathlib setup and no Munchausen results
-    yet. This section updates itself when `lean-status.typ` names a Lean
-    declaration for a statement.
   ] else [
-    #metas.len() statements are formalized. They are:
+    #metas.len() statements of this document are formalized, some of them in part; the table names what a partial formalization covers. All Lean names live in the namespace `Munchausen`. The formalization also states several conjectures of the library as propositions and proves the negation of four refuted ones, among them the finiteness conjecture for short solutions under $0^0 = 1$ (@thm-every-length-m1).
 
     #table(
       columns: (auto, 1fr, auto),

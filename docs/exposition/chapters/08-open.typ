@@ -24,6 +24,9 @@ keeping in mind when judging which problems are realistic.
     [question], [status], [answer], [where],
     [Does every base have finitely many solutions?], st("proven"), [yes: at most $b$ digits], [@thm-length],
     [Finitely many $k$-digit solutions under $0^0 = 1$, $k >= 3$?], st("proven"), [no: binomial families give infinitely many], [@thm-every-length-m1],
+    [Are large short solutions family members?], st("conjecture"), [positions and linear families classified; the rest needs one more coincidence], [@open-families],
+    [Is $(1, 6, 46666)$ the next 3-digit solution?], st("open"), [next family member (proven); none in bases 905 to $10^(3301)$], [@open-next-three],
+    [At most two 3-digit solutions per base?], st("open"), [at most 30 outside a sparse set of bases (proven); at most two up to $10^(3301)$], [@open-two-three-digit],
     [Does every length occur?], st("proven"), [yes, under both conventions], [@sec-cons-binomial],
     [Is $N_0(b)$ bounded?], st("proven"), [no], [@thm-many-m0],
     [Is $N_1(b)$ bounded?], st("open"), [unknown; constructions give at most 2 in the bases searched], [@open-n1],
@@ -55,32 +58,67 @@ keeping in mind when judging which problems are realistic.
 Under $0^0 = 0$ the zero digits cost nothing, and constructions are easy:
 self-paying digits combine freely, and every length and every count occurs.
 Under $0^0 = 1$ every zero costs 1, and the known structure is thin: the
-2-digit families, the binomial families, a few chains of power identities.
+2-digit families, two linear families of power identities, and a few
+chains of power identities. @sec-cons-binomial describes the families.
 
-#problem(id: "open-families", title: [Are large short solutions algebraic?], src: ("22.3", "22.4"))[
-  Is every short solution under $0^0 = 1$ beyond some size a member of an
-  algebraic family, such as the binomial families of @thm-binomial? Are
-  there other identity families, for example with $p x^x$ a $j$-th power for
-  a leading digit $p$ that is not a $j$-th power, or with two large digits?
-  (#q(64))
+#conjecture(id: "open-families", title: [Large short solutions are family members], src: ("25.1", "22.3"))[
+  Under $0^0 = 1$ and for each $k >= 3$, all but finitely many $k$-digit
+  solutions are members of the two linear families: the binomial families
+  of @thm-binomial, and the family $(c^j, 0, dots, 0, x)$ with
+  $x = c^(j c^j) + j - 1$. Moreover every $k$-digit solution in a base
+  above the largest base of the complete list (904, 20, 48, 9 and 9 for
+  $k = 3, dots, 7$) is such a member. (#q(64))
 ]
 
-Evidence: the complete lists of @sec-short-lists stop at bases near
-$10^(186)$ for 4 digits and $10^(51.5)$ for 3 digits. The root heuristic
-of @sec-short-heuristic puts the expected number of further generic
-solutions at $10^(-74)$ for 3 digits, and the identities are exactly what
-it cannot see. A classification of the identities would turn the heuristic
-into a precise conjecture: finitely many solutions outside the families.
+Much of #q(64) is now settled (#lib("25.1")). In every power identity
+$Q_s(r) = lambda A(r)^j - W$, where $W$ is the weight of the large digits,
+the last digit is one of the large digits (Theorem 25.2, proven). With $A$
+linear the members are the binomial families and a second family with
+$e = 0$, for example $(8, 0, 0, 16777218)$ in base
+$16777218^5592406 slash 2$; it gives infinitely many solutions of every
+length $k >= 4$ and the smallest known ones with 4, 5 and 6 digits
+(Theorems 25.4 and 25.5, proven). Nonlinear $A$, decomposable $P_s$,
+products, Aurifeuillian factors, several large digits and self-paying
+digits with a paying tail each need one more Diophantine coincidence
+(Proposition 25.6), and a census of all small prefixes finds no member of
+any of them. For 3 digits with two digits at most $B$ and the third at least
+$2B + 4$ the classification is complete (Theorem 25.7). The evidence for
+the conjecture is the complete lists of @sec-short-lists, which hold no
+solution above these bases up to $10^(51)$, $10^(186)$, $10^(30.9)$ and
+$10^(11)$ for 3 to 6 digits, extended to $10^(3301)$ for 3 digits, and the
+root heuristic of @sec-short-heuristic, which leaves less than $10^(-74)$
+expected generic 3-digit solutions beyond the list. Under $0^0 = 0$ the
+conjecture fails: self-paying digits and swaps give further families.
 
-#problem(id: "open-next-three", title: [The next 3-digit solution], src: "22.3")[
-  Is $(1, 6, 46666)$ in base $46666^23333 - 3$ the next 3-digit solution
-  under $0^0 = 1$ after $(1, 7, 1)$ in base 904? (#q(65))
+#problem(id: "open-nonlinear", title: [Nonlinear identity families], src: "25.1")[
+  Is there an identity family with nonlinear $A$, that is, a parametrized
+  $A$ for which $A(b) = x^(x slash j)$ is solvable by structure?
 ]
 
-A proof needs the finiteness of the Pell-type equations of
-@sec-short-square up to bases near $10^108942$. The obstacle is that the
-base and the exponent of $x^x$ vary together, a situation no published
-method handles.
+Proposition 25.6 reduces this to values of polynomials at perfect powers.
+For each fixed $A$ the Schinzel-Tijdeman theorem bounds the exponent, so a
+family would need $A$ to vary.
+
+#problem(id: "open-next-three", title: [The next 3-digit solution], src: ("25.2", "22.3"))[
+  Prove that $(1, 6, 46666)$ in base $46666^23333 - 3$, about
+  $10^(108942)$, is the next 3-digit solution under $0^0 = 1$ after
+  $(1, 7, 1)$ in base 904. (#q(65))
+]
+
+What is known (#lib("25.2")):
+- proven: $(1, 6, 46666)$ is the next member of the families after
+  $(1, 2, 6)$, and the only 3-digit solution in its base (Theorem 25.10);
+- computed: no 3-digit solution lies in a base from 905 to $10^(3301)$,
+  and below $46666^23333 - 3$ every other 3-digit solution has two digits
+  above 200 and one above 2000 (Theorem 25.11, a sieve with 108 primes over
+  $1.36 dot 10^10$ strings);
+- heuristic: the strings left open add an expected $10^(-3294)$ solutions.
+
+The open part is the strings with two digits in $[201, 46666]$ and one
+above 2000. They are generic Pell-type equations with two large digits
+(@sec-short-square). A sieve over all of them has about $10^14$ strings; a
+sieve over pairs of large digits, with the third digit fixed by size,
+could cut this to about $10^10$ tests and close the gap.
 
 #problem(id: "open-n1", title: [Is $N_1(b)$ bounded?], src: ("8.4", "15.5"))[
   Is there a constant $C$ such that every base has at most $C$ solutions
@@ -107,15 +145,23 @@ other representation of an integer $a^a + c^c$ with two 2-digit bases has a
 rigid shape (#lib("18.3")). None exists among the 2,117 integers with a
 2-digit representation with digits up to 90.
 
-#problem(id: "open-two-three-digit", title: [Two 3-digit solutions per base], src: "18.2")[
+#problem(id: "open-two-three-digit", title: [Two 3-digit solutions per base], src: ("25.3", "18.2"))[
   Does every base have at most two 3-digit solutions under $0^0 = 1$?
   (#q(50))
 ]
 
-Base 4 has two, $(1, 3, 1)$ and $(3, 1, 3)$, and every other base below
-$10^(51)$ has at most one. The proof of @thm-two-two-digit for two digits
-used elementary inequalities. For 3 digits the hard case is a leading
-digit that is also the largest digit.
+Base 4 has two, $(1, 3, 1)$ and $(3, 1, 3)$, and every other base up to
+$10^(3301)$ has at most one (computed, Theorem 25.11). Partial results
+(#lib("25.3"), proven): the largest digits of the 3-digit solutions of one
+base take at most two consecutive values; every base has at most 30
+three-digit solutions, except at most 13 bases near $M^((M-1) slash 2)$ for
+each $M$, which have at most $2M + 24$ (Theorem 25.15); a base has at most
+one family member, and a base with a member has at most three 3-digit
+solutions (Propositions 25.16 and 25.17). The method of @thm-two-two-digit
+fails at the shape $(M, u, v)$, where a base near $M^((M-1) slash 2)$ gives
+an equation in two free digits. A proof that this shape has at most two
+solutions per base would give an absolute bound near 26, and with more
+care perhaps 2. See also @sec-short-two-three.
 
 #problem(id: "open-cores", title: [Cores in perfect-power bases], src: "15.3")[
   Under $0^0 = 0$, is $(1, 3)$ in base 25 the only 2-digit core in a

@@ -101,13 +101,13 @@ the binomial families of @thm-binomial give solutions of every length in
 very large bases.
 
 #tablefig(
-  caption: [Ranges of the complete lists of short solutions (#lib("3.1", "11.5", "19.1")).],
+  caption: [Ranges of the complete lists of short solutions (#lib("3.1", "11.5", "19.1", "25.2")). For 3 digits the sieve of #lib("25.2") extends the list of `kdigit` to every base up to $10^3301$; it found no new solution.],
   id: "tab-app-short-range",
   btable(
     columns: 4,
     align: (right, right, right, left),
     [$k$], [digits up to], [complete for bases up to], [source],
-    [3], [80], [$10^51.5$], [`analysis/data/k3.txt`],
+    [3], [80; 2000], [$10^51.5$; $10^3301$], [`analysis/data/k3.txt`; `r5f_sieve3.txt`],
     [4], [300], [$10^186.5$], [`analysis/data/k4.txt`],
     [5], [80], [$10^30.9$], [`analysis/data/k5.txt`],
     [6], [40], [$10^11.0$], [`analysis/data/k6.txt`],
