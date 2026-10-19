@@ -1333,7 +1333,7 @@ The digit-sum identity repairs this: $b - 1$ divides $F(c) - S(c)$, where
 $S(c)$ is the digit sum of $c$ (@thm-digit-sum).
 
 #lemma(id: "short-divisors", title: "Divisors in a short interval", src: "20.1")[
-  Let $d_1 < dots < d_r$ be divisors of $m >= 1$ in an interval $(Y - h, Y]$
+  Let $d_1 < dots < d_r$, with $r >= 1$, be divisors of $m >= 1$ in an interval $(Y - h, Y]$
   with $Y - h >= 1$. Then $m > (Y - h)^r slash h^(r(r-1) slash 2)$.
 ]
 #proof[
