@@ -273,4 +273,91 @@ theorem isMunchausen_iff_core {b n L : ℕ} (hb : 2 ≤ b) (hn : n < b ^ L) (S :
   rw [hFn, hFc]
   constructor <;> intro h <;> omega
 
+/-! ### Proposition 9.3: the count -/
+
+/-- At most `X^(1/t)` integers `r ≥ 2` have `r^t ≤ X`. -/
+lemma card_pow_le (X t : ℕ) (ht : 1 ≤ t) :
+    (((Finset.Icc 2 X).filter fun r => r ^ t ≤ X).card : ℝ) ≤ (X : ℝ) ^ (1 / (t : ℝ)) := by
+  set N := ⌊(X : ℝ) ^ (1 / (t : ℝ))⌋₊
+  have hsub : ((Finset.Icc 2 X).filter fun r => r ^ t ≤ X) ⊆ Finset.Icc 1 N := by
+    intro r hr
+    rw [Finset.mem_filter, Finset.mem_Icc] at hr
+    rw [Finset.mem_Icc]
+    refine ⟨by omega, Nat.le_floor ?_⟩
+    have h1 : ((r : ℝ) ^ t) ^ (1 / (t : ℝ)) = r := by
+      rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity), mul_one_div_cancel (by positivity),
+        Real.rpow_one]
+    rw [← h1]
+    exact Real.rpow_le_rpow (by positivity) (by exact_mod_cast hr.2) (by positivity)
+  have := Finset.card_le_card hsub
+  rw [Nat.card_Icc] at this
+  calc (((Finset.Icc 2 X).filter fun r => r ^ t ≤ X).card : ℝ) ≤ (N : ℝ) := by
+        exact_mod_cast (by omega : _ ≤ N)
+    _ ≤ _ := Nat.floor_le (by positivity)
+
+open Classical in
+/-- **Proposition 9.3** (section 9.8, corrected form). At most
+`X^(1/(c+1)) + X^(1/(c+2)) log2 X` bases `2 ≤ b ≤ X` have `c ≥ 1` or more self-paying digits. -/
+theorem prop9_3 (X c : ℕ) (hc : 1 ≤ c) :
+    (((Finset.Icc 2 X).filter fun b => ∃ D : Finset ℕ, c ≤ D.card ∧
+        ∀ a ∈ D, ∃ k, SelfPaying b a k).card : ℝ) ≤
+      (X : ℝ) ^ (1 / ((c : ℝ) + 1)) + (X : ℝ) ^ (1 / ((c : ℝ) + 2)) * Nat.log 2 X := by
+  set L := Nat.log 2 X
+  set S := (Finset.Icc 2 X).filter fun b => ∃ D : Finset ℕ, c ≤ D.card ∧
+    ∀ a ∈ D, ∃ k, SelfPaying b a k
+  let T : ℕ → Finset ℕ := fun t => (Finset.Icc 2 X).filter fun r => r ^ t ≤ X
+  have hsub : S ⊆ (Finset.Icc (c + 1) L).biUnion fun t => (T t).image (· ^ t) := by
+    intro b hb
+    rw [Finset.mem_filter, Finset.mem_Icc] at hb
+    obtain ⟨⟨hb2, hbX⟩, D, hD, hDsp⟩ := hb
+    obtain ⟨r, t, hr, ht, hrt⟩ := selfPaying_base_pow hb2 D hDsp
+    rw [Finset.mem_biUnion]
+    have ht1 : 1 ≤ t := by omega
+    have hrb : r ≤ b := by rw [← hrt]; exact Nat.le_self_pow (by omega) r
+    have htL : t ≤ L := by
+      apply Nat.le_log_of_pow_le (by norm_num)
+      calc 2 ^ t ≤ r ^ t := Nat.pow_le_pow_left hr t
+        _ = b := hrt
+        _ ≤ X := hbX
+    refine ⟨t, Finset.mem_Icc.2 ⟨by omega, htL⟩, Finset.mem_image.2 ⟨r, ?_, hrt⟩⟩
+    simp only [T, Finset.mem_filter, Finset.mem_Icc]
+    exact ⟨⟨hr, by omega⟩, by omega⟩
+  have hcard : (S.card : ℝ) ≤ ∑ t ∈ Finset.Icc (c + 1) L, (X : ℝ) ^ (1 / (t : ℝ)) := by
+    calc (S.card : ℝ) ≤ (((Finset.Icc (c + 1) L).biUnion fun t => (T t).image (· ^ t)).card : ℝ) :=
+          by exact_mod_cast Finset.card_le_card hsub
+      _ ≤ ∑ t ∈ Finset.Icc (c + 1) L, (((T t).image (· ^ t)).card : ℝ) := by
+          exact_mod_cast Finset.card_biUnion_le
+      _ ≤ ∑ t ∈ Finset.Icc (c + 1) L, ((T t).card : ℝ) := by
+          apply Finset.sum_le_sum; intro t _; exact_mod_cast Finset.card_image_le
+      _ ≤ _ := by
+          apply Finset.sum_le_sum; intro t ht
+          exact card_pow_le X t (by rw [Finset.mem_Icc] at ht; omega)
+  refine hcard.trans ?_
+  rcases Nat.lt_or_ge L (c + 1) with hL | hL
+  · rw [Finset.Icc_eq_empty (by omega), Finset.sum_empty]; positivity
+  · have hX1 : (1 : ℝ) ≤ X := by
+      have : 1 ≤ X := by
+        by_contra h
+        have : X = 0 := by omega
+        simp [L, this] at hL
+      exact_mod_cast this
+    have hsplit : Finset.Icc (c + 1) L = insert (c + 1) (Finset.Icc (c + 2) L) := by
+      ext t; simp only [Finset.mem_Icc, Finset.mem_insert]; omega
+    rw [hsplit, Finset.sum_insert (by simp)]
+    push_cast
+    have h1 : ∑ t ∈ Finset.Icc (c + 2) L, (X : ℝ) ^ (1 / (t : ℝ)) ≤
+        ∑ _t ∈ Finset.Icc (c + 2) L, (X : ℝ) ^ (1 / ((c : ℝ) + 2)) := by
+      apply Finset.sum_le_sum
+      intro t ht
+      rw [Finset.mem_Icc] at ht
+      apply Real.rpow_le_rpow_of_exponent_le hX1
+      have : (c : ℝ) + 2 ≤ t := by exact_mod_cast ht.1
+      exact one_div_le_one_div_of_le (by positivity) this
+    have h2 : ∑ _t ∈ Finset.Icc (c + 2) L, (X : ℝ) ^ (1 / ((c : ℝ) + 2)) ≤
+        (X : ℝ) ^ (1 / ((c : ℝ) + 2)) * L := by
+      rw [Finset.sum_const, Nat.card_Icc, nsmul_eq_mul, mul_comm]
+      apply mul_le_mul_of_nonneg_left _ (by positivity)
+      exact_mod_cast (by omega : L + 1 - (c + 2) ≤ L)
+    linarith
+
 end Munchausen

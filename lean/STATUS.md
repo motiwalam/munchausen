@@ -19,9 +19,9 @@ Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
 Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
 (OtherSystems), Search, Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 86 formalized (one of them a
-list of computed solutions checked by `decide`), 10 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 77 not formalized and 2 not
+Counts of table rows at the time of writing: 88 formalized (one of them a
+list of computed solutions checked by `decide`), 9 partial, 10 rows of open
+problems (13 `Prop`s), 4 refuted conjectures, 76 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -93,7 +93,7 @@ stated.
 |---|---|---|
 | Conjecture 9.1 | none | not formalized (statement about the probabilistic model) |
 | Theorem 9.2 (base `n^(n-1)`) | `theorem9_2` [Cons] | formalized |
-| Proposition 9.3 (corrected bound `X^(1/(c+1)) + X^(1/(c+2)) log2 X`) | `selfPaying_base_pow`, `card_selfPaying_le` [SPD] | partial: a base with `C` self-paying digits is `r^t` with `t ≥ C + 1`; the count of such `r^t ≤ X` with real roots is not formalized |
+| Proposition 9.3 (corrected bound `X^(1/(c+1)) + X^(1/(c+2)) log2 X`) | `prop9_3`, `selfPaying_base_pow`, `card_pow_le` [SPD] | formalized |
 | Conjecture 9.4 | `Conjecture_9_4`, `not_conjecture_9_4` [Conj] | refuted (as stated, by Corollary 22.7) |
 | Theorem 10.1 | none | not formalized (theorem inside the probabilistic model) |
 | Proposition 10.2 (only `b-1` is invariant) | `residue_invariant_iff` [Cong] | formalized |
@@ -303,7 +303,7 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Lemma 26.1 (the swap lemma) | `swap_lemma_perm`, `swap_lemma`, `swap_last_two` [Search] | formalized |
-| Corollary 26.2 (the class of the moved offset) | none | not formalized (parity of repunits; elementary) |
+| Corollary 26.2 (the class of the moved offset) | `corollary26_2`, `corollary26_2_odd`, `repunit_identity` [Search] | formalized (general and odd bases; the even-base case is the same identity) |
 | Lemma 26.3 (the fibre) | none | not formalized (bookkeeping on near-solutions) |
 | Lemma 26.4 (other systems) | `swap_lemma`, `swap_last_two` [Search] | partial: base `-b` (the ring identity at `r = -b`); factorial, Pisot and `F_q[T]` not formalized |
 | Proposition 26.5, Heuristic 26.6, Proposition 26.9 | none | not formalized (statements about the probabilistic model, computed) |
@@ -366,8 +366,7 @@ In order of value and effort:
    Theorem 25.15.
 2. Theorem 20.12 (the 5-adic law) and the equality part of Theorem 20.11
    (`p`-adic power series).
-3. The real-root count in Proposition 9.3 and the asymptotics of
-   Theorem 11.2.
+3. The asymptotics of Theorem 11.2.
 4. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
    chapter 24.
-5. Corollary 26.2 and an abstract form of Theorem 27.5 (fooling sets).
+5. An abstract form of Theorem 27.5 (fooling sets).

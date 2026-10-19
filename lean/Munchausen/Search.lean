@@ -6,6 +6,7 @@ import Munchausen.Congruences
 * Lemma 26.1, the swap lemma: rearranging digits keeps `F` and moves the value by a multiple
   of `b - 1`; a transposition moves it by `(x - y)(b^j - b^i)` (also in base `-b`,
   Lemma 26.4);
+* Corollary 26.2: when a transposition keeps the offset class modulo `2(b-1)`;
 * Proposition 26.10: the image of `c ↦ S(c)` is the same under both conventions;
 * Proposition 27.8 and Corollary 27.9: which digit values fix the bottom digits of `S`.
 -/
@@ -39,6 +40,43 @@ theorem swap_last_two {R : Type*} [CommRing R] (r : R) (A : List ℕ) (x y : ℕ
     P r (A ++ [x, y]) - P r (A ++ [y, x]) = ((x : R) - y) * (r - 1) := by
   have := swap_lemma r A [] [] x y
   simpa using this
+
+/-! ### Corollary 26.2: the class of the moved offset -/
+
+/-- The repunit `R_s = 1 + b + ... + b^(s-1)` and `b^(i+s) - b^i = b^i (b - 1) R_s`
+(Lemma 26.1). -/
+lemma repunit_identity (b : ℤ) (i s : ℕ) :
+    b ^ (i + s) - b ^ i = b ^ i * (b - 1) * ∑ k ∈ Finset.range s, b ^ k := by
+  rw [mul_assoc, mul_comm (b - 1), geom_sum_mul, pow_add]; ring
+
+/-- **Corollary 26.2** (section 26.1.2). A transposition that moves `D` by
+`(x - y)(b^(i+s) - b^i)` keeps `D` in its class modulo `2(b-1)` exactly when
+`(x - y) b^i R_s` is even. -/
+theorem corollary26_2 {b : ℤ} (hb : 2 ≤ b) (x y : ℤ) (i s : ℕ) :
+    2 * (b - 1) ∣ (x - y) * (b ^ (i + s) - b ^ i) ↔
+      2 ∣ (x - y) * b ^ i * ∑ k ∈ Finset.range s, b ^ k := by
+  rw [repunit_identity]
+  have e : (x - y) * (b ^ i * (b - 1) * ∑ k ∈ Finset.range s, b ^ k) =
+      ((x - y) * b ^ i * ∑ k ∈ Finset.range s, b ^ k) * (b - 1) := by ring
+  rw [e]
+  exact mul_dvd_mul_iff_right (by omega)
+
+/-- In an odd base, `R_s ≡ s (mod 2)`. -/
+lemma repunit_mod_two {b : ℤ} (hb : Odd b) (s : ℕ) :
+    (∑ k ∈ Finset.range s, b ^ k) % 2 = (s : ℤ) % 2 := by
+  induction s with
+  | zero => simp
+  | succ s ih =>
+    rw [Finset.sum_range_succ, Int.add_emod, ih]
+    have : b ^ s % 2 = 1 := Int.odd_iff.1 (hb.pow)
+    rw [this]; push_cast; omega
+
+/-- **Corollary 26.2**, odd bases: the class is kept exactly when `(x - y)(j - i)` is even. -/
+theorem corollary26_2_odd {b : ℤ} (hb : 2 ≤ b) (hodd : Odd b) (x y : ℤ) (i s : ℕ) :
+    2 * (b - 1) ∣ (x - y) * (b ^ (i + s) - b ^ i) ↔ 2 ∣ (x - y) * s := by
+  rw [corollary26_2 hb, Int.dvd_iff_emod_eq_zero, Int.dvd_iff_emod_eq_zero, Int.mul_emod,
+    Int.mul_emod (x - y), repunit_mod_two hodd, Int.odd_iff.1 hodd.pow, mul_one,
+    Int.emod_emod_of_dvd _ (dvd_refl 2), ← Int.mul_emod]
 
 /-! ### Proposition 26.10: the image of `F` -/
 
