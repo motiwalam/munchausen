@@ -368,6 +368,17 @@ only keep the identity. This is the better calibration of the count at
 $D = 0$, and against it the solutions of bases $-10$ to $-27$ number 42
 against 52. Why the last digit matters here is open (@sec-open-list).
 
+#remark(id: "worlds-nega-recheck", title: "The verdicts with clustered near-solutions", src: ("23.2", "26.4"))[
+  Near-solutions at different offsets are not independent: rearranging the
+  digits of a number keeps $F$ and moves $n - F(n)$ by a multiple of
+  $b + 1$, so one coincidence can be counted at several offsets
+  (@ch-model). Recomputed with this clustering, the P values of this
+  section become 0.11 for the 42 solutions against 52 (it was 0.09) and
+  0.056 for the multiples of 3 against their offsets (it was 0.044). The
+  lower near-solution rate at offsets that keep the last digit drops from
+  about 4 to about 2.9 standard deviations. The verdicts do not change.
+]
+
 == Imaginary, Gaussian and Eisenstein bases <sec-worlds-complex>
 
 === Imaginary bases reduce to negative bases
@@ -676,16 +687,61 @@ $x$, so @worlds-free-factor predicts doubling there.
 
   Summed over $x = 2$ to 12 under $0^0 = 0$: the six even $x$ have 31
   solutions (7 twin pairs) against 17.0 in the refined model and 8.0 in the
-  basic one; the five odd $x$ have 9 against 5.4. Near-solutions per base
-  and offset are 2.65 for even $x$ and 1.43 for odd $x$.
+  basic one; the five odd $x$ have 9 against 5.4. Near-solutions at the
+  offsets $j x$, $j = 1, dots, 30$, number 2.65 per base and offset for
+  even $x$ and 1.43 for odd $x$.
 ]
 
 For the golden ratio ($x = 1$), the first entry reads
 $2 = epsilon + epsilon^(-2) = w(1) + w(1)$. The pairs $(N, N + 1)$ in the
-table are the twins of @worlds-pisot-identity. The doubling is plain in the
-near-solutions, and the even-$x$ solutions exceed the model mostly through
-their twins. So the first non-integer base of the library follows both
-universal laws.
+table are the twins of @worlds-pisot-identity. The doubling for even $x$ is
+plain in the near-solutions. The solutions of even $x$ exceed even the
+doubled model, and the twins do not explain this: near-solutions come in
+twin pairs at least as often as solutions do.
+
+The calibration explains part of the excess. For even $x$ under
+$0^0 = 0$ the offsets $j x$ are not all in the class of 0: offsets with even
+$j$ carry 1.4 to 2.4 times as many near-solutions as offsets with odd $j$,
+much as the class of 0 is taken modulo $2(b - 1)$ in odd integer bases. So
+for even $x$ the class of 0 is, at least in part, the class modulo $2x$, and
+the library's offsets $j x$ mixed two classes.
+
+#proposition(id: "worlds-pisot-mod2x", title: "A congruence modulo $2x$", src: "26.6")[
+  For even $x$, every positive integer $N$ with digits $d_i$ in base
+  $epsilon_x$ satisfies
+  $ (N - sum_i d_i) / x equiv A_2 + A_3 med (mod 2), $
+  where $A_r$ is the sum of the digits at the positions $i equiv r med (mod 4)$.
+]
+
+The proof expands $epsilon^2 = 1 + x epsilon$ and uses
+$epsilon^4 equiv 1$ modulo $2x$. The congruence depends on the arrangement
+of the digits, not only on their multiset, so it does not by itself give the
+factor between the two classes. Its cause is open.
+
+#computation(id: "worlds-pisot-recalibrated", title: [The Pisot excess, recalibrated], src: ("21.4", "26.6"))[
+  For $x = 2$ to 8 under $0^0 = 0$, the 25 solutions of even $x$ against the
+  near-solutions per offset in the class of 0 modulo $2x$:
+
+  #align(center, btable(
+    columns: 3,
+    align: (left, right, right),
+    [calibration], [mean per offset], [clustered P value],
+    [all offsets $j x > 0$], [10.60], [0.0016],
+    [even $j$ only], [12.53], [0.0095],
+    [local: $D = plus.minus 2 j x$, $j = 1, 2, 3$], [14.83], [0.049],
+    [far: $D = plus.minus 2 j x$, $j = 11, dots, 20$], [9.70], [],
+  ))
+
+  The defect spectrum peaks near $D = 0$ at the short lengths that hold most
+  solutions, so far offsets miss the peak. Under $0^0 = 1$ and for odd $x$
+  the excesses that remain (11 against 6.8 and 7 against 2.2 with the local
+  calibration, $P = 0.14$ and $0.03$) rest on the tiny solutions of
+  $x <= 5$.
+]
+
+So the Pisot bases follow the parity law, and with the right class and a
+local calibration their excess is a 5% event. The class factor modulo $2x$
+is a new structure without an explanation (@sec-open-list).
 
 == Other weights <sec-worlds-weights>
 
@@ -825,9 +881,12 @@ digits) number 3 under $w(0) = 0$ and 4 under $w(0) = 1$, against about
   keeps all residues up to $b + 1$ and the last three digits. By
   @thm-only-residue the only residue that the digit multiset fixes is
   $n mod (b - 1)$, and the offsets rule out the low digits and the forced
-  top digits. With the look-elsewhere effect of about 16 groups examined and
-  the fresh bases combined, the shortfall has $P approx 0.05$. The library
-  counts it as an unexplained fluctuation.
+  top digits. Per offset family and convention the shortfall has
+  $P = 0.006$ to 0.025, counted with the clustering of near-solutions
+  (@ch-model). After the choice among about 16 groups it has $P approx 0.13$,
+  and with the fresh bases combined $P approx 0.09$; an earlier, naive
+  calibration gave about 0.05. The library counts it as an unexplained
+  fluctuation.
 ]
 
 == Function fields, and why the model misses there <sec-worlds-ffield>
@@ -1068,8 +1127,15 @@ That check was not independent.
 In the integers nothing like this happens. Adding $j(b - 1)$ changes the
 two lowest digits by $-j$ and $+j$, and it changes $F$ by
 $w(d_0 - j) - w(d_0) + w(d_1 + j) - w(d_1) != 0$, because $x^x$ is not
-additive. So an integer near-solution is a different multiset, a genuine
-second draw (@sec-model-defects). In $FF_q [T]$, offsets that randomize
+additive. So a small offset does not carry a solution to a near-solution
+one for one. Integer near-solutions do cluster in a weaker way: a
+rearrangement of the digits keeps $F$ and moves $n - F(n)$ by a multiple of
+$b - 1$, and about two thirds of the near-solutions in bases 12 to 26 share
+their multiset with a near-solution at another offset (@ch-model). That
+inflates the variance of the offset means by a factor 1.5 to 3.5 but not the
+means themselves: offsets with no transposition between them give the same
+mean within 4%. In $FF_q [T]$, by contrast, the mean itself was the census.
+Offsets that randomize
 more and more low digits bring the near-solution count down to the model:
 for $q = 5$, $e = 3$ it falls from the census value 34.4 per base to 20.1
 when 13 low digits can change, against the model's 26.2.
@@ -1297,3 +1363,38 @@ system, where large digits are tied to the top positions, and in $FF_q [T]$,
 where additive weights build the sum from a few blocks. In the integers the
 only structure of this kind is the forced top digits, a correction of a few
 percent.
+
+A pooled test puts the worlds side by side. Compare, in each world, the
+number of solutions with the mean count of near-solutions at offsets in the
+class of 0, which measures the real rate of the coincidence without the
+model.
+
+#computation(id: "worlds-pooled", title: "A pooled test of the worlds", src: "26.5")[
+  Over eight worlds (integer bases 12 to 32, factorions in odd and in even
+  bases, negative bases $-10$ to $-27$, rational bases, Pisot bases,
+  Eisenstein bases and 2-cycles), 284 solutions stand against 297 to 304
+  expected from the near-solutions. The worlds disagree more than chance
+  allows: the heterogeneity statistic is 17.2 on 7 degrees of freedom
+  ($P = 0.016$) with the Pisot offsets in the class modulo $2x$, and 23.3
+  ($P = 0.002$) with the original offsets. Two worlds drive it, the odd-base
+  factorions (ratio 0.33) and the Pisot bases. Without these two, the other
+  six fit one common ratio, 0.91, with $P = 0.60$ for heterogeneity.
+]
+
+So outside the two named worlds nothing suggests that the exact equation
+$n = F(n)$ differs from its near misses. Both exceptions were chosen after
+looking at the data: the factorion shortfall among about 16 groups, the
+Pisot excess as the largest positive deviation.
+
+A last test asked whether one statistic could predict where the model
+fails. In every world, compare the low digits of $F(c)$, below its top three,
+with the digits that $c$ still needs, and divide by the same agreement for
+random low digits. The ratio is within 1.6% of 1 in the integers, base
+$-20$, the factorions and the factorial system, within 3.7% in the Pisot
+base $epsilon_6$, and 2.2% to 3.4% above 1 per digit value in $FF_5 [T]$
+(#lib("26.8"), computed). It does not track the model's error. It is near 1
+in the factorial system, where the model fails completely, because that
+failure sits in the top digits, and it has the same sign in $FF_q [T]$ under
+both conventions, where the model's error changes sign. The failures of the
+model live in the top digits or in a single channel such as the zero count,
+and an average over the low digits dilutes them.

@@ -39,8 +39,14 @@ keeping in mind when judging which problems are realistic.
     [Excess of $(b-1)$-digit solutions], st("heuristic"), [resolved: chance; the totals fit], [@sec-model-anomalies],
     [Empty bases $equiv 3 med (mod 8)$], st("computed"), [resolved: base 43 has a solution], [@sec-model-anomalies],
     [Excess of 5-digit solutions in bases 13 to 99], st("heuristic"), [unexplained fluctuation, $P approx 0.015$], [@sec-short-heuristic],
-    [Factorion shortfall in odd bases], st("heuristic"), [unexplained fluctuation, $P approx 0.05$], [@sec-worlds-weights],
+    [Factorion shortfall in odd bases], st("heuristic"), [unexplained fluctuation; $P approx 0.13$ after the choice among 16 groups], [@sec-worlds-weights],
+    [Excess of solutions in Pisot bases], st("heuristic"), [mostly calibration: a class modulo $2x$; $P approx 0.05$ after recalibration], [@open-pisot-class],
+    [Are near-solutions at different offsets independent?], st("proven"), [no: rearrangements link them; means stay unbiased, variances grow 1.5 to 3.5 times], [@sec-model-defects],
+    [Do all worlds share one rate of solutions to near-solutions?], st("computed"), [six of eight do (ratio 0.91); odd-base factorions and Pisot bases differ], [@sec-worlds-universal],
     [A search faster than $1.9^b$], st("heuristic"), [exact: open; with a 1 to 3% miss rate about $1.75^b$; tree searches need $1.638^b$ in the model], [@sec-search-entropy],
+    [Can another order of the tree beat $1.638^b$?], st("proven"), [no: every order, fixed or adaptive, in the model], [@open-fast-search],
+    [Certificates of emptiness], st("proven"), [in an interval oracle model, at least the widest level of the exact tree, up to a small factor], [@open-certificates],
+    [Constraint solvers], st("computed"), [exact but grow 1.95 to 2.3 per base, worse than the tree], [@open-fast-search],
     [Polynomial-time search], st("open"), [as hard to settle as P versus NP], [@sec-search-complexity],
     [Arbitrary weights], st("proven"), [NP-complete, counting \#P-complete], [@thm-gen-npc],
     [Galois groups of $Q_s$], st("proven"), [$S_(k-1)$ generically; classified for $k = 4, 5$], [@sec-short-galois],
@@ -132,7 +138,10 @@ every small defect in one base. The chain-and-cycle construction of power
 identities (#lib("15.5")) gives at most 2 solutions in every base $r^t$
 with $r <= 40$ not a perfect power and $t <= 300$, the range searched. The model says that the count is a Poisson
 variable with mean about 1, which has no bound, but a large count would be
-a chance event in a single base.
+a chance event in a single base. A chain whose top lands within the number
+of available self-paying digits of the zero count it needs would give three
+or more solutions; bases $r^t$ with $r$ in ${2, 3, 5, 6}$ and $t$ up to
+$10^4$ with many divisors are the natural place to look (#q(88)).
 
 #problem(id: "open-three-bases", title: [Three bases], src: ("15.6", "18.3"))[
   Is there an integer that is a solution under $0^0 = 1$ in three
@@ -209,7 +218,23 @@ not support the original conjecture that none exists, and a search with
 This is the only gap in the refined version of @thm-poisson, and it is the
 factor 1 for odd primes in @sec-model-refined. The 3-adic and 5-adic laws of
 @sec-short-coverings show where uniformity can fail: modulo $3^e$ and $5^e$
-the values of $x^x - x$ are thin.
+the values of $x^x - x$ are thin. The hard case is a prime $p = b - 1$, where
+the digits see each residue of $x$ once, and the statement needed is a bound
+for the exponential sums $sum_(x < p) e(h x^x slash p)$ (#q(80)). A
+computation over every odd prime power dividing $b - 1$ for $b <= 20,000$
+finds the relevant minimum at least 0.23, so in the Poisson model the
+residue law is very close to uniform in that range.
+
+#problem(id: "open-length-shares", title: [The length shares as a theorem], src: ("5.2", "13.2"))[
+  Prove that in the basic model the expected number of solutions with
+  $b - j$ digits tends to the shares of @heur-length-law (8.0%, 55.2%,
+  23.2%, ...) as $b$ grows. (#q(81))
+]
+
+The statement is about random strings only. A natural route couples the
+digit counts with independent Poisson variables and shows that the length
+of the sum depends, up to probability $o(1)$, only on the counts of the
+digits above $b - C ln b$.
 
 #problem(id: "open-length-tail", title: [The length tail], src: "10.5")[
   Does the tail of the length law beyond $J = ln b + 1$, which supports
@@ -224,21 +249,56 @@ the values of $x^x - x$ are thin.
   + Factorions: what could separate $D = 0$ from every small offset that
     keeps all residues up to $b + 1$ and modulo $b^3$? (#q(67))
   + Why is base 19 low in its near-solutions under $0^0 = 0$, not only in
-    its solutions? (#q(68))
+    its solutions? (#q(68)) With clustered near-solutions it is 2.9
+    standard errors below the model with forced top digits, one case of 42,
+    so this is no longer a separate anomaly.
   + Why is the model about 12% low under $0^0 = 1$ in both parities of the
-    base? (#q(70))
+    base? (#q(70)) The excess survives the corrected variance at 3.0
+    standard deviations.
   + Do the long solutions under $0^0 = 0$ really have fewer zero digits than
     the model, 29 against 42.5 in bases 12 to 41? (#q(71))
-  + In negative bases, offsets that keep the last digit give 10 to 25%
-    fewer near-solutions. Which digits of $F mod b$ cause this?
+  + In negative bases, offsets that keep the last digit give 6% to 23%
+    fewer near-solutions, about 2.9 standard deviations with clustering.
+    Which digits of $F mod b$ cause this?
+  + Narcissistic numbers with $d >= 6$ exceed the refined model by 18% in
+    even bases, mostly bases 8 and 10. Do bases 16, 18 and 20 show the
+    same? (#q(87))
 ]
 
-Most of these are deviations of one to three standard deviations; base 19
-is about 4.5 standard errors low (0.67 times the model). There is also a
-residual scatter of about 20% between bases. The forced top digits explain
-a third to a half of the scatter (#lib("23.5")). A model that also fixes the
+Each of these is a deviation of one to three standard deviations. The
+per-base scatter of about 20% that the library first reported is half an
+artefact: near-solutions at different offsets share multisets, and the
+sample variance of the offset means overstated their precision
+(#lib("26.4")). With the corrected variance and the top three or four digits
+of the sum forced, the scatter is noise under $0^0 = 0$ ($P = 0.09$ to 0.14)
+and marginal under $0^0 = 1$ ($P = 0.03$). A model that also fixes the
 bottom digits and adds local factors for short lengths is the natural next
 step.
+
+#problem(id: "open-near-solutions", title: [Near-solutions as a calibration], src: "26.1")[
+  Find a closed form of the design effect, the factor by which clusters of
+  rearranged near-solutions inflate the variance of an offset mean, for
+  factorions, negative bases and Pisot bases. Rerun the rational and
+  Eisenstein offsets with the strings kept, so that their design effect is
+  measured rather than assumed.
+]
+
+For integer bases a heuristic based on swaps of the bottom four or five
+digits predicts the design effect within a few percent (#lib("26.1")).
+Offsets with no transposition between them, or with steps divisible by many
+small numbers, avoid the clusters and keep the mean.
+
+#problem(id: "open-pisot-class", title: [The class modulo $2x$ in Pisot bases], src: "26.6")[
+  In the Pisot bases $epsilon_x$ with even $x$, under $0^0 = 0$, offsets
+  $j x$ with even $j$ carry 1.4 to 2.4 times as many near-solutions as
+  offsets with odd $j$. Which identity causes this? (#q(74))
+]
+
+The congruence of @worlds-pisot-mod2x ties the parity of $(N - sum d_i) slash x$
+to the arrangement of the digits, not to their multiset, so it does not
+give the factor by itself. With the offsets in the class modulo $2x$ and a
+local calibration, the Pisot excess has $P approx 0.05$
+(@sec-worlds-pisot).
 
 #problem(id: "open-cycles", title: [Cycles of $n |-> F(n)$], src: ("15.1", "23.3"))[
   The full census of cycles stops at base 17; base 18 was searched only for
@@ -247,9 +307,16 @@ step.
   count under both conventions, more common than the model's share?
 ]
 
+The image of the map is far from that of a random mapping: 14% to 21% of
+the multisets of bases 10 to 16 are hit, against 31% to 38% for the
+weighted random mapping. Exact coincidences between sums and the forced top
+digits explain most of the gap (#lib("26.7"), computed). A model of the
+image that forces the top digits and counts the coincidences exactly is
+open.
+
 === Search and complexity
 
-#problem(id: "open-fast-search", title: [A fast exact search], src: ("6.4", "8.1", "10.4"))[
+#problem(id: "open-fast-search", title: [A fast exact search], src: ("6.4", "8.1", "10.4", "27.2"))[
   Is there an exact search whose cost grows more slowly than about
   $1.9^b$? Is there one with polynomial cost?
 ]
@@ -262,6 +329,32 @@ current methods. Within the model, every tree search that walks the digits
 from the top needs about $1.638^b$ nodes (@thm-entropy-bound), and a quantum
 search could reach about $1.41^b$. A large classical gain needs a new source
 of information about the low digits of $n$.
+
+Several routes are now closed (#lib("27"), #lib("28")):
+- the entropy bound holds for every order of revealing digit counts, fixed
+  or chosen node by node, so the top-down order is optimal among trees
+  (Theorem 27.2, proven in the model); bottom-up and random orders peak
+  near $3.6^b$;
+- in bases $2^k$ the bottom digits of the sum are fixed only once the
+  counts of all odd digits are known, so a check of bottom digits prunes
+  nothing in a top-down tree, and orders that reveal the odd counts early
+  lose (Proposition 27.8, Corollary 27.9);
+- the constraint solvers CP-SAT and CaDiCaL are exact but grow 1.95 to 2.3
+  per base, as fast as the tree or faster, at $10^4$ to $10^5$ times its
+  cost (computed, bases 8 to 20);
+- the inexact search gains a constant factor: a corrected law for the
+  z-score rule visits 1.1 to 1.3 times fewer nodes at the same miss rate,
+  and a GPU runs it 2.6 to 2.9 times faster than 8 CPU threads.
+
+#problem(id: "open-certificates", title: [Certificates of emptiness], src: "27.3")[
+  In an oracle model where a query reveals the interval of the sum for a
+  partial assignment of digit counts, every certificate that a base has no
+  solution needs at least $N_k$ queries for every level $k$, a number at
+  least 0.86 times the widest level of the exact tree in bases 5 to 21
+  (Theorem 27.5, proven). Prove that this share stays bounded below as $b$
+  grows, which would give a lower bound $2^(b - O(log b))$ in this model.
+  What can an oracle that also reveals low digits do?
+]
 
 #problem(id: "open-hardness-long", title: [Hardness with long solutions], src: "13.1")[
   Is the problem with arbitrary weights still NP-complete on weight tables
@@ -375,7 +468,10 @@ Only 1, 4, 5 under $0^0 = 0$ and 1, 2, 5 under $0^0 = 1$ exist below
 $34!$. No length bound and no residue are available, and the windows model
 fails there (@sec-worlds-factorial). A model that fixes the top digits from
 the large counts, as the search tree does, and a search past $34!$ with
-wider integers are the next steps.
+wider integers are the next steps. A concrete version (#q(84)): for which
+lengths $L$ up to 100 can the few possible top digits of the sum place the
+largest digit in a top position, and what does a model that counts only
+these open lengths predict beyond $34!$?
 
 #problem(id: "open-ffield", title: [A formula for $FF_q [T]$], src: ("21.1", "24.5"))[
   Find a formula, or a good heuristic, for the average number of solutions
@@ -383,8 +479,13 @@ wider integers are the next steps.
   always? Which values of the leading coefficient pass the test of
   @worlds-ff-short for $e = 3$ and $q equiv 2 med (mod 3)$? Prove that
   $T^q$ has no zero digit in a non-square base of degree 2 with two roots of
-  $B - 1$.
+  $B - 1$. (#q(82), #q(83))
 ]
+
+A model that keeps the Frobenius blocks exactly and treats only the
+remaining values as random would be the $FF_q [T]$ form of the forced top
+digits in the integers, and would show whether "keep the forced digits,
+randomize the rest" suffices where the forcing is strong.
 
 #problem(id: "open-gauss-lengths", title: [Length runs in Gaussian bases], src: ("14.5", "23.4"))[
   Prove the runs of lengths of positive integers in base $-n + i$ for
@@ -399,8 +500,12 @@ power of $beta$ is real.
   at 27 and 28 digits and of $-4 + omega$, and of the rational bases
   $11 slash 8$, $11 slash 10$ and $p >= 12$. Each needs a better pruning
   rule: in Gaussian and Eisenstein bases the numbers with fixed top digits
-  form a fractal tile, not an interval.
+  form a fractal tile, not an interval. (#q(89))
 ]
+
+For base $-4 + i$ a disk around each tile could serve as the prefix test.
+The model puts 83% of its expectation at 34 digits, so such a test would
+complete the Gaussian census one base further.
 
 #problem(id: "open-gauss-excess", title: [Base $-3 + i$], src: "14.5")[
   Base $-3 + i$ has four solutions under $0^0 = 1$ against 1.11 expected,
