@@ -1,0 +1,40 @@
+pairs (b, q): 45534  bases: 19984
+b >= 3: min c_pois 0.2143 at (b, q) = (7, 3) h 1;  min c_mult 0.2046 at (7, 3)
+b >= 10: min c_pois 0.2308 at (b, q) = (13, 3) h 1;  min c_mult 0.2193 at (13, 3)
+b >= 20: min c_pois 0.2400 at (b, q) = (25, 3) h 1;  min c_mult 0.2275 at (25, 3)
+b >= 100: min c_pois 0.2476 at (b, q) = (103, 3) h 1;  min c_mult 0.2341 at (103, 3)
+
+group | pairs | min c_pois | at (b, q, h) | min c_mult
+q = 3^k | 9994 | 0.2308 | 13, 3, 1 | 0.2193
+q = 5^k | 4994 | 0.4762 | 21, 5, 1 | 0.4684
+q = 7^k | 3331 | 0.4270 | 29, 7, 3 | 0.4259
+p >= 11 | 27211 | 0.4477 | 27, 13, 2 | 0.4452
+q = p prime >= 101 | 14082 | 0.7574 | 104, 103, 10 | 0.7177
+q = p^k, k >= 2 | 5409 | 0.2368 | 19, 9, 3 | 0.2247
+
+worst primes p >= 101:
+  b 104 p 103 c_pois 0.7574 h 10 c_mult 0.7356 (b-1 prime)
+  b 102 p 101 c_pois 0.7776 h 9 c_mult 0.7304 (b-1 prime)
+  b 158 p 157 c_pois 0.7779 h 91 c_mult 0.7779 (b-1 prime)
+  b 194 p 193 c_pois 0.8005 h 134 c_mult 0.7874 (b-1 prime)
+  b 108 p 107 c_pois 0.8050 h 70 c_mult 0.7851 (b-1 prime)
+  b 138 p 137 c_pois 0.8052 h 10 c_mult 0.8022 (b-1 prime)
+  b 110 p 109 c_pois 0.8080 h 2 c_mult 0.7743 (b-1 prime)
+  b 168 p 167 c_pois 0.8148 h 52 c_mult 0.7944 (b-1 prime)
+
+primes p >= 101 by size of p: count, min, mean of c_pois
+  3-digit p: 7834, min 0.7574, mean 0.9492;  b-1 = p: 143, min 0.7574, mean 0.8893
+  4-digit p: 5215, min 0.9072, mean 0.9709;  b-1 = p: 1061, min 0.9072, mean 0.9602
+  5-digit p: 1033, min 0.9669, mean 0.9772;  b-1 = p: 1033, min 0.9669, mean 0.9772
+
+b - 1 = p prime: max over h of |sum_{x<b} e(h f(x)/p)| / sqrt(p ln p)
+  p >= 1000: 2094 primes, min 0.837, mean 1.000, max 1.405
+  p >= 10000: 1033 primes, min 0.856, mean 0.997, max 1.405
+
+ratio p/b and c_pois, primes p >= 1000:
+  p/(b-1) in [0.0, 0.1): 473, min 0.9646, mean 0.9766
+  p/(b-1) in [0.1, 0.2): 1046, min 0.9576, mean 0.9754
+  p/(b-1) in [0.2, 0.3): 883, min 0.9472, mean 0.9739
+  p/(b-1) in [0.3, 0.4): 691, min 0.9338, mean 0.9726
+  p/(b-1) in [0.5, 0.6): 1061, min 0.9212, mean 0.9711
+  p/(b-1) in [0.9, 1.0): 2094, min 0.9072, mean 0.9686
