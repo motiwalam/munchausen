@@ -17,12 +17,12 @@ per class.
         max_a |q share(a) - 1| and the factor q share(F(c)), by the type of
         q in base b (coprime to b(b-1), dividing b - 1, other).
     python3 r6h_arrange.py rho [N]      > data/r6h_arrange_rho.txt
-        Proposition 1.3: the mean of N_s(q) (roots of Q_s mod q) over the
+        Proposition 35.3: the mean of N_s(q) (roots of Q_s mod q) over the
         arrangements of c equals the sum over r mod q of share_r(F(c)), and
         its split into r == 1, r == 0 mod p, and the rest.
     python3 r6h_arrange.py resid        > data/r6h_arrange_resid.txt
         the residue factor of the refined model at q | b - 1 for short
-        strings: q P(sum g(x) == 0 mod q), k uniform digits (Table 1.4.1).
+        strings: q P(sum g(x) == 0 mod q), k uniform digits (section 35.1.4).
 """
 import math
 import random
@@ -158,7 +158,7 @@ def roots_mod(digs, F, q):
 
 
 def rho(N):
-    """Proposition 1.3 on random multisets: the mean of N_s(q) over the
+    """Proposition 35.3 on random multisets: the mean of N_s(q) over the
     arrangements equals the sum over r mod q of share_r(F(c)). Checked by
     brute force for k <= 6; split by the type of r for k = 3..12."""
     from itertools import permutations

@@ -19,7 +19,7 @@ The averaged bound is
 the window of the large part being one base wider for each leading digit.
 
 Prints, for B = 10^E, both bounds as powers of B and the largest K below B,
-and the share of multisets of K digits with no digit <= z (Proposition 4.2).
+and the share of multisets of K digits with no digit <= z (Proposition 35.9).
 
     python3 r6h_average.py > data/r6h_average.txt
 """
