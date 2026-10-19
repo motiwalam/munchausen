@@ -9,6 +9,7 @@ import Munchausen.Congruences
 * swaps, section 2.3;
 * the complete description of 2-digit solutions, Proposition 2.6, and its four families;
 * solutions of every length under `0^0 = 0`, Proposition 2.7;
+* Corollary 2.4, Proposition 4.2 and Theorem 9.2 (many solutions in one base);
 * the converse of Proposition 2.2, Proposition 8.5 and its corollary in section 8.3;
 * splits and blocks (Lemmas 22.1, 22.3, 22.4, 22.9), Theorem 22.6 and Corollary 22.7.
 -/
@@ -741,5 +742,312 @@ theorem zero_balance_solution {b : ℕ} {s : List ℕ} (hb : 2 ≤ b) (hs : IsSo
       have := Nat.pow_right_injective hb this
       omega
     · have := hy.position_gt hx hxy; omega
+
+/-! ### Many solutions in one base: Corollary 2.4, Proposition 4.2, Theorem 9.2 -/
+
+/-- Under `0^0 = 0`, leading zeros do not change the weight sum: `F(ofDigits l) = F(l)` for a
+little-endian list `l` of digits below `b`, even if it ends in zeros. -/
+lemma F_ofDigits_zero {b : ℕ} (hb : 1 < b) (l : List ℕ) (hl : ∀ d ∈ l, d < b) :
+    F b 0 (Nat.ofDigits b l) = Fs 0 l := by
+  induction l with
+  | nil => simp [F, Nat.ofDigits]
+  | cons d t ih =>
+    have ih' := ih (fun x hx => hl x (by simp [hx]))
+    rw [Nat.ofDigits_cons]
+    by_cases h : d = 0 ∧ Nat.ofDigits b t = 0
+    · obtain ⟨rfl, h2⟩ := h
+      rw [h2] at ih' ⊢
+      simp only [mul_zero, add_zero, Fs_cons, w_zero, zero_add]
+      exact ih'
+    · have hor : d ≠ 0 ∨ Nat.ofDigits b t ≠ 0 := by tauto
+      rw [F, Nat.digits_add b hb d _ (hl d (by simp)) hor, Fs_cons, Fs_cons, ← F, ih']
+
+/-- `ofDigits` of the digits `f 0, ..., f (L-1)` is `sum f i * b^i`. -/
+lemma ofDigits_map_range (b : ℕ) (f : ℕ → ℕ) (L : ℕ) :
+    Nat.ofDigits b ((List.range L).map f) = ∑ i ∈ Finset.range L, f i * b ^ i := by
+  induction L with
+  | zero => simp [Nat.ofDigits]
+  | succ L ih =>
+    rw [List.range_succ, List.map_append, ofDigits_append', ih, Finset.sum_range_succ]
+    simp
+    ring
+
+lemma Fs_map_range (m : ℕ) (f : ℕ → ℕ) (L : ℕ) :
+    Fs m ((List.range L).map f) = ∑ i ∈ Finset.range L, w m (f i) := by
+  induction L with
+  | zero => simp
+  | succ L ih =>
+    rw [List.range_succ, List.map_append, Fs_append, ih, Finset.sum_range_succ]
+    simp
+
+section Combine
+
+variable {ι : Type*} [DecidableEq ι]
+
+/-- The digit at position `k` of the number built from the self-paying digits `d i` at the
+positions `pos i`, `i ∈ S`. -/
+def spDigit (S : Finset ι) (d pos : ι → ℕ) (k : ℕ) : ℕ := ∑ i ∈ S with pos i = k, d i
+
+/-- The number `sum_{i ∈ S} d i * b^(pos i)` (proof of Corollary 2.4). -/
+def spNum (b : ℕ) (S : Finset ι) (d pos : ι → ℕ) : ℕ := ∑ i ∈ S, d i * b ^ pos i
+
+lemma spDigit_fiber {S : Finset ι} {pos : ι → ℕ} (hinj : Set.InjOn pos S) (k : ℕ) :
+    (S.filter fun i => pos i = k) = ∅ ∨ ∃ i ∈ S, pos i = k ∧ (S.filter fun i => pos i = k) = {i} := by
+  by_cases h : (S.filter fun i => pos i = k) = ∅
+  · exact Or.inl h
+  · right
+    obtain ⟨i, hi⟩ := Finset.nonempty_iff_ne_empty.2 h
+    rw [Finset.mem_filter] at hi
+    refine ⟨i, hi.1, hi.2, ?_⟩
+    ext j
+    simp only [Finset.mem_filter, Finset.mem_singleton]
+    constructor
+    · rintro ⟨hj, hjk⟩; exact hinj hj hi.1 (hjk.trans hi.2.symm)
+    · rintro rfl; exact hi
+
+lemma w_spDigit {S : Finset ι} {d pos : ι → ℕ} (hinj : Set.InjOn pos S) (k : ℕ) :
+    w 0 (spDigit S d pos k) = ∑ i ∈ S with pos i = k, w 0 (d i) := by
+  unfold spDigit
+  rcases spDigit_fiber hinj k with h | ⟨i, -, -, h⟩ <;> rw [h] <;> simp
+
+variable {b : ℕ} {I : Finset ι} {d pos : ι → ℕ}
+
+omit [DecidableEq ι] in
+lemma spNum_eq_ofDigits {S : Finset ι} (hS : S ⊆ I) :
+    spNum b S d pos = Nat.ofDigits b ((List.range (I.sup pos + 1)).map (spDigit S d pos)) := by
+  have hmaps : ∀ i ∈ S, pos i ∈ Finset.range (I.sup pos + 1) := fun i hi =>
+    Finset.mem_range.2 (Nat.lt_succ_of_le (Finset.le_sup (hS hi)))
+  rw [ofDigits_map_range, spNum]
+  simp only [spDigit, Finset.sum_mul]
+  rw [← Finset.sum_fiberwise_of_maps_to hmaps]
+  apply Finset.sum_congr rfl
+  intro k _
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [(Finset.mem_filter.1 hi).2]
+
+lemma spDigit_lt (hb : 2 ≤ b) (hinj : Set.InjOn pos I)
+    (hsp : ∀ i ∈ I, SelfPaying b (d i) (pos i)) {S : Finset ι} (hS : S ⊆ I) (k : ℕ) :
+    spDigit S d pos k < b := by
+  have hinjS : Set.InjOn pos S := hinj.mono (by simpa using hS)
+  unfold spDigit
+  rcases spDigit_fiber hinjS k with h | ⟨i, hi, -, h⟩ <;> rw [h]
+  · simp; omega
+  · simpa using (hsp i (hS hi)).2.2.1
+
+/-- **Corollary 2.4**, construction (section 2.2). Under `0^0 = 0`, self-paying digits at
+distinct positions, all placed on zeros, form a solution. -/
+theorem isMunchausen_spNum (hb : 2 ≤ b) (hinj : Set.InjOn pos I)
+    (hsp : ∀ i ∈ I, SelfPaying b (d i) (pos i)) {S : Finset ι} (hS : S ⊆ I) :
+    IsMunchausen b 0 (spNum b S d pos) := by
+  have hmaps : ∀ i ∈ S, pos i ∈ Finset.range (I.sup pos + 1) := fun i hi =>
+    Finset.mem_range.2 (Nat.lt_succ_of_le (Finset.le_sup (hS hi)))
+  have hinjS : Set.InjOn pos S := hinj.mono (by simpa using hS)
+  have hlt : ∀ x ∈ (List.range (I.sup pos + 1)).map (spDigit S d pos), x < b := by
+    intro x hx
+    obtain ⟨k, -, rfl⟩ := List.mem_map.1 hx
+    exact spDigit_lt hb hinj hsp hS k
+  unfold IsMunchausen
+  rw [spNum_eq_ofDigits hS, F_ofDigits_zero (by omega) _ hlt, Fs_map_range]
+  simp only [w_spDigit hinjS]
+  rw [Finset.sum_fiberwise_of_maps_to hmaps (fun i => w 0 (d i)), ← spNum_eq_ofDigits hS, spNum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact ((hsp i (hS hi)).balance).symm
+
+omit [DecidableEq ι] in
+lemma spNum_mod (hsp : ∀ i ∈ I, SelfPaying b (d i) (pos i)) {S : Finset ι} (hS : S ⊆ I) :
+    spNum b S d pos % b = 0 := by
+  apply Nat.mod_eq_zero_of_dvd
+  apply Finset.dvd_sum
+  intro i hi
+  exact Dvd.dvd.mul_left (dvd_pow_self b (by have := (hsp i (hS hi)).2.1; omega)) _
+
+omit [DecidableEq ι] in
+lemma two_le_spNum (hsp : ∀ i ∈ I, SelfPaying b (d i) (pos i)) {S : Finset ι} (hS : S ⊆ I)
+    (hne : S.Nonempty) : 2 ≤ spNum b S d pos := by
+  obtain ⟨i, hi⟩ := hne
+  have h1 := (hsp i (hS hi)).1
+  have hb : 1 ≤ b ^ pos i := Nat.one_le_pow _ _ (by have := (hsp i (hS hi)).2.2.1; omega)
+  calc 2 ≤ d i * b ^ pos i := by nlinarith
+    _ ≤ spNum b S d pos := Finset.single_le_sum (f := fun i => d i * b ^ pos i)
+        (fun _ _ => Nat.zero_le _) hi
+
+lemma spNum_injOn (hb : 2 ≤ b) (hinj : Set.InjOn pos I)
+    (hsp : ∀ i ∈ I, SelfPaying b (d i) (pos i)) {S T : Finset ι} (hS : S ⊆ I) (hT : T ⊆ I)
+    (h : spNum b S d pos = spNum b T d pos) : S = T := by
+  rw [spNum_eq_ofDigits hS, spNum_eq_ofDigits hT] at h
+  have hl := Nat.ofDigits_inj_of_len_eq (by omega) (by simp)
+    (fun x hx => by obtain ⟨k, -, rfl⟩ := List.mem_map.1 hx; exact spDigit_lt hb hinj hsp hS k)
+    (fun x hx => by obtain ⟨k, -, rfl⟩ := List.mem_map.1 hx; exact spDigit_lt hb hinj hsp hT k) h
+  have hdig : ∀ k < I.sup pos + 1, spDigit S d pos k = spDigit T d pos k := by
+    intro k hk
+    have := congrArg (fun l => l[k]?) hl
+    simpa [List.getElem?_map, List.getElem?_range hk] using this
+  -- `i ∈ S` iff the digit at `pos i` is nonzero
+  have key : ∀ (U : Finset ι), U ⊆ I → ∀ i ∈ I, (i ∈ U ↔ spDigit U d pos (pos i) ≠ 0) := by
+    intro U hU i hi
+    have hinjU : Set.InjOn pos U := hinj.mono (by simpa using hU)
+    unfold spDigit
+    constructor
+    · intro hiU
+      rcases spDigit_fiber hinjU (pos i) with h | ⟨j, hj, -, h⟩
+      · exfalso
+        have : i ∈ U.filter (fun j => pos j = pos i) := Finset.mem_filter.2 ⟨hiU, rfl⟩
+        rw [h] at this; simp at this
+      · rw [h]; simp; have := (hsp j (hU hj)).1; omega
+    · intro hne
+      by_contra hiU
+      apply hne
+      apply Finset.sum_eq_zero
+      intro j hj
+      rw [Finset.mem_filter] at hj
+      exact absurd (hinj (hU hj.1) hi hj.2 ▸ hj.1) hiU
+  ext i
+  constructor
+  · intro hi
+    have hiI := hS hi
+    rw [key T hT i hiI, ← hdig _ (Nat.lt_succ_of_le (Finset.le_sup hiI))]
+    exact (key S hS i hiI).1 hi
+  · intro hi
+    have hiI := hT hi
+    rw [key S hS i hiI, hdig _ (Nat.lt_succ_of_le (Finset.le_sup hiI))]
+    exact (key T hT i hiI).1 hi
+
+/-- **Corollary 2.4** (section 2.2). Under `0^0 = 0`, a base with `C` self-paying digits at
+distinct positions has at least `2^(C+1) - 2` nontrivial solutions: every nonempty set of
+them, with or without a final 1. -/
+theorem corollary_2_4 (hb : 2 ≤ b) (hinj : Set.InjOn pos I)
+    (hsp : ∀ i ∈ I, SelfPaying b (d i) (pos i)) :
+    ∃ T : Finset ℕ, T.card = 2 ^ (I.card + 1) - 2 ∧ ∀ n ∈ T, 2 ≤ n ∧ IsMunchausen b 0 n := by
+  let f : Finset ι × ℕ → ℕ := fun p => spNum b p.1 d pos + p.2
+  refine ⟨((I.powerset.erase ∅) ×ˢ Finset.range 2).image f, ?_, ?_⟩
+  · rw [Finset.card_image_of_injOn, Finset.card_product, Finset.card_erase_of_mem
+      (Finset.empty_mem_powerset I), Finset.card_powerset, Finset.card_range]
+    · have : 1 ≤ 2 ^ I.card := Nat.one_le_two_pow
+      rw [pow_succ]; omega
+    · rintro ⟨S, e⟩ hSe ⟨T, e'⟩ hTe' hST
+      simp only [Finset.coe_product, Set.mem_prod, Finset.mem_coe, Finset.mem_erase,
+        Finset.mem_powerset, Finset.mem_range] at hSe hTe'
+      simp only [f] at hST
+      have hmS := spNum_mod hsp hSe.1.2
+      have hmT := spNum_mod hsp hTe'.1.2
+      have hee : e = e' := by
+        have := congrArg (· % b) hST
+        simp only [Nat.add_mod, hmS, hmT, zero_add, Nat.mod_mod] at this
+        rwa [Nat.mod_eq_of_lt (by omega), Nat.mod_eq_of_lt (by omega)] at this
+      subst hee
+      have := spNum_injOn hb hinj hsp hSe.1.2 hTe'.1.2 (by omega)
+      rw [this]
+  · intro n hn
+    simp only [Finset.mem_image, Finset.mem_product, Finset.mem_erase, Finset.mem_powerset,
+      Finset.mem_range, Prod.exists] at hn
+    obtain ⟨S, e, ⟨⟨hSne, hSI⟩, he⟩, rfl⟩ := hn
+    have hne : S.Nonempty := Finset.nonempty_iff_ne_empty.2 hSne
+    have h2 := two_le_spNum hsp hSI hne
+    have hm := isMunchausen_spNum hb hinj hsp hSI
+    refine ⟨by simp only [f]; omega, ?_⟩
+    interval_cases e
+    · simpa [f] using hm
+    · exact (isMunchausen_twin hb (by omega) (spNum_mod hsp hSI)).1 hm
+
+end Combine
+
+/-- A strictly increasing position function on `ℕ`, from `t * pos s = s (r^s - 1)`. -/
+lemma pos_strictMono {r t : ℕ} (hr : 2 ≤ r) (_ht : 1 ≤ t) {pos : ℕ → ℕ}
+    (hpos : ∀ s, t * pos s = s * (r ^ s - 1)) {s s' : ℕ} (hs : 1 ≤ s) (hss : s < s') :
+    pos s < pos s' := by
+  have h1 : r ^ s < r ^ s' := Nat.pow_lt_pow_right (by omega) hss
+  have h2 : 1 ≤ r ^ s := Nat.one_le_pow _ _ (by omega)
+  have h3 : s * (r ^ s - 1) < s' * (r ^ s' - 1) :=
+    Nat.mul_lt_mul_of_le_of_lt hss.le (by omega) (by omega)
+  rw [← hpos, ← hpos] at h3
+  exact Nat.lt_of_mul_lt_mul_left h3
+
+/-- **Theorem 9.2** (section 9.8). For every `n ≥ 3`, base `n^(n-1)` has at least
+`2^(n-1) - 2` nontrivial solutions under `0^0 = 0`. -/
+theorem theorem9_2 {n : ℕ} (hn : 3 ≤ n) :
+    ∃ T : Finset ℕ, T.card = 2 ^ (n - 1) - 2 ∧ ∀ x ∈ T, 2 ≤ x ∧ IsMunchausen (n ^ (n - 1)) 0 x := by
+  have hdvd : ∀ s, (n - 1) ∣ s * (n ^ s - 1) := fun s =>
+    Dvd.dvd.mul_left (by simpa using Nat.sub_dvd_pow_sub_pow n 1 s) s
+  let pos : ℕ → ℕ := fun s => s * (n ^ s - 1) / (n - 1)
+  have hpos : ∀ s, (n - 1) * pos s = s * (n ^ s - 1) := fun s => Nat.mul_div_cancel' (hdvd s)
+  have hb : 2 ≤ n ^ (n - 1) :=
+    le_trans (by omega) (Nat.le_self_pow (by omega) n)
+  have hinj : Set.InjOn pos (Finset.Icc 1 (n - 2)) := by
+    intro s hs s' hs' h
+    simp only [Finset.coe_Icc, Set.mem_Icc] at hs hs'
+    by_contra hne
+    rcases Nat.lt_or_gt_of_ne hne with hlt | hlt
+    · exact absurd h (pos_strictMono (by omega) (by omega) hpos hs.1 hlt).ne
+    · exact absurd h (pos_strictMono (by omega) (by omega) hpos hs'.1 hlt).ne'
+  have hsp : ∀ s ∈ Finset.Icc 1 (n - 2), SelfPaying (n ^ (n - 1)) (n ^ s) (pos s) := by
+    intro s hs
+    rw [Finset.mem_Icc] at hs
+    exact selfPaying_of_dvd (by omega) hs.1 (by omega) (hdvd s)
+  obtain ⟨T, hT, hmem⟩ := corollary_2_4 hb hinj hsp
+  refine ⟨T, ?_, hmem⟩
+  rw [hT, Nat.card_Icc]
+  congr 2
+  omega
+
+/-- `s ↦ s (r^s - 1)` is strictly increasing. -/
+lemma mul_pow_sub_one_strictMono {r : ℕ} (hr : 2 ≤ r) : StrictMono fun s : ℕ => s * (r ^ s - 1) := by
+  intro s s' hss
+  have h1 : r ^ s < r ^ s' := Nat.pow_lt_pow_right (by omega) hss
+  have h2 : 1 ≤ r ^ s := Nat.one_le_pow _ _ (by omega)
+  exact Nat.mul_lt_mul_of_le_of_lt hss.le (by omega) (by omega)
+
+/-- **Proposition 4.2** (section 4.1). Under `0^0 = 0`, for every `L ≥ 2` the base
+`2^(L (2^L - 1))` has at least `2^(2^L - 1) - 2` nontrivial solutions: the digits `2^(j L)`,
+`1 ≤ j ≤ 2^L - 2`, are self-paying. -/
+theorem prop4_2 {L : ℕ} (hL : 2 ≤ L) :
+    ∃ T : Finset ℕ, T.card = 2 ^ (2 ^ L - 1) - 2 ∧
+      ∀ x ∈ T, 2 ≤ x ∧ IsMunchausen (2 ^ (L * (2 ^ L - 1))) 0 x := by
+  set N := L * (2 ^ L - 1) with hN
+  have h4 : 4 ≤ 2 ^ L := by
+    calc 4 = 2 ^ 2 := by norm_num
+      _ ≤ 2 ^ L := Nat.pow_le_pow_right (by norm_num) hL
+  have hdvd : ∀ j, N ∣ (j * L) * (2 ^ (j * L) - 1) := by
+    intro j
+    have h : 2 ^ L - 1 ∣ 2 ^ (j * L) - 1 := by
+      rw [mul_comm j L, pow_mul]; simpa using Nat.sub_dvd_pow_sub_pow (2 ^ L) 1 j
+    obtain ⟨c, hc⟩ := h
+    exact ⟨j * c, by rw [hc, hN]; ring⟩
+  let pos : ℕ → ℕ := fun j => (j * L) * (2 ^ (j * L) - 1) / N
+  have hpos : ∀ j, N * pos j = (j * L) * (2 ^ (j * L) - 1) := fun j => Nat.mul_div_cancel' (hdvd j)
+  have hN0 : 0 < N := Nat.mul_pos (by omega) (by omega)
+  have hb : 2 ≤ 2 ^ N := by
+    calc 2 = 2 ^ 1 := by norm_num
+      _ ≤ 2 ^ N := Nat.pow_le_pow_right (by norm_num) hN0
+  have hinj : Set.InjOn pos (Finset.Icc 1 (2 ^ L - 2)) := by
+    intro j _ j' _ h
+    have : (j * L) * (2 ^ (j * L) - 1) = (j' * L) * (2 ^ (j' * L) - 1) := by
+      rw [← hpos, ← hpos, show pos j = pos j' from h]
+    have := (mul_pow_sub_one_strictMono (r := 2) le_rfl).injective this
+    exact Nat.eq_of_mul_eq_mul_right (by omega) this
+  have hsp : ∀ j ∈ Finset.Icc 1 (2 ^ L - 2), SelfPaying (2 ^ N) (2 ^ (j * L)) (pos j) := by
+    intro j hj
+    rw [Finset.mem_Icc] at hj
+    have hlt : j * L < N := by
+      rw [hN, mul_comm L]
+      exact Nat.mul_lt_mul_of_pos_right (by omega) (by omega)
+    exact selfPaying_of_dvd le_rfl (Nat.mul_pos (by omega) (by omega)) hlt (hdvd j)
+  obtain ⟨T, hT, hmem⟩ := corollary_2_4 hb hinj hsp
+  refine ⟨T, ?_, hmem⟩
+  rw [hT, Nat.card_Icc]
+  congr 2
+  omega
+
+/-- **Proposition 4.2**, unboundedness (section 4.1). Under `0^0 = 0` the number of solutions
+in a base is unbounded. -/
+theorem count_zero_unbounded (C : ℕ) :
+    ∃ b, 2 ≤ b ∧ ∃ T : Finset ℕ, C ≤ T.card ∧ ∀ x ∈ T, 2 ≤ x ∧ IsMunchausen b 0 x := by
+  obtain ⟨T, hT, hmem⟩ := theorem9_2 (n := C + 3) (by omega)
+  refine ⟨(C + 3) ^ (C + 3 - 1), le_trans (by omega) (Nat.le_self_pow (by omega) _), T, ?_, hmem⟩
+  rw [hT]
+  have : C + 2 < 2 ^ (C + 2) := Nat.lt_two_pow_self
+  rw [show C + 3 - 1 = C + 2 by omega]
+  omega
 
 end Munchausen
