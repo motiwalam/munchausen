@@ -50,6 +50,13 @@ every solution beyond some size belongs to such a family (question 64).
   Pell-type equations with a prescribed coordinate, beyond current methods
   (section 8.2).
 
+Update (chapter 32). For 3 digits two more regimes of these Pell-type
+equations are settled. An even large digit behind a non-square leading
+digit gives finitely many solutions, and none when the other two digits
+are at most 20 (Theorems 32.2 and 32.3). A large digit in a fixed square
+class gives finitely many (Proposition 32.6). The open regime is the one
+in which the field `Q(sqrt n)` changes with `x` (section 32.1.6).
+
 ## 7.3 Lengths without solutions
 
 Conjecture (refuted as stated). Under `0^0 = 1` no base has a solution with
@@ -140,3 +147,7 @@ statement for bases near the length, where the evidence below applies: no
   lower bound would prove P != NP, and NP-hardness would prove P = NP.
 - Can the number of solutions in a base be predicted exactly without a
   search? Only on average, through the model.
+
+Update (chapter 31). The congruence mod `b - 1`, tested on the nodes with
+one free slot, makes the exact search 1.1x to 1.3x faster (section 31.2).
+This is a constant factor; the growth rate does not change.

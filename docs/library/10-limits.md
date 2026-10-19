@@ -161,6 +161,14 @@ Proof. Swap the last two digits `x` and `y`. The value changes by
 So the digit-sum identity of section 1.6 is the only such invariant. It
 removes a factor of `b - 1`, which does not change the growth rate.
 
+Update (chapter 31). The factor is a share of the nodes, not a factor
+`b - 1` of the leaves. Tested on the nodes with one free slot, the
+congruence removes 12% to 25% of the exact tree in bases 15 to 35, with no
+trend in the base (Table 31.2.2). So it is a constant factor of about 1.1
+to 1.35, as this section says. The other count and residue results of the
+library add nothing to it: the interval test implies them, or their test
+costs more than it saves (section 31.4).
+
 Splitting the digit values. Split the digits into large values (with counts
 `c_H`) and small values (with counts `c_S`), and try to join two lists. The
 small digits only change the last `L` digits of `n`. Their digits are

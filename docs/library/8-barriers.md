@@ -109,6 +109,17 @@ dense in `[0, 1]`. That is a simpler-looking question of the same type: how
 close does a growing power come to an integer? I found no published result that handles equations
 in which the base and the exponent of `x^x` vary together.
 
+Update (chapter 32). For 3 digits part of this is now done. Let the large
+digit `x` be even and not leading, and let the leading digit `p` not be a
+square. Then the Pell equations for all `x` live in one field
+`Q(sqrt n)`, where `n` is the squarefree part of `p`, and `Y` is divisible
+by `2^(x/2)`. A 2-adic bound for linear forms in two logarithms (Bugeaud
+and Laurent) then bounds `x` (Theorem 32.2). That the base and the exponent
+of `x^x` vary together costs nothing, because only the 2-adic valuation of
+`Y` enters. A sieve up to the bound excludes every such string with the
+other two digits at most 20 (Theorem 32.3). The open part is the case
+where the field changes with `x` (section 32.1.6).
+
 So a proof of finiteness for all short solutions under `0^0 = 1` would need
 new methods for exponential Diophantine equations. The numerical evidence is
 strong: outside the square class, the scan with `x` up to 2500 (bases up to
@@ -196,6 +207,12 @@ for infinitely many bases at once. The tools of this library cannot give one:
 The opposite statement, "every large base has a solution", is as far out
 of reach, and the model says it is false.
 
+Update (chapters 30 and 32). In the toy world of 2-digit narcissistic
+numbers, "infinitely many empty bases" is Landau's problem on primes
+`n^2 + 1` (Corollary 30.13). Section 32.2 explains why counting stops at
+Theorem 20.3 and why the only multiset invariant, `n mod (b - 1)`, cannot
+help.
+
 ## 8.6 Solutions with `b` digits under `0^0 = 1`
 
 The model expects a `b`-digit solution in about 8% of large bases. If the model
@@ -214,12 +231,12 @@ Bases 44 and 45 have no `b`-digit solution either (computed with
 
 | problem | status |
 |---|---|
-| fast exact search | equivalent in difficulty to P vs NP; neither a lower bound nor NP-hardness can be shown without settling it (8.1) |
-| finitely many short solutions under `0^0 = 1` | false: infinitely many for every `k >= 3` (Corollary 22.7); finiteness holds with a large leading digit (8.2) |
+| fast exact search | equivalent in difficulty to P vs NP; neither a lower bound nor NP-hardness can be shown without settling it (8.1); the residue mod `b - 1` gives a constant factor 1.1 to 1.3 (31.2) |
+| finitely many short solutions under `0^0 = 1` | false: infinitely many for every `k >= 3` (Corollary 22.7); finiteness holds with a large leading digit (8.2); for 3 digits also with an even large digit behind a non-square leading digit, and in each fixed square class (32.1) |
 | lengths without solutions | same barrier as the finiteness question; verified up to base 100,000 for 9 digits and 10,000 for the others |
 | is `N_1(b)` bounded | open; reduces to near-solutions with small defects (8.4) |
 | `N_0(b)` unbounded | proven (Proposition 4.2) |
-| infinitely many empty bases | open; no uniform method can exclude coincidences (8.5); rates and the even-base deficit in 9.7 |
+| infinitely many empty bases | open; no uniform method can exclude coincidences (8.5); rates and the even-base deficit in 9.7; Landau's problem in the 2-digit narcissistic toy case (30.3, 32.2) |
 | empty bases `== 3 (mod 8)` | resolved: base 43 has a solution |
 | `b`-digit solutions under `0^0 = 1` | open; none in bases 3 to 45 (8.6) |
 | excess of `(b-1)`-digit solutions | resolved: the total over lengths `b-6` to `b` fits the model (9.6) |

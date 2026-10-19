@@ -508,6 +508,13 @@ the base. In base 32, 64 and 128 the radical is 2, the
 smallest possible, and the bottom digits still cost more than they prune. I
 expect the same in every base. The answer to question 79 is no.
 
+Update (chapter 31). A top-down node knows its low digits in one place:
+a node with one free slot. For each value of the free digit the sum is
+known, and its last digits must be digits that the unknown positions still
+hold. In base 26 this check removes another 17% of the nodes with one
+digit and 24% with two, but it costs 2% and 7% more cycles, because these
+nodes are already cheap (section 31.4.2).
+
 ## 27.5 The law of the work-unit sizes (question 78)
 
 ### 27.5.1 Measurements (computed)
@@ -615,6 +622,13 @@ are within 1.22 of the mean at depth 6 (Table 27.5.2). An assignment
 by predicted size (longest first, with the size predicted from the type)
 helps less than the deeper units: for 64 shards at depth 4 it gives 1.40 to
 1.47 instead of 1.85 to 2.56, in bases 28 to 33.
+
+Update (chapter 31). `fast --shard-by size` now assigns the units by
+predicted size, in integer arithmetic, so that every machine computes the
+same split. In base 30 with the residue rule, the largest of 64 shards
+drops from 2.12 to 1.35 times the mean at depth 4, and from 1.21 to 1.14
+at depth 6 (Table 31.5.1). The two changes add up: depth 6 with the size
+rule gives 1.14.
 
 ### 27.5.4 Time estimates (computed)
 
