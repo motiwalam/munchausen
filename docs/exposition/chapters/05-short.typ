@@ -46,12 +46,13 @@ The lists below are exhaustive within their ranges.
 
 #tablefig(caption: [All solutions with 3 to 8 digits under $0^0 = 1$. A list
   with digits up to $M$ is complete for every base $b$ with
-  $b^k <= (M+1)^(M+1)$.], id: "tab-short-m1")[
+  $b^k <= (M+1)^(M+1)$. For 3 digits a sharper argument gives a larger range
+  (@short-3digit-range).], id: "tab-short-m1")[
   #btable(
     columns: 4,
     align: (right, right, left, left),
     [$k$], [digits up to], [complete for bases up to], [solutions (base: digits)],
-    [3], [80], [$10^(51.5)$], [4: $(1,3,1)$, $(3,1,3)$; 25: $(5,1,3)$; 91: $(6,1,5)$; 215: $(1,2,6)$; 904: $(1,7,1)$],
+    [3], [2000], [$10^(3301)$], [4: $(1,3,1)$, $(3,1,3)$; 25: $(5,1,3)$; 91: $(6,1,5)$; 215: $(1,2,6)$; 904: $(1,7,1)$],
     [4], [300], [$10^(186.5)$], [10: $(3,4,3,5)$; 20: $(6,5,3,4)$],
     [5], [80], [$10^(30.9)$], [6: $(2,2,3,5,2)$, $(2,3,4,5,2)$; 7: $(1,3,4,5,4)$; 13: $(3,3,6,6,1)$; 14: $(2,6,0,3,6)$; 48: $(3,8,6,2,0)$],
     [6], [40], [$10^(11.0)$], [9: $(1,5,6,2,6,2)$],
@@ -79,7 +80,8 @@ from these families the lists are short.
 
 #tablefig(caption: [Solutions with 3 to 8 digits under $0^0 = 0$ that are
   not of the form $(x, 0, dots, 0, e)$ with $x$ self-paying. Same ranges as
-  @tab-short-m1. Swaps and other constructions of @ch-constructions are
+  @tab-short-m1, except that the 3-digit list is complete only for bases up
+  to $10^(51.5)$ (digits up to 80). Swaps and other constructions of @ch-constructions are
   marked.], id: "tab-short-m0")[
   #btable(
     columns: 2,
@@ -97,6 +99,94 @@ from these families the lists are short.
 @app-tables lists every string, the families included. Two-digit solutions
 are plentiful under both conventions and have a complete description
 (@thm-two-digit), so this chapter starts at three digits.
+
+=== Three digits up to $10^(3301)$
+
+For three digits the range of the list is much larger, because a sieve with
+many primes is cheap and a direct bound replaces the general one.
+
+#computation(id: "short-3digit-range", title: "The 3-digit list", src: "25.2")[
+  Under $0^0 = 1$:
+  + every 3-digit solution in a base up to $10^(3301)$ is one of the six of
+    @tab-short-m1;
+  + every 3-digit solution in a base below $46666^(23333) - 3$ with at most
+    one digit above 200 is one of these six.
+  So a 3-digit solution in a base strictly between 904 and
+  $46666^(23333) - 3$ has two digits above 200, one digit above 2000, and a
+  base above $10^(3301)$.
+]
+
+The method is the completed square of @sec-short-square. A string
+$(p, q, r)$ is a solution exactly when $D = 4p(F - r) + q^2$ is a square
+$s^2$ and $b = (s - q) slash (2p)$ is an integer above the digits. A program
+tests $D$ for quadratic residues modulo the 108 odd primes below 600, with
+tables of $w(d)$ modulo each prime, and checks the survivors exactly. Part 1
+takes all strings with digits up to 2000: a solution with a digit
+$M > 2000$ has $b^2 > M^M slash (M + 1) >= 2001^(2001) slash 2002$, so every
+base below $10^(3301.2)$ is covered. Part 2 takes all strings with two
+digits up to 200 and one up to 46,700. In all $1.36 dot 10^(10)$ strings
+were tested, and only 12 survived all 108 primes. Seven of them are
+solutions: the six known ones and $(1, 6, 46666)$. The other five have a
+root that is not an integer, or an integer root at most the largest digit
+#lib("25.2").
+
+The binomial families of @sec-cons-binomial give infinitely many 3-digit
+solutions beyond this range. Their members are the strings
+$(lambda c^2, 2 lambda c e, x)$ of case (i) of @short-three-digit-class
+below, and they can be listed in order.
+
+#proposition(id: "short-members-order", title: "Members in order", src: "25.2")[
+  Among the 3-digit members of the binomial families, a larger last digit
+  $x$ gives a larger base.
+]
+#sketch[
+  A member has $b <= sqrt(x^x slash lambda) <= x^(x slash 2)$. For a member
+  with last digit $x' >= x + 1 >= 7$, the other digits are at most
+  $sqrt(x')$, so its base is at least $x'^((x'-1) slash 2) - x'$, and
+  Bernoulli's inequality shows that this exceeds $x^(x slash 2)$.
+]
+
+By this ordering and a short case check, the next member after $(1, 2, 6)$
+in base 215 is $(1, 6, 46666)$ in base $46666^(23333) - 3$
+(@cons-next-member).
+
+#computation(id: "short-members-list", title: "The first members", src: "25.2")[
+  The strings with $p, q <= 2000$ contain every 3-digit member with
+  $x < 2001^(2001) approx 10^(6605.8)$. There are 1,267 of them, all with
+  $lambda = 1$ and even $x$. @tab-short-members lists the first five.
+]
+
+#tablefig(caption: [The first 3-digit members of the binomial families, in
+  order of base #lib("25.2").], id: "tab-short-members")[
+  #btable(
+    columns: 4,
+    align: (right, left, left, left),
+    [rank], [$(p, q, x)$], [$(c, e)$], [base],
+    [1], [$(1, 2, 6)$], [$(1, 1)$], [215],
+    [2], [$(1, 6, 46666)$], [$(1, 3)$], [$46666^(23333) - 3 approx 10^(108941.8)$],
+    [3], [$(4, 8, 16777476)$], [$(2, 2)$], [about $10^(10^(7.78))$],
+    [4], [$(9, 6, 387467146)$], [$(3, 1)$], [about $10^(10^(9.22))$],
+    [5], [$(1, 10, 10000000026)$], [$(1, 5)$], [about $10^(10^(10.70))$],
+  )
+]
+
+#heuristic(id: "short-next-heuristic", title: "Nothing between", src: "25.2")[
+  The strings that @short-3digit-range leaves open have a digit $M > 2000$
+  and a second digit above 200. By the root heuristic each is a solution
+  with probability about $M^(-M slash 2)$, and there are fewer than $3 M^2$
+  of them for each $M$. The expected number of such solutions is below
+  $3 dot 2000^2 dot 2000^(-1000) approx 10^(-3294)$.
+]
+
+So the claim "$(1, 6, 46666)$ is the next 3-digit solution after
+$(1, 7, 1)$" has three parts. It is proven that $(1, 6, 46666)$ is the next
+family member (@cons-next-member), and that it is the only 3-digit
+solution in its base (@short-member-base). It is computed that no other
+3-digit solution lies in bases from 905 to $10^(3301)$, nor below
+$46666^(23333) - 3$ with at most one digit above 200. It is heuristic that
+no string with two digits above 200 and one above 2000 fills the rest of the
+gap. An exhaustive run over all strings with digits up to 46,700 would need
+about $10^(14)$ tests and has not been done.
 
 === Which lengths occur
 
@@ -127,7 +217,8 @@ $46666^(23333) - 3$, about $10^(108942)$.
   instructive: a heuristic that treats the root of $Q_s$ as a random real
   number cannot see a family whose polynomial factors by an identity. What
   survives is a question (#q(64)): is every short solution beyond some size
-  a member of an algebraic family?
+  a member of an algebraic family? @cons-families-conj states the
+  current conjecture.
 ]
 
 == Local obstructions <sec-short-local>
@@ -701,7 +792,9 @@ the expected number of solutions with a digit above the list's bound.
 
 #heuristic(id: "short-tails", title: "Completeness of the lists", src: ("11.4", "19.1"))[
   For strings without an algebraic identity, the expected number of
-  solutions missing from the lists is about $10^(-74)$ for 3 digits,
+  solutions missing from the lists is about $10^(-74)$ for 3 digits beyond
+  the list with digits up to 80 (and below $10^(-3294)$ beyond
+  @short-3digit-range),
   $10^(-490)$ for 4, $10^(-109)$ for 5, $10^(-45)$ for 6,
   $1.7 dot 10^(-33)$ for 7 and $5.7 dot 10^(-21)$ for 8. For the missing
   lengths 9, 18, 21, 22, 24, 26 and 28 it is $10^(-29)$ or less.
@@ -720,6 +813,29 @@ same holds for the self-paying digits under $0^0 = 0$. So the refined
 heuristic of #lib("22.4") adds the family members in a range, counted
 exactly, to the calibrated mean. In the searched ranges no family member
 under $0^0 = 1$ appears, and the tail estimates stand for generic strings.
+
+The heuristic is blind to a second family as well. Under $0^0 = 1$ the
+strings $(c^j, 0, dots, 0, x)$ with $x = c^(j c^j) + j - 1$ are solutions
+for suitable $c$, because the last digit pays for the weight of $c^j$ and
+for the $j - 1$ zeros (@cons-zero-family). For $c = 1$ it is the family
+$(1, 0, 0, x)$ seen above at the offset $D = x - 3$. These two linear
+families are the only identity families found.
+
+@cons-families-conj states the resulting conjecture: under $0^0 = 1$, all
+but finitely many $k$-digit solutions are members of the two linear
+families, and every $k$-digit solution beyond the complete lists is one.
+
+The evidence has four parts #lib("25.1"). The complete lists hold no other
+solution up to $10^(3301)$ (3 digits), $10^(186)$ (4), $10^(30.9)$ (5) and
+$10^(11)$ (6). The root heuristic puts the expected number beyond the lists
+at $10^(-74)$ or less. Every power identity $Q_s = lambda A^j - W$ ends in a
+large digit, and every identity other than the two linear families needs
+one more coincidence, such as a large number being a perfect power. A census
+of all small prefixes, up to 7 digits, finds no member of any other
+mechanism. The conjecture cannot be strengthened to "finitely many
+solutions", since both families are infinite. It fails under $0^0 = 0$,
+where the self-paying digits and the swaps give further families. It
+replaces the old finiteness conjecture as the answer to question #q(64).
 
 == The square class and near-integers <sec-short-square>
 
@@ -762,28 +878,65 @@ square class_ when the dominant term is a perfect square. Then the right
 side is a square plus a term of size about $x^2$, and two squares that close
 must be equal, which bounds $x$, unless $R = 0$.
 
-#proposition(id: "short-r-zero", title: "When the remainder vanishes", src: "22.3")[
-  Let one digit $x$ of a 3-digit string vary, under $0^0 = 1$. Then $R = 0$
-  only if $x$ is the last digit and $x = p^p + q^q + q^2 slash (4p)$. If
-  moreover $x$ is even, then $p = c^2$ is a square, $q = 2 c e$, and the
-  solutions are exactly the members of the binomial families
-  (@thm-binomial) with $j = 2$.
+The following theorem makes this precise and classifies every 3-digit
+string with one large digit.
+
+#theorem(id: "short-three-digit-class", title: "Three digits with one large digit", src: "25.1")[
+  Under $0^0 = 1$, let $s = (p, q, r)$ have two digits at most $B >= 1$ and
+  a third digit $x >= 2B + 4$, and let $ell$ be the leading digit. Write
+  $
+    (2 p b + q)^2 = N + R, quad N = 4 ell x^x, quad R = 4 p (F - r) + q^2 - N.
+  $
+  Then exactly one of the following holds.
+  + $R = 0$. Then $x$ is the last digit, $p = lambda c^2$ and
+    $q = 2 lambda c e$ with $lambda$ squarefree, $c >= 1$, $e >= 0$, and
+    $x = w(p) + w(q) + lambda e^2$. Here $Q_s (r) = lambda (c r + e)^2 - x^x$,
+    and $s$ is a solution exactly when $x^x = lambda (c b + e)^2$. For even
+    $x$ this needs $lambda = 1$ and $c | x^(x slash 2) - e$, the binomial
+    family with $j = 2$. For odd $x$ it needs $x slash lambda$ to be a
+    square.
+  + $R != 0$ and $N$ is a perfect square. Then $s$ is not a solution.
+  + $R != 0$ and $N$ is not a perfect square. Then $Q_s$ has no power
+    identity $lambda A^2 - x^x$, and $s$ is a solution exactly when the
+    Pell-type equation $U^2 - n V^2 = R$ holds with $U = 2 p b + q$, where
+    $N = n V^2$ with $n > 1$ squarefree.
+]
+#sketch[
+  If $x$ leads or sits in the middle, $R$ is a sum of positive terms, so
+  $R = 0$ needs $x$ last, with $R = 4p(w(p) + w(q) - x) + q^2$. Then
+  $4p | q^2$, and writing $p = lambda c^2$ with $lambda$ squarefree a count
+  of prime exponents gives $q = 2 lambda c e$. The equation becomes
+  $x^x = lambda (c b + e)^2$. For (ii), let $N = V^2$. If $U > V$ then
+  $R >= 2V + 1$, and if $U < V$ then $|R| > V$. So a solution needs
+  $|R| > sqrt(N) >= 2 x^(x slash 2)$. But $|R| <= 9 x^2 B^B$ in every
+  position, and $x >= 2B + 4$ makes $x^(x slash 2) >= 6 x^2 B^B$. For
+  (iii), an identity with one large digit puts it last, and
+  $4p(P_s (r) - F(t))$ is a constant times a square exactly when $R = 0$.
 ]
 
-#remark(id: "short-cor84", src: ("8.2", "22.3"))[
+So among 3-digit strings with one large digit, the identities are exactly
+case (i), case (ii) has no solutions, and everything else is the generic
+case (iii). The six known 3-digit solutions all have $x <= 7 < 2B + 4$, so
+the theorem does not apply to them. $(5, 1, 3)$ in base 25 sits on the
+boundary of case (ii): $N = 4 dot 5^6 = 250^2$, $U = 251$ and
+$R = 501 = 2 V + 1$.
+
+#remark(id: "short-cor84", src: ("8.2", "22.3", "25.1"))[
   An earlier corollary in the library claimed that the 3-digit solutions
   with two digits at most 20 and the third in its square class are the known
-  ones. It assumed $R != 0$. With @short-r-zero the correct statement adds
-  8 binomial members, $(1, 6, x)$, $(1, 10, x)$, $(1, 14, x)$, $(1, 18, x)$,
-  $(4, 8, x)$, $(4, 16, x)$, $(9, 6, x)$ and $(9, 18, x)$, all in bases above
-  $10^(108942)$.
+  ones. It assumed $R != 0$, and the binomial members with $R = 0$ refuted
+  it: they add $(1, 6, x)$, $(1, 10, x)$, $(1, 14, x)$, $(1, 18, x)$,
+  $(4, 8, x)$, $(4, 16, x)$, $(9, 6, x)$ and $(9, 18, x)$, in bases above
+  $10^(108942)$. @short-three-digit-class is the final form of that
+  corollary.
 ]
 
 === Outside the square class
 
-When the dominant term is not a square, write $4 p x^x = N Y^2$ with $N$
-squarefree. The equation asks whether $4 p x^x + R$ is a square: a
-Pell-type equation $U^2 - N Y^2 = R$ with the extra condition that $Y$
+When the dominant term is not a square, we are in case (iii) of
+@short-three-digit-class: write $N = n V^2$ with $n$ squarefree. The
+equation asks whether $N + R$ is a square: a Pell-type equation
+$U^2 - n V^2 = R$ with the extra condition that $V$
 equals a prescribed number such as $x^((x-1) slash 2)$ (@app-quadratic). For
 each single $x$ this is decidable. For all $x$ at once it asks whether an
 exponentially growing sequence ever lands on the solution set of a Pell
@@ -1085,7 +1238,7 @@ have both?
 ]
 
 #computation(id: "short-base25", title: "Base 25 is alone", src: "18.2")[
-  Under $0^0 = 1$, base 25 is the only base below $10^(51)$ with both a
+  Under $0^0 = 1$, base 25 is the only base below $10^(3301)$ with both a
   2-digit and a 3-digit solution, $(1, 3)$ and $(5, 1, 3)$. Among the 8,502
   bases of 2-digit solutions with digits up to 200, which include every such
   base below $10^(460)$, base 25 is the only one with a 3-digit solution.
@@ -1100,14 +1253,105 @@ $5 dot 25^2 = 5^5$. So $(5, 1, 3)$ is the self-paying 5 on top of the
 $3^3 - 2 = 5^2$, the same coincidence that gives $(1, 0, 3)$ in base 5
 under $0^0 = 0$.
 
-Base 4 has two 3-digit solutions, $(1, 3, 1)$ and $(3, 1, 3)$. Every other
-base below $10^(51)$ has at most one.
+=== How many 3-digit solutions can one base have?
 
-#problem(id: "short-q50", title: "At most two 3-digit solutions", src: "18.2")[
+Base 4 has two 3-digit solutions, $(1, 3, 1)$ and $(3, 1, 3)$.
+
+#computation(id: "short-at-most-two", title: "At most two", src: "25.3")[
+  Under $0^0 = 1$, every base up to $10^(3301)$ has at most two 3-digit
+  solutions, and base 4 is the only one with two.
+]
+
+Can a proof reach all bases? The first step is that the largest digit is
+almost fixed by the base.
+
+#lemma(id: "short-largest-digit", title: "The largest digit", src: "25.3")[
+  Let $s$ be a 3-digit solution in base $b$ with leading digit $p$ and
+  largest digit $M$. Then $b^2 slash 3 <= w(M) < (M + 1) b^2$ and
+  $p = floor(F slash b^2)$.
+]
+#proof[
+  $F = p b^2 + q b + r$ with $q b + r < b^2$, so $p = floor(F slash b^2)$
+  and $b^2 <= F < (p + 1) b^2$. Each weight is at most $w(M)$, so
+  $F <= 3 w(M)$, and $w(M) <= F < (p + 1) b^2 <= (M + 1) b^2$.
+]
+
+#corollary(id: "short-two-values", title: "Two consecutive values", src: "25.3")[
+  The largest digits of the 3-digit solutions of one base take at most two
+  values, and these are consecutive.
+]
+#proof[
+  If $M_1 <= M_2 - 2$ both occur, @short-largest-digit gives
+  $w(M_2) < 3 (M_2 + 1) w(M_1) <= 3(M_2 + 1) w(M_2 - 2)$. But
+  $w(M_2) slash w(M_2 - 2) >= 3 M_2^2$.
+]
+
+#theorem(id: "short-thirty", title: "At most 30 per base", src: "25.3")[
+  Let $b >= 5$. Under $0^0 = 1$, base $b$ has at most 30 three-digit
+  solutions, unless $|b - M^((M-1) slash 2)| <= 6$ for a value $M$ with
+  $b^2 slash 3 <= w(M) < (M + 1) b^2$. Then it has at most $2M + 24$. There
+  are at most 13 such exceptional bases for each $M$.
+]
+#sketch[
+  Fix one of the at most two values $M$, and let $u, v$ be digits below $M$.
+  @tab-short-shapes counts the solutions of each shape: in each, the
+  equation fixes the value of an injective function of one digit, or of a
+  function that takes each value at most twice. For the shapes whose
+  leading digit is below $M$, $F slash b^2$ lies in an interval of length
+  below 1, so the leading digit takes at most two values. This leaves the
+  shape $(M, u, v)$, with the equation $w(u) + w(v) - u b - v = M b^2 - w(M)$.
+  Two of its solutions must share their digits above the largest $T$ with
+  $w(T) <= 2M(b + 1)$, since a larger differing digit changes the weight sum
+  by more than $M(b + 1)$. With two or one digits above $T$ there are at
+  most 1 or 3 solutions. With none, $|b^2 - M^(M-1)| <= 5(b + 1)$, so $b$
+  is within 6 of $M^((M-1) slash 2)$, and there are at most $M$ solutions.
+]
+
+#tablefig(caption: [The shapes of 3-digit solutions with largest digit $M$
+  in one base, with $u, v < M$ #lib("25.3").], id: "tab-short-shapes")[
+  #btable(
+    columns: 3,
+    align: (left, left, right),
+    [shape], [equation], [solutions],
+    [$(M, M, M)$], [one equation in $b$], [at most 1],
+    [$(M, M, u)$], [$g(u) = M b^2 + M b - 2 w(M)$], [at most 1],
+    [$(M, u, M)$], [$u b - w(u) = 2 w(M) - M - M b^2$], [at most 2],
+    [$(u, M, M)$], [$u b^2 - w(u) = 2 w(M) - M b - M$], [at most 2],
+    [$(u, M, v)$], [$u$ takes 2 values, then $g(v)$ is fixed], [at most 2],
+    [$(u, v, M)$], [$u$ takes 2 values, then $v b - w(v)$ is fixed], [at most 4],
+    [$(M, u, v)$], [$w(u) + w(v) - u b - v = M b^2 - w(M)$], [at most 3, or $M$],
+  )
+]
+
+This is a constant bound outside at most about $26 ln X slash ln ln X$
+bases up to $X$, against the power of $log b$ of @short-per-base. It does
+not reach 2. The weak point is the shape $(M, u, v)$, where each solution
+is an exact coincidence. In the bases of the binomial families more is
+known.
+
+#proposition(id: "short-one-member", title: "One member per base", src: "25.3")[
+  A base has at most one 3-digit member of the binomial families.
+]
+
+#proposition(id: "short-member-base", title: "Bases with a member", src: "25.3")[
+  Let $(p, q, x)$ be a member in base $b$, with $x = w(p) + w(q) + lambda e^2$.
+  Every other 3-digit solution of base $b$ is $(p, x, r)$ with
+  $w(r) - r = (x - q) b - w(p) - lambda e^2$, or $(p, q', x)$ with $q' != q$
+  and $w(q') - w(q) = (q' - q) b$. Each equation has at most one solution,
+  so base $b$ has at most 3 three-digit solutions.
+]
+
+For each of the 80 members with $x < 10^(300)$, among them base
+$46666^(23333) - 3$, the candidates for the two equations fail modulo some
+prime, so the member is the only 3-digit solution of its base
+#lib("25.3").
+
+#problem(id: "short-q50", title: "At most two 3-digit solutions", src: ("18.2", "25.3"))[
   Under $0^0 = 1$, does every base have at most two 3-digit solutions?
-  (Question #q(50).) In one base each leading digit $p$ allows at most two
-  values of the largest digit. When the largest digit is not the leading
-  one, this leaves at most two strings per leading digit. But a base has
-  many possible leading digits, so this alone does not bound the count by
-  two, and when the largest digit leads, up to $p$ strings remain.
+  (Question #q(50).) It holds for every base up to $10^(3301)$
+  (@short-at-most-two), and every base has at most 30 outside a sparse set
+  (@short-thirty). A third solution needs three independent coincidences,
+  so "at most two" is expected for every base. A proof needs control of the
+  shape $(M, u, v)$, where a base near $M^((M-1) slash 2)$ gives one
+  equation in two free digits.
 ]

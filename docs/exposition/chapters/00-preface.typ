@@ -59,7 +59,7 @@ coincidences and blind to identities. @ch-constructions tells this story.
   found every solution in bases 2 to 41 and 43 (@sec-basics-data,
   @app-tables).
 - Some solutions come from identities between powers: twins, self-paying
-  digits, swaps, the two-digit families, and the binomial families
+  digits, swaps, the two-digit families, the binomial families and a second family of power identities
   (@ch-constructions). Under either convention every length $k >= 3$ has
   infinitely many solutions (@thm-every-length-m0, @thm-every-length-m1).
 - The other solutions behave like coincidences. A probabilistic model
