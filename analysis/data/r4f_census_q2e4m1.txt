@@ -1,0 +1,12 @@
+# r4f_ffield q 2 e 4 m 1 max length 7, model in 0.0 s
+orbit 16 size 2 k 1 sols 0 basic 0.9229 refined 1.2375 lengths 
+orbit 18 size 1 k 1 sols 4 basic 0.9229 refined 1.7240 lengths 3:4
+orbit 19 size 1 k 3 sols 2 basic 0.9229 refined 6.6736 lengths 3:2
+orbit 20 size 1 k 1 sols 2 basic 0.9229 refined 1.9698 lengths 3:2
+orbit 21 size 1 k 2 sols 2 basic 0.9229 refined 2.6760 lengths 3:2
+orbit 22 size 2 k 2 sols 0 basic 0.9229 refined 3.0148 lengths 
+orbit 24 size 2 k 1 sols 1 basic 0.9229 refined 1.7637 lengths 3:1
+orbit 25 size 2 k 2 sols 4 basic 0.9229 refined 2.6863 lengths 3:2,5:2
+orbit 26 size 2 k 2 sols 1 basic 0.9229 refined 3.1030 lengths 7:1
+orbit 27 size 2 k 2 sols 4 basic 0.9229 refined 3.0148 lengths 5:2,7:2
+# total q 2 e 4 m 1: bases 16 solutions 30 per base 1.8750 basic 0.9229 refined 2.6677 time 0.0 s

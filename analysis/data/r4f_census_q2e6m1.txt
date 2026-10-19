@@ -1,0 +1,38 @@
+# r4f_ffield q 2 e 6 m 1 max length 27, model in 0.7 s
+orbit 64 size 2 k 2 sols 3 basic 1.0159 refined 3.3235 lengths 2:1,11:2
+orbit 65 size 2 k 1 sols 0 basic 1.0159 refined 1.6391 lengths 
+orbit 66 size 2 k 1 sols 0 basic 1.0159 refined 2.1803 lengths 
+orbit 67 size 2 k 3 sols 12 basic 1.0159 refined 6.1852 lengths 3:2,11:2,27:8
+orbit 68 size 2 k 1 sols 0 basic 1.0159 refined 1.5845 lengths 
+orbit 69 size 2 k 2 sols 2 basic 1.0159 refined 3.3903 lengths 11:2
+orbit 70 size 2 k 2 sols 4 basic 1.0159 refined 3.0653 lengths 9:2,27:2
+orbit 71 size 2 k 3 sols 4 basic 1.0159 refined 6.1726 lengths 27:4
+orbit 72 size 2 k 1 sols 8 basic 1.0159 refined 1.9556 lengths 5:2,22:2,27:4
+orbit 73 size 2 k 3 sols 6 basic 1.0159 refined 6.1769 lengths 11:4,27:2
+orbit 74 size 2 k 2 sols 4 basic 1.0159 refined 3.0562 lengths 22:2,27:2
+orbit 75 size 2 k 2 sols 2 basic 1.0159 refined 3.1063 lengths 22:2
+orbit 76 size 2 k 2 sols 2 basic 1.0159 refined 3.1063 lengths 22:2
+orbit 77 size 2 k 2 sols 8 basic 1.0159 refined 3.0548 lengths 3:2,22:4,27:2
+orbit 78 size 2 k 2 sols 2 basic 1.0159 refined 4.1387 lengths 5:2
+orbit 79 size 2 k 3 sols 8 basic 1.0159 refined 6.1759 lengths 6:2,27:6
+orbit 96 size 2 k 1 sols 0 basic 1.0159 refined 2.0140 lengths 
+orbit 97 size 2 k 2 sols 2 basic 1.0159 refined 3.0771 lengths 27:2
+orbit 98 size 2 k 2 sols 6 basic 1.0159 refined 3.0445 lengths 5:2,11:2,17:2
+orbit 99 size 2 k 3 sols 7 basic 1.0159 refined 6.1726 lengths 22:1,27:6
+orbit 104 size 2 k 2 sols 4 basic 1.0159 refined 3.0636 lengths 9:2,27:2
+orbit 106 size 1 k 1 sols 2 basic 1.0159 refined 2.0549 lengths 11:2
+orbit 107 size 1 k 3 sols 15 basic 1.0159 refined 6.2204 lengths 2:1,6:2,9:4,11:8
+orbit 108 size 1 k 1 sols 6 basic 1.0159 refined 2.0538 lengths 27:6
+orbit 109 size 1 k 3 sols 20 basic 1.0159 refined 6.1996 lengths 3:2,6:2,11:2,27:14
+orbit 110 size 2 k 2 sols 0 basic 1.0159 refined 3.1063 lengths 
+orbit 112 size 2 k 2 sols 4 basic 1.0159 refined 3.1063 lengths 27:4
+orbit 113 size 2 k 2 sols 5 basic 1.0159 refined 3.0966 lengths 27:5
+orbit 114 size 2 k 1 sols 2 basic 1.0159 refined 2.0307 lengths 27:2
+orbit 115 size 2 k 3 sols 0 basic 1.0159 refined 6.1608 lengths 
+orbit 120 size 1 k 2 sols 15 basic 1.0159 refined 4.2335 lengths 2:1,6:2,9:4,11:8
+orbit 121 size 1 k 2 sols 4 basic 1.0159 refined 3.3903 lengths 2:2,11:2
+orbit 122 size 2 k 2 sols 0 basic 1.0159 refined 3.0653 lengths 
+orbit 124 size 2 k 2 sols 2 basic 1.0159 refined 3.0571 lengths 27:2
+orbit 126 size 1 k 2 sols 0 basic 1.0159 refined 3.7067 lengths 
+orbit 127 size 1 k 3 sols 6 basic 1.0159 refined 6.1996 lengths 3:2,6:2,11:2
+# total q 2 e 6 m 1: bases 64 solutions 262 per base 4.0938 basic 1.0159 refined 3.6355 time 2.0 s

@@ -1,0 +1,65 @@
+# r4f_ffield q 7 e 3 m 1 max length 33, model in 0.0 s
+orbit 343 size 14 k 3 sols 0 basic 0.9885 refined 310.8772 lengths 
+orbit 344 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 345 size 14 k 3 sols 42 basic 0.9885 refined 310.8772 lengths 3:42
+orbit 346 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 347 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 348 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 349 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 350 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 351 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 352 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 353 size 42 k 2 sols 0 basic 0.9885 refined 43.5666 lengths 
+orbit 354 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 355 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 356 size 42 k 2 sols 0 basic 0.9885 refined 43.5666 lengths 
+orbit 364 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 365 size 42 k 3 sols 42 basic 0.9885 refined 310.8772 lengths 3:42
+orbit 366 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 367 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 368 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 369 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 370 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 686 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 687 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 688 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 689 size 14 k 3 sols 42 basic 0.9885 refined 310.8772 lengths 3:42
+orbit 690 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 691 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 692 size 14 k 3 sols 42 basic 0.9885 refined 310.8772 lengths 3:42
+orbit 693 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 694 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 695 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 696 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 697 size 42 k 2 sols 0 basic 0.9885 refined 43.5666 lengths 
+orbit 698 size 42 k 2 sols 0 basic 0.9885 refined 43.5666 lengths 
+orbit 699 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 707 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 708 size 42 k 3 sols 0 basic 0.9885 refined 310.8772 lengths 
+orbit 709 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 710 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 711 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 712 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 713 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1029 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 1030 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 1031 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 1032 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 1033 size 14 k 3 sols 42 basic 0.9885 refined 310.8772 lengths 3:42
+orbit 1034 size 14 k 3 sols 42 basic 0.9885 refined 310.8772 lengths 3:42
+orbit 1035 size 14 k 1 sols 0 basic 0.9885 refined 5.3129 lengths 
+orbit 1036 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 1037 size 42 k 3 sols 0 basic 0.9885 refined 310.8772 lengths 
+orbit 1038 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 1039 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1040 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1041 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1042 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1050 size 42 k 2 sols 0 basic 0.9885 refined 43.5666 lengths 
+orbit 1051 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1052 size 42 k 2 sols 0 basic 0.9885 refined 43.5666 lengths 
+orbit 1053 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+orbit 1054 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 1055 size 42 k 1 sols 0 basic 0.9885 refined 5.4316 lengths 
+orbit 1056 size 42 k 2 sols 0 basic 0.9885 refined 47.8541 lengths 
+# total q 7 e 3 m 1: bases 2058 solutions 4704 per base 2.2857 basic 0.9885 refined 59.4381 time 0.4 s
