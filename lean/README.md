@@ -45,9 +45,12 @@ use `decide`, which the kernel checks.
 | `Munchausen/Basic.lean` | chapter 1: length bound, finitely many solutions per base, digit bound, one base per string, the two conventions, the top digit (1.7) |
 | `Munchausen/Congruences.lean` | section 1.6, Proposition 10.2, Theorem 15.2, Corollary 15.3 |
 | `Munchausen/Constructions.lean` | chapter 2 (twins, self-paying digits and the converse of 2.2, swaps, 2-digit solutions, Corollary 2.4, Proposition 2.7), Propositions 4.2 and 8.5, Theorems 9.2 and 15.9, chapter 22 (splits, blocks, binomial families) and Theorem 25.5 |
+| `Munchausen/SelfPayingDigits.lean` | Proposition 2.3 (moves and cores), Proposition 15.8, the counts of Propositions 8.5 and 9.3 |
+| `Munchausen/Counting.lean` | Propositions 4.1 and 10.4, the finite form of Theorem 11.2 |
 | `Munchausen/Polynomial.lean` | `Q_s`, local obstructions (11.1, 19.1), the test modulo 2 (15.11), negative bases (12.2, 12.3) |
 | `Munchausen/Residues.lean` | residues of `x^x - x` modulo 27 and 81, Lemma 20.6, the coverings 15.13 and 20.13 |
 | `Munchausen/ShortEquations.lean` | Propositions 18.1, 16.5, 20.20, Lemma 18.14, Theorem 15.7 |
+| `Munchausen/ThreeDigits.lean` | Theorem 8.3 and Theorem 25.7 (ii): a large digit in the square class |
 | `Munchausen/OtherSystems.lean` | negative bases (14.4, 14.5), the factorial system (21.14, 21.15), `F_p[T]` (21.1, 21.3, 21.5, 24.1), base `-1+i` (23.1) |
 | `Munchausen/Examples.lean` | concrete solutions checked by `decide`, and `(1,6,46666)` in base `46666^23333 - 3` |
 | `Munchausen/Conjectures.lean` | open problems as named `Prop`s, and proofs that refuted conjectures are false |

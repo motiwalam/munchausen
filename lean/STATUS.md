@@ -15,12 +15,13 @@ Status values:
   in Mathlib and was used).
 
 Abbreviations of the files: Defs, Basic, Cong (Congruences), Cons
-(Constructions), Poly (Polynomial), Res (Residues), Short (ShortEquations),
-Other (OtherSystems), Ex (Examples), Conj (Conjectures).
+(Constructions), SPD (SelfPayingDigits), Count (Counting), Poly (Polynomial),
+Res (Residues), Short (ShortEquations), Three (ThreeDigits), Other
+(OtherSystems), Ex (Examples), Conj (Conjectures).
 
-Counts of table rows at the time of writing: 64 formalized (one of them a
-list of computed solutions checked by `decide`), 8 partial, 10 rows of open
-problems (13 `Prop`s), 4 refuted conjectures, 87 not formalized and 2 not
+Counts of table rows at the time of writing: 70 formalized (one of them a
+list of computed solutions checked by `decide`), 9 partial, 10 rows of open
+problems (13 `Prop`s), 4 refuted conjectures, 80 not formalized and 2 not
 stated.
 
 ## Chapter 1. Basics
@@ -50,7 +51,7 @@ stated.
 |---|---|---|
 | Proposition 2.1 (twins) | `isSolution_twin`, `isMunchausen_twin` [Cons] | formalized |
 | Proposition 2.2 (which bases have self-paying digits) | `selfPaying_of_dvd`, `SelfPaying.exists_pow`, `exists_primitive_root` [Cons] | formalized: the construction, and the converse (a self-paying digit and its base are powers `c^s`, `c^t` of one integer with `t k = s (c^s - 1)`, and every such `c` is a power of one primitive root of `b`) |
-| Proposition 2.3 (structure under `0^0 = 0`) | `isSolution_selfPaying_iff`, `SelfPaying.balance` [Cons] | partial: placing or removing one self-paying digit on a 0 below the leading digit; the unique decomposition into core, digits and final 1 is not formalized |
+| Proposition 2.3 (structure under `0^0 = 0`) | `isSolution_selfPaying_iff` [Cons], `isMunchausen_add_selfPaying`, `isMunchausen_iff_core`, `digitAt` [SPD] | formalized (one move at any zero position, also above the leading digit, and removal of any set of self-paying digits; with Proposition 2.1 for the final 1 this is the decomposition) |
 | Corollary 2.4 (`N_0(b) ≥ 2^(C+1) - 2`) | `corollary_2_4`, `isMunchausen_spNum`, `spNum` [Cons] | formalized |
 | Proposition 2.5 | `isSolution_selfPaying_cons_iff` [Cons] | formalized |
 | swaps (2.3) | `isSolution_swap` [Cons]; `(2,4)` in base 128 [Ex] | formalized |
@@ -66,7 +67,7 @@ stated.
 | 3.5 table: infinitely many for every length | `infinite_solutions_of_length` [Cons], `infinite_bases_of_length` [Cons] | formalized |
 | finiteness conjecture (3.5, 7.2) | `FinitenessConjecture`, `not_finitenessConjecture` [Conj] | refuted |
 | missing lengths (3.4, 7.3) | `MissingLengthsConjecture`, `not_missingLengthsConjecture` [Conj] | refuted |
-| Proposition 4.1 (`N_{m,k}(b) ≤ 2 (X+1)^(k-1)`) | none | not formalized (counting argument; convexity of `a^a - a b^(k-1)`) |
+| Proposition 4.1 (`N_{m,k}(b) ≤ 2 (X+1)^(k-1)`) | `prop4_1`, `solStrings`, `card_le_two_of_convex` [Count] | formalized |
 | Proposition 4.2 (`N_0(b)` unbounded) | `prop4_2`, `count_zero_unbounded` [Cons] | formalized |
 | original conjecture 7.1 under `0^0 = 0` | `NoFullLengthConjecture`, `not_noFullLengthConjecture_zero` [Conj] | refuted (base 15) |
 | conjecture 7.1 under `0^0 = 1` | `NoFullLengthConjecture_one` [Conj] | conjecture |
@@ -80,9 +81,9 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Proposition 8.1 (`L_m` in NP), Corollary 8.2 | none | not formalized (complexity classes are not in Mathlib) |
-| Theorem 8.3 (large leading digit in the square class) | none | not formalized (elementary, but needs care with the explicit bound) |
+| Theorem 8.3 (large leading digit in the square class) | `theorem8_3`, `theorem8_3_one` [Three] | formalized (the explicit bound is stated as three inequalities in `x`, `Z`, `B`, `k`, which hold for large `x`) |
 | Corollary 8.4 and its correction | none | not formalized (depends on a computation; the correction is Proposition 22.8) |
-| Proposition 8.5 (self-paying digits not adjacent) | `SelfPaying.position_gt`, `prop8_5_ineq` [Cons] | partial: positions satisfy `k' ≥ 2k + 1` (the proof shows `k' > r k`); the count "fewer than `log2 b` self-paying digits" is not formalized |
+| Proposition 8.5 (self-paying digits not adjacent, fewer than `log2 b`) | `SelfPaying.position_gt`, `prop8_5_ineq` [Cons], `card_selfPaying_lt_log` [SPD] | formalized (positions `k' ≥ 2k + 1`; the proof shows `k' > r k`) |
 | 8.3: under `0^0 = 1` only `(a,1)` from zero-balance placements | `zero_balance_solution`, `selfPaying_of_balance` [Cons] | formalized |
 | Proposition 8.6 | none | not formalized (bookkeeping of near-solutions; elementary) |
 
@@ -92,12 +93,12 @@ stated.
 |---|---|---|
 | Conjecture 9.1 | none | not formalized (statement about the probabilistic model) |
 | Theorem 9.2 (base `n^(n-1)`) | `theorem9_2` [Cons] | formalized |
-| Proposition 9.3 (corrected bound `X^(1/(c+1)) + X^(1/(c+2)) log2 X`) | none | not formalized |
+| Proposition 9.3 (corrected bound `X^(1/(c+1)) + X^(1/(c+2)) log2 X`) | `selfPaying_base_pow`, `card_selfPaying_le` [SPD] | partial: a base with `C` self-paying digits is `r^t` with `t ≥ C + 1`; the count of such `r^t ≤ X` with real roots is not formalized |
 | Conjecture 9.4 | `Conjecture_9_4`, `not_conjecture_9_4` [Conj] | refuted (as stated, by Corollary 22.7) |
 | Theorem 10.1 | none | not formalized (theorem inside the probabilistic model) |
 | Proposition 10.2 (only `b-1` is invariant) | `residue_invariant_iff` [Cong] | formalized |
 | Conjecture 10.3 | `Conjecture_10_3_lower` [Conj] | conjecture (second part only; the first part excludes "algebraic families", which the library does not define) |
-| Proposition 10.4 | none | not formalized (follows from 1.2 and 1.3 by counting strings; good next step) |
+| Proposition 10.4 | `prop10_4`, `basesWith`, `stringsLE` [Count] | formalized |
 
 ## Chapters 11 and 12. Local obstructions and the polynomial
 
@@ -105,7 +106,7 @@ stated.
 |---|---|---|
 | `Q_s` and its values | `Q`, `eval_Q`, `eval_Q_int`, `isSolution_iff_eval_Q` [Defs, Poly] | formalized |
 | Proposition 11.1 | `not_isSolution_of_no_root_mod`, `no_int_root_of_no_root_mod` [Poly] | formalized (for every modulus) |
-| Theorem 11.2 | none | not formalized (asymptotic counting) |
+| Theorem 11.2 | `theorem11_2_finite` [Count] | partial: the finite bound `sum_k X_k (X_k+1)^(k-1)`; the asymptotics `B^(1 - 2 eps + o(1))` are not formalized |
 | covering families `(2,0,x)`, `(4,0,x)`, `(6,0,x)` (11.3) | none | not formalized (parity; follows from Proposition 15.11) |
 | Proposition 12.1 | none | not formalized (cites Jordan, Cameron-Cohen and Chebotarev) |
 | Proposition 12.2 (odd length in negative bases) | `IsNegSolution`, `IsNegSolution.odd_length` [Poly] | formalized |
@@ -142,7 +143,7 @@ stated.
 | Propositions 15.4, 15.5 | none | not formalized (follow from 1.4, 2.1 and 2.3) |
 | Proposition 15.6 | none | not formalized (model) |
 | Theorem 15.7 | `theorem15_7`, `two_two_digit` [Short] | partial: the statement under `0^0 = 1`, proven in full; the `0^0 = 0` variant (twin bases `a^(a-1)`) is not formalized |
-| Proposition 15.8 | none | not formalized (the converse of Proposition 2.2 is now available; next step) |
+| Proposition 15.8 | `prop15_8`, `NotPerfectPower` [SPD] | formalized |
 | Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`, as the library now states it) |
 | Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
 | Proposition 15.11 | `exists_root_mod_two_iff` [Poly] | formalized |
@@ -283,7 +284,7 @@ stated.
 | Theorem 25.4 | none | not formalized ((a) is Theorem 22.6 and 25.5 after rescaling; (b), (c) need valuations) |
 | Theorem 25.5 | `theorem25_5`, `theorem25_5_conditions` [Cons] | formalized (the prime condition is stated as `c ∣ (j-1)^c`, which is equivalent; the conditions hold for `c = (j-1)^a`) |
 | Proposition 25.6 | none | not formalized |
-| Theorem 25.7 | none | not formalized (completing the square; same work as Theorem 8.3 and Proposition 22.8) |
+| Theorem 25.7 | `theorem25_7_ii_last`, `theorem25_7_ii_middle`, `theorem25_7_ii_leading` [Three] | partial: case (ii) (`N` a square, `R ≠ 0`: no solution) in all three positions; in the middle and in front `R > 0`; cases (i) (the shape `p = lam c^2`, `q = 2 lam c e`) and (iii) are not formalized |
 | Conjecture 25.8 | none | not stated (it refers to "the two linear families"; could be stated with Theorems 22.6 and 25.5) |
 | Proposition 25.9, Theorem 25.10 | none | not formalized (elementary, needs Theorem 25.7) |
 | Theorem 25.11, Heuristic 25.12 | none | not formalized (computation, heuristic) |
@@ -337,16 +338,14 @@ the new numbers.
 
 In order of value and effort:
 
-1. Proposition 10.4 and Theorem 11.2 type counts: strings with digits up to
-   `X` and one base each.
-2. Propositions 15.8, 9.3 (corrected), Theorem 15.9, and the count in
-   Proposition 8.5, now that the converse of Proposition 2.2 is formalized.
-3. The unique decomposition of Proposition 2.3 (core, self-paying digits,
-   final 1).
-4. Proposition 22.8, Theorem 8.3 and Theorem 25.7 (completing the square for
-   3 digits), then Theorem 25.2 and Lemma 25.13 / Corollary 25.14.
-5. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
-6. Lemma 15.12 (2) and Theorem 20.8 (primitive roots, lifting).
-7. Theorem 15.7 under `0^0 = 0`, Propositions 15.16 and 18.16/18.17.
-8. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
+1. Theorem 25.2 (the last digit of a power identity is large), then
+   Theorem 25.7 (i) and Proposition 22.8.
+2. Lemma 25.13 and Corollary 25.14 (the largest digit of 3-digit solutions in
+   one base), then Propositions 25.16 and 25.17.
+3. Proposition 1.6 (a truncated binomial bound for `(1 + 1/n)^n`).
+4. Lemma 15.12 (2) and Theorem 20.8 (primitive roots, lifting).
+5. Theorem 15.7 under `0^0 = 0`, Propositions 15.16 and 18.16 / 18.17.
+6. The real-root count in Proposition 9.3 and the asymptotics of
+   Theorem 11.2.
+7. Base-`B` expansions in `F_p[T]`, for Corollary 21.2, Theorem 21.7 and
    chapter 24.
