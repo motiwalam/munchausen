@@ -150,7 +150,7 @@ stated.
 | Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`, as the library now states it) |
 | Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
 | Proposition 15.11 | `exists_root_mod_two_iff` [Poly] | formalized |
-| Lemma 15.12 (1) | `pow_self_modEq_two` [Cong], `multiple_mem_T` [Res] | partial: `x^x - x` is even, and every multiple of 2 occurs modulo `2^e` |
+| Lemma 15.12 (1) | `lemma15_12_one` [Adic], `pow_self_modEq_two` [Cong], `multiple_mem_T` [Res] | formalized (`x^x - x` is even, and every even residue occurs modulo `2^e`) |
 | Lemma 15.12 (2) (`T(p)` is everything for `p ≥ 5`, `T(3) = {0, 2}`) | `T_prime_eq_univ`, `T_three` [Res] | formalized |
 | Lemma 15.12 (3) | `pow_self_modEq_27`, `pow_self_modEq_three_of_ne` [Res] | formalized |
 | Theorem 15.13 | `covering_27` [Res] | formalized |
@@ -224,7 +224,7 @@ stated.
 | Lemma 20.9 | `lemma20_9_five` [Res], `pow_self_modEq_three` [Cong] | formalized (the residue 3 mod 5 needs `x ≡ 8 (mod 20)`; mod 3, the residue 2 needs `x ≡ 2 (mod 6)` and 1 never occurs) |
 | Lemma 20.10 | none | not formalized (`p`-adic exponential) |
 | Theorem 20.11 (3-adic law) | `theorem20_11`, `step_three_adic`, `three_adic_unit`, `lift_three_adic` [Adic], `pow_self_modEq_81` [Res] | formalized (for every `e ≥ 4`; the lifting uses the congruence `f(x + 2·3^k t) ≡ f(x) + 3^k t B(x) (mod 3^(k+3))` in place of the 3-adic series, and a finite check over one period of 162) |
-| Theorem 20.12 (5-adic law) | `theorem20_12_good`, `theorem20_12_two`, `theorem20_12_three`, `theorem20_12_four` [Adic] | partial: every `v ≢ 3 (mod 5)` lies in `T(5^e)` for every `e`, and the class `3 (mod 5)` is exactly the law's 1, 3 and 11 residues for `e = 2, 3, 4` (finite checks); the law for every `e` needs the 5-adic series (Lemma 20.10) |
+| Theorem 20.12 (5-adic law) | `theorem20_12`, `theorem20_12_three_mod_five`, `theorem20_12_good`, `two_mul_pow_self_sub_eq`, `step_five_adic`, `five_adic_unit`, `exists_sqrt_neg_one_five_pow`; `theorem20_12_two`, `theorem20_12_three`, `theorem20_12_four` [Adic] | partial: the law for every `e ≥ 1` (with `i` a square root of -1 modulo `5^e`, `i ≡ 3 (mod 5)`, the class `3 (mod 5)` is `2 v ≡ (1 - i)(2 - 25 y^2)`); the 5-adic series of Lemma 20.10 is replaced by the binomial expansion of `(i + D)^x` and a step congruence whose coefficient has valuation `v_5(x - i)`. The count `sq(e - 2)` and the density are not formalized |
 | Corollary 20.13 | `covering_81`, `not_isSolution_eight_seven` [Res] | formalized |
 | Proposition 20.14 | none | not formalized |
 | Lemmas 20.15, 20.16, Proposition 20.17, Theorem 20.18 | none | not formalized (orders in quadratic fields; cites Matveev) |

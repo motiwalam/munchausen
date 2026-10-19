@@ -1,7 +1,7 @@
 import Munchausen.Residues
 
 /-!
-# The 3-adic law (Theorem 20.11) and part of the 5-adic law (Theorem 20.12)
+# The 3-adic law (Theorem 20.11) and the 5-adic law (Theorem 20.12)
 
 For `e ≥ 4` the residues of `f(x) = x^x - x` modulo `3^e` are the multiples of 3 and the
 `v ≡ 2 (mod 27)` with `v ≢ 56 (mod 81)`. The inclusion is the check modulo 81 of
@@ -16,7 +16,15 @@ lifts of `f(x) mod 3^(k+2)`, which is Hensel's lemma for the series `G` of the l
 
 For the 5-adic law, the residues `v ≢ 3 (mod 5)` are values modulo every `5^e` by Lemmas 20.6
 and 20.7. The class `3 (mod 5)` is checked modulo 25, 125 and 625 (1, 3 and 11 values, the
-numbers `A (1 - 25 s / 2)`); the law for every `e` needs the 5-adic power series.
+numbers `A (1 - 25 s / 2)`). For every `e` the series of Lemma 20.10 is replaced by two
+elementary facts. Let `i ≡ 3 (mod 5)` be a square root of `-1` modulo `5^e`, `4 ∣ x` and
+`D = x - i`, with `5 ∣ D`. The binomial expansion of `(i + D)^x` gives
+
+    2 (x^x - x) ≡ (1 - i)(2 + D^2) + 5 D^2 S   (mod 5^e),
+
+so every value is `A (1 - 25 s / 2)` with `s` a square (`two_mul_pow_self_sub_eq`). Conversely,
+`f(x + 4·5^k t) ≡ f(x) + 5^k t B(x) (mod 5^(k+j+1))` with `v_5(B(x)) = v_5(D) = j`
+(`step_five_adic`, `five_adic_unit`), which replaces Hensel's lemma.
 -/
 
 namespace Munchausen
@@ -253,7 +261,22 @@ theorem theorem20_11 {e : ℕ} (he : 4 ≤ e) (v : ℤ) :
     obtain ⟨t, ht⟩ := lift_three_adic h6 h9 h5 (max e 5) (le_max_right _ _)
     exact ⟨x0 + 18 * t, by omega, (pow_dvd_pow 3 (le_max_left _ _)).trans ht⟩
 
-/-! ### Theorem 20.12: the 5-adic law, in part -/
+/-- **Lemma 15.12 (1)** (section 15.4.2). For `e ≥ 1`, the values of `x^x - x` modulo `2^e`
+are exactly the even residues. -/
+theorem lemma15_12_one {e : ℕ} (he : 1 ≤ e) (v : ℤ) :
+    (∃ x : ℕ, 1 ≤ x ∧ (2 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - v) ↔ (2 : ℤ) ∣ v := by
+  constructor
+  · rintro ⟨x, hx, hdvd⟩
+    have hx2 : (2 : ℤ) ∣ (x : ℤ) ^ x - x := by
+      have := Nat.modEq_iff_dvd.1 (pow_self_modEq_two x hx).symm
+      push_cast at this; exact this
+    have := (dvd_pow_self (2 : ℤ) (by omega : e ≠ 0)).trans hdvd
+    have h := dvd_sub hx2 this
+    simpa using h
+  · intro hv
+    exact_mod_cast exists_of_dvd (p := 2) (e := e) le_rfl (by exact_mod_cast hv)
+
+/-! ### Theorem 20.12: the 5-adic law, small `e` -/
 
 /-- **Theorem 20.12**, the residues prime to the class 3 (section 20.2.2). For every `e`, each
 `v ≢ 3 (mod 5)` is a value of `x^x - x` modulo `5^e`: the multiples of 5 by Lemma 20.6, and
@@ -374,5 +397,493 @@ theorem theorem20_12_four {v : ℤ} (hv : v % 5 = 3) :
     · exact ⟨108, by norm_num, by norm_num; omega⟩
     · exact ⟨148, by norm_num, by norm_num; omega⟩
     · exact ⟨208, by norm_num, by norm_num; omega⟩
+
+
+/-! ### Theorem 20.12 for every `e` -/
+
+/-- A digit `t < 5` solves `5 ∣ v + u t` when `5 ∤ u`. -/
+lemma exists_five_dvd_add_mul {u : ℤ} (hu : ¬ (5 : ℤ) ∣ u) (v : ℤ) :
+    ∃ t : ℕ, (5 : ℤ) ∣ v + u * t := by
+  have hu' : u % 5 = 1 ∨ u % 5 = 2 ∨ u % 5 = 3 ∨ u % 5 = 4 := by omega
+  have hv' : v % 5 = 0 ∨ v % 5 = 1 ∨ v % 5 = 2 ∨ v % 5 = 3 ∨ v % 5 = 4 := by omega
+  rcases hu' with h | h | h | h <;> rcases hv' with h' | h' | h' | h' | h' <;>
+    first
+    | exact ⟨0, by push_cast; omega⟩ | exact ⟨1, by push_cast; omega⟩
+    | exact ⟨2, by push_cast; omega⟩ | exact ⟨3, by push_cast; omega⟩
+    | exact ⟨4, by push_cast; omega⟩
+
+/-- Hensel's lemma for `y^2 = c` modulo powers of 5: a square root of `c` modulo 5 that is
+prime to 5 lifts modulo every `5^e`. -/
+lemma exists_sq_five_pow {a c : ℤ} (ha : ¬ (5 : ℤ) ∣ a) (h : (5 : ℤ) ∣ a ^ 2 - c) (e : ℕ) :
+    ∃ y : ℤ, (5 : ℤ) ∣ y - a ∧ (5 : ℤ) ^ e ∣ y ^ 2 - c := by
+  induction e with
+  | zero => exact ⟨a, by simp, by simp⟩
+  | succ e ih =>
+    rcases Nat.eq_zero_or_pos e with rfl | he
+    · exact ⟨a, by simp, by simpa using h⟩
+    obtain ⟨y, hya, m, hm⟩ := ih
+    obtain ⟨n, rfl⟩ : ∃ n, e = n + 1 := ⟨e - 1, by omega⟩
+    have hy : ¬ (5 : ℤ) ∣ 2 * y := by omega
+    obtain ⟨t, q, hq⟩ := exists_five_dvd_add_mul hy m
+    refine ⟨y + 5 ^ (n + 1) * t, ?_, q + 5 ^ n * t ^ 2, ?_⟩
+    · have : (5 : ℤ) ∣ 5 ^ (n + 1) * t := Dvd.dvd.mul_right (dvd_pow_self 5 (by omega)) _
+      omega
+    · linear_combination hm + 5 ^ (n + 1) * hq
+
+/-- The expansion of `x^x` at the 5-adic `i = sqrt(-1)` (proof of Theorem 20.12), in any
+commutative ring with `ι^2 = -1`: for `4 ∣ x` and `x = ι + D` with `D = 5 d`,
+`2 (x^x - x) = (1 - ι)(2 + D^2) + 5 D^2 S`. This replaces the 5-adic series of Lemma 20.10:
+the coefficient of `D` vanishes. -/
+lemma two_mul_pow_self_sub_eq {R : Type*} [CommRing R] {ι D d : R} (hι : ι ^ 2 = -1)
+    (hD : D = 5 * d) {x : ℕ} (h4 : 4 ∣ x) (hx : 0 < x) (hxD : (x : R) = ι + D) :
+    ∃ S : R, 2 * ((x : R) ^ x - x) = (1 - ι) * (2 + D ^ 2) + 5 * D ^ 2 * S := by
+  obtain ⟨q, rfl⟩ := h4
+  obtain ⟨r, rfl⟩ : ∃ r, q = r + 1 := ⟨q - 1, by omega⟩
+  set n := 4 * (r + 1) with hn
+  have hpow : (ι + D) ^ n = ∑ m ∈ Finset.range (n + 1), D ^ m * ι ^ (n - m) * (n.choose m) := by
+    rw [add_comm, add_pow]
+  rw [show n + 1 = (4 * r + 2) + 1 + 1 + 1 by omega] at hpow
+  rw [Finset.sum_range_succ', Finset.sum_range_succ', Finset.sum_range_succ'] at hpow
+  have e0 : ι ^ (n - 0) = 1 := by
+    rw [Nat.sub_zero, hn, show 4 * (r + 1) = 2 * (2 * (r + 1)) by ring, pow_mul, hι]
+    simp [pow_mul]
+  have e1 : ι ^ (n - (0 + 1)) = -ι := by
+    rw [show n - (0 + 1) = 2 * (2 * r + 1) + 1 by omega, pow_succ, pow_mul, hι]
+    simp [pow_succ, pow_mul]
+  have e2 : ι ^ (n - (0 + 1 + 1)) = -1 := by
+    rw [show n - (0 + 1 + 1) = 2 * (2 * r + 1) by omega, pow_mul, hι]
+    simp [pow_succ, pow_mul]
+  have c1 : ((n.choose (0 + 1) : ℕ) : R) = ι + D := by simpa using hxD
+  have c2 : 2 * ((n.choose (0 + 1 + 1) : ℕ) : R) = (ι + D) * (ι + D - 1) := by
+    have h : n.choose 2 * 2 = n * (n - 1) := by
+      rw [Nat.choose_two_right]; exact Nat.div_mul_cancel (Nat.even_mul_pred_self n).two_dvd
+    have h' : ((n.choose 2 * 2 : ℕ) : R) = ((n * (n - 1) : ℕ) : R) := by rw [h]
+    push_cast [Nat.cast_sub (show 1 ≤ n by omega)] at h'
+    rw [← hxD]; linear_combination h'
+  set T := ∑ m ∈ Finset.range (4 * r + 2), D ^ m * ι ^ (n - (m + 1 + 1 + 1)) *
+    (n.choose (m + 1 + 1 + 1) : R) with hT
+  have htail : ∑ m ∈ Finset.range (4 * r + 2), D ^ (m + 1 + 1 + 1) * ι ^ (n - (m + 1 + 1 + 1)) *
+      (n.choose (m + 1 + 1 + 1) : R) = D ^ 3 * T := by
+    rw [hT, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun m _ => ?_
+    ring
+  rw [htail, e0, e1, e2] at hpow
+  refine ⟨2 * d * T - d * (2 * ι + D - 1), ?_⟩
+  rw [hxD, hpow]
+  simp only [pow_zero, Nat.choose_zero_right, Nat.cast_one, mul_one, ] at c1 c2 ⊢
+  rw [c1]
+  linear_combination (-(D ^ 2) - 2 * D) * hι - D ^ 2 * (2 * ι + D - 1) * hD + (-D ^ 2) * c2 +
+    2 * D ^ 2 * T * hD
+
+/-- If `5^m ∣ a - b` with `m ≥ 1`, then `5^(m+j) ∣ a^(5^j) - b^(5^j)`. -/
+lemma five_pow_dvd_pow_sub_pow {a b : ℤ} {m : ℕ} (hm : 1 ≤ m) (h : (5 : ℤ) ^ m ∣ a - b)
+    (j : ℕ) : (5 : ℤ) ^ (m + j) ∣ a ^ 5 ^ j - b ^ 5 ^ j := by
+  induction j with
+  | zero => simpa using h
+  | succ j ih =>
+    set δ := a ^ 5 ^ j - b ^ 5 ^ j
+    set B := b ^ 5 ^ j
+    have e : a ^ 5 ^ (j + 1) - b ^ 5 ^ (j + 1) =
+        δ * (5 * B ^ 4 + 10 * B ^ 3 * δ + 10 * B ^ 2 * δ ^ 2 + 5 * B * δ ^ 3 + δ ^ 4) := by
+      have ha : a ^ 5 ^ j = B + δ := by simp [δ, B]
+      rw [pow_succ, pow_mul, pow_mul, ha]; ring
+    rw [e, show m + (j + 1) = (m + j) + 1 by ring, pow_succ]
+    apply mul_dvd_mul ih
+    have h5 : (5 : ℤ) ∣ δ := (dvd_pow_self 5 (by omega)).trans ih
+    exact dvd_add (dvd_add (dvd_add (dvd_add (dvd_mul_right (5 : ℤ) _)
+      (dvd_mul_of_dvd_right h5 _)) (dvd_mul_of_dvd_right (dvd_pow h5 two_ne_zero) _))
+      (dvd_mul_of_dvd_left (dvd_mul_right (5 : ℤ) B) _)) (dvd_pow h5 (by norm_num))
+
+/-- If `5^s ∣ u` with `s ≥ 1`, then `(1 + u)^(5^M) ≡ 1 + 5^M u (mod 5^(2s+M))`. -/
+lemma five_pow_dvd_one_add_pow {u : ℤ} {s : ℕ} (hs : 1 ≤ s) (hu : (5 : ℤ) ^ s ∣ u) (M : ℕ) :
+    (5 : ℤ) ^ (2 * s + M) ∣ (1 + u) ^ 5 ^ M - 1 - 5 ^ M * u := by
+  induction M with
+  | zero => simp
+  | succ M ih =>
+    obtain ⟨w, hw⟩ := ih
+    set z := 5 ^ M * u + 5 ^ (2 * s + M) * w with hzdef
+    have hz : (1 + u) ^ 5 ^ M = 1 + z := by rw [hzdef]; linear_combination hw
+    obtain ⟨u', hu'⟩ := hu
+    have hz' : z = 5 ^ (s + M) * (u' + 5 ^ s * w) := by rw [hzdef, hu']; ring
+    have h5 : (5 : ℤ) ∣ z := (dvd_pow_self 5 (by omega)).trans ⟨_, hz'⟩
+    have ha : (5 : ℤ) ^ (2 * s + 2 * M) ∣ z ^ 2 := ⟨(u' + 5 ^ s * w) ^ 2, by rw [hz']; ring⟩
+    have hb : (5 : ℤ) ∣ 10 + 10 * z + 5 * z ^ 2 + z ^ 3 :=
+      dvd_add (dvd_add (dvd_add ⟨2, by norm_num⟩ (h5.mul_left 10)) (dvd_mul_right 5 _))
+        (dvd_pow h5 (by norm_num))
+    have h2 : (5 : ℤ) ^ (2 * s + (M + 1)) ∣ z ^ 2 * (10 + 10 * z + 5 * z ^ 2 + z ^ 3) :=
+      (pow_dvd_pow 5 (by omega : 2 * s + (M + 1) ≤ 2 * s + 2 * M + 1)).trans
+        (by rw [pow_succ]; exact mul_dvd_mul ha hb)
+    have h1 : (5 : ℤ) ^ (2 * s + (M + 1)) ∣ 5 ^ (2 * s + M + 1) * w := ⟨w, by ring⟩
+    have e : (1 + u) ^ 5 ^ (M + 1) - 1 - 5 ^ (M + 1) * u =
+        5 ^ (2 * s + M + 1) * w + z ^ 2 * (10 + 10 * z + 5 * z ^ 2 + z ^ 3) := by
+      rw [pow_succ, pow_mul, hz, hzdef]; ring
+    rw [e]
+    exact dvd_add h1 h2
+
+/-- Euler's theorem with the exponent: for `x` prime to 5, `x^(4·5^N) = 1 + 5^(N+1) a`. -/
+lemma exists_pow_four_mul_five_pow {x : ℤ} (hx : ¬ (5 : ℤ) ∣ x) (N : ℕ) :
+    ∃ a : ℤ, x ^ (4 * 5 ^ N) = 1 + 5 ^ (N + 1) * a := by
+  have h4 : (5 : ℤ) ∣ x ^ 4 - 1 := by
+    have hx0 : (x : ZMod 5) ≠ 0 := by
+      intro h
+      have := (ZMod.intCast_zmod_eq_zero_iff_dvd x 5).1 h
+      exact hx (by exact_mod_cast this)
+    have key : ∀ y : ZMod 5, y ≠ 0 → y ^ 4 - 1 = 0 := by decide
+    have := key _ hx0
+    have h' := (ZMod.intCast_zmod_eq_zero_iff_dvd (x ^ 4 - 1) 5).1 (by push_cast; exact this)
+    simpa using h'
+  obtain ⟨w, hw⟩ := five_pow_dvd_one_add_pow (u := x ^ 4 - 1) (s := 1) le_rfl (by simpa using h4) N
+  obtain ⟨k, hk⟩ := h4
+  refine ⟨k + 5 * w, ?_⟩
+  rw [pow_mul]
+  have e : (1 + (x ^ 4 - 1)) = x ^ 4 := by ring
+  rw [e] at hw
+  linear_combination hw + 5 ^ N * hk
+
+/-- The step of the 5-adic law (proof of Theorem 20.12). For `x` prime to 5, `N + 1 ≤ k` and
+`x^(4·5^N) = 1 + 5^(N+1) a`:
+`f(x + 4·5^k t) ≡ f(x) + 5^k t (x^x (4 + 5 a) - 4) (mod 5^(k+N+1))`, where `f(x) = x^x - x`. -/
+lemma step_five_adic {x k N t : ℕ} {a : ℤ} (hx : 1 ≤ x) (hk : N + 1 ≤ k)
+    (hx5 : ¬ (5 : ℤ) ∣ x) (ha : (x : ℤ) ^ (4 * 5 ^ N) = 1 + 5 ^ (N + 1) * a) :
+    (5 : ℤ) ^ (k + N + 1) ∣ (((x + 4 * 5 ^ k * t : ℕ) : ℤ) ^ (x + 4 * 5 ^ k * t) -
+      (x + 4 * 5 ^ k * t : ℕ)) - ((x : ℤ) ^ x - x) -
+      5 ^ k * t * ((x : ℤ) ^ x * (4 + 5 * a) - 4) := by
+  obtain ⟨r, rfl⟩ : ∃ r, k = N + 1 + r := ⟨k - (N + 1), by omega⟩
+  set h : ℤ := 4 * 5 ^ (N + 1 + r) * t with hh
+  have hX : ((x + 4 * 5 ^ (N + 1 + r) * t : ℕ) : ℤ) = (x : ℤ) + h := by rw [hh]; push_cast; ring
+  rw [hX, pow_add ((x : ℤ) + h) x]
+  -- `(x + h)^x ≡ x^x (1 + h)`
+  obtain ⟨c, hc⟩ := add_pow_modEq_sq (x : ℤ) h x
+  have hxx : (x : ℤ) * (x : ℤ) ^ (x - 1) = (x : ℤ) ^ x := by
+    rw [← pow_succ']; congr 1; omega
+  have hA : ((x : ℤ) + h) ^ x = (x : ℤ) ^ x * (1 + h) + h ^ 2 * c := by
+    linear_combination hc + h * hxx
+  -- `((x + h)^4)^(5^N) = 1 + 5^(N+1) a'` with `a' ≡ a (mod 5^(N+r))`
+  have h5h : (5 : ℤ) ∣ h := ⟨4 * 5 ^ (N + r) * t, by rw [hh]; ring⟩
+  have hxh5 : ¬ (5 : ℤ) ∣ (x : ℤ) + h := fun hd => hx5 (by
+    have := dvd_sub hd h5h; simpa using this)
+  obtain ⟨a', ha'⟩ := exists_pow_four_mul_five_pow hxh5 N
+  have hdiff : (5 : ℤ) ^ (N + 1 + r) ∣ ((x : ℤ) + h) ^ 4 - (x : ℤ) ^ 4 :=
+    ⟨4 * t * (((x : ℤ) + h) ^ 3 + ((x : ℤ) + h) ^ 2 * x + ((x : ℤ) + h) * x ^ 2 + (x : ℤ) ^ 3),
+      by rw [hh]; ring⟩
+  obtain ⟨g0, hg0⟩ := five_pow_dvd_pow_sub_pow (by omega) hdiff N
+  have hg : a' = a + 5 ^ (N + r) * g0 := by
+    have e1 : (((x : ℤ) + h) ^ 4) ^ 5 ^ N = 1 + 5 ^ (N + 1) * a' := by rw [← pow_mul]; exact ha'
+    have e2 : ((x : ℤ) ^ 4) ^ 5 ^ N = 1 + 5 ^ (N + 1) * a := by rw [← pow_mul]; exact ha
+    rw [e1, e2] at hg0
+    have e3 : (5 : ℤ) ^ (N + 1) * (a' - a - 5 ^ (N + r) * g0) = 0 := by
+      linear_combination hg0
+    have : a' - a - 5 ^ (N + r) * g0 = 0 :=
+      (mul_eq_zero.1 e3).resolve_left (pow_ne_zero _ (by norm_num))
+    linear_combination this
+  -- `((x + h)^4)^(5^k) = 1 + 5^(k+1) a + 5^(k+N+1) E1`
+  obtain ⟨w1, hw1⟩ := five_pow_dvd_one_add_pow (u := 5 ^ (N + 1) * a') (s := N + 1) (by omega)
+    (dvd_mul_right _ _) (r + 1)
+  have hY : (((x : ℤ) + h) ^ 4) ^ 5 ^ (N + 1 + r) =
+      1 + 5 ^ (N + 1 + r + 1) * a + 5 ^ (N + 1 + r + N + 1) * (5 ^ r * g0 + 5 * w1) := by
+    have e1 : (((x : ℤ) + h) ^ 4) ^ 5 ^ (N + 1 + r) =
+        ((((x : ℤ) + h) ^ 4) ^ 5 ^ N) ^ 5 ^ (r + 1) := by
+      rw [show 5 ^ (N + 1 + r) = 5 ^ N * 5 ^ (r + 1) by ring, pow_mul]
+    have e2 : (((x : ℤ) + h) ^ 4) ^ 5 ^ N = 1 + 5 ^ (N + 1) * a' := by rw [← pow_mul]; exact ha'
+    rw [e1, e2, hg]
+    rw [hg] at hw1
+    linear_combination hw1
+  -- raise to the power `t`
+  set E1 : ℤ := 5 ^ r * g0 + 5 * w1
+  set z : ℤ := 5 ^ (N + 1 + r + 1) * a + 5 ^ (N + 1 + r + N + 1) * E1 with hzdef
+  obtain ⟨c2, hc2⟩ := add_pow_modEq_sq 1 z t
+  simp only [one_pow, mul_one] at hc2
+  have hpow : ((x : ℤ) + h) ^ (4 * 5 ^ (N + 1 + r) * t) = (1 + z) ^ t := by
+    rw [pow_mul, pow_mul, hY, hzdef]; ring
+  have hz2 : z ^ 2 = 5 ^ (N + 1 + r + N + 1) * (5 ^ (r + 2) * (a + 5 ^ N * E1) ^ 2) := by
+    rw [hzdef]; ring
+  have hZ : (1 + z) ^ t = 1 + 5 ^ (N + 1 + r + 1) * t * a +
+      5 ^ (N + 1 + r + N + 1) * (t * E1 + 5 ^ (r + 2) * (a + 5 ^ N * E1) ^ 2 * c2) := by
+    rw [hz2] at hc2
+    linear_combination hc2
+  rw [hpow, hZ, hA]
+  refine ⟨(x : ℤ) ^ x * 4 * 5 ^ (r + 1) * t ^ 2 * a + (x : ℤ) ^ x * (1 + h) *
+      (t * E1 + 5 ^ (r + 2) * (a + 5 ^ N * E1) ^ 2 * c2) + 16 * 5 ^ r * t ^ 2 * c *
+      (1 + 5 ^ (N + 1 + r + 1) * t * a +
+        5 ^ (N + 1 + r + N + 1) * (t * E1 + 5 ^ (r + 2) * (a + 5 ^ N * E1) ^ 2 * c2)), ?_⟩
+  rw [hh]; ring
+
+lemma intCast_five_pow_eq_zero {n : ℕ} {A : ℤ} : (A : ZMod (5 ^ n)) = 0 ↔ (5 : ℤ) ^ n ∣ A := by
+  rw [ZMod.intCast_zmod_eq_zero_iff_dvd]; push_cast; rfl
+
+lemma prime_five_int : Prime (5 : ℤ) := Int.prime_iff_natAbs_prime.2 (by norm_num)
+
+lemma isCoprime_five_pow {u : ℤ} (hu : ¬ (5 : ℤ) ∣ u) (n : ℕ) : IsCoprime u ((5 : ℤ) ^ n) :=
+  (((prime_five_int.irreducible).coprime_iff_not_dvd).2 hu).symm.pow_right
+
+lemma five_pow_dvd_of_dvd_two_mul {n : ℕ} {A : ℤ} (h : (5 : ℤ) ^ n ∣ 2 * A) :
+    (5 : ℤ) ^ n ∣ A :=
+  ((isCoprime_five_pow (u := 2) (by norm_num) n).symm).dvd_of_dvd_mul_left h
+
+/-- An `x ≥ 1` with `4 ∣ x` in a given class modulo `5^M` (Chinese remainder theorem). -/
+lemma exists_four_dvd_modEq (M : ℕ) (u : ℤ) :
+    ∃ x : ℕ, 1 ≤ x ∧ 4 ∣ x ∧ (5 : ℤ) ^ M ∣ (x : ℤ) - u := by
+  have h4 : (4 : ℤ) ∣ 5 ^ M - 1 := by simpa using sub_dvd_pow_sub_pow (5 : ℤ) 1 M
+  have hM : (1 : ℤ) ≤ 5 ^ M := one_le_pow₀ (by norm_num)
+  set X : ℤ := u * (1 - 5 ^ M) + 4 * 5 ^ M * (|u| + 1) with hX
+  have hpos : 1 ≤ X := by
+    have h1 : 0 ≤ (|u| - u) * (5 ^ M - 1) := mul_nonneg (by linarith [le_abs_self u]) (by linarith)
+    have h2 : 0 ≤ |u| := abs_nonneg u
+    nlinarith
+  refine ⟨X.toNat, by omega, ?_, ?_⟩
+  · have : (4 : ℤ) ∣ X := by
+      obtain ⟨q, hq⟩ := h4
+      exact ⟨-u * q + 5 ^ M * (|u| + 1), by rw [hX]; linear_combination (-u) * hq⟩
+    omega
+  · rw [Int.toNat_of_nonneg (by omega)]
+    exact ⟨-u + 4 * (|u| + 1), by rw [hX]; ring⟩
+
+/-- The 5-adic `sqrt(-1)` with `i ≡ 3 (mod 5)` exists modulo every `5^e`. -/
+lemma exists_sqrt_neg_one_five_pow (e : ℕ) :
+    ∃ i : ℤ, (5 : ℤ) ^ e ∣ i ^ 2 + 1 ∧ (5 : ℤ) ∣ i - 3 := by
+  obtain ⟨y, hy, hy2⟩ := exists_sq_five_pow (a := 3) (c := -1) (by norm_num) (by norm_num) e
+  exact ⟨y, by simpa using hy2, hy⟩
+
+/-- The leading coefficient of the step of the 5-adic law (proof of Theorem 20.12). Let
+`x ≡ i (mod 5)`, `4 ∣ x`, and let `D = x - i` have valuation exactly `j ≥ 1` (it agrees with `c`
+modulo `5^(j+1)`, and `v_5(c) = j`), with `2 j ≤ e`. Then the coefficient
+`x^x (4 + 5 a) - 4` of the step, `x^(4·5^j) = 1 + 5^(j+1) a`, has valuation exactly `j`: it is
+`≡ 4 (1 - i) D (mod 5^(2j))`. -/
+lemma five_adic_unit {x j e : ℕ} {i c a : ℤ} (hj : 1 ≤ j) (hje : 2 * j ≤ e)
+    (hi : (5 : ℤ) ^ e ∣ i ^ 2 + 1) (hi3 : (5 : ℤ) ∣ i - 3) (h4 : 4 ∣ x) (hx : 0 < x)
+    (hD : (5 : ℤ) ^ (j + 1) ∣ ((x : ℤ) - i) - c) (hc : (5 : ℤ) ^ j ∣ c)
+    (hc' : ¬ (5 : ℤ) ^ (j + 1) ∣ c) (ha : (x : ℤ) ^ (4 * 5 ^ j) = 1 + 5 ^ (j + 1) * a) :
+    ∃ β : ℤ, (x : ℤ) ^ x * (4 + 5 * a) - 4 = 5 ^ j * β ∧ ¬ (5 : ℤ) ∣ β := by
+  set D : ℤ := (x : ℤ) - i with hDdef
+  obtain ⟨c', rfl⟩ := hc
+  obtain ⟨k, hk⟩ := hD
+  have hc'5 : ¬ (5 : ℤ) ∣ c' := fun h => hc' (by rw [pow_succ]; exact mul_dvd_mul_left _ h)
+  set δ : ℤ := c' + 5 * k with hδ
+  have hDδ : D = 5 ^ j * δ := by rw [hδ]; linear_combination hk
+  have hδ5 : ¬ (5 : ℤ) ∣ δ := by omega
+  -- work modulo `5^(2j)`
+  obtain ⟨n, rfl⟩ : ∃ n, j = n + 1 := ⟨j - 1, by omega⟩
+  set N : ℕ := 5 ^ (2 * (n + 1)) with hN
+  have hcast : ∀ A : ℤ, (A : ZMod N) = 0 ↔ (5 : ℤ) ^ (2 * (n + 1)) ∣ A := fun A => by
+    rw [hN]; exact intCast_five_pow_eq_zero
+  have hι : ((i : ℤ) : ZMod N) ^ 2 = -1 := by
+    have : ((i ^ 2 + 1 : ℤ) : ZMod N) = 0 := (hcast _).2 ((pow_dvd_pow 5 hje).trans hi)
+    push_cast at this; linear_combination this
+  have hD2 : ((D : ℤ) : ZMod N) ^ 2 = 0 := by
+    have : ((D ^ 2 : ℤ) : ZMod N) = 0 := (hcast _).2 ⟨δ ^ 2, by rw [hDδ]; ring⟩
+    push_cast at this; exact this
+  have hxR : ((x : ℕ) : ZMod N) = ((i : ℤ) : ZMod N) + ((D : ℤ) : ZMod N) := by
+    rw [hDdef]; push_cast; ring
+  obtain ⟨S, hS⟩ := two_mul_pow_self_sub_eq (R := ZMod N) hι
+    (d := ((5 ^ n * δ : ℤ) : ZMod N)) (by rw [hDδ]; push_cast; ring) h4 hx hxR
+  -- `5 a ≡ x^4 - 1 (mod 5^(2j))`
+  have hx4 : (5 : ℤ) ^ (n + 1) ∣ (x : ℤ) ^ 4 - 1 := by
+    have e : (x : ℤ) ^ 4 - 1 = (i ^ 2 + 1) * (i ^ 2 - 1) +
+        D * (4 * i ^ 3 + 6 * i ^ 2 * D + 4 * i * D ^ 2 + D ^ 3) := by rw [hDdef]; ring
+    rw [e]
+    exact dvd_add (dvd_mul_of_dvd_left ((pow_dvd_pow 5 (by omega)).trans hi) _)
+      (dvd_mul_of_dvd_left ⟨δ, hDδ⟩ _)
+  obtain ⟨w, hw⟩ := five_pow_dvd_one_add_pow (by omega) hx4 (n + 1)
+  have h5a : 5 * a = (x : ℤ) ^ 4 - 1 + 5 ^ (2 * (n + 1)) * w := by
+    have e : (1 + ((x : ℤ) ^ 4 - 1)) ^ 5 ^ (n + 1) = (x : ℤ) ^ (4 * 5 ^ (n + 1)) := by
+      rw [pow_mul]; ring
+    rw [e, ha] at hw
+    have : (5 : ℤ) ^ (n + 1) * (5 * a - ((x : ℤ) ^ 4 - 1 + 5 ^ (2 * (n + 1)) * w)) = 0 := by
+      linear_combination hw
+    linear_combination (mul_eq_zero.1 this).resolve_left (pow_ne_zero _ (by norm_num))
+  -- `2 B ≡ 8 (1 - i) D (mod 5^(2j))`
+  set B : ℤ := (x : ℤ) ^ x * (4 + 5 * a) - 4 with hB
+  have hBR : ((2 * B - 8 * (1 - i) * D : ℤ) : ZMod N) = 0 := by
+    have h5aR : ((5 * a : ℤ) : ZMod N) = ((x : ℕ) : ZMod N) ^ 4 - 1 := by
+      rw [h5a]; push_cast
+      have : (((5 : ℤ) ^ (2 * (n + 1)) : ℤ) : ZMod N) = 0 := (hcast _).2 dvd_rfl
+      push_cast at this; rw [this]; ring
+    rw [hB]; push_cast at h5aR ⊢
+    set ι : ZMod N := ((i : ℤ) : ZMod N)
+    set DR : ZMod N := ((D : ℤ) : ZMod N)
+    have hx4R : ((x : ℕ) : ZMod N) ^ 4 - 1 = -4 * ι * DR := by
+      rw [hxR]
+      linear_combination (ι ^ 2 - 1 + 4 * ι * DR) * hι + (6 * ι ^ 2 + 4 * ι * DR + DR ^ 2) * hD2
+    have h5aR' : 5 * (a : ZMod N) = -4 * ι * DR := h5aR.trans hx4R
+    have h2X : 2 * ((x : ℕ) : ZMod N) ^ x = 2 + 2 * DR := by
+      linear_combination hS + 2 * hxR + ((1 - ι) + 5 * S) * hD2
+    linear_combination (4 + 5 * (a : ZMod N)) * h2X + (2 + 2 * DR) * h5aR' - 8 * ι * hD2
+  have hBd := (hcast _).1 hBR
+  -- read off the valuation
+  obtain ⟨κ, hκ⟩ := hBd
+  have h2B : (5 : ℤ) ^ (n + 1) ∣ 2 * B :=
+    ⟨8 * (1 - i) * δ + 5 ^ (n + 1) * κ, by linear_combination hκ + 8 * (1 - i) * hDδ⟩
+  obtain ⟨β, hβ⟩ := five_pow_dvd_of_dvd_two_mul h2B
+  refine ⟨β, hβ, fun h5 => ?_⟩
+  have e : (5 : ℤ) ^ (n + 1) * (2 * β - 8 * ((1 - i) * δ) - 5 ^ (n + 1) * κ) = 0 := by
+    linear_combination hκ - 2 * hβ + 8 * (1 - i) * hDδ
+  have e' := (mul_eq_zero.1 e).resolve_left (pow_ne_zero _ (by norm_num))
+  have h1 : (5 : ℤ) ∣ (1 - i) * δ := by
+    have : (5 : ℤ) ∣ 5 ^ (n + 1) * κ := dvd_mul_of_dvd_left (dvd_pow_self 5 (by omega)) _
+    omega
+  rcases prime_five_int.dvd_mul.1 h1 with h | h
+  · omega
+  · exact hδ5 h
+
+/-- `x^x - x ≡ 3 (mod 5)` forces `x ≡ 8 (mod 20)` (Lemma 20.9), stated in `ℤ`. -/
+lemma mod_twenty_of_five_dvd {x : ℕ} (hx : 1 ≤ x) (h : (5 : ℤ) ∣ ((x : ℤ) ^ x - x) - 3) :
+    x % 20 = 8 := by
+  have hle : x ≤ x ^ x := by
+    calc x = x ^ 1 := (pow_one x).symm
+      _ ≤ x ^ x := Nat.pow_le_pow_right hx hx
+  have hcast : ((x ^ x - x : ℕ) : ℤ) = (x : ℤ) ^ x - x := by push_cast [hle]; ring
+  exact lemma20_9_five hx (by omega)
+
+/-- **Theorem 20.12**, the class `3 (mod 5)` (the 5-adic law, section 20.2.2). Let `i` be a
+square root of `-1` modulo `5^e` with `i ≡ 3 (mod 5)` (it exists by
+`exists_sqrt_neg_one_five_pow`), and `A = 1 - i`. A residue `v ≡ 3 (mod 5)` is a value of
+`x^x - x` modulo `5^e` exactly when `v ≡ A (1 - 25 s / 2)` with `s = y^2` a square, that is
+`2 v ≡ A (2 - 25 y^2)`. The proof replaces the 5-adic series by the expansion
+`two_mul_pow_self_sub_eq` and Hensel's lemma by the step `step_five_adic`. -/
+theorem theorem20_12_three_mod_five {e : ℕ} {i : ℤ} (hi : (5 : ℤ) ^ e ∣ i ^ 2 + 1)
+    (hi3 : (5 : ℤ) ∣ i - 3) {v : ℤ} (hv : (5 : ℤ) ∣ v - 3) :
+    (∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - v) ↔
+      ∃ y : ℤ, (5 : ℤ) ^ e ∣ 2 * v - (1 - i) * (2 - 25 * y ^ 2) := by
+  have hcast : ∀ A : ℤ, (A : ZMod (5 ^ e)) = 0 ↔ (5 : ℤ) ^ e ∣ A := fun A =>
+    intCast_five_pow_eq_zero
+  have hι : ((i : ℤ) : ZMod (5 ^ e)) ^ 2 = -1 := by
+    have : ((i ^ 2 + 1 : ℤ) : ZMod (5 ^ e)) = 0 := (hcast _).2 hi
+    push_cast at this; linear_combination this
+  have hA5 : ¬ (5 : ℤ) ∣ 1 - i := by omega
+  rcases Nat.eq_zero_or_pos e with rfl | he
+  · exact ⟨fun _ => ⟨0, by simp⟩, fun _ => ⟨1, le_rfl, by simp⟩⟩
+  constructor
+  · rintro ⟨x, hx, hdvd⟩
+    have h20 : x % 20 = 8 := mod_twenty_of_five_dvd hx (by
+      have := (dvd_pow_self (5 : ℤ) he.ne').trans hdvd; omega)
+    have h4 : 4 ∣ x := by omega
+    obtain ⟨δ, hδ⟩ : (5 : ℤ) ∣ (x : ℤ) - i := by omega
+    obtain ⟨S, hS⟩ := two_mul_pow_self_sub_eq (R := ZMod (5 ^ e)) hι
+      (D := (((x : ℤ) - i : ℤ) : ZMod (5 ^ e))) (d := ((δ : ℤ) : ZMod (5 ^ e)))
+      (by rw [hδ]; push_cast; ring) h4 (by omega) (by push_cast; ring)
+    -- an inverse of `1 - i` and a square root of `1 + 5 α S`
+    obtain ⟨α, β, hαβ⟩ := isCoprime_five_pow hA5 e
+    set σ : ℤ := ((S.val : ℕ) : ℤ)
+    have hσ : ((σ : ℤ) : ZMod (5 ^ e)) = S := by simp [σ]
+    obtain ⟨z, -, hz⟩ := exists_sq_five_pow (a := 1) (c := 1 + 5 * α * σ) (by norm_num)
+      ⟨-(α * σ), by ring⟩ e
+    refine ⟨i * δ * z, (hcast _).1 ?_⟩
+    have hvR : ((v : ℤ) : ZMod (5 ^ e)) = ((x : ℕ) : ZMod (5 ^ e)) ^ x - x := by
+      have := (hcast _).2 hdvd; push_cast at this; linear_combination -this
+    have hαR : (α : ZMod (5 ^ e)) * (1 - i) = 1 := by
+      have := (hcast (α * (1 - i) - 1)).2 ⟨-β, by linear_combination hαβ⟩
+      push_cast at this; linear_combination this
+    have hzR : (z : ZMod (5 ^ e)) ^ 2 = 1 + 5 * α * S := by
+      have := (hcast _).2 hz; push_cast at this; rw [← hσ]; linear_combination this
+    rw [hδ] at hS
+    push_cast at hS ⊢
+    linear_combination 2 * hvR + hS + (1 - (i : ZMod (5 ^ e))) * 25 * (δ : ZMod (5 ^ e)) ^ 2 *
+      (z : ZMod (5 ^ e)) ^ 2 * hι - 25 * (δ : ZMod (5 ^ e)) ^ 2 * (1 - (i : ZMod (5 ^ e))) * hzR
+      - 125 * (δ : ZMod (5 ^ e)) ^ 2 * S * hαR
+  · rintro ⟨y, hy⟩
+    set c : ℤ := 5 * i * y with hc
+    have htarget : ((2 * v : ℤ) : ZMod (5 ^ e)) =
+        (1 - (i : ZMod (5 ^ e))) * (2 + (c : ZMod (5 ^ e)) ^ 2) := by
+      have := (hcast _).2 hy
+      rw [hc]; push_cast at this ⊢
+      linear_combination this - (1 - (i : ZMod (5 ^ e))) * 25 * (y : ZMod (5 ^ e)) ^ 2 * hι
+    have he1 : (5 : ℤ) ^ e = 5 * 5 ^ (e - 1) := by rw [← pow_succ']; congr 1; omega
+    by_cases hA : (5 : ℤ) ^ e ∣ c ^ 2
+    · -- `c^2 ≡ 0`: take `x ≡ i (mod 5^e)`
+      obtain ⟨x, hx1, hx4, κ, hκ⟩ := exists_four_dvd_modEq e i
+      have hD0 : (((x : ℤ) - i : ℤ) : ZMod (5 ^ e)) = 0 := (hcast _).2 ⟨κ, hκ⟩
+      obtain ⟨S, hS⟩ := two_mul_pow_self_sub_eq (R := ZMod (5 ^ e)) hι
+        (D := (((x : ℤ) - i : ℤ) : ZMod (5 ^ e))) (d := ((5 ^ (e - 1) * κ : ℤ) : ZMod (5 ^ e)))
+        (by rw [hκ, he1]; push_cast; ring) hx4 (by omega) (by push_cast; ring)
+      have hc0 : (c : ZMod (5 ^ e)) ^ 2 = 0 := by
+        have := (hcast _).2 hA; push_cast at this; exact this
+      rw [hD0] at hS
+      refine ⟨x, hx1, five_pow_dvd_of_dvd_two_mul ((hcast _).1 ?_)⟩
+      push_cast at htarget ⊢
+      linear_combination hS - htarget - (1 - (i : ZMod (5 ^ e))) * hc0
+    -- the valuation `j` of `c`
+    have hc0 : c ≠ 0 := by rintro h; exact hA (by rw [h]; simp)
+    obtain ⟨j, m₀, hm₀, hcm⟩ := Nat.exists_eq_pow_mul_and_not_dvd (Int.natAbs_ne_zero.2 hc0) 5
+      (by norm_num)
+    have hcj : (5 : ℤ) ^ j ∣ c := by
+      rw [← Int.natAbs_dvd_natAbs]; simp [hcm]
+    have hcj' : ¬ (5 : ℤ) ^ (j + 1) ∣ c := by
+      intro h
+      have h' : 5 ^ (j + 1) ∣ c.natAbs := by
+        have := Int.natAbs_dvd_natAbs.2 h; simpa [Int.natAbs_pow] using this
+      rw [hcm, pow_succ] at h'
+      exact hm₀ (Nat.dvd_of_mul_dvd_mul_left (pow_pos (by norm_num) j) h')
+    have hj1 : 1 ≤ j := by
+      by_contra h0
+      have : j = 0 := by omega
+      subst this
+      apply hcj'
+      simpa [hc] using dvd_mul_of_dvd_left (dvd_mul_right (5 : ℤ) i) y
+    have h2j : 2 * j + 1 ≤ e := by
+      by_contra h
+      obtain ⟨c₁, hc₁⟩ := hcj
+      exact hA ((pow_dvd_pow 5 (by omega : e ≤ 2 * j)).trans ⟨c₁ ^ 2, by rw [hc₁]; ring⟩)
+    have h5c : (5 : ℤ) ∣ c := (dvd_pow_self 5 (by omega)).trans hcj
+    have claim : ∀ m, 2 * j + 1 ≤ m → m ≤ e → ∃ x : ℕ, 1 ≤ x ∧ 4 ∣ x ∧
+        (5 : ℤ) ^ (j + 1) ∣ ((x : ℤ) - i) - c ∧ (5 : ℤ) ^ m ∣ ((x : ℤ) ^ x - x) - v := by
+      intro m hm
+      induction m, hm using Nat.le_induction with
+      | base =>
+        intro _
+        obtain ⟨x, hx1, hx4, κ, hκ⟩ := exists_four_dvd_modEq e (i + c)
+        have hDc : (((x : ℤ) - i : ℤ) : ZMod (5 ^ e)) = (c : ZMod (5 ^ e)) :=
+          (ZMod.intCast_eq_intCast_iff_dvd_sub _ _ _).2 (by push_cast; exact ⟨-κ, by
+            linear_combination -hκ - hc⟩)
+        obtain ⟨S, hS⟩ := two_mul_pow_self_sub_eq (R := ZMod (5 ^ e)) hι
+          (D := (((x : ℤ) - i : ℤ) : ZMod (5 ^ e))) (d := ((i * y + 5 ^ (e - 1) * κ : ℤ) :
+            ZMod (5 ^ e))) (by
+              have : (x : ℤ) - i = 5 * (i * y + 5 ^ (e - 1) * κ) := by
+                linear_combination hκ + hc + κ * he1
+              rw [this]; push_cast; ring) hx4 (by omega) (by push_cast; ring)
+        rw [hDc] at hS
+        set σ : ℤ := ((S.val : ℕ) : ℤ)
+        have hσ : ((σ : ℤ) : ZMod (5 ^ e)) = S := by simp [σ]
+        have h1 : (5 : ℤ) ^ e ∣ 2 * (((x : ℤ) ^ x - x) - v) - 5 * c ^ 2 * σ := by
+          rw [← hcast]; push_cast at htarget ⊢; rw [hσ]
+          linear_combination hS - htarget
+        have h2 : (5 : ℤ) ^ (2 * j + 1) ∣ 5 * c ^ 2 * σ := by
+          obtain ⟨c₁, hc₁⟩ := hcj
+          exact ⟨c₁ ^ 2 * σ, by rw [hc₁]; ring⟩
+        refine ⟨x, hx1, hx4, (pow_dvd_pow 5 (by omega : j + 1 ≤ e)).trans
+          ⟨κ, by linear_combination hκ⟩,
+          five_pow_dvd_of_dvd_two_mul ?_⟩
+        have := dvd_add ((pow_dvd_pow 5 h2j).trans h1) h2
+        simpa using this
+      | succ m hm ih =>
+        intro hme
+        obtain ⟨x, hx1, hx4, hxc, μ, hμ⟩ := ih (by omega)
+        obtain ⟨k, rfl⟩ : ∃ k, m = k + j := ⟨m - j, by omega⟩
+        have hx5 : ¬ (5 : ℤ) ∣ (x : ℤ) := by
+          have : (5 : ℤ) ∣ ((x : ℤ) - i) - c := (dvd_pow_self 5 (by omega)).trans hxc
+          omega
+        obtain ⟨a, ha⟩ := exists_pow_four_mul_five_pow hx5 j
+        obtain ⟨β, hβ, hβ5⟩ := five_adic_unit hj1 (by omega) hi hi3 hx4 (by omega) hxc hcj hcj' ha
+        obtain ⟨t, q, hq⟩ := exists_five_dvd_add_mul hβ5 μ
+        obtain ⟨W, hW⟩ := step_five_adic (x := x) (k := k) (N := j) (t := t) hx1 (by omega) hx5 ha
+        refine ⟨x + 4 * 5 ^ k * t, by omega, dvd_add hx4 ⟨5 ^ k * t, by ring⟩, ?_, ?_⟩
+        · obtain ⟨g, hg⟩ := pow_dvd_pow (5 : ℤ) (by omega : j + 1 ≤ k)
+          obtain ⟨u, hu⟩ := hxc
+          exact ⟨u + 4 * g * t, by push_cast; linear_combination hu + 4 * (t : ℤ) * hg⟩
+        · refine ⟨W + q, ?_⟩
+          rw [hβ] at hW
+          linear_combination hW + hμ + 5 ^ (k + j) * hq
+    obtain ⟨x, hx1, -, -, h⟩ := claim e h2j le_rfl
+    exact ⟨x, hx1, h⟩
+
+/-- **Theorem 20.12** (the 5-adic law, section 20.2.2). With `i` and `A = 1 - i` as in
+`theorem20_12_three_mod_five`, for `e ≥ 1` the values of `x^x - x` modulo `5^e` are the residues
+`v ≢ 3 (mod 5)` and the residues `A (1 - 25 s / 2)` with `s` a square. -/
+theorem theorem20_12 {e : ℕ} (he : 1 ≤ e) {i : ℤ} (hi : (5 : ℤ) ^ e ∣ i ^ 2 + 1)
+    (hi3 : (5 : ℤ) ∣ i - 3) (v : ℤ) :
+    (∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - v) ↔
+      (¬ (5 : ℤ) ∣ v - 3 ∨ ∃ y : ℤ, (5 : ℤ) ^ e ∣ 2 * v - (1 - i) * (2 - 25 * y ^ 2)) := by
+  by_cases h : (5 : ℤ) ∣ v - 3
+  · rw [theorem20_12_three_mod_five hi hi3 h]; simp [h]
+  · exact ⟨fun _ => Or.inl h, fun _ => theorem20_12_good he h⟩
 
 end Munchausen
