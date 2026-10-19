@@ -1,5 +1,6 @@
 import Munchausen.ThreeDigits
 import Munchausen.Counting
+import Munchausen.Examples
 
 /-!
 # The members of the square class and 3-digit solutions in one base
@@ -538,6 +539,107 @@ theorem prop25_17_card {b p q x : ℕ} (hs : IsSolution b 1 [p, q, x])
     _ ≤ ({[p, q, x]} : Finset (List ℕ)).card + S2.card + S3.card := by
         have := Finset.card_union_le ({[p, q, x]} : Finset (List ℕ)) S2; omega
     _ ≤ 3 := by rw [Finset.card_singleton]; omega
+
+/-! ### Proposition 25.9 and Theorem 25.10 -/
+
+/-- **Proposition 25.9** (section 25.2.1). Among the 3-digit members (solutions with `R = 0`
+under `0^0 = 1`), a larger last digit gives a larger base. -/
+theorem prop25_9 {b p q x b' p' q' x' : ℕ} (hs : IsSolution b 1 [p, q, x])
+    (hR : 4 * p * x = 4 * p * (w 1 p + w 1 q) + q ^ 2) (hs' : IsSolution b' 1 [p', q', x'])
+    (hR' : 4 * p' * x' = 4 * p' * (w 1 p' + w 1 q') + q' ^ 2) (hxx : x < x') : b < b' := by
+  obtain ⟨lam, c, e, -, -, hp, hq, hx, hY⟩ := theorem25_7_i hs hR
+  obtain ⟨lam', c', e', -, -, hp', hq', hx', hY'⟩ := theorem25_7_i hs' hR'
+  obtain ⟨-, hpW, -⟩ := member_bounds hs hp hq hx hY
+  obtain ⟨-, -, hW'⟩ := member_bounds hs' hp' hq' hx' hY'
+  have hp1 : 1 ≤ p := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
+  have hp1' : 1 ≤ p' := Nat.one_le_iff_ne_zero.2 (hs'.head_ne_zero (by simp))
+  have hx1 : 1 ≤ x := by
+    have := one_le_w (m := 1) (show p ≠ 0 by omega); omega
+  have hpx' : p' + 1 ≤ x' := by
+    have := le_w (m := 1) (show p' ≠ 0 by omega)
+    have : 1 ≤ w 1 q' := by rw [w_one_eq_pow]; exact one_le_pow_self q'
+    omega
+  have h2 := two_mul_pow_self_le hx1 hxx
+  by_contra hbb
+  have hb2 : b' ^ 2 ≤ b ^ 2 := Nat.pow_le_pow_left (by omega) 2
+  -- `(p' + 1) b'^2 ≤ x' b^2 ≤ x' p b^2 ≤ x' x^x ≤ x'^x' < (p' + 1) b'^2`
+  have h3 : (p' + 1) * b' ^ 2 ≤ x' * (p * b ^ 2) := by
+    calc (p' + 1) * b' ^ 2 ≤ x' * b ^ 2 := Nat.mul_le_mul hpx' hb2
+      _ ≤ x' * (p * b ^ 2) := Nat.mul_le_mul_left _ (Nat.le_mul_of_pos_left _ (by omega))
+  have h4 : x' * (p * b ^ 2) ≤ x' ^ x' := by
+    calc x' * (p * b ^ 2) ≤ x' * x ^ x := Nat.mul_le_mul_left _ hpW
+      _ ≤ 2 * x' * x ^ x := by nlinarith
+      _ ≤ x' ^ x' := h2
+  omega
+
+/-- No `d^2` lies strictly between `k^2` and `(k + 1)^2`. -/
+lemma ne_sq_of_between {n k d : ℕ} (h1 : k ^ 2 < n) (h2 : n < (k + 1) ^ 2) : n ≠ d ^ 2 := by
+  rintro rfl
+  rcases Nat.lt_or_ge d (k + 1) with h | h
+  · have : d ^ 2 ≤ k ^ 2 := Nat.pow_le_pow_left (by omega) 2
+    omega
+  · have : (k + 1) ^ 2 ≤ d ^ 2 := Nat.pow_le_pow_left h 2
+    omega
+
+/-- **Theorem 25.10** (section 25.2.1). Under `0^0 = 1`, the 3-digit power-identity members
+(solutions with `R = 0`) are `(1, 2, 6)` in base 215, `(1, 6, 46666)` in base
+`46666^23333 - 3` (`isSolution_1_6_46666`), and members in larger bases. So after `(1,2,6)`
+the next member is `(1, 6, 46666)`. -/
+theorem theorem25_10 {b p q x : ℕ} (hs : IsSolution b 1 [p, q, x])
+    (hR : 4 * p * x = 4 * p * (w 1 p + w 1 q) + q ^ 2) :
+    ([p, q, x] = [1, 2, 6] ∧ b = 215) ∨
+      ([p, q, x] = [1, 6, 46666] ∧ b = 46666 ^ 23333 - 3) ∨ 46666 ^ 23333 - 3 < b := by
+  by_cases hbig : 46666 < x
+  · exact Or.inr (Or.inr (prop25_9 (isSolution_1_6_46666 1) (by norm_num [w]) hs hR hbig))
+  obtain ⟨lam, c, e, hlam, hc, hp, hq, hx, hY⟩ := theorem25_7_i hs hR
+  have he := member_e_pos hs hp hq hx hY
+  have hlam1 : 1 ≤ lam := Nat.pos_of_ne_zero hlam.ne_zero
+  -- `w(p), w(q) ≤ x ≤ 46666`, so `p, q ≤ 6`
+  have hsmall : ∀ d, w 1 d ≤ 46666 → d ≤ 6 := by
+    intro d hd
+    by_contra h7
+    rw [w_one_eq_pow] at hd
+    have : 7 ^ 7 ≤ d ^ d :=
+      (Nat.pow_le_pow_left (by omega) 7).trans (Nat.pow_le_pow_right (by omega) (by omega))
+    norm_num at this
+    omega
+  have hp6 := hsmall p (by omega)
+  have hq6 := hsmall q (by omega)
+  have hlam3 : lam ≤ 3 := by
+    have : lam * c * e ≤ 3 := by
+      have : 2 * (lam * c * e) ≤ 6 := by rw [hq] at hq6; linarith
+      omega
+    nlinarith [Nat.mul_le_mul (Nat.mul_le_mul (le_refl lam) hc) he]
+  have hc3 : c ≤ 3 := by nlinarith [Nat.mul_le_mul hlam1 (le_refl (c ^ 2))]
+  have he3 : e ≤ 3 := by nlinarith [Nat.mul_le_mul (Nat.mul_le_mul hlam1 hc) (le_refl e)]
+  have hx0 : x ≠ 0 := by
+    have := one_le_w (m := 1) (show p ≠ 0 by rw [hp]; positivity); omega
+  have hpar := theorem25_7_i_parity hx0 hlam hY
+  interval_cases lam <;> interval_cases c <;> interval_cases e <;>
+    norm_num at hp hq <;> subst hp hq <;> norm_num [w] at hx <;> subst hx <;>
+    (try omega)
+  · -- `(1, 2, 6)`: `(b + 1)^2 = 216^2`
+    left
+    refine ⟨rfl, ?_⟩
+    norm_num at hY
+    have h216 : (b + 1) ^ 2 = 216 ^ 2 := by rw [← hY]; norm_num
+    have : b + 1 = 216 := Nat.pow_left_injective two_ne_zero h216
+    omega
+  · -- `x = 261` is odd and not a square
+    obtain ⟨d, hd⟩ := hpar.2 (by decide)
+    exact absurd (by simpa using hd) (ne_sq_of_between (k := 16) (by norm_num) (by norm_num))
+  · -- `(1, 6, 46666)`: `(b + 3)^2 = (46666^23333)^2`
+    right; left
+    refine ⟨rfl, ?_⟩
+    have hsq : 46666 ^ 46666 = (46666 ^ 23333) ^ 2 := by rw [← pow_mul]
+    generalize 46666 ^ 23333 = Y at hsq ⊢
+    rw [one_mul, one_mul, hsq] at hY
+    exact Nat.eq_sub_of_add_eq (Nat.pow_left_injective two_ne_zero hY).symm
+  · -- `x = 513` is odd and not a square
+    obtain ⟨d, hd⟩ := hpar.2 (by decide)
+    exact absurd (by simpa using hd) (ne_sq_of_between (k := 22) (by norm_num) (by norm_num))
+  · -- `x = 262` is even, but `lam = 2`
+    exact absurd (hpar.1 (by decide)) (by norm_num)
 
 /-! ### Theorem 25.15 -/
 
