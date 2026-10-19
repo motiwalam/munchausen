@@ -260,6 +260,95 @@ theorem IsFFSolution.add_C {B n : (ZMod p)[X]} (hB : 0 < B.degree) (hn : IsFFSol
       ← hn, hF, List.map_cons, List.sum_cons]
     ring
 
+/-! ### Proposition 21.4: self-paying digits -/
+
+/-- **Proposition 21.4** (section 21.1.3). A nonzero digit `d` of degree `j` pays for itself
+at position `k`, `w(d) = d B^k`, exactly when `d^(p^j - 1) = B^k`. -/
+theorem ffWeight_eq_mul_pow_iff {B d : (ZMod p)[X]} (hd : d ≠ 0) (k : ℕ) :
+    ffWeight d = d * B ^ k ↔ d ^ (p ^ d.natDegree - 1) = B ^ k := by
+  have hp : 1 ≤ p ^ d.natDegree := Nat.one_le_pow _ _ (Fact.out : p.Prime).pos
+  have e : ffWeight d = d * d ^ (p ^ d.natDegree - 1) := by
+    rw [ffWeight, ← pow_succ']; congr 1; omega
+  rw [e]
+  exact ⟨fun h => mul_left_cancel₀ hd h, fun h => by rw [h]⟩
+
+/-- **Proposition 21.4**, base `T^e` (section 21.1.3). The digit `c T^j` (`c ≠ 0`) pays for
+itself at position `k` in base `T^e` exactly when `e k = j (p^j - 1)`. -/
+theorem ffWeight_C_mul_X_pow_iff {c : ZMod p} (hc : c ≠ 0) (j e k : ℕ) :
+    ffWeight (C c * X ^ j) = C c * X ^ j * (X ^ e) ^ k ↔ e * k = j * (p ^ j - 1) := by
+  rw [ffWeight, natDegree_C_mul_X_pow j c hc, mul_pow, ← C_pow, ZMod.pow_card_pow, ← pow_mul,
+    ← pow_mul, mul_assoc, ← pow_add]
+  have hp : 1 ≤ p ^ j := Nat.one_le_pow _ _ (Fact.out : p.Prime).pos
+  constructor
+  · intro h
+    have h1 := mul_left_cancel₀ (C_ne_zero.2 hc) h
+    have h2 := congrArg natDegree h1
+    rw [natDegree_X_pow, natDegree_X_pow] at h2
+    rw [Nat.mul_sub_one]
+    omega
+  · intro h
+    congr 2
+    rw [Nat.mul_sub_one] at h
+    have : j ≤ j * p ^ j := Nat.le_mul_of_pos_right _ hp
+    omega
+
+/-- Placing a digit at a zero position `k` (also above the leading digit) adds `d B^k` to the
+value and `w(d)` to the weight sum (under `0^0 = 0`). -/
+lemma exists_place_digit {B : (ZMod p)[X]} (hB : 0 < B.degree) {d : (ZMod p)[X]}
+    (hd : d.degree < B.degree) :
+    ∀ (k : ℕ) (L : List (ZMod p)[X]), (∀ e ∈ L, e.degree < B.degree) → L.getD k 0 = 0 →
+      ∃ L' : List (ZMod p)[X], (∀ e ∈ L', e.degree < B.degree) ∧
+        ringVal B L' = ringVal B L + d * B ^ k ∧
+        (L'.map ffWeight).sum = (L.map ffWeight).sum + ffWeight d := by
+  have h0 : (0 : (ZMod p)[X]).degree < B.degree := lt_of_le_of_lt bot_le hB
+  intro k
+  induction k with
+  | zero =>
+    intro L hL hk
+    cases L with
+    | nil => exact ⟨[d], by simpa using hd, by simp, by simp⟩
+    | cons a t =>
+      simp only [List.getD_cons_zero] at hk
+      subst hk
+      refine ⟨d :: t, ?_, by simp; ring, by simp [ffWeight_zero]; ring⟩
+      intro e he
+      rcases List.mem_cons.1 he with rfl | he
+      · exact hd
+      · exact hL e (by simp [he])
+  | succ k ih =>
+    intro L hL hk
+    cases L with
+    | nil =>
+      obtain ⟨L', hL', hv, hs⟩ := ih [] (by simp) (by simp)
+      refine ⟨0 :: L', ?_, by simp [hv]; ring, by simp [hs, ffWeight_zero]⟩
+      intro e he
+      rcases List.mem_cons.1 he with rfl | he
+      · exact h0
+      · exact hL' e he
+    | cons a t =>
+      simp only [List.getD_cons_succ] at hk
+      obtain ⟨L', hL', hv, hs⟩ := ih t (fun e he => hL e (by simp [he])) hk
+      refine ⟨a :: L', ?_, by simp [hv]; ring, by simp [hs]; ring⟩
+      intro e he
+      rcases List.mem_cons.1 he with rfl | he
+      · exact hL e (by simp)
+      · exact hL' e he
+
+/-- **Proposition 21.4**, placement (section 21.1.3). Under `0^0 = 0`, a digit `d` that pays
+for itself at position `k` can be placed at any zero position `k` of a solution (also above
+its leading digit), as in Proposition 2.3. -/
+theorem IsFFSolution.add_selfPaying {B n d : (ZMod p)[X]} (hB : 0 < B.degree)
+    (hn : IsFFSolution 0 B n) {k : ℕ} (hk : (polyDigits B n).getD k 0 = 0)
+    (hd : d.degree < B.degree) (hpay : ffWeight d = d * B ^ k) :
+    IsFFSolution 0 B (n + d * B ^ k) := by
+  obtain ⟨hv, hexp⟩ := polyDigits_spec hB n
+  obtain ⟨L', hL', hv', hs'⟩ := exists_place_digit hB hd k _ hexp.1 hk
+  have hF : ffF 0 B n = ((polyDigits B n).map ffWeight).sum := by
+    conv_lhs => rw [← hv]
+    exact ffF_zero_ringVal hB hexp.1
+  unfold IsFFSolution at hn ⊢
+  rw [← hv, ← hv', ffF_zero_ringVal hB hL', hs', ← hF, hn, hv', hv, hpay]
+
 /-! ### Lemma 24.8: scaling -/
 
 lemma ffWeight_C_mul {c : ZMod p} (hc : c ≠ 0) (d : (ZMod p)[X]) :
