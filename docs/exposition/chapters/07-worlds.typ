@@ -61,7 +61,8 @@ the time. It does so in one situation.
   then under $0^0 = 0$ the identity holds modulo 2 for free, and the
   expected number of solutions doubles. Under $0^0 = 1$ each zero adds 1, so
   the factor applies only to strings with an even number of zeros, and it
-  is about $1 + e^(-2) approx 1.135$ when zeros are rare.
+  is $1 + e^(-2) approx 1.135$ when the number of zeros is a Poisson count
+  with mean 1, as in a long string. When zeros are rare it tends to 2.
 ]
 
 For $x^x$ the condition $w(d) equiv d med (mod 2)$ always holds, since
@@ -289,7 +290,7 @@ solutions in positive bases.
 
 The small bases show the same algebraic structure as positive bases.
 Under $0^0 = 0$ twins appear in bases $-2$, $-7$, $-8$, $-10$, $-25$ and
-$-32$. For odd $x$, $(x, 0, 0)$ and $(x, 0, 1)$ are solutions in base
+$-32$. For $x$ odd or a square, $(x, 0, 0)$ and $(x, 0, 1)$ are solutions in base
 $-x^((x-1) slash 2)$ as well as in base $x^((x-1) slash 2)$, which gives
 $(4, 0, 0)$ in base $-8$ and $(5, 0, 0)$ in base $-25$. In base $-32$ the
 digit 16 pays for itself at position 12, because
@@ -362,7 +363,7 @@ from $-10$ have three of 20 against 2.44 ($P = 0.45$).
 ]
 
 One side result is worth noting. Offsets that keep the last digit of $n$
-give 10 to 25% fewer near-solutions in negative bases than offsets that
+give 6% to 23% fewer near-solutions in negative bases than offsets that
 only keep the identity. This is the better calibration of the count at
 $D = 0$, and against it the solutions of bases $-10$ to $-27$ number 42
 against 52. Why the last digit matters here is open (@sec-open-list).
@@ -583,7 +584,7 @@ grow faster than any sum of weights can follow (#lib("21.2"),
 Proposition 21.9, proven). The tree has about $2 (p-1)^(p-1) slash ln(p slash q)$
 nodes, so the cost is worst for $q$ near $p$.
 
-#computation(id: "worlds-afs-census", title: [Rational bases with $p <= 11$], src: "21.2")[
+#computation(id: "worlds-afs-census", title: [Rational bases with $p <= 11$], src: ("16.5", "21.2"))[
   All bases $p slash q$ with $q > 1$ and $p <= 11$ except $11 slash 8$ and
   $11 slash 10$ were searched exhaustively under both conventions. Totals,
   with "near" the summed mean count of $N = F(N) + j (p - q)$ for
@@ -643,7 +644,8 @@ weights of all its digits.
   and $epsilon equiv epsilon^(-1) equiv 1$ modulo $epsilon - 1$. Hence
   $N equiv "digit sum" med (mod x)$. Under $0^0 = 0$, if $N$ is a solution
   whose digit at position 0 is 0 and whose digit at position 1 is not $x$,
-  then $N + 1$ is a solution.
+  then $N + 1$ is a solution. For $x = 1$ the digit at position $-1$ must
+  also be 0.
 ]
 
 There are no self-paying digits: a digit at a position other than 0 adds an
@@ -929,14 +931,20 @@ In degree 2 the count is a formula.
   $B - 1$ needs two distinct roots. Conversely, writing
   $(T^q - T) slash (B - 1)$ in base $B$ gives the base-$B$ digits of $F$
   explicitly, and each $beta$ turns out to give exactly $q$ values of $c$.
-  The statement under $0^0 = 1$ follows from @worlds-ff-conventions below.
+  Under $0^0 = 1$ the square bases follow from @worlds-ff-conventions
+  below: in base $lambda (T - c)^2$ every solution of degree $q$ has
+  $(q - 3) slash 2$ or $(q - 1) slash 2$ zero digits, which is not divisible
+  by $p = q$. The count $q (q - 1)$ in the other bases is a computation for
+  $q <= 19$; its proof is open.
 ]
 
 #remark(id: "worlds-ff-correction", src: ("21.1", "24.4"))[
-  The library first stated that under $0^0 = 1$ each base with two roots has
-  $q (q - 2)$ solutions. That is the average: the $q (q-1) slash 2$ square
-  bases $lambda (T - c)^2$ have none, and the other bases with two roots
-  have $q (q - 1)$. The census shows 0 or $q (q - 1)$ in every base.
+  The library first stated that under $0^0 = 1$ and for $q >= 5$ each base
+  with two roots has $q (q - 2)$ solutions. That is the average: the
+  $q (q-1) slash 2$ square bases $lambda (T - c)^2$ have none, and the other
+  bases with two roots have $q (q - 1)$. For $q >= 5$ the census shows 0 or
+  $q (q - 1)$ in every such base. For $q = 3$ the average is 5 per base with
+  two roots, and the per-base pattern is not established.
 ]
 
 === The census and the gap
@@ -1063,8 +1071,8 @@ $w(d_0 - j) - w(d_0) + w(d_1 + j) - w(d_1) != 0$, because $x^x$ is not
 additive. So an integer near-solution is a different multiset, a genuine
 second draw (@sec-model-defects). In $FF_q [T]$, offsets that randomize
 more and more low digits bring the near-solution count down to the model:
-for $q = 5$, $e = 3$ it falls from the census value 34.4 per base to about
-21 when 13 low digits can change, against the model's 26.2.
+for $q = 5$, $e = 3$ it falls from the census value 34.4 per base to 20.1
+when 13 low digits can change, against the model's 26.2.
 
 === The exact channel under $0^0 = 1$
 
@@ -1164,7 +1172,7 @@ sum.
 
 #computation(id: "worlds-ff-integers", title: "The integer digits of the sum", src: "24.6")[
   For 100,000 random $(b-1)$-digit strings per base, with a $(b-1)$-digit
-  sum, $b = 11$ to 41, $0^0 = 1$: the top two or three positions of the sum
+  sum, in bases 11, 15, 21, 25, 31 and 41, $0^0 = 1$: the top two or three positions of the sum
   are almost never zero or zero far more often than $1 slash b$. Below them
   the rate of zero digits is $1 slash b$ within 3%. The forced top digits move
   the integer predictions by a few percent: the parity factor under

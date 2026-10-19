@@ -26,11 +26,11 @@ keeping in mind when judging which problems are realistic.
     [Finitely many $k$-digit solutions under $0^0 = 1$, $k >= 3$?], st("proven"), [no: binomial families give infinitely many], [@thm-every-length-m1],
     [Does every length occur?], st("proven"), [yes, under both conventions], [@sec-cons-binomial],
     [Is $N_0(b)$ bounded?], st("proven"), [no], [@thm-many-m0],
-    [Is $N_1(b)$ bounded?], st("open"), [unknown; constructions give at most 2], [@open-n1],
+    [Is $N_1(b)$ bounded?], st("open"), [unknown; constructions give at most 2 in the bases searched], [@open-n1],
     [Infinitely many bases without solutions?], st("open"), [model: about 1 base in 8], [@open-empty],
     [A $b$-digit solution under $0^0 = 1$?], st("open"), [none in bases 3 to 45; model expects some], [@open-bdigit],
     [Bases with two 2-digit solutions under $0^0 = 1$], st("proven"), [only base 3], [@thm-two-two-digit],
-    [$b(b + x) = x^x + 1$ only for $x = 3, 7$?], st("open"), [proven for prime powers and $x <= 4 dot 10^9$; abc implies it], [@cor-x-x],
+    [$b(b + x) = x^x + 1$ only for $x = 3, 7$?], st("open"), [proven for prime powers and $x <= 4 dot 10^9$; abc implies finitely many], [@cor-x-x],
     [$b(b + x) = x^n + 1$ with $n >= 4$], st("open"), [only $(7, 7)$ known; finite under abc], [@sec-dio-exponents],
     [Count of solutions per base], st("heuristic"), [Poisson with mean about 1 per convention, doubled in odd bases under $0^0 = 0$], [@sec-model-poisson],
     [Excess of $(b-1)$-digit solutions], st("heuristic"), [resolved: chance; the totals fit], [@sec-model-anomalies],
@@ -44,7 +44,7 @@ keeping in mind when judging which problems are realistic.
     [Integers with three bases under $0^0 = 1$], st("open"), [none known], [@open-three-bases],
     [Lengths in base $-1 + i$], st("proven"), [exactly $equiv 1, 4 med (mod 8)$], [@worlds-minus1i],
     [Finitely many solutions in the factorial system?], st("open"), [only 1, 2, 4, 5 below $34!$], [@open-factorial],
-    [Why the model misses in $FF_q [T]$], st("proven"), [Frobenius blocks and the zero count], [@sec-worlds-ffield],
+    [Why the model misses in $FF_q [T]$], st("heuristic"), [Frobenius blocks and the $0^0 = 1$ channel proven; the $0^0 = 0$ mechanism heuristic], [@sec-worlds-ffield],
   )
 ]
 
@@ -92,7 +92,7 @@ self-paying digit replaced by 0 leaves a near-solution with
 $F(n) = n + 1$, so a construction like @thm-many-m0 needs near-solutions of
 every small defect in one base. The chain-and-cycle construction of power
 identities (#lib("15.5")) gives at most 2 solutions in every base $r^t$
-with $r <= 40$ and $t <= 300$. The model says that the count is a Poisson
+with $r <= 40$ not a perfect power and $t <= 300$, the range searched. The model says that the count is a Poisson
 variable with mean about 1, which has no bound, but a large count would be
 a chance event in a single base.
 
@@ -134,7 +134,7 @@ large terms, and abc does not apply.
 ]
 
 The model says yes: about 17% of even and 8% of odd bases are empty. The
-data agree: bases 19, 27 and 35 are the empty ones up to 43, and each base's
+data agree: bases 19, 27 and 35 are the empty ones up to 41 (base 43 has solutions), and each base's
 own near-solution spectrum predicts its chance of being empty. A proof would
 have to exclude a coincidence in infinitely many bases at once. Congruences
 remove only a fixed share of the candidates, and constructions only show that
@@ -186,14 +186,16 @@ the values of $x^x - x$ are thin.
     fewer near-solutions. Which digits of $F mod b$ cause this?
 ]
 
-Each of these is a deviation of one to three standard deviations, or a
+Most of these are deviations of one to three standard deviations; base 19
+is about 4.5 standard errors low (0.67 times the model). There is also a
 residual scatter of about 20% between bases. The forced top digits explain
 a third to a half of the scatter (#lib("23.5")). A model that also fixes the
 bottom digits and adds local factors for short lengths is the natural next
 step.
 
 #problem(id: "open-cycles", title: [Cycles of $n |-> F(n)$], src: ("15.1", "23.3"))[
-  The census of cycles stops at base 18. Do the cycle counts keep following
+  The full census of cycles stops at base 17; base 18 was searched only for
+  2-cycles. Do the cycle counts keep following
   the class-lumped random-mapping model, and are the zero-free cycles, which
   count under both conventions, more common than the model's share?
 ]
@@ -239,7 +241,9 @@ the explicit digits of $(b - c)^e$.
     the search tree by $W$ and check every offset $|D| <= W$ at the leaves.
     (#q(25))
   + Find where the tree search and the string sieve cross over for lengths 8
-    to 12, and push those lengths to bases $10^4$ to $10^5$. (#q(29))
+    to 12, and push those lengths to bases $10^4$ to $10^5$. (#q(29)) A
+    first step is done: the 8-digit list is complete for bases up to
+    23,364 and the 7-digit list up to $10^(7.2)$ (#lib("19.1")).
 ]
 
 === The Munchausen polynomial
@@ -273,16 +277,19 @@ others: the covering of $(2, 0, 1, 0, x)$ under $0^0 = 1$ uses 8, 11 and 25.
 What is left is described in @cor-x-x: $x > 4 dot 10^9$ odd, composite, not
 a prime power, with a mixed ideal whose class has order $d | x$ and
 $x slash d < 3.3 dot 10^4 ln x$. Class orders with $d | x$ do occur, from
-$x = 15$ on, so the class group alone cannot close the case
+$x = 15$ on, in computations that assume the generalized Riemann
+hypothesis, so the class group alone cannot close the case
 (#lib("20.5")). The weak abc inequality $c < K "rad"(a b c)^(2 - delta)$
-would finish the proof together with the sieve (@app-abc).
+implies that there are finitely many solutions; an effective form of it,
+together with the sieve, would finish the proof (@app-abc).
 
 #problem(id: "open-n5", title: [The exponent $n = 5$], src: "18.1")[
   Find all integer points on the genus 2 curve $b^2 + x b = x^5 + 1$.
 ]
 
-No solution has $x <= 10^(10)$. The Jacobian has analytic rank 3, larger
-than the genus, so Chabauty's method does not apply (@app-curves). The
+No solution has $x <= 10^(10)$. The Jacobian has analytic rank 3, so its
+Mordell-Weil rank is probably 3, larger than the genus. If so, Chabauty's
+method does not apply (@app-curves). The
 problem is decidable with Baker's method for hyperelliptic curves and the
 Mordell-Weil sieve, which needs a 2-descent and a saturated basis of the
 Mordell-Weil group. More generally, is the set of $(x, n)$ with $n >= 4$
@@ -302,7 +309,7 @@ $x <= 10^8$ ($n <= 15$).
 #problem(id: "open-c3", title: [The families $(1, x, 2)$ and $(1, x, 3)$], src: "20.4")[
   Prove that $(1, x, 2)$ is never a solution under $0^0 = 1$, that is,
   that $b(b + x) = x^x + 3$ has no solution; and finish $(1, x, 3)$ for
-  composite $x$.
+  the $x$ that are not prime powers.
 ]
 
 No solution exists for $x <= 10^9$ in either family. For $(1, x, 3)$ the

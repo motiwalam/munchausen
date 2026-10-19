@@ -819,3 +819,15 @@ lean4:
   title: The Lean theorem prover and the Mathlib library
   author: The Lean community
   url: https://leanprover-community.github.io/
+
+mahler1957:
+  type: article
+  title: On the fractional parts of the powers of a rational number (II)
+  author: Mahler, Kurt
+  date: 1957
+  page-range: 122-124
+  parent:
+    type: periodical
+    title: Mathematika
+    volume: 4
+    issue: 2
