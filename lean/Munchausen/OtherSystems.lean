@@ -387,4 +387,180 @@ theorem forced_residue {b r z : ℕ} (hb : 1 ≤ b) (W : ℕ → ℕ)
   -- cancel the digit sum
   exact Nat.ModEq.add_left_cancel' s.sum (h2.symm.trans (Nat.ModEq.refl _))
 
+/-! ### Proposition 14.6: the length in a negative base -/
+
+/-- An even-length string with digits below `b` has `(b + 1) P_t(-b) ≥ -b (b^|t| - 1)`: the
+odd powers of `-b` are negative and the digits are at most `b - 1`. -/
+lemma neg_base_even_lower {b : ℕ} (hb : 1 ≤ b) :
+    ∀ (k : ℕ) (t : List ℕ), t.length = 2 * k → (∀ d ∈ t, d < b) →
+      -((b : ℤ) * (b ^ t.length - 1)) ≤ (b + 1) * P (-(b : ℤ)) t := by
+  intro k
+  induction k with
+  | zero =>
+    intro t ht _
+    obtain rfl : t = [] := List.length_eq_zero_iff.1 (by omega)
+    simp
+  | succ k ih =>
+    intro t ht hdig
+    obtain ⟨x, y, t', rfl⟩ : ∃ x y t', t = x :: y :: t' := by
+      match t, ht with
+      | x :: y :: t', _ => exact ⟨x, y, t', rfl⟩
+    simp only [List.length_cons] at ht
+    have ht' : t'.length = 2 * k := by omega
+    have ih' := ih t' ht' (fun d hd => hdig d (by simp [hd]))
+    have hx : (x : ℤ) ≤ b - 1 := by have := hdig x (by simp); omega
+    have hy : (0 : ℤ) ≤ y := by positivity
+    have he : Even t'.length := ⟨k, by omega⟩
+    set B : ℤ := (b : ℤ) ^ t'.length
+    have hB : 0 ≤ B := by positivity
+    have hb' : (1 : ℤ) ≤ b := by exact_mod_cast hb
+    have h1 : (-(b : ℤ)) ^ (t'.length + 1) = -(b * B) := by rw [pow_succ, he.neg_pow]; ring
+    have h2 : (-(b : ℤ)) ^ t'.length = B := he.neg_pow _
+    simp only [P_cons, List.length_cons, h1, h2]
+    have h3 : (b : ℤ) ^ (t'.length + 1 + 1) = b * b * B := by rw [pow_succ, pow_succ]; ring
+    rw [h3]
+    have h4 : 0 ≤ ((b : ℤ) - 1 - x) * ((b + 1) * (b * B)) :=
+      mul_nonneg (by linarith) (by positivity)
+    have h5 : 0 ≤ ((b : ℤ) + 1) * (y * B) := by positivity
+    linear_combination ih' + h4 + h5
+
+/-- An odd-length string `d :: t` with `1 ≤ d` and digits below `b` has
+`(b + 1) P(-b) ≥ b^|t| + b`, the smallest value of that length. -/
+lemma neg_base_odd_lower {b d : ℕ} (hb : 1 ≤ b) (hd : 1 ≤ d) {t : List ℕ} (ht : Even t.length)
+    (hdig : ∀ e ∈ t, e < b) : (b : ℤ) ^ t.length + b ≤ (b + 1) * P (-(b : ℤ)) (d :: t) := by
+  obtain ⟨k, hk⟩ := ht
+  have h := neg_base_even_lower hb k t (by omega) hdig
+  have he : Even t.length := ⟨k, hk⟩
+  rw [P_cons, he.neg_pow]
+  have hd' : (1 : ℤ) ≤ d := by exact_mod_cast hd
+  have hB : (0 : ℤ) ≤ (b : ℤ) ^ t.length := by positivity
+  have h6 : 0 ≤ ((d : ℤ) - 1) * ((b + 1) * (b : ℤ) ^ t.length) :=
+    mul_nonneg (by linarith) (by positivity)
+  linear_combination h + h6
+
+/-- Three terms of the binomial expansion: `2 Y^2 (Y+1)^k ≥ 2 Y^(k+2) + 2 k Y^(k+1) + k (k-1) Y^k`. -/
+lemma three_terms_le (Y k : ℕ) :
+    2 * Y ^ (k + 2) + 2 * k * Y ^ (k + 1) + k * (k - 1) * Y ^ k ≤ 2 * Y ^ 2 * (Y + 1) ^ k := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    have e1 : 2 * Y ^ 2 * (Y + 1) ^ (k + 1) = 2 * Y ^ 2 * (Y + 1) ^ k * (Y + 1) := by ring
+    rw [e1]
+    have h := Nat.mul_le_mul_right (Y + 1) ih
+    have e2 : (2 * Y ^ (k + 2) + 2 * k * Y ^ (k + 1) + k * (k - 1) * Y ^ k) * (Y + 1) =
+        2 * Y ^ (k + 3) + (2 * k + 2) * Y ^ (k + 2) + (k * (k - 1) + 2 * k) * Y ^ (k + 1) +
+          k * (k - 1) * Y ^ k := by ring
+    rw [e2] at h
+    have e3 : (k + 1) * (k + 1 - 1) = k * (k - 1) + 2 * k := by
+      rw [Nat.add_sub_cancel]
+      rcases k with _ | k
+      · rfl
+      · rw [Nat.add_sub_cancel]; ring
+    rw [e3]
+    have e4 : 2 * Y ^ (k + 1 + 2) = 2 * Y ^ (k + 3) := by ring
+    have e5 : 2 * (k + 1) * Y ^ (k + 1 + 1) = (2 * k + 2) * Y ^ (k + 2) := by ring
+    rw [e4, e5]
+    omega
+
+/-- `7 (b-1)^(b-1) ≤ 3 b^(b-1)` for `b ≥ 4`, since `(1 + 1/n)^n ≥ 2 + (n-1)/(2n) ≥ 7/3`. -/
+lemma seven_mul_pow_le {b : ℕ} (hb : 4 ≤ b) : 7 * (b - 1) ^ (b - 1) ≤ 3 * b ^ (b - 1) := by
+  obtain ⟨n, rfl⟩ : ∃ n, b = n + 1 := ⟨b - 1, by omega⟩
+  simp only [Nat.add_sub_cancel]
+  have h := three_terms_le n n
+  have hn : 3 ≤ n := by omega
+  have e : 2 * n ^ (n + 2) + 2 * n * n ^ (n + 1) + n * (n - 1) * n ^ n =
+      (5 * n ^ 2 - n) * n ^ n := by
+    have : n ≤ 5 * n ^ 2 := by nlinarith
+    zify [this, (by omega : 1 ≤ n)]
+    ring
+  rw [e] at h
+  have hpos : 0 < n ^ 2 := by positivity
+  have h2 : 14 * n ^ 2 * n ^ n ≤ 3 * ((5 * n ^ 2 - n) * n ^ n) := by
+    have : 14 * n ^ 2 ≤ 3 * (5 * n ^ 2 - n) := by
+      have : n ≤ 5 * n ^ 2 := by nlinarith
+      zify [this]; nlinarith
+    calc 14 * n ^ 2 * n ^ n ≤ 3 * (5 * n ^ 2 - n) * n ^ n := Nat.mul_le_mul_right _ this
+      _ = 3 * ((5 * n ^ 2 - n) * n ^ n) := by ring
+  have h3 : 14 * n ^ 2 * n ^ n ≤ 6 * n ^ 2 * (n + 1) ^ n := by nlinarith
+  have h4 : 7 * n ^ n * (2 * n ^ 2) ≤ 3 * (n + 1) ^ n * (2 * n ^ 2) := by nlinarith
+  exact Nat.le_of_mul_le_mul_right h4 (by positivity)
+
+/-- The inequality of Proposition 14.6: for odd `d ≥ b + 2` (and `d ≥ 5`),
+`d (b+1) (b-1)^(b-1) + 1 ≤ b^(d-1)`. -/
+lemma prop14_6_ineq {b d : ℕ} (hb : 2 ≤ b) (hd : b + 2 ≤ d) (hd5 : 5 ≤ d) :
+    d * (b + 1) * (b - 1) ^ (b - 1) + 1 ≤ b ^ (d - 1) := by
+  rcases (by omega : b = 2 ∨ b = 3 ∨ 4 ≤ b) with rfl | rfl | hb4
+  · induction d, hd5 using Nat.le_induction with
+    | base => norm_num
+    | succ d hd ih =>
+      have := ih (by omega)
+      rw [show d + 1 - 1 = d - 1 + 1 by omega, pow_succ]
+      norm_num at this ⊢; omega
+  · induction d, hd5 using Nat.le_induction with
+    | base => norm_num
+    | succ d hd ih =>
+      have := ih (by omega)
+      rw [show d + 1 - 1 = d - 1 + 1 by omega, pow_succ]
+      norm_num at this ⊢; omega
+  · induction d, hd using Nat.le_induction with
+    | base =>
+      have h7 := seven_mul_pow_le hb4
+      have e : b ^ (b + 2 - 1) = b ^ 2 * b ^ (b - 1) := by
+        rw [← pow_add]; congr 1; omega
+      rw [e]
+      have hq : 3 * ((b + 2) * (b + 1)) < 7 * b ^ 2 := by nlinarith
+      have hpos : 0 < b ^ (b - 1) := by positivity
+      have : 7 * ((b + 2) * (b + 1) * (b - 1) ^ (b - 1)) <
+          7 * (b ^ 2 * b ^ (b - 1)) := by
+        calc 7 * ((b + 2) * (b + 1) * (b - 1) ^ (b - 1))
+            = (b + 2) * (b + 1) * (7 * (b - 1) ^ (b - 1)) := by ring
+          _ ≤ (b + 2) * (b + 1) * (3 * b ^ (b - 1)) := Nat.mul_le_mul_left _ h7
+          _ = 3 * ((b + 2) * (b + 1)) * b ^ (b - 1) := by ring
+          _ < 7 * b ^ 2 * b ^ (b - 1) := Nat.mul_lt_mul_of_pos_right hq hpos
+          _ = 7 * (b ^ 2 * b ^ (b - 1)) := by ring
+      omega
+    | succ d hd ih =>
+      rw [show d + 1 - 1 = d - 1 + 1 by omega, pow_succ]
+      have := ih (by omega)
+      set C := (b - 1) ^ (b - 1)
+      have h1 : (d + 1) * (b + 1) * C ≤ 2 * (d * (b + 1) * C) := by
+        have : d + 1 ≤ 2 * d := by omega
+        calc (d + 1) * (b + 1) * C ≤ (2 * d) * (b + 1) * C :=
+              Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ this)
+          _ = 2 * (d * (b + 1) * C) := by ring
+      have h2 : 4 * b ^ (d - 1) ≤ b ^ (d - 1) * b := by
+        rw [mul_comm 4]; exact Nat.mul_le_mul_left _ hb4
+      omega
+
+/-- **Proposition 14.6** (section 14.1). A solution in base `-b`, `b ≥ 2`, under `0^0 = m ≤ 1`
+has at most `b + 1` digits (and an odd number of them, Proposition 12.2). -/
+theorem prop14_6 {b m : ℕ} {s : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (h : IsNegSolution b m s) :
+    s.length ≤ b + 1 := by
+  by_contra hlen
+  have hodd := h.odd_length
+  obtain ⟨d, t, rfl⟩ : ∃ d t, s = d :: t := by
+    cases s with
+    | nil => exact absurd rfl h.ne_nil
+    | cons d t => exact ⟨d, t, rfl⟩
+  have hd : 1 ≤ d := Nat.one_le_iff_ne_zero.2 h.head_ne_zero
+  have ht : Even t.length := by
+    rw [List.length_cons, Nat.odd_add_one, Nat.not_odd_iff_even] at hodd; exact hodd
+  have hdig : ∀ e ∈ t, e < b := fun e he => h.lt_base e (by simp [he])
+  have hlow := neg_base_odd_lower (by omega) hd ht hdig
+  have hF := Fs_le hm hb h.lt_base
+  have heq := h.eq
+  have hL5 : 5 ≤ t.length + 1 := by
+    obtain ⟨k, hk⟩ := ht
+    simp only [List.length_cons] at hlen
+    omega
+  have hineq := prop14_6_ineq hb (by simp only [List.length_cons] at hlen; omega) hL5
+  simp only [List.length_cons, Nat.add_sub_cancel] at hF hineq
+  rw [heq] at hlow
+  have hF' : ((Fs m (d :: t) : ℕ) : ℤ) ≤ ((t.length + 1) * (b - 1) ^ (b - 1) : ℕ) := by
+    exact_mod_cast hF
+  have hineq' : (((t.length + 1) * (b + 1) * (b - 1) ^ (b - 1) + 1 : ℕ) : ℤ) ≤
+      ((b ^ t.length : ℕ) : ℤ) := by exact_mod_cast hineq
+  push_cast at hF' hineq' hlow
+  nlinarith
+
 end Munchausen

@@ -132,7 +132,7 @@ stated.
 | Proposition 14.4 | `neg_residue_invariant_iff` [Other] | formalized |
 | Proposition 14.5 | `IsNegSolution.dvd` [Other] | formalized |
 | 14.1.1: odd `b`, `0^0 = 1`, even zeros | `IsNegSolution.even_count_zero` [Other] | formalized |
-| Proposition 14.6 (length at most `b+1`) | none | not formalized (odd length is Proposition 12.2; the bound is an inequality like 1.1) |
+| Proposition 14.6 (length at most `b+1`) | `prop14_6`, `prop14_6_ineq`, `neg_base_odd_lower`, `IsNegSolution.odd_length` [Other, Poly] | formalized (with odd length this gives `d ≤ b` for odd `b`) |
 | Propositions 14.8, 14.9, 14.10 (imaginary and Gaussian bases) | none | not formalized |
 | Propositions 14.7, 14.11 | none | not formalized (model) |
 
