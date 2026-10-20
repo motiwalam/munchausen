@@ -57,6 +57,12 @@ are at most 20 (Theorems 32.2 and 32.3). A large digit in a fixed square
 class gives finitely many (Proposition 32.6). The open regime is the one
 in which the field `Q(sqrt n)` changes with `x` (section 32.1.6).
 
+Update (chapter 36). In the last position the regime where the field
+changes is finite too: `(p, q, x)` with `x` odd is a solution for only
+finitely many `x`, effectively bounded and uniformly in `q`, because the
+field of the constant term is imaginary (Corollary 36.10). The open
+regime is an odd large digit in the middle and an even one in front.
+
 ## 7.3 Lengths without solutions
 
 Conjecture (refuted as stated). Under `0^0 = 1` no base has a solution with

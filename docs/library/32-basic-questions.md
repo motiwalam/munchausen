@@ -18,7 +18,7 @@ logarithms, in its 2-adic form.
 | 1 | The bound is uniform: `x <= C B^(3/2) (log 3B)^4` when `p, q <= B` | proven, `C` effective (Theorem 32.5) |
 | 1 | For `p, q <= 20` no such string is a solution in any base, under either convention; the same holds when `x >= 9` is an odd square | proven and computed (Theorem 32.3, Proposition 32.7) |
 | 1 | Every 3-digit solution in any base with two digits at most 20 and the third digit even and not leading is in the lists of chapter 3 or a member of the binomial family | proven and computed (Corollary 32.4) |
-| 1 | The three regimes: `N` a square (elementary), the square class of `N` fixed (Baker), the class varying (open) | proven for the first two (section 32.1.6) |
+| 1 | The three regimes: `N` a square (elementary), the square class of `N` fixed (Baker), the class varying (open; finite in the last position by chapter 36) | proven for the first two (section 32.1.6) |
 | 2 | What counting can and cannot prove about empty bases, and what the families add | discussion (section 32.2) |
 | 3 | Searching by multisets across bases saves at most about 2.1x on a sweep, and nothing on one base | proven bound, heuristic gain (section 32.3) |
 
@@ -249,6 +249,12 @@ Proof sketch. Use Theorem 32.2 with explicit bounds for its terms.
   number formula gives `log eta <= h log eta = (sqrt(Delta)/2) L(1, chi)`.
   Partial summation with `|sum_(k <= t) chi(k)| <= Delta` gives
   `L(1, chi) <= log Delta + 2`. So `log eta <= sqrt(B) (log 4B + 2)`.
+
+  Correction (chapter 36, 2026-10-19). With `|sum chi(k)| <= Delta`,
+  partial summation from `N = Delta` gives only `log Delta + 3`. The
+  stated `log Delta + 2` holds because the partial sums are at most
+  `Delta/2` in absolute value (the sum over a period is 0; Lemma 36.2).
+  The theorem is unaffected.
 - The constant term. `|R| <= x^2 + 4B (2 B^B + x + B)`, so
   `log |R| <= 2 log x + (B + 1) log B + 4`.
 - The exponent. `log b' <= 2 log x` for `x >= 10`.
@@ -278,7 +284,8 @@ the leading digit.
 | `N` a square | `x` odd and leading; `x` even with a square leading digit | the gap of Theorem 25.7 (ii) | no solution except the family |
 | `n` fixed in `x` | `x` even and not leading, `p` not a square | 2-adic Baker (Theorem 32.2) | finitely many, explicit |
 | `n` fixed on a class | `x` in a fixed square class: odd, not leading, `x = lam t^2`; or even and leading, `x = lam t^2` | real Baker (Matveev), Proposition 32.6 | finitely many in each class |
-| `n` varies | odd `x` not leading, even `x` leading, over all classes | none known | open |
+| `n` varies, last position | odd `x` last, over all classes | the imaginary field `Q(sqrt R)`: Lehmer numbers, Matveev (chapter 36) | finitely many for each `p, q`, effective (Corollary 36.10) |
+| `n` varies, other positions | odd `x` in the middle, even `x` leading, over all classes | none known | open |
 
 Proposition 32.6 (proven). Fix `p, q`, the position of `x`, and a squarefree
 `lam`. Then only finitely many `x` with squarefree part `lam` make the string
@@ -343,6 +350,21 @@ direction A7 of `questions-round5.md` (the field `Q(sqrt(x^2 + 4c))` for
 A uniform treatment of a family of real quadratic fields, for example
 through results on `y^2 = a x^n + c` that are uniform in `n`, would settle
 the 3-digit case up to a finite computation.
+
+Correction (chapter 36, 2026-10-19). "Now seen to be the only obstacle for
+three digits" is wrong for the last position. The regulator is an obstacle
+of the Pell form only. For `(p, q, x)` with `x` odd and
+`x > W + q^2/(4p)` the same equation reads `U^2 + D = 4p x^x` with
+`D > 0`, and in the imaginary field `Q(sqrt(-D))` there are no units of
+infinite order and `x^x` is an `x`-th power. Primitive divisors of Lehmer
+numbers (Theorem 36.5) and Matveev's bound for three logarithms with a
+reduced lattice basis (Theorem 36.9) bound `x` by about `10^39` to
+`10^40` for `p <= 20`, uniformly in `q`. So the last position is finite
+for each pair of small digits, of either parity (Corollary 36.10), and the
+row "`n` varies" of the table above is split. The middle position with
+`x` odd and the leading position with `x` even remain open; there the
+field of `R` is real and its regulator enters every height (section
+36.4.3).
 
 The abc conjecture would close every regime at once, but only in the
 completed-square form. Written as `x^x = p b^2 + q b + (x - C)`, the
@@ -470,11 +492,14 @@ the growth rate.
 
 These are questions 129 to 132 of `questions.md`.
 
-1. Uniformity over fields. Is there a bound for the solutions of
+1. (Answered in chapter 36 for the last position: in the field
+   `Q(sqrt(-D))` of `R` the bound is uniform in `q`, Theorem 36.9. The
+   middle position remains.) Uniformity over fields. Is there a bound for the solutions of
    `U^2 - n V^2 = R` with `V = x^(x/2)`-type powers that is uniform over the
    fields `Q(sqrt(p x))`, `x` odd? This would close the 3-digit problem up to
    computation. Lead: the results on `y^2 = a x^n + c` uniform in `n`.
-2. Other square classes. Proposition 32.6 gives finiteness for odd `x` in
+2. (Answered in chapter 36 for the last position: every class at once,
+   Corollary 36.10. The middle position remains.) Other square classes. Proposition 32.6 gives finiteness for odd `x` in
    any fixed square class `x = lam t^2`, and Proposition 32.7 closes
    `lam = 1`. For `lam > 1` the linear form has five logarithms and the
    bound on `t` is about `10^10`. Is there a better route, for example a

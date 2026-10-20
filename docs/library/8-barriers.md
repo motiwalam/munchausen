@@ -120,6 +120,13 @@ of `x^x` vary together costs nothing, because only the 2-adic valuation of
 other two digits at most 20 (Theorem 32.3). The open part is the case
 where the field changes with `x` (section 32.1.6).
 
+Update (chapter 36). In the last position that case is finite as well.
+For odd `x` the constant term `R` is negative once `x` is large, and in
+the imaginary field `Q(sqrt R)` the power `x^x` is an `x`-th power and
+there are no units of infinite order. Primitive divisors of Lehmer numbers
+and Matveev's bound then bound `x` (Theorems 36.5 and 36.9). The middle
+and leading positions, where that field is real, remain open.
+
 So a proof of finiteness for all short solutions under `0^0 = 1` would need
 new methods for exponential Diophantine equations. The numerical evidence is
 strong: outside the square class, the scan with `x` up to 2500 (bases up to

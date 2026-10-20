@@ -331,6 +331,15 @@ the same sieve exclude an odd square `x = t^2 >= 9` for `p, q <= 20`
 field changes with `x`: odd `x` that does not lead, and even `x` that
 leads (section 32.1.6).
 
+Correction (chapter 36, 2026-10-19). Odd `x` in the last position is no
+longer open. In the field `Q(sqrt R)`, imaginary once `x > W + q^2/(4p)`,
+`(p, q, x)` is a solution for only finitely many `x`, with
+`x <= X_B(p)`, about `10^39` to `10^40` for `p <= 20`, uniformly in `q`
+(Theorem 36.9, Corollary 36.10), and `x <= X_A(p)`, at most 340,896 for
+`p <= 20`, when the ideal `J` of Lemma 36.1 is ambiguous (Theorem 36.5).
+What remains open in case (iii) is odd `x` in the middle and even `x`
+that leads.
+
 The six known 3-digit solutions are all small cases: `x` is at most 7, so
 `x < 2B + 4`. `(5,1,3)` in base 25 sits on the boundary of (ii):
 `N = 4 * 5^6 = 250^2`, `U = 251` and `R = 501 = 2V + 1`.

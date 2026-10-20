@@ -268,7 +268,7 @@ attack, in [questions-round3.md](questions-round3.md).
 
 ## Round 4: questions raised by chapter 22
 
-64. (Answered in chapter 25 for linear identities: two families; other mechanisms need an extra coincidence; Conjecture 25.8. Partly answered in chapter 32 for 3 digits: with an even large digit behind a non-square leading digit only finitely many, none with the other digits at most 20 (Theorems 32.2, 32.3); open where the field `Q(sqrt n)` changes with `x`.) Is every short solution under `0^0 = 1` beyond some size a member of an
+64. (Answered in chapter 25 for linear identities: two families; other mechanisms need an extra coincidence; Conjecture 25.8. Partly answered in chapter 32 for 3 digits: with an even large digit behind a non-square leading digit only finitely many, none with the other digits at most 20 (Theorems 32.2, 32.3); open where the field `Q(sqrt n)` changes with `x`. Chapter 36: in the last position an odd large digit gives only finitely many for each pair of small digits (Corollary 36.10); open in the middle and leading positions.) Is every short solution under `0^0 = 1` beyond some size a member of an
     algebraic family, such as the binomial families of Theorem 22.6? Do other
     identity families exist, for example with `p x^x` a `j`-th power for `p`
     not a `j`-th power, or with two large digits? (chapter 22)
@@ -433,12 +433,16 @@ problems found in the library are in
 
 ## Round 10: questions raised by chapter 32
 
-129. Uniformity over fields. Is there a bound for the solutions of
+129. (Answered in chapter 36 for the last position: there the field of
+     `R` is imaginary once `x > W + q^2/(4p)`, and Theorem 36.9 bounds `x`
+     uniformly in `q`. The middle position with `x` odd and the leading
+     position remain open.) Uniformity over fields. Is there a bound for the solutions of
      `U^2 - n V^2 = R`, with `V` a power like `x^(x/2)`, that is uniform
      over the fields `Q(sqrt(p x))` with `x` odd? This would close the
      3-digit problem with one large digit up to computation. Lead: results
      on `y^2 = a x^n + c` that are uniform in `n`. (proof; section 32.1.6)
-130. Other square classes. Proposition 32.6 gives finiteness for odd `x` in
+130. (Answered in chapter 36 for the last position: every square class at
+     once, Corollary 36.10. The middle position remains.) Other square classes. Proposition 32.6 gives finiteness for odd `x` in
      any fixed square class `x = lam t^2`, and Proposition 32.7 closes
      `lam = 1` for `p, q <= 20`. For `lam > 1` the linear form has five
      logarithms and the bound on `t` is about `10^10`. Is there a better
@@ -538,3 +542,32 @@ problems found in the library are in
      Theorem 35.12 with the condition `b - 1 | G(c)` for solutions whose
      small part is long and dissociated. Does it give a range beyond
      `(ln b)^C` for strings with few large digits? (proof; section 35.4.3)
+
+## Round 14: questions raised by chapter 36
+
+149. A computable bound for the last position. Theorem 36.9 bounds an odd
+     last digit `x` by about `10^40`. Mignotte's bounds for three
+     logarithms, or a primitive divisor theorem for twisted sequences
+     `tau gamma^n - tau' gamma'^n` that is uniform in the height of `tau`,
+     would bring the bound within reach of the sieve and close the last
+     position for `p, q <= 10`. (proof and computation; section 36.3)
+150. A class-group sieve. For `x` with `J` not ambiguous, a solution needs
+     `[J] = [A]^(-x)` for one of the `2^omega(x)` ideals `A` of norm `x`,
+     an event of chance about `2^omega(x) / e`. Can this be tested fast
+     enough, with forms of discriminant `-4D`, to run beyond `10^10`?
+     (computation; section 36.3)
+151. The middle position. Proposition 36.11 leaves the 25 families with
+     `pA` a square for every `x`, and a density-0 set of `x` for the
+     others. Is there a finiteness theorem for `x` prime, where `A` is a
+     prime ideal and the class group has order about `x / log x`
+     (`A = 1`) or the regulator is about `x` (`A > 1`)? (proof; section
+     36.4.1)
+152. The leading position. Is there finiteness for the even `x` for which
+     `Q(sqrt R)` has class number above `x^(1/6 + eps)`? These form a thin
+     set, but it would be the first result in that case beyond fixed
+     square classes. (proof; section 36.4.3)
+153. Other weights. For factorions the last position gives
+     `U^2 + |K| = 4p x!`, also imaginary, but `x!` is not a power. Which
+     weights `w(x)` are perfect `x`-th powers up to a bounded factor on a
+     large set, so that the argument of chapter 36 applies? (proof;
+     section 36.6)

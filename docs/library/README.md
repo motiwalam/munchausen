@@ -47,7 +47,8 @@ statement is marked by its source:
 | [33. Factorials against x^x](33-factorials.md) | 3-digit factorions with one large digit are finite except a leading case of Brocard type, with a complete list for the other digits up to 10; 2-digit factorions are infinite; GRH for a large last digit; a sufficient condition for identity families, which `x!` never meets; abc bounds every 3-digit solution of `x^x` with `R != 0`; one-step chains of Theorem 15.14 give only base 64 |
 | [34. Is the refined model complete?](34-model-complete.md) | the exact refined model by zero class; the 12% excess under `0^0 = 1` is a zero-free surplus in odd bases and one cell in even bases, about 2 standard deviations once the between-world scatter is counted; no zero deficit among near-solutions; the basic count is the trace of a stochastic length matrix, `1 + C/b` with `C = 1.1046` one eigenvalue; the refined count as a sum over characters; a ledger of 241 P values; neighbouring bases look independent |
 | [35. One heuristic and existence](35-existence.md) | the arrangements of a multiset spread over the residues modulo `q` prime to `b (b - 1)` at a rate independent of `ord_q(b)`; the root heuristic is the refined model averaged over the residue of the base, and the two agree at lengths 6 to 12; one invariant ideal for every positional system; averaging over bases gains only a bounded factor, but excludes long solutions with few large digits; near-solutions with about `sqrt(b / e)` matched top digits in every base `b >= 27` |
-| [Open questions](questions.md) | 148 research questions in thirteen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [36. Three digits when the field changes](36-field-family.md) | in the last position an odd large digit gives only finitely many solutions for each pair of small digits, uniformly in the second digit: Lehmer numbers and Matveev's bound in the imaginary field of the constant term; `(1, q, x)` with `x` prime to `q^2 + 4 + 4w(q)` is decided; a density result for the middle position and a square-part bound for the leading one; why the real fields resist |
+| [Open questions](questions.md) | 153 research questions in fourteen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -167,6 +168,20 @@ Proven:
   3-digit solution with two digits at most 20 and an even third digit that
   does not lead is in the lists of chapter 3 or a binomial member
   (Corollary 32.4).
+- Let `p, q` be fixed digits and `x` odd. Then `(p, q, x)`, with `x` last,
+  is a solution for only finitely many `x`, with an effective bound
+  independent of `q`: `x <= max(X_B(p), W + q^2/(4p))`, where `X_B(p)` is
+  about `10^39` to `2.4 * 10^40` for `p <= 20` (Theorem 36.9). With
+  chapter 32, every pair of small digits has only finitely many solutions
+  with a large last digit, of either parity (Corollary 36.10). The proof
+  works in the imaginary field `Q(sqrt(-D))` of the constant term, where
+  `x^x` is an `x`-th power and there are no units of infinite order. When
+  the remaining ideal is ambiguous, primitive divisors of Lehmer numbers
+  give `x <= 340,896` for `p <= 20` (Theorem 36.5); so `(1, q, x)` with `x`
+  odd, prime to `q^2 + 4 + 4w(q)` and beyond `1 + w(q) + q^2/4` is a
+  solution only for `(1, 0, 3)` in base 5 under `0^0 = 0`
+  (Corollary 36.6, computer-assisted). An odd large digit in the middle
+  and an even one in front remain open.
 - For every `x >= 3`, `(1, x)` is a factorion in base `x! - x + 1`
   (Proposition 33.9). A 3-digit factorion with one large digit `x` in the
   last or middle position has `x` below an explicit bound (Theorems 33.4
@@ -252,6 +267,12 @@ Computed:
 - Under `0^0 = 1` no base up to `10^3301` has a 3-digit solution other than
   the six known ones, and every such base has at most two (Theorem 25.11,
   section 25.3).
+- With two digits at most 20 and one large digit `x` in the regime where
+  the field changes (odd `x` last or in the middle, even `x` in front),
+  every solution with `x <= 10^8` in the last position or `x <= 10^9` in
+  the other two is known or has `R = 0`. For `p, q <= 10` and odd `x` last
+  the same holds up to `max(X_A(p), W + q^2/(4p))`, up to `10^10`
+  (Proposition 36.8, section 36.5).
 - `rho(b) <= 0.82` for every base from 12 to 6000. So the refined Poisson
   theorem of chapter 13 holds without assumption in that range (Corollary
   29.16, computer-assisted).
