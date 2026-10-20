@@ -12,6 +12,10 @@ The main results:
 * `found_eq_solutions`: the same as an equality of `Finset`s with the specification
   `solutions b m`.
 
+The search runs the last-digit tests of chapter 37 with the defaults of the Rust code. The
+versions `searchWith_sound`, `mem_searchWith_iff` and `foundWith_eq_solutions` hold for any
+numbers of tested digits, `0` (the tests off) included.
+
 The proof of completeness fixes a solution `n` of length `d` under `0^0 = m` and follows it
 down the tree. `IsCompletion P k N m n` says that `n` is a completion of the node `N` at level
 `k`: the decided counts are the digit counts of `n`, the forced counts are the counts in the
@@ -51,6 +55,43 @@ lemma mem_takeWhile_range {p : ℕ → Bool} {n e : ℕ} (he : e < n)
     (hp : ∀ e' ≤ e, p e' = true) : e ∈ (List.range n).takeWhile p := by
   rw [List.range_eq_range']
   exact mem_takeWhile_range' (Nat.zero_le e) (by omega) fun e' _ h => hp e' h
+
+/-- A sum of 1 over `s` has one nonzero term, of value 1. -/
+lemma exists_of_sum_eq_one {s : Finset ℕ} {f : ℕ → ℕ} (h : ∑ x ∈ s, f x = 1) :
+    ∃ a ∈ s, f a ≠ 0 ∧ (∀ F : ℕ → ℕ, ∑ x ∈ s, f x * F x = F a) ∧
+      ∀ x ∈ s, f x ≠ 0 → x = a := by
+  obtain ⟨a, ha, hfa⟩ := exists_ne_zero_of_sum_ne_zero (s := s) (f := f) (by omega)
+  have e := add_sum_erase s f ha
+  have hrest : ∀ x ∈ s.erase a, f x = 0 := sum_eq_zero_iff.1 (by omega)
+  have hfa1 : f a = 1 := by omega
+  refine ⟨a, ha, hfa, fun F => ?_, fun x hx hfx => ?_⟩
+  · have e' := add_sum_erase s (fun x => f x * F x) ha
+    rw [← e', hfa1, one_mul, sum_eq_zero fun x hx => by rw [hrest x hx, zero_mul], add_zero]
+  · by_contra hxa
+    exact hfx (hrest x (mem_erase.2 ⟨hxa, hx⟩))
+
+/-- A sum of 2 over `s` is `f a + f c` for at most two points `a`, `c` (equal if one term is 2). -/
+lemma exists_of_sum_eq_two {s : Finset ℕ} {f : ℕ → ℕ} (h : ∑ x ∈ s, f x = 2) :
+    ∃ a ∈ s, ∃ c ∈ s, f a ≠ 0 ∧ f c ≠ 0 ∧ (∀ F : ℕ → ℕ, ∑ x ∈ s, f x * F x = F a + F c) ∧
+      ∀ x ∈ s, f x ≠ 0 → x = a ∨ x = c := by
+  obtain ⟨a, ha, hfa⟩ := exists_ne_zero_of_sum_ne_zero (s := s) (f := f) (by omega)
+  have e := add_sum_erase s f ha
+  by_cases hfa2 : f a = 2
+  · have hrest : ∀ x ∈ s.erase a, f x = 0 := sum_eq_zero_iff.1 (by omega)
+    refine ⟨a, ha, a, ha, hfa, hfa, fun F => ?_, fun x hx hfx => ?_⟩
+    · have e' := add_sum_erase s (fun x => f x * F x) ha
+      rw [← e', hfa2, sum_eq_zero fun x hx => by rw [hrest x hx, zero_mul], add_zero, two_mul]
+    · by_contra hxa
+      exact hfx (hrest x (mem_erase.2 ⟨fun h' => hxa (Or.inl h'), hx⟩))
+  · have hs1 : ∑ x ∈ s.erase a, f x = 1 := by omega
+    have hfa1 : f a = 1 := by omega
+    obtain ⟨c, hc, hfc, hF, hx⟩ := exists_of_sum_eq_one hs1
+    refine ⟨a, ha, c, mem_of_mem_erase hc, hfa, hfc, fun F => ?_, fun x hxs hfx => ?_⟩
+    · have e' := add_sum_erase s (fun x => f x * F x) ha
+      rw [← e', hF F, hfa1, one_mul]
+    · by_cases hxa : x = a
+      · exact Or.inl hxa
+      · exact Or.inr (hx x (mem_erase.2 ⟨hxa, hxs⟩) hfx)
 
 /-- A number between `lo` and `hi` shares the leading digits that `lo` and `hi` share. -/
 lemma topDigits_eq_of_le_of_le {b d lo hi n L : ℕ} (hL : L ≤ d) (h1 : lo ≤ n) (h2 : n ≤ hi)
@@ -153,6 +194,55 @@ lemma le_chi (h : Covers P k N m n) : n ≤ chi P k N := le_min h.le_hi (by have
 
 lemma clo_lt (h : Covers P k N m n) : clo P N < P.b ^ P.d := lt_of_le_of_lt h.clo_le h.high
 
+/-- A weighted digit count of `n` is the placed part plus the free part. -/
+lemma sum_split (h : Covers P k N m n) (F : ℕ → ℕ) :
+    ∑ x ∈ range P.b, digitCount P.b P.d n x * F x =
+      ∑ x ∈ range P.b, N.cnt x * F x +
+        ∑ x ∈ range P.b, (digitCount P.b P.d n x - N.cnt x) * F x := by
+  rw [← sum_add_distrib]
+  refine sum_congr rfl fun x _ => ?_
+  rw [← add_mul, Nat.add_sub_cancel' (h.cnt_le x)]
+
+/-- A digit with more copies in `n` than placed is a digit below `b`. -/
+lemma lt_b_of_cnt_lt (h : Covers P k N m n) {x : ℕ} (hx : N.cnt x < digitCount P.b P.d n x) :
+    x < P.b := by
+  by_contra hxb
+  rw [digitCount_eq_zero h.b_pos (not_lt.1 hxb)] at hx
+  omega
+
+/-- **One free slot.** The solution has exactly one digit `y < k` beyond the placed counts. -/
+lemma exists_free_one (h : Covers P k N m n) (hrf : rf P N = 1) :
+    ∃ y < k, (∀ F : ℕ → ℕ, ∑ x ∈ range P.b, digitCount P.b P.d n x * F x =
+        ∑ x ∈ range P.b, N.cnt x * F x + F y) ∧
+      ∀ x, N.cnt x < digitCount P.b P.d n x → x = y := by
+  have hsum : ∑ x ∈ range P.b, (digitCount P.b P.d n x - N.cnt x) = 1 := by rw [← hrf, h.rf_eq]
+  obtain ⟨y, -, hfy, hF, hfree⟩ := exists_of_sum_eq_one hsum
+  have hyk : y < k := by
+    by_contra hyk
+    exact hfy (h.sub_eq_zero_of_le (not_lt.1 hyk))
+  refine ⟨y, hyk, fun F => by rw [h.sum_split F, hF F], fun x hx => ?_⟩
+  exact hfree x (mem_range.2 (h.lt_b_of_cnt_lt hx)) (by omega)
+
+/-- **Two free slots.** The solution has exactly two digits `y1 ≤ y2 < k` beyond the placed
+counts, counted with multiplicity. -/
+lemma exists_free_two (h : Covers P k N m n) (hrf : rf P N = 2) :
+    ∃ y2 < k, ∃ y1 ≤ y2, (∀ F : ℕ → ℕ, ∑ x ∈ range P.b, digitCount P.b P.d n x * F x =
+        ∑ x ∈ range P.b, N.cnt x * F x + F y1 + F y2) ∧
+      ∀ x, N.cnt x < digitCount P.b P.d n x → x = y1 ∨ x = y2 := by
+  have hsum : ∑ x ∈ range P.b, (digitCount P.b P.d n x - N.cnt x) = 2 := by rw [← hrf, h.rf_eq]
+  obtain ⟨a, -, c, -, hfa, hfc, hF, hfree⟩ := exists_of_sum_eq_two hsum
+  have hlt : ∀ y, digitCount P.b P.d n y - N.cnt y ≠ 0 → y < k := fun y hy => by
+    by_contra hyk
+    exact hy (h.sub_eq_zero_of_le (not_lt.1 hyk))
+  have hfree' : ∀ x, N.cnt x < digitCount P.b P.d n x → x = a ∨ x = c := fun x hx =>
+    hfree x (mem_range.2 (h.lt_b_of_cnt_lt hx)) (by omega)
+  rcases le_total a c with hac | hca
+  · exact ⟨c, hlt c hfc, a, hac, fun F => by rw [h.sum_split F, hF F, add_assoc], hfree'⟩
+  · refine ⟨a, hlt a hfa, c, hca, fun F => by rw [h.sum_split F, hF F]; ring, fun x hx => ?_⟩
+    rcases hfree' x hx with hx | hx
+    · exact Or.inr hx
+    · exact Or.inl hx
+
 end Covers
 
 namespace IsCompletion
@@ -214,12 +304,91 @@ theorem resOk_of_covers (h : Covers P k N m n) (hrf : rf P N = 1) : resOk P k N 
   simp only [resOk, List.any_eq_true, List.mem_range, beq_iff_eq]
   exact ⟨m, h.mem, y, hyk, hmod⟩
 
-theorem residueFails_eq_false (h : Covers P k N m n) : residueFails P k N = false := by
-  simp only [residueFails, Bool.and_eq_false_iff, beq_eq_false_iff_ne, Bool.not_eq_eq_eq_not,
-    Bool.not_false]
+/-- **Lemma 37.1** (the last digits). Let `n` be a completion of `N` at level `k`. The digit of
+`n` in lane `i` (the digit of `b^i`), an unknown position, is an available digit, or a free
+digit: below `k`, with more copies in `n` than placed. -/
+theorem lowDigit_avail_or_free (h : IsCompletion P k N m n) {i : ℕ} (hi : i < P.d - N.pl) :
+    avail P k N (n / P.b ^ i % P.b) = true ∨
+      (n / P.b ^ i % P.b < k ∧
+        N.cnt (n / P.b ^ i % P.b) < digitCount P.b P.d n (n / P.b ^ i % P.b)) := by
+  -- lane `i` is the top digit at position `d - 1 - i`, at or after the end of the prefix
+  have hpx : topDigit P.b P.d n (P.d - 1 - i) = n / P.b ^ i % P.b := by
+    simp only [topDigit]
+    rw [show P.d - 1 - (P.d - 1 - i) = i by omega]
+  have hcount : (topDigits P.b P.d n N.pl).count (n / P.b ^ i % P.b) <
+      digitCount P.b P.d n (n / P.b ^ i % P.b) := by
+    have e := topDigits_add P.b P.d n N.pl (P.d - i - N.pl)
+    rw [show N.pl + (P.d - i - N.pl) = P.d - i by omega] at e
+    have hmem : n / P.b ^ i % P.b ∈
+        (List.range (P.d - i - N.pl)).map (fun j => topDigit P.b P.d n (N.pl + j)) := by
+      refine List.mem_map.2 ⟨P.d - 1 - i - N.pl, List.mem_range.2 (by omega), ?_⟩
+      rw [show N.pl + (P.d - 1 - i - N.pl) = P.d - 1 - i by omega, hpx]
+    have h1 := List.count_pos_iff.2 hmem
+    have h2 := count_topDigits_le_digitCount P.b P.d n (n / P.b ^ i % P.b)
+      (show P.d - i ≤ P.d by omega)
+    rw [e, List.count_append] at h2
+    omega
+  rcases le_or_gt k (n / P.b ^ i % P.b) with hkx | hkx
+  · left
+    simp only [avail, Bool.and_eq_true, decide_eq_true_eq]
+    refine ⟨hkx, ?_⟩
+    rw [h.topDigits_clo, h.decided _ hkx]
+    exact hcount
+  · right
+    refine ⟨hkx, ?_⟩
+    rw [h.forced _ hkx]
+    exact hcount
+
+/-- The last digits of a completion pass `lowDigitsOk` for every number `j` of digits, when `ys`
+holds the free digits. -/
+theorem lowDigitsOk_of_isCompletion (h : IsCompletion P k N m n) {ys : List ℕ}
+    (hys : ∀ x, N.cnt x < digitCount P.b P.d n x → x ∈ ys) (j : ℕ) :
+    lowDigitsOk P j k N n ys = true := by
+  simp only [lowDigitsOk, List.all_eq_true, List.mem_range, Bool.or_eq_true]
+  intro i hi
+  rcases lowDigit_avail_or_free h (show i < P.d - N.pl by omega) with ha | ⟨-, hc⟩
+  · exact Or.inr ha
+  · exact Or.inl (List.contains_iff_mem.2 (hys _ hc))
+
+/-- **Proposition 37.2** (the last digits with one free slot, Rust: `low_ok`). A node with one
+free slot, of which a solution is a completion, passes the last-digit test. -/
+theorem lowOk_of_isCompletion (h : IsCompletion P k N m n) (hrf : rf P N = 1) :
+    lowOk P k N = true := by
+  obtain ⟨y, hyk, hsum, hfree⟩ := h.exists_free_one hrf
+  have hmod := sum_count_g_mod (m := m) h.two_le_b h.low h.high h.one_le_d
+    ((isMunchausen_iff_sum h.two_le_b h.low h.high h.one_le_d).2 h.sol)
+  rw [hsum (g m)] at hmod
+  have hn : sumW P m N + w m y = n := by rw [sumW, ← hsum (w m), h.sol]
+  simp only [lowOk, List.any_eq_true, List.mem_range, Bool.and_eq_true, beq_iff_eq]
+  refine ⟨m, h.mem, y, hyk, hmod, ?_⟩
+  rw [hn]
+  exact lowDigitsOk_of_isCompletion h (fun x hx => by simp [hfree x hx]) _
+
+/-- **Proposition 37.4** (the last digits with two free slots, Rust: `pair_ok`). A node with two
+free slots, of which a solution is a completion, passes the pair test. -/
+theorem pairOk_of_isCompletion (h : IsCompletion P k N m n) (hrf : rf P N = 2) :
+    pairOk P k N = true := by
+  obtain ⟨y2, hy2k, y1, hy12, hsum, hfree⟩ := h.exists_free_two hrf
+  have hmod := sum_count_g_mod (m := m) h.two_le_b h.low h.high h.one_le_d
+    ((isMunchausen_iff_sum h.two_le_b h.low h.high h.one_le_d).2 h.sol)
+  rw [hsum (g m)] at hmod
+  have hn : sumW P m N + w m y1 + w m y2 = n := by rw [sumW, ← hsum (w m), h.sol]
+  simp only [pairOk, List.any_eq_true, List.mem_range, Bool.and_eq_true, beq_iff_eq]
+  refine ⟨m, h.mem, y2, hy2k, y1, by omega, hmod, ?_⟩
+  rw [hn]
+  exact lowDigitsOk_of_isCompletion h (fun x hx => by rcases hfree x hx with rfl | rfl <;> simp) _
+
+/-- The tests on one free slot (residue and last digits) spare a node with a completion. -/
+theorem oneSlotFails_eq_false (h : IsCompletion P k N m n) : oneSlotFails P k N = false := by
   by_cases hrf : rf P N = 1
-  · exact Or.inr (resOk_of_covers h hrf)
-  · exact Or.inl hrf
+  · simp [oneSlotFails, resOk_of_covers h.toCovers hrf, lowOk_of_isCompletion h hrf]
+  · simp [oneSlotFails, hrf]
+
+/-- The test on two free slots spares a node with a completion. -/
+theorem pairFails_eq_false (h : IsCompletion P k N m n) : pairFails P k N = false := by
+  by_cases hrf : rf P N = 2
+  · simp [pairFails, pairOk_of_isCompletion h hrf]
+  · simp [pairFails, hrf]
 
 /-- **The first unknown digit** (`first_digit_ok`). The digit of `n` after the known prefix lies
 between the digits of `lo` and `hi` there, and `n` has one more copy of it than the prefix. -/
@@ -471,9 +640,9 @@ theorem step_of_isCompletion (h : IsCompletion P k N m n) (hk : 2 < k) :
   · obtain ⟨c', hs, hc'⟩ := settle_isCompletion (P.d + 1) hc
     refine ⟨c', ?_, hc'⟩
     have hhi := not_lt.2 (pow_le_hi_of_covers hc.toCovers)
-    simp only [expandChild, tryChild, residueFails_eq_false hc.toCovers, Bool.false_eq_true,
+    simp only [expandChild, tryChild, oneSlotFails_eq_false hc, Bool.false_eq_true,
       ↓reduceIte, hhi, hs, firstDigitOk_of_isCompletion hc', Bool.not_true,
-      residueFails_eq_false hc'.toCovers]
+      oneSlotFails_eq_false hc', pairFails_eq_false hc']
 
 /-- **A leaf finds the solution.** At level 2 or below every digit from 2 up is decided, so the
 completion `n` has `c_1 - cnt 1` extra ones and the rest of the free slots are zeros. -/
@@ -529,14 +698,14 @@ end Tree
 
 /-- **The root** has every `d`-digit solution as a completion. The digits above `kmax` have count
 0 by Proposition 1.2, nothing is forced, and nothing is known. -/
-theorem root_isCompletion {b d m n : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (hmem : m ∈ ms)
-    (h1 : b ^ (d - 1) ≤ n) (h2 : n < b ^ d) (hsol : IsMunchausen b m n) :
-    IsCompletion ⟨b, d, ms⟩ (kmax b d + 1) root m n := by
+theorem root_isCompletion {b d m n low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1)
+    (hmem : m ∈ ms) (h1 : b ^ (d - 1) ≤ n) (h2 : n < b ^ d) (hsol : IsMunchausen b m n) :
+    IsCompletion ⟨b, d, ms, low, pair⟩ (kmax b d + 1) root m n := by
   have hd : 1 ≤ d := by
     by_contra hd
     simp only [show d = 0 by omega, Nat.zero_sub, pow_zero] at h1 h2
     omega
-  have hcov : Covers ⟨b, d, ms⟩ (kmax b d + 1) root m n :=
+  have hcov : Covers ⟨b, d, ms, low, pair⟩ (kmax b d + 1) root m n :=
     { two_le_b := hb
       level_le := by
         have := Nat.findGreatest_le (P := fun x => x ^ x < b ^ d) (b - 1)
@@ -562,34 +731,35 @@ theorem root_isCompletion {b d m n : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m
       forced := fun x _ => by simp [root, topDigits]
       pl_le := Nat.zero_le _ }
   refine { hcov with common := ?_ }
-  have hlt : clo ⟨b, d, ms⟩ root < b ^ d := hcov.clo_lt
-  have hchi : chi ⟨b, d, ms⟩ (kmax b d + 1) root ≤ b ^ d - 1 := min_le_right _ _
+  have hlt : clo ⟨b, d, ms, low, pair⟩ root < b ^ d := hcov.clo_lt
+  have hchi : chi ⟨b, d, ms, low, pair⟩ (kmax b d + 1) root ≤ b ^ d - 1 := min_le_right _ _
   have hpow := pow_pos (show 0 < b by omega) d
-  change clo ⟨b, d, ms⟩ root / b ^ (d - 0) = chi ⟨b, d, ms⟩ (kmax b d + 1) root / b ^ (d - 0)
+  change clo ⟨b, d, ms, low, pair⟩ root / b ^ (d - 0) =
+    chi ⟨b, d, ms, low, pair⟩ (kmax b d + 1) root / b ^ (d - 0)
   rw [Nat.sub_zero, Nat.div_eq_of_lt hlt, Nat.div_eq_of_lt (by omega)]
 
 /-- Every output for one length is a solution. -/
-theorem searchLen_sound {b d : ℕ} {ms : List ℕ} (hb : 2 ≤ b) :
-    ∀ p ∈ searchLen b d ms, p.1 ∈ ms ∧ 0 < p.2 ∧ IsMunchausen b p.1 p.2 := by
+theorem searchLen_sound {b d low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) :
+    ∀ p ∈ searchLen b d ms low pair, p.1 ∈ ms ∧ 0 < p.2 ∧ IsMunchausen b p.1 p.2 := by
   intro p hp
   exact dfs_sound (Q := fun p : ℕ × ℕ => p.1 ∈ ms ∧ 0 < p.2 ∧ IsMunchausen b p.1 p.2)
-    (fun N q hq => leaf_sound (P := ⟨b, d, ms⟩) (N := N) hb hq) _ _ p hp
+    (fun N q hq => leaf_sound (P := ⟨b, d, ms, low, pair⟩) (N := N) hb hq) _ _ p hp
 
 /-- **Completeness for one length.** Every `d`-digit solution under a convention `m ∈ ms` is
-found. -/
-theorem mem_searchLen {b d m n : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (hmem : m ∈ ms)
-    (h1 : b ^ (d - 1) ≤ n) (h2 : n < b ^ d) (hsol : IsMunchausen b m n) :
-    (m, n) ∈ searchLen b d ms :=
-  dfs_complete (Inv := fun k N => IsCompletion ⟨b, d, ms⟩ k N m n) (m, n)
+found, with any numbers of digits in the last-digit tests. -/
+theorem mem_searchLen {b d m n low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1)
+    (hmem : m ∈ ms) (h1 : b ^ (d - 1) ≤ n) (h2 : n < b ^ d) (hsol : IsMunchausen b m n) :
+    (m, n) ∈ searchLen b d ms low pair :=
+  dfs_complete (Inv := fun k N => IsCompletion ⟨b, d, ms, low, pair⟩ k N m n) (m, n)
     (fun _ _ hk h => step_of_isCompletion h hk) (fun _ _ hk h => mem_leaf h.toCovers hk) _ _
     (root_isCompletion hb hm hmem h1 h2 hsol)
 
-/-- **Soundness.** Every pair `(m, n)` returned by the search is a positive solution under
-`0^0 = m`, for a convention `m ∈ ms`. -/
-theorem search_sound {b : ℕ} {ms : List ℕ} (hb : 2 ≤ b) :
-    ∀ p ∈ search b ms, p.1 ∈ ms ∧ 0 < p.2 ∧ IsMunchausen b p.1 p.2 := by
+/-- **Soundness**, for any numbers of digits in the last-digit tests. Every pair `(m, n)` returned
+by the search is a positive solution under `0^0 = m`, for a convention `m ∈ ms`. -/
+theorem searchWith_sound {b low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) :
+    ∀ p ∈ searchWith b ms low pair, p.1 ∈ ms ∧ 0 < p.2 ∧ IsMunchausen b p.1 p.2 := by
   intro p hp
-  simp only [search, List.mem_append, List.mem_flatMap] at hp
+  simp only [searchWith, List.mem_append, List.mem_flatMap] at hp
   rcases hp with hp | ⟨d, -, hp⟩
   · simp only [oneDigit, List.mem_flatMap, List.mem_map, List.mem_filter, List.mem_range,
       decide_eq_true_eq] at hp
@@ -599,15 +769,16 @@ theorem search_sound {b : ℕ} {ms : List ℕ} (hb : 2 ≤ b) :
     simpa using hwx
   · exact searchLen_sound hb p hp
 
-/-- **Soundness and completeness.** For a convention `m ∈ ms` with `m ≤ 1`, the search returns
-`(m, n)` exactly when `n` is a positive solution in base `b` under `0^0 = m`. -/
-theorem mem_search_iff {b m n : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (hmem : m ∈ ms) :
-    (m, n) ∈ search b ms ↔ 0 < n ∧ IsMunchausen b m n := by
-  refine ⟨fun h => (search_sound hb _ h).2, fun ⟨hn, hsol⟩ => ?_⟩
+/-- **Soundness and completeness**, for any numbers `low` and `pair` of digits in the last-digit
+tests. For a convention `m ∈ ms` with `m ≤ 1`, the search returns `(m, n)` exactly when `n` is a
+positive solution in base `b` under `0^0 = m`. -/
+theorem mem_searchWith_iff {b m n low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1)
+    (hmem : m ∈ ms) : (m, n) ∈ searchWith b ms low pair ↔ 0 < n ∧ IsMunchausen b m n := by
+  refine ⟨fun h => (searchWith_sound hb _ h).2, fun ⟨hn, hsol⟩ => ?_⟩
   obtain ⟨h1, h2, hD⟩ := pow_le_of_digits_length hb hn
   have hDb := length_le_maxLen hb hm hsol
   set D := (Nat.digits b n).length with hDdef
-  simp only [search, List.mem_append, List.mem_flatMap, List.mem_range'_1]
+  simp only [searchWith, List.mem_append, List.mem_flatMap, List.mem_range'_1]
   rcases Nat.eq_or_lt_of_le hD with hD1 | hD2
   · left
     rw [← hD1, pow_one] at h2
@@ -621,18 +792,38 @@ theorem mem_search_iff {b m n : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 
     exact ⟨D, ⟨by omega, by simp only [maxLen] at hDb ⊢; omega⟩,
       mem_searchLen hb hm hmem h1 h2 hsol⟩
 
-/-- **The search computes the specification.** For `m ∈ ms` with `m ≤ 1`, the numbers that
-`search b ms` finds under `0^0 = m` are exactly the positive solutions. -/
-theorem found_eq_solutions {b m : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (hmem : m ∈ ms) :
-    found b ms m = solutions b m := by
+/-- **The search computes the specification**, for any numbers of digits in the last-digit tests.
+For `m ∈ ms` with `m ≤ 1`, the numbers found under `0^0 = m` are exactly the positive
+solutions. -/
+theorem foundWith_eq_solutions {b m low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1)
+    (hmem : m ∈ ms) : foundWith b ms low pair m = solutions b m := by
   ext n
-  rw [mem_solutions hb hm, ← mem_search_iff hb hm hmem]
-  simp only [found, List.mem_toFinset, List.mem_map, List.mem_filter, decide_eq_true_eq]
+  rw [mem_solutions hb hm, ← mem_searchWith_iff (low := low) (pair := pair) hb hm hmem]
+  simp only [foundWith, List.mem_toFinset, List.mem_map, List.mem_filter, decide_eq_true_eq]
   constructor
   · rintro ⟨⟨m', n'⟩, ⟨hp, rfl⟩, rfl⟩
     exact hp
   · intro hp
     exact ⟨(m, n), ⟨hp, rfl⟩, rfl⟩
+
+/-- **Soundness.** Every pair `(m, n)` returned by the search (with the default tests) is a
+positive solution under `0^0 = m`, for a convention `m ∈ ms`. -/
+theorem search_sound {b : ℕ} {ms : List ℕ} (hb : 2 ≤ b) :
+    ∀ p ∈ search b ms, p.1 ∈ ms ∧ 0 < p.2 ∧ IsMunchausen b p.1 p.2 :=
+  searchWith_sound hb
+
+/-- **Soundness and completeness.** For a convention `m ∈ ms` with `m ≤ 1`, the search with the
+default tests returns `(m, n)` exactly when `n` is a positive solution in base `b` under
+`0^0 = m`. -/
+theorem mem_search_iff {b m n : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (hmem : m ∈ ms) :
+    (m, n) ∈ search b ms ↔ 0 < n ∧ IsMunchausen b m n :=
+  mem_searchWith_iff hb hm hmem
+
+/-- **The search computes the specification.** For `m ∈ ms` with `m ≤ 1`, the numbers that
+`search b ms` finds under `0^0 = m` are exactly the positive solutions. -/
+theorem found_eq_solutions {b m : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hm : m ≤ 1) (hmem : m ∈ ms) :
+    found b ms m = solutions b m :=
+  foundWith_eq_solutions hb hm hmem
 
 end ExactSearch
 

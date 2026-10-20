@@ -5,6 +5,9 @@ import Munchausen.Search.Correctness
 
 * `#guard` runs the search (compiled code, outside any proof) and compares it with the lines of
   `output/b2-41-0.txt` and `output/b2-41-1.txt`, written by the Rust code, for bases 2 to 12.
+* `#guard` compares the node counts of the tree with those of `fast search 2 14 --unit-depth 0`
+  (stderr), for the residue rule alone, the default last-digit tests, one convention, and other
+  digit counts. They agree in every base from 2 to 12, so the Lean tree is the Rust tree.
 * The theorems `solutions_two` to `solutions_seven` are checked by the kernel with `decide`. With
   `found_eq_solutions` they give the complete list of solutions in these bases, as theorems.
 -/
@@ -54,6 +57,44 @@ def rustLine (b m : ℕ) : List (List ℕ) :=
 -- solutions of that convention.
 #guard (List.range' 2 11).all fun b =>
   found b [0] 0 = found b [0, 1] 0 && found b [1] 1 = found b [0, 1] 1
+
+-- The last-digit tests keep every solution, with any numbers of tested digits.
+#guard (List.range' 2 9).all fun b => [(0, 0), (1, 0), (2, 1), (5, 4)].all fun (l, p) =>
+  foundWith b [0, 1] l p 0 = found b [0, 1] 0 && foundWith b [0, 1] l p 1 = found b [0, 1] 1
+
+/-! ### Node counts against the Rust code -/
+
+/-- The nodes of the tree below `N`: every node that survives its tests, leaves included. This
+is what `fast search` counts. -/
+def dfsNodes {ν γ : Type} (cands : ℕ → ν → List γ) (expand : ℕ → ν → γ → Option ν)
+    (bottom : ℕ) : ℕ → ν → ℕ
+  | 0, _ => 1
+  | k + 1, N =>
+    if k + 1 ≤ bottom then 1
+    else 1 + (((cands (k + 1) N).filterMap (expand (k + 1) N)).map
+      (dfsNodes cands expand bottom k)).sum
+
+/-- The nodes of the search in base `b`, over the lengths 2 to `b`. -/
+def searchNodes (b : ℕ) (ms : List ℕ) (low pair : ℕ) : ℕ :=
+  ((List.range' 2 (maxLen b - 1)).map fun d =>
+    let P : Params := ⟨b, d, ms, low, pair⟩
+    dfsNodes (childCands P) (expandChild P) 2 (kmax b d + 1) root).sum
+
+/-- The node counts of `fast search 2 12 --unit-depth 0 -j 1` with the given options. Without
+`--unit-depth 0` the Rust code builds its work units without the last-digit tests. -/
+def rustNodes (ms : List ℕ) (low pair : ℕ) : List ℕ :=
+  match ms, low, pair with
+  | [0, 1], 0, 0 => [1, 4, 8, 11, 19, 30, 59, 126, 195, 373, 510]
+  | [0, 1], 3, 2 => [1, 4, 8, 9, 13, 18, 31, 78, 116, 203, 302]
+  | [0], 3, 2 => [1, 4, 7, 9, 13, 18, 30, 78, 108, 202, 293]
+  | [1], 3, 2 => [1, 4, 8, 4, 13, 18, 28, 65, 109, 186, 293]
+  | [0, 1], 1, 0 => [1, 4, 8, 10, 16, 27, 44, 102, 178, 320, 447]
+  | [0, 1], 2, 1 => [1, 4, 8, 10, 14, 23, 38, 89, 147, 254, 369]
+  | _, _, _ => []
+
+#guard [([0, 1], 0, 0), ([0, 1], 3, 2), ([0], 3, 2), ([1], 3, 2), ([0, 1], 1, 0),
+    ([0, 1], 2, 1)].all fun (ms, l, p) =>
+  (List.range' 2 11).map (fun b => searchNodes b ms l p) == rustNodes ms l p
 
 /-! ### Complete lists of solutions, checked by the kernel -/
 

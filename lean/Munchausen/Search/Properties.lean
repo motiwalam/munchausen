@@ -5,9 +5,12 @@ import Munchausen.Search.Correctness
 
 * `settle_eq_of_le`: the fuel `d + 1` that `tryChild` gives to `settle` is enough. More fuel
   gives the same result, so `settle` computes the fixed point of the Rust loop.
-* `search_nodup`: the search returns each solution once (for distinct conventions `ms`). Two
-  children of a node differ in the count of one digit, and every output below a child has that
-  count, so the subtrees have disjoint outputs.
+* `searchWith_nodup`, `search_nodup`: the search returns each solution once (for distinct
+  conventions `ms`), with any numbers of digits in the last-digit tests. Two children of a node
+  differ in the count of one digit, and every output below a child has that count, so the
+  subtrees have disjoint outputs.
+* `avail_childAt`: the available digits of a child are those of its parent, plus the digit of
+  the child when it gets copies outside the prefix. This is how the Rust code updates its mask.
 -/
 
 namespace Munchausen
@@ -81,6 +84,25 @@ lemma settle_of_tryChild {j : ℕ} {c c' : Node} (h : tryChild P j c = some c') 
     simp only [Option.some.injEq] at h
     rw [hs, h]
 
+/-- **The mask of a child** (Rust: `n.avail | (e > 0) << k` in `next_child`). The child that
+gives the digit `j` its forced copies plus `e` more, with the prefix of its parent, has the
+available digits of its parent, and `j` when `e > 0`. The hypotheses hold in the tree: the
+prefix of a candidate child is the prefix of its parent, and `cnt j` counts the copies of `j`
+that the prefix forced. -/
+theorem avail_childAt {j e : ℕ} {N : Node}
+    (hpre : topDigits P.b P.d (clo P (childAt j e N)) N.pl = topDigits P.b P.d (clo P N) N.pl)
+    (hocc : (topDigits P.b P.d (clo P N) N.pl).count j = N.cnt j) (x : ℕ) :
+    avail P j (childAt j e N) x = (avail P (j + 1) N x || (x == j && decide (0 < e))) := by
+  have hpl : (childAt j e N).pl = N.pl := rfl
+  simp only [avail, hpl, hpre]
+  by_cases hxj : x = j
+  · subst hxj
+    simp [childAt, hocc]
+  · have hcnt : (childAt j e N).cnt x = N.cnt x := by
+      simp only [childAt, Function.update_of_ne hxj]
+    have hle : (j ≤ x) ↔ (j + 1 ≤ x) := by omega
+    simp [hcnt, hxj, hle]
+
 /-- A child of `N` at level `k` keeps the counts of the digits `x ≥ k` and gives the digit
 `k - 1` the count `cnt (k - 1) + e`. -/
 lemma expandChild_cnt {k e : ℕ} {N N' : Node} (hk : 1 ≤ k) (h : expandChild P k N e = some N') :
@@ -143,10 +165,11 @@ lemma leaf_nodup (hb : 2 ≤ P.b) (hms : P.ms.Nodup) (k : ℕ) (N : Node) :
     simp only [leafCnt, show x ≠ 1 by omega, show x ≠ 0 by omega, ↓reduceIte]
 
 /-- The search for one length has no duplicates, and its outputs have `d` digits. -/
-theorem searchLen_nodup {b d : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nodup) :
-    (searchLen b d ms).Nodup ∧ ∀ p ∈ searchLen b d ms, Out ⟨b, d, ms⟩ (kmax b d + 1) root p := by
-  refine dfs_nodup (Good := fun k _ => k ≤ b) (Out := Out ⟨b, d, ms⟩)
-    (fun k N _ _ => leaf_nodup (P := ⟨b, d, ms⟩) hb hms k N)
+theorem searchLen_nodup {b d low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nodup) :
+    (searchLen b d ms low pair).Nodup ∧
+      ∀ p ∈ searchLen b d ms low pair, Out ⟨b, d, ms, low, pair⟩ (kmax b d + 1) root p := by
+  refine dfs_nodup (Good := fun k _ => k ≤ b) (Out := Out ⟨b, d, ms, low, pair⟩)
+    (fun k N _ _ => leaf_nodup (P := ⟨b, d, ms, low, pair⟩) hb hms k N)
     (fun k N _ _ => List.Nodup.sublist (List.takeWhile_sublist _) List.nodup_range)
     (fun k N e N' _ hkb he => ⟨by omega, fun p ⟨h1, h2, h3, h4⟩ =>
       ⟨h1, h2, h3, fun x hx hx2 hxb => by
@@ -161,10 +184,11 @@ theorem searchLen_nodup {b d : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nod
     simp only [kmax]
     omega
 
-/-- **No duplicates.** With distinct conventions, the search returns each pair `(m, n)` once. -/
-theorem search_nodup {b : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nodup) :
-    (search b ms).Nodup := by
-  unfold search
+/-- **No duplicates.** With distinct conventions, the search returns each pair `(m, n)` once,
+for any numbers of digits in the last-digit tests. -/
+theorem searchWith_nodup {b low pair : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nodup) :
+    (searchWith b ms low pair).Nodup := by
+  unfold searchWith
   rw [List.nodup_append]
   refine ⟨?_, ?_, ?_⟩
   · unfold oneDigit List.Nodup
@@ -207,6 +231,11 @@ theorem search_nodup {b : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nodup) :
     have := Nat.pow_le_pow_right (show 0 < b by omega) (show 1 ≤ d - 1 by omega)
     simp only [pow_one] at this h1
     omega
+
+/-- **No duplicates** for the search with the default tests. -/
+theorem search_nodup {b : ℕ} {ms : List ℕ} (hb : 2 ≤ b) (hms : ms.Nodup) :
+    (search b ms).Nodup :=
+  searchWith_nodup hb hms
 
 end ExactSearch
 

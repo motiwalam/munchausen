@@ -37,6 +37,10 @@ The tree, the tests and their order are the same. The representation is simpler:
 * The leaf checks only the conventions in `ms`. The Rust leaf checks both and `main.rs` prints
   the ones asked for; the output is the same.
 * The number 0 is not output (see `Spec.lean`).
+* The last-digit tests (chapter 37) read the sum of each candidate as a natural number. The Rust
+  code reads it from tables of `w(y) mod b^j` and a 64-bit mask `avail`, kept up to date as the
+  prefix grows; here `avail` is recomputed from `cnt` and the prefix. The Rust code takes at most
+  3 and 2 digits and needs `b ≤ 64`; here any counts work.
 -/
 
 namespace Munchausen
@@ -45,14 +49,18 @@ namespace ExactSearch
 
 open Finset
 
-/-- The parameters of the search for one length: the base `b`, the number of digits `d`, and
-the conventions `0^0 = m`, `m ∈ ms`, whose solutions the search must keep. The residue rule
-keeps a node if one of them passes (`prune.residue` in the Rust code, `-m` on the command
-line). -/
+/-- The parameters of the search for one length: the base `b`, the number of digits `d`, the
+conventions `0^0 = m`, `m ∈ ms`, whose solutions the search must keep, and the digit counts of
+the last-digit tests. The residue rule keeps a node if one of the conventions passes
+(`prune.residue` in the Rust code, `-m` on the command line). `low` is the number of last
+digits tested on a node with one free slot (`--low-digits`), `pair` the number tested on a node
+with two (`--low-pairs`); 0 turns a test off. -/
 structure Params where
   b : ℕ
   d : ℕ
   ms : List ℕ
+  low : ℕ
+  pair : ℕ
 
 /-- A node of the search tree (Rust: `Node` with the histogram `cnt` and the known lanes of
 `lo`). At level `k`, `cnt x` is the decided count `c_x` for `x ≥ k`, and the number of forced
@@ -107,9 +115,49 @@ at level `k`: some convention `m ∈ ms` and some digit `y < k` in the slot give
 def resOk (k : ℕ) (N : Node) : Bool :=
   P.ms.any fun m => (List.range k).any fun y => (residue P m N + g m y) % (P.b - 1) == 0
 
-/-- A node at level `k` fails the residue test: it has one free slot and no completion passes
-the congruence. -/
-def residueFails (k : ℕ) (N : Node) : Bool := rf P N == 1 && !resOk P k N
+/-- The sum of the placed digits under `0^0 = m` (Rust: `t` plus the zero term `zlow1`, `m` for
+each placed zero). A completion adds the weights of its free digits. -/
+def sumW (m : ℕ) (N : Node) : ℕ := ∑ x ∈ range P.b, N.cnt x * w m x
+
+/-- **The available digits** (Rust: the mask `avail` of `Node`, and `node_avail`). At level `k`:
+the decided digits `x ≥ k` with more copies than the known prefix holds (the set `A` of section
+37.1.1). -/
+def avail (k : ℕ) (N : Node) (x : ℕ) : Bool :=
+  decide (k ≤ x) && decide ((topDigits P.b P.d (clo P N) N.pl).count x < N.cnt x)
+
+/-- The last `j` digits of `S`, at most the `d - pl` unknown ones, are available digits or digits
+of `ys`, the free digits (Lemma 37.1). -/
+def lowDigitsOk (j k : ℕ) (N : Node) (S : ℕ) (ys : List ℕ) : Bool :=
+  (List.range (min j (P.d - N.pl))).all fun i =>
+    let x := S / P.b ^ i % P.b
+    ys.contains x || avail P k N x
+
+/-- **The last-digit test on one free slot** (Proposition 37.2, Rust: `Params::low_ok`). Some
+convention `m ∈ ms` and some digit `y < k` complete the residue, and the last `low` digits of
+the sum are available digits or `y`. -/
+def lowOk (k : ℕ) (N : Node) : Bool :=
+  P.ms.any fun m => (List.range k).any fun y =>
+    (residue P m N + g m y) % (P.b - 1) == 0 &&
+      lowDigitsOk P P.low k N (sumW P m N + w m y) [y]
+
+/-- **The last-digit test on two free slots** (Proposition 37.4, Rust: `Params::pair_ok`). Some
+convention `m ∈ ms` and some pair `y1 ≤ y2 < k` complete the residue, and the last `pair` digits
+of the sum are available digits, `y1` or `y2`. -/
+def pairOk (k : ℕ) (N : Node) : Bool :=
+  P.ms.any fun m => (List.range k).any fun y2 => (List.range (y2 + 1)).any fun y1 =>
+    (residue P m N + g m y1 + g m y2) % (P.b - 1) == 0 &&
+      lowDigitsOk P P.pair k N (sumW P m N + w m y1 + w m y2) [y1, y2]
+
+/-- A node at level `k` fails the tests on one free slot: the residue test, and with `low > 0`
+the last-digit test (Rust: `res_ok(k, res) && (L & 3 == 0 || low_ok(..))`, at its two call
+sites in `next_child`). -/
+def oneSlotFails (k : ℕ) (N : Node) : Bool :=
+  rf P N == 1 && !(resOk P k N && (P.low == 0 || lowOk P k N))
+
+/-- A node at level `k` fails the test on two free slots, which runs with `pair > 0` (Rust:
+`L & 12 == 0 || c.rf != 2 || pair_ok(..)` in `next_child`). -/
+def pairFails (k : ℕ) (N : Node) : Bool :=
+  P.pair != 0 && rf P N == 2 && !pairOk P k N
 
 /-- **The first unknown digit** (Rust: `first_digit_ok`). Let the digit of `lo` just after the
 known prefix be `x0 ≥ k`. That digit of the sum lies between the digits `x0` and `x1` of `lo`
@@ -150,18 +198,21 @@ def settle (k : ℕ) : ℕ → Node → Option Node
 the copies of `j` already forced (Rust: `ck = occk + e` in `next_child`). -/
 def childAt (j e : ℕ) (N : Node) : Node := ⟨Function.update N.cnt j (N.cnt j + e), N.pl⟩
 
-/-- The tests on one child at level `j`, in the order of `next_child`: the residue test, the
-interval test `hi ≥ b^(d-1)`, `settle`, the first unknown digit, and the residue test again
-after the forced digits. The test `lo < b^d` is in `children`, as a `break`. -/
+/-- The tests on one child at level `j`, in the order of `next_child`: the tests on one free slot
+(the residue and the last digits), the interval test `hi ≥ b^(d-1)`, `settle`, the first unknown
+digit, the tests on one free slot again after the forced digits, and the test on two free slots.
+The test `lo < b^d` is in `childCands`, as a `break`. Before `settle` the child has the prefix of
+its parent, as in the Rust code. -/
 def tryChild (j : ℕ) (c : Node) : Option Node :=
-  if residueFails P j c then none
+  if oneSlotFails P j c then none
   else if hi P j c < P.b ^ (P.d - 1) then none
   else
     match settle P j (P.d + 1) c with
     | none => none
     | some c' =>
       if !firstDigitOk P j c' then none
-      else if residueFails P j c' then none
+      else if oneSlotFails P j c' then none
+      else if pairFails P j c' then none
       else some c'
 
 /-- The values `e` for the children of a node at level `k`: `e = 0, 1, ..., rf`, stopping at the
@@ -199,23 +250,29 @@ def explore : ℕ → Node → List (ℕ × ℕ) := dfs (childCands P) (expandCh
 `kmax` in `Params::new`). -/
 def kmax (b d : ℕ) : ℕ := Nat.findGreatest (fun x => x ^ x < b ^ d) (b - 1)
 
-/-- The search for the `d`-digit solutions. The root sits at level `kmax + 1`: the digits above
-`kmax` have count 0. -/
-def searchLen (b d : ℕ) (ms : List ℕ) : List (ℕ × ℕ) :=
-  explore ⟨b, d, ms⟩ (kmax b d + 1) root
+/-- The search for the `d`-digit solutions, with `low` and `pair` digits in the last-digit tests.
+The root sits at level `kmax + 1`: the digits above `kmax` have count 0. -/
+def searchLen (b d : ℕ) (ms : List ℕ) (low pair : ℕ) : List (ℕ × ℕ) :=
+  explore ⟨b, d, ms, low, pair⟩ (kmax b d + 1) root
 
 /-- The one-digit solutions, `x^x = x`, which the Rust code lists apart (`run_search_n`). -/
 def oneDigit (b : ℕ) (ms : List ℕ) : List (ℕ × ℕ) :=
   ms.flatMap fun m => ((List.range b).filter fun x => 0 < x ∧ w m x = x).map fun x => (m, x)
 
-/-- **The exact search** in base `b` for the conventions `ms`: the one-digit solutions, then the
-lengths `d = 2, ..., maxLen b`. -/
-def search (b : ℕ) (ms : List ℕ) : List (ℕ × ℕ) :=
-  oneDigit b ms ++ (List.range' 2 (maxLen b - 1)).flatMap fun d => searchLen b d ms
+/-- **The exact search** in base `b` for the conventions `ms`, with `low` and `pair` digits in
+the last-digit tests: the one-digit solutions, then the lengths `d = 2, ..., maxLen b`. -/
+def searchWith (b : ℕ) (ms : List ℕ) (low pair : ℕ) : List (ℕ × ℕ) :=
+  oneDigit b ms ++ (List.range' 2 (maxLen b - 1)).flatMap fun d => searchLen b d ms low pair
+
+/-- **The exact search** with the defaults of the Rust code, `--low-digits 3 --low-pairs 2`. -/
+def search (b : ℕ) (ms : List ℕ) : List (ℕ × ℕ) := searchWith b ms 3 2
+
+/-- The solutions that `searchWith` finds under `0^0 = m`, as a `Finset`. -/
+def foundWith (b : ℕ) (ms : List ℕ) (low pair m : ℕ) : Finset ℕ :=
+  (((searchWith b ms low pair).filter fun p => p.1 = m).map Prod.snd).toFinset
 
 /-- The solutions that the search finds under `0^0 = m`, as a `Finset`. -/
-def found (b : ℕ) (ms : List ℕ) (m : ℕ) : Finset ℕ :=
-  (((search b ms).filter fun p => p.1 = m).map Prod.snd).toFinset
+def found (b : ℕ) (ms : List ℕ) (m : ℕ) : Finset ℕ := foundWith b ms 3 2 m
 
 end ExactSearch
 

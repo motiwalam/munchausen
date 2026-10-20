@@ -13,13 +13,13 @@ else. The Lean code favors reading over speed. It runs on small bases.
 | `Algorithm.lean` | the search itself |
 | `Correctness.lean` | one lemma per pruning rule, and the main theorems |
 | `Properties.lean` | `settle` reaches its fixed point, and the search has no duplicates |
-| `Examples.lean` | runs against `output/b2-41-0.txt` and `output/b2-41-1.txt`, and kernel-checked solution lists |
+| `Examples.lean` | runs against `output/b2-41-0.txt` and `output/b2-41-1.txt`, node counts against `fast search`, and kernel-checked solution lists |
 
 ## How the Lean code maps to the Rust code
 
 | Lean (`Algorithm.lean`) | Rust (`fast/src/search.rs`) |
 |---|---|
-| `Params` (`b`, `d`, `ms`) | `Params::new`, and `prune.residue` for the conventions |
+| `Params` (`b`, `d`, `ms`, `low`, `pair`) | `Params::new`, `prune.residue` for the conventions, and `prune.low`, `prune.pair` (`--low-digits`, `--low-pairs`) |
 | `Node` (`cnt`, `pl`) | `Node`, the histogram `cnt`, and the known lanes of `lo` |
 | `t`, `hi`, `rf`, `residue` | the fields `t`, `hi`, `rf`, `res` of `Node` |
 | `clo`, `chi` | `Params::clip_lo`, and the clipping in `next_child` |
@@ -29,17 +29,27 @@ else. The Lean code favors reading over speed. It runs on small bases.
 | `tryChild` | the body of that loop |
 | `settle` | `Search::settle` |
 | `firstDigitOk` | `first_digit_ok` |
-| `resOk`, `residueFails` | `Params::res_ok` and its two call sites |
+| `resOk` | `Params::res_ok` |
+| `sumW` | `t` plus the zero term `zlow1` in `low_ok` and `pair_ok` |
+| `avail` | the mask `avail` of `Node`, and `Params::node_avail` |
+| `lowDigitsOk` | the digit checks of `low_ok` and `pair_ok` (the shifted masks and the loops over `lcand`, `pcand`) |
+| `lowOk` | `Params::low_ok` |
+| `pairOk` | `Params::pair_ok` |
+| `oneSlotFails` | `res_ok(k, res) && (L & 3 == 0 \|\| low_ok(..))` at its two call sites in `next_child` |
+| `pairFails` | `L & 12 == 0 \|\| c.rf != 2 \|\| pair_ok(..)` in `next_child` |
 | `leaf` | `Search::leaf` |
 | `explore` | `Search::rec_seq` |
 | `kmax` | `kmax` in `Params::new` |
-| `oneDigit`, `search` | `run_search_n` and `max_len` |
+| `oneDigit`, `searchWith`, `search` | `run_search_n` and `max_len`; `search` uses the defaults `--low-digits 3 --low-pairs 2` |
 
 The Lean node stores less than the Rust node. It keeps the counts `cnt` and
-the length `pl` of the known prefix. It recomputes `t`, `hi`, `rf` and the
-residue from `cnt`. The Rust code keeps them as running sums. The Rust code
+the length `pl` of the known prefix. It recomputes `t`, `hi`, `rf`, the
+residue and the mask `avail` from `cnt` and the prefix. The Rust code keeps
+them as running sums and updates the mask as the prefix grows
+(`avail_childAt` shows that its update for a child is right). The Rust code
 reads the known prefix from the lanes of `lo`. The Lean code reads it with
-`topDigits b d (clo ..) pl`.
+`topDigits b d (clo ..) pl`. The last-digit tests read the sum of each
+candidate as a number, where the Rust code uses tables of `w(y) mod b^j`.
 
 At level `k`, `cnt x` is the decided count `c_x` for `x >= k`. For `x < k`
 it is the number of forced copies of `x`. The tests and their order are the
@@ -58,8 +68,17 @@ axioms `propext`, `Classical.choice` and `Quot.sound`. No `sorry`, no
   `(m, n)` exactly when `n` is a positive solution.
 - `found_eq_solutions`: the same as an equality of `Finset`s,
   `found b ms m = solutions b m`.
-- `search_nodup`: if `ms` has no duplicates, the search returns each pair
-  once.
+- `searchWith_sound`, `mem_searchWith_iff`, `foundWith_eq_solutions`: the
+  same for `searchWith b ms low pair`, with any numbers `low` and `pair` of
+  digits in the last-digit tests (0 turns a test off). `search` is
+  `searchWith b ms 3 2`, the Rust default.
+- `search_nodup`, `searchWith_nodup`: if `ms` has no duplicates, the search
+  returns each pair once.
+- `lowDigit_avail_or_free` (Lemma 37.1), `lowOk_of_isCompletion`
+  (Proposition 37.2), `pairOk_of_isCompletion` (Proposition 37.4): the
+  last-digit tests never prune a node of which a solution is a completion.
+- `avail_childAt`: the mask of a child is the mask of its parent, plus the
+  digit of the child when the child gives it copies outside the prefix.
 - `settle_eq_of_le`: the fuel `d + 1` that the search gives to `settle` is
   enough, so `settle` computes the fixed point of the Rust loop.
 - `maxLen_condition_iff`: the Rust length test `d (b-1)^(b-1) >= b^(d-1)`
@@ -84,6 +103,11 @@ known prefix is common to both ends of the interval.
   `t_lt_of_covers` covers the `break` on `lo >= b^d`.
   `pow_le_hi_of_covers` covers the test `hi >= b^(d-1)`.
   `resOk_of_covers` covers the residue rule (Theorem 31.1).
+  `lowOk_of_isCompletion` and `pairOk_of_isCompletion` cover the last-digit
+  tests on one and two free slots (Propositions 37.2 and 37.4). Both rest on
+  `lowDigit_avail_or_free` (Lemma 37.1): a digit of the solution in an
+  unknown position is an available digit or a free digit.
+  `exists_free_one` and `exists_free_two` name the free digits.
   `settle_isCompletion` covers the forced digits, iterated to a fixed point.
   `firstDigitOk_of_isCompletion` covers the first unknown digit.
 - `mem_leaf`: a leaf with the property outputs `(m, n)`.
@@ -103,10 +127,19 @@ exactly (`leaf_sound`).
 - The Lean code computes `t + e w(k) < b^d` before the residue test of child
   `e`. The Rust code tests the residue first. Both orders emit the same
   children.
+- The Rust code builds its work units (by default 4 levels) without the
+  last-digit tests, so that the units do not depend on them. The Lean tree
+  equals the Rust tree of `fast search --unit-depth 0`: the node counts
+  agree in bases 2 to 12 (`Examples.lean`).
+- The Rust tests need `b <= 64` and take at most 3 and 2 digits. The Lean
+  tests take any base and any counts.
 
 ## Running it
 
 Build with `lake build Munchausen.Search.Examples`. The `#guard` lines run
 the search for bases 2 to 12 and compare the result with the Rust output.
+Others compare the node counts with those of
+`fast search 2 12 --unit-depth 0 -j 1` for six flag sets, and check that the
+solutions do not depend on the digit counts of the last-digit tests.
 The kernel checks for bases 2 to 7 take about 30 seconds. A check for base
 10 takes about a minute, so it is not in the build.

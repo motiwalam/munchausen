@@ -23,8 +23,8 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 169 formalized, 22 partial, 12
-rows of open problems (15 `Prop`s), 4 refuted conjectures, 76 not formalized,
+Counts of table rows at the time of writing: 174 formalized, 22 partial, 12
+rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
 ## Chapter 1. Basics
@@ -447,6 +447,18 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 76 not formalized,
 | Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
 | Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel` [Exist] | partial: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286` and shown to get easier as `b` grows); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; that `T(b)` does not decrease with `b` is not formalized (condition (a) is used only through `3 (T + 5) <= b`) |
 
+## Chapter 37. The last digits and two free slots
+
+| result | Lean name | status |
+|---|---|---|
+| Lemma 37.1 (the last digits) | `lowDigit_avail_or_free`, `avail`, `exists_free_one`, `exists_free_two` [ES] | formalized (in the form the search uses: a digit of a completion in an unknown position is an available digit or a free digit; the multiset statement follows from it) |
+| Proposition 37.2 (one free slot) | `lowOk_of_isCompletion`, `lowOk` [ES] | formalized for the Lean version of the engine, any number of digits |
+| Proposition 37.3 (the interval with two free slots) | none | not formalized (the clipped interval holds every `d`-digit sum, `Covers.le_hi`, `Covers.t_le` [ES]) |
+| Proposition 37.4 (two free slots) | `pairOk_of_isCompletion`, `pairOk` [ES] | formalized for the Lean version of the engine, any number of digits |
+| Corollary 37.5 | `foundWith_eq_solutions`, `found_eq_solutions`, `mem_searchWith_iff` [ES] | formalized for the Lean version of the engine; the Rust code itself is not verified, but the Lean tree has the node counts of `fast search --unit-depth 0` in bases 2 to 12 |
+| the mask of a child | `avail_childAt` [ES] | formalized |
+| Heuristic 37.6, the tables of chapter 37 | none | not formalized (heuristic, computed) |
+
 ## The verified exact search
 
 The files in `Munchausen/Search/` (abbreviated ES) hold a functional version
@@ -455,11 +467,11 @@ of the exact search of `fast/src/search.rs` and a proof that it is correct.
 
 | result | Lean name | status |
 |---|---|---|
-| the search: count vectors from the largest digit down, the interval, forced digits iterated to a fixed point, the first unknown digit, the residue rule, the leaf check, both conventions | `search`, `searchLen`, `explore`, `childCands`, `tryChild`, `settle`, `firstDigitOk`, `resOk`, `leaf` [ES] | executable; `#guard` matches `output/b2-41-0.txt` and `output/b2-41-1.txt` for bases 2 to 12 |
-| soundness | `search_sound`, `leaf_sound` [ES] | formalized |
-| completeness, one lemma per pruning rule | `mem_search_iff`, `t_lt_of_covers`, `pow_le_hi_of_covers`, `resOk_of_covers`, `settle_isCompletion`, `firstDigitOk_of_isCompletion`, `childAt_isCompletion`, `root_isCompletion`, `mem_leaf` [ES] | formalized |
-| output equals the solution set | `found_eq_solutions`, `solutions`, `mem_solutions` [ES] | formalized (positive solutions; the Rust string `(0)` is left out) |
-| no duplicates | `search_nodup` [ES] | formalized |
+| the search: count vectors from the largest digit down, the interval, forced digits iterated to a fixed point, the first unknown digit, the residue rule, the last-digit tests on one and two free slots, the leaf check, both conventions | `search`, `searchWith`, `searchLen`, `explore`, `childCands`, `tryChild`, `settle`, `firstDigitOk`, `resOk`, `lowOk`, `pairOk`, `avail`, `leaf` [ES] | executable; `#guard` matches `output/b2-41-0.txt` and `output/b2-41-1.txt` for bases 2 to 12, and the node counts of `fast search --unit-depth 0` for six flag sets |
+| soundness | `search_sound`, `searchWith_sound`, `leaf_sound` [ES] | formalized |
+| completeness, one lemma per pruning rule | `mem_search_iff`, `mem_searchWith_iff`, `t_lt_of_covers`, `pow_le_hi_of_covers`, `resOk_of_covers`, `lowOk_of_isCompletion`, `pairOk_of_isCompletion`, `settle_isCompletion`, `firstDigitOk_of_isCompletion`, `childAt_isCompletion`, `root_isCompletion`, `mem_leaf` [ES] | formalized, for any numbers of digits in the last-digit tests |
+| output equals the solution set | `found_eq_solutions`, `foundWith_eq_solutions`, `solutions`, `mem_solutions` [ES] | formalized (positive solutions; the Rust string `(0)` is left out) |
+| no duplicates | `search_nodup`, `searchWith_nodup` [ES] | formalized |
 | termination; `settle` reaches its fixed point | `dfs`, `settle_eq_of_le` [ES] | formalized |
 | the length loop `max_len` returns `b` | `maxLen_condition_iff`, `length_le_maxLen` [ES] | formalized |
 | abstract DFS with sound pruning | `dfs_sound`, `dfs_complete`, `dfs_nodup` [ES] | formalized |
