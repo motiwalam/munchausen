@@ -20,12 +20,12 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ShortEquations), Local (LocalTests), Three (ThreeDigits), TDB
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
-(SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
+(SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
+ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 159 formalized (one of them a
-list of computed solutions checked by `decide`), 23 partial, 12 rows of open
-problems (15 `Prop`s), 4 refuted conjectures, 77 not formalized and 5 not
-stated.
+Counts of table rows at the time of writing: 167 formalized, 24 partial, 12
+rows of open problems (15 `Prop`s), 4 refuted conjectures, 76 not formalized,
+5 not stated, and 1 executable row (the exact search itself).
 
 ## Chapter 1. Basics
 
@@ -66,7 +66,7 @@ stated.
 
 | result | Lean name | status |
 |---|---|---|
-| short solutions of 3.2, 3.3 (computed lists) | examples in [Ex] | each listed solution is checked by `decide`; completeness of the lists is not formalized (large computation) |
+| short solutions of 3.2, 3.3 (computed lists) | examples in [Ex]; `solutions_two` to `solutions_seven`, `found_eq_solutions` [ES] | partial: each listed solution is checked by `decide`; the complete list of solutions is formalized for bases 2 to 7 (the verified exact search, checked by the kernel); completeness for larger bases is not formalized (large computation) |
 | 3.5 table: infinitely many for every length | `infinite_solutions_of_length` [Cons], `infinite_bases_of_length` [Cons] | formalized |
 | finiteness conjecture (3.5, 7.2) | `FinitenessConjecture`, `not_finitenessConjecture` [Conj] | refuted |
 | missing lengths (3.4, 7.3) | `MissingLengthsConjecture`, `not_missingLengthsConjecture` [Conj] | refuted |
