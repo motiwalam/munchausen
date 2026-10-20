@@ -1,0 +1,7 @@
+# Theorem M.7: b(xb + 1) = x^x + 1, x even
+X_L = 4.264661e+11  (no even x above this passes the inequality)
+  x = 1e+09: allowed by the inequality: True
+  x = 1e+10: allowed by the inequality: True
+  x = 1e+11: allowed by the inequality: True
+  x = 1e+12: allowed by the inequality: False
+  x = 1e+13: allowed by the inequality: False
