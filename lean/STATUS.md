@@ -23,7 +23,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 174 formalized, 22 partial, 12
+Counts of table rows at the time of writing: 175 formalized, 21 partial, 12
 rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
@@ -409,7 +409,7 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Theorem 33.12 | `theorem33_12`, `theorem33_12_member` [Fact] | formalized (every `u ≥ j` gives a member, since then `t_i ≤ (M u)^j ≤ x`; (S3) is stated as `y > M (x + v)` whenever `v^j ≤ x`) |
 | Proposition 33.13 | `prop33_13`, `prop33_13_lt`, `prop33_13_identity` [Fact] | formalized (the consequence for identities with `lam` an integer dividing `t_0`, as the normalization of Corollary 25.3 gives) |
 | Theorem 33.14, Corollary 33.15, Theorem 33.19 | none | not formalized (conditional on abc; the Tschirnhaus reduction is not stated) |
-| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `theorem33_16_bound`, `theorem33_16_solution`, `rad_four_mul_pow_self_le`, `abc_div_gcd` [Fact] | partial: for `x^x` in full: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)`, `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)`, `rad(4 l x^x) ≤ 2 l x`, and `x ≤ (2 + δ) B + C_δ` for every 3-digit solution with `R ≠ 0`, in each of the three positions and under either convention (`ε = δ/(4 + δ)`); the sentence on factorials (with the cited `rad(x!) ≤ e^(1.01624 x)`) is not formalized |
+| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `theorem33_16_bound`, `theorem33_16_solution`, `rad_four_mul_pow_self_le`, `abc_div_gcd`; `theorem33_16_bound_factorial`, `theorem33_16_factorion`, `rad_factorial`, `rad_four_mul_factorial_le` [Fact] | formalized: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)`, `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)`, `rad(4 l x^x) ≤ 2 l x`, and `x ≤ (2 + δ) B + C_δ` for every 3-digit solution with `R ≠ 0`, in each of the three positions and under either convention (`ε = δ/(4 + δ)`); the same bound `x ≤ (2 + δ) B + C_δ` for 3-digit factorions, with `rad(x!) = x# ≤ 4^x` (Mathlib) in place of the cited `e^(1.01624 x)` and `log x! ≥ x log x - x` (Stirling): the weaker radical bound changes only the constant `C_δ`, not the slope `2 + δ`, and `(2 + δ) B + C_δ` is the library's `max(C', (2 + O(ε)) B)` |
 | Corollary 33.17 | `corollary33_17`, `isSolution_x_0_0` [Fact] | formalized, corrected (see problem 9): a solution with the large digit last is a member of case (i) (`theorem25_7_i`), the large digit is never in the middle, and in front it needs `0^0 = 0` and the string `(x, 0, 0)` or `(x, 0, 1)` |
 | Corollary 33.18, Proposition 33.20, Table 33.4.1 | none | not formalized (conditional on abc; computation) |
 | Proposition 33.21 | `prop33_21`, `prop33_21_card` [Fact] | formalized (the arithmetic; Theorem 15.14 itself is not formalized) |
@@ -578,10 +578,6 @@ In order of value and effort:
    `q <= e - 2`. `theorem29_11_two` gives conditions (a) to (c) in both
    directions, and `topCoeff_span`, `exists_topCoeff_mul_ne_zero` are the
    tools on the `ℓ` side.
-2. Theorem 33.16 for factorials: `rad(x!)` is the primorial, at most `4^x`
-   in Mathlib, which can replace the cited `e^(1.01624 x)` in the bound
-   `x <= max(C', (2 + O(eps)) B)`; the completed square is
-   `three_digit_iff_sq`, and `theorem33_16_bound` is the model.
 3. The asymptotic counts of chapters 20 and 35: Theorem 20.3 from
    `prop20_2`, then the count of Theorem 35.12 and the summed bound of
    Proposition 35.8 (`prop35_8_window`, `prop35_8_fix`, `prop35_8_count` are

@@ -110,7 +110,7 @@
   "short-member-base": "prop25_17",
   "short-block-route": "P_sub_Fs_append_one, P_sub_Fs_append_zero",
   "short-prop-base-average": "prop35_3, P_one (partial: the exchange of the two sums and the term r = 1; the other terms use the arrangement bound)",
-  "short-abc-three": "theorem33_16_abc, theorem33_16, theorem33_16_bound, theorem33_16_solution, corollary33_17 (partial: for x^x in all three positions and both conventions; the factorion case is not formalized)",
+  "short-abc-three": "theorem33_16_abc, theorem33_16, theorem33_16_bound, theorem33_16_solution, theorem33_16_bound_factorial, theorem33_16_factorion, corollary33_17 (with abc as the hypothesis ABC; for factorions with rad(x!) <= 4^x in place of the cited bound)",
   "short-prop-no-small": "prop35_9_share, prop35_9_bounds (partial: the share as a product and its two exponential bounds; the limit is not formalized)",
   // Chapter 6
   "dio-elementary": "prop18_1_a, prop18_1_b, prop18_1_c, prop18_1_d, prop16_5",
