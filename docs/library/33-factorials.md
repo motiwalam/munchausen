@@ -446,6 +446,14 @@ Proof. By Bertrand's postulate `v_l(x!) = 1` for a prime `l` in `(x/2, x]`,
 which exists for `x >= 2`; `v_l(lam y^j) == v_l(lam) (mod j)`. In the
 identity, `lam c^j = t_0`, so `lam <= t_0`.
 
+Correction (Lean formalization, 2026-10-19). The last step bounds `P(lam)`
+by `lam <= t_0`, which holds only when `lam` is an integer: a prime in the
+denominator of a rational `lam` is not bounded by `lam`. In the identity
+case `lam` is an integer, by the normalization of Corollary 25.3 (Gauss's
+lemma makes `c`, `e` integers and `lam c^j = t_0`). The general statement,
+`x < 2 P(lam)` with `P(lam)` taken over numerator and denominator, is
+unaffected. The Lean version `prop33_13_identity` assumes `lam` integral.
+
 So the set `S_j(lam) = {x : w(x) in lam Q^(*j)}` is finite for `x!`, and it
 is all of the progression `x == 0 (mod j)` (with `lam = 1`) for `x^x`. That
 is the difference behind question 96.
