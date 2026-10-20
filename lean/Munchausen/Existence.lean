@@ -9,7 +9,7 @@ import Munchausen.Counting
 * Proposition 35.5: in any commutative ring, the ideal of value differences of equivalent
   strings; it contains the ideal of the exchanges, equals it when the exchanges connect each
   class, and equals `(β - 1)` for geometric place values once two adjacent positions can
-  exchange digits that differ by a unit;
+  exchange digits that differ by a unit, also with negative positions when `β` is a unit;
 * Proposition 35.6: in `Z[t]/(f)` the ideal `(t - 1)` meets `Z` in `f(1) Z`, and in `Z[1/q]`
   the ideal `(p/q - 1)` meets `Z` in `(p - q) Z`;
 * Proposition 35.9: the share of multisets without small digits is a product, with its two
@@ -150,6 +150,72 @@ theorem prop35_5_three (A : Set (List R)) (β u : R) (hu : IsUnit u) {a c : List
   rwa [← hv, ← mul_assoc, Units.inv_mul, one_mul] at this
 
 end Ideals
+
+section IdealsNeg
+
+variable {R : Type*} [CommRing R]
+
+/-- The invariant ideal `I_0` when positions may be negative (section 35.3.1, `β` a unit). An
+admissible string is a pair `(k, s)`: the digits `s`, least significant first, start at
+position `-k`, so the value is `u β^(-k) v_β(s)`. Equivalent strings have the same multiset
+of digits, whatever their positions. -/
+def invIdealZ (A : Set (ℕ × List R)) (β : Rˣ) (u : R) : Ideal R :=
+  Ideal.span {z | ∃ s ∈ A, ∃ t ∈ A, s.2.Perm t.2 ∧
+    z = u * ↑(β⁻¹ ^ s.1) * ringVal (β : R) s.2 - u * ↑(β⁻¹ ^ t.1) * ringVal (β : R) t.2}
+
+/-- `β^(-k) ≡ 1 (mod β - 1)` for a unit `β`. -/
+lemma sub_one_dvd_inv_pow_sub_one (β : Rˣ) (k : ℕ) : (β : R) - 1 ∣ ↑(β⁻¹ ^ k) - 1 := by
+  have h1 : (β : R) - 1 ∣ ↑β⁻¹ - 1 := ⟨-↑β⁻¹, by rw [sub_mul, mul_neg, Units.mul_inv]; ring⟩
+  have h2 : (↑β⁻¹ : R) - 1 ∣ (↑β⁻¹ : R) ^ k - 1 := by
+    simpa using sub_dvd_pow_sub_pow (↑β⁻¹ : R) 1 k
+  simpa using h1.trans h2
+
+/-- **Proposition 35.5 (3)** for negative positions (section 35.3.1), first half. With place
+values `u β^i`, `β` a unit and `i` any integer, every value is `u` times the digit sum modulo
+`β - 1`, so `I_0 ⊆ (β - 1)`. -/
+theorem prop35_5_three_neg_le (A : Set (ℕ × List R)) (β : Rˣ) (u : R) :
+    invIdealZ A β u ≤ Ideal.span {(β : R) - 1} := by
+  rw [invIdealZ, Ideal.span_le]
+  rintro z ⟨⟨k, s⟩, -, ⟨l, t⟩, -, hst, rfl⟩
+  rw [SetLike.mem_coe, Ideal.mem_span_singleton]
+  obtain ⟨a, ha⟩ := sub_one_dvd_ringVal_sub_sum (β : R) s
+  obtain ⟨b, hb⟩ := sub_one_dvd_ringVal_sub_sum (β : R) t
+  obtain ⟨c, hc⟩ := sub_one_dvd_inv_pow_sub_one β k
+  obtain ⟨d, hd⟩ := sub_one_dvd_inv_pow_sub_one β l
+  have hsum : s.sum = t.sum := hst.sum_eq
+  refine ⟨u * (↑(β⁻¹ ^ k) * a + c * s.sum - ↑(β⁻¹ ^ l) * b - d * t.sum), ?_⟩
+  dsimp only
+  linear_combination u * ↑(β⁻¹ ^ k) * ha + u * s.sum * hc - u * ↑(β⁻¹ ^ l) * hb -
+    u * t.sum * hd + u * hsum
+
+/-- **Proposition 35.5 (3)** for negative positions (section 35.3.1). If `u` and `β` are units
+and some admissible string allows the exchange of two adjacent positions whose digits differ by
+a unit, then `I_0 = (β - 1)`. Every power of `β`, also a negative one, is a unit here. -/
+theorem prop35_5_three_neg (A : Set (ℕ × List R)) (β : Rˣ) (u : R) (hu : IsUnit u) {k : ℕ}
+    {a c : List R} {x y : R} (h1 : (k, a ++ x :: y :: c) ∈ A) (h2 : (k, a ++ y :: x :: c) ∈ A)
+    (hxy : IsUnit (x - y)) : invIdealZ A β u = Ideal.span {(β : R) - 1} := by
+  refine le_antisymm (prop35_5_three_neg_le A β u) ?_
+  rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe]
+  have hperm : (a ++ x :: y :: c).Perm (a ++ y :: x :: c) :=
+    List.Perm.append_left a (List.Perm.swap y x c)
+  have hmem : u * ↑(β⁻¹ ^ k) * ringVal (β : R) (a ++ x :: y :: c) -
+      u * ↑(β⁻¹ ^ k) * ringVal (β : R) (a ++ y :: x :: c) ∈ invIdealZ A β u :=
+    Ideal.subset_span ⟨_, h1, _, h2, hperm, rfl⟩
+  have e : u * ↑(β⁻¹ ^ k) * ringVal (β : R) (a ++ x :: y :: c) -
+      u * ↑(β⁻¹ ^ k) * ringVal (β : R) (a ++ y :: x :: c) =
+      -(u * ↑(β⁻¹ ^ k) * (x - y) * (β : R) ^ a.length) * ((β : R) - 1) := by
+    have := ringVal_exch (β : R) a [] c x y
+    simp only [List.nil_append, List.length_nil, add_zero] at this
+    rw [← mul_sub, this]
+    ring
+  rw [e] at hmem
+  have hunit : IsUnit (-(u * ↑(β⁻¹ ^ k) * (x - y) * (β : R) ^ a.length)) :=
+    (((hu.mul (Units.isUnit _)).mul hxy).mul ((Units.isUnit β).pow _)).neg
+  obtain ⟨v, hv⟩ := hunit
+  have := Ideal.mul_mem_left _ (↑v⁻¹ : R) hmem
+  rwa [← hv, ← mul_assoc, Units.inv_mul, one_mul] at this
+
+end IdealsNeg
 
 /-! ### Proposition 35.6 -/
 

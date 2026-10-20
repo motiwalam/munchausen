@@ -22,8 +22,8 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
-Counts of table rows at the time of writing: 157 formalized (one of them a
-list of computed solutions checked by `decide`), 24 partial, 12 rows of open
+Counts of table rows at the time of writing: 158 formalized (one of them a
+list of computed solutions checked by `decide`), 23 partial, 12 rows of open
 problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized and 5 not
 stated.
 
@@ -438,7 +438,7 @@ stated.
 | Theorem 35.1, Corollary 35.2 | none | not formalized (character sums over random arrangements) |
 | Proposition 35.3 | `prop35_3`, `P_one` [Exist] | formalized (the exchange of the two sums, and `P_s(1)` is the digit sum; the other residues are estimated by Theorem 35.1) |
 | Heuristics 35.4, 35.11, sections 35.1.3, 35.1.4, 35.2, Table 35.3.2.1 | none | not formalized (heuristic, computed) |
-| Proposition 35.5 | `invIdeal`, `exchIdeal`, `Exch`, `ringVal_exch`, `prop35_5_one`, `prop35_5_two`, `prop35_5_three_le`, `prop35_5_three` [Exist] | partial: (1), (2) and (3) for place values `u β^i` with `i ≥ 0`; the negative positions of a unit `β` are not covered |
+| Proposition 35.5 | `invIdeal`, `exchIdeal`, `Exch`, `ringVal_exch`, `prop35_5_one`, `prop35_5_two`, `prop35_5_three_le`, `prop35_5_three`; `invIdealZ`, `prop35_5_three_neg_le`, `prop35_5_three_neg` [Exist] | formalized ((1), (2), and (3) for place values `u β^i` with `i ≥ 0`, and with any integer `i` when `β` is a unit: a string is then a pair `(k, s)` starting at position `-k`) |
 | Proposition 35.6 | `prop35_6`, `prop35_6_rat` [Exist] | formalized (for `Z[t]/(f)` with any `f`, which is `Z[β]` when `f` is the minimal polynomial of the algebraic integer `β`; and for `p/q` in `Z[1/q]`, which covers `-p/q`) |
 | Proposition 35.7 | none | not formalized (convergence of a random walk on a finite group) |
 | Proposition 35.8 | none | not formalized (the window of Lemma 20.1 with the mean value theorem) |
