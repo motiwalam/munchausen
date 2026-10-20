@@ -26,5 +26,6 @@ import Munchausen.ModelComplete
 import Munchausen.Existence
 import Munchausen.TwoSquares
 import Munchausen.FieldFamily
+import Munchausen.MiddleLeading
 import Munchausen.Search.Properties
 import Munchausen.Search.Examples
