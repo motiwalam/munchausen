@@ -9,7 +9,8 @@ import Munchausen.Congruences
 * Corollary 26.2: when a transposition keeps the offset class modulo `2(b-1)`;
 * Proposition 26.10: the image of `c ↦ S(c)` is the same under both conventions;
 * Proposition 27.8 and Corollary 27.9: which digit values fix the bottom digits of `S`;
-* Theorem 27.5 in abstract form: the fooling-set bound for certificates of emptiness.
+* Lemma 27.3 and Theorem 27.5 in the interval oracle: the fooling-set bound for certificates
+  of emptiness, with the claim of its proof.
 -/
 
 namespace Munchausen
@@ -259,5 +260,401 @@ theorem lemma26_3_unique {b m D : ℕ} (hb : 2 ≤ b) {c s s' : List ℕ} (hs : 
     (fun d hd => hdig d (hs.mem_iff.1 (List.mem_reverse.1 hd)))
     (fun d hd => hdig d (hs'.mem_iff.1 (List.mem_reverse.1 hd))) hval
   exact List.reverse_injective this
+
+/-! ### Theorem 27.5 in the interval oracle -/
+
+section Oracle
+
+variable {b : ℕ}
+
+/-- The digit `j` from the top of a `d`-digit number `n` (`j = 0` is the leading digit). -/
+def topDigit (b d n j : ℕ) : ℕ := n / b ^ (d - 1 - j) % b
+
+/-- How often the value `v` occurs among the top `l` digits of `n`. -/
+def prefixCount (b d n l v : ℕ) : ℕ :=
+  ((Finset.range l).filter fun j => topDigit b d n j = v).card
+
+/-- How many of the top `l` digits of `n` have a value outside `R`. -/
+def outsideCount (b d n l : ℕ) (R : Finset (Fin b)) : ℕ :=
+  ((Finset.range l).filter fun j => ∀ v ∈ R, topDigit b d n j ≠ v).card
+
+/-- The weight sum `S(c)` of a count vector. -/
+def wsum (wt : Fin b → ℕ) (c : Fin b → ℕ) : ℕ := ∑ v, c v * wt v
+
+namespace Cylinder
+
+/-- The values outside `R`. -/
+def U (x : Cylinder b) : Finset (Fin b) := Finset.univ.filter (· ∉ x.R)
+
+/-- The number `rf` of free copies. -/
+def rf (d : ℕ) (x : Cylinder b) : ℕ := d - ∑ v ∈ x.R, x.cR v
+
+/-- The weight `t` of the revealed copies. -/
+def t (wt : Fin b → ℕ) (x : Cylinder b) : ℕ := ∑ v ∈ x.R, x.cR v * wt v
+
+/-- The least weight outside `R`. -/
+def minU (wt : Fin b → ℕ) (x : Cylinder b) : ℕ := if h : x.U.Nonempty then x.U.inf' h wt else 0
+
+/-- The largest weight outside `R`. -/
+def maxU (wt : Fin b → ℕ) (x : Cylinder b) : ℕ := x.U.sup wt
+
+/-- The lower end of the interval `I(x)`, clipped at `b^(d-1)`. -/
+def lo (d : ℕ) (wt : Fin b → ℕ) (x : Cylinder b) : ℕ :=
+  max (x.t wt + x.rf d * x.minU wt) (b ^ (d - 1))
+
+/-- The upper end of the interval `I(x)`, clipped at `b^d - 1`. -/
+def hi (d : ℕ) (wt : Fin b → ℕ) (x : Cylinder b) : ℕ :=
+  min (x.t wt + x.rf d * x.maxU wt) (b ^ d - 1)
+
+/-- The length of `P(x)`, the common leading digits of the ends of `I(x)`. -/
+def pre (d : ℕ) (wt : Fin b → ℕ) (x : Cylinder b) : ℕ :=
+  Nat.findGreatest (fun l => x.lo d wt / b ^ (d - l) = x.hi d wt / b ^ (d - l)) d
+
+/-- The interval test of section 27.3.1 fails: `I(x)` is empty, or `P(x)` holds more than `c_v`
+copies of some `v ∈ R`, or more than `rf` digits outside `R`. -/
+def Fails (d : ℕ) (wt : Fin b → ℕ) (x : Cylinder b) : Prop :=
+  x.hi d wt < x.lo d wt ∨ (∃ v ∈ x.R, x.cR v < prefixCount b d (x.lo d wt) (x.pre d wt) v) ∨
+    x.rf d < outsideCount b d (x.lo d wt) (x.pre d wt) x.R
+
+end Cylinder
+
+/-- Two numbers with the same quotient by `D` differ by less than `D`. -/
+lemma sub_lt_of_div_eq {m n D : ℕ} (hD : 0 < D) (hmn : m ≤ n) (h : m / D = n / D) :
+    n - m < D := by
+  have h1 := Nat.div_add_mod m D
+  have h2 := Nat.div_add_mod n D
+  have h3 := Nat.mod_lt n hD
+  rw [h] at h1
+  omega
+
+/-- Equal leading digits at length `L` give equal leading digits at every shorter length. -/
+lemma div_eq_of_div_eq {m n : ℕ} {B e e' : ℕ} (hee : e ≤ e') (h : m / B ^ e = n / B ^ e) :
+    m / B ^ e' = n / B ^ e' := by
+  obtain ⟨k, rfl⟩ : ∃ k, e' = e + k := ⟨e' - e, by omega⟩
+  rw [pow_add, ← Nat.div_div_eq_div_mul, ← Nat.div_div_eq_div_mul, h]
+
+/-- The interval test passes on every cylinder `x` containing a count vector `c` (with `d`
+copies and `S(c)` of `d` digits) whose sum `S(c)` has top `pre(x)` digits holding each value
+`v` at most `c_v` times. -/
+lemma not_fails_of_prefix {d : ℕ} (hb : 2 ≤ b) (wt : Fin b → ℕ) (x : Cylinder b)
+    (c : Fin b → ℕ) (hsum : ∑ v, c v = d) (hmem : x.Mem c)
+    (hS1 : b ^ (d - 1) ≤ wsum wt c) (hS2 : wsum wt c < b ^ d)
+    (hpre : ∀ v : Fin b, prefixCount b d (wsum wt c) (x.pre d wt) v ≤ c v) :
+    ¬ x.Fails d wt := by
+  classical
+  set n := wsum wt c with hn
+  have hb0 : 0 < b := by omega
+  have hRsum : ∑ v ∈ x.R, x.cR v = ∑ v ∈ x.R, c v :=
+    Finset.sum_congr rfl fun v hv => (hmem v hv).symm
+  have hsplit : ∀ f : Fin b → ℕ, ∑ v, f v = ∑ v ∈ x.R, f v + ∑ v ∈ x.U, f v := by
+    intro f
+    rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (· ∈ x.R) f]
+    congr 1
+    rw [Finset.filter_mem_eq_inter, Finset.univ_inter]
+  have hUc : ∑ v ∈ x.U, c v = x.rf d := by
+    have := hsplit c; rw [hsum] at this
+    simp only [Cylinder.rf, hRsum]; omega
+  have hnt : n = x.t wt + ∑ v ∈ x.U, c v * wt v := by
+    rw [hn, wsum, hsplit (fun v => c v * wt v), Cylinder.t]
+    congr 1
+    exact Finset.sum_congr rfl fun v hv => by rw [hmem v hv]
+  have hmin : x.rf d * x.minU wt ≤ ∑ v ∈ x.U, c v * wt v := by
+    rw [← hUc, Finset.sum_mul]
+    refine Finset.sum_le_sum fun v hv => Nat.mul_le_mul_left _ ?_
+    have hUne : x.U.Nonempty := ⟨v, hv⟩
+    simp only [Cylinder.minU, hUne, ↓reduceDIte]
+    exact Finset.inf'_le _ hv
+  have hmax : ∑ v ∈ x.U, c v * wt v ≤ x.rf d * x.maxU wt := by
+    rw [← hUc, Finset.sum_mul]
+    exact Finset.sum_le_sum fun v hv => Nat.mul_le_mul_left _ (Finset.le_sup (f := wt) hv)
+  have hlo : x.lo d wt ≤ n := max_le (by omega) hS1
+  have hhi : n ≤ x.hi d wt := le_min (by omega) (by omega)
+  set L := x.pre d wt with hL
+  have hLd : L ≤ d := Nat.findGreatest_le d
+  have hLspec : x.lo d wt / b ^ (d - L) = x.hi d wt / b ^ (d - L) := by
+    refine Nat.findGreatest_spec
+      (P := fun l => x.lo d wt / b ^ (d - l) = x.hi d wt / b ^ (d - l)) (Nat.zero_le d) ?_
+    simp only [Nat.sub_zero]
+    have hhi2 : x.hi d wt ≤ b ^ d - 1 := min_le_right _ _
+    rw [Nat.div_eq_of_lt (by omega), Nat.div_eq_of_lt (by have := pow_pos hb0 d; omega)]
+  have hnL : n / b ^ (d - L) = x.lo d wt / b ^ (d - L) := by
+    have h1 := Nat.div_le_div_right (c := b ^ (d - L)) hlo
+    have h2 := Nat.div_le_div_right (c := b ^ (d - L)) hhi
+    omega
+  have hdig : ∀ j < L, topDigit b d (x.lo d wt) j = topDigit b d n j := by
+    intro j hj
+    simp only [topDigit]
+    rw [div_eq_of_div_eq (show d - L ≤ d - 1 - j by omega) hnL]
+  have hpc : ∀ v : Fin b, prefixCount b d (x.lo d wt) L v ≤ c v := by
+    intro v
+    refine le_trans (le_of_eq ?_) (hpre v)
+    simp only [prefixCount]
+    congr 1
+    refine Finset.filter_congr fun j hj => ?_
+    rw [hdig j (Finset.mem_range.1 hj)]
+  have hout : outsideCount b d (x.lo d wt) L x.R ≤ x.rf d := by
+    rw [← hUc]
+    set f : ℕ → Fin b := fun j => ⟨topDigit b d (x.lo d wt) j, Nat.mod_lt _ hb0⟩ with hf
+    have hmaps : ∀ j ∈ (Finset.range L).filter
+        (fun j => ∀ v ∈ x.R, topDigit b d (x.lo d wt) j ≠ v), f j ∈ x.U := by
+      intro j hj
+      obtain ⟨-, hj⟩ := Finset.mem_filter.1 hj
+      exact Finset.mem_filter.2 ⟨Finset.mem_univ _, fun hR => hj _ hR rfl⟩
+    rw [outsideCount, Finset.card_eq_sum_card_fiberwise hmaps]
+    refine Finset.sum_le_sum fun v _ => le_trans ?_ (hpc v)
+    simp only [prefixCount]
+    refine Finset.card_le_card fun j hj => ?_
+    obtain ⟨hj1, hj2⟩ := Finset.mem_filter.1 hj
+    obtain ⟨hj3, -⟩ := Finset.mem_filter.1 hj1
+    refine Finset.mem_filter.2 ⟨hj3, ?_⟩
+    rw [← hj2]
+  intro hfail
+  unfold Cylinder.Fails at hfail
+  rw [← hL] at hfail
+  rcases hfail with h | ⟨v, hvR, hv⟩ | h
+  · omega
+  · have := hpc v
+    rw [hmem v hvR] at this
+    omega
+  · omega
+
+/-- **Lemma 27.3** (section 27.3.1). A failing cylinder contains no solution: if the `d` digits
+of `S(c)` have the counts `c`, every cylinder containing `c` passes the interval test. -/
+theorem lemma27_3 {d : ℕ} (hb : 2 ≤ b) (wt : Fin b → ℕ) (x : Cylinder b) (c : Fin b → ℕ)
+    (hsum : ∑ v, c v = d) (hmem : x.Mem c) (hS1 : b ^ (d - 1) ≤ wsum wt c)
+    (hS2 : wsum wt c < b ^ d) (hsol : ∀ v : Fin b, prefixCount b d (wsum wt c) d v = c v) :
+    ¬ x.Fails d wt := by
+  refine not_fails_of_prefix hb wt x c hsum hmem hS1 hS2 fun v => ?_
+  rw [← hsol v]
+  simp only [prefixCount]
+  refine Finset.card_le_card fun j hj => ?_
+  obtain ⟨hj1, hj2⟩ := Finset.mem_filter.1 hj
+  exact Finset.mem_filter.2 ⟨Finset.mem_range.2 (lt_of_lt_of_le (Finset.mem_range.1 hj1)
+    (Nat.findGreatest_le d)), hj2⟩
+
+/-- **Theorem 27.5** (section 27.3.1), the claim of the proof, in the interval oracle. Let the
+cylinder `x` contain the count vector `c` (with `d` copies, `S(c)` of `d` digits, not starting
+with `1, 0` or `b-1, b-1`), let the top `lam ≥ 1` digits of `S(c)` hold each value `v` at
+most `c_v` times, and let `w(u) - w(m) ≥ b^(d - lam - 1)` for all `m < u` with `u ≥ θ`. If `x`
+is not a single vector and fails, every value outside `R` is below `θ`. -/
+theorem theorem27_5_claim {d : ℕ} (hb : 2 ≤ b) (hd : 2 ≤ d) (wt : Fin b → ℕ) (x : Cylinder b)
+    (c : Fin b → ℕ) (hsum : ∑ v, c v = d) (hmem : x.Mem c)
+    (hS1 : b ^ (d - 1) ≤ wsum wt c) (hS2 : wsum wt c < b ^ d)
+    (h10 : ¬ (topDigit b d (wsum wt c) 0 = 1 ∧ topDigit b d (wsum wt c) 1 = 0))
+    (hbb : ¬ (topDigit b d (wsum wt c) 0 = b - 1 ∧ topDigit b d (wsum wt c) 1 = b - 1))
+    {lam θ : ℕ} (hlam1 : 1 ≤ lam) (hlam : ∀ v : Fin b, prefixCount b d (wsum wt c) lam v ≤ c v)
+    (hθ : ∀ u m : Fin b, θ ≤ (u : ℕ) → m < u → wt m + b ^ (d - lam - 1) ≤ wt u)
+    (hrf : 1 ≤ x.rf d) (hU : 2 ≤ x.U.card) (hfail : x.Fails d wt) :
+    ∀ u : Fin b, u ∉ x.R → (u : ℕ) < θ := by
+  classical
+  set n := wsum wt c with hn
+  have hb0 : 0 < b := by omega
+  -- the weight sum splits over `R` and `U`
+  have hRsum : ∑ v ∈ x.R, x.cR v = ∑ v ∈ x.R, c v := Finset.sum_congr rfl fun v hv => (hmem v hv).symm
+  have hsplit : ∀ f : Fin b → ℕ, ∑ v, f v = ∑ v ∈ x.R, f v + ∑ v ∈ x.U, f v := by
+    intro f
+    rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (· ∈ x.R) f]
+    congr 1
+    rw [Finset.filter_mem_eq_inter, Finset.univ_inter]
+  have hUc : ∑ v ∈ x.U, c v = x.rf d := by
+    have := hsplit c; rw [hsum] at this
+    simp only [Cylinder.rf, hRsum]; omega
+  have hnt : n = x.t wt + ∑ v ∈ x.U, c v * wt v := by
+    rw [hn, wsum, hsplit (fun v => c v * wt v), Cylinder.t]
+    congr 1
+    exact Finset.sum_congr rfl fun v hv => by rw [hmem v hv]
+  have hUne : x.U.Nonempty := Finset.card_pos.1 (by omega)
+  have hmin : x.rf d * x.minU wt ≤ ∑ v ∈ x.U, c v * wt v := by
+    rw [← hUc, Finset.sum_mul]
+    refine Finset.sum_le_sum fun v hv => Nat.mul_le_mul_left _ ?_
+    simp only [Cylinder.minU, hUne, ↓reduceDIte]
+    exact Finset.inf'_le _ hv
+  have hmax : ∑ v ∈ x.U, c v * wt v ≤ x.rf d * x.maxU wt := by
+    rw [← hUc, Finset.sum_mul]
+    exact Finset.sum_le_sum fun v hv => Nat.mul_le_mul_left _ (Finset.le_sup (f := wt) hv)
+  -- `S(c) ∈ I(x)`
+  have hlo : x.lo d wt ≤ n := max_le (by omega) hS1
+  have hhi : n ≤ x.hi d wt := le_min (by omega) (by omega)
+  -- `P(x)` is a prefix of `S(c)`
+  set L := x.pre d wt with hL
+  have hLd : L ≤ d := Nat.findGreatest_le d
+  have hLspec : x.lo d wt / b ^ (d - L) = x.hi d wt / b ^ (d - L) := by
+    refine Nat.findGreatest_spec
+      (P := fun l => x.lo d wt / b ^ (d - l) = x.hi d wt / b ^ (d - l)) (Nat.zero_le d) ?_
+    simp only [Nat.sub_zero]
+    have hhi2 : x.hi d wt ≤ b ^ d - 1 := min_le_right _ _
+    rw [Nat.div_eq_of_lt (by omega), Nat.div_eq_of_lt (by have := pow_pos hb0 d; omega)]
+  have hpos : ∀ e, 0 < b ^ e := fun e => pow_pos hb0 e
+  have hnL : n / b ^ (d - L) = x.lo d wt / b ^ (d - L) := by
+    have h1 := Nat.div_le_div_right (c := b ^ (d - L)) hlo
+    have h2 := Nat.div_le_div_right (c := b ^ (d - L)) hhi
+    omega
+  intro u hu
+  by_contra hθu
+  push Not at hθu
+  -- `L ≤ lam`
+  have hLlam : L ≤ lam := by
+    by_contra hLl
+    push Not at hLl
+    have h2 : n / b ^ (d - 2) = x.lo d wt / b ^ (d - 2) :=
+      div_eq_of_div_eq (by omega) hnL
+    have h2' : n / b ^ (d - 2) = x.hi d wt / b ^ (d - 2) :=
+      h2.trans (div_eq_of_div_eq (by omega) hLspec)
+    have hd1 : b ^ (d - 1) = b * b ^ (d - 2) := by rw [← pow_succ']; congr 1; omega
+    have hd2 : b ^ d = b * b * b ^ (d - 2) := by
+      rw [mul_assoc, ← pow_succ', ← pow_succ']; congr 1; omega
+    have hdig0 : ∀ m, topDigit b d m 0 = m / b ^ (d - 2) / b % b := by
+      intro m; simp only [topDigit, Nat.sub_zero, Nat.div_div_eq_div_mul, hd1, mul_comm]
+    have hdig1 : ∀ m, topDigit b d m 1 = m / b ^ (d - 2) % b := by
+      intro m; simp only [topDigit, show d - 1 - 1 = d - 2 by omega]
+    by_cases hA : b ^ (d - 1) ≤ x.t wt + x.rf d * x.minU wt
+    · by_cases hB : x.t wt + x.rf d * x.maxU wt ≤ b ^ d - 1
+      · -- no clipping: the width of `I(x)` is at least `b^(d - lam - 1)`
+        have hlo' : x.lo d wt = x.t wt + x.rf d * x.minU wt := max_eq_left hA
+        have hhi' : x.hi d wt = x.t wt + x.rf d * x.maxU wt := min_eq_left hB
+        set u0 := x.U.max' hUne
+        have hu0 : u0 ∈ x.U := Finset.max'_mem _ _
+        have huU : u ∈ x.U := Finset.mem_filter.2 ⟨Finset.mem_univ _, hu⟩
+        have huu0 : u ≤ u0 := Finset.le_max' _ _ huU
+        obtain ⟨m, hmU, hmu0⟩ : ∃ m ∈ x.U, m ≠ u0 := by
+          by_contra h
+          push Not at h
+          have : x.U ⊆ {u0} := fun y hy => Finset.mem_singleton.2 (h y hy)
+          have := Finset.card_le_card this
+          simp at this; omega
+        have hmlt : m < u0 := lt_of_le_of_ne (Finset.le_max' _ _ hmU) hmu0
+        have hwidth := hθ u0 m (le_trans hθu (by exact_mod_cast huu0)) hmlt
+        have hwu0 : wt u0 ≤ x.maxU wt := Finset.le_sup (f := wt) hu0
+        have hwm : x.minU wt ≤ wt m := by
+          simp only [Cylinder.minU, hUne, ↓reduceDIte]; exact Finset.inf'_le _ hmU
+        have hgap : x.lo d wt + b ^ (d - lam - 1) ≤ x.hi d wt := by
+          rw [hlo', hhi']
+          have h0 : x.minU wt + b ^ (d - lam - 1) ≤ x.maxU wt := by omega
+          have h1 : x.rf d * (x.minU wt + b ^ (d - lam - 1)) ≤ x.rf d * x.maxU wt :=
+            Nat.mul_le_mul_left _ h0
+          rw [Nat.mul_add] at h1
+          have h2 : b ^ (d - lam - 1) ≤ x.rf d * b ^ (d - lam - 1) := Nat.le_mul_of_pos_left _ hrf
+          omega
+        have heq := div_eq_of_div_eq (show d - L ≤ d - lam - 1 by omega) hLspec
+        have := sub_lt_of_div_eq (hpos _) (by omega) heq
+        omega
+      · -- clipped at `b^d - 1`: `S(c)` starts with `b-1, b-1`
+        have hhi' : x.hi d wt = b ^ d - 1 := min_eq_right (by omega)
+        rw [hhi'] at h2'
+        have hq : (b ^ d - 1) / b ^ (d - 2) = b * b - 1 := by
+          rw [hd2]
+          apply Nat.div_eq_of_lt_le
+          · have := hpos (d - 2)
+            have : 1 ≤ b * b := by nlinarith
+            rw [Nat.sub_mul]; omega
+          · have := hpos (d - 2)
+            have : 1 ≤ b * b := by nlinarith
+            rw [Nat.sub_add_cancel this]; omega
+        apply hbb
+        rw [hdig0, hdig1, h2', hq]
+        have hbb1 : b * b - 1 = (b - 1) * b + (b - 1) := by
+          obtain ⟨c, rfl⟩ : ∃ c, b = c + 1 := ⟨b - 1, by omega⟩
+          simp only [Nat.add_sub_cancel]; ring_nf; omega
+        have e1 : ((b - 1) * b + (b - 1)) / b = b - 1 := by
+          rw [Nat.add_comm, Nat.add_mul_div_right _ _ hb0, Nat.div_eq_of_lt (by omega), zero_add]
+        have e2 : ((b - 1) * b + (b - 1)) % b = b - 1 := by
+          rw [Nat.add_comm, Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (by omega)]
+        rw [hbb1, e1, e2, Nat.mod_eq_of_lt (by omega)]
+        exact ⟨rfl, rfl⟩
+    · -- clipped at `b^(d-1)`: `S(c)` starts with `1, 0`
+      have hlo' : x.lo d wt = b ^ (d - 1) := max_eq_right (by omega)
+      rw [hlo', hd1, Nat.mul_div_cancel _ (hpos _)] at h2
+      apply h10
+      rw [hdig0, hdig1, h2, Nat.div_self hb0, Nat.mod_self, Nat.mod_eq_of_lt (by omega)]
+      exact ⟨rfl, rfl⟩
+  -- so `P(x)` holds each value at most `c_v` times, and `x` passes
+  refine not_fails_of_prefix hb wt x c hsum hmem hS1 hS2 (fun v => le_trans ?_ (hlam v)) hfail
+  simp only [prefixCount]
+  refine Finset.card_le_card fun j hj => ?_
+  obtain ⟨hj1, hj2⟩ := Finset.mem_filter.1 hj
+  exact Finset.mem_filter.2 ⟨Finset.mem_range.2 (by have := Finset.mem_range.1 hj1; omega), hj2⟩
+
+/-- **Theorem 27.5** (section 27.3.1) in the interval oracle. Let every `c ∈ G` have `d` copies,
+`S(c)` of `d` digits not starting with `1, 0` or `b-1, b-1`, a prefix length `lam(c) ≥ 1` whose
+top digits hold each value `v` at most `c_v` times, and a threshold `θ(c)` with
+`w(u) - w(m) ≥ b^(d - lam(c) - 1)` for all `m < u`, `u ≥ θ(c)`. Then every certificate (a set
+of failing cylinders that covers `G`) has at least `N_k` cylinders, where `N_k` counts the
+restrictions `c|V_k` to the values `≥ k` of the `c ∈ G` with `θ(c) ≤ k`. -/
+theorem theorem27_5_oracle {d : ℕ} (hb : 2 ≤ b) (hd : 2 ≤ d) (wt : Fin b → ℕ) (k : ℕ)
+    (G : Finset (Fin b → ℕ)) (lam θ : (Fin b → ℕ) → ℕ)
+    (hG : ∀ c ∈ G, ∑ v, c v = d ∧ b ^ (d - 1) ≤ wsum wt c ∧ wsum wt c < b ^ d ∧
+      ¬ (topDigit b d (wsum wt c) 0 = 1 ∧ topDigit b d (wsum wt c) 1 = 0) ∧
+      ¬ (topDigit b d (wsum wt c) 0 = b - 1 ∧ topDigit b d (wsum wt c) 1 = b - 1) ∧
+      1 ≤ lam c ∧ (∀ v : Fin b, prefixCount b d (wsum wt c) (lam c) v ≤ c v) ∧
+      ∀ u m : Fin b, θ c ≤ (u : ℕ) → m < u → wt m + b ^ (d - lam c - 1) ≤ wt u)
+    (cert : Finset (Cylinder b)) (hfails : ∀ x ∈ cert, x.Fails d wt)
+    (hcover : ∀ c ∈ G, ∃ x ∈ cert, x.Mem c) :
+    ((G.filter fun c => θ c ≤ k).image fun c (v : {v : Fin b // k ≤ (v : ℕ)}) => c v).card ≤
+      cert.card := by
+  classical
+  apply card_image_le_of_fooling _ _ (fun x => {c | x.Mem c ∧ ∑ v, c v = d}) cert
+  · intro c hc
+    obtain ⟨hcG, -⟩ := Finset.mem_filter.1 hc
+    obtain ⟨x, hx, hxc⟩ := hcover c hcG
+    exact ⟨x, hx, hxc, (hG c hcG).1⟩
+  · intro x hx c hc c' hc' hxc hxc'
+    obtain ⟨hcG, hck⟩ := Finset.mem_filter.1 hc
+    obtain ⟨hsum, hS1, hS2, h10, hbb, hlam1, hlam, hθ⟩ := hG c hcG
+    obtain ⟨hmc, -⟩ := hxc
+    obtain ⟨hmc', hsum'⟩ := hxc'
+    funext v
+    by_cases hcc : c' = c
+    · rw [hcc]
+    -- `x` is not a single vector
+    have hsplit : ∀ f : Fin b → ℕ, ∑ v, f v = ∑ v ∈ x.R, f v + ∑ v ∈ x.U, f v := by
+      intro f
+      rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (· ∈ x.R) f]
+      congr 1
+      rw [Finset.filter_mem_eq_inter, Finset.univ_inter]
+    have hRc : ∑ v ∈ x.R, c v = ∑ v ∈ x.R, x.cR v := Finset.sum_congr rfl fun v hv => hmc v hv
+    have hRc' : ∑ v ∈ x.R, c' v = ∑ v ∈ x.R, x.cR v := Finset.sum_congr rfl fun v hv => hmc' v hv
+    have hUc : ∑ v ∈ x.U, c v = x.rf d := by
+      have := hsplit c; rw [hsum] at this; simp only [Cylinder.rf]; omega
+    have hUc' : ∑ v ∈ x.U, c' v = x.rf d := by
+      have := hsplit c'; rw [hsum'] at this; simp only [Cylinder.rf]; omega
+    have hne : ∃ v ∈ x.U, c v ≠ c' v := by
+      by_contra h
+      push Not at h
+      apply hcc
+      funext v
+      by_cases hv : v ∈ x.R
+      · rw [hmc v hv, hmc' v hv]
+      · exact (h v (Finset.mem_filter.2 ⟨Finset.mem_univ _, hv⟩)).symm
+    obtain ⟨v0, hv0U, hv0⟩ := hne
+    have hrf : 1 ≤ x.rf d := by
+      by_contra h0
+      have hz : x.rf d = 0 := by omega
+      have h1 : c v0 = 0 := by
+        have := Finset.single_le_sum (fun v _ => Nat.zero_le (c v)) hv0U; omega
+      have h2 : c' v0 = 0 := by
+        have := Finset.single_le_sum (fun v _ => Nat.zero_le (c' v)) hv0U; omega
+      exact hv0 (h1.trans h2.symm)
+    have hU : 2 ≤ x.U.card := by
+      by_contra h2
+      have hU1 : x.U = {v0} := by
+        refine Finset.eq_singleton_iff_unique_mem.2 ⟨hv0U, fun y hy => ?_⟩
+        by_contra hy'
+        have : ({y, v0} : Finset (Fin b)) ⊆ x.U := by
+          intro z hz; simp only [Finset.mem_insert, Finset.mem_singleton] at hz
+          rcases hz with rfl | rfl <;> assumption
+        have := Finset.card_le_card this
+        rw [Finset.card_pair hy'] at this; omega
+      rw [hU1, Finset.sum_singleton] at hUc hUc'
+      exact hv0 (hUc.trans hUc'.symm)
+    have hall := theorem27_5_claim hb hd wt x c hsum hmc hS1 hS2 h10 hbb hlam1 hlam hθ hrf hU
+      (hfails x hx)
+    have hvR : (v : Fin b) ∈ x.R := by
+      by_contra hvR
+      have := hall v hvR
+      have := v.2
+      omega
+    rw [hmc v hvR, hmc' v hvR]
+
+end Oracle
 
 end Munchausen

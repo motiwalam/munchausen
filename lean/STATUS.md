@@ -329,8 +329,9 @@ stated.
 | result | Lean name | status |
 |---|---|---|
 | Lemma 27.1, Theorem 27.2 | none | not formalized (entropy statements in the model) |
-| Theorem 27.5 | `theorem27_5`, `card_image_le_of_fooling`, `Cylinder` [Search] | partial: the fooling-set count, with the claim of the proof (a failing cylinder that holds `c ∈ G` and another vector reveals every value `≥ θ(c)`) as a hypothesis; the claim needs the interval test of the oracle |
-| Lemma 27.3, Proposition 27.4, Remark 27.6, Corollary 27.7 | none | not formalized (need the oracle model of cylinders and certificates) |
+| Theorem 27.5 | `theorem27_5_oracle`, `theorem27_5_claim`, `theorem27_5`, `card_image_le_of_fooling`, `Cylinder.Fails`, `topDigit`, `prefixCount` [Search] | formalized (in the interval oracle of section 27.3.1, with the claim of the proof proven; `lam(c)` and `theta(c)` may be any values with the defining properties, so the largest `lam` and least `theta` of the library are covered) |
+| Lemma 27.3 | `lemma27_3`, `not_fails_of_prefix` [Search] | formalized |
+| Proposition 27.4, Remark 27.6, Corollary 27.7 | none | not formalized (27.4 is a statement about algorithms; 27.6 and 27.7 concern the engine's forcing test and the top-down tree) |
 | Proposition 27.8 | `prop27_8`, `not_dvd_w_of_coprime` [Search] | formalized |
 | Corollary 27.9 | `corollary27_9` [Search] | formalized (as: if every unrevealed value below `k` has `b^L ∣ w(v)`, then `k ≤ 1`, and `k = 0` under `0^0 = 1`) |
 
