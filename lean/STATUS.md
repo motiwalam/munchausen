@@ -22,9 +22,9 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
-Counts of table rows at the time of writing: 153 formalized (one of them a
-list of computed solutions checked by `decide`), 25 partial, 12 rows of open
-problems (15 `Prop`s), 4 refuted conjectures, 80 not formalized and 5 not
+Counts of table rows at the time of writing: 155 formalized (one of them a
+list of computed solutions checked by `decide`), 24 partial, 12 rows of open
+problems (15 `Prop`s), 4 refuted conjectures, 79 not formalized and 5 not
 stated.
 
 ## Chapter 1. Basics
@@ -341,12 +341,12 @@ stated.
 |---|---|---|
 | Theorem 29.1, Lemmas 29.3, 29.4, Theorem 29.5, Corollary 29.6, Proposition 29.7 | none | not formalized (theorems about the probabilistic model; Lemma 29.3 cites the Barbour-Hall bound) |
 | Lemma 29.2 (weights) | `lemma29_2` [MT] | formalized |
-| Lemma 29.8 | `finrank_ker_frobR`, `natCard_fixed_local`, `exists_C_of_dvd_pow_card_sub` (1); `range_pow_sub_one_le`, `Jsum_le_range` (4) [MT] | partial: (1) for `j = 1` (Berlekamp's count `dim R^φ = ω(B - 1)`, by the Chinese remainder theorem) and (4); (1) for `j ≥ 2`, (2) and (3) (traces) not formalized |
-| Theorem 29.9 | none | not formalized (needs Lemma 29.8 (3)) |
-| Corollary 29.10 | `exists_good_factor`, `exists_coprime_of_sum` [MT] | partial: a good factor exists when `e - 1` is a prime power; the conclusion `k = ω` needs Theorem 29.9 |
-| Theorem 29.11 | `theorem29_11_one`, `kDim_le`, `codim_le_finrank_ker_add_one`, `comp_pow_eq_of_codim_gt`, `theorem29_11_three`, `topCoeff`, `exists_topCoeff_mul_ne_zero` [MT] | partial: (1) and (3) in full; of (2), the necessity of (a) (`Λ_(e-2) = 0`, hence `ℓ ∘ φ^(e-1) = ℓ`); (b), (c), the converse of (2), and (4) are not formalized |
-| Remark 29.12 | none | not formalized |
-| Conjecture 29.13 (`k(B) = ω(B - 1)`) | `Conjecture29_13` [MT] | conjecture (proved for non-squarefree `B - 1` by `theorem29_11_three`) |
+| Lemma 29.8 | `finrank_ker_frobR`, `natCard_fixed_local`, `exists_C_of_dvd_pow_card_sub` (1); `lemma29_8_two_nil`, `mem_range_pow_sub_one_of_pow_eq_zero` (2); `lemma29_8_three`, `iSup_range_pow_sub_one_eq`, `pow_card_pow_add_local`, `range_pow_gcd_sub_one_le`, `frobA` (3); `range_pow_sub_one_le`, `Jsum_le_range` (4) [MT] | partial: (1) for `j = 1` (Berlekamp's count `dim R^φ = ω(B - 1)`, by the Chinese remainder theorem); of (2), that the image of `φ^j - 1` (`j ≥ 1`) contains every nilpotent element, in `R` and in each `R_i`; (3) in full, without traces (`φ^(a+f) = φ^a` on `F_q[T]/(P^a)`, and Euclid's algorithm on the exponents); and (4). (1) for `j ≥ 2` and the trace description in (2) are not formalized |
+| Theorem 29.9 | `theorem29_9`, `sub_one_mem_range_pow`, `pow_card_pow_mul_add_one`, `dvd_pow_card_pow_sub`, `sub_one_apply_eq` [MT] | formalized (the part reached by the term `j = e - 1` is the ideal `Q R`, `Q = (B - 1)/P`, on which `φ^(k f + 1) = φ`; this replaces Lemma 29.8 (3) with `S = {e - 1}`, and the terms `j = e - 2, e - 1` cover `R` modulo `Q R`) |
+| Corollary 29.10 | `corollary29_10`, `corollary29_10_two`, `exists_good_factor`, `exists_coprime_of_sum` [MT] | formalized (`k(B) = ω(B - 1)` when `e - 1 = r^s`, `s ≥ 1`, and for `e = 2` separately; see problem 6) |
+| Theorem 29.11 | `theorem29_11_one`, `kDim_le`, `codim_le_finrank_ker_add_one`, `theorem29_11_two`, `codim_gt_iff`, `mem_dualAnnihilator_Jsum`, `topCoeff_span`, `comp_pow_eq_of_codim_gt`, `theorem29_11_three`, `topCoeff`, `exists_topCoeff_mul_ne_zero` [MT] | partial: (1), (2) (both directions, with (a), (b), (c)) and (3) in full; (4) (Euler's formula over the roots of `B - 1` and the element `D = M'^(1-q)`) is not formalized |
+| Remark 29.12 | none | not formalized (it uses the roots and the `u_m` of the proof of Theorem 29.11 (4)) |
+| Conjecture 29.13 (`k(B) = ω(B - 1)`) | `Conjecture29_13` [MT] | conjecture (proved for non-squarefree `B - 1` by `theorem29_11_three`, and when `B - 1` has a good factor by `theorem29_9`) |
 | Lemma 29.14 (Assumption R fails at `b = 10`, `d = 2`) | `lemma29_14` [MT] | formalized (the digit 3 is the only 1-digit string with a 2-digit weight) |
 | Theorem 29.15, Corollary 29.16, Propositions 29.17, 29.19 | none | not formalized (model, computation, exponential sums) |
 | Conjecture 29.18 | none | not stated (exponential sums) |
@@ -499,8 +499,9 @@ Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
    degrees starts at `e = 2`, where `e - 1 = 1` is not a prime power `r^s`
    with `s >= 1`, and the proof ("`r` divides every `f_i`, hence `e`, but `r`
    divides `e - 1`") needs a prime `r`. The case `e = 2` holds for the
-   trivial reason that every degree is prime to 1. The Lean statement
-   (`exists_good_factor`) assumes `s >= 1`.
+   trivial reason that every degree is prime to 1. The Lean statements
+   (`exists_good_factor`, `corollary29_10`) assume `s >= 1`, and
+   `corollary29_10_two` covers `e = 2`.
 7. **Lemma 20.4** (section 20.1.4), an edge case. For `r = 0` the claim reads
    `m > 1`, false for `m = 1`. The lemma needs `r >= 1`, which holds wherever
    it is used. The Lean statement (`lemma20_4`) assumes a nonempty set.
