@@ -48,6 +48,7 @@ statement is marked by its source:
 | [34. Is the refined model complete?](34-model-complete.md) | the exact refined model by zero class; the 12% excess under `0^0 = 1` is a zero-free surplus in odd bases and one cell in even bases, about 2 standard deviations once the between-world scatter is counted; no zero deficit among near-solutions; the basic count is the trace of a stochastic length matrix, `1 + C/b` with `C = 1.1046` one eigenvalue; the refined count as a sum over characters; a ledger of 241 P values; neighbouring bases look independent |
 | [35. One heuristic and existence](35-existence.md) | the arrangements of a multiset spread over the residues modulo `q` prime to `b (b - 1)` at a rate independent of `ord_q(b)`; the root heuristic is the refined model averaged over the residue of the base, and the two agree at lengths 6 to 12; one invariant ideal for every positional system; averaging over bases gains only a bounded factor, but excludes long solutions with few large digits; near-solutions with about `sqrt(b / e)` matched top digits in every base `b >= 27` |
 | [36. Three digits when the field changes](36-field-family.md) | in the last position an odd large digit gives only finitely many solutions for each pair of small digits, uniformly in the second digit: Lehmer numbers and Matveev's bound in the imaginary field of the constant term; `(1, q, x)` with `x` prime to `q^2 + 4 + 4w(q)` is decided; a density result for the middle position and a square-part bound for the leading one; why the real fields resist |
+| [37. The last digits and two free slots](37-low-digits.md) | the last digits of a node with one or two free slots must be digits that the unknown positions still hold; a 64-bit mask and tables per residue class make this a few instructions, and the default search visits 0.52 to 0.57 of the nodes of the residue rule (5% to 13% fewer cycles); the instructions of the residue rule cost no cycles |
 | [Open questions](questions.md) | 153 research questions in fourteen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
@@ -241,6 +242,10 @@ Proven:
 - A node of the exact search with one free slot can be dropped when no
   digit completes the residue mod `b - 1` (Theorem 31.1). The interval of a
   node is the exact hull of the sums its counts allow (Lemma 31.4).
+- The last digits of the sum of a node lie in unknown positions, so each
+  is a free digit or a decided digit with copies outside the prefix
+  (Lemma 37.1). This gives exact tests on the nodes with one and two free
+  slots (Propositions 37.2 and 37.4).
 - Deciding whether a base has a solution is an NP problem on a tally language.
   So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
   would prove P = NP (section 8.1).
@@ -286,6 +291,10 @@ Computed:
   bases 15 to 35 and saves 1.11x to 1.22x in cycles, a constant factor.
   The forcing loop, iterated to its fixed point, saves 1.46x in nodes in
   every base from 20 to 33 (chapter 31).
+- The last-digit tests on the nodes with one and two free slots leave
+  0.52 to 0.60 of the nodes of the residue rule in bases 15 to 33 and
+  save 5.5% to 13.3% of the cycles in bases 24 to 31, 10% to 19% with one
+  convention (chapter 37).
 - No 4-digit factorion has its first three digits at most 6 and a last
   digit at most 1500 (section 33.2.2). The constructions of Theorem 15.14
   with `r <= 40` and `t <= 20,000`, or `r <= 7` and `t <= 10^5`, give no

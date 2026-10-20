@@ -401,13 +401,19 @@ problems found in the library are in
 
 ## Round 9: questions raised by chapter 31
 
-124. Is there a cheap exact test for nodes with two free slots? The
+124. (Answered in chapter 37: with the residue, the interval fails 0.0% to
+     7% of these nodes, too few to pay for a sorted table; the last digit
+     of the pair fails 10% to 28% of them, and the last two digits pay,
+     section 37.2.) Is there a cheap exact test for nodes with two free slots? The
      congruence alone reaches almost every class. The pair `(y_1, y_2)`
      must also put `S = t + w(y_1) + w(y_2)` in the interval of the prefix,
      a 2-sum problem over `k` values. How often does no pair satisfy both,
      and can a sorted table per level answer it in a few instructions?
      (computation; section 31.4.2)
-125. Where do the extra cycles of the residue rule go? Two residues per node
+125. (Answered in chapter 37: the extra instructions are register and
+     stack moves of the two byte residues; they run in idle issue slots
+     and cost no cycles, section 37.3.) Where do the extra cycles of the
+     residue rule go? Two residues per node
      cost 6% to 13% more instructions, but computing a child's residue
      only after its forced digits saves no cycles. A profile of the loop
      over `e` with and without the rule would say whether the larger node,
@@ -424,7 +430,10 @@ problems found in the library are in
      section 27.5 suggests? Then the share of the nodes that a test on `f`
      free slots can reach is known in advance for every base.
      (computation; section 31.1.2)
-128. Do the last digits pay in another form? A check of the last digit
+128. (Answered in chapter 37: the mask costs one `or` per child and one
+     compare per new prefix digit; three last digits save 3% to 8% of the
+     cycles, and they are on by default, section 37.1.) Do the last digits
+     pay in another form? A check of the last digit
      removes 17% of the nodes at base 26 but costs 2% more cycles. A table
      of `w(y) mod b` per residue class, and a bit mask of the digits that
      the unknown positions still hold, would make it a few instructions. Is
@@ -571,3 +580,28 @@ problems found in the library are in
      weights `w(x)` are perfect `x`-th powers up to a bounded factor on a
      large set, so that the argument of chapter 36 applies? (proof;
      section 36.6)
+
+## Round 15: questions raised by chapter 37
+
+154. The first unknown digit of a pair. It fails 24% to 47% of the nodes
+     with two free slots (Table 37.2.1), more than the last digit, but
+     needs the carry of `t + w(y1) + w(y2)` into lane `pp - 1`. Can a test
+     on the top lanes of `t` and a table of `w(y) / b^(pp-1)` per level
+     decide it for most pairs, and the rest by a full sum? (computation;
+     section 37.2.2)
+155. The GPU. With the tests, the CPU visits 0.53 to 0.57 of the nodes of
+     the GPU. Does a port of the mask and the tables to
+     `shaders/search.comp` pay on the subgroup engine, where the residue
+     rule gave 1.18x? (computation; section 37.4)
+156. Copies. The last-digit tests ignore the multiplicity of a digit in the
+     last lanes. A second mask of the digits with two copies left would
+     make them exact for two and three digits. How many more nodes would
+     that remove, and at what cost? (computation; section 37.1.2)
+157. Three free slots. The sums of three weights reach most classes and
+     most last digits, so the mask would be dense. Does the last digit of
+     a triple still remove a useful share of those nodes, 14% of the tree
+     (Table 31.1.1)? (computation; section 37.2.3)
+158. Lean. Lemma 37.1 and Propositions 37.2 and 37.4 are statements about
+     multisets and digits. Can the verified search of
+     `lean/Munchausen/Search/` run both tests, with a soundness lemma for
+     each? (proof; section 37.5)

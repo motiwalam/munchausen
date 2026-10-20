@@ -16,7 +16,7 @@ or heuristic (the model of chapter 5, or a judgment from data).
 | 31.1 | where the tree spends its nodes | 43% of the nodes have one free slot and 25% have two (base 28). Their subtrees are tiny. The tree dies in the middle levels, not at the leaves. | computed |
 | 31.2 | the congruence mod `b - 1` as a pruning rule | a node with one free slot fails if no digit below `k` completes its residue (Theorem 31.1). The rule removes 12% to 25% of the nodes in bases 15 to 35 and saves 10% to 18% of the cycles (1.11x to 1.22x) in bases 24 to 31. With one convention (`-m 0` or `-m 1`) it removes 13% to 30% (1.22x to 1.29x in cycles at bases 28 and 31). The GPU is 1.18x faster at base 30. The `--zscore` search visits 9% to 13% fewer nodes. | proven; computed |
 | 31.3 | the fixed-point interval | the engine already iterates the forced digits to a fixed point. The iteration saves 1.46x to 1.47x nodes in every base from 20 to 33, a constant factor. The interval it reaches is the exact hull of the reachable sums (Lemma 31.4), so the worst-case bound on the free slots is not loose. | proven; computed |
-| 31.4 | other count and residue results | Proposition 1.6 and the bound of section 1.7 are implied by the interval test (Proposition 31.5). The parity rules of section 1.6 are parts of the congruence of section 31.2. The residue test with zero or two free slots, and a test on the last one or two digits with one free slot, cost more cycles than they save. Self-paying digits and blocks give no rule. | proven; computed |
+| 31.4 | other count and residue results | Proposition 1.6 and the bound of section 1.7 are implied by the interval test (Proposition 31.5). The parity rules of section 1.6 are parts of the congruence of section 31.2. The residue test with zero or two free slots costs more cycles than it saves. A test on the last one or two digits with one free slot did too in this chapter; with a mask and tables it pays (chapter 37). Self-paying digits and blocks give no rule. | proven; computed |
 | 31.5 | splitting a base into jobs | `--shard-by size` (new) deals the units out by predicted size. The largest of 64 shards drops from 2.12 to 1.35 times the mean at unit depth 4, and from 1.21 to 1.14 at depth 6 (base 30). | computed |
 | 31.6 | the inexact search | the residue rule is exact, so it keeps the miss rate of `--zscore` and its calibration. No other change to the thresholds follows from the theory. | heuristic; computed |
 
@@ -248,6 +248,13 @@ residues, and the instructions grow by 6% to 13%. The removed nodes are
 cheap: a node with one free slot has two children, and most of its work is
 those two interval evaluations.
 
+Correction (chapter 37, 2026-10-19). The added instructions cost no
+cycles: on the same tree the residue engine with its rule off runs 35%
+more instructions than the old engine and 2% fewer cycles (Table 37.3.1).
+They are moves of the two byte residues that fill idle issue slots. The
+cycles track the interval evaluations, and the removed nodes are cheap,
+as said above.
+
 Table 31.2.4. Wall time and user time of `fast search b -j 8`, median of 3
 (base 32) or 2 (base 33) alternating runs, with a load of 5 to 9 from
 other jobs.
@@ -405,6 +412,16 @@ counts in the prefix. Corollary 27.9 says that a bottom check never prunes a
 top-down tree above its single vectors. Here it prunes, but where the tree
 is already cheap.
 
+Correction (chapter 37, 2026-10-19). The last digits do pay in another
+form. A 64-bit mask of the digits that the unknown positions still hold
+costs one `or` per child and one compare per new prefix digit, and a table
+of `w(y) mod b` per level and residue class makes one digit a shift and an
+`and` (section 37.1.3). Three last digits then save 3% to 8% of the cycles
+in bases 24 to 31, and with the last two digits of a pair on the nodes
+with two free slots 5% to 13% (Tables 37.1.2 and 37.2.3). Both tests are
+on by default. The committed test leaves 3,224,507 and 2,958,329 nodes for
+one and two digits, a little more than the rows above (section 37.5).
+
 ### 31.4.3 Results that give no rule
 
 - Self-paying digits (Propositions 2.2 and 2.3) need `a^(a-1) = b^k`. In
@@ -525,6 +542,12 @@ This chapter adds one constant factor, from the one residue the multiset
 fixes, and shows that the low digits pay only where the tree is already
 cheap. It does not touch question 109.
 
+Correction (chapter 37, 2026-10-19). The low digits pay a second constant
+factor. With the last-digit tests on the nodes with one and two free slots
+the search visits 0.52 to 0.57 of the nodes of the residue rule and saves
+5.5% to 13.3% of the cycles with both conventions, 10% to 19% with one
+(Tables 37.2.3 to 37.2.5).
+
 ## Files
 
 - Engine: `fast/src/search.rs` (`res_ok`, `res_add`, `node_res`, the
@@ -547,14 +570,18 @@ cheap. It does not touch question 109.
 
 These are questions 124 to 128 of `questions.md`.
 
-1. The residue rule needs one free slot. Is there a cheap exact test for
-two free slots? The congruence alone reaches almost every class. The pair
+1. (Answered in chapter 37: with the residue, the interval removes 0.0% to
+7% of these nodes, too few to pay; the last digit of the pair removes 10%
+to 28% of them and pays, section 37.2.) The residue rule needs one free
+slot. Is there a cheap exact test for two free slots? The congruence alone reaches almost every class. The pair
 `(y_1, y_2)` must also make `S = t + w(y_1) + w(y_2)` fall in the interval
 of the prefix; with the residue this is a 2-sum problem over `k` values.
 How often does no pair satisfy both, and can a sorted table per level
 answer it in a few instructions?
 
-2. Where do the extra cycles of the residue go? Two residues per node
+2. (Answered in chapter 37: the extra instructions are moves that run in
+idle issue slots and cost no cycles, section 37.3.) Where do the extra
+cycles of the residue go? Two residues per node
 cost 6% to 13% more instructions. A child that computes its residue only
 after its forced digits saves 2.3% of the instructions and no cycles
 (section 31.4.2), so the cost is not the arithmetic. A profile of the loop
@@ -572,7 +599,9 @@ the nodes of the exact tree a fixed geometric law, as the branching process
 of section 27.5 suggests? If so, the share of the nodes that any test on
 `f` free slots can reach is known in advance for every base.
 
-5. Do the last digits pay in some other form? A check of the last digit
+5. (Answered in chapter 37: yes, the mask is one `or` per child and one
+compare per new prefix digit, and three digits save 3% to 8% of the
+cycles, section 37.1.) Do the last digits pay in some other form? A check of the last digit
 removes 17% of the nodes at base 26 but costs 2% more cycles. A table of
 `w(y) mod b` per residue class, and a bit mask of the digits that the
 unknown positions still hold, would make it a few instructions. Is the mask
