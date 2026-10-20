@@ -209,6 +209,11 @@ Proof. For each prime `q`, write `e_i = v_q(d_i)`, sorted so that
 `lcm(d_1, ..., d_r) >= prod d_i / prod over i < j of gcd(d_i, d_j)`. Each
 `gcd(d_i, d_j)` divides `d_j - d_i < h`. And `m` is a multiple of the lcm.
 
+Correction (Lean formalization, 2026-10-19). For `r = 0` the claim reads
+`m > 1`, which is false for `m = 1`. The lemma needs `r >= 1`. Its only use
+is the proof of Proposition 20.5, with `r = k >= 3`, so nothing else changes.
+The Lean statement (`lemma20_4`) assumes a nonempty set of divisors.
+
 Proposition 20.5 (proven). Let `k >= 3`, and let `b_k` be the largest real `Y`
 with `Y <= 2^k (k ln Y / (k - 1))^(k(k-1)/2)`. Under a fixed
 convention, the number of bases `b <= B` with a `k`-digit solution is at most

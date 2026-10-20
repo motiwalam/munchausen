@@ -363,8 +363,9 @@ solutions in positive bases.
 
 The small bases show the same algebraic structure as positive bases.
 Under $0^0 = 0$ twins appear in bases $-2$, $-7$, $-8$, $-10$, $-25$ and
-$-32$. For $x$ odd or a square, $(x, 0, 0)$ and $(x, 0, 1)$ are solutions in base
-$-x^((x-1) slash 2)$ as well as in base $x^((x-1) slash 2)$, which gives
+$-32$. For $x >= 4$ odd or a square, $(x, 0, 0)$ and $(x, 0, 1)$ are solutions in base
+$-x^((x-1) slash 2)$ as well as in base $x^((x-1) slash 2)$ (for $x = 3$ the
+base is $-3$, which has no digit 3). This gives
 $(4, 0, 0)$ in base $-8$ and $(5, 0, 0)$ in base $-25$. In base $-32$ the
 digit 16 pays for itself at position 12, because
 $16 dot 32^12 = 2^64 = 16^16$ and $(-32)^12 > 0$. The solutions with $b + 1$
@@ -1387,8 +1388,9 @@ an irreducible factor $P$ of $B - 1$ _good_ if $gcd(deg P, e - 1) = 1$.
 
 #theorem(id: "worlds-ff-kB", title: [$k(B)$ is the number of factors], src: "29.2")[
   + If $B - 1$ has a good factor, then $k(B) = omega(B - 1)$.
-  + If $e - 1$ is a prime power, then $k(B) = omega(B - 1)$ for every base
-    $B$ of degree $e$. This covers $e = 2, dots, 6, 8, 9, 10, 12, 14, dots$.
+  + If $e = 2$, or $e - 1$ is a prime power, then $k(B) = omega(B - 1)$ for
+    every base $B$ of degree $e$. This covers
+    $e = 2, dots, 6, 8, 9, 10, 12, 14, dots$.
   + In every case $k(B) <= omega(B - 1) + 1$, and $k(B) = omega(B - 1)$
     when $B - 1$ is not squarefree.
 ]
@@ -1403,8 +1405,9 @@ an irreducible factor $P$ of $B - 1$ _good_ if $gcd(deg P, e - 1) = 1$.
   $e - 1$ give the image of $phi - 1$ again (fact 4). So $J$ contains the
   good part of $I$ and projects onto the bad part of $I$, and therefore
   $J = I$.
-  (2) If every factor were bad, a prime $r$ dividing $e - 1$ would divide
-  every degree, hence $e = sum a_i deg P_i$, and also $e - 1$.
+  (2) For $e = 2$ every degree is prime to $e - 1 = 1$, so every factor is
+  good. Otherwise, if every factor were bad, a prime $r$ dividing $e - 1$
+  would divide every degree, hence $e = sum a_i deg P_i$, and also $e - 1$.
   (3) Pass to linear functionals. A functional vanishes on $J$ when it is
   invariant under $phi^j$ on $W_j$ for each $j$. The difference
   $lambda compose phi - lambda$ of such a functional is forced onto one

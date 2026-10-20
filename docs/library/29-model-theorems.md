@@ -318,6 +318,12 @@ sum is `I_bad`. Since `J <= I = I_good + I_bad` and `J >= I_good + 0`,
 Proof. If every factor is bad, `r` divides every `f_i`, hence
 `e = sum a_i f_i`. But `r` divides `e - 1`.
 
+Correction (Lean formalization, 2026-10-19). The list starts at `e = 2`,
+but `e - 1 = 1` is not a prime power `r^s` with `s >= 1`, and the proof
+needs a prime `r`. The statement still holds for `e = 2`: every degree is
+prime to 1, so every factor of `B - 1` is good, and Theorem 29.9 applies.
+The Lean statement (`exists_good_factor`) assumes `s >= 1`.
+
 The first degrees where all factors can be bad are `e = 7`
 (types `3 + 4`, `2 + 2 + 3`, `2^2 + 3`), `e = 11`, `13`, `15`, `16`.
 
