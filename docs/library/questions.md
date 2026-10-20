@@ -601,7 +601,10 @@ problems found in the library are in
      most last digits, so the mask would be dense. Does the last digit of
      a triple still remove a useful share of those nodes, 14% of the tree
      (Table 31.1.1)? (computation; section 37.2.3)
-158. Lean. Lemma 37.1 and Propositions 37.2 and 37.4 are statements about
+158. (Answered in chapter 37: `lowOk_of_isCompletion` and
+     `pairOk_of_isCompletion` in `lean/Munchausen/Search/`, with
+     `found_eq_solutions` for the search with both tests, section 37.5.)
+     Lean. Lemma 37.1 and Propositions 37.2 and 37.4 are statements about
      multisets and digits. Can the verified search of
      `lean/Munchausen/Search/` run both tests, with a soundness lemma for
      each? (proof; section 37.5)

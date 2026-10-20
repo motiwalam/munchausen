@@ -72,7 +72,8 @@
   "model-cor-near-exist": "corollary35_14, corollary35_14_lower, corollary35_14_upper (partial: near-solutions for every b >= 27, t >= 2 for every b >= 77, and sqrt(b/e) - 6 <= T(b) < sqrt(b/e); that T(b) does not decrease is not formalized)",
   // Chapter 4
   "search-lem-hull": "lemma31_4, lemma31_4_attained",
-  "search-prop-exact": "ExactSearch.found_eq_solutions, ExactSearch.search_sound (for the Lean version of the search; the Rust code is not verified)",
+  "search-prop-exact": "ExactSearch.found_eq_solutions, ExactSearch.foundWith_eq_solutions, ExactSearch.search_sound (for the Lean version of the search, with the residue rule and the last-digit tests; the Rust code is not verified)",
+  "search-lem-low": "ExactSearch.lowDigit_avail_or_free, ExactSearch.lowOk_of_isCompletion, ExactSearch.pairOk_of_isCompletion, ExactSearch.avail_childAt (for the nodes of the Lean version of the search)",
   "search-thm-residue": "theorem31_1, IsSolution.sum_g_modEq_zero",
   "search-thm-certificates": "theorem27_5_oracle, theorem27_5_claim, lemma27_3",
   "search-prop-fixed-length": "prop4_1, prop10_4",

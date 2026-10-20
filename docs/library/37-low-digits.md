@@ -20,7 +20,9 @@ updates in `next_child` and `settle`) was read against the statements.
 The tests are exact as implemented. The draft stated the two-slot test
 without its own proposition; Proposition 37.4 and Corollary 37.5 now
 state it. The tables were recomputed from the data files (section 37.5).
-One pair of data files had swapped names; they are renamed.
+One pair of data files had swapped names; they are renamed. The Lean
+version of the exact search now runs both tests, with a soundness lemma
+for each (section 37.5).
 
 ## Summary
 
@@ -30,7 +32,7 @@ One pair of data files had swapped names; they are renamed.
 | 37.2 | 124: two free slots | "`S` in the interval of the prefix" adds nothing but the ends of the `d`-digit range (Proposition 37.3). With the residue it fails 0.0% to 7% of these nodes, too few to pay. The last digit of `t + w(y1) + w(y2)` fails 10% to 28% of them (Proposition 37.4), and is the same shift and `and` over the pairs. With two digits, and three digits for one free slot, the default visits 0.52 to 0.57 of the nodes of the residue rule and takes 0.87 to 0.95 of the cycles in bases 24 to 31 (0.81 to 0.90 with one convention). | proven; computed |
 | 37.3 | 125: the instructions of the residue rule | On the same tree, the residue engine with its rule off runs 35% more instructions than the engine before it and 2% fewer cycles. The 68 extra instructions per interval evaluation are mostly register and stack moves of the two byte residues. They fill idle issue slots. The loop waits on its dependent vector additions and on mispredicts. The cycles track the interval evaluations, not the nodes. | computed; heuristic |
 | 37.4 | defaults, the GPU | `--low-digits 3 --low-pairs 2` is the default. The GPU search is unchanged and runs without the tests. | computed |
-| 37.5 | checks | The tables agree with the data files. The search with the tests finds every solution (Corollary 37.5). | proven; computed |
+| 37.5 | checks | The tables agree with the data files. The search with the tests finds every solution (Corollary 37.5); the Lean version of the search proves it for its own engine, whose tree has the Rust node counts in bases 2 to 12. | proven; computed |
 
 Scripts: `analysis/r6s2_bench.py` (cycle counts, with `analysis/r6s_cyc.c`),
 `analysis/r6s2_tables.py` (Tables 37.1.2, 37.2.3 and 37.2.4),
@@ -531,6 +533,23 @@ record their arguments, and a rerun of base 15 (2,725 nodes with `-m 0`,
 2,531 with `-m 1`) settle it. The files are renamed; the table was right.
 Tables 37.1.1 and 37.2.2 come from test builds that are not committed.
 
+Lean. The verified search of `lean/Munchausen/Search/` now runs both
+tests, with any numbers of digits (`searchWith b ms low pair`; `search` uses
+3 and 2). `foundWith_eq_solutions` and `found_eq_solutions` hold with the
+tests on. `lowDigit_avail_or_free` is Lemma 37.1 in the form the search
+uses: a digit of a completion in an unknown position is in `A` or is a free
+digit. `lowOk_of_isCompletion` and `pairOk_of_isCompletion` are
+Propositions 37.2 and 37.4 for the nodes of the Lean search, and
+`avail_childAt` is the update of the mask by a child. The Lean code
+recomputes `A` from the counts and the prefix, as it does `t`, `hi` and the
+residue. Its tree has the node counts of `fast search 2 12 --unit-depth 0`
+for the residue rule alone, the default, `-m 0`, `-m 1`, and the digit
+counts 1, 0 and 2, 1 (`#guard` in `Examples.lean`). The option matters:
+the Rust code builds its work units, by default 4 levels deep, without the
+tests, so the node counts of section 37.2.4 are those of that mixed tree.
+The theorems use only the axioms `propext`, `Classical.choice` and
+`Quot.sound`.
+
 One difference with chapter 31 is unexplained. Section 31.4.2 reports
 3,222,980 nodes at base 26 for the check of one last digit, and 2,947,567
 for two. The committed test leaves 3,224,507 and 2,958,329. The two-digit
@@ -577,6 +596,7 @@ Each item now has a note in the chapter or question file it corrects.
 | `analysis/data/r6s2_pair_b20_30.txt` | Table 37.2.1 |
 | `analysis/data/r6s2_nodes_{both,m0,m1}.txt` | Table 37.2.5, stderr of `fast search 2 33` |
 | `analysis/data/r6s2_residue_cycles.json`, `r6s2_residue_kinds.txt` | Tables 37.3.1 and 37.3.2 |
+| `lean/Munchausen/Search/` | the verified search with both tests (section 37.5) |
 
 Test builds that are not committed: the variants of Tables 37.1.1 and
 37.2.2, and `fields` of section 37.3 (two functions made no-ops).
@@ -601,7 +621,8 @@ These are questions 154 to 158 of `questions.md`.
    last digits, so the mask would be dense. Does the last digit of a
    triple still remove a useful share of those nodes (14% of the tree,
    Table 31.1.1)?
-5. Lean. Lemma 37.1 and Propositions 37.2 and 37.4 are statements about
-   multisets and digits, close to those of chapter 1. Can the verified
-   search of `lean/Munchausen/Search/` run both tests, with a soundness
-   lemma for each?
+5. (Answered in this chapter, section 37.5.) Lean. Lemma 37.1 and
+   Propositions 37.2 and 37.4 are statements about multisets and digits,
+   close to those of chapter 1. Can the verified search of
+   `lean/Munchausen/Search/` run both tests, with a soundness lemma for
+   each?
