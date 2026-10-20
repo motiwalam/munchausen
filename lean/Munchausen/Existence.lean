@@ -1,5 +1,7 @@
 import Munchausen.FunctionField
 import Munchausen.Counting
+import Munchausen.Applications
+import Munchausen.BaseWindow
 
 /-!
 # One heuristic and existence (chapter 35)
@@ -12,6 +14,9 @@ import Munchausen.Counting
   exchange digits that differ by a unit, also with negative positions when `β` is a unit;
 * Proposition 35.6: in `Z[t]/(f)` the ideal `(t - 1)` meets `Z` in `f(1) Z`, and in `Z[1/q]`
   the ideal `(p/q - 1)` meets `Z` in `(p - q) Z`;
+* Proposition 35.8: the window of Lemma 20.1 computed from the large digits contains the base,
+  widened by one; the small part `m(c_S)` is fixed by the large part and the base; and the
+  small multisets with a given `m(c_S)` number at most `C(z0 + j, j)` (Lemma 30.2);
 * Proposition 35.9: the share of multisets without small digits is a product, with its two
   exponential bounds;
 * Theorem 35.13 in full: the steering of the top digits of `F` by copies of one digit per
@@ -265,6 +270,226 @@ theorem prop35_6_rat {p q : ℤ} (hq : 1 ≤ q) (hpq : IsCoprime p q) (n : ℤ) 
     refine ⟨q * c, 0, ?_⟩
     push_cast
     field_simp
+
+/-! ### Proposition 35.8: the window from the large digits -/
+
+lemma pow_sub_one_add_pow_le {b : ℕ} (hb : 1 ≤ b) (i : ℕ) :
+    (b - 1) ^ (i + 1) + b ^ i ≤ b ^ (i + 1) := by
+  · have h1 : (b - 1) ^ i ≤ b ^ i := Nat.pow_le_pow_left (by omega) i
+    have h2 : (b - 1) ^ (i + 1) = (b - 1) * (b - 1) ^ i := by rw [pow_succ']
+    have h3 : b ^ (i + 1) = (b - 1) * b ^ i + b ^ i := by
+      rw [pow_succ', ← Nat.succ_mul, Nat.succ_eq_add_one, Nat.sub_add_cancel hb]
+    rw [h2, h3]
+    exact Nat.add_le_add_right (Nat.mul_le_mul_left _ h1) _
+
+/-- **Proposition 35.8** (section 35.4.1), the window. Let `n` be a solution in base `b` with
+`k ≥ 3` digits, leading digit `p`, second digit at most `M`, and let `F'` be the weight of
+the large digits: `F' ≤ n < F' + b` (the small weights add less than `b`). Then
+`p (b - 1)^(k-1) < F' < p b^(k-1) + (M + 1) b^(k-2)`: the window of Lemma 20.1 computed from
+`F'` contains `b`, widened by one base. No mean value theorem is needed. -/
+theorem prop35_8_window {b m p q M F' : ℕ} {t : List ℕ} (hs : IsSolution b m (p :: q :: t))
+    (ht : t ≠ []) (hq : q ≤ M) (hF1 : F' ≤ P b (p :: q :: t))
+    (hF2 : P b (p :: q :: t) < F' + b) :
+    p * (b - 1) ^ (t.length + 1) < F' ∧ F' < p * b ^ (t.length + 1) + (M + 1) * b ^ t.length := by
+  obtain ⟨h1, h2⟩ := lemma20_1 hs hq
+  have hp1 : 1 ≤ p := by
+    have := hs.head_ne_zero (by simp); simp at this; omega
+  have hb : 1 < b := by have := hs.lt_base p (by simp); omega
+  refine ⟨?_, by omega⟩
+  have hlen : 1 ≤ t.length := List.length_pos_iff.2 ht
+  have k1 := pow_sub_one_add_pow_le (b := b) (by omega) t.length
+  have k2 : b ≤ b ^ t.length := by
+    calc b = b ^ 1 := (pow_one b).symm
+      _ ≤ b ^ t.length := Nat.pow_le_pow_right (by omega) hlen
+  have k3 : p * (b - 1) ^ (t.length + 1) + p * b ^ t.length ≤ p * b ^ (t.length + 1) := by
+    rw [← mul_add]; exact Nat.mul_le_mul_left _ k1
+  have k4 : b ≤ p * b ^ t.length := k2.trans (Nat.le_mul_of_pos_left _ hp1)
+  omega
+
+/-- **Proposition 35.8**, the window in roots: `b - 1 < (F'/p)^(1/(k-1)) < b + (M+1)/(p (k-1))`,
+so `b` is one of the integers of the window of Lemma 20.1 computed from `F'`, or the one
+below it. -/
+theorem prop35_8_root {b m p q M F' : ℕ} {t : List ℕ} (hs : IsSolution b m (p :: q :: t))
+    (ht : t ≠ []) (hq : q ≤ M) (hF1 : F' ≤ P b (p :: q :: t))
+    (hF2 : P b (p :: q :: t) < F' + b) :
+    (b : ℝ) - 1 < ((F' : ℝ) / p) ^ ((t.length + 1 : ℕ) : ℝ)⁻¹ ∧
+      ((F' : ℝ) / p) ^ ((t.length + 1 : ℕ) : ℝ)⁻¹ < b + (M + 1) / (p * (t.length + 1 : ℕ)) := by
+  obtain ⟨h1, -⟩ := prop35_8_window hs ht hq hF1 hF2
+  obtain ⟨-, h3⟩ := lemma20_1_root hs hq
+  have hp1 : 1 ≤ p := by
+    have := hs.head_ne_zero (by simp); simp at this; omega
+  have hb : 1 < b := by have := hs.lt_base p (by simp); omega
+  have hpR : (0 : ℝ) < p := by exact_mod_cast hp1
+  set j := t.length + 1
+  have hj : (0 : ℝ) < ((j : ℕ) : ℝ)⁻¹ := by positivity
+  have hb1 : (0 : ℝ) ≤ (b : ℝ) - 1 := by
+    have : (1 : ℝ) < b := by exact_mod_cast hb
+    linarith
+  constructor
+  · have hlt : ((b : ℝ) - 1) ^ j < (F' : ℝ) / p := by
+      rw [lt_div_iff₀ hpR]
+      have : ((p * (b - 1) ^ j : ℕ) : ℝ) < F' := by exact_mod_cast h1
+      push_cast [Nat.cast_sub hb.le] at this
+      linarith
+    have := Real.rpow_lt_rpow (by positivity) hlt hj
+    rwa [Real.pow_rpow_inv_natCast hb1 (by omega)] at this
+  · refine lt_of_le_of_lt ?_ h3
+    apply Real.rpow_le_rpow (by positivity) _ hj.le
+    exact div_le_div_of_nonneg_right (by exact_mod_cast hF1) hpR.le
+
+lemma sum_le_Fs (m : ℕ) (s : List ℕ) : s.sum ≤ Fs m s := by
+  induction s with
+  | nil => simp
+  | cons d t ih => simp only [List.sum_cons, Fs_cons]; have := le_w' m d; omega
+
+/-- **Proposition 35.8**, the small part is fixed. Let two solutions in base `b` have the same
+large part `L` and small parts `S`, `S'` with `F(S), F(S') < b - 1`. Then
+`m(S) = F(S) - σ(S)` equals `m(S')`: both lie in `[0, b - 2]` and are `≡ -m(L)` modulo
+`b - 1`. -/
+theorem prop35_8_fix {b m : ℕ} (hb : 2 ≤ b) {L S S' s s' : List ℕ} (hs : IsSolution b m s)
+    (hs' : IsSolution b m s') (hp : s.Perm (L ++ S)) (hp' : s'.Perm (L ++ S'))
+    (hS : Fs m S < b - 1) (hS' : Fs m S' < b - 1) :
+    Fs m S - S.sum = Fs m S' - S'.sum := by
+  have key : ∀ {u U : List ℕ}, IsSolution b m u → u.Perm (L ++ U) →
+      (Fs m L - L.sum) + (Fs m U - U.sum) ≡ 0 [MOD b - 1] := by
+    intro u U hu hpu
+    have h1 := P_modEq_sum (b := b) (by omega) u
+    rw [hu.eq] at h1
+    have hF : Fs m u = Fs m L + Fs m U := by
+      rw [← Fs_append]; unfold Fs; exact (hpu.map _).sum_eq
+    have hsum : u.sum = L.sum + U.sum := by rw [← List.sum_append]; exact hpu.sum_eq
+    rw [hF, hsum] at h1
+    have hL := sum_le_Fs m L
+    have hU := sum_le_Fs m U
+    have e : Fs m L + Fs m U = (Fs m L - L.sum + (Fs m U - U.sum)) + (L.sum + U.sum) := by omega
+    rw [e] at h1
+    have := Nat.ModEq.add_right_cancel' (L.sum + U.sum) (h1.trans (by rw [zero_add]))
+    exact this
+  have h1 := key hs hp
+  have h2 := key hs' hp'
+  have h3 := Nat.ModEq.add_left_cancel' _ (h1.trans h2.symm)
+  exact Nat.ModEq.eq_of_lt_of_lt h3 (by omega) (by omega)
+
+/-- Multisets of `k` numbers at most `X` number at most `C(X + k, k)`. -/
+lemma card_le_choose_of_bounded (T : Finset (Multiset ℕ)) (X k : ℕ)
+    (hT : ∀ c ∈ T, Multiset.card c = k ∧ ∀ x ∈ c, x ≤ X) : T.card ≤ (X + k).choose k := by
+  classical
+  let cf : ℕ → Fin (X + 1) := fun d => ⟨d % (X + 1), Nat.mod_lt _ (by omega)⟩
+  let f : Multiset ℕ → Sym (Fin (X + 1)) k := fun c =>
+    if h : Multiset.card c = k then ⟨c.map cf, by simpa using h⟩
+    else ⟨Multiset.replicate k 0, by simp⟩
+  have key : ∀ c ∈ T, ((f c : Multiset (Fin (X + 1))).map Fin.val) = c := by
+    intro c hc
+    obtain ⟨h1, h2⟩ := hT c hc
+    have hf : f c = ⟨c.map cf, by simpa using h1⟩ := by
+      simp only [f, h1, ↓reduceDIte]
+      rfl
+    rw [hf, Sym.coe_mk, Multiset.map_map]
+    conv_rhs => rw [← Multiset.map_id c]
+    refine Multiset.map_congr rfl fun d hd => ?_
+    simp only [Function.comp_apply, cf, id]
+    exact Nat.mod_eq_of_lt (by have := h2 d hd; omega)
+  have hinj : Set.InjOn f T := by
+    intro c hc c' hc' h
+    rw [← key c hc, ← key c' hc', h]
+  calc T.card = (T.image f).card := (Finset.card_image_of_injOn hinj).symm
+    _ ≤ (Finset.univ : Finset (Sym (Fin (X + 1)) k)).card := Finset.card_le_univ _
+    _ = (X + k).choose k := by
+        rw [Finset.card_univ, Sym.card_sym_eq_choose, Fintype.card_fin,
+          show X + 1 + k - 1 = X + k by omega]
+
+/-- `∑_(a ≤ z ≤ y) count_z(c) f(z)` is the sum of `f` over the elements of `c` that are at least
+`a`, when every element is at most `y`. -/
+lemma sum_Icc_count_mul {c : Multiset ℕ} {a y : ℕ} (f : ℕ → ℕ) (hc : ∀ x ∈ c, x ≤ y) :
+    ∑ z ∈ Finset.Icc a y, c.count z * f z = ((c.filter (a ≤ ·)).map f).sum := by
+  classical
+  have h1 : ∀ z ∈ Finset.Icc a y, c.count z * f z = (c.filter (a ≤ ·)).count z * f z := by
+    intro z hz
+    rw [Multiset.count_filter_of_pos (Finset.mem_Icc.1 hz).1]
+  have hsub : (c.filter (a ≤ ·)).toFinset ⊆ Finset.Icc a y := by
+    intro z hz
+    have h := Multiset.mem_filter.1 (Multiset.mem_toFinset.1 hz)
+    exact Finset.mem_Icc.2 ⟨h.2, hc z h.1⟩
+  rw [Finset.sum_multiset_map_count, Finset.sum_congr rfl h1,
+    ← Finset.sum_subset (f := fun z => (c.filter (a ≤ ·)).count z * f z) hsub
+      (fun z _ hz => by
+        simp only [Multiset.mem_toFinset] at hz
+        simp [Multiset.count_eq_zero.2 hz])]
+  simp only [smul_eq_mul]
+
+/-- **Proposition 35.8**, the bound on `r_j` (section 35.4.1). With `2 ≤ z0` and
+`j ≤ 2 z0 + 1`, the multisets of `j` digits (all at most `y`) with a given value of
+`m = ∑ g(x)` number at most `C(z0 + j, j)`: by Lemma 30.2 the digits from `z0` up are fixed
+by the digits below `z0`, which form a multiset of at most `j` elements of `{0, ..., z0 - 1}`. -/
+theorem prop35_8_count {m z0 j y N : ℕ} (hz0 : 2 ≤ z0) (hj : j ≤ 2 * z0 + 1)
+    (S : Finset (Multiset ℕ))
+    (hS : ∀ c ∈ S, Multiset.card c = j ∧ (∀ x ∈ c, x ≤ y) ∧ (c.map (g m)).sum = N) :
+    S.card ≤ (z0 + j).choose j := by
+  classical
+  let φ : Multiset ℕ → Multiset ℕ := fun c =>
+    c.filter (· < z0) + Multiset.replicate (j - Multiset.card (c.filter (· < z0))) z0
+  have hlow : ∀ c, (φ c).filter (· < z0) = c.filter (· < z0) := by
+    intro c
+    have hrep : ∀ n, (Multiset.replicate n z0).filter (· < z0) = 0 := fun n =>
+      Multiset.filter_eq_nil.2 fun x hx => by rw [Multiset.eq_of_mem_replicate hx]; omega
+    simp only [φ]
+    rw [Multiset.filter_add, hrep, add_zero, Multiset.filter_filter]
+    exact Multiset.filter_congr fun x _ => and_self_iff
+  -- the high part is determined by the low part
+  have hinj : Set.InjOn φ S := by
+    intro c hc c' hc' h
+    obtain ⟨hcj, hcy, hcN⟩ := hS c hc
+    obtain ⟨hcj', hcy', hcN'⟩ := hS c' hc'
+    have hl : c.filter (· < z0) = c'.filter (· < z0) := by rw [← hlow c, ← hlow c', h]
+    have hsplit : ∀ d : Multiset ℕ, d = d.filter (· < z0) + d.filter (z0 ≤ ·) := by
+      intro d
+      conv_lhs => rw [← Multiset.filter_add_not (· < z0) d]
+      congr 1
+      exact Multiset.filter_congr fun x _ => by omega
+    have hcard : ∀ d : Multiset ℕ, Multiset.card d =
+        Multiset.card (d.filter (· < z0)) + Multiset.card (d.filter (z0 ≤ ·)) := by
+      intro d; conv_lhs => rw [hsplit d]
+      rw [Multiset.card_add]
+    have hsum : ∀ d : Multiset ℕ, (d.map (g m)).sum =
+        ((d.filter (· < z0)).map (g m)).sum + ((d.filter (z0 ≤ ·)).map (g m)).sum := by
+      intro d; conv_lhs => rw [hsplit d]
+      rw [Multiset.map_add, Multiset.sum_add]
+    have e1 := sum_Icc_count_mul (a := z0) (fun _ => 1) hcy
+    have e1' := sum_Icc_count_mul (a := z0) (fun _ => 1) hcy'
+    have e2 := sum_Icc_count_mul (a := z0) (g m) hcy
+    have e2' := sum_Icc_count_mul (a := z0) (g m) hcy'
+    simp only [mul_one, Multiset.map_const', Multiset.sum_replicate, smul_eq_mul] at e1 e1'
+    have hc1 := hcard c
+    have hc1' := hcard c'
+    have hs1 := hsum c
+    have hs1' := hsum c'
+    rw [hl] at hc1 hs1
+    have hcnt := lemma30_2 (m := m) (c := fun z => c.count z) (c' := fun z => c'.count z) hz0 y
+      (by rw [e1, e1']; omega) (by rw [e1]; omega)
+      (by rw [e2, e2']; omega)
+    ext z
+    rcases Nat.lt_or_ge z z0 with hz | hz
+    · have := congrArg (Multiset.count z) hl
+      have k1 := Multiset.count_filter_of_pos (p := (· < z0)) (s := c) hz
+      have k2 := Multiset.count_filter_of_pos (p := (· < z0)) (s := c') hz
+      rw [k1, k2] at this
+      exact this
+    · rcases Nat.lt_or_ge y z with hzy | hzy
+      · rw [Multiset.count_eq_zero.2 (fun h => by have := hcy z h; omega),
+          Multiset.count_eq_zero.2 (fun h => by have := hcy' z h; omega)]
+      · exact hcnt z (Finset.mem_Icc.2 ⟨hz, hzy⟩)
+  calc S.card = (S.image φ).card := (Finset.card_image_of_injOn hinj).symm
+    _ ≤ (z0 + j).choose j := by
+        refine card_le_choose_of_bounded _ z0 j fun d hd => ?_
+        obtain ⟨c, hc, rfl⟩ := Finset.mem_image.1 hd
+        obtain ⟨hcj, -, -⟩ := hS c hc
+        have hle : Multiset.card (c.filter (· < z0)) ≤ j :=
+          hcj ▸ Multiset.card_le_card (Multiset.filter_le _ _)
+        refine ⟨by simp only [φ, Multiset.card_add, Multiset.card_replicate]; omega, ?_⟩
+        intro x hx
+        rcases Multiset.mem_add.1 hx with hx | hx
+        · have := (Multiset.mem_filter.1 hx).2; omega
+        · rw [Multiset.eq_of_mem_replicate hx]
 
 /-! ### Proposition 35.9 -/
 

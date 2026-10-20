@@ -23,8 +23,8 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
 Counts of table rows at the time of writing: 158 formalized (one of them a
-list of computed solutions checked by `decide`), 23 partial, 12 rows of open
-problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized and 5 not
+list of computed solutions checked by `decide`), 24 partial, 12 rows of open
+problems (15 `Prop`s), 4 refuted conjectures, 77 not formalized and 5 not
 stated.
 
 ## Chapter 1. Basics
@@ -441,7 +441,7 @@ stated.
 | Proposition 35.5 | `invIdeal`, `exchIdeal`, `Exch`, `ringVal_exch`, `prop35_5_one`, `prop35_5_two`, `prop35_5_three_le`, `prop35_5_three`; `invIdealZ`, `prop35_5_three_neg_le`, `prop35_5_three_neg` [Exist] | formalized ((1), (2), and (3) for place values `u β^i` with `i ≥ 0`, and with any integer `i` when `β` is a unit: a string is then a pair `(k, s)` starting at position `-k`) |
 | Proposition 35.6 | `prop35_6`, `prop35_6_rat` [Exist] | formalized (for `Z[t]/(f)` with any `f`, which is `Z[β]` when `f` is the minimal polynomial of the algebraic integer `β`; and for `p/q` in `Z[1/q]`, which covers `-p/q`) |
 | Proposition 35.7 | none | not formalized (convergence of a random walk on a finite group) |
-| Proposition 35.8 | none | not formalized (the window of Lemma 20.1 with the mean value theorem) |
+| Proposition 35.8 | `prop35_8_window`, `prop35_8_root`, `prop35_8_fix`, `prop35_8_count`, `card_le_choose_of_bounded` [Exist] | partial: the window (`p (b-1)^(k-1) < F(c_L) < p b^(k-1) + (M+1) b^(k-2)` and its root form, for `k >= 3` and any `b`, by algebra in place of the mean value theorem), the small part `m(c_S)` fixed by `c_L` and `b`, and `r_j(N) <= C(z0 + j, j)` from Lemma 30.2; the displayed sum over `(c_L, p, b)` is not assembled |
 | Proposition 35.9 | `prop35_9_share`, `prop35_9_bounds` [Exist] | partial: the exact share as a product and its two exponential bounds; the limit `-2A` is not formalized |
 | Corollary 35.10, Theorem 35.12 | none | not formalized (asymptotic counts) |
 | Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
