@@ -21,10 +21,11 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (ThreeDigitBases), Other (OtherSystems), FF (FunctionField), Search, Ex
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
+FFam (FieldFamily),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 178 formalized, 20 partial, 12
-rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
+Counts of table rows at the time of writing: 180 formalized, 28 partial, 12
+rows of open problems (15 `Prop`s), 4 refuted conjectures, 81 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
 ## Chapter 1. Basics
@@ -449,6 +450,24 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
 | Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel`, `NearCond`, `NearCond.mono`, `nearT`, `nearT_mono`, `nearT_thresholds`, `nearExp_mono`, `condA_monotoneOn` [Exist] | formalized: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286`); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; `T(b)` (`nearT`, the largest `T` allowed by (a) and (b)) and `t = T(b) - log_b(e b/(b - e))` do not decrease with `b` (for fixed `T` both conditions get easier: `b (1 - e^(-1 + 1/b))` has derivative `1 - e^(-1 + 1/b) (1 - 1/b) > 0`); `T(b) >= 1, 2, 3` from 27, 49, 77. The second half of (a), `2 (T + 4) <= b`, is not part of `NearCond`, since Theorem 35.13 does not need it |
 
+## Chapter 36. Three digits when the field changes
+
+| result | Lean name | status |
+|---|---|---|
+| the equation of section 36.1.2 (`U^2 + D = 4 p x^x`, `μ` an algebraic integer, `D > 0` beyond `W + q^2/(4p)`) | `fieldD`, `field_last`, `isSolution_last_iff_field`, `fieldD_pos_iff`, `field_mu_integral`, `fieldD_eq`, `fieldD_lt` [FFam] | formalized |
+| Lemma 36.1 | `lemma36_1_a`, `split_of_pow_dvd_sq_add`, `lemma36_1_round`, `lemma36_1_c` [FFam] | partial: (a) in elementary form (for `D < 2^x`, which `x > 2 log2(p D)` gives, every prime `l ∣ x` has `D = l^(2k) u` with `l ∤ u` and `-u` a square modulo `l`); the rounding step of (b), with the per-prime bound corrected (problem 10); the step of (c) (`gcd(x, D) = 1` makes `U` prime to `x`); the ideal factorization `(μ) = J A^x` in `Q(sqrt(-D))` is not formalized |
+| Lemma 36.2 | `lemma36_2`, `lemma36_2_partial`, `norm_sum_range_le_half`, `norm_sum_Ioc_mul_le`, `sum_range_shift_of_periodic` [FFam] | partial: `‖L(1, χ)‖ ≤ log N + 2` for every nontrivial Dirichlet character modulo `N` (Mathlib's `LFunction`), the partial sums of norm at most `N / 2`, and the summation by parts; the class number formula `h = sqrt(abs(Δ)) L(1, χ) / π` is cited and not in Mathlib |
+| Lemma 36.3 (Bilu, Hanrot and Voutier; Voutier) | `BHVTheorem`, `VoutierTheorem`, `voutierTable`, `voutierTable_abs_le`, `IsLehmerPair`, `IsPrimitiveDivisor` [FFam] | not formalized (cited; stated as `Prop`s and used only as hypotheses; `voutierTable_abs_le` checks `abs(α β) ≤ 9` for the twelve pairs) |
+| Lemma 36.4 | `lemma36_4`, `lehmer`, `pow_sub_pow_eq_lehmer`, `lehmer_eq_div` [FFam] | formalized (Lehmer numbers by their recurrence in `R = (α + β)^2`, `Q = α β`; for every odd `n ≥ 5`, with only `P ∤ R (R - 4 Q)` and `P ∤ L_d` for `d < n`; the proof works in an algebraic closure of `ZMod P`) |
+| Theorem 36.5 | `exists_large_primitive_divisor`, `theorem36_5_step3`, `theorem36_5_final` [FFam] | partial: Step 5 from the cited Lemma 36.3 and Lemma 36.4 (`L_n` with `n ≥ 7` odd and `abs(α β) > 9` has a primitive divisor `P ≡ ±1 (mod 2n)`, `P ≥ 2n - 1`), `U^2 > 3 D` of Step 3, and the final inequalities of Steps 5 and 6; Steps 1 to 4 (ambiguous ideals, the class of `A`, the Lehmer pair built from `ρ`) and the values `X_A(p)` are not formalized |
+| Corollary 36.6 | `corollary36_6_computation`, `corollary36_6_coprime`, `cor36_6Range_eq_true`, `natCast_resDisc`, `not_isSquare_of_nonres` [FFam] | partial: the exact computation for `p = 1` (every odd `x ≤ 7619` with `D > 0`, every `q`, both conventions: only `(1, 0, 3)` in base 5 under `0^0 = 0`; the kernel checks a non-residue modulo one of 12 primes for each `x`, in fourteen parts) and `gcd(x, D) = gcd(x, K0)`; the step through Theorem 36.5 and the families with odd `p ≤ 20` are not formalized |
+| Corollary 36.7 | `corollary36_7_coprime` [FFam] | partial: `gcd(x, K0) = 1` gives `gcd(x, D) = 1`; that `J` is ambiguous is about ideals and is not formalized |
+| Proposition 36.8, section 36.5, Table 36.4.3.1, the checks of section 36.7 | none | not formalized (computation) |
+| Theorem 36.9 | `theorem36_9_upper` [FFam] | partial: the upper bound of Step 4, `4 D x^x < 8 x U^2`, that is `abs(Λ0) < sqrt(8x) x^(-x/2)`; the lattice, the heights, Matveev's theorem and `X_B(p)` are not formalized |
+| Corollary 36.10 | none | not formalized (needs Theorem 36.9) |
+| Proposition 36.11 | `prop36_11` [FFam] | partial: the local condition `(p A / l) = 1` for every prime `l` of `x` prime to `2 p A`; the density statement and the count 25 of 440 are not formalized |
+| Proposition 36.12 | `pell_lead`, `two_pow_dvd_V` [FFam, SR] | partial: the reduction of the leading position to `U^2 - n V^2 = R` with `V = 2 f x^(x/2)` and `2^(x/2 + 1) ∣ V`; the inequality of Theorem 32.2 (Baker) and the computed bounds are not formalized |
+
 ## Chapter 37. The last digits and two free slots
 
 | result | Lean name | status |
@@ -489,7 +508,9 @@ of the exact search of `fast/src/search.rs` and a proof that it is correct.
 `Question51_three`, `Conjecture29_13`, `Conjecture33_11`. All are in
 `Conjectures.lean`, except `Conjecture29_13`, which is in `ModelTheorems.lean`,
 and `Conjecture33_11`, which is in `Factorials.lean`. The abc conjecture is
-stated as `ABC` in `Factorials.lean` and used only as a hypothesis. The round
+stated as `ABC` in `Factorials.lean` and used only as a hypothesis. The cited
+theorems of Lemma 36.3 are stated as `BHVTheorem` and `VoutierTheorem` in
+`FieldFamily.lean`, also used only as hypotheses. The round
 5 questions (72 to 89) are research directions and are not stated.
 
 ## Problems found
@@ -564,6 +585,21 @@ Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
    `0^0 = 0` and the string is `(x, 0, 0)` or `(x, 0, 1)`
    (`isSolution_x_0_0` shows the exception occurs).
 
+10. **Lemma 36.1** (b) (section 36.1.2), a step of the proof. The proof says
+   that the remainders at the two primes `L, L'` above a split `l ∣ x` have
+   absolute values summing to at most `v_l(p) + v_l(D)/2`, and concludes
+   `s(J) <= log p + (1/2) log D`. With `a <= a'` the valuations of `μ`,
+   `a + a' = v_l(p) + x v_l(x)` and `a <= v_l(D)/2`, the remainders are `a`
+   and `v_l(p) - a`. For `l ∤ p` and `a = v_l(D)/2 >= 1` they sum to
+   `v_l(D)`, twice the claimed bound. This happens when `l` divides both
+   `U` and `D` (then `gcd(x, D) > 1`). The right per-prime bound is
+   `max(v_l(p), v_l(D)) <= v_l(p) + v_l(D)`, which gives
+   `s(J) <= log p + log D = log(p D)`. That is the bound stated in (b) and
+   used in Theorem 36.9 (`w_s = max(log(p D), π)`), so no statement
+   changes. The referee note of section 36.7 repeats the wrong per-prime
+   bound. The Lean statement (`lemma36_1_round`) proves the corrected
+   bound.
+
 The library corrections that landed during this work (Proposition 9.3, the
 pair `(c, 1)` in Proposition 15.16 needs `c >= 3`, the negative-base family
 `(x, 0, 0)` needs `x` odd or a square, the renumbering of chapters 16, 23 and
@@ -590,4 +626,11 @@ In order of value and effort:
    are the tools.
 3. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
    the model).
-4. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.
+4. Chapter 36, the ideal-theoretic parts: Lemma 36.1 as ideal
+   factorization in `𝓞 (Q(sqrt(-D)))` (Mathlib has Dedekind domains and
+   `Ideal.absNorm`, but no ready API for quadratic fields), Steps 1 to 4
+   of Theorem 36.5 (ambiguous ideals and the Lehmer pair from `ρ`), the
+   class number formula for Lemma 36.2, and the density part of
+   Proposition 36.11 (the non-residue primes have Dirichlet density 1/2;
+   Mathlib has Dirichlet's theorem). Theorem 36.9 needs Matveev's theorem
+   and heights, which could be stated as a hypothesis like `BHVTheorem`.

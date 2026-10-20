@@ -113,6 +113,9 @@
   "short-abc-three": "theorem33_16_abc, theorem33_16, theorem33_16_bound, theorem33_16_solution, theorem33_16_bound_factorial, theorem33_16_factorion, corollary33_17 (with abc as the hypothesis ABC; for factorions with rad(x!) <= 4^x in place of the cited bound)",
   "short-prop-no-small": "prop35_9_share, prop35_9_bounds (partial: the share as a product and its two exponential bounds; the limit is not formalized)",
   "short-thm-few-large": "theorem35_12, theorem35_12_density, fewLargeBases_card_le",
+  "short-lem-ideal": "lemma36_1_a, lemma36_1_round, lemma36_1_c, field_last (partial: the split primes of x in elementary form, the rounding step, and U prime to x when gcd(x, D) = 1; the ideal factorization is not formalized)",
+  "short-thm-lehmer": "lemma36_4, exists_large_primitive_divisor, lemma36_2, theorem36_5_step3, theorem36_5_final (partial: the primitive divisor P = +-1 mod 2n from the cited theorems BHVTheorem and VoutierTheorem, the bound on L(1, chi), and the inequalities of Steps 3, 5 and 6; the class group steps are not formalized)",
+  "short-cor-p1": "corollary36_6_computation, corollary36_6_coprime (partial: the exact check of every odd x <= 7619, checked by the kernel; the step through the ambiguous-ideal theorem is not formalized)",
   // Chapter 6
   "dio-elementary": "prop18_1_a, prop18_1_b, prop18_1_c, prop18_1_d, prop16_5",
   "dio-no-congruence": "prop16_8_finite",
