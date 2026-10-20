@@ -49,7 +49,8 @@ statement is marked by its source:
 | [35. One heuristic and existence](35-existence.md) | the arrangements of a multiset spread over the residues modulo `q` prime to `b (b - 1)` at a rate independent of `ord_q(b)`; the root heuristic is the refined model averaged over the residue of the base, and the two agree at lengths 6 to 12; one invariant ideal for every positional system; averaging over bases gains only a bounded factor, but excludes long solutions with few large digits; near-solutions with about `sqrt(b / e)` matched top digits in every base `b >= 27` |
 | [36. Three digits when the field changes](36-field-family.md) | in the last position an odd large digit gives only finitely many solutions for each pair of small digits, uniformly in the second digit: Lehmer numbers and Matveev's bound in the imaginary field of the constant term; `(1, q, x)` with `x` prime to `q^2 + 4 + 4w(q)` is decided; a density result for the middle position and a square-part bound for the leading one; why the real fields resist |
 | [37. The last digits and two free slots](37-low-digits.md) | the last digits of a node with one or two free slots must be digits that the unknown positions still hold; a 64-bit mask and tables per residue class make this a few instructions, and the default search visits 0.52 to 0.57 of the nodes of the residue rule (5% to 13% fewer cycles); the instructions of the residue rule cost no cycles |
-| [Open questions](questions.md) | 153 research questions in fourteen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
+| [38. The middle and leading positions for three digits](38-middle-leading.md) | an even large digit in front gives only finitely many solutions for each pair of small digits (an S-unit lattice of covolume `O(sqrt(x) log x)` and Matveev's bound); `b (xb + 1) = x^x + 1` has no solution (Laurent's bound and a sieve to `4.27 * 10^11`); in the middle, the 25 families with `pA` a square are bounded for prime powers `x` by an elementary trace argument, and four of them are closed for prime powers; why the middle position resists |
+| [Open questions](questions.md) | 163 research questions in sixteen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md) |
 
 ## Main results
 
@@ -181,8 +182,20 @@ Proven:
   give `x <= 340,896` for `p <= 20` (Theorem 36.5); so `(1, q, x)` with `x`
   odd, prime to `q^2 + 4 + 4w(q)` and beyond `1 + w(q) + q^2/4` is a
   solution only for `(1, 0, 3)` in base 5 under `0^0 = 0`
-  (Corollary 36.6, computer-assisted). An odd large digit in the middle
-  and an even one in front remain open.
+  (Corollary 36.6, computer-assisted). An even large digit in front is
+  also finite for each pair of small digits (Theorem 38.6), so with
+  chapters 25, 32 and 36 every 3-digit family with one large digit is
+  finite, effectively, except an odd large digit in the middle
+  (Corollary 38.9). `b (xb + 1) = x^x + 1`, the strings `(x, 1, 1)`, has
+  no solution (Corollary 38.8, computer-assisted). In the middle, the 25
+  families with `pA` a square are effectively bounded for prime powers
+  `x` without linear forms in logarithms (Theorem 38.2); `(1, x, 1)` and
+  `(3, x, 1)` have no prime power solution beyond `x = 3, 7` of the first
+  (Corollary 38.3, computer-assisted).
+
+  Correction (chapter 38, 2026-10-20). This item said: "An odd large
+  digit in the middle and an even one in front remain open." Only the
+  middle remains open.
 - For every `x >= 3`, `(1, x)` is a factorion in base `x! - x + 1`
   (Proposition 33.9). A 3-digit factorion with one large digit `x` in the
   last or middle position has `x` below an explicit bound (Theorems 33.4

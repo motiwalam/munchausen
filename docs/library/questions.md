@@ -565,13 +565,20 @@ problems found in the library are in
      an event of chance about `2^omega(x) / e`. Can this be tested fast
      enough, with forms of discriminant `-4D`, to run beyond `10^10`?
      (computation; section 36.3)
-151. The middle position. Proposition 36.11 leaves the 25 families with
+151. (Partially answered in chapter 38: for the 25 families with `pA` a
+     square, odd prime powers `x` are effectively bounded without linear
+     forms in logarithms (Theorem 38.2); `(1, x, 1)`, `(1, x, 0)`,
+     `(3, x, 1)`, `(3, x, 0)` and, up to `5^a > 10^9`, `(1, x, 3)` are
+     closed for prime powers (Corollary 38.3). Open for `pA` not a square.)
+     The middle position. Proposition 36.11 leaves the 25 families with
      `pA` a square for every `x`, and a density-0 set of `x` for the
      others. Is there a finiteness theorem for `x` prime, where `A` is a
      prime ideal and the class group has order about `x / log x`
      (`A = 1`) or the regulator is about `x` (`A > 1`)? (proof; section
      36.4.1)
-152. The leading position. Is there finiteness for the even `x` for which
+152. (Answered in chapter 38: `(x, q, r)` with `x` even is a solution for
+     only finitely many `x`, effectively, for every `q, r` (Theorem 38.6).)
+     The leading position. Is there finiteness for the even `x` for which
      `Q(sqrt R)` has class number above `x^(1/6 + eps)`? These form a thin
      set, but it would be the first result in that case beyond fixed
      square classes. (proof; section 36.4.3)
@@ -608,3 +615,30 @@ problems found in the library are in
      multisets and digits. Can the verified search of
      `lean/Munchausen/Search/` run both tests, with a soundness lemma for
      each? (proof; section 37.5)
+
+## Round 16: questions raised by chapter 38
+
+159. Mixed solutions in the square families. For `x` with two prime
+     factors, a solution of a middle family with `pA = k^2` needs the class
+     of `Q = P_T / P_T'` to absorb `z^x`. Is there a version of Corollary
+     18.11 for `k > 1`, where `Q(sqrt(x^2 + 4k^2))` has no small unit?
+     (proof; section 38.2.4)
+160. The biquadratic field. For `pA` not a square and `x` prime, is the
+     class of `I^2` in `M = Q(sqrt(x^2 + 4pA), sqrt(pA))` ever principal
+     with a generator of height `O(log x)`? A positive answer on a set of
+     primes of positive density would close the middle position there by
+     the trace argument. (proof; section 38.3.1)
+161. A computable bound for the leading families with `|S| > 0`. Theorem
+     38.6 gives `10^39` and more. With three logarithms and the `l`-adic
+     places of `S`, can the bound for `(x, 1, 2)` or `(x, 2, 1)` be brought
+     below `10^13`, within reach of the sieve? (proof and computation;
+     section 38.4.2)
+162. Prime powers `x = 5^a`, `a` odd, in `(1, x, 3)`. The Pell form in
+     `Q(sqrt 5)` with `V` a power of 5 gives a bound by Proposition 32.6.
+     Compute it and close `(1, x, 3)` for prime powers. (computation;
+     Corollary 38.3)
+163. Uniformity for the leading position. Theorem 38.6 depends on `A`
+     through `sqrt(A)` and the primes of `Aq`, so with `q, r <= B` it gives
+     about `x <= B^(B + o(B))`. Is there a bound polynomial in `B`, as
+     Theorem 32.5 gives for an even `x` behind a non-square digit? (proof;
+     section 38.4.2)

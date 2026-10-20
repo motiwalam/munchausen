@@ -340,6 +340,17 @@ longer open. In the field `Q(sqrt R)`, imaginary once `x > W + q^2/(4p)`,
 What remains open in case (iii) is odd `x` in the middle and even `x`
 that leads.
 
+Correction (chapter 38, 2026-10-20). Even `x` that leads is no longer
+open: `(x, q, r)` is a solution for only finitely many even `x`, with an
+effective bound, for every `q >= 1` and `r` (Theorem 38.6; `q = 0` gives
+`x | A`). What remains open in case (iii) is odd `x` in the middle. In the
+25 middle families with `pA` a square (`p, q <= 20`), odd prime powers
+`x` are effectively bounded (Theorem 38.2): `(1, x, 1)`, `(1, x, 0)`,
+`(3, x, 1)` and `(3, x, 0)` have no prime power solution beyond `x = 3, 7`
+of the first two, and `(1, x, 3)` none except possibly `5^a > 10^9`, `a`
+odd (Corollary 38.3). `x` with two distinct prime factors remains open in
+all of them.
+
 The six known 3-digit solutions are all small cases: `x` is at most 7, so
 `x < 2B + 4`. `(5,1,3)` in base 25 sits on the boundary of (ii):
 `N = 4 * 5^6 = 250^2`, `U = 251` and `R = 501 = 2V + 1`.

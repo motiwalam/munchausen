@@ -5,7 +5,7 @@ odd large digit `x` in the middle, and an even large digit in front
 (questions 151 and 152). The leading position turns out to be finite for
 every pair of small digits, against the assessment of section 36.4.3. In
 the middle, the 25 families with `pA` a square are finite for prime
-powers `x` by an elementary argument, and three of them are closed for
+powers `x` by an elementary argument, and four of them are closed for
 prime powers.
 
 Labels: proven (a proof is here, with cited inputs named), cited, computed
@@ -840,14 +840,16 @@ Each item now has a note in the chapter or question file it corrects.
    `x` leading ... open"): even `x` leading is finite (Theorem 38.6).
 3. Section 25.1.4 (correction of chapter 36): "What remains open in case
    (iii) is odd `x` in the middle and even `x` that leads." Now only odd
-   `x` in the middle, and in the 25 square families only `x` with two
-   prime factors and the powers `5^a > 10^9`, `a` odd, of `(1, x, 3)`.
+   `x` in the middle. In the 25 square families prime powers are
+   effectively bounded; in five of them (Corollary 38.3 (a) to (c)) only
+   `x` with two prime factors and the powers `5^a > 10^9`, `a` odd, of
+   `(1, x, 3)` remain.
 4. README, main results: "An odd large digit in the middle and an even one
    in front remain open." Even `x` in front is finite.
 5. Question 152 asks for finiteness when `Q(sqrt R)` has class number
    above `x^(1/6 + eps)`. Answered: finite for every even `x`.
 6. Question 151 asks about prime `x`. Answered for the 25 square families
-   (Corollary 38.3, prime powers, effectively; three families closed);
+   (Corollary 38.3, prime powers, effectively; four families closed);
    open for `pA` not a square.
 7. Lemma 36.1 (b), found by the Lean formalization (`lemma36_1_round` in
    `lean/Munchausen/FieldFamily.lean`). The proof said that the remainders
