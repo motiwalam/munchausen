@@ -1,0 +1,1 @@
+K 5 B 5: 8107 families; the gap applies for every x > 29 (worst ((5, 5, 5, 5), 4, 1, 2))

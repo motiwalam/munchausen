@@ -1,0 +1,1 @@
+K 4 B 20: 39442 families; the gap applies for every x > 55 (worst ((13, 20, 20), 3, 1, 3))

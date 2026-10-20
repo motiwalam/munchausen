@@ -1,0 +1,28 @@
+(1, 0, 0, 0) m 1 g 2 x 4 : in the class, no base
+(1, 0, 2, 0) m 0 g 2 x 6 : in the class, no base
+(1, 0, 2, 0) m 1 g 2 x 8 : in the class, no base
+(1, 0, 4, 0) m 0 g 2 x 261 : x^x / l is not a g-th power
+(1, 0, 4, 0) m 1 g 2 x 263 : x^x / l is not a g-th power
+(1, 2, 1, 0) m 0 g 2 x 6 : in the class, no base
+(1, 2, 1, 0) m 1 g 2 x 7 : x^x / l is not a g-th power
+(1, 2, 3, 2) m 1 g 2 x 37 : x^x / l is not a g-th power
+(1, 2, 5, 4) m 1 g 2 x 3390 : in the class, no base
+(1, 4, 4, 0) m 0 g 2 x 513 : x^x / l is not a g-th power
+(1, 4, 4, 0) m 1 g 2 x 514 : in the class, no base
+(2, 0, 0, 0) m 0 g 2 x 4 : x^x / l is not a g-th power
+(2, 0, 0, 0) m 1 g 2 x 7 : x^x / l is not a g-th power
+(2, 0, 4, 0) m 0 g 2 x 262 : x^x / l is not a g-th power
+(2, 0, 4, 0) m 1 g 2 x 264 : x^x / l is not a g-th power
+(2, 4, 2, 0) m 0 g 2 x 264 : x^x / l is not a g-th power
+(2, 4, 2, 0) m 1 g 2 x 265 : x^x / l is not a g-th power
+(3, 0, 0, 0) m 0 g 2 x 27 : in the class, a solution in base 10 digits long
+(3, 0, 0, 0) m 1 g 2 x 30 : x^x / l is not a g-th power
+(4, 0, 0, 0) m 0 g 2 x 256 : in the class, no base
+(4, 0, 0, 0) m 1 g 2 x 259 : x^x / l is not a g-th power
+(4, 0, 4, 0) m 0 g 2 x 513 : x^x / l is not a g-th power
+(4, 0, 4, 0) m 1 g 2 x 515 : x^x / l is not a g-th power
+(4, 4, 1, 0) m 0 g 2 x 513 : x^x / l is not a g-th power
+(4, 4, 1, 0) m 1 g 2 x 514 : in the class, no base
+(4, 4, 5, 2) m 1 g 2 x 3642 : in the class, no base
+(5, 0, 0, 0) m 0 g 2 x 3125 : in the class, a solution in base 2731 digits long
+(5, 0, 0, 0) m 1 g 2 x 3128 : x^x / l is not a g-th power
