@@ -1,11 +1,11 @@
-\\ Round 6, field families: checks of Theorem F.5 and Corollary F.7.
+\\ Round 6, field families: checks of Theorem 36.5 and Corollary 36.7.
 \\
 \\ check(x, p, U): with D = 4 p x^x - U^2 > 0 and gcd(x, D) = 1, factor
-\\ mu = (U + sqrt(-D))/2 in Q(sqrt(-D)), split (mu) = J A^x (Lemma F.1), and
-\\ if J is ambiguous build rho, n and the Lehmer number of Theorem F.5 and
+\\ mu = (U + sqrt(-D))/2 in Q(sqrt(-D)), split (mu) = J A^x (Lemma 36.1), and
+\\ if J is ambiguous build rho, n and the Lehmer number of Theorem 36.5 and
 \\ test Step 4: L_n g = +-(f/c). Part 1: artificial U near sqrt(4 p x^x).
 \\ Part 2: planted mu = rho^(x/e), so that n > 1. Part 3: the ambiguity
-\\ rule of Corollary F.7 against PARI.
+\\ rule of Corollary 36.7 against PARI.
 \\ Usage: gp -q r6f_ff_lehmer.gp > data/r6f_ff_lehmer.txt
 default(parisize, "2G");
 ordcls(K, I) = {

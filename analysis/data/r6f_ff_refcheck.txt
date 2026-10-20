@@ -1,0 +1,52 @@
+# Chapter 36, referee checks (section 36.7). r6f_ff_refexact.py and r6f_ff_refcheck.c, 3 threads.
+# pos 0 last (a, c, x), 1 middle (a, x, c), 2 leading (x, a, c); m = w(0)
+
+## r6f_ff_refexact.py bounds
+p 1 X_A 7618 X_B 8.155e+38
+p 2 X_A 19021 X_B 1.793e+39
+p 10 X_A 145768 X_B 1.11e+40
+p 20 X_A 340896 X_B 2.426e+40
+middle families 440 with pA a square 25 [(1, 0, 0), (1, 1, 1), (1, 3, 1), (3, 0, 0), (3, 1, 1), (4, 0, 0), (4, 1, 1), (5, 0, 0), (5, 1, 1), (7, 0, 0), (7, 1, 1), (9, 0, 0), (9, 1, 1), (11, 0, 0), (11, 1, 1), (13, 0, 0), (13, 1, 1), (15, 0, 0), (15, 1, 1), (16, 0, 0), (16, 1, 1), (17, 0, 0), (17, 1, 1), (19, 0, 0), (19, 1, 1)]
+
+## r6f_ff_refexact.py exact 1 10 7619 (base > every digit)
+solution p q x m base 1 0 3 0 5
+solution p q x m base 1 3 1 1 4
+solution p q x m base 1 7 1 1 904
+exact test done: p <= 1 q <= 10 odd x <= 7619
+
+## r6f_ff_refcheck on r6f_ff_refexact.py inputs last
+# last position, p, q <= 10, odd x <= 3e6 and two windows per large family: 234 input lines, 265500066 values of x tested, 17 survivors
+survivor pos a c m x: 0 1 0 0 1
+survivor pos a c m x: 0 1 0 0 3
+survivor pos a c m x: 0 1 1 1 1
+survivor pos a c m x: 0 1 3 1 1
+survivor pos a c m x: 0 1 7 1 1
+survivor pos a c m x: 0 3 0 0 1
+survivor pos a c m x: 0 3 0 0 27
+survivor pos a c m x: 0 3 1 1 3
+survivor pos a c m x: 0 4 0 0 1
+survivor pos a c m x: 0 5 0 0 1
+survivor pos a c m x: 0 5 0 0 3125
+survivor pos a c m x: 0 5 1 1 3
+survivor pos a c m x: 0 6 1 1 5
+survivor pos a c m x: 0 7 0 0 1
+survivor pos a c m x: 0 7 0 0 823543
+survivor pos a c m x: 0 9 0 0 1
+survivor pos a c m x: 0 9 0 0 387420489
+
+## r6f_ff_refcheck on r6f_ff_refexact.py inputs midlead
+# middle (x odd) and leading (x even), small digits <= 20, x <= 2e6: 922 input lines, 922000000 values of x tested, 1427 survivors
+# 1414 survivors are (x, 0, 0) or (x, 0, 1) leading, 0^0 = 0, x an even square (A = 0, R = 0): listed by count only
+survivor pos a c m x: 1 1 0 0 1
+survivor pos a c m x: 1 1 0 0 3
+survivor pos a c m x: 1 1 0 0 7
+survivor pos a c m x: 1 1 1 1 1
+survivor pos a c m x: 1 1 1 1 3
+survivor pos a c m x: 1 1 1 1 7
+survivor pos a c m x: 1 2 0 1 1
+survivor pos a c m x: 1 3 2 1 1
+survivor pos a c m x: 1 3 3 1 1
+survivor pos a c m x: 1 5 3 1 1
+survivor pos a c m x: 1 6 5 1 1
+survivor pos a c m x: 2 1 0 1 2
+survivor pos a c m x: 2 1 5 1 6

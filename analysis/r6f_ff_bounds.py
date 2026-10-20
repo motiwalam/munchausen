@@ -7,13 +7,13 @@ For the string (p, q, x) with x odd and x > W + q^2/(4p), W = w(p) + w(q),
 and mu = (U + sqrt(-D))/2 lies in the imaginary quadratic field
 K = Q(sqrt(-D)). Write (mu) = J A^x with N(A) = x. Two bounds on x:
 
-Theorem A (J ambiguous, primitive divisors). Let t, n be as in the draft,
+Bound A (J ambiguous, primitive divisors). Theorem 36.5. Let t, n be as in its proof,
 x = t n, n odd, t <= h(K).
   n >= 7: x <= (14/13) (sqrt(D)/pi) (log 4D + 2)
   n <= 5: x <= 5 (2 sqrt(D)/pi) (log 4D + 2)
 with D < 4 p x. X_A(p) is the largest x allowed by either.
 
-Theorem B (any J, Matveev with three logarithms).
+Bound B (any J, Matveev with three logarithms).
   (x/2) log x - (1/2) log(8x)
      <= 2^38 * 4 * (1 + log 2) * (1 + log Bc) * pi * (4/sqrt 3) * e * ws * log x
 with e <= (2 sqrt(D)/pi)(log 4D + 2), ws = max(log p + log D, pi),
