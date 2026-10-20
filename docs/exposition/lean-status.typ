@@ -113,6 +113,7 @@
   "dio-no-congruence": "prop16_8_finite",
   "dio-12x": "prop20_20",
   "dio-c-elementary": "lemma20_21_a, lemma20_21_a_even, lemma20_21_a_25, lemma20_21_b_three, lemma20_21_b_prime",
+  "dio-cores-abc": "theorem15_10 (with abc as the hypothesis ABC)",
   // Chapter 7
   "worlds-odd-length": "IsNegSolution.odd_length",
   "worlds-nega-residue": "neg_residue_invariant_iff, IsNegSolution.dvd",

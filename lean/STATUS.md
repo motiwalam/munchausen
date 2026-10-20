@@ -22,9 +22,9 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
-Counts of table rows at the time of writing: 152 formalized (one of them a
+Counts of table rows at the time of writing: 153 formalized (one of them a
 list of computed solutions checked by `decide`), 25 partial, 12 rows of open
-problems (15 `Prop`s), 4 refuted conjectures, 81 not formalized and 5 not
+problems (15 `Prop`s), 4 refuted conjectures, 80 not formalized and 5 not
 stated.
 
 ## Chapter 1. Basics
@@ -148,7 +148,7 @@ stated.
 | Theorem 15.7 | `theorem15_7`, `two_two_digit`, `theorem15_7_zero` [Short] | formalized (both conventions; under `0^0 = 0` the other bases are the twin bases `a^(a-1)`) |
 | Proposition 15.8 | `prop15_8`, `NotPerfectPower` [SPD] | formalized |
 | Theorem 15.9 | `theorem15_9` [Cons] | formalized (for every `a ≥ 2`, as the library now states it) |
-| Theorem 15.10 (assuming abc) | none | not formalized (abc is a conjecture; it could be stated as a hypothesis) |
+| Theorem 15.10 (assuming abc) | `theorem15_10`, `ABC`, `abc_le_gcd_mul`, `abc_case_nat`, `bounded_of_rpow_le` [Fact] | formalized (with abc as the hypothesis `ABC`; the set of pairs `(a, c)` is finite, and each pair has one base) |
 | Proposition 15.11 | `exists_root_mod_two_iff` [Poly] | formalized |
 | Lemma 15.12 (1) | `lemma15_12_one` [Adic], `pow_self_modEq_two` [Cong], `multiple_mem_T` [Res] | formalized (`x^x - x` is even, and every even residue occurs modulo `2^e`) |
 | Lemma 15.12 (2) (`T(p)` is everything for `p ≥ 5`, `T(3) = {0, 2}`) | `T_prime_eq_univ`, `T_three` [Res] | formalized |
@@ -531,12 +531,10 @@ In order of value and effort:
    (sufficiency, (b), (c)) and (4), and Remark 29.12. The Chinese remainder
    setup of `finrank_ker_frobR` and the dual argument of
    `comp_pow_eq_of_codim_gt` are in place.
-2. Theorem 15.10 with abc as a hypothesis. `ABC`, `rad` and the step
-   `abc_div_gcd` are in `Factorials.lean`; what remains is the case analysis
-   of the proof and the asymptotic comparison of `c^c` with
-   `c^(c (1 - 2 delta) + O(eps c))`. The same step finishes Theorem 33.16
-   (the bounds `rad(N) <= 2 l x` and `abs(R) <= 9 x^2 B^B` of Theorem 25.7)
-   and Corollary 33.17.
+2. Theorem 33.16 under abc to the end: the bounds `rad(N) <= 2 l x` and
+   `abs(R) <= 9 x^2 B^B` of Theorem 25.7 and the bound on `x`, then
+   Corollary 33.17. `ABC`, `abc_le_gcd_mul` and `bounded_of_rpow_le` (used for
+   Theorem 15.10) are the tools.
 3. Theorem 35.13, Steps 1 and 2 (the steering of the top digits by
    monotonicity, with the real bounds on `theta_i`), and Corollary 35.14.
 4. Chapter 35, smaller items: Proposition 35.5 (3) for negative positions of

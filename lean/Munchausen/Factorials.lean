@@ -19,7 +19,9 @@ its digits. The factorion weight is `x!`, with `w(0) = m`.
 * Proposition 33.13: `x! = lam y^j` forces every prime of `(x/2, x]` into `lam`;
 * Proposition 33.21: the bound `r^v ≤ t T + 1` on the self-paying digits of a construction;
 * the abc conjecture as a hypothesis `ABC`, and the abc step of Theorem 33.16:
-  `U^2 = N + R`, `R ≠ 0` gives `N ≤ K (rad(N) U |R|)^(1 + ε)`.
+  `U^2 = N + R`, `R ≠ 0` gives `N ≤ K (rad(N) U |R|)^(1 + ε)`;
+* Theorem 15.10 under abc: finitely many 2-digit solutions in perfect-power bases with one
+  weight much smaller than the other.
 -/
 
 namespace Munchausen
@@ -638,5 +640,310 @@ theorem theorem33_16 (habc : ABC) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
     rw [show (1 - ε) / 2 = 1 - (1 + ε) / 2 by ring, Real.rpow_sub hN0, Real.rpow_one]
   rw [e3, div_le_iff₀ hNp]
   exact h2
+
+/-! ### Theorem 15.10 under abc -/
+
+/-- The analytic step of Theorem 15.10: if `x^x ≤ K (2 x · x^(x γ))^(2+ε) (2 x^(2 + x/2))^(1+ε)`
+with `(2 + ε) γ + (1 + ε)/2 < 1`, then `x` is bounded. -/
+lemma bounded_of_rpow_le {K ε γ : ℝ} (hε : 0 ≤ ε)
+    (hη : 0 < 1 - (2 + ε) * γ - (1 + ε) / 2) :
+    ∃ X0 : ℕ, ∀ x : ℕ, 1 ≤ x → (x : ℝ) ^ x ≤
+      K * (2 * x * (x : ℝ) ^ ((x : ℝ) * γ)) ^ (2 + ε) *
+        (2 * (x : ℝ) ^ (2 + (x : ℝ) / 2)) ^ (1 + ε) →
+      x ≤ X0 := by
+  set η := 1 - (2 + ε) * γ - (1 + ε) / 2 with hηdef
+  set C := |Real.log K| + (3 + 2 * ε) * Real.log 2 + (4 + 3 * ε) with hC
+  refine ⟨max 3 ⌈C / η⌉₊, fun x hx h => ?_⟩
+  by_contra hlt
+  push Not at hlt
+  have hx3 : 3 < x := lt_of_le_of_lt (le_max_left _ _) hlt
+  have hxC : C / η < x := lt_of_lt_of_le (Nat.lt_of_ceil_lt (lt_of_le_of_lt (le_max_right _ _)
+    hlt)) le_rfl
+  have hxr : (3 : ℝ) < x := by exact_mod_cast hx3
+  have hx0 : (0 : ℝ) < x := by linarith
+  have hlog : 1 ≤ Real.log x := by
+    rw [Real.le_log_iff_exp_le hx0]
+    have := Real.exp_one_lt_d9
+    linarith
+  have h2 : (0 : ℝ) < 2 := by norm_num
+  have hA : 0 < 2 * (x : ℝ) * (x : ℝ) ^ ((x : ℝ) * γ) := by positivity
+  have hB : 0 < 2 * (x : ℝ) ^ (2 + (x : ℝ) / 2) := by positivity
+  have hP1 : 0 < (2 * (x : ℝ) * (x : ℝ) ^ ((x : ℝ) * γ)) ^ (2 + ε) := Real.rpow_pos_of_pos hA _
+  have hP2 : 0 < (2 * (x : ℝ) ^ (2 + (x : ℝ) / 2)) ^ (1 + ε) := Real.rpow_pos_of_pos hB _
+  have hLHS : 0 < (x : ℝ) ^ x := by positivity
+  have hK : 0 < K := by
+    by_contra hK
+    push Not at hK
+    have : K * (2 * x * (x : ℝ) ^ ((x : ℝ) * γ)) ^ (2 + ε) *
+        (2 * (x : ℝ) ^ (2 + (x : ℝ) / 2)) ^ (1 + ε) ≤ 0 :=
+      mul_nonpos_of_nonpos_of_nonneg (mul_nonpos_of_nonpos_of_nonneg hK hP1.le) hP2.le
+    linarith
+  have hl := Real.log_le_log hLHS h
+  rw [Real.log_mul (by positivity) hP2.ne', Real.log_mul hK.ne' hP1.ne', Real.log_rpow hA,
+    Real.log_rpow hB, Real.log_mul (by positivity) (by positivity), Real.log_mul h2.ne' hx0.ne',
+    Real.log_rpow hx0, Real.log_mul h2.ne' (by positivity), Real.log_rpow hx0,
+    Real.log_pow] at hl
+  -- `η x log x ≤ C log x`
+  set L := Real.log x
+  have hlog2 : 0 ≤ Real.log 2 := Real.log_nonneg (by norm_num)
+  have key : η * x * L ≤ C * L := by
+    have h1 : Real.log K ≤ |Real.log K| * L := by
+      have := le_abs_self (Real.log K)
+      nlinarith [abs_nonneg (Real.log K)]
+    have h2' : (3 + 2 * ε) * Real.log 2 ≤ (3 + 2 * ε) * Real.log 2 * L := by
+      have : 0 ≤ (3 + 2 * ε) * Real.log 2 := by positivity
+      nlinarith
+    rw [hηdef, hC]
+    nlinarith
+  have hL0 : 0 < L := by linarith
+  have : η * x ≤ C := le_of_mul_le_mul_right (by linarith) hL0
+  rw [div_lt_iff₀ hη] at hxC
+  linarith
+
+/-- abc for a sum that need not be coprime: `C ≤ gcd(A, B) K (rad A rad B rad C)^(1+ε)`. -/
+lemma abc_le_gcd_mul {ε K : ℝ}
+    (hK : ∀ a b c : ℕ, 0 < a → 0 < b → a + b = c → Nat.Coprime a b →
+      (c : ℝ) ≤ K * (rad (a * b * c) : ℝ) ^ (1 + ε)) (hε : 0 < ε)
+    {A B C : ℕ} (hA : 0 < A) (hB : 0 < B) (hABC : A + B = C) :
+    (C : ℝ) ≤ Nat.gcd A B * (K * ((rad A * rad B * rad C : ℕ) : ℝ) ^ (1 + ε)) := by
+  set g := Nat.gcd A B with hg
+  have hg0 : 0 < g := Nat.gcd_pos_of_pos_left _ hA
+  have hgA : g ∣ A := Nat.gcd_dvd_left A B
+  have hgB : g ∣ B := Nat.gcd_dvd_right A B
+  have hgC : g ∣ C := hABC ▸ dvd_add hgA hgB
+  have h := abc_div_gcd hK hε hA hB hABC
+  rw [← hg] at h
+  have hC0 : 0 < C := by omega
+  have hrad : rad (A / g) * rad (B / g) * rad (C / g) ≤ rad A * rad B * rad C :=
+    Nat.mul_le_mul (Nat.mul_le_mul (rad_le_of_dvd (Nat.div_dvd_of_dvd hgA) hA.ne')
+      (rad_le_of_dvd (Nat.div_dvd_of_dvd hgB) hB.ne'))
+      (rad_le_of_dvd (Nat.div_dvd_of_dvd hgC) hC0.ne')
+  have hCg : ((C / g : ℕ) : ℝ) = (C : ℝ) / g := Nat.cast_div hgC (by positivity)
+  rw [hCg] at h
+  have hpos : (0 : ℝ) < (C : ℝ) / g := by positivity
+  have hK0 : 0 < K := by
+    by_contra hK0
+    push Not at hK0
+    have : K * ((rad (A / g) * rad (B / g) * rad (C / g) : ℕ) : ℝ) ^ (1 + ε) ≤ 0 :=
+      mul_nonpos_of_nonpos_of_nonneg hK0 (Real.rpow_nonneg (Nat.cast_nonneg _) _)
+    linarith
+  have h2 : ((rad (A / g) * rad (B / g) * rad (C / g) : ℕ) : ℝ) ^ (1 + ε) ≤
+      ((rad A * rad B * rad C : ℕ) : ℝ) ^ (1 + ε) :=
+    Real.rpow_le_rpow (Nat.cast_nonneg _) (by exact_mod_cast hrad) (by linarith)
+  have h3 : (C : ℝ) / g ≤ K * ((rad A * rad B * rad C : ℕ) : ℝ) ^ (1 + ε) :=
+    h.trans (mul_le_mul_of_nonneg_left h2 hK0.le)
+  have hg' : (0 : ℝ) < g := by exact_mod_cast hg0
+  rw [div_le_iff₀ hg'] at h3
+  linarith
+
+/-- The inequality behind each case of Theorem 15.10: from `X ≤ D K (W D)^(1+ε)` with
+`1 ≤ D ≤ 2 x x^(x γ)` and `W ≤ 2 x^(2 + x/2)` follows the hypothesis of
+`bounded_of_rpow_le`. -/
+lemma abc_case_le {K ε γ X D W x : ℝ} (hε : 0 ≤ ε) (hX : 0 < X) (hD1 : 1 ≤ D)
+    (hD : D ≤ 2 * x * x ^ (x * γ)) (hW0 : 0 ≤ W) (hW : W ≤ 2 * x ^ (2 + x / 2))
+    (h : X ≤ D * (K * (W * D) ^ (1 + ε))) :
+    X ≤ K * (2 * x * x ^ (x * γ)) ^ (2 + ε) * (2 * x ^ (2 + x / 2)) ^ (1 + ε) := by
+  have hD0 : 0 < D := by linarith
+  have hK : 0 < K := by
+    by_contra hK
+    push Not at hK
+    have : D * (K * (W * D) ^ (1 + ε)) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos hD0.le
+        (mul_nonpos_of_nonpos_of_nonneg hK (Real.rpow_nonneg (by positivity) _))
+    linarith
+  have e2 : D ^ (2 + ε) = D * D ^ (1 + ε) := by
+    rw [show (2 : ℝ) + ε = 1 + (1 + ε) by ring, Real.rpow_add hD0, Real.rpow_one]
+  have e1 : D * (K * (W * D) ^ (1 + ε)) = K * D ^ (2 + ε) * W ^ (1 + ε) := by
+    rw [Real.mul_rpow hW0 hD0.le, e2]
+    ring
+  rw [e1] at h
+  refine h.trans ?_
+  apply mul_le_mul _ (Real.rpow_le_rpow hW0 hW (by linarith)) (Real.rpow_nonneg hW0 _)
+    (mul_nonneg hK.le (Real.rpow_nonneg (by linarith) _))
+  exact mul_le_mul_of_nonneg_left (Real.rpow_le_rpow hD0.le hD (by linarith)) hK.le
+
+lemma sqrt_bound {r x : ℕ} (h : r ^ 2 ≤ 2 * x ^ x) : (r : ℝ) ≤ 2 * (x : ℝ) ^ ((x : ℝ) / 2) := by
+  have hx0 : (0 : ℝ) ≤ x := Nat.cast_nonneg x
+  have hsq : ((x : ℝ) ^ ((x : ℝ) / 2)) ^ 2 = (x : ℝ) ^ x := by
+    rw [← Real.rpow_natCast, ← Real.rpow_mul hx0]; norm_num
+  have h1 : (r : ℝ) ^ 2 ≤ (2 * (x : ℝ) ^ ((x : ℝ) / 2)) ^ 2 := by
+    rw [mul_pow, hsq]
+    have : ((r ^ 2 : ℕ) : ℝ) ≤ ((2 * x ^ x : ℕ) : ℝ) := by exact_mod_cast h
+    push_cast at this
+    have : (0 : ℝ) ≤ (x : ℝ) ^ x := by positivity
+    linarith
+  have h2 : (0 : ℝ) ≤ 2 * (x : ℝ) ^ ((x : ℝ) / 2) := by positivity
+  nlinarith [sq_nonneg ((r : ℝ) - 2 * (x : ℝ) ^ ((x : ℝ) / 2)), Nat.cast_nonneg (α := ℝ) r]
+
+lemma W_bound {u v r x : ℕ} (hu : u ≤ x) (hv : v ≤ x) (hr : r ^ 2 ≤ 2 * x ^ x) :
+    ((u * r * v : ℕ) : ℝ) ≤ 2 * (x : ℝ) ^ (2 + (x : ℝ) / 2) := by
+  have hx0 : (0 : ℝ) ≤ x := Nat.cast_nonneg x
+  rw [Real.rpow_add' hx0 (by positivity), Real.rpow_two]
+  have h1 := sqrt_bound hr
+  have hu' : (u : ℝ) ≤ x := by exact_mod_cast hu
+  have hv' : (v : ℝ) ≤ x := by exact_mod_cast hv
+  push_cast
+  have : (u : ℝ) * r ≤ x * (2 * (x : ℝ) ^ ((x : ℝ) / 2)) :=
+    mul_le_mul hu' h1 (Nat.cast_nonneg r) hx0
+  calc (u : ℝ) * r * v ≤ x * (2 * (x : ℝ) ^ ((x : ℝ) / 2)) * x :=
+        mul_le_mul this hv' (Nat.cast_nonneg v) (by positivity)
+    _ = 2 * (x ^ 2 * (x : ℝ) ^ ((x : ℝ) / 2)) := by ring
+
+lemma D_bound {N x : ℕ} (hx : 1 ≤ x) {γ : ℝ} (hγ : 0 ≤ γ)
+    (h : (N : ℝ) ≤ ((x ^ x : ℕ) : ℝ) ^ γ ∨ N ≤ x) :
+    (N : ℝ) ≤ 2 * x * (x : ℝ) ^ ((x : ℝ) * γ) := by
+  have hx1 : (1 : ℝ) ≤ x := by exact_mod_cast hx
+  have hx0 : (0 : ℝ) ≤ x := by linarith
+  have h1 : (1 : ℝ) ≤ (x : ℝ) ^ ((x : ℝ) * γ) := Real.one_le_rpow hx1 (by positivity)
+  have e : ((x ^ x : ℕ) : ℝ) ^ γ = (x : ℝ) ^ ((x : ℝ) * γ) := by
+    rw [Real.rpow_mul hx0]; push_cast; rw [Real.rpow_natCast]
+  rcases h with h | h
+  · rw [e] at h
+    nlinarith
+  · have : (N : ℝ) ≤ x := by exact_mod_cast h
+    nlinarith
+
+/-- One case of Theorem 15.10: abc for `A + B = C` with `x^x ≤ C`, `rad(A B C) ≤ u r v B`, and
+the size bounds, gives the hypothesis of `bounded_of_rpow_le` at `x`. -/
+lemma abc_case_nat {ε K γ : ℝ}
+    (hK : ∀ a b c : ℕ, 0 < a → 0 < b → a + b = c → Nat.Coprime a b →
+      (c : ℝ) ≤ K * (rad (a * b * c) : ℝ) ^ (1 + ε)) (hε : 0 < ε) (hγ : 0 ≤ γ)
+    {A B C x u v r : ℕ} (hA : 0 < A) (hB : 0 < B) (hABC : A + B = C) (hx : 1 ≤ x)
+    (hX : x ^ x ≤ C) (hrad : rad A * rad B * rad C ≤ u * r * v * B) (hu : u ≤ x) (hv : v ≤ x)
+    (hr : r ^ 2 ≤ 2 * x ^ x) (hBx : (B : ℝ) ≤ ((x ^ x : ℕ) : ℝ) ^ γ ∨ B ≤ x) :
+    (x : ℝ) ^ x ≤
+      K * (2 * x * (x : ℝ) ^ ((x : ℝ) * γ)) ^ (2 + ε) *
+        (2 * (x : ℝ) ^ (2 + (x : ℝ) / 2)) ^ (1 + ε) := by
+  have h := abc_le_gcd_mul hK hε hA hB hABC
+  have hg : Nat.gcd A B ≤ B := Nat.gcd_le_right _ hB
+  have hC0 : (0 : ℝ) < C := by exact_mod_cast (show 0 < C by omega)
+  have hK0 : 0 < K := by
+    by_contra hK0
+    push Not at hK0
+    have : (Nat.gcd A B : ℝ) * (K * ((rad A * rad B * rad C : ℕ) : ℝ) ^ (1 + ε)) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (Nat.cast_nonneg _)
+        (mul_nonpos_of_nonpos_of_nonneg hK0 (Real.rpow_nonneg (Nat.cast_nonneg _) _))
+    linarith
+  have hB1 : (1 : ℝ) ≤ B := by exact_mod_cast hB
+  have h2 : (C : ℝ) ≤ B * (K * (((u * r * v : ℕ) : ℝ) * B) ^ (1 + ε)) := by
+    refine h.trans (mul_le_mul (by exact_mod_cast hg) (mul_le_mul_of_nonneg_left
+      (Real.rpow_le_rpow (Nat.cast_nonneg _) (by exact_mod_cast hrad) (by linarith)) hK0.le)
+      (mul_nonneg hK0.le (Real.rpow_nonneg (Nat.cast_nonneg _) _)) (by linarith))
+  have hX' : (x : ℝ) ^ x ≤ C := by exact_mod_cast hX
+  exact abc_case_le hε.le (by positivity) hB1 (D_bound hx hγ hBx) (Nat.cast_nonneg _)
+    (W_bound hu hv hr) (hX'.trans h2)
+
+lemma pow_self_lt_pow_self {a c : ℕ} (ha : 1 ≤ a) (h : a ^ a < c ^ c) : a < c := by
+  by_contra hac
+  push Not at hac
+  have := (Nat.pow_le_pow_left hac c).trans (Nat.pow_le_pow_right (by omega) hac)
+  omega
+
+/-- **Theorem 15.10** (section 15.3), assuming abc. Fix `δ > 0`. Only finitely many 2-digit
+solutions `(a, c)` under `0^0 = 0` with `c ≥ 2`, `c ≠ a^a` and a perfect-power base `r^t`,
+`t ≥ 2`, satisfy `min(a^a, c^c) ≤ max(a^a, c^c)^(1/4 - δ)`. -/
+theorem theorem15_10 (habc : ABC) {δ : ℝ} (hδ : 0 < δ) :
+    {p : ℕ × ℕ | 2 ≤ p.2 ∧ p.2 ≠ p.1 ^ p.1 ∧ ∃ r t : ℕ, 2 ≤ t ∧ IsSolution (r ^ t) 0 [p.1, p.2] ∧
+      (min (p.1 ^ p.1) (p.2 ^ p.2) : ℕ) ≤
+        ((max (p.1 ^ p.1) (p.2 ^ p.2) : ℕ) : ℝ) ^ ((1 : ℝ) / 4 - δ)}.Finite := by
+  set δ₀ := min δ (1 / 4) with hδ₀
+  have hδ₀pos : 0 < δ₀ := lt_min hδ (by norm_num)
+  have hδ₀le : δ₀ ≤ 1 / 4 := min_le_right _ _
+  have hδ₀δ : δ₀ ≤ δ := min_le_left _ _
+  set γ : ℝ := 1 / 4 - δ₀ with hγdef
+  have hγ : 0 ≤ γ := by linarith
+  have hη : 0 < 1 - (2 + δ₀) * γ - (1 + δ₀) / 2 := by rw [hγdef]; nlinarith
+  obtain ⟨K, hK⟩ := habc δ₀ hδ₀pos
+  obtain ⟨X0, hX0⟩ := bounded_of_rpow_le (K := K) hδ₀pos.le hη
+  refine (Set.Finite.subset (Finset.range (X0 + 1) ×ˢ Finset.range (X0 + 1)).finite_toSet ?_)
+  rintro ⟨a, c⟩ ⟨hc2, hca, r, t, ht, hsol, hmin⟩
+  dsimp only at hc2 hca hsol hmin
+  simp only [Finset.coe_product, Finset.coe_range, Set.mem_prod, Set.mem_Iio]
+  obtain ⟨hlt, hhead, heq⟩ := hsol
+  have ha : a ≠ 0 := hhead (by simp)
+  have hab : a < r ^ t := hlt a (by simp)
+  have hcb : c < r ^ t := hlt c (by simp)
+  have hr2 : 2 ≤ r := by
+    by_contra h
+    have : r ^ t ≤ 1 := pow_le_one₀ (Nat.zero_le _) (by omega)
+    omega
+  have hrb : r ^ 2 ≤ r ^ t := Nat.pow_le_pow_right (by omega) ht
+  have heq' : a * r ^ t + c = a ^ a + c ^ c := by
+    have := heq
+    simp only [P_pair, Fs_pair, w_of_ne_zero 0 ha, w_of_ne_zero 0 (show c ≠ 0 by omega),
+      Nat.cast_id] at this
+    exact this
+  have hγ' : (1 : ℝ) / 4 - δ ≤ γ := by linarith
+  -- `min ≤ max^γ`
+  have hmin' : ((min (a ^ a) (c ^ c) : ℕ) : ℝ) ≤ ((max (a ^ a) (c ^ c) : ℕ) : ℝ) ^ γ := by
+    refine hmin.trans (Real.rpow_le_rpow_of_exponent_le ?_ hγ')
+    have : 1 ≤ max (a ^ a) (c ^ c) := le_trans (Nat.one_le_pow _ _ (by omega)) (le_max_right _ _)
+    exact_mod_cast this
+  have hcc : c < c ^ c := by
+    calc c < c ^ 2 := by nlinarith
+      _ ≤ c ^ c := Nat.pow_le_pow_right (by omega) hc2
+  rcases lt_trichotomy (a ^ a) (c ^ c) with hlt' | heq'' | hgt
+  · -- `a^a < c^c`: the bound is on `c`
+    have hac : a < c := pow_self_lt_pow_self (by omega) hlt'
+    rw [min_eq_left hlt'.le, max_eq_right hlt'.le] at hmin'
+    have hrc : r ^ 2 ≤ 2 * c ^ c := by
+      have : a * r ^ t ≤ 2 * c ^ c := by omega
+      have : r ^ t ≤ a * r ^ t := Nat.le_mul_of_pos_left _ (by omega)
+      omega
+    have hradC : rad (a * r ^ t) ≤ a * r :=
+      (rad_mul_le ha (by positivity)).trans (Nat.mul_le_mul (rad_le_self ha)
+        ((rad_pow (by omega)).le.trans (rad_le_self (by omega))))
+    have hradc : rad (c ^ c) ≤ c := (rad_pow (by omega)).le.trans (rad_le_self (by omega))
+    have hcX : c ≤ X0 := by
+      rcases lt_or_gt_of_ne hca with h1 | h1
+      · -- `c < a^a`: `c^c + (a^a - c) = a r^t`
+        refine hX0 c (by omega) (abc_case_nat hK hδ₀pos hγ (A := c ^ c) (B := a ^ a - c)
+          (C := a * r ^ t) (u := a) (v := c) (r := r) (by positivity) (by omega) (by omega)
+          (by omega) (by omega) ?_ hac.le le_rfl hrc (Or.inl ?_))
+        · calc rad (c ^ c) * rad (a ^ a - c) * rad (a * r ^ t)
+              ≤ c * (a ^ a - c) * (a * r) :=
+                Nat.mul_le_mul (Nat.mul_le_mul hradc (rad_le_self (by omega))) hradC
+            _ = a * r * c * (a ^ a - c) := by ring
+        · have : ((a ^ a - c : ℕ) : ℝ) ≤ ((a ^ a : ℕ) : ℝ) := by exact_mod_cast Nat.sub_le _ _
+          exact this.trans hmin'
+      · -- `a^a < c`: `a r^t + (c - a^a) = c^c`
+        refine hX0 c (by omega) (abc_case_nat hK hδ₀pos hγ (A := a * r ^ t) (B := c - a ^ a)
+          (C := c ^ c) (u := a) (v := c) (r := r) (by positivity) (by omega) (by omega)
+          (by omega) le_rfl ?_ hac.le le_rfl hrc (Or.inr (by omega)))
+        calc rad (a * r ^ t) * rad (c - a ^ a) * rad (c ^ c)
+            ≤ a * r * (c - a ^ a) * c :=
+              Nat.mul_le_mul (Nat.mul_le_mul hradC (rad_le_self (by omega))) hradc
+          _ = a * r * c * (c - a ^ a) := by ring
+    exact ⟨by omega, by omega⟩
+  · -- `a^a = c^c` contradicts the hypothesis
+    exfalso
+    rw [heq'', min_self, max_self] at hmin'
+    have h1 : (1 : ℝ) < ((c ^ c : ℕ) : ℝ) := by exact_mod_cast (show 1 < c ^ c by omega)
+    have : ((c ^ c : ℕ) : ℝ) ^ γ < ((c ^ c : ℕ) : ℝ) ^ (1 : ℝ) :=
+      Real.rpow_lt_rpow_of_exponent_lt h1 (by linarith)
+    rw [Real.rpow_one] at this
+    linarith
+  · -- `c^c < a^a`: the bound is on `a`
+    have hca' : c < a := pow_self_lt_pow_self (by omega) hgt
+    rw [min_eq_right hgt.le, max_eq_left hgt.le] at hmin'
+    have hra : r ^ 2 ≤ 2 * a ^ a := by
+      have : a * r ^ t ≤ 2 * a ^ a := by omega
+      have : r ^ t ≤ a * r ^ t := Nat.le_mul_of_pos_left _ (by omega)
+      omega
+    have hradC : rad (a * r ^ t) ≤ a * r :=
+      (rad_mul_le ha (by positivity)).trans (Nat.mul_le_mul (rad_le_self ha)
+        ((rad_pow (by omega)).le.trans (rad_le_self (by omega))))
+    have hrada : rad (a ^ a) ≤ a := (rad_pow ha).le.trans (rad_le_self ha)
+    have haX : a ≤ X0 := by
+      refine hX0 a (by omega) (abc_case_nat hK hδ₀pos hγ (A := a ^ a) (B := c ^ c - c)
+        (C := a * r ^ t) (u := a) (v := a) (r := r) (by positivity) (by omega) (by omega)
+        (by omega) (by omega) ?_ le_rfl le_rfl hra (Or.inl ?_))
+      · calc rad (a ^ a) * rad (c ^ c - c) * rad (a * r ^ t)
+            ≤ a * (c ^ c - c) * (a * r) :=
+              Nat.mul_le_mul (Nat.mul_le_mul hrada (rad_le_self (by omega))) hradC
+          _ = a * r * a * (c ^ c - c) := by ring
+      · have : ((c ^ c - c : ℕ) : ℝ) ≤ ((c ^ c : ℕ) : ℝ) := by exact_mod_cast Nat.sub_le _ _
+        exact this.trans hmin'
+    exact ⟨by omega, by omega⟩
 
 end Munchausen
