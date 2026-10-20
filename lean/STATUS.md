@@ -579,12 +579,15 @@ In order of value and effort:
    separable algebra `R`), the elements `u_m = M'^(1 - q^m)`, and the case
    `q <= e - 2`. `theorem29_11_two` gives conditions (a) to (c) in both
    directions, and `topCoeff_span`, `exists_topCoeff_mul_ne_zero` are the
-   tools on the `ℓ` side.
-3. The finer asymptotics of chapters 20 and 35: the second-order range of
+   tools on the `ℓ` side. The recursion `u_(m+1) = u_1 φ(u_m)` follows from
+   `ℓ ∘ φ = ℓ(c_1 ·)` alone, since `φ` is invertible on the reduced ring;
+   Euler's formula is needed for `u_(f_i) ≡ 1` modulo each factor in the
+   constant case.
+2. The finer asymptotics of chapters 20 and 35: the second-order range of
    Theorem 20.3 (b) to (d), which needs `X_K(B)` to first order and
    Stirling's formula for `C(X + K, K)`; the limit `-2A` of Proposition 35.9
    and Corollary 35.10. `theorem20_3`, `choose_le_exp` and `prop35_9_bounds`
    are the tools.
-5. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
+3. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
    the model).
-6. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.
+4. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.
