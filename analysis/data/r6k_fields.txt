@@ -1,0 +1,15 @@
+  ***   Warning: new stack size = 1000000000 (953.674 Mbytes).
+last (1,1,1,x)                     X = 1. e4  n = 40  mean |D|/x^2 = 18.633  mean hR/x = 0.9793  mean hR/sqrt|D| = 0.2620
+last (1,2,3,x)                     X = 1. e4  n = 40  mean |D|/x^2 = 17.567  mean hR/x = 0.8727  mean hR/sqrt|D| = 0.2736
+last (2,0,0,x), x = 1 mod 3        X = 1. e4  n = 40  mean |D|/x^2 = 33.285  mean hR/x = 0.7884  mean hR/sqrt|D| = 0.2205
+middle (1,x,1,1)                   X = 1. e4  n = 40  mean |D|/x^2 = 57359.375  mean hR/x = 86.7213  mean hR/sqrt|D| = 0.4039
+middle (1,1,x,1)                   X = 1. e4  n = 40  mean |D|/x^2 = 35165.330  mean hR/x = 46.1580  mean hR/sqrt|D| = 0.2606
+leading (x,1,1,1)                  X = 1. e4  n = 40  mean |D|/x^2 = 98.137  mean hR/x = 4.7572  mean hR/sqrt|D| = 0.5031
+leading (x,1,2,0)                  X = 1. e4  n = 40  mean |D|/x^2 = 789.913  mean hR/x = 15.3014  mean hR/sqrt|D| = 0.5882
+last (1,1,1,x)                     X = 1. e6  n = 40  mean |D|/x^2 = 19.246  mean hR/x = 1.0683  mean hR/sqrt|D| = 0.2738
+last (1,2,3,x)                     X = 1. e6  n = 40  mean |D|/x^2 = 17.055  mean hR/x = 0.8939  mean hR/sqrt|D| = 0.2785
+last (2,0,0,x), x = 1 mod 3        X = 1. e6  n = 40  mean |D|/x^2 = 36.273  mean hR/x = 0.8776  mean hR/sqrt|D| = 0.2196
+middle (1,x,1,1)                   X = 1. e6  n = 40  mean |D|/x^2 = 5924699.617  mean hR/x = 895.8050  mean hR/sqrt|D| = 0.4348
+middle (1,1,x,1)                   X = 1. e6  n = 40  mean |D|/x^2 = 3708666.488  mean hR/x = 459.2049  mean hR/sqrt|D| = 0.2579
+leading (x,1,1,1)                  X = 1. e6  n = 40  mean |D|/x^2 = 95.488  mean hR/x = 5.0705  mean hR/sqrt|D| = 0.5348
+leading (x,1,2,0)                  X = 1. e6  n = 40  mean |D|/x^2 = 815.900  mean hR/x = 15.7813  mean hR/sqrt|D| = 0.5662
