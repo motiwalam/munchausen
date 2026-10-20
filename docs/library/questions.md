@@ -642,3 +642,49 @@ problems found in the library are in
      about `x <= B^(B + o(B))`. Is there a bound polynomial in `B`, as
      Theorem 32.5 gives for an even `x` behind a non-square digit? (proof;
      section 38.4.2)
+
+## Round 17: directions and questions from the whole library
+
+A preface on where the project stands, its blind spots and the assumptions
+nobody questioned, the full statements of these questions with their
+motivation, a first attack, leads and an estimate of difficulty and payoff,
+four proposed workloads and a list of problems found in the library are in
+[questions-round7.md](questions-round7.md).
+
+164. Which families of strings can be decided at all? A reduction through
+     Theorem 25.7 (ii) seems to make templates with polynomial digits
+     undecidable; are free-digit families decidable? (proof, logic)
+165. Local and global obstructions for one free digit. Which middle
+     families have a covering, and which are locally soluble everywhere?
+     Lead: 10 of the 440 fail by parity, the other 430 pass six prime
+     powers together. (proof and computation; section 32.1.3)
+166. Which conjecture closes the middle position? The Lang-Waldschmidt
+     conjecture with GRH, or LW alone? (proof, conditional; section 38.3.2)
+167. Why no reduction step applies: every linear form of chapters 32, 36
+     and 38 has an algebraic number that moves with `x`. Is a uniform
+     reduction possible? (speculative)
+168. Is three digits the limit of the S-unit method? The size of the
+     discriminant for every number of digits and position. (proof)
+169. The next 3-digit solution, unconditionally: the sieve of Theorem 25.11
+     over all `10^14` strings with digits up to 46,700. (computation)
+170. How many bases provably have a solution? Under `0^0 = 1` about
+     `(ln X)^2` bases up to `X`, under `0^0 = 0` at least `sqrt(X)/2`.
+     (proof)
+171. A census by the number of distinct digit values, in all bases up to
+     a bound. (search engineering)
+172. Is the multiset map lumpable? Exhaustive `phi_b` for bases 8 to 14.
+     (computation, Markov chains)
+173. Testing the model at large bases through the top levels of the exact
+     tree. (computation)
+174. Selection and classification in the short-solution residual: base 10
+     and the block `(3,3,6,6)`. (computation; section 35.1.4)
+175. Search lower bounds in other models: fooling sets for every `b`,
+     residue oracles, resolution and cutting planes. (proof, complexity)
+176. Atypical nodes: can information outside the interval certify them?
+     (search engineering; section 6.2)
+177. A fully formal finiteness theorem for an exponential family: Theorem
+     38.2 for `(1, x, 1)` and `(1, x, 3)` in Lean. (formalization)
+178. The trust chain of the census and the sieves. (formalization and
+     engineering)
+179. An audit of the cited constants and a literature search. (referee
+     work)
