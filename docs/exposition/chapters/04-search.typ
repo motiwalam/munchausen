@@ -87,7 +87,7 @@ The conventions differ only in what a zero adds to the sum. The interval above i
   The prefix-pruned search finds every solution of every length in base $b$, under both conventions.
 ]
 #proof[
-  Each rule removes only count vectors that cannot be solutions. The interval contains every sum that a completion of the node can reach. Every leading digit of the interval is a digit of every reachable sum, so a solution contains it. Forcing a digit removes only completions that leave it out. The first unknown digit of every reachable sum lies in the range the last test checks. A count vector reaches a leaf only if it passed every check, and the leaf compares the exact sum with the vector. The residue rule of @sec-search-residue removes a node only when no completion can satisfy the digit-sum identity.
+  Each rule removes only count vectors that cannot be solutions. The interval contains every sum that a completion of the node can reach. Every leading digit of the interval is a digit of every reachable sum, so a solution contains it. Forcing a digit removes only completions that leave it out. The first unknown digit of every reachable sum lies in the range the last test checks. A count vector reaches a leaf only if it passed every check, and the leaf compares the exact sum with the vector. The residue rule of @sec-search-residue removes a node only when no completion can satisfy the digit-sum identity, and the last-digit tests of @sec-search-low only when no completion puts the right digits in the unknown positions (@search-lem-low).
 ]
 
 The implementation in Rust stores each number as one byte per base-$b$ digit in 256-bit vector registers, so addition in base $b$ needs no conversion and no bignum library. Carries resolve with a carry-lookahead identity on 64-bit masks, and one addition costs about 15 instructions. Two registers cover 62 digits and bases up to 127. The tree splits into about $10^5$ work units in a fixed order, which threads share by work stealing and a journal records, so long runs survive interruptions. Before a solution is printed, the program recomputes its sum with arbitrary-precision integers. The same engine accepts other weight tables, which @sec-model-tests and @sec-worlds-weights use. @app-software has the details.
@@ -123,10 +123,29 @@ The engine keeps $R$ for both conventions in every node and updates it as digits
 How much does it remove? The values $w(y) - y$ for $y$ below the typical level $0.57 b$ fill only 20% to 48% of the residue classes. The reason is the residue laws of @sec-short-coverings: $x^x equiv x$ modulo 2 always, and modulo 3 and 5 the values of $x^x - x$ miss whole classes. So the rule removes most when $b - 1$ has the factors 2, 3 and 5 (bases 25, 31, 37), and least when $b - 1$ is prime (bases 24, 30, 32).
 
 #computation(id: "search-comp-residue", title: "What the residue rule saves", src: ("31.2", "31.6"))[
-  With both conventions in one run, the rule removes 12% to 25% of the nodes in every base from 15 to 35, with no trend in the base: base 28 drops from 18.0 to 13.6 million nodes, base 35 from 1.51 to 1.22 billion. With one convention (`-m 0` or `-m 1`) it removes 13% to 30%. The solutions found are the same. The time falls less than the nodes, because each node now carries two residues: 1.11 to 1.22 times fewer cycles in bases 24 to 31 with both conventions, 1.22 to 1.29 times with one, and 1.18 times on the GPU at base 30. Under `--zscore 3.4 --zlaw cond` the rule removes 9% to 13% of the nodes, since the z-score rule already drops many of the same nodes.
+  With both conventions in one run, the rule removes 12% to 25% of the nodes in every base from 15 to 35, with no trend in the base: base 28 drops from 18.0 to 13.6 million nodes, base 35 from 1.51 to 1.22 billion. With one convention (`-m 0` or `-m 1`) it removes 13% to 30%. The solutions found are the same. The time falls less than the nodes, because the removed nodes are cheap (a node with one free slot costs two interval evaluations): 1.11 to 1.22 times fewer cycles in bases 24 to 31 with both conventions, 1.22 to 1.29 times with one, and 1.18 times on the GPU at base 30. Under `--zscore 3.4 --zlaw cond` the rule removes 9% to 13% of the nodes, since the z-score rule already drops many of the same nodes.
 ]
 
 The gain is a constant factor, as @thm-only-residue predicts: the residue modulo $b - 1$ is the only one the multiset fixes, and it can only remove a share of the nodes with one free slot. The same test with two free slots removes almost nothing, because two digits reach 87% to 100% of the classes. With no free slot the test only repeats what the interval says. Both versions cost more cycles than they save #lib("31.4").
+
+=== The last digits <sec-search-low>
+
+A node with one free slot knows its sum up to one digit: for each candidate $y < v$ the sum $t + w(y)$, plus $m$ for each zero, is a number, and its last digits can be read off. These digits stand in positions that the known prefix does not cover. So they must be digits that those positions can hold.
+
+#lemma(id: "search-lem-low", title: "The last digits", src: "37.1")[
+  Let a node at digit value $v$ have $r$ free slots and $p$ unknown positions below its known prefix. Let $A$ be the set of digits $x >= v$ with more copies in $c_x$ than in the prefix. If a completion with free digits $y_1, dots, y_r$ is a solution, then each of its last $p$ digits is in $A$ or is one of $y_1, dots, y_r$.
+]
+#proof[
+  The solution lies in the interval of the node, so its top digits are the known prefix. Its digits are the multiset of the completion: $c_x$ copies of each $x >= v$, the forced digits, and $y_1, dots, y_r$. The prefix holds every forced digit and some copies of the digits $>= v$. The last $p$ positions hold the rest: the free digits and the copies of the digits $>= v$ outside the prefix.
+]
+
+So a node with one free slot fails when, for every $y$ that completes the residue of @search-thm-residue, one of the last $j <= p$ digits of its sum lies outside $A$ and is not $y$. A node with two free slots fails when the same holds for every pair $y_1 <= y_2 < v$ that completes the residue #lib("37.1", "37.2"). The test counts no copies, so it is weaker than it could be, and still exact. The engine keeps $A$ as a 64-bit mask: a child adds $v$ when it gives $v$ copies outside the prefix, and a new prefix digit clears its bit when its count is used up. A table of $w(y) mod b$ per level and residue class turns the test of one digit into a shift and an "and".
+
+#computation(id: "search-comp-low", title: "What the last digits save", src: ("37.1", "37.2"))[
+  By default the search tests three last digits on the nodes with one free slot and two on the nodes with two. It then visits 0.52 to 0.60 of the nodes of the residue rule in bases 15 to 33 (base 33: 224 million instead of 405 million), with the same solutions. It takes 0.87 to 0.95 of the cycles in bases 24 to 31 with both conventions, and 0.81 to 0.90 with one. The interval is a weak test with two free slots: with the residue it fails 0% to 7% of these nodes, while their last digit fails 10% to 28%.
+]
+
+The cycles fall less than the nodes here too. The answer to why lies in the loop over the children. It waits on chains of dependent vector additions and on about one mispredicted branch per child, and simple scalar work fits in the issue slots that this leaves idle. On the same tree, the two residues of each node add 35% more instructions and 2% fewer cycles. The cycles follow the interval evaluations, 82 to 85 per evaluation, and the removed nodes are those with the fewest evaluations #lib("37.3").
 
 == The cost of the exact search <sec-search-cost>
 

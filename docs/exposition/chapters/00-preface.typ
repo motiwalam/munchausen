@@ -70,7 +70,9 @@ coincidences and blind to identities. @ch-constructions tells this story.
 - The exact search costs about $1.9^b$. In the model no tree search can do
   better than about $1.64^b$, and a proof of any lower bound would settle
   P versus NP (@ch-search). The digit-sum identity still gives a constant
-  factor, at the nodes that miss only one digit (@sec-search-residue).
+  factor, at the nodes that miss only one digit (@sec-search-residue), and
+  the last digits of the sum give another at the nodes that miss one or two
+  (@sec-search-low).
 - For a fixed number of digits the question becomes one polynomial equation
   in the base. Local obstructions, Galois groups and a root heuristic
   describe the short solutions, and almost all bases have none

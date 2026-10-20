@@ -53,6 +53,10 @@ The search drops a node with one free slot when no digit completes its
 residue modulo $b - 1$ (@search-thm-residue); `--no-residue` turns this
 off, to compare or to resume a journal of an older build. With `-m 0` or
 `-m 1` the search reports one convention, and the rule tests only that one.
+The search also tests the last digits of the nodes with one and two free
+slots (@search-lem-low). `--low-digits n` (0 to 3, default 3) and
+`--low-pairs n` (0 to 2, default 2) set how many digits; both need the
+residue rule and `b <= 64`, and the GPU runs without them (#lib("37.4")).
 
 With `--features gpu` the program also runs on a GPU through Vulkan 1.3.
 `--gpu` runs every unit on the GPU, and `--hybrid` shares the units between
@@ -162,6 +166,7 @@ them. Each library chapter ends with a table of its scripts and data files.
     [`r5m_`], [theorems about the model: length shares, $k(B)$, $rho(b)$, block and top-digit models], [L29],
     [`r6a_`], [anti-concentration, collisions of $x^x - x$, fixed points, 2-digit narcissistic numbers], [L30],
     [`r6s_`], [the residue rule, nodes by free slots, cycle counts, shard balance], [L31],
+    [`r6s2_`], [the last-digit tests, pairs with two free slots, cycles and instructions of the residue rule], [L37],
     [`r6b_`], [the 2-adic bound for 3-digit families and the sieve below it], [L32],
     [`r6f_`], [least inert primes, 3-digit factorions, the Brocard sieve, 4-digit factorions, identity census, explicit abc bounds, chains], [L33],
     [`r6q_`], [the exact refined model by zero class, the length matrix and its trace, characters, perturbed worlds, the ledger of P values, neighbouring bases], [L34],

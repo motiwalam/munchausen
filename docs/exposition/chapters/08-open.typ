@@ -64,7 +64,7 @@ keeping in mind when judging which problems are realistic.
     [Excess of solutions in Pisot bases], st("heuristic"), [mostly calibration: a class modulo $2x$; $P approx 0.05$ after recalibration], [@open-pisot-class],
     [Are near-solutions at different offsets independent?], st("proven"), [no: rearrangements link them; means stay unbiased, variances grow 1.5 to 3.5 times], [@sec-model-defects],
     [Do all worlds share one rate of solutions to near-solutions?], st("computed"), [six of eight do (ratio 0.91); odd-base factorions and Pisot bases differ], [@sec-worlds-universal],
-    [A search faster than $1.9^b$], st("heuristic"), [exact: open, with constant factors such as the residue rule (1.1 to 1.3); with a 1 to 3% miss rate about $1.75^b$; tree searches need $1.638^b$ in the model], [@sec-search-entropy],
+    [A search faster than $1.9^b$], st("heuristic"), [exact: open, with constant factors such as the residue rule (1.1 to 1.3) and the last digits (1.06 to 1.15 more); with a 1 to 3% miss rate about $1.75^b$; tree searches need $1.638^b$ in the model], [@sec-search-entropy],
     [Can another order of the tree beat $1.638^b$?], st("proven"), [no: every order, fixed or adaptive, in the model], [@open-fast-search],
     [Certificates of emptiness], st("proven"), [in an interval oracle model, at least the widest level of the exact tree, up to a small factor], [@open-certificates],
     [Constraint solvers], st("computed"), [exact but grow 1.95 to 2.3 per base, worse than the tree], [@open-fast-search],
@@ -444,7 +444,9 @@ Several routes are now closed (#lib("27"), #lib("28")):
 - the exact search gains constant factors only: the forcing loop, run to
   its fixed point, saves 1.46 times the nodes, and the interval it reaches
   is the exact hull of the possible sums (@search-lem-hull); the residue
-  rule saves 1.1 to 1.3 times more (@search-thm-residue); the other count
+  rule saves 1.1 to 1.3 times more (@search-thm-residue), and the last
+  digits of the nodes with one or two free slots 1.06 to 1.15 times more
+  in cycles (@search-lem-low); the other count
   and residue results of the library are implied by the interval test or
   cost more than they save (#lib("31.4"));
 - the inexact search gains a constant factor: a corrected law for the
@@ -491,19 +493,20 @@ the explicit digits of $(b - c)^e$.
     23,364 and the 7-digit list up to $10^(7.2)$ (#lib("19.1")).
 ]
 
-#problem(id: "open-constant-factors", title: [Constant factors in the exact search], src: "31")[
-  Is there a cheap exact test for nodes with two free slots, which must
-  combine the residue with the interval (a 2-sum problem over the digits
-  below $v$)? Can a mask of the digits still available make the last-digit
-  check pay? Is the law of the free slots over the exact tree a fixed
-  geometric law? (#q(124), #q(127), #q(128))
+#problem(id: "open-constant-factors", title: [Constant factors in the exact search], src: ("31", "37"))[
+  Can the first unknown digit of a pair be tested cheaply? It fails 24% to
+  47% of the nodes with two free slots, more than the last digit, but it
+  needs the carry of the sum. Do the copies of a digit, a third free slot
+  or a port to the GPU pay? Is the law of the free slots over the exact
+  tree a fixed geometric law? (#q(127), #q(154), #q(155), #q(156), #q(157))
 ]
 
 The residue rule removes a share of the nodes with one free slot, 43% of
-the tree. With two free slots the residue alone reaches almost every class,
-but the two digits must also put the sum in the interval. A test that uses
-both could act on another quarter of the nodes. The answer changes only
-the constant, not the growth rate.
+the tree. The last digits remove more of them and a share of the nodes
+with two free slots: the default search visits 0.52 to 0.57 of the nodes
+of the residue rule (@search-comp-low). With two free slots the interval
+adds almost nothing to the residue. The answers change only the constant,
+not the growth rate.
 
 === The Munchausen polynomial
 
