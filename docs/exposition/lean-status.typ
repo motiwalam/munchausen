@@ -61,7 +61,7 @@
   "model-prop-forced": "forced_residue",
   "model-lem-swap": "swap_lemma, swap_lemma_perm, swap_last_two",
   "model-lem-dissoc": "lemma30_1, lemma30_2, lemma30_2_mod",
-  "model-prop-collision": "prop30_7 (partial: the two-step count, in which the pairs with g(x) + g(y) = r are at most the collisions; the k-step form and the probabilities are not formalized)",
+  "model-prop-collision": "prop30_7, prop30_7_k (as counts of k-tuples, which are the probabilities times (M + 1)^k)",
   "model-prop-cycles": "F_lt_pow_self (partial: F maps numbers below b^b to themselves)",
   "model-prop-image": "prop26_10_one, prop26_10_two",
   "model-lem-zero-free": "lemma34_2, lemma34_3",

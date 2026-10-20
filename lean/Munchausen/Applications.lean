@@ -527,6 +527,94 @@ theorem prop30_7 {α A : Type*} [DecidableEq A] [AddCommGroup A] (X : Finset α)
   rw [← Finset.mul_sum, Finset.sum_add_distrib] at this
   omega
 
+/-! ### Proposition 30.7, the `k`-step form -/
+
+section KStep
+
+variable {α A : Type*} [DecidableEq A] [AddCommGroup A]
+
+/-- The number of `k`-tuples from `X` whose values under `f` add up to `r`: `(M + 1)^k` times
+`P(∑ g(X_i) ≡ r)` for `X = {0, ..., M}` and `f = g mod Q`. -/
+def tupleCount (X : Finset α) (f : α → A) (k : ℕ) (r : A) : ℕ :=
+  ((Fintype.piFinset fun _ : Fin k => X).filter fun v => ∑ i, f (v i) = r).card
+
+lemma tupleCount_zero (X : Finset α) (f : α → A) (r : A) :
+    tupleCount X f 0 r = if r = 0 then 1 else 0 := by
+  unfold tupleCount
+  by_cases h : r = 0
+  · subst h; simp
+  · simp [h, Ne.symm h]
+
+/-- One more step: condition on the first entry. -/
+lemma tupleCount_succ (X : Finset α) (f : α → A) (k : ℕ) (r : A) :
+    tupleCount X f (k + 1) r = ∑ x ∈ X, tupleCount X f k (r - f x) := by
+  classical
+  unfold tupleCount
+  rw [Finset.card_eq_sum_card_fiberwise (f := fun v : Fin (k + 1) → α => v 0) (t := X)
+    (fun v hv => by
+      have := (Finset.mem_filter.1 hv).1
+      exact Fintype.mem_piFinset.1 this 0)]
+  refine Finset.sum_congr rfl fun x hx => ?_
+  refine Finset.card_bij (fun v _ => Fin.tail v) ?_ ?_ ?_
+  · intro v hv
+    simp only [Finset.mem_filter, Fintype.mem_piFinset] at hv ⊢
+    obtain ⟨⟨hX, hsum⟩, h0⟩ := hv
+    refine ⟨fun i => hX i.succ, ?_⟩
+    rw [Fin.sum_univ_succ, h0] at hsum
+    simp only [Fin.tail]
+    rw [← hsum]; abel
+  · intro v hv w hw h
+    simp only [Finset.mem_filter] at hv hw
+    rw [← Fin.cons_self_tail v, ← Fin.cons_self_tail w, h, hv.2, hw.2]
+  · intro w hw
+    simp only [Finset.mem_filter, Fintype.mem_piFinset] at hw
+    refine ⟨Fin.cons x w, ?_, by ext i; simp⟩
+    simp only [Finset.mem_filter, Fintype.mem_piFinset, Fin.cons_zero, and_true]
+    refine ⟨fun i => Fin.cases hx (fun j => by simpa using hw.1 j) i, ?_⟩
+    rw [Fin.sum_univ_succ]
+    simp only [Fin.cons_zero, Fin.cons_succ, hw.2]
+    abel
+
+/-- Two steps: `tupleCount` is the count of pairs of `prop30_7`. -/
+lemma tupleCount_two (X : Finset α) (f : α → A) (r : A) :
+    tupleCount X f 2 r = ((X ×ˢ X).filter (fun xy => f xy.1 + f xy.2 = r)).card := by
+  rw [tupleCount_succ, Finset.card_filter, Finset.sum_product]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  rw [tupleCount_succ]
+  refine Finset.sum_congr rfl fun y _ => ?_
+  rw [tupleCount_zero]
+  congr 1
+  apply propext
+  rw [sub_sub, sub_eq_zero, eq_comm]
+
+/-- **Proposition 30.7** (section 30.2.2), the `k`-step form. For `k ≥ 2` steps,
+`P(∑_(i ≤ k) g(X_i) ≡ r) ≤ N_M(Q)/(M + 1)^2`: the `k`-tuples with sum `r` are at most
+`|X|^(k-2)` times the collisions `f x = f y`. -/
+theorem prop30_7_k (X : Finset α) (f : α → A) (k : ℕ) (r : A) :
+    tupleCount X f (k + 2) r ≤
+      X.card ^ k * ((X ×ˢ X).filter (fun xy => f xy.1 = f xy.2)).card := by
+  induction k generalizing r with
+  | zero => rw [pow_zero, one_mul, tupleCount_two]; exact prop30_7 X f r
+  | succ k ih =>
+    rw [show k + 1 + 2 = (k + 2) + 1 by ring, tupleCount_succ]
+    calc ∑ x ∈ X, tupleCount X f (k + 2) (r - f x)
+        ≤ ∑ _x ∈ X, X.card ^ k * ((X ×ˢ X).filter (fun xy => f xy.1 = f xy.2)).card :=
+          Finset.sum_le_sum fun x _ => ih _
+      _ = X.card ^ (k + 1) * ((X ×ˢ X).filter (fun xy => f xy.1 = f xy.2)).card := by
+          rw [Finset.sum_const, smul_eq_mul, pow_succ]; ring
+
+/-- **Proposition 30.7**, the general form: `P(S_(2j) = r) ≤ P(S_j = S'_j)` for two independent
+sums of `j` steps. The pairs of `j`-tuples whose sums add up to `r` are at most the pairs with
+equal sums. -/
+theorem prop30_7_halves (X : Finset α) (f : α → A) (j : ℕ) (r : A) :
+    (((Fintype.piFinset fun _ : Fin j => X) ×ˢ (Fintype.piFinset fun _ : Fin j => X)).filter
+        fun uv => ∑ i, f (uv.1 i) + ∑ i, f (uv.2 i) = r).card ≤
+      (((Fintype.piFinset fun _ : Fin j => X) ×ˢ (Fintype.piFinset fun _ : Fin j => X)).filter
+        fun uv => ∑ i, f (uv.1 i) = ∑ i, f (uv.2 i)).card :=
+  prop30_7 _ (fun u : Fin j → α => ∑ i, f (u i)) r
+
+end KStep
+
 /-- **Proposition 30.6**, the forced primes (section 30.1.5): for a prime `p` and `d ≥ 1`,
 `x^d ≡ x (mod p)` for every `x` exactly when `p - 1` divides `d - 1`. -/
 theorem prop30_6_forced {p d : ℕ} [hp : Fact p.Prime] (hd : 1 ≤ d) :

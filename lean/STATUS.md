@@ -23,7 +23,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 167 formalized, 24 partial, 12
+Counts of table rows at the time of writing: 168 formalized, 23 partial, 12
 rows of open problems (15 `Prop`s), 4 refuted conjectures, 76 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
@@ -362,7 +362,7 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 76 not formalized,
 | Lemma 30.4 | `lemma30_4`, `lemma30_4_allowed` [App] | formalized (`x^x < b^d` with `b ≤ 2d`, `b ≥ 12` forces `x ≤ 2d - 5`; every `x < b`, `x ≤ d` is allowed) |
 | Theorem 30.5, Corollary 30.8 | none | not formalized (model) |
 | Proposition 30.6 | `prop30_6_forced`, `prop30_6_step` [App] | partial: `x^d ≡ x (mod p)` for all `x` iff `p - 1 ∣ d - 1`, and `p^d - p ≡ -p (mod p^2)`; the limit law not formalized |
-| Proposition 30.7 | `prop30_7` [App] | partial: the two-step count (pairs with `f x + f y = r` are at most the collisions); the `k`-step form and the probability language not formalized |
+| Proposition 30.7 | `prop30_7`, `prop30_7_k`, `prop30_7_halves`, `tupleCount`, `tupleCount_succ` [App] | formalized (as counts, which are the probabilities times `(M + 1)^k`: the pairs with `f x + f y = r` are at most the collisions, the `k`-tuples with sum `r` at most `(M + 1)^(k-2)` times the collisions, and the general form for two halves of `j` steps) |
 | Conjecture 30.9 | none | not stated |
 | Proposition 30.10 | `prop30_10`, `pow_self_modEq_self_iff`, `card_pow_modEq_self`, `sum_div_orderOf` [App] | formalized (the count `(p-1) + ∑_(d ∣ p-1) φ(d) (p-1)/d` over one period `1 ≤ c ≤ p(p-1)`) |
 | Corollary 30.11 | `corollary30_11_two`, `corollary30_11_two_solution`, `dvd_g_iff_modEq` [App] | partial: (2); (1) and (3) cite Kurlberg, Luca and Shparlinski |
