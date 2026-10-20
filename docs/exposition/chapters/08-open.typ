@@ -26,8 +26,8 @@ keeping in mind when judging which problems are realistic.
     [Finitely many $k$-digit solutions under $0^0 = 1$, $k >= 3$?], st("proven"), [no: binomial families give infinitely many], [@thm-every-length-m1],
     [Are large short solutions family members?], st("conjecture"), [positions and linear families classified; the rest needs one more coincidence; true under abc for one dominant digit], [@open-families],
     [3-digit strings with an even large digit behind a non-square leading digit], st("proven"), [finitely many for each pair of small digits; none with both at most 20], [@sec-short-regimes],
-    [3-digit strings with a large last digit], st("proven"), [finitely many for each pair of small digits, of either parity; an odd one is at most about $10^(40)$, uniformly in the middle digit], [@short-cor-last],
-    [3-digit strings with an even large leading digit], st("proven"), [finitely many for each pair of small digits; at most $10^(186)$ for digits at most 20; none for $(x, 1, 1)$], [@short-thm-lead],
+    [3-digit strings with a large last digit], st("proven"), [finitely many for each pair of small digits, of either parity; an odd one is at most $max(X_B (p), W + q^2 slash (4 p))$, where $X_B (p)$ is about $10^(40)$ and does not depend on the middle digit $q$, but $W = w(p) + w(q)$ does], [@short-cor-last],
+    [3-digit strings with an even large leading digit], st("proven"), [finitely many for each pair of small digits with the middle digit nonzero; at most $10^(186)$ for digits at most 20; none for $(x, 1, 1)$; under $0^0 = 0$, $(x, 0, 0)$ and $(x, 0, 1)$ have infinitely many], [@short-thm-lead],
     [3-digit strings with an odd large middle digit], st("open"), [density 0 unless $p A$ is a square; prime powers bounded when it is; no new solution with the other digits at most 20 and $x <= 10^9$], [@open-field-family],
     [3-digit strings under abc], st("conditional"), [one large digit: at most about twice the others unless a family member; two large digits $u >= v$ open for $v$ above about $u slash 2$], [@short-abc-three],
     [Which weights have identity families?], st("proven"), [a sufficient condition for every weight; factorials never meet it; exact under abc for one dominant digit], [@sec-cons-weights],
@@ -69,7 +69,7 @@ keeping in mind when judging which problems are realistic.
     [Can another order of the tree beat $1.638^b$?], st("proven"), [no: every order, fixed or adaptive, in the model], [@open-fast-search],
     [Certificates of emptiness], st("proven"), [in an interval oracle model, at least the widest level of the exact tree, up to a small factor], [@open-certificates],
     [Constraint solvers], st("computed"), [exact but grow 1.95 to 2.3 per base, worse than the tree], [@open-fast-search],
-    [Polynomial-time search], st("open"), [as hard to settle as P versus NP], [@sec-search-complexity],
+    [Polynomial-time search], st("open"), [a proof that none exists would prove P $!=$ NP; NP-hardness would prove P = NP], [@sec-search-complexity],
     [Arbitrary weights], st("proven"), [NP-complete, counting \#P-complete], [@thm-gen-npc],
     [Galois groups of $Q_s$], st("proven"), [$S_(k-1)$ generically; classified for $k = 4, 5$], [@sec-short-galois],
     [Integers with three bases under $0^0 = 1$], st("open"), [none known], [@open-three-bases],
@@ -504,8 +504,8 @@ the explicit digits of $(b - c)^e$.
 
 The residue rule removes a share of the nodes with one free slot, 43% of
 the tree. The last digits remove more of them and a share of the nodes
-with two free slots: the default search visits 0.52 to 0.57 of the nodes
-of the residue rule (@search-comp-low). With two free slots the interval
+with two free slots: the default search visits 0.52 to 0.60 of the nodes
+of the residue rule from base 20 on (@search-comp-low). With two free slots the interval
 adds almost nothing to the residue. The answers change only the constant,
 not the growth rate.
 

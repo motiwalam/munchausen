@@ -40,7 +40,7 @@ sizes. No claimed result had to be withdrawn.
 | `pA` not a square: `z = (theta + k)/(theta - k)` lives in the biquadratic field `M = K(sqrt(pA))`, and every solution is "mixed" in `M` | proven, checked in 50 fields (Lemma 38.4) |
 | Why the middle position resists: there `h Reg` is about `x L(1, chi)`, of the size of the exponent | heuristic (section 38.3.2) |
 | Leading, `x` even: `mu = nu theta^(x+1)`, `theta = (q + sqrt R)/2` of norm `-xA`, `nu` an S-unit for the primes above `Aq` | proven (Lemma 38.5) |
-| Leading, `x` even: `(x, q, r)` is a solution for only finitely many `x`, effectively, for every `q, r`. The S-unit lattice has covolume `O(sqrt(x) log x)`, far below the exponent. For `q, r <= 20`: `x <= 10^186` | proven, effective (Theorem 38.6) |
+| Leading, `x` even: `(x, q, r)` is a solution for only finitely many `x`, effectively, for every `q >= 1` and `r` (`q = 0` forces `x \| A`). The S-unit lattice has covolume `O(sqrt(x) log x)`, far below the exponent. For `q, r <= 20`: `x <= 10^186` | proven, effective (Theorem 38.6) |
 | `b (xb + 1) = x^x + 1` (`(x, 1, 1)` under both conventions, `(x, 1, 0)` under `0^0 = 0`): `x <= 4.27 * 10^11` by Laurent's bound, and a sieve to that bound leaves nothing. These strings are never solutions | proven and computed (Theorem 38.7, Corollary 38.8) |
 | Every 3-digit family with one large digit and fixed small digits is finite, effectively, except odd `x` in the middle (and the two self-paying leading families `(x, 0, 0)`, `(x, 0, 1)` under `0^0 = 0`) | proven (Corollary 38.9) |
 | Corrections: section 36.4.3 and Proposition 36.12 (superseded), section 32.1.6, section 25.1.4, the README, questions 151 and 152; Lemma 36.1 (b) (from the Lean formalization) | section "Library corrections" |
@@ -186,9 +186,17 @@ Remarks.
 - The gap `g-` is not a transcendence measure. It is one real number per
   family, computed to enough digits. Transcendence only guarantees that
   `f(2ke)` is not an integer, so that the computation of `N0` and `g-`
-  terminates. The bound is therefore effective, with no a priori bound on
-  the precision needed; in the computed cases a few hundred digits
-  suffice (`2ke / 2.3` digits plus a margin).
+  terminates. The precision has an a priori bound as well. With
+  `E = e^(2ke)` and `N` an integer, `|f(2ke) - N| = |k^a E^2 - N E -+ k^a| / E`,
+  and the numerator is the value at `e` of an integer polynomial of degree
+  `4ke`. An effective transcendence measure for `e` (K. Mahler, J. reine
+  angew. Math. 166 (1932), and later explicit forms) bounds it below in
+  terms of that degree and the height `max(k^a, N)`. So the bound is
+  effective in the strong sense. The computation does not use this bound:
+  it doubles the precision until `N0` is stable, and in the computed cases
+  a few hundred digits suffice (`2ke / 2.3` digits plus a margin).
+  Correction (round 7 review, 2026-10-20). This remark said "with no a
+  priori bound on the precision needed".
 - No linear form in logarithms is used. The equation says that the unit
   `u` has `log u` within `O(k^3 / x^2)` of `2ke`, plus `a log(theta / k)`;
   only the integrality of a trace is needed. In particular a solution
@@ -425,8 +433,14 @@ Corollary 18.11 (a class of order at least `x / (3.3 * 10^4 log x)`) for
 exactly this reason.
 
 So what is proven for `pA` not a square remains Proposition 36.11: the
-`x` that can occur have density 0. Section 38.7 lists the attempts that
-failed.
+`x` that can occur have density 0. Of the 415 such families with
+`p, q <= 20`, 10 have no solution by parity: `(p, x, 0)` with `p` odd
+under `0^0 = 1`, where `b (pb + x)` is even and `p^p + x^x + 1` is odd
+(section 36.4.1). So 405 non-square families are open. Section 38.7 lists
+the attempts that failed.
+
+Correction (round 7 review, 2026-10-20). The paragraph above did not
+separate the 10 parity families from the open ones.
 
 ## 38.4 Leading position, x even
 
@@ -850,7 +864,8 @@ Each item now has a note in the chapter or question file it corrects.
    above `x^(1/6 + eps)`. Answered: finite for every even `x`.
 6. Question 151 asks about prime `x`. Answered for the 25 square families
    (Corollary 38.3, prime powers, effectively; four families closed);
-   open for `pA` not a square.
+   open for `pA` not a square, except the 10 parity families of
+   section 36.4.1.
 7. Lemma 36.1 (b), found by the Lean formalization (`lemma36_1_round` in
    `lean/Munchausen/FieldFamily.lean`). The proof said that the remainders
    at the two primes above a split `l | x` sum to at most

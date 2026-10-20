@@ -282,9 +282,15 @@ factor modulo `b - 1` at the short length, gives 1.35 under `0^0 = 1` and
 1.86 under `0^0 = 0`. Observed are 5 (the first row of the table) and 9
 (under `0^0 = 0`, a different nine from the total above). Most of these
 nine are structured (self-paying zeros, blocks, a family member). Under
-`0^0 = 1` one of the five is a family member, and the other four against
-1.35 have P = 0.048. The arrangement factors of the root heuristic have
-mean 1 and do not explain the rest (section 35.1.4).
+`0^0 = 1` one of the five is a family member and one, `(3,3,6,6,1)` in
+base 13, is an exact block followed by the digit 1. The other three
+against 1.35 have P = 0.155. The arrangement factors of the root heuristic
+have mean 1 (section 35.1.4).
+
+Correction (round 7 review, 2026-10-20). This update counted
+`(3,3,6,6,1)` as generic and gave four strings against 1.35, P = 0.048.
+Chapter 35 counts the same string as structured under `0^0 = 0`; with one
+rule it is 3 against 1.35, P = 0.155.
 
 Fixed length. For a large `k`, the bases with a `k`-digit solution are
 `b = k` with probability 8%, `k+1` with 55%, `k+2` with 23%, `k+3` with 9%, and

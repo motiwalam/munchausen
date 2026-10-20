@@ -86,7 +86,9 @@ Part of the excess is the identity factor modulo `b - 1` at the short
 length, which the exact refined model contains (a factor 1.4 to 2.1 at 3
 and 4 digits, Table 35.1.4.1). Identity families and self-paying blocks
 explain most of the rest under `0^0 = 0`. Under `0^0 = 1` four generic
-short exceptions remain against 1.35 expected (P = 0.048). The two
+short exceptions remain against 1.35 expected (P = 0.048; corrected in
+the round 7 review, 2026-10-20, to 3 against 1.35, P = 0.155, since
+`(3,3,6,6,1)` is a block solution, section 35.1.4). The two
 heuristics are one in this sense: the root heuristic is the per-base
 refined model averaged over the residue of the base (Heuristic 35.4), and
 they agree on totals at lengths 6 to 12 (section 35.2).

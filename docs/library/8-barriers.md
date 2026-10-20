@@ -127,6 +127,17 @@ there are no units of infinite order. Primitive divisors of Lehmer numbers
 and Matveev's bound then bound `x` (Theorems 36.5 and 36.9). The middle
 and leading positions, where that field is real, remain open.
 
+Correction (round 7 review, 2026-10-20). The leading position is no longer
+open. Chapter 38 shows that `(x, q, r)` with `x` even and `q >= 1` is a
+solution for only finitely many `x`, with an effective bound
+(Theorem 38.6). The ideal of norm `x` has a small generator, and the
+S-unit lattice of the real field `Q(sqrt R)` has covolume
+`O(sqrt(x) log x)`. With chapters 25, 32 and 36, every 3-digit family with
+one large digit and fixed small digits is finite, effectively, except an
+odd large digit in the middle and two self-paying families under
+`0^0 = 0` (Corollary 38.9). In the middle, prime powers `x` are bounded in
+the 25 families with `pA` a square (Corollary 38.3).
+
 So a proof of finiteness for all short solutions under `0^0 = 1` would need
 new methods for exponential Diophantine equations. The numerical evidence is
 strong: outside the square class, the scan with `x` up to 2500 (bases up to
@@ -238,8 +249,8 @@ Bases 44 and 45 have no `b`-digit solution either (computed with
 
 | problem | status |
 |---|---|
-| fast exact search | equivalent in difficulty to P vs NP; neither a lower bound nor NP-hardness can be shown without settling it (8.1); the residue mod `b - 1` gives a constant factor 1.1 to 1.3 (31.2) |
-| finitely many short solutions under `0^0 = 1` | false: infinitely many for every `k >= 3` (Corollary 22.7); finiteness holds with a large leading digit (8.2); for 3 digits also with an even large digit behind a non-square leading digit, and in each fixed square class (32.1) |
+| fast exact search | polynomial time: open; a superpolynomial lower bound would prove P != NP, and NP-hardness would prove P = NP (8.1). A faster exponential algorithm is blocked by neither, and a proof that `1.638^b` is optimal would imply P != NP. The residue mod `b - 1` gives a constant factor 1.1 to 1.3 (31.2), the last digits save another 5% to 13% of the cycles (37.2). Correction (round 7 review, 2026-10-20). This row said "equivalent in difficulty to P vs NP", which conflates polynomial with faster. |
+| finitely many short solutions under `0^0 = 1` | false: infinitely many for every `k >= 3` (Corollary 22.7); finiteness holds with a large leading digit (8.2); for 3 digits also with an even large digit behind a non-square leading digit, and in each fixed square class (32.1); with one large digit and fixed small digits, finite in every position except an odd digit in the middle (36.3, 38.4, Corollary 38.9) |
 | lengths without solutions | same barrier as the finiteness question; verified up to base 100,000 for 9 digits and 10,000 for the others |
 | is `N_1(b)` bounded | open; reduces to near-solutions with small defects (8.4) |
 | `N_0(b)` unbounded | proven (Proposition 4.2) |

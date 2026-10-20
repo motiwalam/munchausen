@@ -4,6 +4,11 @@ These files hold a functional version of the exact search in
 `fast/src/search.rs`, and a proof that it finds every solution and nothing
 else. The Lean code favors reading over speed. It runs on small bases.
 
+What is verified is the algorithm, in this separate Lean implementation.
+The Rust engine is not verified. The tables below map each Lean function to
+its Rust counterpart by hand, and `Examples.lean` checks by test, not by
+proof, that both give the same solutions and node counts in bases 2 to 12.
+
 ## Files
 
 | file | content |

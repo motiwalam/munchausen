@@ -351,6 +351,12 @@ of the first two, and `(1, x, 3)` none except possibly `5^a > 10^9`, `a`
 odd (Corollary 38.3). `x` with two distinct prime factors remains open in
 all of them.
 
+Correction (round 7 review, 2026-10-20). The correction of chapter 36
+above says `x <= X_B(p)` "uniformly in `q`". That holds only beyond the
+real range, `x > W + q^2/(4p)`. The full bound for odd `x` last is
+`x <= max(X_B(p), W + q^2/(4p))` with `W = w(p) + w(q)`, and its second
+term grows like `q^q` (section 36.3, "Uniformity").
+
 The six known 3-digit solutions are all small cases: `x` is at most 7, so
 `x < 2B + 4`. `(5,1,3)` in base 25 sits on the boundary of (ii):
 `N = 4 * 5^6 = 250^2`, `U = 251` and `R = 501 = 2V + 1`.

@@ -1,4 +1,9 @@
-# Round 7: directions and questions
+# Round 17: directions and questions
+
+`questions.md` lists these questions as "Round 17". The file name follows
+the older count of the files `questions-round3.md`, `questions-round5.md`
+and `questions-round6.md`. The corrections made from its list of problems
+are labelled "round 7 review".
 
 A reading of the library after chapter 38, with chapters 29 to 38 read
 closely and the questions 1 to 163 checked for overlap, produced this file.
@@ -823,3 +828,11 @@ Workload 4: trust (Lean and referee work).
     and sound, with node counts equal to `fast --unit-depth 0` in bases 2 to
     12. Summaries outside the library should say "the algorithm is
     verified", not "the search is verified" (question 178).
+
+Status (round 7 review, 2026-10-20). All eleven problems were checked and
+fixed in the library, and in the exposition where the same claim appears;
+the corrections are dated "round 7 review". Two numbers differ from the
+list. In item 7, base 10 contributes 0.26 of the expectation 1.35, so
+without base 10 the residual is 2 against 1.08, P = 0.29 (not "about
+1.3"). In item 3 a check modulo each one of 2, 3, 4, 5, 7, 8, 9, 11, 13
+and 16 finds no local obstruction beyond the 10 parity families.

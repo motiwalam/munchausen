@@ -47,10 +47,10 @@ statement is marked by its source:
 | [33. Factorials against x^x](33-factorials.md) | 3-digit factorions with one large digit are finite except a leading case of Brocard type, with a complete list for the other digits up to 10; 2-digit factorions are infinite; GRH for a large last digit; a sufficient condition for identity families, which `x!` never meets; abc bounds every 3-digit solution of `x^x` with `R != 0`; one-step chains of Theorem 15.14 give only base 64 |
 | [34. Is the refined model complete?](34-model-complete.md) | the exact refined model by zero class; the 12% excess under `0^0 = 1` is a zero-free surplus in odd bases and one cell in even bases, about 2 standard deviations once the between-world scatter is counted; no zero deficit among near-solutions; the basic count is the trace of a stochastic length matrix, `1 + C/b` with `C = 1.1046` one eigenvalue; the refined count as a sum over characters; a ledger of 241 P values; neighbouring bases look independent |
 | [35. One heuristic and existence](35-existence.md) | the arrangements of a multiset spread over the residues modulo `q` prime to `b (b - 1)` at a rate independent of `ord_q(b)`; the root heuristic is the refined model averaged over the residue of the base, and the two agree at lengths 6 to 12; one invariant ideal for every positional system; averaging over bases gains only a bounded factor, but excludes long solutions with few large digits; near-solutions with about `sqrt(b / e)` matched top digits in every base `b >= 27` |
-| [36. Three digits when the field changes](36-field-family.md) | in the last position an odd large digit gives only finitely many solutions for each pair of small digits, uniformly in the second digit: Lehmer numbers and Matveev's bound in the imaginary field of the constant term; `(1, q, x)` with `x` prime to `q^2 + 4 + 4w(q)` is decided; a density result for the middle position and a square-part bound for the leading one; why the real fields resist |
-| [37. The last digits and two free slots](37-low-digits.md) | the last digits of a node with one or two free slots must be digits that the unknown positions still hold; a 64-bit mask and tables per residue class make this a few instructions, and the default search visits 0.52 to 0.57 of the nodes of the residue rule (5% to 13% fewer cycles); the instructions of the residue rule cost no cycles |
-| [38. The middle and leading positions for three digits](38-middle-leading.md) | an even large digit in front gives only finitely many solutions for each pair of small digits (an S-unit lattice of covolume `O(sqrt(x) log x)` and Matveev's bound); `b (xb + 1) = x^x + 1` has no solution (Laurent's bound and a sieve to `4.27 * 10^11`); in the middle, the 25 families with `pA` a square are bounded for prime powers `x` by an elementary trace argument, and four of them are closed for prime powers; why the middle position resists |
-| [Open questions](questions.md) | 179 research questions in seventeen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md); [round 7 directions](questions-round7.md) |
+| [36. Three digits when the field changes](36-field-family.md) | in the last position an odd large digit gives only finitely many solutions for each pair of small digits, with an effective bound whose part beyond the real range does not depend on the second digit: Lehmer numbers and Matveev's bound in the imaginary field of the constant term; `(1, q, x)` with `x` prime to `q^2 + 4 + 4w(q)` is decided; a density result for the middle position and a square-part bound for the leading one; why the real fields resist |
+| [37. The last digits and two free slots](37-low-digits.md) | the last digits of a node with one or two free slots must be digits that the unknown positions still hold; a 64-bit mask and tables per residue class make this a few instructions, and the default search visits 0.52 to 0.57 of the nodes of the residue rule in the bases 18 to 33 of Table 37.2.5, 0.66 in base 15 (5% to 13% fewer cycles); the instructions of the residue rule cost no cycles |
+| [38. The middle and leading positions for three digits](38-middle-leading.md) | an even large digit in front gives only finitely many solutions for each pair of small digits with the second digit nonzero (an S-unit lattice of covolume `O(sqrt(x) log x)` and Matveev's bound); `b (xb + 1) = x^x + 1` has no solution (Laurent's bound and a sieve to `4.27 * 10^11`); in the middle, the 25 families with `pA` a square are bounded for prime powers `x` by an elementary trace argument, and four of them are closed for prime powers; why the middle position resists |
+| [Open questions](questions.md) | 179 research questions in seventeen rounds, with priorities and answers; [round 5 directions](questions-round5.md); [round 6 directions](questions-round6.md); [round 17 directions](questions-round7.md) |
 
 ## Main results
 
@@ -171,9 +171,11 @@ Proven:
   does not lead is in the lists of chapter 3 or a binomial member
   (Corollary 32.4).
 - Let `p, q` be fixed digits and `x` odd. Then `(p, q, x)`, with `x` last,
-  is a solution for only finitely many `x`, with an effective bound
-  independent of `q`: `x <= max(X_B(p), W + q^2/(4p))`, where `X_B(p)` is
-  about `10^39` to `2.4 * 10^40` for `p <= 20` (Theorem 36.9). With
+  is a solution for only finitely many `x`, with the effective bound
+  `x <= max(X_B(p), W + q^2/(4p))`, where `W = w(p) + w(q)` and `X_B(p)`
+  is about `10^39` to `2.4 * 10^40` for `p <= 20` (Theorem 36.9). Only
+  `X_B(p)`, the bound beyond the real range, is independent of `q`. The
+  real range `x <= W + q^2/(4p)` grows like `q^q`. With
   chapter 32, every pair of small digits has only finitely many solutions
   with a large last digit, of either parity (Corollary 36.10). The proof
   works in the imaginary field `Q(sqrt(-D))` of the constant term, where
@@ -183,11 +185,15 @@ Proven:
   odd, prime to `q^2 + 4 + 4w(q)` and beyond `1 + w(q) + q^2/4` is a
   solution only for `(1, 0, 3)` in base 5 under `0^0 = 0`
   (Corollary 36.6, computer-assisted). An even large digit in front is
-  also finite for each pair of small digits (Theorem 38.6), so with
-  chapters 25, 32 and 36 every 3-digit family with one large digit is
-  finite, effectively, except an odd large digit in the middle
-  (Corollary 38.9). `b (xb + 1) = x^x + 1`, the strings `(x, 1, 1)`, has
-  no solution (Corollary 38.8, computer-assisted). In the middle, the 25
+  also finite for each pair of small digits with the second digit
+  nonzero (Theorem 38.6). So with chapters 25, 32 and 36 every 3-digit
+  family with one large digit is finite, effectively, with two
+  exceptions (Corollary 38.9). The open one is an odd large digit in the
+  middle. The other is the pair of leading families `(x, 0, 0)` and
+  `(x, 0, 1)` under `0^0 = 0`, which have infinitely many solutions:
+  `x b^2 = x^x` holds with `b = x^((x-1)/2)` for every odd `x >= 5` and
+  every even square `x`. `b (xb + 1) = x^x + 1`, the strings
+  `(x, 1, 1)`, has no solution (Corollary 38.8, computer-assisted). In the middle, the 25
   families with `pA` a square are effectively bounded for prime powers
   `x` without linear forms in logarithms (Theorem 38.2); `(1, x, 1)` and
   `(3, x, 1)` have no prime power solution beyond `x = 3, 7` of the first
@@ -196,6 +202,13 @@ Proven:
   Correction (chapter 38, 2026-10-20). This item said: "An odd large
   digit in the middle and an even one in front remain open." Only the
   middle remains open.
+
+  Correction (round 7 review, 2026-10-20). This item said that the bound
+  for an odd last digit is "independent of `q`", and that every family
+  with one large digit is finite "except an odd large digit in the
+  middle". The bound contains `W = w(p) + w(q)`; only `X_B(p)` does not
+  depend on `q` (section 36.3, "Uniformity"). Corollary 38.9 leaves out
+  the two infinite families `(x, 0, 0)` and `(x, 0, 1)` under `0^0 = 0`.
 - For every `x >= 3`, `(1, x)` is a factorion in base `x! - x + 1`
   (Proposition 33.9). A 3-digit factorion with one large digit `x` in the
   last or middle position has `x` below an explicit bound (Theorems 33.4
@@ -260,8 +273,8 @@ Proven:
   (Lemma 37.1). This gives exact tests on the nodes with one and two free
   slots (Propositions 37.2 and 37.4).
 - Deciding whether a base has a solution is an NP problem on a tally language.
-  So a proof that no fast algorithm exists would prove P != NP, and NP-hardness
-  would prove P = NP (section 8.1).
+  So a proof that no polynomial-time algorithm exists would prove
+  P != NP, and NP-hardness would prove P = NP (section 8.1).
 
 Computed:
 
@@ -305,9 +318,13 @@ Computed:
   The forcing loop, iterated to its fixed point, saves 1.46x in nodes in
   every base from 20 to 33 (chapter 31).
 - The last-digit tests on the nodes with one and two free slots leave
-  0.52 to 0.60 of the nodes of the residue rule in bases 15 to 33 and
-  save 5.5% to 13.3% of the cycles in bases 24 to 31, 10% to 19% with one
-  convention (chapter 37).
+  0.52 to 0.66 of the nodes of the residue rule in bases 15 to 33
+  (0.52 to 0.60 from base 20 on, Table 37.2.5) and save 5.5% to 13.3% of
+  the cycles in bases 24 to 31, 10% to 19% with one convention
+  (chapter 37).
+
+  Correction (round 7 review, 2026-10-20). This item said "0.52 to 0.60
+  ... in bases 15 to 33". Base 15 has 0.660.
 - No 4-digit factorion has its first three digits at most 6 and a last
   digit at most 1500 (section 33.2.2). The constructions of Theorem 15.14
   with `r <= 40` and `t <= 20,000`, or `r <= 7` and `t <= 10^5`, give no
@@ -351,8 +368,12 @@ Model:
   the per-base refined model averaged over the residue of the base
   (Heuristic 35.4). Part of the short-solution excess over the basic model
   is the identity factor modulo `b - 1`, and families explain much of the
-  rest. Under `0^0 = 1` four generic short exceptions remain against 1.35
-  expected (section 35.1.4).
+  rest. Under `0^0 = 1` three generic short exceptions remain against
+  1.35 expected, P = 0.155, within chance (section 35.1.4).
+
+  Correction (round 7 review, 2026-10-20). This item said four. The
+  fourth, `(3,3,6,6,1)` in base 13, is an exact block followed by the
+  digit 1, and chapter 35 counts it as structured under `0^0 = 0`.
 - A search that misses a few percent of solutions grows about 1.71x per
   base instead of 1.89x (section 9.3). The `--zscore` rule keeps its miss rate
   near 2% from base 30 to 300 (section 10.3). With `--zlaw cond` its threshold

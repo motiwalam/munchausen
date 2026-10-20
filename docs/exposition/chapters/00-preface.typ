@@ -68,8 +68,8 @@ coincidences and blind to identities. @ch-constructions tells this story.
   (@ch-model). It fails in instructive ways in other number systems
   (@sec-worlds-ffield, @sec-worlds-factorial).
 - The exact search costs about $1.9^b$. In the model no tree search can do
-  better than about $1.64^b$, and a proof of any lower bound would settle
-  P versus NP (@ch-search). The digit-sum identity still gives a constant
+  better than about $1.64^b$, and a proof of any superpolynomial lower
+  bound would prove P $!=$ NP (@ch-search). The digit-sum identity still gives a constant
   factor, at the nodes that miss only one digit (@sec-search-residue), and
   the last digits of the sum give another at the nodes that miss one or two
   (@sec-search-low).

@@ -29,7 +29,7 @@ is labelled as computed at sample points only.
 | `(1, q, x)` with `x` odd, `x > w(q) + 1 + q^2/4` and `x` prime to `q^2 + 4 + 4w(q)` is a solution only for `(1, 0, 3)` in base 5 (`0^0 = 0`), for every `q`. The same holds for odd `p <= 20` under explicit congruence conditions | proven and computed (Corollaries 36.6, 36.7) |
 | For every `J`, a reduced lattice basis and Matveev's bound for three logarithms give `x <= X_B(p)`, about `8.2 * 10^38` to `2.4 * 10^40` for `p <= 20`, uniform in `q` | proven, effective (Theorem 36.9) |
 | So for fixed `p, q` the string `(p, q, x)` is a solution for only finitely many `x`, of either parity, with an effective bound | proven (Corollary 36.10) |
-| Middle position, `x` odd: every prime `l` of `x` with `l` prime to `2pA` has `(pA / l) = 1`. If `pA` is not a square (415 of the 440 families with `p, q <= 20`), the `x` that can occur have density 0 | proven (Proposition 36.11) |
+| Middle position, `x` odd: every prime `l` of `x` with `l` prime to `2pA` has `(pA / l) = 1`. If `pA` is not a square (415 of the 440 families with `p, q <= 20`), the `x` that can occur have density 0. Ten of the 415, `(p, x, 0)` with `p` odd under `0^0 = 1`, have no solution by parity, so 405 are open | proven (Proposition 36.11) |
 | Leading position, `x` even, `x = n f^2`: the 2-adic bound of Theorem 32.2 holds with the unit of `Q(sqrt n)`, so the square part `f^2` of a solution is small, at most `4.5 * 10^9` for `x = 10^20` | proven, weak (Proposition 36.12); superseded by Theorem 38.6, which bounds every even leading `x` |
 | Sieve: last position, `p, q <= 10`, odd `x` up to `max(X_A(p), W + q^2/(4p))`, up to `10^10`; all three open cases with small digits up to 20 and `x <= 10^8`, the middle and leading cases to `10^9`. Only known solutions and `R = 0` strings survive | computed (Proposition 36.8, section 36.5) |
 | Why the middle and leading positions resist: in a real field the regulator enters every height. Middle: `h Reg` is about `x`. Leading: `Reg` is about `sqrt(x)` | proven sizes, measured (section 36.4.3); the leading case was finished in chapter 38 (Theorem 38.6) |
@@ -482,6 +482,17 @@ Of the 440 middle families with `p, q <= 20` (both conventions where
 two `A = p^p`. The family `(1, x, 1)` is the equation
 `b(b + x) = x^x + 1` of chapters 16 and 18.
 
+Of the 415 families with `pA` not a square, 10 have no solution at all:
+`(p, x, 0)` with `p` odd under `0^0 = 1`. By the parity rules of
+section 1.6, `b (pb + x)` is even for odd `x` and odd `p` (if `b` is odd,
+`pb + x` is even), while `p^p + x^x + 1` is odd. So 405 non-square
+families are open, apart from density 0. No other family fails modulo
+any one of 2, 3, 4, 5, 7, 8, 9, 11, 13 and 16 (computed, round 7 review).
+
+Correction (round 7 review, 2026-10-20). This section and the summary
+counted all 415 non-square families as open. The 10 parity families above
+are closed, so 405 are open.
+
 ### 36.4.2 Leading, x even: the square part
 
 Proposition 36.12 (proven, weak). Let `(x, q, r)` be a solution with `x`
@@ -701,7 +712,9 @@ Each item now has a note in the chapter or question file it corrects.
    `x` in the middle, and even `x` that leads. In the last position odd
    `x` is finite for each pair of small digits.
 3. Question 129 asks for uniformity over `Q(sqrt(px))`. Answered for the
-   last position by passing to `Q(sqrt R)` (Theorem 36.9; uniform in `q`).
+   last position by passing to `Q(sqrt R)` (Theorem 36.9; the bound
+   `X_B(p)` beyond the real range is uniform in `q`, the real range is
+   not).
    Question 130 asks about square classes `lam > 1`: in the last position
    every class is covered at once (Corollary 36.10); the middle position
    remains.

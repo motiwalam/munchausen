@@ -59,9 +59,21 @@ in which the field `Q(sqrt n)` changes with `x` (section 32.1.6).
 
 Update (chapter 36). In the last position the regime where the field
 changes is finite too: `(p, q, x)` with `x` odd is a solution for only
-finitely many `x`, effectively bounded and uniformly in `q`, because the
-field of the constant term is imaginary (Corollary 36.10). The open
-regime is an odd large digit in the middle and an even one in front.
+finitely many `x`, with the effective bound
+`x <= max(X_B(p), W + q^2/(4p))`, because the field of the constant term
+is imaginary beyond the real range (Corollary 36.10). The open regime is
+an odd large digit in the middle and an even one in front.
+
+Correction (round 7 review, 2026-10-20). The update above said
+"effectively bounded and uniformly in `q`". Only `X_B(p)`, the bound
+beyond the real range, is independent of `q`. The real range
+`x <= W + q^2/(4p)`, with `W = w(p) + w(q)`, grows like `q^q`
+(section 36.3, "Uniformity"). The update is also stale on the leading
+position. Chapter 38 made an even large digit in front finite for each
+pair of small digits with `q >= 1` (Theorem 38.6). Only an odd large digit
+in the middle remains open (Corollary 38.9). In the 25 middle families
+with `pA` a square, prime powers `x` are effectively bounded
+(Corollary 38.3).
 
 ## 7.3 Lengths without solutions
 
@@ -150,7 +162,8 @@ statement for bases near the length, where the evidence below applies: no
   (Conjecture 9.1). Chapter 10 shows that in the model no tree search can do
   better than about `1.638^b`, and that the exact tree grows like `2^b`. Chapter 6 explains why I do not expect a polynomial method.
 - Section 8.1 shows that a proof either way is out of reach: an unconditional
-  lower bound would prove P != NP, and NP-hardness would prove P = NP.
+  superpolynomial lower bound would prove P != NP, and NP-hardness would
+  prove P = NP.
 - Can the number of solutions in a base be predicted exactly without a
   search? Only on average, through the model.
 

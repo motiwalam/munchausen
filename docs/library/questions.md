@@ -577,7 +577,7 @@ problems found in the library are in
      (`A = 1`) or the regulator is about `x` (`A > 1`)? (proof; section
      36.4.1)
 152. (Answered in chapter 38: `(x, q, r)` with `x` even is a solution for
-     only finitely many `x`, effectively, for every `q, r` (Theorem 38.6).)
+     only finitely many `x`, effectively, for every `q >= 1` and `r` (Theorem 38.6).)
      The leading position. Is there finiteness for the even `x` for which
      `Q(sqrt R)` has class number above `x^(1/6 + eps)`? These form a thin
      set, but it would be the first result in that case beyond fixed

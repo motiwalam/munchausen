@@ -911,10 +911,14 @@ the short length itself.
 
 Under $0^0 = 0$ the nine are mostly structured: self-paying zeros, block
 pairs and a family member. Under $0^0 = 1$ one of the five is a family
-member. The other four are 3435, $(6, 5, 3, 4)$ in base 20,
-$(3, 3, 6, 6, 1)$ in base 13 and $(2, 6, 0, 3, 6)$ in base 14. Against
-1.35 expected, four or more has probability 0.048, and two of the four are
-the 5-digit excess of @short-5-excess.
+member, and $(3, 3, 6, 6, 1)$ in base 13 is structured too: the exact block
+$(3, 3, 6, 6)$ at shift 1 followed by the digit 1. It has no zero, so it is
+the same solution under both conventions. The other three are 3435,
+$(6, 5, 3, 4)$ in base 20 and $(2, 6, 0, 3, 6)$ in base 14. Against 1.35
+expected, three or more has probability 0.155. Without base 10, where the
+subject started, two remain against 1.08, with probability 0.29. One of
+them is part of the 5-digit excess of @short-5-excess. So the generic
+short solutions show no significant excess.
 
 #heuristic(id: "short-heur-one", title: "One heuristic for every length", src: "35.1")[
   The root heuristic and the per-base refined model are two averages of
@@ -925,8 +929,8 @@ the 5-digit excess of @short-5-excess.
   $e^(-0.35 k)$, and by the last-digit factor. The excess of short
   solutions over the basic model has three parts: the identity factor
   modulo $b - 1$ at the short length (1.1 to 2.1 for $x^x$), identity
-  families and self-paying blocks, and under $0^0 = 1$ a residual of about
-  3 times on four generic strings.
+  families and self-paying blocks, and under $0^0 = 1$ a residual of three
+  generic strings against 1.35, which is within chance.
 ]
 
 The medium lengths test this. For lengths 6 to 12 in bases 7 to 20 the
@@ -1575,7 +1579,11 @@ about $x L(1, chi)$: the covolume of the $S$-unit lattice is as large as
 the exponent, and the method of @short-thm-lead fails by a power of
 $ln x$ #lib("38.3"). There is a density result: every prime $l$ of $x$
 prime to $2 p A$ has $(p A slash l) = 1$, so unless $p A$ is a square the
-possible $x$ have density 0 #lib("36.4").
+possible $x$ have density 0 #lib("36.4"). Of the 440 middle families with
+$p, q <= 20$ (two for $q = 0$, one per convention), 415 have $p A$ not a
+square. Ten of them never give a solution: $(p, x, 0)$ with $p$ odd under
+$0^0 = 1$, where $b(p b + x)$ is even and $p^p + x^x + 1$ is odd. So 405
+are open.
 
 When $p A = k^2$ is a square, $theta = (x + sqrt(R)) slash 2$ satisfies
 $N(theta + k) = k x$, so the ideal of norm $x$ is generated, up to the

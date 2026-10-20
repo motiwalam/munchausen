@@ -567,6 +567,11 @@ under `0^0 = 1`, and one of the five is a member of a binomial family. So
 the Munchausen factor is about 3 on generic strings, not 4 to 5, and part
 of it is the 5-digit excess of section 22.4.3 (section 35.1.4).
 
+Correction (round 7 review, 2026-10-20). One more of the five,
+`(3,3,6,6,1)` in base 13, is an exact block followed by the digit 1. So
+the generic strings are 3 against 1.35, a factor of about 2.2 with
+P = 0.155 (section 35.1.4).
+
 There is no parity effect: `x! == 0 (mod 2)` for `x >= 2`, so the identity
 modulo `b-1` gives no free factor. The census agrees: 15 factorions in the 16
 odd bases from 11 to 41, 22 in the 16 even bases from 10 to 40.
