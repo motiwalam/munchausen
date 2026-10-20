@@ -54,7 +54,7 @@
   "31": "31-search-rules.md", "32": "32-basic-questions.md",
   "33": "33-factorials.md", "34": "34-model-complete.md",
   "35": "35-existence.md", "36": "36-field-family.md",
-  "37": "37-low-digits.md",
+  "37": "37-low-digits.md", "38": "38-middle-leading.md",
 )
 
 #let lib(..secs) = {

@@ -178,7 +178,15 @@ Proposition 18.6 is elementary: it needs no linear forms in logarithms.
 
 Laurent's theorem (cited: M. Laurent, Acta Arith. 133 (2008), Corollary 2
 with `m = 10`; the constants are as quoted in arXiv 2608.20995 and must be
-checked against the paper). Let `alpha1, alpha2 > 1` be multiplicatively independent
+checked against the paper).
+
+Update (chapter 38, 2026-10-20). The statement and the constant
+`C2(10) = 25.2` (for real positive logarithms; `C1(10) = 32.3` is the
+general one) agree in two independent sources: T. Hilgart, C. Premstaller
+and V. Ziegler, arXiv:2608.20995, Corollary 2.8 and Table 1, and T.
+Miyazaki, R. Scott and R. Styer, arXiv:2604.18991, Proposition 6.1. Laurent
+requires `alpha_1, alpha_2` and their logarithms real and positive, which
+holds here. The original paper was still not available (section 38.4.3). Let `alpha1, alpha2 > 1` be multiplicatively independent
 real algebraic numbers, `b1, b2` positive integers,
 `Lam = b2 log alpha2 - b1 log alpha1`, `Dg = [Q(alpha1, alpha2) : Q]`,
 `log A_i >= max(h(alpha_i), log(alpha_i) / Dg, 1 / Dg)` with `h` the

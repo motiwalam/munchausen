@@ -27,7 +27,8 @@ keeping in mind when judging which problems are realistic.
     [Are large short solutions family members?], st("conjecture"), [positions and linear families classified; the rest needs one more coincidence; true under abc for one dominant digit], [@open-families],
     [3-digit strings with an even large digit behind a non-square leading digit], st("proven"), [finitely many for each pair of small digits; none with both at most 20], [@sec-short-regimes],
     [3-digit strings with a large last digit], st("proven"), [finitely many for each pair of small digits, of either parity; an odd one is at most about $10^(40)$, uniformly in the middle digit], [@short-cor-last],
-    [3-digit strings with an odd large middle digit or an even large leading digit], st("open"), [density 0 in the middle unless $p A$ is a square; no new solution with the other digits at most 20 and $x <= 10^9$], [@open-field-family],
+    [3-digit strings with an even large leading digit], st("proven"), [finitely many for each pair of small digits; at most $10^(186)$ for digits at most 20; none for $(x, 1, 1)$], [@short-thm-lead],
+    [3-digit strings with an odd large middle digit], st("open"), [density 0 unless $p A$ is a square; prime powers bounded when it is; no new solution with the other digits at most 20 and $x <= 10^9$], [@open-field-family],
     [3-digit strings under abc], st("conditional"), [one large digit: at most about twice the others unless a family member; two large digits $u >= v$ open for $v$ above about $u slash 2$], [@short-abc-three],
     [Which weights have identity families?], st("proven"), [a sufficient condition for every weight; factorials never meet it; exact under abc for one dominant digit], [@sec-cons-weights],
     [3-digit factorions with one large digit], st("proven"), [finitely many, except a leading case of Brocard type; complete apart from it when the other digits are at most 10], [@worlds-fact-three],
@@ -545,12 +546,12 @@ hypothesis, so the class group alone cannot close the case
 implies that there are finitely many solutions; an effective form of it,
 together with the sieve, would finish the proof (@app-abc).
 
-#problem(id: "open-field-family", title: [Three digits when the field changes], src: ("32.1", "36.4"))[
-  Show that $(p, x, q)$ with $x$ odd, and $(x, q, r)$ with $x$ even, are
-  solutions for only finitely many $x$ when the small digits are fixed.
-  Make the bound for an odd last digit small enough for a sieve, and
-  carry the method to 4 digits with a binomial prefix. (#q(129), #q(130),
-  #q(131), #q(149), #q(151), #q(152))
+#problem(id: "open-field-family", title: [An odd large digit in the middle], src: ("32.1", "36.4", "38.3"))[
+  Show that $(p, x, q)$ with $x$ odd is a solution for only finitely many
+  $x$ when the small digits are fixed. Make the bounds for an odd last
+  digit and an even leading digit small enough for a sieve, and carry the
+  method to 4 digits with a binomial prefix. (#q(129), #q(130), #q(131),
+  #q(149), #q(151), #q(159), #q(160), #q(161), #q(162), #q(163))
 ]
 
 This is the last row of @tab-short-regimes. In a fixed field, Baker's
@@ -558,12 +559,18 @@ method bounds the large digit (@short-thm-2adic, @short-prop-class). For
 an odd last digit the field of the constant term is imaginary, and
 primitive divisors of Lehmer numbers and Matveev's bound settle it
 (@short-thm-imag), but only up to about $10^(40)$, far beyond any sieve.
-In the middle and in front that field is real. Its regulator enters
-every height, and the class number times the regulator is about $x$ in
-the middle and $sqrt(x)$ in front, so the known bounds are too weak by a
-power of $ln x$ #lib("36.4"). A result on $y^2 = a x^n + c$ that is
-uniform in $n$ would be the natural tool. Under abc every regime is closed
-(@short-abc-three).
+For an even leading digit the field is real, but the ideal of norm $x$
+has a small generator and the $S$-unit lattice has covolume about
+$sqrt(x)$, so Matveev's bound settles it as well (@short-thm-lead), up to
+about $10^(186)$ for digits at most 20. In the middle the discriminant is
+about $x^2$ and the covolume about $x$, the size of the exponent
+#lib("38.3"). When $p A$ is a square a trace argument bounds prime powers
+$x$ (@short-thm-trace); what is left there is $x$ with two prime factors,
+where the ideal of norm $x$ splits between an ideal and its conjugate,
+as in @cor-x-x. When $p A$ is not a square the possible $x$ have density
+0, and nothing more is known. A result on $y^2 = a x^n + c$ that is
+uniform in $n$ would be the natural tool. Under abc every regime is
+closed (@short-abc-three).
 
 #problem(id: "open-comparable", title: [Two comparable large digits], src: "33.4")[
   Under abc, a 3-digit string with two large digits $u >= v$ and $R != 0$

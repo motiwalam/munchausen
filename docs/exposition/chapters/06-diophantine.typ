@@ -429,10 +429,10 @@ bounds for such forms, and comparing the two bounds bounds $n$
   $
 ]
 
-This is Corollary 2 of Laurent @laurent2008 with $m = 10$. The library
-quotes the constants from a secondary source and flags that they must be
-checked against the paper #lib("18.1"). The results below that use it
-inherit this caveat.
+This is Corollary 2 of Laurent @laurent2008 with $(m, C_2) = (10, 25.2)$,
+the constant for real positive logarithms. The original paper was not
+available; the statement and the table of constants agree in two
+independent recent sources #lib("18.1", "38.4").
 
 #theorem(id: "dio-pure-all", title: "All pure solutions", src: "18.1")[
   For odd $x$, the only pure solution of $b(b + x) = x^n + 1$ with $n >= 4$

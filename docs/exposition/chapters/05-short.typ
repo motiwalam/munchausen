@@ -1164,8 +1164,9 @@ is a square. If $x$ is odd, $x^x = x dot (x^((x-1) slash 2))^2$ is $x$ times
 a square. So $n$ is the squarefree part of $ell$ (for even $x$ that does not
 lead), of $p x$ (for odd $x$ that does not lead, with leading digit $p$), or
 of $x$ itself (for even $x$ that leads); for odd $x$ that leads, $N$ is a
-square. This gives three regimes and a remainder #lib("32.1"), whose last-position
-part is finite by a change of field #lib("36.1").
+square. This gives three regimes and a remainder #lib("32.1"). A change
+of field makes the last and the leading positions of the remainder finite
+#lib("36.1", "38.4"); only an odd digit in the middle is left.
 
 #tablefig(caption: [The regimes for 3-digit strings with one large digit $x$ #lib("32.1").], id: "tab-short-regimes")[
   #btable(columns: 4, align: (left, left, left, left),
@@ -1174,7 +1175,8 @@ part is finite by a change of field #lib("36.1").
     [$n$ fixed], [$x$ even, not leading, leading digit not a square], [2-adic Baker (@short-thm-2adic)], [finitely many, explicit bound],
     [$n$ fixed on a class], [$x = lambda t^2$ with $lambda$ fixed: odd and not leading, or even and leading], [real Baker (@short-prop-class)], [finitely many in each class],
     [$n$ varies, last], [$x$ odd and last, every square class], [the imaginary field of $R$: Lehmer numbers and Matveev (@short-thm-imag)], [finitely many, explicit bound],
-    [$n$ varies, other], [$x$ odd in the middle, $x$ even and leading], [none known; abc (@short-abc-three)], [open; finite under abc],
+    [$n$ varies, leading], [$x$ even and leading, every square class], [the real field of $R$: an S-unit lattice and Matveev (@short-thm-lead)], [finitely many, explicit bound],
+    [$n$ varies, middle], [$x$ odd in the middle], [a trace argument for prime powers when $p A$ is a square (@short-thm-trace); otherwise none; abc (@short-abc-three)], [open; finite under abc],
   )
 ]
 
@@ -1483,21 +1485,160 @@ So for $p, q <= 10$ an odd last digit that is a solution must have $J$ not
 ambiguous or $gcd(x, D) > 1$, and lie between $10^8$ and $X_B (p)$. The
 gap is the price of Matveev's constant (#q(149), #q(150)).
 
-=== Where the frontier is
+=== When the field is real: an even digit in front <sec-short-lead>
 
-What is left of the 3-digit problem with one large digit is the last row
-of @tab-short-regimes: an odd large digit in the middle and an even one in
-front. There the field of $R$ is real. Its regulator enters the height of
-every logarithm in the linear form, and the class number times the
-regulator is about $x$ in the middle and about $sqrt(x)$ in front
-#lib("36.4"). In the middle there is a density result: every prime $l$ of
-$x$ prime to $2 p A$ has $(p A slash l) = 1$, where
-$A = w(p) + w(q) - q$, so unless $p A$ is a square the possible $x$ have
-density 0. In front the 2-adic bound still limits the square part of $x$.
-A treatment of a whole family of real quadratic fields at once, for
-example through results on $y^2 = a x^n + c$ that are uniform in $n$,
-would settle these cases up to a finite computation (#q(129), #q(151),
-#q(152)).
+For an even leading digit the field of $R$ is real, and it has units of
+infinite order. Take $(x, q, r)$ with $x$ even and $q >= 1$, and
+$A = w(q) + w(r) - r >= 1$ (for $q = 0$ the equation forces $x | A$).
+Completing the square gives
+$
+  U^2 = 4 x^(x + 1) + R, quad U = 2 x b + q, quad R = q^2 + 4 x A .
+$
+Put $theta = (q + sqrt(R)) slash 2$ and $mu = (U + sqrt(R)) slash 2 = x b + theta$.
+Then $theta theta' = -x A$ and $N(mu) = x^(x + 1)$. The point is that
+$R - q^2$ is divisible by $x$, so the ideal of norm $x$ has a small
+generator #lib("38.4").
+
+#lemma(id: "short-lem-lead", title: [The ideal of norm $x$ in front], src: "38.4")[
+  Let $S$ be the set of primes above the primes dividing $A q$. Then
+  $mu slash theta^(x + 1)$ is an $S$-unit of $QQ(sqrt(R))$. If $R$ is a
+  perfect square, the same holds coordinatewise in $QQ times QQ$.
+]
+#proof[
+  Let $l | x$ with $l$ prime to $A q$. Then $l$ does not divide $R$, so no
+  prime above $l$ divides both $mu$ and $mu'$, whose difference is
+  $sqrt(R)$. Hence $l$ splits and all of $v_l (N(mu)) = (x + 1) v_l (x)$
+  sits on one prime $P$. Since $mu - theta = x b$, $P$ divides $theta$ to
+  the order $v_l (x)$, and $P'$ does not divide $theta$. So $mu$ and
+  $theta^(x + 1)$ have the same valuation at $P$ and $P'$. Away from $x$
+  and $A$ both are units.
+]
+
+#theorem(id: "short-thm-lead", title: "An even digit in front", src: "38.4")[
+  For every $q >= 1$, $r >= 0$ and either convention, $(x, q, r)$ with $x$
+  even is a solution for only finitely many $x$, with an effective bound.
+  For $q, r <= 20$ the bound is at most $10^(186)$.
+]
+#sketch[
+  By @short-lem-lead,
+  $
+    ln(mu slash mu') = ln |nu slash nu'| + (x + 1) ln |theta slash theta'|
+  $
+  with $nu$ an $S$-unit, and the left side is at most about
+  $sqrt(R) x^(-(x + 1) slash 2)$. The $S$-units, mapped to their
+  logarithmic absolute values, form a lattice of rank $1 + |S|$ whose
+  covolume is at most $h(K) "Reg"(K) product_(P in S) ln N(P)$ times a
+  constant. By the class number formula $h "Reg"$ is at most about
+  $sqrt(R) ln R$, so $O(sqrt(x) ln x)$. Minkowski's second theorem gives a
+  basis of a sublattice of bounded index whose lengths multiply to at most
+  a constant times the covolume. Writing $nu slash nu'$ in that basis gives
+  a linear form in $|S| + 2$ logarithms whose heights multiply to
+  $O(sqrt(x) (ln x)^2)$, with coefficients of size $x ln x$. Matveev's
+  theorem (@app-baker-matveev) bounds it below by
+  $exp(-c sqrt(x) (ln x)^3)$, against $x^(-x slash 2)$. If $R$ is a
+  square, the same runs over $QQ$ with no regulator.
+]
+
+Chapter 36 had expected this case to resist, because the regulator enters
+the height of every logarithm. It does, but only once: in a reduced basis
+of the whole $S$-unit lattice the heights multiply to the covolume, which
+is about $sqrt(x)$, not to a power of the regulator #lib("36.4", "38.4").
+When $S$ is empty there are only two logarithms, and Laurent's bound
+(@dio-laurent) is small enough for a sieve.
+
+#theorem(id: "short-thm-x11", title: [The equation $b(x b + 1) = x^x + 1$], src: ("38.4", "38.5"))[
+  The strings $(x, 1, 1)$, under either convention, and $(x, 1, 0)$ under
+  $0^0 = 0$ are not solutions in any base, for any $x >= 2$.
+]
+#proof[
+  Here $A = q = 1$, so $S$ is empty and $mu = epsilon theta^(x + 1)$ with
+  a unit $epsilon$ of norm $-1$. If $R = 4 x + 1$ is a square, $epsilon = plus.minus 1$,
+  and $ln(mu slash mu') = (x + 1) ln |theta slash theta'|$ is about
+  $sqrt(x)$, far too large. Otherwise
+  $ln(mu slash mu') = (x + 1) ln alpha - 2 j ln eta$ with
+  $alpha = |theta slash theta'|$ and $eta$ the fundamental unit, two
+  multiplicatively independent numbers. @dio-laurent, with
+  $ln eta <= h "Reg" <= (sqrt(R) slash 2)(ln R + 2)$ in the worst case,
+  gives $x <= 4.27 dot 10^(11)$. Odd $x$ make $N$ a square
+  (@short-three-digit-class), and $x = 3, 5$ fail directly. A sieve modulo
+  150 primes tested every even $x <= 4.265 dot 10^(11)$ and found no
+  survivor; a second sieve with different primes and no tables agreed on
+  $10^9$ values #lib("38.5", "38.6").
+]
+
+=== When the field is real: an odd digit in the middle <sec-short-middle>
+
+In the middle, $(p, x, q)$ with $x$ odd gives $U^2 = 4 p x^x + R$ with
+$R = x^2 + 4 p A$ and $A = w(p) + w(q) - q$. Now the discriminant of
+$QQ(sqrt(R))$ is about $x^2$, the square of the exponent, and $h "Reg"$ is
+about $x L(1, chi)$: the covolume of the $S$-unit lattice is as large as
+the exponent, and the method of @short-thm-lead fails by a power of
+$ln x$ #lib("38.3"). There is a density result: every prime $l$ of $x$
+prime to $2 p A$ has $(p A slash l) = 1$, so unless $p A$ is a square the
+possible $x$ have density 0 #lib("36.4").
+
+When $p A = k^2$ is a square, $theta = (x + sqrt(R)) slash 2$ satisfies
+$N(theta + k) = k x$, so the ideal of norm $x$ is generated, up to the
+primes of $k$, by an element of height about $ln x$. For a prime power $x$
+this turns the equation into a statement about a single unit, and no
+linear form in logarithms is needed. Among the middle families with
+$p, q <= 20$ there are 25 with $p A$ a square: $(1, x, 3)$, $(p, x, 1)$
+for odd $p$ and $p = 4, 16$, and $(p, x, 0)$ under $0^0 = 0$ for the same
+$p$, where $A = p^p$.
+
+#theorem(id: "short-thm-trace", title: "A trace argument", src: "38.2")[
+  Let $p A = k^2$, let $x >= 2 k^2$ be a power of an odd prime not dividing
+  $k$, and let $e >= 1$, $a >= 0$ satisfy $e v_l (p) = a v_l (k)$ for
+  every prime $l | k$. Let $f(t) = 2 k^a sinh t$ for odd $e$ and
+  $2 k^a cosh t$ for even $e$, and
+  $g = 2 k e - f^(-1)(floor(f(2 k e)))$, a positive number. If $(p, x, q)$
+  is a solution, then $x^2 (g - e Lambda_0) <= 2 e k^3$, where
+  $Lambda_0 = ln((U + sqrt(R)) slash (U - sqrt(R)))$ is about
+  $x^(1 - x slash 2)$.
+]
+#sketch[
+  $(mu) = J B^x$ with $B$ of norm $x$, and for a prime power $x$ the ideal
+  $B$ is $(theta + k)$ or its conjugate up to primes of $k$. With
+  $z = (theta + k) slash (theta - k)$ the number
+  $w = (mu slash mu')^e z^(minus.plus e x)$ is a unit times
+  $(theta slash k)^a$, so $k^a (w + w')$ is an integer. Its norm gives
+  $w' = (-1)^e slash w$, so the absolute value of this integer is $f(tau)$ with
+  $tau = |ln w|$. Now $x ln z$ lies between $2 k (1 - k^2 slash x^2)$ and
+  $2 k$, so $tau$ is within $2 e k^3 slash x^2 + e Lambda_0$ of $2 k e$. An
+  integer that close to $f(2 k e)$ must be $floor(f(2 k e))$, since
+  $f(2 k e)$ is not an integer (Euler's number to a nonzero integer
+  power is transcendental). That gives
+  the inequality.
+]
+
+For $k = 1$, the family $(1, x, 1)$, the gap is $g = 2 - op("arcsinh")(7 slash 2) = 0.0343$
+and the bound is $x <= 7.64$: this is @dio-diagonal-pure again, with the
+unit $(7 + sqrt(53)) slash 2$ of trace 7 behind the solution $x = 7$. The
+bound is $3438$ for $(1, x, 3)$, $5.07 dot 10^(10)$ for $(3, x, 1)$,
+$1.7 dot 10^(74)$ for $(4, x, 1)$, and about $e^(k e)$ in general
+#lib("38.2").
+
+#corollary(id: "short-cor-trace", title: "Prime powers in the square families", src: ("38.2", "38.5"))[
+  Under either convention, $(1, x, 1)$ and $(1, x, 0)$ (with $0^0 = 0$) are
+  solutions for an odd prime power $x$ only when $x = 3$ or $x = 7$;
+  $(3, x, 1)$ and $(3, x, 0)$ (with $0^0 = 0$) never are; and $(1, x, 3)$
+  is not, except possibly for $x = 5^a > 10^9$ with $a$ odd. In each of the
+  other 20 square families with $p, q <= 20$, the odd prime powers $x$ that
+  give a solution are finitely many and effectively bounded.
+]
+#proof[
+  For $x$ prime to $k$, @short-thm-trace and a sieve of every odd
+  $x <= 5.07 dot 10^(10)$ in $(3, x, 1)$ and $(3, x, 0)$, and of every odd
+  $x <= 10^9$ in the others. Powers of a prime of $k$ lie in one square
+  class or are squares, and @short-three-digit-class,
+  @short-prop-class and @short-comp-oddsq handle them; for $5^a$ in
+  $(1, x, 3)$ the bound of @short-prop-class has not been computed.
+]
+
+So the 3-digit problem with one large digit $x$ has one open regime: an
+odd $x$ in the middle, for $x$ with two distinct prime factors in the 25
+square families and for density-0 sets of $x$ in the others (#q(151),
+#q(159), #q(160)).
 
 The abc conjecture (@app-abc) closes every regime at once, in the
 completed-square form #lib("33.4"). In $U^2 = N + R$ the radical of the
