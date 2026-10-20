@@ -206,6 +206,40 @@ theorem maxLen_tight {b : ℕ} (hb : 2 ≤ b) :
     have h3 : 3 * (b - 1) ^ (b - 1) ≤ b * (b - 1) ^ (b - 1) := Nat.mul_le_mul_right _ h
     omega
 
+/-- **The length loop of the Rust code.** `max_len` takes the lengths `d = 1, 2, ...` while
+`d (b-1)^(b-1) ≥ b^(d-1)` and stops at the first failure. The test holds exactly for
+`d ≤ maxLen b = b`, so the loop returns `b` (for `b ≤ 64`, its cap). -/
+theorem maxLen_condition_iff {b d : ℕ} (hb : 2 ≤ b) (hd : 1 ≤ d) :
+    b ^ (d - 1) ≤ d * (b - 1) ^ (b - 1) ↔ d ≤ maxLen b := by
+  simp only [maxLen]
+  constructor
+  · intro h
+    by_contra h'
+    have := length_ineq hb (show b + 1 ≤ d by omega)
+    omega
+  · intro h
+    have h1 : b ^ d ≤ d * b ^ (b - 1) := by
+      rcases Nat.eq_or_lt_of_le h with rfl | hlt
+      · have : d ^ d = d * d ^ (d - 1) := by
+          rw [← pow_succ']
+          congr 1
+          omega
+        omega
+      · calc b ^ d ≤ b ^ (b - 1) := Nat.pow_le_pow_right (by omega) (by omega)
+          _ ≤ d * b ^ (b - 1) := Nat.le_mul_of_pos_left _ (by omega)
+    have h2 := (maxLen_tight hb).1
+    simp only [maxLen] at h2
+    have h3 : b * b ^ (d - 1) = b ^ d := by
+      rw [← pow_succ']
+      congr 1
+      omega
+    have h4 : b * b ^ (d - 1) ≤ b * (d * (b - 1) ^ (b - 1)) := by
+      calc b * b ^ (d - 1) = b ^ d := h3
+        _ ≤ d * b ^ (b - 1) := h1
+        _ ≤ d * (b * (b - 1) ^ (b - 1)) := Nat.mul_le_mul_left _ h2
+        _ = b * (d * (b - 1) ^ (b - 1)) := by ring
+    exact Nat.le_of_mul_le_mul_left h4 (by omega)
+
 /-- **The specification.** The positive solutions in base `b` under `0^0 = m`. The range
 `n < b^b` loses nothing (`mem_solutions`). -/
 def solutions (b m : ℕ) : Finset ℕ :=

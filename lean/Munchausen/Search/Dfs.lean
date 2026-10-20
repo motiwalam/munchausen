@@ -67,6 +67,46 @@ theorem dfs_complete (Inv : Nat → ν → Prop) (a : α)
       exact List.mem_flatMap.2 ⟨N', List.mem_filterMap.2 ⟨c, hc, he⟩,
         dfs_complete Inv a hstep hleaf k N' hN'⟩
 
+/-- **No duplicates.** Let `Good` be an invariant of the tree and `Out k N a` a property of every
+output `a` below `N`. If the leaves have no duplicates, the candidates of a node are distinct,
+and two distinct candidates never share an output, then the search has no duplicates. -/
+theorem dfs_nodup (Good : Nat → ν → Prop) (Out : Nat → ν → α → Prop)
+    (hleaf : ∀ k N, k ≤ bottom → Good k N → (leaf N).Nodup ∧ ∀ a ∈ leaf N, Out k N a)
+    (hcands : ∀ k N, bottom < k → Good k N → (cands k N).Nodup)
+    (hchild : ∀ k N c N', bottom < k → Good k N → expand k N c = some N' →
+      Good (k - 1) N' ∧ ∀ a, Out (k - 1) N' a → Out k N a)
+    (hdisj : ∀ k N c c' N₁ N₂ a, bottom < k → Good k N → c ≠ c' → expand k N c = some N₁ →
+      expand k N c' = some N₂ → Out (k - 1) N₁ a → Out (k - 1) N₂ a → False) :
+    ∀ k N, Good k N → (dfs cands expand leaf bottom k N).Nodup ∧
+      ∀ a ∈ dfs cands expand leaf bottom k N, Out k N a
+  | 0, N, h => hleaf 0 N (Nat.zero_le _) h
+  | k + 1, N, h => by
+    simp only [dfs]
+    by_cases hk : k + 1 ≤ bottom
+    · simp only [hk, ↓reduceIte]
+      exact hleaf _ N hk h
+    · simp only [hk, ↓reduceIte]
+      have hlt : bottom < k + 1 := by omega
+      have ih : ∀ c N', expand (k + 1) N c = some N' →
+          (dfs cands expand leaf bottom k N').Nodup ∧
+            ∀ a ∈ dfs cands expand leaf bottom k N', Out k N' a := fun c N' he =>
+        dfs_nodup Good Out hleaf hcands hchild hdisj k N' (hchild (k + 1) N c N' hlt h he).1
+      refine ⟨?_, fun a ha => ?_⟩
+      · unfold List.Nodup
+        rw [List.pairwise_flatMap]
+        refine ⟨fun N' hN' => ?_, ?_⟩
+        · obtain ⟨c, -, he⟩ := List.mem_filterMap.1 hN'
+          exact (ih c N' he).1
+        · rw [List.pairwise_filterMap]
+          refine List.Pairwise.imp ?_ (hcands (k + 1) N hlt h)
+          intro c c' hne N₁ he₁ N₂ he₂ a ha₁ a' ha₂ heq
+          subst heq
+          exact hdisj (k + 1) N c c' N₁ N₂ a hlt h hne he₁ he₂ ((ih c N₁ he₁).2 a ha₁)
+            ((ih c' N₂ he₂).2 a ha₂)
+      · obtain ⟨N', hN', ha'⟩ := List.mem_flatMap.1 ha
+        obtain ⟨c, -, he⟩ := List.mem_filterMap.1 hN'
+        exact (hchild (k + 1) N c N' hlt h he).2 a ((ih c N' he).2 a ha')
+
 end ExactSearch
 
 end Munchausen
