@@ -1164,7 +1164,8 @@ is a square. If $x$ is odd, $x^x = x dot (x^((x-1) slash 2))^2$ is $x$ times
 a square. So $n$ is the squarefree part of $ell$ (for even $x$ that does not
 lead), of $p x$ (for odd $x$ that does not lead, with leading digit $p$), or
 of $x$ itself (for even $x$ that leads); for odd $x$ that leads, $N$ is a
-square. This gives three regimes and an open remainder #lib("32.1").
+square. This gives three regimes and a remainder #lib("32.1"), whose last-position
+part is finite by a change of field #lib("36.1").
 
 #tablefig(caption: [The regimes for 3-digit strings with one large digit $x$ #lib("32.1").], id: "tab-short-regimes")[
   #btable(columns: 4, align: (left, left, left, left),
@@ -1172,13 +1173,15 @@ square. This gives three regimes and an open remainder #lib("32.1").
     [$N$ a square], [$x$ odd and leading; $x$ even behind a square leading digit], [the gap of @short-three-digit-class (ii)], [no solution outside the binomial family],
     [$n$ fixed], [$x$ even, not leading, leading digit not a square], [2-adic Baker (@short-thm-2adic)], [finitely many, explicit bound],
     [$n$ fixed on a class], [$x = lambda t^2$ with $lambda$ fixed: odd and not leading, or even and leading], [real Baker (@short-prop-class)], [finitely many in each class],
-    [$n$ varies], [the rest: odd $x$ not leading, even $x$ leading], [none known; abc (@short-abc-three)], [open; finite under abc],
+    [$n$ varies, last], [$x$ odd and last, every square class], [the imaginary field of $R$: Lehmer numbers and Matveev (@short-thm-imag)], [finitely many, explicit bound],
+    [$n$ varies, other], [$x$ odd in the middle, $x$ even and leading], [none known; abc (@short-abc-three)], [open; finite under abc],
   )
 ]
 
 The first regime is elementary: two squares cannot be close unless they
-are equal. The other two use linear forms in logarithms, explained in
-@app-baker.
+are equal. The others use linear forms in logarithms, explained in
+@app-baker, and the last-position row also primitive divisors of Lehmer
+numbers.
 
 === When the field does not change
 
@@ -1324,16 +1327,177 @@ that leads.
   "even or an odd square".
 ]
 
+=== When the field is imaginary <sec-short-imaginary>
+
+For an odd last digit the Pell form $U^2 - n V^2 = R$ lives in
+$QQ(sqrt(p x))$, a real field that changes with $x$ and whose regulator can
+be as large as $sqrt(x) ln x$. The way out is to factor in the other
+field, the field of $R$ #lib("36.1"). Take $(p, q, x)$ with $x$ odd and
+last, and $W = w(p) + w(q)$. Once $x > W + q^2 slash (4 p)$ the constant
+$R$ is negative, and the equation reads
+$
+  U^2 + D = 4 p x^x, quad U = 2 p b + q, quad D = 4 p (x - W) - q^2 > 0 .
+$
+Put $mu = (U + sqrt(-D)) slash 2$, an integer of $K = QQ(sqrt(-D))$ of norm
+$p x^x$. The field $K$ still changes with $x$, but it is imaginary. That
+gives two things the real form lacked: $K$ has no units of infinite
+order, and its class number is about $sqrt(D)$, so about $sqrt(x)$, far
+below the exponent $x$ (@app-quadratic). And $x^x$ is an $x$-th power.
+
+#lemma(id: "short-lem-ideal", title: "The ideal equation", src: "36.1")[
+  Suppose $x > 2 log_2 (p D)$. Then every prime factor of $x$ splits in
+  $K$, and $(mu) = J A^x$, where $A$ is an integral ideal of norm $x$
+  prime to its conjugate and $J$ is a fractional ideal with
+  $sum_P |v_P (J)| ln N(P) <= ln(p D)$. If $gcd(x, D) = 1$, then $J$ is
+  integral of norm $p$.
+]
+#sketch[
+  A prime ideal that divides both $mu$ and its conjugate $mu'$ divides
+  $mu - mu' = sqrt(-D)$, so it occurs in one of them to an order at most
+  $v(D) slash 2$. A ramified or inert prime of $x$ would occur in both to
+  an order near $x slash 2$, which is too much. For a split prime of $x$,
+  round the two orders to multiples of $x$: the larger rounds to
+  $x v_l (x)$, the smaller to 0, and the remainders, together with the
+  primes of $p$, form $J$.
+]
+
+The ideal $J$ is ambiguous if it equals its conjugate. This holds when
+$p = 1$, and for odd $p$ under congruence conditions on $q$ and $x$
+#lib("36.2"). Then primitive divisors finish the job. A Lehmer pair is a
+pair $(alpha, beta)$ of algebraic integers with $(alpha + beta)^2$ and
+$alpha beta$ coprime nonzero integers and $alpha slash beta$ not a root of
+unity. For odd $n$ the Lehmer number is
+$L_n = (alpha^n - beta^n) slash (alpha - beta)$, and a primitive divisor
+of $L_n$ is a prime that divides $L_n$ but not
+$(alpha^2 - beta^2)^2 L_1 dots.c L_(n - 1)$.
+
+#theorem(id: "short-thm-bhv", title: "Bilu, Hanrot and Voutier", status: "cited", src: "36.2")[
+  For every Lehmer pair and every $n > 30$, $L_n$ has a primitive divisor.
+  For odd $7 <= n <= 29$ the pairs without one are, up to equivalence,
+  twelve explicit pairs, all with $|alpha beta| <= 9$.
+]
+
+The first part is Theorem 1.4 of @bilu-hanrot-voutier2001. The list for
+$n <= 30$ is Voutier's of 1995, reproduced there; a 2025 note of Voutier
+corrects the lists only for $n <= 6$ and $n = 8, 10, 12$. A primitive
+divisor $P$ of $L_n$, $n >= 7$ odd, satisfies
+$P equiv plus.minus 1 med (mod 2 n)$, so $P >= 2 n - 1$ #lib("36.2").
+
+#theorem(id: "short-thm-lehmer", title: "Ambiguous ideal", src: "36.2")[
+  Let $x >= 11$ be odd with $D > 0$, $x > 2 log_2 (p D)$ and
+  $gcd(x, D) = 1$, and suppose $J$ is ambiguous. If $(p, q, x)$ is a
+  solution, then $x <= 10 sqrt(D) (ln 4 D + 2) slash pi$. Since
+  $D < 4 p x$, this gives $x <= 7618$ for $p = 1$ and $x <= 340896$ for
+  $p <= 20$, for every $q$.
+]
+#sketch[
+  An ambiguous ideal is an integer $c$ times a product $J_1$ of ramified
+  primes, with $J_1^2 = (j_1)$. Let $e$ be the order of the class of $A$.
+  Some $t | x$ with $t >= e slash 2$ makes $J_1 A^t = (rho)$ principal, and
+  then $rho^n = j_1^((n - 1) slash 2) mu slash c$ with $n = x slash t$ odd.
+  The numbers $alpha = rho slash sqrt(j_1)$ and
+  $beta = rho' slash sqrt(j_1)$ form a Lehmer pair with
+  $alpha beta = x^t >= 11$: coprimality holds because $A^t$ contains only
+  one prime above each prime of $x$, and $alpha slash beta$ is not a root
+  of unity because $mu slash mu'$ is too close to 1. The Lehmer number
+  $L_n$ equals $(mu - mu') slash (c (rho - rho'))$, so it divides the
+  square factor $f$ of $D = f^2 D_0$. If $n >= 7$, @short-thm-bhv gives a
+  primitive divisor $P >= 2n - 1$ of $L_n$, so
+  $D_0 <= D slash (2 n - 1)^2$, and $x = t n <= h(K) n$ is at most about
+  $sqrt(D) ln D$ by the class number bound
+  $h <= sqrt(|Delta|)(ln |Delta| + 2) slash pi$. If $n <= 5$, then
+  $x <= 5 t <= 5 h$ directly.
+]
+
+#corollary(id: "short-cor-p1", title: "Leading digit 1", src: "36.2")[
+  Let $q >= 0$, either convention, and let $x$ be odd with
+  $x > 1 + w(q) + q^2 slash 4$ and $x$ prime to $q^2 + 4 + 4 w(q)$. Then
+  $(1, q, x)$ is a solution in some base only for $(1, 0, 3)$ in base 5
+  under $0^0 = 0$, where $25 + 3 = 1 + 27$.
+]
+#proof[
+  Here $D = 4 x - (q^2 + 4 + 4 w(q))$, so $gcd(x, D) = 1$ and $J$ has norm
+  1, hence is ambiguous. @short-thm-lehmer gives $x <= 7618$ once
+  $x >= 11$. For $q >= 7$ this contradicts $x > w(q) >= 7^7$. For
+  $q <= 6$ an exact test of every odd $x <= 7619$ and a sieve up to $10^8$
+  find only $(1, 0, 3)$ #lib("36.2", "36.7").
+]
+
+When $J$ is not ambiguous its class can have order about $h(K)$, and the
+Lehmer argument fails. A linear form in three logarithms still works,
+because the class group is finite and costs only heights of size about
+$sqrt(x)$.
+
+#theorem(id: "short-thm-imag", title: "An odd last digit", src: "36.3")[
+  Let $x >= 25$ be odd with $D > 0$ and $x > 2 log_2 (p D)$. If
+  $(p, q, x)$ is a solution, then $x <= X_B (p)$, an explicit bound that
+  does not depend on $q$: $8.2 dot 10^(38)$ for $p = 1$,
+  $1.1 dot 10^(40)$ for $p = 10$ and $2.4 dot 10^(40)$ for $p = 20$.
+]
+#sketch[
+  The pairs $(s, r)$ with $J^s A^r$ principal form a lattice of index $e$,
+  the order of the class of $A$, and it contains $(1, x)$. Weight the
+  coordinates by $ln(p D)$ and $ln x$, the heights that $J$ and $A$
+  contribute. A reduced basis $v_1, v_2$ has weighted lengths whose
+  product is at most $(4 slash sqrt(3)) e ln(p D) ln x$. Let $rho_i$
+  generate the ideal of $v_i$. Then $mu$ is a root of unity times
+  $rho_1^a rho_2^b$ with $|a|, |b|$ of order $x ln x$, and
+  $
+    2 i theta = a ln(rho_1 slash rho'_1) + b ln(rho_2 slash rho'_2) + k ln zeta,
+  $
+  where $theta$ is the argument of $mu$ and $zeta$ a root of unity. Since
+  $tan theta = sqrt(D) slash U$ and $U$ is about $x^(x slash 2)$, the left
+  side is at most $sqrt(8 x) x^(-x slash 2)$. Matveev's theorem for three
+  logarithms in a quadratic field (@app-baker-matveev, complex form) bounds
+  it below by $exp(-c e ln(p D) (ln x)^2)$, and $e <= h(K)$ is about
+  $sqrt(x) ln x$. So $x ln x slash 2 <= c' sqrt(x) (ln x)^4$, which bounds
+  $x$.
+]
+
+The reduced basis is what makes this work. The obvious choice, a power of
+$A$ for $mu$ and one more element for the rest, gives a product of
+heights of order $e^2$, about $x (ln x)^2$, and the inequality then fails
+by a power of $ln x$.
+
+#corollary(id: "short-cor-last", title: "The last position is finite", src: "36.3")[
+  For fixed $p >= 1$, $q >= 0$ and either convention, $(p, q, x)$ is a
+  solution for only finitely many $x$, with an effective bound:
+  @short-thm-imag for odd $x$ beyond $W + q^2 slash (4 p)$,
+  @short-thm-2adic for even $x$ and $p$ not a square, and
+  @short-three-digit-class for even $x$ and $p$ a square.
+]
+
+#computation(id: "short-comp-field", title: "Small digits, changing field", src: ("36.2", "36.5"))[
+  For $p, q <= 10$ and odd $x <= max(X_A (p), W + q^2 slash (4 p))$, up to
+  $10^(10)$, where $X_A (p)$ is the bound of @short-thm-lehmer, the only
+  solutions $(p, q, x)$ are the known ones and the strings with $R = 0$:
+  $(p, 0, 1)$ and the swaps $(p, 0, p^p)$ under $0^0 = 0$. With two digits
+  at most 20, the same holds for odd $x <= 10^8$ in the last position and
+  for $x <= 10^9$ in the other two positions of the open regime. A sieve
+  modulo 150 primes tested $6 dot 10^(11)$ values of $x$, and a second
+  sieve with different primes and no tables reproduced its survivors on a
+  slice of $1.2 dot 10^9$ values.
+]
+
+So for $p, q <= 10$ an odd last digit that is a solution must have $J$ not
+ambiguous or $gcd(x, D) > 1$, and lie between $10^8$ and $X_B (p)$. The
+gap is the price of Matveev's constant (#q(149), #q(150)).
+
 === Where the frontier is
 
 What is left of the 3-digit problem with one large digit is the last row
-of @tab-short-regimes: Pell equations in which the field $QQ(sqrt(p x))$ or
-$QQ(sqrt(x))$ changes with $x$. The regulator of such a field can be as
-large as $sqrt(x) ln x$, and then every known form of Baker's theorem is too
-weak by a power of $ln x$. A treatment of a whole family of real quadratic
-fields at once, for example through results on $y^2 = a x^n + c$ that are
-uniform in $n$, would settle the case up to a finite computation (#q(129),
-#q(130)).
+of @tab-short-regimes: an odd large digit in the middle and an even one in
+front. There the field of $R$ is real. Its regulator enters the height of
+every logarithm in the linear form, and the class number times the
+regulator is about $x$ in the middle and about $sqrt(x)$ in front
+#lib("36.4"). In the middle there is a density result: every prime $l$ of
+$x$ prime to $2 p A$ has $(p A slash l) = 1$, where
+$A = w(p) + w(q) - q$, so unless $p A$ is a square the possible $x$ have
+density 0. In front the 2-adic bound still limits the square part of $x$.
+A treatment of a whole family of real quadratic fields at once, for
+example through results on $y^2 = a x^n + c$ that are uniform in $n$,
+would settle these cases up to a finite computation (#q(129), #q(151),
+#q(152)).
 
 The abc conjecture (@app-abc) closes every regime at once, in the
 completed-square form #lib("33.4"). In $U^2 = N + R$ the radical of the

@@ -75,7 +75,10 @@ coincidences and blind to identities. @ch-constructions tells this story.
   in the base. Local obstructions, Galois groups and a root heuristic
   describe the short solutions, and almost all bases have none
   (@ch-short). For 3 digits, a 2-adic form of Baker's theorem excludes
-  whole families with an even large digit (@sec-short-regimes).
+  whole families with an even large digit (@sec-short-regimes), and
+  primitive divisors of Lehmer numbers in an imaginary quadratic field
+  make a large last digit finite for each pair of small digits
+  (@sec-short-imaginary).
 - The 3-digit solution $(1, 7, 1)$ in base 904 leads to the equation
   $b(b + x) = x^x + 1$ and its relatives, which need quadratic fields,
   linear forms in logarithms and the abc conjecture (@ch-diophantine).

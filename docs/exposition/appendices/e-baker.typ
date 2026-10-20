@@ -49,7 +49,7 @@ See @baker1966 and @baker-wustholz2007. For applications one needs explicit cons
   $ ln abs(Lambda) > -1.4 dot 30^(r+3) r^(4.5) D^2 (1 + ln D)(1 + ln B) A_1 dots A_r . $
 ]
 
-This is from @matveev2000, in the form of @bugeaud-mignotte-siksek2006[Theorem 9.4]. For three logarithms in a quadratic field the constant is about $9.7 dot 10^(11)$.
+This is from @matveev2000, in the form of @bugeaud-mignotte-siksek2006[Theorem 9.4], which is stated for real fields. For three logarithms in a real quadratic field the constant is about $9.7 dot 10^(11)$. Matveev's Corollary 2.3 also covers fields that are not real, with any determination of the logarithms: the bound becomes $ln abs(Lambda) > -2^(6 r + 20) D^2 (1 + ln D)(1 + ln B) A_1 dots A_r$, with $B = max abs(b_i)$. @short-thm-imag uses this form in an imaginary quadratic field, where one of the numbers is a root of unity.
 
 For two logarithms Laurent's bound @laurent2008 is far sharper. Its shape is
 $ ln abs(Lambda) >= -C D^4 (max(ln b' + 0.38, 10 slash D, 1))^2 ln A_1 ln A_2, quad b' = b_1 / (D ln A_2) + b_2 / (D ln A_1), $
