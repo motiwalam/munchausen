@@ -52,7 +52,9 @@ recomputes the Munchausen sum with arbitrary-precision integers.
 | option | meaning |
 |---|---|
 | `-m`, `--mode <0\|1\|both>` | the conventions to report (default `both`). With one convention, the residue rule keeps only its solutions, so the search visits 13% to 30% fewer nodes than without the rule, and up to 10% fewer than for `both` |
-| `--no-residue` | `search` only. Turn off the residue rule (see "Third round" below), for comparisons |
+| `--no-residue` | `search` only. Turn off the residue rule (see "Third round" below), for comparisons. This also turns off the last-digit tests. |
+| `--low-digits <n>` | `search` only. The last-digit test on nodes with one free slot (see "Fourth round" below): `0` turns it off, `1` to `3` is the number of last digits it checks (default 3). |
+| `--low-pairs <n>` | `search` only. The last-digit test on nodes with two free slots: `0` turns it off, `1` or `2` is the number of last digits it checks (default 2). `--low-digits 0 --low-pairs 0` gives the tree of the third round. |
 | `-j`, `--threads <n>` | number of worker threads (default: one per core) |
 | `--journal <file>` | `search` only. Record progress in `<file>`, and resume from it if it exists. `{base}` in the name becomes the base. |
 | `--progress` | `search` only. Print progress every 10 seconds, with the node count and an estimate of the share of the work done (fitted on bases 26 to 33 under the `x^x` weights, so rough for other weights). |
@@ -358,14 +360,72 @@ What did not help:
 - The same test for a child with no free slot (`e = rf`): such a child
   nearly always fails its interval anyway, and the test cost 2% more
   cycles at base 26.
-- The test for two free slots: the residues of two digits below `k` reach
-  almost every class modulo `b - 1` under one of the two conventions, so it
-  removed 0.0% to 1% of the nodes.
-- The last one or two digits of `S`. With one free slot the low digits of
-  every completion are known, and they must be digits that the unknown
-  positions still hold. This removes another 17% (one digit) or 24% (two
-  digits) of the nodes at base 26, but the nodes it removes are cheap, and
-  the test cost 2% and 7% more cycles than it saved.
+- The residue test alone for two free slots: the residues of two digits
+  below `k` reach almost every class modulo `b - 1` under one of the two
+  conventions, so it removed 0.0% to 1% of the nodes.
+- The last one or two digits of `S`, tested with a loop over the
+  candidate digits and their counts in the prefix. This removes another
+  17% (one digit) or 24% (two digits) of the nodes at base 26, but the
+  test cost 2% and 7% more cycles than it saved. The fourth round makes
+  the same test cheap.
+
+### Fourth round: the last digits
+
+With one free slot `y < k`, a node knows the sum `t + w(y)` of each `y`
+that completes its residue. The lowest positions of the sum are unknown
+positions, so each of its last digits must be a digit that the unknown
+positions hold: a decided digit `x >= k` with copies outside the prefix,
+or `y` itself. A node keeps the set of such decided digits as a 64-bit
+mask, which `settle` updates when the last copy of a digit enters the
+prefix. A table per level, convention and residue class holds the last
+digits of `w(y)` as a bit set, so the test of one digit is a shift and an
+AND. Two or three digits loop over the one to three candidates `y` that
+pass. A node with two free slots gets the same test over the pairs
+`y1 <= y2 < k`, on one digit by mask and on two by a loop over the pairs.
+`docs/algorithm.md` ("The last-digit tests") gives the details, and
+`docs/library/drafts/round6-search2.md` the measurements.
+
+The tests need the residue rule and `b <= 64`. They do not act while the
+program builds the work units, so the units, the journals and `--shard`
+are the same as in the third round. The GPU search does not run them:
+`--gpu` and `--hybrid` turn them off, and then visit the nodes of the
+third round.
+
+The default (`--low-digits 3 --low-pairs 2`) visits 0.52 to 0.57 of the
+nodes of the third round in bases 24 to 33, under each convention and
+both. User-mode cycles of
+`search b -j 1` on one P-core, median of 3 alternating runs, with other
+jobs on the machine (load 9 to 15):
+
+| base | nodes before | nodes after | cycles before | cycles after | change | `-m 0` | `-m 1` |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 24 | 1,166,554 | 633,928 | 0.384 G | 0.342 G | -10.9% | -15.9% | -16.2% |
+| 25 | 1,993,518 | 1,099,521 | 0.634 G | 0.587 G | -7.4% | -11.8% | -12.9% |
+| 26 | 3,894,520 | 2,134,691 | 1.211 G | 1.104 G | -8.9% | -14.1% | -15.7% |
+| 27 | 7,720,378 | 4,247,844 | 2.302 G | 2.159 G | -6.2% | -11.5% | -12.5% |
+| 28 | 13,596,926 | 7,452,542 | 4.079 G | 3.748 G | -8.1% | -13.1% | -14.2% |
+| 29 | 26,908,928 | 15,280,109 | 8.022 G | 7.577 G | -5.5% | -10.4% | -13.1% |
+| 30 | 53,636,804 | 28,191,150 | 16.13 G | 13.98 G | -13.3% | -18.0% | -19.3% |
+| 31 | 92,205,006 | 52,876,747 | 34.28 G | 30.67 G | -10.5% | -14.3% | -16.2% |
+
+The last two columns compare `-m 0` and `-m 1` with the third round under
+the same option. With both tests off the node counts are those of the
+third round, and the cycles are 0.2% lower to 1.4% higher. On 8 threads,
+base 32 took 7.75 s against 9.40 s (median of 3 alternating runs, load
+about 12). The output is the same as before for every base from 2 to 33,
+under each convention and both.
+
+What did not help:
+
+- The test for two free slots before the forced digits of a child, as the
+  residue rule does for one slot. On top of the test after the forced
+  digits it cost 0.8% more cycles at base 26: it runs on every cursor, and
+  the later test removes almost the same nodes.
+- A test on the residue and the interval alone for two free slots: no
+  pair satisfies both in 0.0% to 7% of these nodes in bases 20 to 30.
+- The digit of the sum at the first unknown position, for two free
+  slots. It would fail 24% to 47% of these nodes, but it needs a full sum
+  per pair (see the draft).
 
 ## GPU search
 
@@ -380,8 +440,10 @@ cargo build --release --features gpu
 ```
 
 `--gpu` runs every unit on the GPU. `--hybrid` also runs units on the CPU
-threads. Both give the same solutions and the same node counts as the CPU
-search. A test checks this for bases 2 to 26. The GPU path runs the exact
+threads. Both give the same solutions as the CPU search, and the same
+node counts as the CPU search with `--low-digits 0 --low-pairs 0`: the
+GPU has no last-digit tests, so `--gpu` turns them off. A test checks
+this for bases 2 to 26. The GPU path runs the exact
 search and the `--zscore` rule, with `--zlaw`, `--zfrom`, `--zslope` and
 `--ztable`. It accepts `--shard` and `--min-digits`/`--max-digits`, but not
 `--journal`, the other inexact rules, or other weights. It handles bases
@@ -474,8 +536,14 @@ for bases 10 to 22. They test both widths of digit vectors. They also compare
 together find what one run finds. For 24 weight options (`--zero` from -3 to
 7, `--shift` from -1 to 3, `--factorial`, `--perturb` with `--keep-residues`
 or `--set-residue`), a test compares `search` with a brute force over all
-digit multisets in bases 2 to 8. Another test checks the weight tables. The
-tests take about 90 seconds.
+digit multisets in bases 2 to 8, with the last-digit tests on and off.
+Another test checks the weight tables. A test runs the residue rule for
+each convention, both and none, with every level of the two last-digit
+tests, against the reference in bases 2 to 20; in test builds an
+assertion checks the residues and the mask of each node against values
+recomputed from its counts and prefix. Another test checks the
+multiplication that divides by `b^2` in the three-digit test. The tests
+take about 2 minutes.
 
 ## Source files
 

@@ -258,12 +258,61 @@ free slot before its forced digits, and forcing only names the digit `y`.
 
 Two thirds of the nodes have one or two free slots, and the nodes with one
 free slot are 43% of the tree, so this one test removes 12% to 25% of the
-nodes in bases 15 to 35. The same test for two free slots, or for none,
-costs more than it saves (`docs/library/31-search-rules.md`, section 31.4.2).
+nodes in bases 15 to 35. The same residue test alone for two free slots,
+or for none, costs more than it saves (`docs/library/31-search-rules.md`,
+section 31.4.2). The last-digit tests below act on both.
 
 With `-m 0` or `-m 1` the test uses only that convention, and removes up to
 30% of the nodes. The search then may miss solutions of the other
 convention, which `-m` does not print anyway.
+
+### The last-digit tests
+
+A node with one free slot knows its whole multiset except one digit
+`y < k`, and the residue rule leaves one to three candidates for `y`. For
+each candidate the sum `S = t + w(y)` (plus the zeros under `0^0 = 1`) is
+known, and in particular its last digits. The known prefix holds the top
+`d - pp` digits of `S`, and `pp >= 1`, so the last digit sits in an unknown
+position. The unknown positions hold exactly the digits of the multiset
+that the prefix does not hold: the copies of decided digits `x >= k` that
+are not in the prefix yet, and `y`. (Every prefix digit below `k` was
+forced, so no other digit below `k` has a copy left.) So the last digit
+of `S` must be `y` or a decided digit with copies left. With `pp >= 2` the
+same holds for the last two digits, and so on.
+
+A node keeps the set of decided digits with copies left as a 64-bit mask
+`avail`. A child for `c_k = occ_k + e` adds `k` if `e > 0`, and `settle`
+removes a digit `x >= k` when a new leading digit makes its count in the
+prefix reach `c_x`; it counts these copies anyway, for the count test. A
+table per level `k`, convention and residue class `R` holds the set of
+`w(y) mod b` over the `y < k` that complete `R`, twice (bits `v` and
+`v + b` of a 128-bit word), and the set of `(y - w(y)) mod b`. With
+`a = (t + zeros) mod b`, the set of last digits is the first table
+shifted by `b - a`, so the test of one digit is
+
+    ((mask >> (b - a)) & avail) != 0  or  bit a of the second table.
+
+For two or three digits the search then loops over the candidates `y`,
+computes `(a + w(y)) mod b^2` or `mod b^3` from a table of `w(y) mod b^3`,
+splits it into digits with a table of `b^2` entries and one
+multiplication, and checks every digit against `avail` and `y`. The test
+does not count copies, so it is weaker than it could be, but it never
+removes a solution.
+
+A node with two free slots `y1 <= y2 < k` gets the same test over the
+pairs that complete its residue: the last digit of
+`t + w(y1) + w(y2)` must be in `avail`, `y1` or `y2`. One digit is again
+a shift and an AND on a table of the pairs; two digits loop over the pairs
+that pass. The pairs below `k` of each class come first in their list, so
+a table of end indices per level gives them.
+
+The one-slot test runs at the same two points as the residue rule; the
+two-slot test runs only after the forced digits of a child. Neither runs
+while the program builds the work units, so the units do not depend on
+them. `--low-digits` and `--low-pairs` set the number of digits (default
+3 and 2, `0` turns a test off). Together they remove 43% to 48% of the
+nodes of the residue rule in bases 24 to 33, and 5% to 13% of the cycles
+with both conventions (`docs/library/drafts/round6-search2.md`).
 
 ### Why the search misses nothing
 
@@ -278,6 +327,10 @@ Each rule only removes count vectors that cannot be solutions.
 - The residue rule removes a node only if no completion has a digit sum
   congruent to its Munchausen sum modulo `b - 1`. A solution has one, under
   its own convention.
+- The last-digit tests remove a node with one or two free slots only if,
+  for every choice of the free digits that passes the residue rule, a last
+  digit of the sum is a digit that no unknown position can hold. The last
+  digits of a solution are its own digits in unknown positions.
 
 A count vector reaches a leaf only if it passed every check on the way down.
 The leaf then compares the exact sum with the vector.

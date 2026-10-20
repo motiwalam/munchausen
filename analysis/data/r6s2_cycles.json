@@ -1,0 +1,3056 @@
+{
+ "both": {
+  "24": {
+   "base": {
+    "cycles": 0.3839,
+    "instr": 1.1338,
+    "bmiss": 0.0047,
+    "runs": [
+     [
+      0.3887,
+      1.1338,
+      0.0049
+     ],
+     [
+      0.3839,
+      1.1338,
+      0.0047
+     ],
+     [
+      0.3816,
+      1.1338,
+      0.0046
+     ]
+    ],
+    "nodes": "base 24: 1166554 nodes, 4245720 interval evaluations",
+    "args": "search 24 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 0.3839,
+    "instr": 1.1637,
+    "bmiss": 0.0046,
+    "runs": [
+     [
+      0.3844,
+      1.1637,
+      0.0046
+     ],
+     [
+      0.3829,
+      1.1637,
+      0.0046
+     ],
+     [
+      0.3839,
+      1.1637,
+      0.0046
+     ]
+    ],
+    "nodes": "base 24: 1166554 nodes, 4245720 interval evaluations",
+    "args": "search 24 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 0.3513,
+    "instr": 0.9927,
+    "bmiss": 0.0044,
+    "runs": [
+     [
+      0.3517,
+      0.9927,
+      0.0044
+     ],
+     [
+      0.3513,
+      0.9927,
+      0.0044
+     ],
+     [
+      0.3491,
+      0.9927,
+      0.0044
+     ]
+    ],
+    "nodes": "base 24: 781461 nodes, 3402902 interval evaluations",
+    "args": "search 24 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.3468,
+    "instr": 0.9453,
+    "bmiss": 0.0046,
+    "runs": [
+     [
+      0.3467,
+      0.9453,
+      0.0046
+     ],
+     [
+      0.3468,
+      0.9453,
+      0.0046
+     ],
+     [
+      0.3469,
+      0.9453,
+      0.0046
+     ]
+    ],
+    "nodes": "base 24: 656292 nodes, 3005031 interval evaluations",
+    "args": "search 24 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.3422,
+    "instr": 0.9311,
+    "bmiss": 0.0044,
+    "runs": [
+     [
+      0.3422,
+      0.9311,
+      0.0044
+     ],
+     [
+      0.3417,
+      0.9311,
+      0.0044
+     ],
+     [
+      0.3441,
+      0.9311,
+      0.0044
+     ]
+    ],
+    "nodes": "base 24: 633928 nodes, 2960303 interval evaluations",
+    "args": "search 24 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "25": {
+   "base": {
+    "cycles": 0.6339,
+    "instr": 1.9151,
+    "bmiss": 0.0077,
+    "runs": [
+     [
+      0.6346,
+      1.9151,
+      0.0077
+     ],
+     [
+      0.6337,
+      1.9151,
+      0.0077
+     ],
+     [
+      0.6339,
+      1.9151,
+      0.0077
+     ]
+    ],
+    "nodes": "base 25: 1993518 nodes, 7290987 interval evaluations",
+    "args": "search 25 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 0.6375,
+    "instr": 1.9643,
+    "bmiss": 0.0076,
+    "runs": [
+     [
+      0.6367,
+      1.9643,
+      0.0076
+     ],
+     [
+      0.6375,
+      1.9643,
+      0.0076
+     ],
+     [
+      0.6376,
+      1.9643,
+      0.0077
+     ]
+    ],
+    "nodes": "base 25: 1993518 nodes, 7290987 interval evaluations",
+    "args": "search 25 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 0.5844,
+    "instr": 1.6835,
+    "bmiss": 0.0075,
+    "runs": [
+     [
+      0.5844,
+      1.6835,
+      0.0075
+     ],
+     [
+      0.5833,
+      1.6835,
+      0.0075
+     ],
+     [
+      0.5957,
+      1.6835,
+      0.0078
+     ]
+    ],
+    "nodes": "base 25: 1282416 nodes, 5669151 interval evaluations",
+    "args": "search 25 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.5962,
+    "instr": 1.6683,
+    "bmiss": 0.008,
+    "runs": [
+     [
+      0.5941,
+      1.6683,
+      0.0079
+     ],
+     [
+      0.5962,
+      1.6683,
+      0.008
+     ],
+     [
+      0.6018,
+      1.6683,
+      0.0082
+     ]
+    ],
+    "nodes": "base 25: 1147895 nodes, 5217214 interval evaluations",
+    "args": "search 25 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.5869,
+    "instr": 1.6548,
+    "bmiss": 0.0076,
+    "runs": [
+     [
+      0.5857,
+      1.6548,
+      0.0076
+     ],
+     [
+      0.5869,
+      1.6548,
+      0.0076
+     ],
+     [
+      0.5937,
+      1.6548,
+      0.0078
+     ]
+    ],
+    "nodes": "base 25: 1099521 nodes, 5120466 interval evaluations",
+    "args": "search 25 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "26": {
+   "base": {
+    "cycles": 1.211,
+    "instr": 3.6745,
+    "bmiss": 0.015,
+    "runs": [
+     [
+      1.2087,
+      3.6745,
+      0.015
+     ],
+     [
+      1.2152,
+      3.6745,
+      0.0151
+     ],
+     [
+      1.211,
+      3.6745,
+      0.015
+     ]
+    ],
+    "nodes": "base 26: 3894520 nodes, 14192574 interval evaluations",
+    "args": "search 26 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 1.2126,
+    "instr": 3.7719,
+    "bmiss": 0.0148,
+    "runs": [
+     [
+      1.2117,
+      3.7719,
+      0.0148
+     ],
+     [
+      1.2126,
+      3.7719,
+      0.0147
+     ],
+     [
+      1.2167,
+      3.7719,
+      0.0148
+     ]
+    ],
+    "nodes": "base 26: 3894520 nodes, 14192574 interval evaluations",
+    "args": "search 26 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 1.1215,
+    "instr": 3.2414,
+    "bmiss": 0.0147,
+    "runs": [
+     [
+      1.1184,
+      3.2414,
+      0.0147
+     ],
+     [
+      1.1215,
+      3.2414,
+      0.0147
+     ],
+     [
+      1.1237,
+      3.2414,
+      0.0148
+     ]
+    ],
+    "nodes": "base 26: 2641779 nodes, 11448036 interval evaluations",
+    "args": "search 26 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 1.1152,
+    "instr": 3.0834,
+    "bmiss": 0.0154,
+    "runs": [
+     [
+      1.1155,
+      3.0834,
+      0.0156
+     ],
+     [
+      1.1099,
+      3.0834,
+      0.0153
+     ],
+     [
+      1.1152,
+      3.0834,
+      0.0154
+     ]
+    ],
+    "nodes": "base 26: 2212170 nodes, 10081730 interval evaluations",
+    "args": "search 26 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 1.1036,
+    "instr": 3.0388,
+    "bmiss": 0.0151,
+    "runs": [
+     [
+      1.0985,
+      3.0388,
+      0.0149
+     ],
+     [
+      1.1036,
+      3.0388,
+      0.0151
+     ],
+     [
+      1.1056,
+      3.0388,
+      0.0152
+     ]
+    ],
+    "nodes": "base 26: 2134691 nodes, 9926772 interval evaluations",
+    "args": "search 26 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "27": {
+   "base": {
+    "cycles": 2.302,
+    "instr": 7.1652,
+    "bmiss": 0.0279,
+    "runs": [
+     [
+      2.3092,
+      7.1652,
+      0.0283
+     ],
+     [
+      2.294,
+      7.1652,
+      0.0276
+     ],
+     [
+      2.302,
+      7.1652,
+      0.0279
+     ]
+    ],
+    "nodes": "base 27: 7720378 nodes, 27564863 interval evaluations",
+    "args": "search 27 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 2.3043,
+    "instr": 7.3531,
+    "bmiss": 0.0275,
+    "runs": [
+     [
+      2.304,
+      7.3531,
+      0.0274
+     ],
+     [
+      2.3043,
+      7.3531,
+      0.0275
+     ],
+     [
+      2.3325,
+      7.3531,
+      0.0285
+     ]
+    ],
+    "nodes": "base 27: 7720378 nodes, 27564863 interval evaluations",
+    "args": "search 27 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 2.1528,
+    "instr": 6.3408,
+    "bmiss": 0.0286,
+    "runs": [
+     [
+      2.1528,
+      6.3408,
+      0.0286
+     ],
+     [
+      2.1459,
+      6.3408,
+      0.0284
+     ],
+     [
+      2.1607,
+      6.3408,
+      0.0289
+     ]
+    ],
+    "nodes": "base 27: 5139310 nodes, 22042853 interval evaluations",
+    "args": "search 27 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 2.2068,
+    "instr": 6.2666,
+    "bmiss": 0.0305,
+    "runs": [
+     [
+      2.2225,
+      6.2666,
+      0.0311
+     ],
+     [
+      2.2068,
+      6.2666,
+      0.0305
+     ],
+     [
+      2.1835,
+      6.2666,
+      0.0299
+     ]
+    ],
+    "nodes": "base 27: 4453996 nodes, 19780759 interval evaluations",
+    "args": "search 27 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 2.1589,
+    "instr": 6.1694,
+    "bmiss": 0.029,
+    "runs": [
+     [
+      2.156,
+      6.1694,
+      0.0289
+     ],
+     [
+      2.1589,
+      6.1694,
+      0.029
+     ],
+     [
+      2.1627,
+      6.1694,
+      0.0292
+     ]
+    ],
+    "nodes": "base 27: 4247844 nodes, 19368455 interval evaluations",
+    "args": "search 27 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "28": {
+   "base": {
+    "cycles": 4.079,
+    "instr": 12.6575,
+    "bmiss": 0.0489,
+    "runs": [
+     [
+      4.079,
+      12.6574,
+      0.0489
+     ],
+     [
+      4.0877,
+      12.6575,
+      0.0491
+     ],
+     [
+      4.0776,
+      12.6575,
+      0.0488
+     ]
+    ],
+    "nodes": "base 28: 13596926 nodes, 49993629 interval evaluations",
+    "args": "search 28 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 4.1084,
+    "instr": 12.9942,
+    "bmiss": 0.0484,
+    "runs": [
+     [
+      4.1022,
+      12.9942,
+      0.0482
+     ],
+     [
+      4.1319,
+      12.9942,
+      0.0491
+     ],
+     [
+      4.1084,
+      12.9942,
+      0.0484
+     ]
+    ],
+    "nodes": "base 28: 13596926 nodes, 49993629 interval evaluations",
+    "args": "search 28 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 3.8064,
+    "instr": 10.9704,
+    "bmiss": 0.05,
+    "runs": [
+     [
+      3.8064,
+      10.9704,
+      0.05
+     ],
+     [
+      3.8246,
+      10.9704,
+      0.0502
+     ],
+     [
+      3.8035,
+      10.9704,
+      0.0498
+     ]
+    ],
+    "nodes": "base 28: 9006171 nodes, 39479581 interval evaluations",
+    "args": "search 28 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 3.8087,
+    "instr": 10.6234,
+    "bmiss": 0.0521,
+    "runs": [
+     [
+      3.8045,
+      10.6234,
+      0.0518
+     ],
+     [
+      3.8087,
+      10.6234,
+      0.0521
+     ],
+     [
+      3.8102,
+      10.6234,
+      0.0523
+     ]
+    ],
+    "nodes": "base 28: 7723423 nodes, 35360456 interval evaluations",
+    "args": "search 28 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 3.7475,
+    "instr": 10.4655,
+    "bmiss": 0.05,
+    "runs": [
+     [
+      3.7475,
+      10.4655,
+      0.05
+     ],
+     [
+      3.7724,
+      10.4655,
+      0.0508
+     ],
+     [
+      3.7378,
+      10.4655,
+      0.0497
+     ]
+    ],
+    "nodes": "base 28: 7452542 nodes, 34818694 interval evaluations",
+    "args": "search 28 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "29": {
+   "base": {
+    "cycles": 8.0218,
+    "instr": 24.6931,
+    "bmiss": 0.0957,
+    "runs": [
+     [
+      8.0218,
+      24.6931,
+      0.0957
+     ],
+     [
+      8.0572,
+      24.6931,
+      0.0967
+     ],
+     [
+      8.0121,
+      24.6931,
+      0.0953
+     ]
+    ],
+    "nodes": "base 29: 26908928 nodes, 96222394 interval evaluations",
+    "args": "search 29 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 8.0981,
+    "instr": 25.3502,
+    "bmiss": 0.0954,
+    "runs": [
+     [
+      8.0687,
+      25.3502,
+      0.0946
+     ],
+     [
+      8.1354,
+      25.3502,
+      0.0965
+     ],
+     [
+      8.0981,
+      25.3502,
+      0.0954
+     ]
+    ],
+    "nodes": "base 29: 26908928 nodes, 96222394 interval evaluations",
+    "args": "search 29 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 7.522,
+    "instr": 22.1982,
+    "bmiss": 0.0975,
+    "runs": [
+     [
+      7.5193,
+      22.1982,
+      0.0975
+     ],
+     [
+      7.522,
+      22.1982,
+      0.0972
+     ],
+     [
+      7.5576,
+      22.1982,
+      0.0986
+     ]
+    ],
+    "nodes": "base 29: 18289264 nodes, 77806418 interval evaluations",
+    "args": "search 29 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 7.7603,
+    "instr": 22.0515,
+    "bmiss": 0.1055,
+    "runs": [
+     [
+      7.7242,
+      22.0515,
+      0.1043
+     ],
+     [
+      7.7603,
+      22.0515,
+      0.1055
+     ],
+     [
+      7.7701,
+      22.0515,
+      0.1059
+     ]
+    ],
+    "nodes": "base 29: 16044945 nodes, 70308625 interval evaluations",
+    "args": "search 29 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 7.5775,
+    "instr": 21.709,
+    "bmiss": 0.0996,
+    "runs": [
+     [
+      7.5999,
+      21.709,
+      0.1005
+     ],
+     [
+      7.5598,
+      21.709,
+      0.0992
+     ],
+     [
+      7.5775,
+      21.709,
+      0.0996
+     ]
+    ],
+    "nodes": "base 29: 15280109 nodes, 68778953 interval evaluations",
+    "args": "search 29 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "30": {
+   "base": {
+    "cycles": 16.1301,
+    "instr": 49.1145,
+    "bmiss": 0.1909,
+    "runs": [
+     [
+      16.1312,
+      49.1145,
+      0.1918
+     ],
+     [
+      16.1301,
+      49.1145,
+      0.1909
+     ],
+     [
+      16.0381,
+      49.1145,
+      0.1886
+     ]
+    ],
+    "nodes": "base 30: 53636804 nodes, 191504476 interval evaluations",
+    "args": "search 30 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 16.2635,
+    "instr": 50.428,
+    "bmiss": 0.1907,
+    "runs": [
+     [
+      16.2608,
+      50.428,
+      0.19
+     ],
+     [
+      16.3084,
+      50.428,
+      0.1919
+     ],
+     [
+      16.2635,
+      50.428,
+      0.1907
+     ]
+    ],
+    "nodes": "base 30: 53636804 nodes, 191504476 interval evaluations",
+    "args": "search 30 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 14.3236,
+    "instr": 41.8763,
+    "bmiss": 0.1801,
+    "runs": [
+     [
+      14.3236,
+      41.8763,
+      0.1801
+     ],
+     [
+      14.3386,
+      41.8763,
+      0.1804
+     ],
+     [
+      14.2613,
+      41.8763,
+      0.1788
+     ]
+    ],
+    "nodes": "base 30: 35348213 nodes, 151624241 interval evaluations",
+    "args": "search 30 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 14.1465,
+    "instr": 39.766,
+    "bmiss": 0.1898,
+    "runs": [
+     [
+      14.182,
+      39.766,
+      0.19
+     ],
+     [
+      14.1465,
+      39.766,
+      0.1898
+     ],
+     [
+      14.1108,
+      39.766,
+      0.1879
+     ]
+    ],
+    "nodes": "base 30: 29172736 nodes, 132116224 interval evaluations",
+    "args": "search 30 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 13.9841,
+    "instr": 39.1281,
+    "bmiss": 0.1838,
+    "runs": [
+     [
+      13.9841,
+      39.1281,
+      0.1838
+     ],
+     [
+      13.939,
+      39.1281,
+      0.1833
+     ],
+     [
+      14.0,
+      39.1281,
+      0.185
+     ]
+    ],
+    "nodes": "base 30: 28191150 nodes, 130153052 interval evaluations",
+    "args": "search 30 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "31": {
+   "base": {
+    "cycles": 34.2764,
+    "instr": 118.7991,
+    "bmiss": 0.3257,
+    "runs": [
+     [
+      34.2764,
+      118.7991,
+      0.3257
+     ],
+     [
+      34.3574,
+      118.7991,
+      0.3281
+     ],
+     [
+      34.2394,
+      118.7991,
+      0.3238
+     ]
+    ],
+    "nodes": "base 31: 92205006 nodes, 339408631 interval evaluations",
+    "args": "search 31 -j 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 34.3669,
+    "instr": 119.7491,
+    "bmiss": 0.324,
+    "runs": [
+     [
+      34.3398,
+      119.7491,
+      0.323
+     ],
+     [
+      34.4899,
+      119.7491,
+      0.3279
+     ],
+     [
+      34.3669,
+      119.7491,
+      0.324
+     ]
+    ],
+    "nodes": "base 31: 92205006 nodes, 339408631 interval evaluations",
+    "args": "search 31 -j 1  --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 31.0918,
+    "instr": 103.2073,
+    "bmiss": 0.3283,
+    "runs": [
+     [
+      31.0918,
+      103.2073,
+      0.3283
+     ],
+     [
+      31.3508,
+      103.2073,
+      0.3331
+     ],
+     [
+      30.877,
+      103.2073,
+      0.3238
+     ]
+    ],
+    "nodes": "base 31: 61716247 nodes, 268455648 interval evaluations",
+    "args": "search 31 -j 1  --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 31.5174,
+    "instr": 100.0107,
+    "bmiss": 0.3514,
+    "runs": [
+     [
+      31.5174,
+      100.0107,
+      0.3526
+     ],
+     [
+      31.5649,
+      100.0107,
+      0.3514
+     ],
+     [
+      31.3867,
+      100.0107,
+      0.3469
+     ]
+    ],
+    "nodes": "base 31: 55240727 nodes, 246665108 interval evaluations",
+    "args": "search 31 -j 1  --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 30.674,
+    "instr": 98.4827,
+    "bmiss": 0.335,
+    "runs": [
+     [
+      30.6557,
+      98.4827,
+      0.3347
+     ],
+     [
+      30.674,
+      98.4827,
+      0.335
+     ],
+     [
+      30.7524,
+      98.4827,
+      0.3382
+     ]
+    ],
+    "nodes": "base 31: 52876747 nodes, 241937148 interval evaluations",
+    "args": "search 31 -j 1  --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  }
+ },
+ "m0": {
+  "24": {
+   "base": {
+    "cycles": 0.372,
+    "instr": 1.0899,
+    "bmiss": 0.0045,
+    "runs": [
+     [
+      0.3723,
+      1.0899,
+      0.0045
+     ],
+     [
+      0.3706,
+      1.0899,
+      0.0045
+     ],
+     [
+      0.372,
+      1.0899,
+      0.0045
+     ]
+    ],
+    "nodes": "base 24: 1108633 nodes, 4129878 interval evaluations",
+    "args": "search 24 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 0.3757,
+    "instr": 1.1186,
+    "bmiss": 0.0045,
+    "runs": [
+     [
+      0.374,
+      1.1186,
+      0.0045
+     ],
+     [
+      0.3762,
+      1.1186,
+      0.0045
+     ],
+     [
+      0.3757,
+      1.1186,
+      0.0045
+     ]
+    ],
+    "nodes": "base 24: 1108633 nodes, 4129878 interval evaluations",
+    "args": "search 24 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 0.3269,
+    "instr": 0.924,
+    "bmiss": 0.0041,
+    "runs": [
+     [
+      0.3269,
+      0.924,
+      0.0041
+     ],
+     [
+      0.3267,
+      0.924,
+      0.0041
+     ],
+     [
+      0.3273,
+      0.924,
+      0.004
+     ]
+    ],
+    "nodes": "base 24: 738916 nodes, 3278095 interval evaluations",
+    "args": "search 24 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.3152,
+    "instr": 0.8576,
+    "bmiss": 0.004,
+    "runs": [
+     [
+      0.3142,
+      0.8576,
+      0.004
+     ],
+     [
+      0.3159,
+      0.8576,
+      0.0041
+     ],
+     [
+      0.3152,
+      0.8576,
+      0.004
+     ]
+    ],
+    "nodes": "base 24: 609735 nodes, 2875134 interval evaluations",
+    "args": "search 24 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.313,
+    "instr": 0.8454,
+    "bmiss": 0.0039,
+    "runs": [
+     [
+      0.3165,
+      0.8454,
+      0.004
+     ],
+     [
+      0.3123,
+      0.8454,
+      0.0039
+     ],
+     [
+      0.313,
+      0.8454,
+      0.0039
+     ]
+    ],
+    "nodes": "base 24: 594317 nodes, 2844298 interval evaluations",
+    "args": "search 24 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "25": {
+   "base": {
+    "cycles": 0.6305,
+    "instr": 1.8958,
+    "bmiss": 0.0077,
+    "runs": [
+     [
+      0.631,
+      1.8958,
+      0.0077
+     ],
+     [
+      0.6276,
+      1.8958,
+      0.0076
+     ],
+     [
+      0.6305,
+      1.8958,
+      0.0077
+     ]
+    ],
+    "nodes": "base 25: 1967526 nodes, 7239015 interval evaluations",
+    "args": "search 25 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 0.6354,
+    "instr": 1.9444,
+    "bmiss": 0.0077,
+    "runs": [
+     [
+      0.6372,
+      1.9444,
+      0.0077
+     ],
+     [
+      0.6308,
+      1.9444,
+      0.0076
+     ],
+     [
+      0.6354,
+      1.9444,
+      0.0077
+     ]
+    ],
+    "nodes": "base 25: 1967526 nodes, 7239015 interval evaluations",
+    "args": "search 25 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 0.5588,
+    "instr": 1.5992,
+    "bmiss": 0.0072,
+    "runs": [
+     [
+      0.5588,
+      1.5992,
+      0.0072
+     ],
+     [
+      0.5577,
+      1.5992,
+      0.0072
+     ],
+     [
+      0.5611,
+      1.5992,
+      0.0072
+     ]
+    ],
+    "nodes": "base 25: 1260420 nodes, 5604624 interval evaluations",
+    "args": "search 25 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.5656,
+    "instr": 1.5775,
+    "bmiss": 0.0074,
+    "runs": [
+     [
+      0.5675,
+      1.5775,
+      0.0075
+     ],
+     [
+      0.5656,
+      1.5775,
+      0.0074
+     ],
+     [
+      0.5653,
+      1.5775,
+      0.0074
+     ]
+    ],
+    "nodes": "base 25: 1127945 nodes, 5162288 interval evaluations",
+    "args": "search 25 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.5558,
+    "instr": 1.5499,
+    "bmiss": 0.0071,
+    "runs": [
+     [
+      0.5564,
+      1.5499,
+      0.0071
+     ],
+     [
+      0.5549,
+      1.5499,
+      0.0071
+     ],
+     [
+      0.5558,
+      1.5499,
+      0.0071
+     ]
+    ],
+    "nodes": "base 25: 1083034 nodes, 5072466 interval evaluations",
+    "args": "search 25 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "26": {
+   "base": {
+    "cycles": 1.157,
+    "instr": 3.4694,
+    "bmiss": 0.0145,
+    "runs": [
+     [
+      1.1425,
+      3.4694,
+      0.014
+     ],
+     [
+      1.157,
+      3.4694,
+      0.0145
+     ],
+     [
+      1.1593,
+      3.4694,
+      0.0146
+     ]
+    ],
+    "nodes": "base 26: 3622854 nodes, 13649255 interval evaluations",
+    "args": "search 26 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 1.1543,
+    "instr": 3.561,
+    "bmiss": 0.014,
+    "runs": [
+     [
+      1.1543,
+      3.561,
+      0.014
+     ],
+     [
+      1.1536,
+      3.561,
+      0.0139
+     ],
+     [
+      1.1589,
+      3.561,
+      0.0141
+     ]
+    ],
+    "nodes": "base 26: 3622854 nodes, 13649255 interval evaluations",
+    "args": "search 26 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 1.0281,
+    "instr": 2.9949,
+    "bmiss": 0.0133,
+    "runs": [
+     [
+      1.0276,
+      2.9949,
+      0.0133
+     ],
+     [
+      1.033,
+      2.9949,
+      0.0133
+     ],
+     [
+      1.0281,
+      2.9949,
+      0.0132
+     ]
+    ],
+    "nodes": "base 26: 2484571 nodes, 10985150 interval evaluations",
+    "args": "search 26 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.9961,
+    "instr": 2.7952,
+    "bmiss": 0.0133,
+    "runs": [
+     [
+      0.9948,
+      2.7952,
+      0.0132
+     ],
+     [
+      0.9961,
+      2.7952,
+      0.0133
+     ],
+     [
+      1.0152,
+      2.7952,
+      0.0139
+     ]
+    ],
+    "nodes": "base 26: 2067172 nodes, 9676713 interval evaluations",
+    "args": "search 26 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.9939,
+    "instr": 2.752,
+    "bmiss": 0.0131,
+    "runs": [
+     [
+      0.9904,
+      2.752,
+      0.013
+     ],
+     [
+      0.9939,
+      2.752,
+      0.0131
+     ],
+     [
+      0.9972,
+      2.752,
+      0.0132
+     ]
+    ],
+    "nodes": "base 26: 2010932 nodes, 9564233 interval evaluations",
+    "args": "search 26 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "27": {
+   "base": {
+    "cycles": 2.2903,
+    "instr": 7.1053,
+    "bmiss": 0.028,
+    "runs": [
+     [
+      2.2903,
+      7.1053,
+      0.028
+     ],
+     [
+      2.2824,
+      7.1053,
+      0.0276
+     ],
+     [
+      2.2926,
+      7.1053,
+      0.028
+     ]
+    ],
+    "nodes": "base 27: 7638459 nodes, 27401025 interval evaluations",
+    "args": "search 27 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 2.2959,
+    "instr": 7.2913,
+    "bmiss": 0.0276,
+    "runs": [
+     [
+      2.2991,
+      7.2913,
+      0.0276
+     ],
+     [
+      2.2888,
+      7.2913,
+      0.0273
+     ],
+     [
+      2.2959,
+      7.2913,
+      0.0276
+     ]
+    ],
+    "nodes": "base 27: 7638459 nodes, 27401025 interval evaluations",
+    "args": "search 27 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 2.0685,
+    "instr": 6.0687,
+    "bmiss": 0.0272,
+    "runs": [
+     [
+      2.0696,
+      6.0687,
+      0.0274
+     ],
+     [
+      2.0685,
+      6.0687,
+      0.0272
+     ],
+     [
+      2.0618,
+      6.0687,
+      0.0272
+     ]
+    ],
+    "nodes": "base 27: 5099394 nodes, 21928187 interval evaluations",
+    "args": "search 27 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 2.0764,
+    "instr": 5.9055,
+    "bmiss": 0.0283,
+    "runs": [
+     [
+      2.0764,
+      5.9055,
+      0.0283
+     ],
+     [
+      2.0763,
+      5.9055,
+      0.0281
+     ],
+     [
+      2.0858,
+      5.9055,
+      0.0284
+     ]
+    ],
+    "nodes": "base 27: 4392918 nodes, 19614584 interval evaluations",
+    "args": "search 27 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 2.0277,
+    "instr": 5.7636,
+    "bmiss": 0.0268,
+    "runs": [
+     [
+      2.0277,
+      5.7636,
+      0.0268
+     ],
+     [
+      2.0267,
+      5.7636,
+      0.0268
+     ],
+     [
+      2.0338,
+      5.7636,
+      0.0269
+     ]
+    ],
+    "nodes": "base 27: 4198743 nodes, 19226234 interval evaluations",
+    "args": "search 27 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "28": {
+   "base": {
+    "cycles": 3.8634,
+    "instr": 11.9548,
+    "bmiss": 0.0458,
+    "runs": [
+     [
+      3.8496,
+      11.9548,
+      0.0454
+     ],
+     [
+      3.8662,
+      11.9548,
+      0.0459
+     ],
+     [
+      3.8634,
+      11.9548,
+      0.0458
+     ]
+    ],
+    "nodes": "base 28: 12663714 nodes, 48127228 interval evaluations",
+    "args": "search 28 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 3.9005,
+    "instr": 12.2716,
+    "bmiss": 0.0456,
+    "runs": [
+     [
+      3.8834,
+      12.2716,
+      0.0448
+     ],
+     [
+      3.9107,
+      12.2716,
+      0.0457
+     ],
+     [
+      3.9005,
+      12.2716,
+      0.0456
+     ]
+    ],
+    "nodes": "base 28: 12663714 nodes, 48127228 interval evaluations",
+    "args": "search 28 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 3.4106,
+    "instr": 9.9172,
+    "bmiss": 0.0433,
+    "runs": [
+     [
+      3.4106,
+      9.9172,
+      0.0433
+     ],
+     [
+      3.4129,
+      9.9172,
+      0.0435
+     ],
+     [
+      3.4015,
+      9.9172,
+      0.0431
+     ]
+    ],
+    "nodes": "base 28: 8185865 nodes, 37048458 interval evaluations",
+    "args": "search 28 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 3.4083,
+    "instr": 9.5913,
+    "bmiss": 0.0446,
+    "runs": [
+     [
+      3.3897,
+      9.5913,
+      0.0441
+     ],
+     [
+      3.4083,
+      9.5913,
+      0.0446
+     ],
+     [
+      3.4136,
+      9.5913,
+      0.0449
+     ]
+    ],
+    "nodes": "base 28: 7181591 nodes, 33839863 interval evaluations",
+    "args": "search 28 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 3.3559,
+    "instr": 9.4394,
+    "bmiss": 0.043,
+    "runs": [
+     [
+      3.3559,
+      9.4394,
+      0.043
+     ],
+     [
+      3.3509,
+      9.4394,
+      0.0429
+     ],
+     [
+      3.3612,
+      9.4394,
+      0.043
+     ]
+    ],
+    "nodes": "base 28: 6985818 nodes, 33448317 interval evaluations",
+    "args": "search 28 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "29": {
+   "base": {
+    "cycles": 8.005,
+    "instr": 24.4895,
+    "bmiss": 0.0964,
+    "runs": [
+     [
+      7.9897,
+      24.4895,
+      0.0957
+     ],
+     [
+      8.0293,
+      24.4895,
+      0.0964
+     ],
+     [
+      8.005,
+      24.4895,
+      0.0964
+     ]
+    ],
+    "nodes": "base 29: 26637042 nodes, 95678629 interval evaluations",
+    "args": "search 29 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 8.0768,
+    "instr": 25.1408,
+    "bmiss": 0.0959,
+    "runs": [
+     [
+      8.0457,
+      25.1408,
+      0.0952
+     ],
+     [
+      8.0964,
+      25.1408,
+      0.0962
+     ],
+     [
+      8.0768,
+      25.1408,
+      0.0959
+     ]
+    ],
+    "nodes": "base 29: 26637042 nodes, 95678629 interval evaluations",
+    "args": "search 29 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 7.2403,
+    "instr": 21.2179,
+    "bmiss": 0.0932,
+    "runs": [
+     [
+      7.2232,
+      21.2179,
+      0.093
+     ],
+     [
+      7.2403,
+      21.2179,
+      0.0932
+     ],
+     [
+      7.2656,
+      21.2179,
+      0.0946
+     ]
+    ],
+    "nodes": "base 29: 18109583 nodes, 77293869 interval evaluations",
+    "args": "search 29 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 7.3485,
+    "instr": 20.7531,
+    "bmiss": 0.0992,
+    "runs": [
+     [
+      7.3485,
+      20.7531,
+      0.0985
+     ],
+     [
+      7.3578,
+      20.7531,
+      0.0992
+     ],
+     [
+      7.3437,
+      20.7531,
+      0.0992
+     ]
+    ],
+    "nodes": "base 29: 15726417 nodes, 69441852 interval evaluations",
+    "args": "search 29 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 7.1704,
+    "instr": 20.2626,
+    "bmiss": 0.0939,
+    "runs": [
+     [
+      7.1923,
+      20.2626,
+      0.0939
+     ],
+     [
+      7.1704,
+      20.2626,
+      0.0939
+     ],
+     [
+      7.1357,
+      20.2626,
+      0.0931
+     ]
+    ],
+    "nodes": "base 29: 15023898 nodes, 68036814 interval evaluations",
+    "args": "search 29 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "30": {
+   "base": {
+    "cycles": 15.4476,
+    "instr": 46.7474,
+    "bmiss": 0.1831,
+    "runs": [
+     [
+      15.4906,
+      46.7474,
+      0.1856
+     ],
+     [
+      15.4476,
+      46.7474,
+      0.1831
+     ],
+     [
+      15.42,
+      46.7474,
+      0.1824
+     ]
+    ],
+    "nodes": "base 30: 50520624 nodes, 185272130 interval evaluations",
+    "args": "search 30 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 15.5521,
+    "instr": 47.9945,
+    "bmiss": 0.1805,
+    "runs": [
+     [
+      15.5455,
+      47.9945,
+      0.1805
+     ],
+     [
+      15.6051,
+      47.9945,
+      0.1827
+     ],
+     [
+      15.5521,
+      47.9945,
+      0.1803
+     ]
+    ],
+    "nodes": "base 30: 50520624 nodes, 185272130 interval evaluations",
+    "args": "search 30 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 13.384,
+    "instr": 39.0709,
+    "bmiss": 0.1661,
+    "runs": [
+     [
+      13.4208,
+      39.0709,
+      0.1677
+     ],
+     [
+      13.348,
+      39.0709,
+      0.1655
+     ],
+     [
+      13.384,
+      39.0709,
+      0.1661
+     ]
+    ],
+    "nodes": "base 30: 33794059 nodes, 147067355 interval evaluations",
+    "args": "search 30 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 12.8611,
+    "instr": 35.8606,
+    "bmiss": 0.1682,
+    "runs": [
+     [
+      12.8611,
+      35.8606,
+      0.1686
+     ],
+     [
+      12.793,
+      35.8606,
+      0.1663
+     ],
+     [
+      12.8728,
+      35.8606,
+      0.1682
+     ]
+    ],
+    "nodes": "base 30: 27300468 nodes, 126869331 interval evaluations",
+    "args": "search 30 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 12.67,
+    "instr": 35.2718,
+    "bmiss": 0.1619,
+    "runs": [
+     [
+      12.67,
+      35.2718,
+      0.1619
+     ],
+     [
+      12.5939,
+      35.2718,
+      0.1605
+     ],
+     [
+      12.6765,
+      35.2718,
+      0.1624
+     ]
+    ],
+    "nodes": "base 30: 26583217 nodes, 125434829 interval evaluations",
+    "args": "search 30 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "31": {
+   "base": {
+    "cycles": 33.9953,
+    "instr": 117.8334,
+    "bmiss": 0.3203,
+    "runs": [
+     [
+      33.9732,
+      117.8334,
+      0.3203
+     ],
+     [
+      34.4166,
+      117.8334,
+      0.3251
+     ],
+     [
+      33.9953,
+      117.8334,
+      0.3202
+     ]
+    ],
+    "nodes": "base 31: 91257673 nodes, 337513970 interval evaluations",
+    "args": "search 31 -j 1 -m 0",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 34.0616,
+    "instr": 118.7737,
+    "bmiss": 0.3203,
+    "runs": [
+     [
+      34.0488,
+      118.7737,
+      0.3187
+     ],
+     [
+      34.0616,
+      118.7737,
+      0.3203
+     ],
+     [
+      34.125,
+      118.7737,
+      0.3223
+     ]
+    ],
+    "nodes": "base 31: 91257673 nodes, 337513970 interval evaluations",
+    "args": "search 31 -j 1 -m 0 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 29.8749,
+    "instr": 99.1097,
+    "bmiss": 0.3129,
+    "runs": [
+     [
+      29.8749,
+      99.1097,
+      0.3129
+     ],
+     [
+      29.8209,
+      99.1097,
+      0.3129
+     ],
+     [
+      29.9218,
+      99.1097,
+      0.3151
+     ]
+    ],
+    "nodes": "base 31: 60792209 nodes, 265752193 interval evaluations",
+    "args": "search 31 -j 1 -m 0 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 30.0148,
+    "instr": 95.7108,
+    "bmiss": 0.3281,
+    "runs": [
+     [
+      29.9887,
+      95.7108,
+      0.3264
+     ],
+     [
+      30.1126,
+      95.7108,
+      0.329
+     ],
+     [
+      30.0148,
+      95.7108,
+      0.3281
+     ]
+    ],
+    "nodes": "base 31: 54312524 nodes, 244102286 interval evaluations",
+    "args": "search 31 -j 1 -m 0 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 29.1476,
+    "instr": 93.3086,
+    "bmiss": 0.3139,
+    "runs": [
+     [
+      29.085,
+      93.3086,
+      0.312
+     ],
+     [
+      29.2625,
+      93.3086,
+      0.317
+     ],
+     [
+      29.1476,
+      93.3086,
+      0.3139
+     ]
+    ],
+    "nodes": "base 31: 52101672 nodes, 239680582 interval evaluations",
+    "args": "search 31 -j 1 -m 0 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  }
+ },
+ "m1": {
+  "24": {
+   "base": {
+    "cycles": 0.3728,
+    "instr": 1.0897,
+    "bmiss": 0.0045,
+    "runs": [
+     [
+      0.373,
+      1.0897,
+      0.0045
+     ],
+     [
+      0.3728,
+      1.0897,
+      0.0045
+     ],
+     [
+      0.3708,
+      1.0897,
+      0.0045
+     ]
+    ],
+    "nodes": "base 24: 1108115 nodes, 4128842 interval evaluations",
+    "args": "search 24 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 0.3727,
+    "instr": 1.1183,
+    "bmiss": 0.0045,
+    "runs": [
+     [
+      0.3725,
+      1.1183,
+      0.0045
+     ],
+     [
+      0.3727,
+      1.1183,
+      0.0045
+     ],
+     [
+      0.3745,
+      1.1183,
+      0.0045
+     ]
+    ],
+    "nodes": "base 24: 1108115 nodes, 4128842 interval evaluations",
+    "args": "search 24 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 0.3298,
+    "instr": 0.9317,
+    "bmiss": 0.0041,
+    "runs": [
+     [
+      0.3298,
+      0.9317,
+      0.0041
+     ],
+     [
+      0.3304,
+      0.9317,
+      0.0041
+     ],
+     [
+      0.3289,
+      0.9317,
+      0.0041
+     ]
+    ],
+    "nodes": "base 24: 749193 nodes, 3308878 interval evaluations",
+    "args": "search 24 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.3156,
+    "instr": 0.8642,
+    "bmiss": 0.004,
+    "runs": [
+     [
+      0.3151,
+      0.8642,
+      0.004
+     ],
+     [
+      0.3198,
+      0.8642,
+      0.0042
+     ],
+     [
+      0.3156,
+      0.8642,
+      0.004
+     ]
+    ],
+    "nodes": "base 24: 618284 nodes, 2900150 interval evaluations",
+    "args": "search 24 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.3123,
+    "instr": 0.8539,
+    "bmiss": 0.0039,
+    "runs": [
+     [
+      0.3123,
+      0.8539,
+      0.0039
+     ],
+     [
+      0.313,
+      0.8539,
+      0.0039
+     ],
+     [
+      0.3117,
+      0.8539,
+      0.0039
+     ]
+    ],
+    "nodes": "base 24: 602283 nodes, 2868148 interval evaluations",
+    "args": "search 24 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "25": {
+   "base": {
+    "cycles": 0.5987,
+    "instr": 1.8023,
+    "bmiss": 0.0073,
+    "runs": [
+     [
+      0.6038,
+      1.8023,
+      0.0074
+     ],
+     [
+      0.5987,
+      1.8023,
+      0.0073
+     ],
+     [
+      0.596,
+      1.8023,
+      0.0072
+     ]
+    ],
+    "nodes": "base 25: 1843721 nodes, 6991403 interval evaluations",
+    "args": "search 25 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 0.607,
+    "instr": 1.8482,
+    "bmiss": 0.0073,
+    "runs": [
+     [
+      0.6143,
+      1.8482,
+      0.0076
+     ],
+     [
+      0.6024,
+      1.8482,
+      0.0071
+     ],
+     [
+      0.607,
+      1.8482,
+      0.0073
+     ]
+    ],
+    "nodes": "base 25: 1843721 nodes, 6991403 interval evaluations",
+    "args": "search 25 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 0.5289,
+    "instr": 1.5051,
+    "bmiss": 0.0067,
+    "runs": [
+     [
+      0.5282,
+      1.5051,
+      0.0067
+     ],
+     [
+      0.5295,
+      1.5051,
+      0.0067
+     ],
+     [
+      0.5289,
+      1.5051,
+      0.0067
+     ]
+    ],
+    "nodes": "base 25: 1177391 nodes, 5361318 interval evaluations",
+    "args": "search 25 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 0.5341,
+    "instr": 1.4732,
+    "bmiss": 0.007,
+    "runs": [
+     [
+      0.5305,
+      1.4732,
+      0.0068
+     ],
+     [
+      0.5359,
+      1.4732,
+      0.0071
+     ],
+     [
+      0.5341,
+      1.4732,
+      0.007
+     ]
+    ],
+    "nodes": "base 25: 1059488 nodes, 4974486 interval evaluations",
+    "args": "search 25 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.5214,
+    "instr": 1.4556,
+    "bmiss": 0.0066,
+    "runs": [
+     [
+      0.5222,
+      1.4556,
+      0.0066
+     ],
+     [
+      0.5214,
+      1.4556,
+      0.0066
+     ],
+     [
+      0.5214,
+      1.4556,
+      0.0066
+     ]
+    ],
+    "nodes": "base 25: 1026365 nodes, 4908240 interval evaluations",
+    "args": "search 25 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "26": {
+   "base": {
+    "cycles": 1.1809,
+    "instr": 3.5332,
+    "bmiss": 0.0149,
+    "runs": [
+     [
+      1.1809,
+      3.5332,
+      0.0149
+     ],
+     [
+      1.1908,
+      3.5332,
+      0.0152
+     ],
+     [
+      1.1637,
+      3.5332,
+      0.0144
+     ]
+    ],
+    "nodes": "base 26: 3705366 nodes, 13814275 interval evaluations",
+    "args": "search 26 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 1.1804,
+    "instr": 3.6265,
+    "bmiss": 0.0144,
+    "runs": [
+     [
+      1.1786,
+      3.6265,
+      0.0144
+     ],
+     [
+      1.1958,
+      3.6265,
+      0.015
+     ],
+     [
+      1.1804,
+      3.6265,
+      0.0144
+     ]
+    ],
+    "nodes": "base 26: 3705366 nodes, 13814275 interval evaluations",
+    "args": "search 26 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 1.0482,
+    "instr": 3.0387,
+    "bmiss": 0.0136,
+    "runs": [
+     [
+      1.0482,
+      3.0387,
+      0.0135
+     ],
+     [
+      1.0473,
+      3.0387,
+      0.0136
+     ],
+     [
+      1.0488,
+      3.0387,
+      0.0136
+     ]
+    ],
+    "nodes": "base 26: 2540462 nodes, 11151905 interval evaluations",
+    "args": "search 26 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 1.0087,
+    "instr": 2.8125,
+    "bmiss": 0.0137,
+    "runs": [
+     [
+      1.0074,
+      2.8125,
+      0.0136
+     ],
+     [
+      1.0087,
+      2.8125,
+      0.0137
+     ],
+     [
+      1.0138,
+      2.8125,
+      0.0138
+     ]
+    ],
+    "nodes": "base 26: 2091866 nodes, 9748055 interval evaluations",
+    "args": "search 26 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 0.996,
+    "instr": 2.7762,
+    "bmiss": 0.0131,
+    "runs": [
+     [
+      0.996,
+      2.7762,
+      0.0131
+     ],
+     [
+      0.9922,
+      2.7762,
+      0.013
+     ],
+     [
+      0.9961,
+      2.7762,
+      0.0131
+     ]
+    ],
+    "nodes": "base 26: 2033804 nodes, 9631931 interval evaluations",
+    "args": "search 26 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "27": {
+   "base": {
+    "cycles": 2.174,
+    "instr": 6.6784,
+    "bmiss": 0.0266,
+    "runs": [
+     [
+      2.1635,
+      6.6784,
+      0.0263
+     ],
+     [
+      2.2,
+      6.6784,
+      0.0274
+     ],
+     [
+      2.174,
+      6.6784,
+      0.0266
+     ]
+    ],
+    "nodes": "base 27: 7069475 nodes, 26263057 interval evaluations",
+    "args": "search 27 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 2.1847,
+    "instr": 6.8523,
+    "bmiss": 0.0263,
+    "runs": [
+     [
+      2.1989,
+      6.8523,
+      0.0268
+     ],
+     [
+      2.1847,
+      6.8523,
+      0.0263
+     ],
+     [
+      2.172,
+      6.8523,
+      0.0259
+     ]
+    ],
+    "nodes": "base 27: 7069475 nodes, 26263057 interval evaluations",
+    "args": "search 27 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 1.9388,
+    "instr": 5.6157,
+    "bmiss": 0.0255,
+    "runs": [
+     [
+      1.965,
+      5.6157,
+      0.0264
+     ],
+     [
+      1.9388,
+      5.6157,
+      0.0255
+     ],
+     [
+      1.9372,
+      5.6157,
+      0.0255
+     ]
+    ],
+    "nodes": "base 27: 4651507 nodes, 20608939 interval evaluations",
+    "args": "search 27 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 1.9171,
+    "instr": 5.4037,
+    "bmiss": 0.0258,
+    "runs": [
+     [
+      1.9363,
+      5.4037,
+      0.0264
+     ],
+     [
+      1.9143,
+      5.4037,
+      0.0257
+     ],
+     [
+      1.9171,
+      5.4037,
+      0.0258
+     ]
+    ],
+    "nodes": "base 27: 4025802 nodes, 18595071 interval evaluations",
+    "args": "search 27 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 1.9025,
+    "instr": 5.321,
+    "bmiss": 0.0254,
+    "runs": [
+     [
+      1.9263,
+      5.321,
+      0.0261
+     ],
+     [
+      1.9025,
+      5.321,
+      0.0254
+     ],
+     [
+      1.8846,
+      5.321,
+      0.0247
+     ]
+    ],
+    "nodes": "base 27: 3889049 nodes, 18321565 interval evaluations",
+    "args": "search 27 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "28": {
+   "base": {
+    "cycles": 3.9693,
+    "instr": 12.1864,
+    "bmiss": 0.048,
+    "runs": [
+     [
+      3.9851,
+      12.1864,
+      0.0485
+     ],
+     [
+      3.9693,
+      12.1864,
+      0.048
+     ],
+     [
+      3.9406,
+      12.1864,
+      0.0471
+     ]
+    ],
+    "nodes": "base 28: 12965612 nodes, 48731018 interval evaluations",
+    "args": "search 28 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 3.983,
+    "instr": 12.5095,
+    "bmiss": 0.0468,
+    "runs": [
+     [
+      3.983,
+      12.5095,
+      0.0468
+     ],
+     [
+      3.9857,
+      12.5095,
+      0.0469
+     ],
+     [
+      3.9733,
+      12.5095,
+      0.0466
+     ]
+    ],
+    "nodes": "base 28: 12965612 nodes, 48731018 interval evaluations",
+    "args": "search 28 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 3.5075,
+    "instr": 10.2536,
+    "bmiss": 0.0449,
+    "runs": [
+     [
+      3.507,
+      10.2536,
+      0.045
+     ],
+     [
+      3.5094,
+      10.2536,
+      0.0448
+     ],
+     [
+      3.5075,
+      10.2536,
+      0.0449
+     ]
+    ],
+    "nodes": "base 28: 8627031 nodes, 38368983 interval evaluations",
+    "args": "search 28 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 3.4535,
+    "instr": 9.6813,
+    "bmiss": 0.046,
+    "runs": [
+     [
+      3.4535,
+      9.6813,
+      0.046
+     ],
+     [
+      3.437,
+      9.6813,
+      0.0456
+     ],
+     [
+      3.4865,
+      9.6813,
+      0.0471
+     ]
+    ],
+    "nodes": "base 28: 7310907 nodes, 34216257 interval evaluations",
+    "args": "search 28 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 3.4059,
+    "instr": 9.5541,
+    "bmiss": 0.0446,
+    "runs": [
+     [
+      3.4059,
+      9.5541,
+      0.0446
+     ],
+     [
+      3.3909,
+      9.5541,
+      0.044
+     ],
+     [
+      3.4286,
+      9.5541,
+      0.045
+     ]
+    ],
+    "nodes": "base 28: 7106553 nodes, 33807549 interval evaluations",
+    "args": "search 28 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "29": {
+   "base": {
+    "cycles": 7.5121,
+    "instr": 22.8338,
+    "bmiss": 0.0902,
+    "runs": [
+     [
+      7.5121,
+      22.8338,
+      0.0902
+     ],
+     [
+      7.5311,
+      22.8338,
+      0.0908
+     ],
+     [
+      7.488,
+      22.8338,
+      0.0893
+     ]
+    ],
+    "nodes": "base 29: 24433581 nodes, 91271702 interval evaluations",
+    "args": "search 29 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 7.5596,
+    "instr": 23.4378,
+    "bmiss": 0.089,
+    "runs": [
+     [
+      7.5596,
+      23.4378,
+      0.089
+     ],
+     [
+      7.5714,
+      23.4378,
+      0.0895
+     ],
+     [
+      7.5528,
+      23.4378,
+      0.0883
+     ]
+    ],
+    "nodes": "base 29: 24433581 nodes, 91271702 interval evaluations",
+    "args": "search 29 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 6.6428,
+    "instr": 19.284,
+    "bmiss": 0.0848,
+    "runs": [
+     [
+      6.644,
+      19.284,
+      0.0852
+     ],
+     [
+      6.6428,
+      19.284,
+      0.0848
+     ],
+     [
+      6.6327,
+      19.284,
+      0.0848
+     ]
+    ],
+    "nodes": "base 29: 16202105 nodes, 71670092 interval evaluations",
+    "args": "search 29 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 6.6551,
+    "instr": 18.6292,
+    "bmiss": 0.088,
+    "runs": [
+     [
+      6.6719,
+      18.6292,
+      0.0885
+     ],
+     [
+      6.6203,
+      18.6292,
+      0.0871
+     ],
+     [
+      6.6551,
+      18.6292,
+      0.088
+     ]
+    ],
+    "nodes": "base 29: 14130790 nodes, 64989802 interval evaluations",
+    "args": "search 29 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 6.529,
+    "instr": 18.3591,
+    "bmiss": 0.0843,
+    "runs": [
+     [
+      6.5231,
+      18.3591,
+      0.084
+     ],
+     [
+      6.5309,
+      18.3591,
+      0.0847
+     ],
+     [
+      6.529,
+      18.3591,
+      0.0843
+     ]
+    ],
+    "nodes": "base 29: 13664445 nodes, 64057112 interval evaluations",
+    "args": "search 29 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "30": {
+   "base": {
+    "cycles": 15.7803,
+    "instr": 47.4972,
+    "bmiss": 0.1908,
+    "runs": [
+     [
+      15.8693,
+      47.4972,
+      0.1936
+     ],
+     [
+      15.7803,
+      47.4972,
+      0.1908
+     ],
+     [
+      15.7739,
+      47.4972,
+      0.1894
+     ]
+    ],
+    "nodes": "base 30: 51487751 nodes, 187206380 interval evaluations",
+    "args": "search 30 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 15.906,
+    "instr": 48.7646,
+    "bmiss": 0.1882,
+    "runs": [
+     [
+      15.953,
+      48.7646,
+      0.1898
+     ],
+     [
+      15.8369,
+      48.7646,
+      0.1868
+     ],
+     [
+      15.906,
+      48.7646,
+      0.1882
+     ]
+    ],
+    "nodes": "base 30: 51487751 nodes, 187206380 interval evaluations",
+    "args": "search 30 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 13.4648,
+    "instr": 39.2915,
+    "bmiss": 0.1682,
+    "runs": [
+     [
+      13.4648,
+      39.2915,
+      0.168
+     ],
+     [
+      13.4898,
+      39.2915,
+      0.1688
+     ],
+     [
+      13.4524,
+      39.2915,
+      0.1682
+     ]
+    ],
+    "nodes": "base 30: 34026988 nodes, 147758476 interval evaluations",
+    "args": "search 30 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 12.9235,
+    "instr": 36.0201,
+    "bmiss": 0.1705,
+    "runs": [
+     [
+      12.9235,
+      36.0201,
+      0.1705
+     ],
+     [
+      12.9532,
+      36.0201,
+      0.1714
+     ],
+     [
+      12.9105,
+      36.0201,
+      0.17
+     ]
+    ],
+    "nodes": "base 30: 27539252 nodes, 127555627 interval evaluations",
+    "args": "search 30 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 12.7356,
+    "instr": 35.5513,
+    "bmiss": 0.1644,
+    "runs": [
+     [
+      12.7125,
+      35.5512,
+      0.1638
+     ],
+     [
+      12.7356,
+      35.5513,
+      0.1644
+     ],
+     [
+      12.786,
+      35.5513,
+      0.1652
+     ]
+    ],
+    "nodes": "base 30: 26799611 nodes, 126076345 interval evaluations",
+    "args": "search 30 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  },
+  "31": {
+   "base": {
+    "cycles": 32.508,
+    "instr": 112.4709,
+    "bmiss": 0.3035,
+    "runs": [
+     [
+      32.5415,
+      112.4709,
+      0.3042
+     ],
+     [
+      32.4732,
+      112.4709,
+      0.3006
+     ],
+     [
+      32.508,
+      112.4709,
+      0.3035
+     ]
+    ],
+    "nodes": "base 31: 86091750 nodes, 327182136 interval evaluations",
+    "args": "search 31 -j 1 -m 1",
+    "build": "commit 9756e6b (residue rule only)"
+   },
+   "off": {
+    "cycles": 32.6189,
+    "instr": 113.3577,
+    "bmiss": 0.3024,
+    "runs": [
+     [
+      32.9261,
+      113.3577,
+      0.3131
+     ],
+     [
+      32.4783,
+      113.3577,
+      0.2974
+     ],
+     [
+      32.6189,
+      113.3577,
+      0.3024
+     ]
+    ],
+    "nodes": "base 31: 86091750 nodes, 327182136 interval evaluations",
+    "args": "search 31 -j 1 -m 1 --low-digits 0 --low-pairs 0",
+    "build": "the last-digit tests"
+   },
+   "L3P1": {
+    "cycles": 27.9858,
+    "instr": 92.7148,
+    "bmiss": 0.2899,
+    "runs": [
+     [
+      28.1115,
+      92.7148,
+      0.2948
+     ],
+     [
+      27.8828,
+      92.7148,
+      0.2841
+     ],
+     [
+      27.9858,
+      92.7147,
+      0.2899
+     ]
+    ],
+    "nodes": "base 31: 56061643 nodes, 251849534 interval evaluations",
+    "args": "search 31 -j 1 -m 1 --low-digits 3 --low-pairs 1",
+    "build": "the last-digit tests"
+   },
+   "L2P2": {
+    "cycles": 28.0127,
+    "instr": 88.6207,
+    "bmiss": 0.3023,
+    "runs": [
+     [
+      28.1245,
+      88.6207,
+      0.3064
+     ],
+     [
+      28.0127,
+      88.6207,
+      0.3023
+     ],
+     [
+      27.9823,
+      88.6207,
+      0.302
+     ]
+    ],
+    "nodes": "base 31: 50242446 nodes, 232825454 interval evaluations",
+    "args": "search 31 -j 1 -m 1 --low-digits 2 --low-pairs 2",
+    "build": "the last-digit tests"
+   },
+   "L3P2": {
+    "cycles": 27.2372,
+    "instr": 86.9615,
+    "bmiss": 0.2901,
+    "runs": [
+     [
+      27.22,
+      86.9615,
+      0.2887
+     ],
+     [
+      27.2766,
+      86.9615,
+      0.2919
+     ],
+     [
+      27.2372,
+      86.9615,
+      0.2901
+     ]
+    ],
+    "nodes": "base 31: 48675957 nodes, 229692476 interval evaluations",
+    "args": "search 31 -j 1 -m 1 --low-digits 3 --low-pairs 2",
+    "build": "the last-digit tests"
+   }
+  }
+ }
+}
