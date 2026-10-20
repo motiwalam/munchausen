@@ -886,4 +886,238 @@ theorem theorem20_12 {e : ℕ} (he : 1 ≤ e) {i : ℤ} (hi : (5 : ℤ) ^ e ∣ 
   · rw [theorem20_12_three_mod_five hi hi3 h]; simp [h]
   · exact ⟨fun _ => Or.inl h, fun _ => theorem20_12_good he h⟩
 
+/-! ### Theorem 20.12: the count -/
+
+/-- The squares modulo `5^k`, as residues in `[0, 5^k)`. -/
+def sqMod (k : ℕ) : Finset ℕ := (Finset.range (5 ^ k)).image fun y => y ^ 2 % 5 ^ k
+
+lemma mem_sqMod {k s : ℕ} : s ∈ sqMod k ↔ ∃ y : ℕ, y ^ 2 % 5 ^ k = s := by
+  constructor
+  · intro h
+    obtain ⟨y, -, rfl⟩ := Finset.mem_image.1 h
+    exact ⟨y, rfl⟩
+  · rintro ⟨y, rfl⟩
+    refine Finset.mem_image.2 ⟨y % 5 ^ k, Finset.mem_range.2 (Nat.mod_lt _ (by positivity)), ?_⟩
+    rw [← Nat.pow_mod]
+
+lemma lt_of_mem_sqMod {k s : ℕ} (h : s ∈ sqMod k) : s < 5 ^ k := by
+  obtain ⟨y, rfl⟩ := mem_sqMod.1 h
+  exact Nat.mod_lt _ (by positivity)
+
+/-- A natural number whose square is `u` modulo `5^n`, from an integer one. -/
+lemma exists_nat_sq_mod {n u : ℕ} (hu : u < 5 ^ n) {y : ℤ} (hy : (5 : ℤ) ^ n ∣ y ^ 2 - u) :
+    ∃ z : ℕ, z ^ 2 % 5 ^ n = u := by
+  refine ⟨y.natAbs, ?_⟩
+  have h : u ≡ y.natAbs ^ 2 [MOD 5 ^ n] := by
+    rw [Nat.modEq_iff_dvd]; push_cast; rw [sq_abs]; exact hy
+  rw [← Nat.mod_eq_of_lt hu]
+  exact h.symm
+
+lemma card_filter_mod_five (m r : ℕ) (hr : r < 5) :
+    ((Finset.range (5 * m)).filter fun u => u % 5 = r).card = m := by
+  have : ((Finset.range (5 * m)).filter fun u => u % 5 = r) =
+      (Finset.range (5 * m)).filter fun u => u ≡ r [MOD 5] := by
+    refine Finset.filter_congr fun u _ => ?_
+    rw [Nat.ModEq, Nat.mod_eq_of_lt hr]
+  rw [this, ← Nat.count_eq_card_filter_range, Nat.count_modEq_card _ (by norm_num)]
+  simp [Nat.mul_mod_right]
+
+/-- The squares modulo `5^(k+2)`: the units `≡ ±1 (mod 5)` and `25` times the squares modulo
+`5^k`. -/
+theorem card_sqMod_add_two (k : ℕ) :
+    (sqMod (k + 2)).card = 2 * 5 ^ (k + 1) + (sqMod k).card := by
+  rw [← Finset.card_filter_add_card_filter_not (s := sqMod (k + 2)) (fun s => ¬ 5 ∣ s)]
+  have h5 : (5 : ℕ) ∣ 5 ^ (k + 2) := dvd_pow_self 5 (by omega)
+  have hA : (sqMod (k + 2)).filter (fun s => ¬ 5 ∣ s) =
+      ((Finset.range (5 * 5 ^ (k + 1))).filter fun u => u % 5 = 1) ∪
+        ((Finset.range (5 * 5 ^ (k + 1))).filter fun u => u % 5 = 4) := by
+    ext s
+    simp only [Finset.mem_filter, Finset.mem_union, Finset.mem_range]
+    constructor
+    · rintro ⟨hs, h5s⟩
+      have hlt := lt_of_mem_sqMod hs
+      obtain ⟨y, rfl⟩ := mem_sqMod.1 hs
+      have hmod : y ^ 2 % 5 ^ (k + 2) % 5 = y ^ 2 % 5 := Nat.mod_mod_of_dvd _ h5
+      have hy : y ^ 2 % 5 = (y % 5) ^ 2 % 5 := Nat.pow_mod _ _ _
+      have hlt' : y ^ 2 % 5 ^ (k + 2) < 5 * 5 ^ (k + 1) := by rw [← pow_succ']; exact hlt
+      have key : y ^ 2 % 5 ^ (k + 2) % 5 = (y % 5) ^ 2 % 5 := by rw [hmod, hy]
+      have : y % 5 < 5 := Nat.mod_lt _ (by norm_num)
+      set r := y % 5
+      interval_cases r <;> norm_num at key <;> omega
+    · rintro (⟨hs, h1⟩ | ⟨hs, h4⟩)
+      · refine ⟨mem_sqMod.2 ?_, by omega⟩
+        obtain ⟨z, -, hz⟩ := exists_sq_five_pow (a := 1) (c := (s : ℤ)) (by norm_num)
+          (by push_cast; omega) (k + 2)
+        exact exists_nat_sq_mod (by rw [pow_succ']; exact hs) hz
+      · refine ⟨mem_sqMod.2 ?_, by omega⟩
+        obtain ⟨z, -, hz⟩ := exists_sq_five_pow (a := 2) (c := (s : ℤ)) (by norm_num)
+          (by push_cast; omega) (k + 2)
+        exact exists_nat_sq_mod (by rw [pow_succ']; exact hs) hz
+  have hB : (sqMod (k + 2)).filter (fun s => ¬ ¬ 5 ∣ s) = (sqMod k).image (25 * ·) := by
+    ext s
+    simp only [Finset.mem_filter, not_not, Finset.mem_image]
+    constructor
+    · rintro ⟨hs, h5s⟩
+      obtain ⟨y, rfl⟩ := mem_sqMod.1 hs
+      have hy5 : 5 ∣ y := by
+        have : 5 ∣ y ^ 2 := by
+          have := (Nat.dvd_mod_iff h5).1 h5s; exact this
+        exact Nat.prime_five.dvd_of_dvd_pow this
+      obtain ⟨z, rfl⟩ := hy5
+      refine ⟨z ^ 2 % 5 ^ k, mem_sqMod.2 ⟨z, rfl⟩, ?_⟩
+      rw [show (5 * z) ^ 2 = 25 * z ^ 2 by ring, show 5 ^ (k + 2) = 25 * 5 ^ k by ring,
+        Nat.mul_mod_mul_left]
+    · rintro ⟨s', hs', rfl⟩
+      obtain ⟨z, rfl⟩ := mem_sqMod.1 hs'
+      refine ⟨mem_sqMod.2 ⟨5 * z, ?_⟩, dvd_mul_of_dvd_left (by norm_num) _⟩
+      rw [show (5 * z) ^ 2 = 25 * z ^ 2 by ring, show 5 ^ (k + 2) = 25 * 5 ^ k by ring,
+        Nat.mul_mod_mul_left]
+  rw [hA, hB, Finset.card_union_of_disjoint, card_filter_mod_five _ _ (by norm_num),
+    card_filter_mod_five _ _ (by norm_num),
+    Finset.card_image_of_injective _ (fun a b h => by simpa using h)]
+  · ring
+  · rw [Finset.disjoint_left]
+    intro u h1 h2
+    simp only [Finset.mem_filter] at h1 h2
+    omega
+
+/-- The number of squares modulo `5^k` (section 20.2.2): `(5^(k+1) + 7)/12` for even `k` and
+`(5^(k+1) + 11)/12` for odd `k`. -/
+theorem card_sqMod (k : ℕ) :
+    12 * (sqMod k).card = 5 ^ (k + 1) + if Even k then 7 else 11 := by
+  induction k using Nat.strong_induction_on with
+  | _ k ih =>
+    rcases k with _ | _ | k
+    · decide
+    · decide
+    · rw [card_sqMod_add_two, mul_add, ih k (by omega)]
+      have : Even (k + 2) ↔ Even k := by simp [Nat.even_add]
+      simp only [this]
+      split_ifs <;> ring
+
+open Classical in
+/-- **Theorem 20.12**, the count (section 20.2.2). For `e ≥ 2` the class `3 (mod 5)` holds
+exactly `sq(e - 2)` elements of `T(5^e)`, `sq(k)` the number of squares modulo `5^k`. -/
+theorem theorem20_12_card {e : ℕ} (he : 2 ≤ e) :
+    ((Finset.range (5 ^ e)).filter fun v : ℕ => v % 5 = 3 ∧
+        ∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - (v : ℤ)).card =
+      (sqMod (e - 2)).card := by
+  obtain ⟨i, hi, hi3⟩ := exists_sqrt_neg_one_five_pow e
+  obtain ⟨n, rfl⟩ : ∃ n, e = n + 2 := ⟨e - 2, by omega⟩
+  simp only [Nat.add_sub_cancel]
+  set A : ℤ := 1 - i with hA
+  set H : ℤ := (((5 ^ (n + 2) + 1) / 2 : ℕ) : ℤ) with hH
+  have hM : (0 : ℤ) < 5 ^ (n + 2) := by positivity
+  have h2H : (5 : ℤ) ^ (n + 2) ∣ 2 * H - 1 := by
+    have hodd : (5 ^ (n + 2) + 1) % 2 = 0 := by
+      have : Odd (5 ^ (n + 2)) := Odd.pow (by decide)
+      obtain ⟨t, ht⟩ := this; omega
+    refine ⟨1, ?_⟩
+    rw [hH]; push_cast
+    have : ((5 ^ (n + 2) + 1) / 2 : ℕ) * 2 = 5 ^ (n + 2) + 1 := Nat.div_mul_cancel
+      (Nat.dvd_of_mod_eq_zero hodd)
+    have : (((5 ^ (n + 2) + 1) / 2 : ℕ) : ℤ) * 2 = 5 ^ (n + 2) + 1 := by exact_mod_cast this
+    push_cast at this
+    linarith
+  have hA5 : ¬ (5 : ℤ) ∣ A := by omega
+  -- the map `s ↦ A (1 - 25 s / 2) mod 5^e`
+  set V : ℕ → ℕ := fun s => ((A * (2 - 25 * s) * H) % 5 ^ (n + 2)).toNat with hV
+  have hVz : ∀ s, (V s : ℤ) = (A * (2 - 25 * s) * H) % 5 ^ (n + 2) := fun s =>
+    Int.toNat_of_nonneg (Int.emod_nonneg _ hM.ne')
+  have hV2 : ∀ s, (5 : ℤ) ^ (n + 2) ∣ 2 * V s - A * (2 - 25 * s) := by
+    intro s
+    rw [hVz]
+    obtain ⟨m, hm⟩ := h2H
+    refine ⟨-2 * ((A * (2 - 25 * s) * H) / 5 ^ (n + 2)) + A * (2 - 25 * s) * m, ?_⟩
+    have := Int.emod_add_mul_ediv (A * (2 - 25 * s) * H) (5 ^ (n + 2))
+    linear_combination 2 * this + A * (2 - 25 * (s : ℤ)) * hm
+  have h25 : (5 : ℤ) ^ (n + 2) = 25 * 5 ^ n := by ring
+  have hsq : ∀ y : ℕ, (5 : ℤ) ^ n ∣ ((y ^ 2 % 5 ^ n : ℕ) : ℤ) - (y : ℤ) ^ 2 := by
+    intro y
+    have := Nat.modEq_iff_dvd.1 (Nat.mod_modEq (y ^ 2) (5 ^ n)).symm
+    push_cast at this ⊢
+    exact this
+  have hlt : ∀ s, (V s : ℤ) < 5 ^ (n + 2) := fun s => by rw [hVz]; exact Int.emod_lt_of_pos _ hM
+  symm
+  refine Finset.card_bij (fun s _ => V s) ?_ ?_ ?_
+  · -- `V s` lies in the class `3 (mod 5)` and is a value
+    intro s hs
+    obtain ⟨y, rfl⟩ := mem_sqMod.1 hs
+    have h5V : (5 : ℤ) ∣ 2 * V (y ^ 2 % 5 ^ n) - A * (2 - 25 * (y ^ 2 % 5 ^ n : ℕ)) :=
+      (dvd_pow_self 5 (by omega)).trans (hV2 _)
+    have hlin : (5 : ℤ) ∣ A * (2 - 25 * ((y ^ 2 % 5 ^ n : ℕ) : ℤ)) - 2 * A :=
+      ⟨-5 * A * ((y ^ 2 % 5 ^ n : ℕ) : ℤ), by ring⟩
+    have hV3 : V (y ^ 2 % 5 ^ n) % 5 = 3 := by
+      have : (V (y ^ 2 % 5 ^ n) : ℤ) % 5 = 3 := by omega
+      omega
+    have hlt' := hlt (y ^ 2 % 5 ^ n)
+    refine Finset.mem_filter.2 ⟨Finset.mem_range.2 (by exact_mod_cast hlt'), hV3, ?_⟩
+    refine (theorem20_12_three_mod_five (v := (V (y ^ 2 % 5 ^ n) : ℤ)) hi hi3
+      (by omega)).2 ⟨y, ?_⟩
+    obtain ⟨m, hm⟩ := hsq y
+    obtain ⟨m', hm'⟩ := hV2 (y ^ 2 % 5 ^ n)
+    refine ⟨m' - A * m, ?_⟩
+    rw [h25] at hm' ⊢
+    linear_combination hm' - 25 * A * hm
+  · -- injective
+    intro s hs s' hs' hss
+    have h1 := hV2 s
+    have h2 := hV2 s'
+    rw [hss] at h1
+    have hd : (5 : ℤ) ^ (n + 2) ∣ 25 * (((s : ℤ) - s') * A) := by
+      obtain ⟨a, ha⟩ := h1
+      obtain ⟨c, hc⟩ := h2
+      exact ⟨a - c, by linear_combination ha - hc⟩
+    rw [h25] at hd
+    have hd' : (5 : ℤ) ^ n ∣ ((s : ℤ) - s') * A :=
+      (mul_dvd_mul_iff_left (by norm_num : (25 : ℤ) ≠ 0)).1 hd
+    have hd'' : (5 : ℤ) ^ n ∣ (s : ℤ) - s' :=
+      ((isCoprime_five_pow hA5 n).symm).dvd_of_dvd_mul_right hd'
+    have hmod : s' ≡ s [MOD 5 ^ n] := Nat.modEq_iff_dvd.2 (by push_cast; exact hd'')
+    exact (hmod.eq_of_lt_of_lt (lt_of_mem_sqMod hs') (lt_of_mem_sqMod hs)).symm
+  · -- surjective
+    intro v hv
+    obtain ⟨hvlt, hv3, hx⟩ := Finset.mem_filter.1 hv
+    rw [Finset.mem_range] at hvlt
+    obtain ⟨y, hy⟩ := (theorem20_12_three_mod_five hi hi3 (by omega)).1 hx
+    refine ⟨y.natAbs ^ 2 % 5 ^ n, mem_sqMod.2 ⟨_, rfl⟩, ?_⟩
+    obtain ⟨m, hm⟩ := hsq y.natAbs
+    rw [Int.natCast_natAbs, sq_abs] at hm
+    obtain ⟨m', hm'⟩ := hV2 (y.natAbs ^ 2 % 5 ^ n)
+    obtain ⟨m'', hm''⟩ := hy
+    have hd : (5 : ℤ) ^ (n + 2) ∣ 2 * ((V (y.natAbs ^ 2 % 5 ^ n) : ℤ) - v) := by
+      refine ⟨m' - m'' - A * m, ?_⟩
+      rw [h25] at hm' hm'' ⊢
+      linear_combination hm' - hm'' - 25 * A * hm
+    have hd2 := five_pow_dvd_of_dvd_two_mul hd
+    have hmod : v ≡ V (y.natAbs ^ 2 % 5 ^ n) [MOD 5 ^ (n + 2)] :=
+      Nat.modEq_iff_dvd.2 (by push_cast; exact hd2)
+    have hlt' := hlt (y.natAbs ^ 2 % 5 ^ n)
+    exact (hmod.eq_of_lt_of_lt hvlt (by exact_mod_cast hlt')).symm
+
+open Classical in
+/-- **Theorem 20.12**, the size of `T(5^e)`: for `e ≥ 2` it has `4 · 5^(e-1) + sq(e - 2)`
+elements, so its density tends to `4/5 + 1/60 = 49/60`. -/
+theorem theorem20_12_card_T {e : ℕ} (he : 2 ≤ e) :
+    ((Finset.range (5 ^ e)).filter fun v : ℕ =>
+        ∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - (v : ℤ)).card =
+      4 * 5 ^ (e - 1) + (sqMod (e - 2)).card := by
+  set T := (Finset.range (5 ^ e)).filter fun v : ℕ =>
+    ∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - (v : ℤ)
+  have hsplit := Finset.card_filter_add_card_filter_not (s := T) (fun v => v % 5 = 3)
+  have h3 : T.filter (fun v => v % 5 = 3) = (Finset.range (5 ^ e)).filter fun v : ℕ =>
+      v % 5 = 3 ∧ ∃ x : ℕ, 1 ≤ x ∧ (5 : ℤ) ^ e ∣ ((x : ℤ) ^ x - x) - (v : ℤ) := by
+    rw [Finset.filter_filter]
+    exact Finset.filter_congr fun v _ => and_comm
+  have hn3 : T.filter (fun v => ¬ v % 5 = 3) =
+      (Finset.range (5 * 5 ^ (e - 1))).filter fun v => ¬ v % 5 = 3 := by
+    rw [Finset.filter_filter, ← pow_succ', show e - 1 + 1 = e by omega]
+    refine Finset.filter_congr fun v _ => ⟨fun h => h.2, fun h => ⟨?_, h⟩⟩
+    exact theorem20_12_good (by omega) (by omega)
+  have hrest := Finset.card_filter_add_card_filter_not
+    (s := Finset.range (5 * 5 ^ (e - 1))) (fun v => v % 5 = 3)
+  rw [card_filter_mod_five _ _ (by norm_num), Finset.card_range] at hrest
+  rw [h3, hn3, theorem20_12_card he] at hsplit
+  omega
+
 end Munchausen
