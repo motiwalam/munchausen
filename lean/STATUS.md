@@ -22,9 +22,9 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
-Counts of table rows at the time of writing: 133 formalized (one of them a
-list of computed solutions checked by `decide`), 19 partial, 11 rows of open
-problems (14 `Prop`s), 4 refuted conjectures, 67 not formalized and 4 not
+Counts of table rows at the time of writing: 152 formalized (one of them a
+list of computed solutions checked by `decide`), 25 partial, 12 rows of open
+problems (15 `Prop`s), 4 refuted conjectures, 81 not formalized and 5 not
 stated.
 
 ## Chapter 1. Basics
@@ -398,7 +398,7 @@ stated.
 | factorions, weights in general | `IsWSolution`, `fw`, `isSolution_iff_isWSolution` [Fact] | formalized (definitions) |
 | the completed square `U^2 = M + K` (table of chapter 33) | `three_digit_iff_sq`, `factorion_last_iff` [Fact] | formalized |
 | Lemma 33.1 | `lemma33_1`, `lemma33_1_two`, `sq_eq_pow_mul` [Fact] | formalized (in finite form: `v` even and the unit part a square modulo `l`, or `≡ 1 (mod 8)` for `l = 2`; that is "`K` is a square in `Q_l`" without citing Hensel) |
-| Lemma 33.2 | `lemma33_2`, `pow_div_dvd_factorial` [Fact] | partial: the obstruction behind (a) and (c) (`K = l^v k` not an `l`-adic square and `l^(v+1) ∣ x!`, with `l^(x/l) ∣ x!`); the discriminant bound of (b) and the explicit forms with `log |K|` are not stated |
+| Lemma 33.2 | `lemma33_2`, `pow_div_dvd_factorial` [Fact] | partial: the obstruction behind (a) and (c) (`K = l^v k` not an `l`-adic square and `l^(v+1) ∣ x!`, with `l^(x/l) ∣ x!`); the discriminant bound of (b) and the explicit forms with `log abs(K)` are not stated |
 | Lemma 33.3 | none | not formalized (cites Trevino, Pomerance, Bach; computed) |
 | Theorem 33.4 | `theorem33_4_b`, `theorem33_4_d_A`, `theorem33_4_d`, `factorion_last_iff` [Fact] | partial: (b) (`x < 2 p A`) and (d) in full, and the equivalence with `U^2 = M + K`; the bounds `X0` of (a) to (c) need Lemma 33.3 |
 | Theorems 33.5, 33.6, Table 33.1.1 | none | not formalized (computation) |
@@ -409,7 +409,7 @@ stated.
 | Theorem 33.12 | `theorem33_12`, `theorem33_12_member` [Fact] | formalized (every `u ≥ j` gives a member, since then `t_i ≤ (M u)^j ≤ x`; (S3) is stated as `y > M (x + v)` whenever `v^j ≤ x`) |
 | Proposition 33.13 | `prop33_13`, `prop33_13_lt`, `prop33_13_identity` [Fact] | formalized (the consequence for identities with `lam` an integer dividing `t_0`, as the normalization of Corollary 25.3 gives) |
 | Theorem 33.14, Corollary 33.15, Theorem 33.19 | none | not formalized (conditional on abc; the Tschirnhaus reduction is not stated) |
-| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `abc_div_gcd` [Fact] | partial: under abc, `N ≤ K (rad(N) U |R|)^(1+ε)` and `N^((1-ε)/2) ≤ 2 K (rad(N) |R|)^(1+ε)` for `0 < |R| ≤ N`; the bounds on `rad(N)` and `|R|` and the final bound on `x` are not formalized |
+| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `abc_div_gcd` [Fact] | partial: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)` and `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)` for `0 < abs(R) ≤ N`; the bounds on `rad(N)` and `abs(R)` and the final bound on `x` are not formalized |
 | Corollaries 33.17, 33.18, Proposition 33.20, Table 33.4.1 | none | not formalized (conditional on abc; computation) |
 | Proposition 33.21 | `prop33_21`, `prop33_21_card` [Fact] | formalized (the arithmetic; Theorem 15.14 itself is not formalized) |
 | Proposition 33.22 | none | not formalized (inequalities closed by a computation) |
@@ -453,9 +453,11 @@ stated.
 `NoFullLengthConjecture_one`, `BoundedCountOne`, `InfinitelyManyEmptyBases`,
 `EveryCountOccurs`, `Conjecture_10_3_lower`, `Question65`, `Question50`,
 `Question36`, `Question39`, `Question12`, `Question32`, `Question51_two`,
-`Question51_three`, `Conjecture29_13`. All are in `Conjectures.lean`, except
-`Conjecture29_13`, which is in `ModelTheorems.lean`. The round 5 questions (72 to 89)
-are research directions and are not stated.
+`Question51_three`, `Conjecture29_13`, `Conjecture33_11`. All are in
+`Conjectures.lean`, except `Conjecture29_13`, which is in `ModelTheorems.lean`,
+and `Conjecture33_11`, which is in `Factorials.lean`. The abc conjecture is
+stated as `ABC` in `Factorials.lean` and used only as a hypothesis. The round
+5 questions (72 to 89) are research directions and are not stated.
 
 ## Problems found
 
@@ -502,6 +504,16 @@ Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
 7. **Lemma 20.4** (section 20.1.4), an edge case. For `r = 0` the claim reads
    `m > 1`, false for `m = 1`. The lemma needs `r >= 1`, which holds wherever
    it is used. The Lean statement (`lemma20_4`) assumes a nonempty set.
+8. **Proposition 33.13** (section 33.3.2), a small gap in the consequence.
+   The proposition allows `lam` rational, and the bound is `x < 2 P(lam)`
+   with `P(lam)` the largest prime of the numerator or the denominator.
+   The consequence for identities says `lam c^j = t_0`, "so `lam <= t_0`",
+   and concludes `x < 2 t_0`. That needs `P(lam) <= t_0`, which `lam <= t_0`
+   gives only when `lam` is an integer; a prime of the denominator of `lam`
+   is not bounded by `lam`. With the normalization of Corollary 25.3 (`A`
+   primitive, Gauss's lemma) `lam` is an integer dividing `t_0`, and the
+   conclusion holds. The Lean statement (`prop33_13_identity`) assumes
+   `lam` an integer dividing `t_0`.
 
 The library corrections that landed during this work (Proposition 9.3, the
 pair `(c, 1)` in Proposition 15.16 needs `c >= 3`, the negative-base family
@@ -513,23 +525,23 @@ the new numbers.
 
 In order of value and effort:
 
-1. Theorem 20.12 for every `e`: the 5-adic series of Lemma 20.10, or an
-   elementary congruence for `f` near `x = i` in the spirit of
-   `step_three_adic` (the derivative vanishes there, so the step is of
-   second order).
-2. Chapter 29 with traces: Lemma 29.8 (1) for `j >= 2`, (2) and (3) (the
+1. Chapter 29 with traces: Lemma 29.8 (1) for `j >= 2`, (2) and (3) (the
    subfields and trace kernels of `F_(q^f)`, Hensel lifting), then
    Theorem 29.9, the conclusion of Corollary 29.10, Theorem 29.11 (2)
    (sufficiency, (b), (c)) and (4), and Remark 29.12. The Chinese remainder
    setup of `finrank_ker_frobR` and the dual argument of
    `comp_pow_eq_of_codim_gt` are in place.
-3. Theorem 30.12, the count `tau(b^2 + 1) - 2`: needs `r_2(N) = 4 sum chi(d)`
-   (Gaussian integers), which is not in Mathlib; with it, the converse of
-   Corollary 30.13 (2).
-4. Chapter 24: Corollary 24.3 (the assembly of all digits of `F(x)` from
-   `p_0, ..., p_(e-1)`), Proposition 24.6 (2), Corollary 24.12 (1).
-5. The claim inside Theorem 27.5 (the interval test of the oracle), which
-   would make the fooling-set bound unconditional.
-6. Smaller items: Theorem 15.14 (chains and cycles of `phi`), Theorem 15.10
-   with abc as a hypothesis, the `k`-step form of Proposition 30.7, and the
-   unbounded number of bases in Proposition 15.15.
+2. Theorem 15.10 with abc as a hypothesis. `ABC`, `rad` and the step
+   `abc_div_gcd` are in `Factorials.lean`; what remains is the case analysis
+   of the proof and the asymptotic comparison of `c^c` with
+   `c^(c (1 - 2 delta) + O(eps c))`. The same step finishes Theorem 33.16
+   (the bounds `rad(N) <= 2 l x` and `abs(R) <= 9 x^2 B^B` of Theorem 25.7)
+   and Corollary 33.17.
+3. Theorem 35.13, Steps 1 and 2 (the steering of the top digits by
+   monotonicity, with the real bounds on `theta_i`), and Corollary 35.14.
+4. Chapter 35, smaller items: Proposition 35.5 (3) for negative positions of
+   a unit `beta`, Proposition 35.8 (the window with the small part), and the
+   count of Theorem 35.12.
+5. Smaller items: the `k`-step form of Proposition 30.7, the unbounded
+   number of bases in Proposition 15.15, Corollary 34.7 and Theorem 34.6
+   (they need Theorem 29.1).
