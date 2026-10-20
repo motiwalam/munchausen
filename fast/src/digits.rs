@@ -156,6 +156,12 @@ mod imp {
             }
         }
 
+        // lanes 0 to 3, one per byte
+        #[inline(always)]
+        pub fn low4(&self) -> u32 {
+            unsafe { _mm_cvtsi128_si32(_mm256_castsi256_si128(self.0[0])) as u32 }
+        }
+
         // bit i set iff lane i is nonzero
         #[inline(always)]
         pub fn nonzero_mask(&self) -> u64 {
@@ -255,6 +261,11 @@ mod imp {
                 m |= ((self.0[i / 32][i % 32] >= x) as u64) << i;
             }
             m
+        }
+
+        #[inline(always)]
+        pub fn low4(&self) -> u32 {
+            u32::from_le_bytes([self.0[0][0], self.0[0][1], self.0[0][2], self.0[0][3]])
         }
 
         #[inline(always)]

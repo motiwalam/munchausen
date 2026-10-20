@@ -222,9 +222,9 @@ impl<const N: usize> Search<N> {
                                     let u = &units[i];
                                     let p = &self.params[u.pi];
                                     if self.inexact {
-                                        rayon::scope(|s| self.rec::<true>(s, p, u.k, u.n, u.cnt, 0));
+                                        rayon::scope(|s| self.rec::<true, 0>(s, p, u.k, u.n, u.cnt, 0));
                                     } else {
-                                        rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+                                        rayon::scope(|s| self.rec::<false, 0>(s, p, u.k, u.n, u.cnt, 0));
                                     }
                                     on_cpu.fetch_add(1, Ordering::Relaxed);
                                     continue;
@@ -280,7 +280,7 @@ impl<const N: usize> Search<N> {
         let mut cnt = [0u8; 128];
         cnt[..64].copy_from_slice(&dv(HEADER + 4 * vb));
         let p = &self.params[pi];
-        let mut n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0, zmin: f32::INFINITY, res: [0; 2] };
+        let mut n = Node { t: DV::from_bytes(&dv(HEADER)), hi: DV::from_bytes(&dv(HEADER + vb)), pp, rf, m: 0, lneed: 0.0, ln_e: 0.0, zmin: f32::INFINITY, res: [0; 2], avail: 0 };
         n.res = p.node_res(&n, k, &cnt);
         if self.inexact {
             // The item does not carry the model's bookkeeping. The node has
@@ -295,9 +295,9 @@ impl<const N: usize> Search<N> {
         }
         if root {
             if self.inexact {
-                rayon::scope(|s| self.rec::<true>(s, p, k, n, cnt, 0));
+                rayon::scope(|s| self.rec::<true, 0>(s, p, k, n, cnt, 0));
             } else {
-                rayon::scope(|s| self.rec::<false>(s, p, k, n, cnt, 0));
+                rayon::scope(|s| self.rec::<false, 0>(s, p, k, n, cnt, 0));
             }
             return;
         }
@@ -309,16 +309,16 @@ impl<const N: usize> Search<N> {
             hi = hi.add(&p.dhi[k], &p.base);
         }
         let res = (0..e).fold(n.res, |r, _| p.res_add(r, k));
-        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: n.m, lneed: n.lneed, ln_e: 0.0, zmin: f32::INFINITY }, k, e, occk, res };
+        let mut cur = Cursor { te, hi, h: Head { pp, rf, m: n.m, lneed: n.lneed, ln_e: 0.0, zmin: f32::INFINITY, avail: 0 }, k, e, occk, res, z: 0 };
         let mut l = Local::for_params(p);
         rayon::scope(|s| {
             if self.inexact {
-                while let Some(c) = self.next_child::<true>(p, &mut cur, &mut cnt, &mut l) {
-                    self.rec_seq::<true>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
+                while let Some(c) = self.next_child::<true, 0>(p, &mut cur, &mut cnt, &mut l) {
+                    self.rec_seq::<true, 0>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
                 }
             } else {
-                while let Some(c) = self.next_child::<false>(p, &mut cur, &mut cnt, &mut l) {
-                    self.rec_seq::<false>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
+                while let Some(c) = self.next_child::<false, 0>(p, &mut cur, &mut cnt, &mut l) {
+                    self.rec_seq::<false, 0>(s, p, k - 1, &c, &mut cnt, &mut l, 0);
                 }
             }
         });

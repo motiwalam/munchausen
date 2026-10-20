@@ -95,6 +95,12 @@ options:
   --no-residue            (search) turn off the residue rule: by default the
                           search drops nodes with one free slot whose digit
                           multiset cannot satisfy n == F(n) modulo b - 1
+  --low-digits <n>        (search) the last-digit test on nodes with one free
+                          slot: 0 (off), or the number of last digits it
+                          checks (1 to 3); it needs the residue rule
+  --low-pairs <n>         (search) the last-digit test on nodes with two free
+                          slots: 0 (off), or the number of last digits it
+                          checks (1 or 2); it needs the residue rule
   --uniform               (search, inexact) measure --band and --deficit on the
                           scale of the whole random walk instead of pointwise
   --unit-depth <n>        (search) tree depth at which the search is cut into
@@ -195,6 +201,8 @@ fn parse_args() -> Opts {
             "--ratio" => prune.ratio = val().parse().unwrap_or_else(|_| die("bad ratio")),
             "--uniform" => prune.uniform = true,
             "--no-residue" => no_residue = true,
+            "--low-pairs" => prune.pair = val().parse().ok().filter(|&n| n <= 2).unwrap_or_else(|| die("bad digit count for --low-pairs: use 0 to 2")),
+            "--low-digits" => prune.low = val().parse().ok().filter(|&n| n <= 3).unwrap_or_else(|| die("bad digit count: use 0 to 3")),
             "--perturb" => prune.perturb = val().parse().unwrap_or_else(|_| die("bad seed")),
             "--keep-residues" => prune.keep_residues = true,
             "--offset" => prune.offset = val().parse().unwrap_or_else(|_| die("bad offset")),
@@ -287,6 +295,12 @@ fn parse_args() -> Opts {
     }
     if zhist.is_some() && !prune.zscore.is_finite() {
         die("--zhist needs --zscore");
+    }
+    // the GPU search has no last-digit test, and the CPU threads of
+    // --hybrid must visit the same nodes as the GPU
+    if gpu {
+        prune.low = 0;
+        prune.pair = 0;
     }
     if gpu && unit_stats.is_some() {
         die("--unit-stats does not work with --gpu or --hybrid");
@@ -686,18 +700,38 @@ mod tests {
 
     // The residue rule for one convention keeps every solution of that
     // convention, and without the rule the search finds the same numbers.
+    // So do the last-digit tests, with one and two free slots, on top of it.
     #[test]
     fn residue_rule_keeps_solutions() {
         for b in 2..=20 {
             let want = [0, 1].map(|m| sorted(from_u128(if b <= 9 { reference::brute(b, m) } else { reference::dfs_search(b, m).0 }, b)));
             for residue in 0..4u8 {
-                let o = Opts { prune: search::Prune { residue, ..search::Prune::NONE }, ..test_opts() };
-                let got = run_search_n::<1>(b, &o);
-                for m in 0..2 {
-                    if residue == 0 || residue & (1 << m) != 0 {
-                        assert_eq!(sorted(got[m].clone()), want[m], "base {b} mode {m} residue rule {residue}");
+                for low in 0..=3 {
+                    for pair in 0..=2 {
+                        let o = Opts { prune: search::Prune { residue, low, pair, ..search::Prune::NONE }, ..test_opts() };
+                        let got = run_search_n::<1>(b, &o);
+                        // the wide vectors read the last digits from the same word
+                        let wide = if low == 3 && pair == 2 { run_search_n::<2>(b, &o) } else { got.clone() };
+                        for m in 0..2 {
+                            if residue == 0 || residue & (1 << m) != 0 {
+                                let what = format!("base {b} mode {m} residue rule {residue} low {low} pair {pair}");
+                                assert_eq!(sorted(got[m].clone()), want[m], "{what}");
+                                assert_eq!(sorted(wide[m].clone()), want[m], "{what}, N=2");
+                            }
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    // The last-digit test of three digits divides by b^2 with a multiplication.
+    #[test]
+    fn magic_division_is_exact() {
+        for b in 2..=64u64 {
+            let m = search::magic_b2(b as u32);
+            for s in 0..b * b * b {
+                assert_eq!((s * m) >> 40, s / (b * b), "base {b} s {s}");
             }
         }
     }
@@ -706,6 +740,8 @@ mod tests {
     // visit the same nodes
     #[cfg(feature = "gpu")]
     fn check_gpu<const N: usize>(bases: std::ops::RangeInclusive<u32>, prune: search::Prune) {
+        // the GPU search has no last-digit tests
+        let prune = search::Prune { low: 0, pair: 0, ..prune };
         for b in bases {
             let run = |gpu: bool, cpu: bool| {
                 let sr = search::Search::<N>::new(b, 1, u32::MAX, 3, prune);
@@ -830,12 +866,14 @@ mod tests {
 
     #[test]
     fn weight_options_match_brute_force() {
-        for prune in weight_options() {
+        // with and without the last-digit tests
+        let all = weight_options().into_iter().flat_map(|p| [p, search::Prune { low: 3 - p.low.min(3), pair: 2 - p.pair.min(2), ..p }]);
+        for prune in all {
             for b in 2..=8 {
                 let o = Opts { prune, ..test_opts() };
                 let want = brute_multisets(b, &prune).map(sorted);
                 let got = run_search_n::<1>(b, &o).map(sorted);
-                let what = format!("base {b}: zero {} shift {} factorial {} power {} perturb {} residue {:?} offset {}", prune.zero, prune.shift, prune.factorial, prune.power, prune.perturb, prune.set_residue, prune.offset);
+                let what = format!("base {b}: zero {} shift {} factorial {} power {} perturb {} residue {:?} offset {} low {} pair {}", prune.zero, prune.shift, prune.factorial, prune.power, prune.perturb, prune.set_residue, prune.offset, prune.low, prune.pair);
                 assert_eq!(got, want, "{what}");
                 assert_eq!(run_search_n::<2>(b, &o).map(sorted), want, "{what}, N=2");
                 for mode in 0..2 {

@@ -99,6 +99,34 @@ pub struct Params<const N: usize> {
     rres: Vec<u8>,
     rok: Vec<u128>,
     root_res: [u8; 2],
+    // The last-digit test (see low_ok), for b <= 64. bsz = b, full has the
+    // bits 0 to b - 1, and lmod = b^low. ltab[(2 k + m) q + R] holds two
+    // digit sets for the y < k that complete the residue R under convention
+    // m: bit w_m(y) mod b, twice (bits v and v + b), and bit
+    // (y - w_m(y)) mod b. zlow1 and zlowl [m (d + 1) + z] are the sum of z
+    // zeros under convention m (plus the shift of a negative weight of 0)
+    // modulo b and lmod. lcand[lstart[i]..lstart[i + 1]] lists
+    // (y, w_m(y) mod lmod) for the same y as ltab[i]. div2[s] = (s mod b,
+    // s / b) for s < b^2, and s / b^2 = (s magic) >> 40 for s < b^3.
+    // ltab2 is ltab for two free slots: the pairs y1 <= y2 < k that
+    // complete R, with v = w_m(y1) + w_m(y2) mod b, and the bits
+    // (y1 - v) and (y2 - v) mod b. pcand[pend[i].0..pend[i].1] lists these
+    // pairs as (y1, y2, v mod b^2), and zlow2 is zlow1 modulo b^2.
+    rmodes: u8,
+    bsz: u32,
+    full: u64,
+    lmod: u32,
+    magic: u64,
+    ltab: Vec<(u128, u64)>,
+    ltab2: Vec<(u128, u64)>,
+    pend: Vec<(u16, u16)>,
+    pcand: Vec<(u8, u8, u16)>,
+    zlow2: Vec<u32>,
+    zlow1: Vec<u32>,
+    zlowl: Vec<u32>,
+    lstart: Vec<u32>,
+    lcand: Vec<(u32, u32)>,
+    div2: Vec<[u8; 2]>,
 }
 
 /// Pruning rules for the inexact search. Both are off by default.
@@ -162,6 +190,12 @@ pub struct Prune {
     /// the conventions (bit m for 0^0 = m) for which a node must keep
     /// n == F(n) modulo b - 1 possible; 0 turns the residue rule off
     pub residue: u8,
+    /// the last-digit test on nodes with one free slot: 0 (off), or the
+    /// number of last digits it checks (1 to 3); it needs the residue rule
+    pub low: u8,
+    /// the last-digit test on nodes with two free slots: 0 (off), or the
+    /// number of last digits it checks (1 or 2); it needs the residue rule
+    pub pair: u8,
 }
 
 /// The null law of ln E for the typical-set test.
@@ -184,7 +218,7 @@ fn zbin(z: f32) -> usize {
 }
 
 impl Prune {
-    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None, zlaw: ZLaw::Poisson, zfrom: 0.75, zslope: 0.0, zhist: false, tree_stats: false, ztable: None, residue: 3 };
+    pub const NONE: Prune = Prune { cap: u32::MAX, z: f64::INFINITY, deficit: f64::INFINITY, epsilon: 0.0, ratio: 0.0, uniform: false, perturb: 0, keep_residues: false, zscore: f64::INFINITY, offset: 0, zero: 1, shift: 0, factorial: false, power: 0, set_residue: None, zlaw: ZLaw::Poisson, zfrom: 0.75, zslope: 0.0, zhist: false, tree_stats: false, ztable: None, residue: 3, low: 3, pair: 2 };
 
     /// whether the weights differ from x^x with 0^0 in {0, 1}
     pub fn custom_weights(&self) -> bool {
@@ -382,6 +416,85 @@ impl<const N: usize> Params<N> {
             }
         }
         let root_res = [(prune.offset % q as u64) as u8; 2];
+        // the last-digit test: w_m(y) modulo b and b^low
+        let (b2, lmod) = (b * b, b.pow(prune.low.clamp(1, 3) as u32));
+        let wlow = |m: usize, y: usize, md: u32| -> u32 {
+            if y == 0 { zw[m].rem_euclid(md as i64) as u32 } else { (&wt[y] % md).iter_u32_digits().next().unwrap_or(0) }
+        };
+        let rmodes = prune.residue & 3;
+        let (mut ltab, mut lstart, mut lcand, mut ltab2) = (vec![], vec![], vec![], vec![]);
+        let (mut pend, mut pcand) = (vec![], vec![]);
+        // the residue r that y completes, and the bits of v = w_m(y) mod b
+        let need = |m: usize, y: usize| ((q - rres[m * (kmax + 1) + y] as u32) % q) as usize;
+        let vbits = |v: u32| (1u128 << v) | (1u128 << (v + b));
+        if (prune.low > 0 || prune.pair > 0) && b <= 64 {
+            let qs = q as usize;
+            ltab = vec![(0, 0); (kmax + 1) * 2 * qs];
+            for k in 1..=kmax {
+                for m in 0..2 {
+                    // the digits below k are those below k - 1 and k - 1
+                    let (row, prev) = ((2 * k + m) * qs, (2 * (k - 1) + m) * qs);
+                    ltab.copy_within(prev..prev + qs, row);
+                    let (y, v) = (k - 1, wlow(m, k - 1, b));
+                    let e = &mut ltab[row + need(m, y)];
+                    e.0 |= vbits(v);
+                    e.1 |= 1 << ((y as u32 + b - v) % b);
+                }
+            }
+            for k in 0..=kmax {
+                for m in 0..2 {
+                    for r in 0..qs {
+                        lstart.push(lcand.len() as u32);
+                        lcand.extend((0..k).filter(|&y| need(m, y) == r).map(|y| (y as u32, wlow(m, y, lmod))));
+                    }
+                }
+            }
+            lstart.push(lcand.len() as u32);
+            if prune.pair > 0 {
+                ltab2 = vec![(0, 0); (kmax + 1) * 2 * qs];
+                for k in 1..=kmax {
+                    for m in 0..2 {
+                        let (row, prev) = ((2 * k + m) * qs, (2 * (k - 1) + m) * qs);
+                        ltab2.copy_within(prev..prev + qs, row);
+                        // the new pairs (y1, k - 1)
+                        let y2 = k - 1;
+                        for y1 in 0..=y2 {
+                            // R + r_m(y1) + r_m(y2) == 0 modulo q
+                            let r = (need(m, y1) + need(m, y2)) % qs;
+                            let v = (wlow(m, y1, b) + wlow(m, y2, b)) % b;
+                            let e = &mut ltab2[row + r];
+                            e.0 |= vbits(v);
+                            e.1 |= 1 << ((y1 as u32 + b - v) % b) | 1 << ((y2 as u32 + b - v) % b);
+                        }
+                    }
+                }
+            }
+            if prune.pair > 1 {
+                // the pairs of each (m, R) in the order of y2, so that those
+                // below k come first
+                let mut groups = vec![vec![]; 2 * qs];
+                for m in 0..2 {
+                    for y2 in 0..kmax {
+                        for y1 in 0..=y2 {
+                            let v = (wlow(m, y1, b2) + wlow(m, y2, b2)) % b2;
+                            groups[m * qs + (need(m, y1) + need(m, y2)) % qs].push((y1 as u8, y2 as u8, v as u16));
+                        }
+                    }
+                }
+                pend = vec![(0, 0); (kmax + 1) * 2 * qs];
+                for (g, list) in groups.iter().enumerate() {
+                    let (m, r, start) = (g / qs, g % qs, pcand.len());
+                    pcand.extend(list.iter().copied());
+                    for k in 0..=kmax {
+                        let below = list.iter().take_while(|e| (e.1 as usize) < k).count();
+                        pend[(2 * k + m) * qs + r] = (start as u16, (start + below) as u16);
+                    }
+                }
+            }
+        }
+        let zlow = |md: u32| -> Vec<u32> {
+            (0..2).flat_map(|m| (0..=d as i64).map(move |z| (lshift as i64 + z * zw[m]).rem_euclid(md as i64) as u32)).collect()
+        };
         Params {
             d,
             base: Base::new(b),
@@ -427,7 +540,140 @@ impl<const N: usize> Params<N> {
             rres,
             rok,
             root_res,
+            rmodes,
+            bsz: b,
+            full: if b >= 64 { u64::MAX } else { (1u64 << b) - 1 },
+            lmod,
+            magic: magic_b2(b),
+            ltab,
+            ltab2,
+            pend,
+            pcand,
+            zlow2: zlow(b2),
+            zlow1: zlow(b),
+            zlowl: zlow(lmod),
+            lstart,
+            lcand,
+            div2: (0..b2).map(|s| [(s % b) as u8, (s / b) as u8]).collect(),
         }
+    }
+
+    // The last-digit test, for a node whose one free slot holds a digit
+    // y < k. Its sum under convention m is t + (zeros) + w_m(y), with z
+    // known zeros. Lane 0 is unknown, so the last digit of the sum is a
+    // digit that the unknown positions hold: a digit of avail (decided, with
+    // copies not yet in the prefix) or y itself. With L & 3 = 2 or 3, the
+    // last L & 3 digits in unknown positions must all be such digits (the
+    // test does not count copies). The y range over the digits below k that
+    // complete the residue res. Returns false if no y passes under any
+    // convention of the residue rule.
+    #[inline(always)]
+    fn low_ok<const L: u8>(&self, k: usize, res: [u8; 2], t: &DV<N>, z: u32, avail: u64, pp: u32) -> bool {
+        let tl = t.low4();
+        let b = self.bsz;
+        let zi = z as usize;
+        for m in 0..2 {
+            if self.rmodes & (1 << m) == 0 {
+                continue;
+            }
+            let i = (2 * k + m) * self.q as usize + res[m] as usize;
+            let (mk, sf) = unsafe { *self.ltab.get_unchecked(i) };
+            let mut a = (tl & 0xff) + unsafe { *self.zlow1.get_unchecked(m * (self.d as usize + 1) + zi) };
+            if a >= b {
+                a -= b;
+            }
+            // the last digits w_m(y) + a modulo b
+            let rot = (mk >> (b - a)) as u64 & self.full;
+            if rot & avail == 0 && (sf >> a) & 1 == 0 {
+                continue;
+            }
+            if L & 3 < 2 || pp < 2 {
+                return true;
+            }
+            // t modulo lmod = b^L
+            let (b2, lm) = (b * b, self.lmod);
+            let tv = (tl & 0xff) + b * ((tl >> 8) & 0xff) + if L & 3 >= 3 { b2 * ((tl >> 16) & 0xff) } else { 0 };
+            let mut a2 = tv + unsafe { *self.zlowl.get_unchecked(m * (self.d as usize + 1) + zi) };
+            if a2 >= lm {
+                a2 -= lm;
+            }
+            let (s0, s1) = unsafe { (*self.lstart.get_unchecked(i) as usize, *self.lstart.get_unchecked(i + 1) as usize) };
+            for &(y, wy) in unsafe { self.lcand.get_unchecked(s0..s1) } {
+                let mut s = a2 + wy;
+                if s >= lm {
+                    s -= lm;
+                }
+                let av = avail | 1 << y;
+                let ok = if L & 3 >= 3 {
+                    let x2 = ((s as u64 * self.magic) >> 40) as u32;
+                    let [x0, x1] = unsafe { *self.div2.get_unchecked((s - x2 * b2) as usize) };
+                    // with pp = 2, lane 2 is a known digit
+                    let x2 = if pp >= 3 { x2 } else { x0 as u32 };
+                    (av >> x0) & (av >> x1) & (av >> x2) & 1
+                } else {
+                    let [x0, x1] = unsafe { *self.div2.get_unchecked(s as usize) };
+                    (av >> x0) & (av >> x1) & 1
+                };
+                if ok != 0 {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    // The last-digit test for a node with two free slots y1 <= y2 < k: the
+    // last digit of t + (zeros) + w_m(y1) + w_m(y2) must be a digit of avail,
+    // y1 or y2, for a pair that completes the residue res. With
+    // (L >> 2) & 3 = 2 and pp >= 2, so must the last two digits.
+    #[inline(always)]
+    fn pair_ok<const L: u8>(&self, k: usize, res: [u8; 2], t: &DV<N>, z: u32, avail: u64, pp: u32) -> bool {
+        let tl = t.low4();
+        let b = self.bsz;
+        let zi = z as usize;
+        for m in 0..2 {
+            if self.rmodes & (1 << m) == 0 {
+                continue;
+            }
+            let i = (2 * k + m) * self.q as usize + res[m] as usize;
+            let (mk, sf) = unsafe { *self.ltab2.get_unchecked(i) };
+            let mut a = (tl & 0xff) + unsafe { *self.zlow1.get_unchecked(m * (self.d as usize + 1) + zi) };
+            if a >= b {
+                a -= b;
+            }
+            if ((mk >> (b - a)) as u64 & avail) | (sf >> a) & 1 == 0 {
+                continue;
+            }
+            if (L >> 2) & 3 < 2 || pp < 2 {
+                return true;
+            }
+            let b2 = b * b;
+            let mut a2 = (tl & 0xff) + b * ((tl >> 8) & 0xff) + unsafe { *self.zlow2.get_unchecked(m * (self.d as usize + 1) + zi) };
+            if a2 >= b2 {
+                a2 -= b2;
+            }
+            let (s0, s1) = unsafe { *self.pend.get_unchecked(i) };
+            for &(y1, y2, v) in unsafe { self.pcand.get_unchecked(s0 as usize..s1 as usize) } {
+                let mut s = a2 + v as u32;
+                if s >= b2 {
+                    s -= b2;
+                }
+                let [x0, x1] = unsafe { *self.div2.get_unchecked(s as usize) };
+                let av = avail | 1 << y1 | 1 << y2;
+                if (av >> x0) & (av >> x1) & 1 != 0 {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    // the decided digits above k that the known leading digits do not hold
+    // in full: cnt[x] holds c_x for x > k
+    fn node_avail(&self, n: &Node<N>, k: usize, cnt: &Hist) -> u64 {
+        let lo = self.clip_lo(&n.t);
+        let known = self.known(n.pp);
+        (k + 1..=self.kmax).filter(|&x| cnt[x] as u32 > lo.count(x as u8, known)).fold(0, |a, x| a | 1 << x)
     }
 
     // whether a node with the residues res, whose one free slot holds a
@@ -539,6 +785,13 @@ impl<const N: usize> Params<N> {
     }
 }
 
+// s / b^2 = (s magic_b2(b)) >> 40 for every s < b^3 and b <= 64: with
+// D = b^2 and magic = (2^40 + e) / D, 0 <= e < D, s magic / 2^40 is
+// s / D + s e / (D 2^40), and s e < 2^18 2^12 < 2^40.
+pub fn magic_b2(b: u32) -> u64 {
+    (1u64 << 40).div_ceil(b as u64 * b as u64)
+}
+
 // E h, Var h and Cov(h, N) for N ~ Poisson(mu) and h(n) = ln n! - n lnp.
 fn cell_moments(mu: f64, lnp: f64) -> (f64, f64, f64) {
     if mu <= 0.0 {
@@ -611,6 +864,7 @@ struct Node<const N: usize> {
     ln_e: f64,     // ln of the model's expected number of solutions below the node
     zmin: f32,     // with --zhist: the smallest z-score on the path to the node
     res: [u8; 2],  // offset + sum of w(x) - x over the digits in t, modulo b - 1, per convention
+    avail: u64,    // with the last-digit test: the decided digits x with c_x above their copies in the prefix
 }
 
 #[derive(Default)]
@@ -681,6 +935,9 @@ pub struct Search<const N: usize> {
     /// search also runs
     #[cfg_attr(not(feature = "gpu"), allow(dead_code))]
     zscore_only: bool,
+    /// the last-digit tests: the digits of the test with one free slot (0
+    /// to 3), plus 4 times those of the test with two free slots (0 to 2)
+    low: u8,
     /// (convention, number of digits, digits with the least significant first)
     pub found: Mutex<Vec<(u32, u32, [u8; 64])>>,
     /// statistics, one slot per thread so that threads do not share cache lines
@@ -729,6 +986,8 @@ impl<const N: usize> Search<N> {
                 && prune.zero >= 0
                 && !prune.zhist
                 && !prune.tree_stats,
+            // the last-digit test needs the residue rule
+            low: if prune.residue & 3 == 0 || b > 64 { 0 } else { prune.low.min(3) | prune.pair.min(2) << 2 },
             found: Mutex::new(vec![]),
             // slot 0 serves threads outside the pool
             stats: (0..=rayon::current_num_threads()).map(|_| Stats::default()).collect(),
@@ -832,7 +1091,7 @@ impl<const N: usize> Search<N> {
         for (pi, p) in self.params.iter().enumerate() {
             let mut l = Local::for_params(p);
             let hi = p.root_hi.add(&p.drop[p.kmax * (p.d as usize + 1) + p.d as usize], &p.base);
-            let root = Node { t: p.root_t, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b), zmin: f32::INFINITY, res: p.root_res };
+            let root = Node { t: p.root_t, hi, pp: p.d, rf: p.d, m: 0, lneed: 0.0, ln_e: p.d as f64 * (((p.kmax + 1) as f64).ln() - p.ln_b), zmin: f32::INFINITY, res: p.root_res, avail: 0 };
             let mut frontier = vec![Unit { pi, k: p.kmax, n: root, cnt: [0; 128] }];
             for _ in 0..depth {
                 let mut next = vec![];
@@ -843,7 +1102,8 @@ impl<const N: usize> Search<N> {
                     }
                     l.node(u.n.zmin);
                     let mut cnt = u.cnt;
-                    self.expand::<true>(p, u.k, &u.n, &mut cnt, &mut l, |_, c, cnt| {
+                    // the last-digit test does not act here, so the units do not depend on it
+                    self.expand::<true, 0>(p, u.k, &u.n, &mut cnt, &mut l, |_, c, cnt| {
                         next.push(Unit { pi, k: u.k - 1, n: *c, cnt: *cnt });
                     });
                 }
@@ -864,10 +1124,24 @@ impl<const N: usize> Search<N> {
                 return;
             }
             let p = &self.params[u.pi];
+            let mut n = u.n;
+            if self.low > 0 {
+                n.avail = p.node_avail(&n, u.k, &u.cnt);
+            }
+            // low: the digits of the last-digit test with one free slot, plus
+            // 4 times those with two
+            macro_rules! go {
+                ($x:literal, $($l:literal)*) => {
+                    match self.low {
+                        $($l => rayon::scope(|s| self.rec::<$x, $l>(s, p, u.k, n, u.cnt, 0)),)*
+                        _ => unreachable!(),
+                    }
+                };
+            }
             if self.inexact {
-                rayon::scope(|s| self.rec::<true>(s, p, u.k, u.n, u.cnt, 0));
+                go!(true, 0 1 2 3 4 5 6 7 8 9 10 11)
             } else {
-                rayon::scope(|s| self.rec::<false>(s, p, u.k, u.n, u.cnt, 0));
+                go!(false, 0 1 2 3 4 5 6 7 8 9 10 11)
             }
             done(i);
         });
@@ -877,9 +1151,9 @@ impl<const N: usize> Search<N> {
     // child whose interval survives the leading-digit test. cnt[x] holds c_x
     // for x > k; the cursor sets cnt[k] before it hands out a child.
     #[inline(always)]
-    fn expand<const X: bool>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, &Node<N>, &mut Hist)) {
-        let mut cur = Cursor::new(p, k, n);
-        while let Some(c) = self.next_child::<X>(p, &mut cur, cnt, l) {
+    fn expand<const X: bool, const L: u8>(&self, p: &Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, mut emit: impl FnMut(&mut Local, &Node<N>, &mut Hist)) {
+        let mut cur = Cursor::new::<L>(p, k, n);
+        while let Some(c) = self.next_child::<X, L>(p, &mut cur, cnt, l) {
             emit(l, &c, cnt);
         }
     }
@@ -887,7 +1161,7 @@ impl<const N: usize> Search<N> {
     // Advance the cursor to its next child that survives every test. X
     // enables the inexact rules.
     #[inline(always)]
-    fn next_child<const X: bool>(&self, p: &Params<N>, cur: &mut Cursor<N>, cnt: &mut Hist, l: &mut Local) -> Option<Node<N>> {
+    fn next_child<const X: bool, const L: u8>(&self, p: &Params<N>, cur: &mut Cursor<N>, cnt: &mut Hist, l: &mut Local) -> Option<Node<N>> {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1); // lanes >= d-1
@@ -915,7 +1189,11 @@ impl<const N: usize> Search<N> {
             }
             let res = cur.res;
             cur.res = p.res_add(res, k);
-            if n.rf - e == 1 && !p.res_ok(k, res) {
+            // the decided digits with copies outside the prefix
+            let avail = if L > 0 { n.avail | ((e > 0) as u64) << k } else { 0 };
+            // child e has one free slot before its forced digits, and a
+            // forced digit only names the digit of that slot
+            if n.rf - e == 1 && !(p.res_ok(k, res) && (L & 3 == 0 || p.low_ok::<L>(k, res, &te, cur.z, avail, n.pp))) {
                 continue;
             }
             let mut nlo = te.nonzero_mask();
@@ -933,17 +1211,22 @@ impl<const N: usize> Search<N> {
             let mut clo = if nlo & top == 0 { p.pow_lo } else { te };
             let mut chi = if nhi & !dm != 0 { p.max_v } else { hi };
             let lneed = if X && p.track_ln { n.lneed + p.ln_fact[e as usize] } else { 0.0 };
-            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0, zmin: f32::INFINITY, res };
-            if self.settle::<X>(p, k, &mut c, &mut clo, &mut chi, cnt) && {
+            let mut c = Node { t: te, hi, pp: n.pp, rf: n.rf - e, m: mk, lneed, ln_e: 0.0, zmin: f32::INFINITY, res, avail };
+            if self.settle::<X, L>(p, k, &mut c, &mut clo, &mut chi, cnt) && {
                 // hi for the child's own cursor, before the branches below
                 c.hi = c.hi.add(unsafe { p.drop.get_unchecked((k - 1) * (p.d as usize + 1) + c.rf as usize) }, base);
                 first_digit_ok(p, &clo, &chi, c.pp, k, cnt)
             }
-                && (c.rf != 1 || p.res_ok(k, c.res))
+                && (c.rf != 1 || (p.res_ok(k, c.res) && (L & 3 == 0 || p.low_ok::<L>(k, c.res, &c.t, clo.count(0, p.known(c.pp)), c.avail, c.pp))))
+                && (L & 12 == 0 || c.rf != 2 || p.pair_ok::<L>(k, c.res, &c.t, clo.count(0, p.known(c.pp)), c.avail, c.pp))
                 && (!X || (p.plausible(&c, &clo, k) && p.likely(&mut c, n, k, l)))
             {
                 #[cfg(test)]
                 assert_eq!(c.res, p.node_res(&c, k - 1, cnt), "the residues of a node");
+                #[cfg(test)]
+                if L > 0 {
+                    assert_eq!(c.avail, p.node_avail(&c, k - 1, cnt), "the available digits of a node");
+                }
                 return Some(c);
             }
         }
@@ -958,7 +1241,7 @@ impl<const N: usize> Search<N> {
     // to t, which narrows the interval and can expose more leading digits.
     // Returns false if the node fails.
     #[inline(always)]
-    fn settle<const X: bool>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, cnt: &Hist) -> bool {
+    fn settle<const X: bool, const L: u8>(&self, p: &Params<N>, k: usize, c: &mut Node<N>, clo: &mut DV<N>, chi: &mut DV<N>, cnt: &Hist) -> bool {
         let base = &p.base;
         let dm = p.dmask;
         let top = !(dm >> 1);
@@ -996,8 +1279,13 @@ impl<const N: usize> Search<N> {
                 // lanes < d <= 62 and digits < b <= 127, so indices stay in bounds
                 let x = unsafe { *ld.get_unchecked(i as usize) };
                 let lim = unsafe { *cnt.get_unchecked(x as usize) };
-                if (clo.eq_mask_at(&ld, i as usize) & known).count_ones() > lim as u32 {
+                let cx = (clo.eq_mask_at(&ld, i as usize) & known).count_ones();
+                if cx > lim as u32 {
                     return false;
+                }
+                if L > 0 {
+                    // all copies of x are in the prefix now
+                    c.avail &= !(((cx == lim as u32) as u64) << x);
                 }
                 if X && p.track_ln {
                     // copies of x among the known digits up to lane i, in the
@@ -1067,9 +1355,9 @@ impl<const N: usize> Search<N> {
     }
 
     // A parallel task: search the subtree below n.
-    fn rec<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
+    fn rec<'s, const X: bool, const L: u8>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: Node<N>, mut cnt: Hist, depth: u32) {
         let mut l = Local::for_params(p);
-        self.rec_seq::<X>(s, p, k, &n, &mut cnt, &mut l, depth);
+        self.rec_seq::<X, L>(s, p, k, &n, &mut cnt, &mut l, depth);
         self.flush(&l);
     }
 
@@ -1078,7 +1366,7 @@ impl<const N: usize> Search<N> {
     // thread has no queued tasks left hands its children to the pool as
     // tasks, so idle threads can steal them. Otherwise the children run
     // here, which avoids the cost of a task per node.
-    fn rec_seq<'s, const X: bool>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, depth: u32) {
+    fn rec_seq<'s, const X: bool, const L: u8>(&'s self, s: &rayon::Scope<'s>, p: &'s Params<N>, k: usize, n: &Node<N>, cnt: &mut Hist, l: &mut Local, depth: u32) {
         // with --tree-stats: the node count when each cursor's node was
         // counted, to measure its subtree; split marks a node whose children
         // went to other tasks
@@ -1093,22 +1381,22 @@ impl<const N: usize> Search<N> {
         // the cursors of the ancestors; k decreases by one per level
         let mut stack: [std::mem::MaybeUninit<Cursor<N>>; 64] = [const { std::mem::MaybeUninit::uninit() }; 64];
         let mut sp = 0;
-        let mut cur = Cursor::new(p, k, n);
+        let mut cur = Cursor::new::<L>(p, k, n);
         loop {
             let ck = cur.k;
             let level = depth + (k - ck) as u32;
             let child = if cur.e == 0 && level < self.par_depth && rayon_core::current_thread_has_pending_tasks() != Some(true) {
                 // hand every child to the pool and drop this node
-                self.expand::<X>(p, ck, &cur.node0(), cnt, l, |_, c, cnt| {
+                self.expand::<X, L>(p, ck, &cur.node0(), cnt, l, |_, c, cnt| {
                     let (c, cnt) = (*c, *cnt);
-                    s.spawn(move |s| self.rec::<X>(s, p, ck - 1, c, cnt, level + 1))
+                    s.spawn(move |s| self.rec::<X, L>(s, p, ck - 1, c, cnt, level + 1))
                 });
                 if ts {
                     split = true;
                 }
                 None
             } else {
-                self.next_child::<X>(p, &mut cur, cnt, l)
+                self.next_child::<X, L>(p, &mut cur, cnt, l)
             };
             match child {
                 Some(c) => {
@@ -1124,7 +1412,7 @@ impl<const N: usize> Search<N> {
                             cur_start = before;
                         }
                         sp += 1;
-                        cur = Cursor::new(p, ck - 1, &c);
+                        cur = Cursor::new::<L>(p, ck - 1, &c);
                     }
                 }
                 None => {
@@ -1159,6 +1447,7 @@ struct Cursor<const N: usize> {
     e: u32,
     occk: u32,
     res: [u8; 2], // the residues of the child for e
+    z: u32,       // with the last-digit test: the zeros in the known leading digits
 }
 
 // the fields of a node that its cursor still needs
@@ -1170,18 +1459,21 @@ struct Head {
     lneed: f64,
     ln_e: f64,
     zmin: f32,
+    avail: u64,
 }
 
 impl<const N: usize> Cursor<N> {
     #[inline(always)]
-    fn new(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
-        let occk = p.clip_lo(&n.t).count(k as u8, p.known(n.pp));
-        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e, zmin: n.zmin }, k, e: 0, occk, res: n.res }
+    fn new<const L: u8>(p: &Params<N>, k: usize, n: &Node<N>) -> Self {
+        let (lo, known) = (p.clip_lo(&n.t), p.known(n.pp));
+        let occk = lo.count(k as u8, known);
+        let z = if L > 0 { lo.count(0, known) } else { 0 };
+        Cursor { te: n.t, hi: n.hi, h: Head { pp: n.pp, rf: n.rf, m: n.m, lneed: n.lneed, ln_e: n.ln_e, zmin: n.zmin, avail: n.avail }, k, e: 0, occk, res: n.res, z }
     }
 
     // the node of a cursor that has not started yet
     fn node0(&self) -> Node<N> {
         let h = &self.h;
-        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e, zmin: h.zmin, res: self.res }
+        Node { t: self.te, hi: self.hi, pp: h.pp, rf: h.rf, m: h.m, lneed: h.lneed, ln_e: h.ln_e, zmin: h.zmin, res: self.res, avail: h.avail }
     }
 }
