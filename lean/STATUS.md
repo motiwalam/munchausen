@@ -22,7 +22,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
-Counts of table rows at the time of writing: 155 formalized (one of them a
+Counts of table rows at the time of writing: 156 formalized (one of them a
 list of computed solutions checked by `decide`), 24 partial, 12 rows of open
 problems (15 `Prop`s), 4 refuted conjectures, 79 not formalized and 5 not
 stated.
@@ -409,8 +409,9 @@ stated.
 | Theorem 33.12 | `theorem33_12`, `theorem33_12_member` [Fact] | formalized (every `u ≥ j` gives a member, since then `t_i ≤ (M u)^j ≤ x`; (S3) is stated as `y > M (x + v)` whenever `v^j ≤ x`) |
 | Proposition 33.13 | `prop33_13`, `prop33_13_lt`, `prop33_13_identity` [Fact] | formalized (the consequence for identities with `lam` an integer dividing `t_0`, as the normalization of Corollary 25.3 gives) |
 | Theorem 33.14, Corollary 33.15, Theorem 33.19 | none | not formalized (conditional on abc; the Tschirnhaus reduction is not stated) |
-| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `abc_div_gcd` [Fact] | partial: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)` and `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)` for `0 < abs(R) ≤ N`; the bounds on `rad(N)` and `abs(R)` and the final bound on `x` are not formalized |
-| Corollaries 33.17, 33.18, Proposition 33.20, Table 33.4.1 | none | not formalized (conditional on abc; computation) |
+| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `theorem33_16_bound`, `theorem33_16_solution`, `rad_four_mul_pow_self_le`, `abc_div_gcd` [Fact] | partial: for `x^x` in full: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)`, `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)`, `rad(4 l x^x) ≤ 2 l x`, and `x ≤ (2 + δ) B + C_δ` for every 3-digit solution with `R ≠ 0`, in each of the three positions and under either convention (`ε = δ/(4 + δ)`); the sentence on factorials (with the cited `rad(x!) ≤ e^(1.01624 x)`) is not formalized |
+| Corollary 33.17 | `corollary33_17`, `isSolution_x_0_0` [Fact] | formalized, corrected (see problem 9): a solution with the large digit last is a member of case (i) (`theorem25_7_i`), the large digit is never in the middle, and in front it needs `0^0 = 0` and the string `(x, 0, 0)` or `(x, 0, 1)` |
+| Corollary 33.18, Proposition 33.20, Table 33.4.1 | none | not formalized (conditional on abc; computation) |
 | Proposition 33.21 | `prop33_21`, `prop33_21_card` [Fact] | formalized (the arithmetic; Theorem 15.14 itself is not formalized) |
 | Proposition 33.22 | none | not formalized (inequalities closed by a computation) |
 | Heuristic 33.23, the census of 33.3.4 | none | not formalized (heuristic, computed) |
@@ -515,6 +516,21 @@ Items 1 and 2 and the hypothesis of Theorem 15.9 were fixed in the library
    primitive, Gauss's lemma) `lam` is an integer dividing `t_0`, and the
    conclusion holds. The Lean statement (`prop33_13_identity`) assumes
    `lam` an integer dividing `t_0`.
+9. **Corollary 33.17** (section 33.4.1), an exception under `0^0 = 0`. The
+   corollary claims, under either convention, that every 3-digit solution
+   whose largest digit `x` exceeds `(2 + eps) max(B_eps, B)` is a member of
+   case (i) of Theorem 25.7, so `x` is last. Its proof uses "`R = 0` is case
+   (i)", and Theorem 25.7 is stated under `0^0 = 1` (chapter 25), where a
+   leading `x` gives `R = 4x (w(q) + g(r)) + q^2 > 0` because `w(q) >= 1`.
+   Under `0^0 = 0` the strings `(x, 0, 0)` and `(x, 0, 1)` have `R = 0` with
+   `x` in front, and they are solutions for every odd `x >= 5` in base
+   `x^((x-1)/2)` (the self-paying families of Proposition 2.3). Their small
+   digits are at most 1 and `x` is unbounded, so the corollary fails for
+   them. Theorem 33.16 itself assumes `R != 0` and is not affected. The
+   Lean statement (`corollary33_17`) proves the corrected form: last means
+   case (i), the middle is impossible, and in front the convention is
+   `0^0 = 0` and the string is `(x, 0, 0)` or `(x, 0, 1)`
+   (`isSolution_x_0_0` shows the exception occurs).
 
 The library corrections that landed during this work (Proposition 9.3, the
 pair `(c, 1)` in Proposition 15.16 needs `c >= 3`, the negative-base family
