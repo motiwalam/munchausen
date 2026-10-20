@@ -1,0 +1,78 @@
+# Referee checks of chapter 38 (section 38.6), 2026-10-20.
+
+## gp -q -s 2G r6m_ref_bounds.gp < /dev/null
+# Theorem 38.2: gaps and X_sq
+k=1 e=1 a=0 T=2 digits=51 frac=0.25372082 g-=0.034279528 g+=0.094712547 X_sq=7.638315254
+k=5 e=1 a=0 T=10 digits=55 frac=0.46574941 g-=2.1145214 e-5 g+=2.4254645 e-5 X_sq=3438.459895
+k=9 e=2 a=1 T=36 digits=66 frac=0.044020801 g-=1.1345250 e-18 g+=2.4637951 e-17 X_sq=5.069752059 e10
+k=32 e=5 a=2 T=320 digits=190 frac=0.11463422 g-=1.1879006 e-143 g+=9.1746302 e-143 X_sq=1.660867216 e74
+k=125 e=3 a=1 T=750 digits=377 frac=0.83642887 g-=1.2724994 e-328 g+=2.4884860 e-329 X_sq=3.034672694 e167
+k=2401 e=4 a=1 T=19208 digits=8402 frac=0.65528896 g-=3.2183427 e-8346 g+=1.6929910 e-8346 X_sq=1.854885424 e4178
+# Theorem 38.7: Laurent bound
+largest allowed even x about 4.2646608 e11
+at x = 4.265e11: lhs = 5.710595777 e12  rhs at the largest log eta = 5.710424648 e12  max over the grid = 5.710424648 e12
+# Theorem 38.6: log10 of the bounds, 1 <= q <= 20, 0 <= r <= 20
+440 families
+worst field case: log10 X = 185.53 at (x,20,4) m=1 A=104857600000000000000000252 |S|=20
+worst square case: log10 X = 34.30
+(x,1,1) m=1: A=1 |S|=0 log10 X field 28.05 square 7.75
+(x,1,0) m=0: A=1 |S|=0 log10 X field 28.05 square 7.75
+(x,1,2) m=1: A=3 |S|=2 log10 X field 39.58 square 10.75
+(x,1,7) m=1: A=823537 |S|=6 log10 X field 70.97 square 16.87
+(x,20,4) m=1: A=104857600000000000000000252 |S|=20 log10 X field 185.53 square 34.30
+
+## gp -q r6m_ref_planted.gp < /dev/null
+(a) x an odd prime power prime to k, x <= 400, 2 <= n <= 9
+  p=1 A=1 k=1 (e,a)=(1,0): 4 solutions, 0 without the unit
+  p=1 A=25 k=5 (e,a)=(1,0): 2 solutions, 0 without the unit
+  p=3 A=27 k=9 (e,a)=(2,1): 2 solutions, 0 without the unit
+  p=3 A=3 k=3 (e,a)=(1,1): 1 solutions, 0 without the unit
+  p=5 A=125 k=25 (e,a)=(2,1): 3 solutions, 0 without the unit
+  p=1 A=9 k=3 (e,a)=(1,0): 0 solutions, 0 without the unit
+  p=2 A=8 k=4 (e,a)=(2,1): 3 solutions, 0 without the unit
+(a') negative control, omega(x) >= 2, x <= 3000, 2 <= n <= 5
+  p=1 A=1 k=1 (e,a)=(1,0): 5 solutions, 5 without the unit
+  p=3 A=27 k=9 (e,a)=(2,1): 1 solutions, 1 without the unit
+  p=1 A=25 k=5 (e,a)=(1,0): 0 solutions, 0 without the unit
+(b) leading, x even <= 1000, q <= 7, A <= 60, 3 <= n <= 9
+  183 solutions, 0 with support outside A q
+
+## python r6m_ref_exact.py 6000   (integer square roots, 8 processes)
+root mid 1 1 1 1 1
+root mid 1 0 0 1 1
+root mid 1 1 1 3 4
+root mid 1 0 0 3 4
+root mid 1 1 1 7 904
+root mid 1 0 0 7 904
+done: x <= 6000, families [('mid', 1, 1, 1), ('mid', 1, 0, 0), ('mid', 1, 3, 1), ('mid', 3, 1, 1), ('mid', 3, 0, 0), ('lead', 1, 1, 1), ('lead', 1, 0, 0)]
+# columns: position, the two small digits (a, c), convention m, x, b
+
+## r6m_refsieve (Euler's criterion modulo the 40 primes above 2^31), 8 threads
+# input lines: a c pos m x0 x1 par
+# small range, to compare with data/r6f_ff_evidence.txt
+survivor 1 1 mid 1 1
+survivor 1 1 mid 1 3
+survivor 1 1 mid 1 7
+family 1 1 mid 1 x 1..1000001 par 1 tested 500001 survivors 3
+survivor 1 0 mid 0 1
+survivor 1 0 mid 0 3
+survivor 1 0 mid 0 7
+family 1 0 mid 0 x 1..1000001 par 1 tested 500001 survivors 3
+family 1 3 mid 1 x 1..1000001 par 1 tested 500001 survivors 0
+family 3 1 mid 1 x 1..1000001 par 1 tested 500001 survivors 0
+family 3 0 mid 0 x 1..1000001 par 1 tested 500001 survivors 0
+family 1 1 lead 1 x 2..1000000 par 0 tested 500000 survivors 0
+family 1 0 lead 0 x 2..1000000 par 0 tested 500000 survivors 0
+# slices of the runs of section 38.5
+family 1 1 lead 1 x 426000000000..426500000000 par 0 tested 250000001 survivors 0
+family 1 0 lead 0 x 426000000000..426500000000 par 0 tested 250000001 survivors 0
+family 1 1 lead 1 x 999999998..1100000000 par 0 tested 50000002 survivors 0
+family 1 0 lead 0 x 999999998..1100000000 par 0 tested 50000002 survivors 0
+family 1 1 lead 1 x 173205080000..173305080000 par 0 tested 50000001 survivors 0
+family 1 0 lead 0 x 173205080000..173305080000 par 0 tested 50000001 survivors 0
+family 3 1 mid 1 x 50000000001..50700000000 par 1 tested 350000000 survivors 0
+family 3 0 mid 0 x 50000000001..50700000000 par 1 tested 350000000 survivors 0
+family 3 1 mid 1 x 999999999..1100000001 par 1 tested 50000002 survivors 0
+family 3 0 mid 0 x 999999999..1100000001 par 1 tested 50000002 survivors 0
+family 3 1 mid 1 x 27182818285..27282818285 par 1 tested 50000001 survivors 0
+family 3 0 mid 0 x 27182818285..27282818285 par 1 tested 50000001 survivors 0

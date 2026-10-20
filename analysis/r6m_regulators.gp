@@ -1,4 +1,4 @@
-\\ Round 6 middle draft: regulators of Q(sqrt(x^2 + 4k^2)) for odd primes x
+\\ Chapter 38: regulators of Q(sqrt(x^2 + 4k^2)) for odd primes x
 \\ (exact, quadregulator). How often is Reg at most 2k + log x + 1?
 \\ usage: gp -q r6m_regulators.gp
 reg(k,X0,cnt)={my(n=0,small=0,s=0.,mn=10^9,mx=0.);

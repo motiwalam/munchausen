@@ -1,4 +1,4 @@
-\\ Round 6 middle draft, Lemma M.4: in M = Q(sqrt R, sqrt(pA)), R = x^2 + 4pA,
+\\ Chapter 38, Lemma 38.4: in M = Q(sqrt R, sqrt(pA)), R = x^2 + 4pA,
 \\ pA not a square, x an odd prime with (pA/x) = 1, the x-part of
 \\ z = (theta + k)/(theta - k) is (I^-1 tau(I)) and L/L' = I tau(I).
 \\ Prints the support of z away from x and checks both identities.

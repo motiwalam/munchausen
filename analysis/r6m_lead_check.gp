@@ -1,4 +1,4 @@
-\\ Round 6 middle draft: Lemma M.5 on artificial equations
+\\ Chapter 38: Lemma 38.5 on artificial equations
 \\ U^2 = 4 x^n + R, R = q^2 + 4xA, U = 2xb + q, x even.
 \\ Claim: mu / theta^n is an S-unit, S = primes above A*q (n large enough).
 \\ usage: gp -q r6m_lead_check.gp

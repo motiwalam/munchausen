@@ -1,16 +1,16 @@
-"""Bounds for the leading position with x even (round 6, middle draft).
+"""Bounds for the leading position with x even (chapter 38).
 
 The string (x, q, r) with x even and q >= 1 is a solution exactly when
 U^2 = 4 x^(x+1) + R, U = 2xb + q, R = q^2 + 4xA, A = w(q) + w(r) - r.
 With theta = (q + sqrt R)/2 (norm -xA) the number nu = mu / theta^(x+1),
 mu = (U + sqrt R)/2, is an S-unit for the primes above A*q
-(Lemma M.5 of the draft). Two bounds follow.
+(Lemma 38.5). Two bounds follow.
 
   laurent   the family b(xb + 1) = x^x + 1 ((x,1,1), and (x,1,0) under
             0^0 = 0): S is empty and Laurent's bound for two logarithms
             gives an explicit X_L.
   matveev B every family with 1 <= q <= B, 0 <= r <= B: Matveev's bound
-            with a reduced basis of the S-unit lattice (Theorem M.6).
+            with a reduced basis of the S-unit lattice (Theorem 38.6).
 
 Usage: python r6m_lead_bounds.py laurent
        python r6m_lead_bounds.py matveev B
@@ -26,7 +26,7 @@ def w(d, m):
 
 
 def laurent_ok(x):
-    """True if the inequality of Theorem M.7 allows this even x."""
+    """True if the inequality of Theorem 38.7 allows this even x."""
     R = 4 * x + 1
     lx = log(x)
     alpha_log = 2.0001 / sqrt(R)          # log alpha, alpha = |theta/theta'|
@@ -56,7 +56,7 @@ def laurent():
             lo = mid
         else:
             hi = mid
-    print("# Theorem M.7: b(xb + 1) = x^x + 1, x even")
+    print("# Theorem 38.7: b(xb + 1) = x^x + 1, x even")
     print(f"X_L = {hi:.6e}  (no even x above this passes the inequality)")
     for x in (1e9, 1e10, 1e11, 1e12, 1e13):
         print(f"  x = {x:.0e}: allowed by the inequality: {laurent_ok(x)}")
@@ -106,7 +106,7 @@ def matveev_x(A, q):
 
 
 def matveev(B):
-    print("# Theorem M.6: log10 of the bound X_M for (x, q, r), x even, q >= 1")
+    print("# Theorem 38.6: log10 of the bound X_M for (x, q, r), x even, q >= 1")
     print("# q r m  A  |S|max  log10(X_M)")
     worst = 0
     for q in range(1, B + 1):

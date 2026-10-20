@@ -1,4 +1,4 @@
-\\ Round 6 middle draft: Lemma M.1 and Theorem M.2 on artificial equations
+\\ Chapter 38: Lemma 38.1 and Theorem 38.2 on artificial equations
 \\ p b^2 + x b - A = x^n with pA = k^2 and small n. For each solution with x
 \\ prime to 2k it looks for e, a, s with (mu/mu')^e z^(-s e n) (theta/k)^(-a)
 \\ a unit and prints k^a Tr(w). Prime powers x must always have one.

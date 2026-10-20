@@ -1,4 +1,4 @@
-"""Bounds of Theorem M.2 and Table M.2.3.1 (round 6 middle draft, square families).
+"""Bounds of Theorem 38.2 and Table 38.2.3.1 (chapter 38, square families).
 
 For a middle family (p, x, q) with p*A = k^2 a perfect square and an odd
 prime power x prime to 2k, a solution forces the integer k^a * Tr(w) to be
