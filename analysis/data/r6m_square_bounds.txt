@@ -1,0 +1,33 @@
+# middle families with p, q <= 20 and p*A = k^2
+# columns: p A k e a | families | f(2ke) | gaps g-, g+ | X_sq = sqrt(2 e k^3 / g-)
+p=1 A=1 k=1 e=1 a=0 | (1,x,1) both; (1,x,0) 0^0=0
+   f(2ke) = 7.253720815694037535336428   frac = 0.253721
+   g- = 0.0342795   g+ = 0.0947125   X_sq = 7.6383153
+p=1 A=25 k=5 e=1 a=0 | (1,x,3) both
+   f(2ke) = 22026.46574940678675447305   frac = 0.465749
+   g- = 2.11452e-5   g+ = 2.42546e-5   X_sq = 3438.4599
+p=3 A=27 k=9 e=2 a=1 | (3,x,1) both; (3,x,0) 0^0=0
+   f(2ke) = 38801083924036757.0440208   frac = 0.0440208
+   g- = 1.13453e-18   g+ = 2.4638e-17   X_sq = 5.0697521e+10
+p=4 A=256 k=32 e=5 a=2 | (4,x,1) both; (4,x,0) 0^0=0
+   f(2ke) = 9.650152259751510640212273e+141   frac = 0.114634
+   g- = 1.1879e-143   g+ = 9.17463e-143   X_sq = 1.6608672e+74
+p=5 A=3125 k=125 e=3 a=1 | (5,x,1) both; (5,x,0) 0^0=0
+   f(2ke) = 6.573118176818505208509669e+327   frac = 0.836429
+   g- = 1.2725e-328   g+ = 2.48849e-329   X_sq = 3.0346727e+167
+p=7 A=823543 k=2401 e=4 a=1 | (7,x,1) both; (7,x,0) 0^0=0
+   2ke = 19208: X_sq is about exp(ke), not computed
+p=9 A=387420489 k=59049 e=5 a=1 | (9,x,1) both; (9,x,0) 0^0=0
+   2ke = 590490: X_sq is about exp(ke), not computed
+p=11 A=285311670611 k=1771561 e=6 a=1 | (11,x,1) both; (11,x,0) 0^0=0
+   2ke = 21258732: X_sq is about exp(ke), not computed
+p=13 A=302875106592253 k=62748517 e=7 a=1 | (13,x,1) both; (13,x,0) 0^0=0
+   2ke = 878479238: X_sq is about exp(ke), not computed
+p=15 A=437893890380859375 k=2562890625 e=8 a=1 | (15,x,1) both; (15,x,0) 0^0=0
+   2ke = 41006250000: X_sq is about exp(ke), not computed
+p=16 A=18446744073709551616 k=17179869184 e=17 a=2 | (16,x,1) both; (16,x,0) 0^0=0
+   2ke = 584115552256: X_sq is about exp(ke), not computed
+p=17 A=827240261886336764177 k=118587876497 e=9 a=1 | (17,x,1) both; (17,x,0) 0^0=0
+   2ke = 2134581776946: X_sq is about exp(ke), not computed
+p=19 A=1978419655660313589123979 k=6131066257801 e=10 a=1 | (19,x,1) both; (19,x,0) 0^0=0
+   2ke = 122621325156020: X_sq is about exp(ke), not computed

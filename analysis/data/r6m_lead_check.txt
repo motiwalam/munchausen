@@ -1,0 +1,13 @@
+[2, 1, 2, 4, 2, "support of nu:", [2]]
+[2, 1, 4, 6, 4, "support of nu:", [2]]
+[2, 1, 5, 5, 3, "support of nu:", [5]]
+[2, 1, 8, 8, 8, "support of nu:", [2]]
+[2, 1, 13, 4, 3, "support of nu:", [13]]
+[2, 1, 14, 7, 6, "support of nu:", [2, 7]]
+[2, 1, 17, 3, 3, "support of nu:", [17]]
+[2, 1, 20, 5, 4, "support of nu:", [2, 5]]
+[2, 1, 23, 6, 5, "support of nu:", [23]]
+[2, 1, 32, 3, 4, "support of nu:", [2]]
+[2, 1, 39, 5, 5, "support of nu:", [3, 13]]
+[2, 1, 41, 7, 7, "support of nu:", [41]]
+tested 321 failures 0

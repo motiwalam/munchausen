@@ -1,0 +1,4 @@
+k=5 x>100000 n=2000 mean Reg/x=0.1064 min 0.00013 max 0.5572  #Reg<=2k+log x+1: 1
+k=5 x>10000000 n=500 mean Reg/x=0.0890 min 0.00006 max 0.4927  #Reg<=2k+log x+1: 0
+k=9 x>100000 n=2000 mean Reg/x=0.0921 min 0.00005 max 0.6892  #Reg<=2k+log x+1: 1
+k=1 x>100000 n=2000 mean Reg/x=0.0001 min 0.00010 max 0.0001  #Reg<=2k+log x+1: 2000
