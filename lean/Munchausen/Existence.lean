@@ -24,7 +24,8 @@ import Munchausen.BaseWindow
   those of its `F`, with no carry from the rest, is a near-solution, and an exchange below the
   top makes it a strict one), and `theorem35_13` with the real conditions (a) and (b);
 * Corollary 35.14: near-solutions with `0 < |n - F(n)| < b^(b-2)` for `b ≥ 27`, and with
-  `|n - F(n)| < n / b`, `n / b^2` for `b ≥ 49`, `b ≥ 77`.
+  `|n - F(n)| < n / b`, `n / b^2` for `b ≥ 49`, `b ≥ 77`; `T(b)` (`nearT`) and the exponent
+  `t = T(b) - log_b(e b/(b - e))` do not decrease with `b`.
 -/
 
 namespace Munchausen
@@ -1421,5 +1422,168 @@ theorem corollary35_14_upper {b T : ℕ} (hTb : T + 6 ≤ b)
   have : (T : ℝ) * (Real.exp 1 * (T + 4)) ≤ T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) := by
     apply mul_le_mul_of_nonneg_left _ hT0; linarith
   nlinarith
+
+/-! ### Corollary 35.14: `T(b)` does not decrease -/
+
+lemma hasDerivAt_condA_fun {t : ℝ} (ht : 0 < t) :
+    HasDerivAt (fun s : ℝ => s * (1 - Real.exp (-1 + s⁻¹)))
+      (1 - Real.exp (-1 + t⁻¹) * (1 - t⁻¹)) t := by
+  have h1 : HasDerivAt (fun s : ℝ => -1 + s⁻¹) (-(t ^ 2)⁻¹) t := by
+    simpa using (hasDerivAt_inv ht.ne').const_add (-1 : ℝ)
+  have h2 := (h1.exp).const_sub 1
+  have h3 := (hasDerivAt_id' t).mul h2
+  convert h3 using 1
+  field_simp
+  ring
+
+/-- The right side `b (1 - e^(-1 + 1/b))` of condition (a) of Theorem 35.13 grows with `b`: its
+derivative `1 - e^(-1 + 1/b) (1 - 1/b)` is positive for `b ≥ 1`. -/
+lemma condA_monotoneOn :
+    MonotoneOn (fun s : ℝ => s * (1 - Real.exp (-1 + s⁻¹))) (Set.Ici 1) := by
+  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Ici 1)
+    (fun x hx => (hasDerivAt_condA_fun (by simp at hx; linarith)).continuousAt.continuousWithinAt)
+    (fun x hx => (hasDerivAt_condA_fun ?_).hasDerivWithinAt) ?_
+  · rw [interior_Ici] at hx; simp at hx; linarith
+  · intro x hx
+    rw [interior_Ici] at hx
+    simp only [Set.mem_Ioi] at hx
+    have hx0 : 0 < x := by linarith
+    have hinv : x⁻¹ ≤ 1 := inv_le_one_of_one_le₀ hx.le
+    have hinv0 : 0 < x⁻¹ := inv_pos.2 hx0
+    have he : Real.exp (-1 + x⁻¹) ≤ 1 := Real.exp_le_one_iff.2 (by linarith)
+    have : Real.exp (-1 + x⁻¹) * (1 - x⁻¹) ≤ 1 :=
+      calc Real.exp (-1 + x⁻¹) * (1 - x⁻¹) ≤ 1 * 1 :=
+            mul_le_mul he (by linarith) (by linarith) zero_le_one
+        _ = 1 := one_mul 1
+    linarith
+
+/-- Condition (a) of Theorem 35.13 only gets easier as `b` grows. -/
+lemma condA_mono {b b' T : ℕ} (hb : 1 ≤ b) (hbb : b ≤ b')
+    (h : (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b))) :
+    (T : ℝ) + 5 ≤ b' * (1 - Real.exp (-1 + 1 / b')) := by
+  have h1 : (1 : ℝ) ≤ b := by exact_mod_cast hb
+  have h2 : (b : ℝ) ≤ b' := by exact_mod_cast hbb
+  have := condA_monotoneOn (a := (b : ℝ)) (b := (b' : ℝ)) h1 (h1.trans h2) h2
+  simp only [one_div] at h ⊢
+  exact h.trans this
+
+/-- Condition (b) of Theorem 35.13 only gets easier as `b` grows, for `T + 6 ≤ b`. -/
+lemma condB_mono {b b' T : ℕ} (h0 : T + 6 ≤ b) (hb : b ≤ b')
+    (h : 1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 +
+      T ≤ (b : ℝ) - 2) :
+    1 + T * (Real.exp 1 * (T + 4) * b' / (b' - T - 5) + 1) + Real.exp 1 * b' / (b' - 2) + 1 +
+      T ≤ (b' : ℝ) - 2 := by
+  have he0 := Real.exp_pos 1
+  have h0r : (T : ℝ) + 6 ≤ b := by exact_mod_cast h0
+  have hbr : (b : ℝ) ≤ b' := by exact_mod_cast hb
+  have hT0 : (0 : ℝ) ≤ T := T.cast_nonneg
+  have hd0 : (0 : ℝ) < b - T - 5 := by linarith
+  have hd : (0 : ℝ) < b' - T - 5 := by linarith
+  have r1 : (b' : ℝ) / (b' - T - 5) ≤ b / (b - T - 5) := by
+    rw [div_le_div_iff₀ hd hd0]; nlinarith
+  have r2 : (b' : ℝ) / (b' - 2) ≤ b / (b - 2) := by
+    rw [div_le_div_iff₀ (by linarith) (by linarith)]; nlinarith
+  have k1 : Real.exp 1 * (T + 4) * b' / (b' - T - 5) ≤ Real.exp 1 * (T + 4) * b / (b - T - 5) := by
+    rw [mul_div_assoc, mul_div_assoc]
+    exact mul_le_mul_of_nonneg_left r1 (by positivity)
+  have k2 : Real.exp 1 * b' / (b' - 2) ≤ Real.exp 1 * b / (b - 2) := by
+    rw [mul_div_assoc, mul_div_assoc]
+    exact mul_le_mul_of_nonneg_left r2 he0.le
+  have k3 : (T : ℝ) * (Real.exp 1 * (T + 4) * b' / (b' - T - 5) + 1) ≤
+      T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) :=
+    mul_le_mul_of_nonneg_left (by linarith) hT0
+  linarith
+
+/-- The conditions (a) and (b) of Theorem 35.13 for the base `b` and the number `T` of matched
+digits. -/
+def NearCond (b T : ℕ) : Prop :=
+  (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b)) ∧
+    1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 + T ≤
+      (b : ℝ) - 2
+
+/-- Condition (a) gives `T + 6 ≤ b`, since `e^(-1 + 1/b) > 0`. -/
+lemma NearCond.add_six_le {b T : ℕ} (h : NearCond b T) : T + 6 ≤ b := by
+  have := Real.exp_pos (-1 + 1 / (b : ℝ))
+  have hb0 : (0 : ℝ) ≤ b := b.cast_nonneg
+  have : (T : ℝ) + 5 < b := by
+    rcases hb0.lt_or_eq with hb | hb
+    · nlinarith [h.1]
+    · have := h.1; rw [← hb] at this; simp at this; linarith
+  have : T + 5 < b := by exact_mod_cast this
+  omega
+
+/-- **Corollary 35.14** (section 35.5.1): for fixed `T`, the conditions (a) and (b) of Theorem
+35.13 hold for every base above one where they hold. -/
+theorem NearCond.mono {b b' T : ℕ} (h : NearCond b T) (hb : b ≤ b') : NearCond b' T := by
+  have h6 := h.add_six_le
+  exact ⟨condA_mono (by omega) hb h.1, condB_mono h6 hb h.2⟩
+
+open Classical in
+/-- `T(b)` of Corollary 35.14: the largest `T` allowed by the conditions (a) and (b) of Theorem
+35.13, and `0` if there is none. Condition (a) forces `T < b`, so the search stops at `b`. -/
+noncomputable def nearT (b : ℕ) : ℕ := Nat.findGreatest (NearCond b) b
+
+lemma nearCond_nearT {b : ℕ} (h : nearT b ≠ 0) : NearCond b (nearT b) := by
+  classical
+  exact Nat.findGreatest_spec (P := NearCond b) (m := nearT b) (Nat.findGreatest_le b)
+    (Nat.findGreatest_of_ne_zero rfl h)
+
+lemma le_nearT {b T : ℕ} (h : NearCond b T) : T ≤ nearT b := by
+  classical
+  have h6 := h.add_six_le
+  exact Nat.le_findGreatest (by omega) h
+
+/-- **Corollary 35.14** (section 35.5.1): `T(b)` does not decrease with `b`, since for fixed `T`
+the left sides of (a) and (b) fall and the right sides grow with `b`. -/
+theorem nearT_mono : Monotone nearT := by
+  intro b b' hb
+  by_cases h : nearT b = 0
+  · rw [h]; exact Nat.zero_le _
+  · exact le_nearT ((nearCond_nearT h).mono hb)
+
+/-- **Corollary 35.14**: `T(b) ≥ 1` for `b ≥ 27`, `T(b) ≥ 2` for `b ≥ 49` and `T(b) ≥ 3` for
+`b ≥ 77`, the thresholds of `corollary35_14`. -/
+theorem nearT_thresholds {b : ℕ} :
+    (27 ≤ b → 1 ≤ nearT b) ∧ (49 ≤ b → 2 ≤ nearT b) ∧ (77 ≤ b → 3 ≤ nearT b) := by
+  refine ⟨fun hb => le_nearT ⟨theorem35_13_cond_a (by omega),
+      theorem35_13_cond_b (b0 := 27) (by norm_num) hb (by norm_num)⟩,
+    fun hb => le_nearT ⟨theorem35_13_cond_a (by omega),
+      theorem35_13_cond_b (b0 := 49) (by norm_num) hb (by norm_num)⟩,
+    fun hb => le_nearT ⟨theorem35_13_cond_a (by omega),
+      theorem35_13_cond_b (b0 := 77) (by norm_num) hb (by norm_num)⟩⟩
+
+/-- **Corollary 35.14**: the exponent `t = T(b) - log_b(e b/(b - e))` of the near-solutions does
+not decrease with `b ≥ 3`, since `T(b)` does not and `log_b(e b/(b - e))` falls: its numerator
+falls and stays positive, and its denominator `log b` grows. -/
+theorem nearExp_mono {b b' : ℕ} (hb : 3 ≤ b) (hbb : b ≤ b') :
+    (nearT b : ℝ) - Real.logb b (Real.exp 1 * b / (b - Real.exp 1)) ≤
+      (nearT b' : ℝ) - Real.logb b' (Real.exp 1 * b' / (b' - Real.exp 1)) := by
+  have hT : (nearT b : ℝ) ≤ nearT b' := by exact_mod_cast nearT_mono hbb
+  have he := Real.exp_one_lt_d9
+  have he0 := Real.exp_pos 1
+  have he1 := Real.exp_one_gt_d9
+  have h3 : (3 : ℝ) ≤ b := by exact_mod_cast hb
+  have hbr : (b : ℝ) ≤ b' := by exact_mod_cast hbb
+  set e := Real.exp 1
+  have hd : 0 < (b : ℝ) - e := by linarith
+  have hd' : 0 < (b' : ℝ) - e := by linarith
+  -- the arguments are at least 1 and fall
+  have hq1 : 1 ≤ e * b' / (b' - e) := by
+    rw [le_div_iff₀ hd']; nlinarith
+  have hq : e * b' / (b' - e) ≤ e * b / (b - e) := by
+    rw [div_le_div_iff₀ hd' hd]; nlinarith [mul_le_mul_of_nonneg_left hbr (sq_nonneg e)]
+  have hl1 : 0 ≤ Real.log (e * b' / (b' - e)) := Real.log_nonneg hq1
+  have hl2 : Real.log (e * b' / (b' - e)) ≤ Real.log (e * b / (b - e)) :=
+    Real.log_le_log (by linarith) hq
+  have hlb : 0 < Real.log b := Real.log_pos (by linarith)
+  have hlb' : Real.log b ≤ Real.log b' := Real.log_le_log (by linarith) hbr
+  have key : Real.logb b' (e * b' / (b' - e)) ≤ Real.logb b (e * b / (b - e)) := by
+    unfold Real.logb
+    calc Real.log (e * b' / (b' - e)) / Real.log b'
+        ≤ Real.log (e * b' / (b' - e)) / Real.log b :=
+          div_le_div_of_nonneg_left hl1 hlb hlb'
+      _ ≤ Real.log (e * b / (b - e)) / Real.log b :=
+          div_le_div_of_nonneg_right hl2 hlb.le
+  linarith
 
 end Munchausen

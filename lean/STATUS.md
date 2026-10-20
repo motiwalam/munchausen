@@ -23,7 +23,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 175 formalized, 21 partial, 12
+Counts of table rows at the time of writing: 176 formalized, 20 partial, 12
 rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
@@ -445,7 +445,7 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Proposition 35.9 | `prop35_9_share`, `prop35_9_bounds` [Exist] | partial: the exact share as a product and its two exponential bounds; the limit `-2A` is not formalized |
 | Corollary 35.10, Theorem 35.12 | none | not formalized (asymptotic counts) |
 | Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
-| Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel` [Exist] | partial: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286` and shown to get easier as `b` grows); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; that `T(b)` does not decrease with `b` is not formalized (condition (a) is used only through `3 (T + 5) <= b`) |
+| Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel`, `NearCond`, `NearCond.mono`, `nearT`, `nearT_mono`, `nearT_thresholds`, `nearExp_mono`, `condA_monotoneOn` [Exist] | formalized: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286`); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; `T(b)` (`nearT`, the largest `T` allowed by (a) and (b)) and `t = T(b) - log_b(e b/(b - e))` do not decrease with `b` (for fixed `T` both conditions get easier: `b (1 - e^(-1 + 1/b))` has derivative `1 - e^(-1 + 1/b) (1 - 1/b) > 0`); `T(b) >= 1, 2, 3` from 27, 49, 77. The second half of (a), `2 (T + 4) <= b`, is not part of `NearCond`, since Theorem 35.13 does not need it |
 
 ## Chapter 37. The last digits and two free slots
 
@@ -582,8 +582,6 @@ In order of value and effort:
    `prop20_2`, then the count of Theorem 35.12 and the summed bound of
    Proposition 35.8 (`prop35_8_window`, `prop35_8_fix`, `prop35_8_count` are
    in place).
-4. Corollary 35.14: that `T(b)` does not decrease with `b`, which needs
-   condition (a) to grow with `b` (`b (1 - e^(-1 + 1/b))` is increasing).
 5. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
    the model).
 6. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.
