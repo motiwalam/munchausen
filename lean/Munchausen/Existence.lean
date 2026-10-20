@@ -1371,4 +1371,55 @@ theorem corollary35_14 {m : ℕ} (hm : m ≤ 1) :
       (theorem35_13_cond_b (b0 := 77) (by norm_num) hb (by norm_num))
     exact ⟨n, h1, h2, h3, h4, by simpa using h5⟩
 
+/-- **Corollary 35.14**, the size of `T(b)` from below: if `e (T + 6)^2 ≤ b` and `T ≥ 1`, the
+conditions (a) and (b) of Theorem 35.13 hold. So `T(b) ≥ sqrt(b/e) - 6`. -/
+theorem corollary35_14_lower {b T : ℕ} (hT : 1 ≤ T) (hb : Real.exp 1 * ((T : ℝ) + 6) ^ 2 ≤ b) :
+    ((T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b))) ∧
+      1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 + T ≤
+        (b : ℝ) - 2 := by
+  have he := Real.exp_one_lt_d9
+  have he' := Real.exp_one_gt_d9
+  set e := Real.exp 1
+  have hx : (1 : ℝ) ≤ T := by exact_mod_cast hT
+  set x : ℝ := (T : ℝ)
+  set B : ℝ := (b : ℝ)
+  have hB : 2.7 * (x + 6) ^ 2 ≤ B := by nlinarith
+  constructor
+  · apply theorem35_13_cond_a
+    have : ((3 * (T + 5) : ℕ) : ℝ) ≤ b := by push_cast; nlinarith
+    exact_mod_cast this
+  · have hd1 : 0 < B - x - 5 := by nlinarith
+    have hd2 : 0 < B - 2 := by nlinarith
+    have P1 : e * (x + 4) * B / (B - x - 5) ≤ e * (x + 4) + 2 := by
+      rw [div_le_iff₀ hd1]
+      nlinarith
+    have P2 : e * B / (B - 2) ≤ e + 1 := by
+      rw [div_le_iff₀ hd2]
+      nlinarith
+    have hx0 : 0 ≤ x := by linarith
+    have : x * (e * (x + 4) * B / (B - x - 5) + 1) ≤ x * (e * (x + 4) + 3) := by
+      apply mul_le_mul_of_nonneg_left _ hx0; linarith
+    nlinarith
+
+/-- **Corollary 35.14**, the size of `T(b)` from above: condition (b) of Theorem 35.13 forces
+`e T^2 < b`. So `T(b) < sqrt(b/e)`, and with `corollary35_14_lower`,
+`T(b) = sqrt(b/e) - O(1)`. -/
+theorem corollary35_14_upper {b T : ℕ} (hTb : T + 6 ≤ b)
+    (hbb : 1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 +
+      T ≤ (b : ℝ) - 2) :
+    Real.exp 1 * (T : ℝ) ^ 2 < b := by
+  have he0 := Real.exp_pos 1
+  have hTr : (T : ℝ) + 6 ≤ b := by exact_mod_cast hTb
+  have hT0 : (0 : ℝ) ≤ T := T.cast_nonneg
+  have hd1 : (0 : ℝ) < b - T - 5 := by linarith
+  have hd2 : (0 : ℝ) < b - 2 := by linarith
+  have P1 : Real.exp 1 * (T + 4) ≤ Real.exp 1 * (T + 4) * b / (b - T - 5) := by
+    rw [le_div_iff₀ hd1]
+    have : (0 : ℝ) ≤ Real.exp 1 * (T + 4) := by positivity
+    nlinarith
+  have P2 : 0 ≤ Real.exp 1 * b / (b - 2) := by positivity
+  have : (T : ℝ) * (Real.exp 1 * (T + 4)) ≤ T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) := by
+    apply mul_le_mul_of_nonneg_left _ hT0; linarith
+  nlinarith
+
 end Munchausen

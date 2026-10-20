@@ -69,7 +69,7 @@
   "model-prop-characters": "prop34_10_uniform (partial: every residue occurs equally often among the d-digit numbers; the sum over characters is about the model)",
   "model-thm-e2": "theorem34_12_parity (partial: F(n) - n = z(n) mod 2 in odd bases; the limit is about the model)",
   "model-thm-near-exist": "theorem35_13, steer, steer_step, theorem35_13_step3, theorem35_13_strict (without the condition 2(T + 4) <= b)",
-  "model-cor-near-exist": "corollary35_14 (partial: near-solutions for every b >= 27, with t >= 1 for b >= 49 and t >= 2 for b >= 77; T(b) = sqrt(b/e) - O(1) is not formalized)",
+  "model-cor-near-exist": "corollary35_14, corollary35_14_lower, corollary35_14_upper (partial: near-solutions for every b >= 27, t >= 2 for every b >= 77, and sqrt(b/e) - 6 <= T(b) < sqrt(b/e); that T(b) does not decrease is not formalized)",
   // Chapter 4
   "search-lem-hull": "lemma31_4, lemma31_4_attained",
   "search-prop-exact": "ExactSearch.found_eq_solutions, ExactSearch.search_sound (for the Lean version of the search; the Rust code is not verified)",
