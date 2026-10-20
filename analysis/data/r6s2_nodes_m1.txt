@@ -1,64 +1,64 @@
   base 2: 1 nodes, 0 interval evaluations
 base 2 done in 0.000s
   base 3: 4 nodes, 7 interval evaluations
-base 3 done in 0.000s
-  base 4: 8 nodes, 17 interval evaluations
+base 3 done in 0.003s
+  base 4: 7 nodes, 17 interval evaluations
 base 4 done in 0.000s
-  base 5: 10 nodes, 27 interval evaluations
-base 5 done in 0.000s
-  base 6: 19 nodes, 53 interval evaluations
-base 6 done in 0.000s
+  base 5: 11 nodes, 29 interval evaluations
+base 5 done in 0.003s
+  base 6: 17 nodes, 50 interval evaluations
+base 6 done in 0.003s
   base 7: 30 nodes, 95 interval evaluations
-base 7 done in 0.000s
-  base 8: 56 nodes, 195 interval evaluations
-base 8 done in 0.000s
-  base 9: 111 nodes, 388 interval evaluations
-base 9 done in 0.000s
-  base 10: 170 nodes, 636 interval evaluations
+base 7 done in 0.007s
+  base 8: 53 nodes, 187 interval evaluations
+base 8 done in 0.010s
+  base 9: 117 nodes, 394 interval evaluations
+base 9 done in 0.003s
+  base 10: 172 nodes, 638 interval evaluations
 base 10 done in 0.001s
-  base 11: 300 nodes, 1147 interval evaluations
-base 11 done in 0.001s
-  base 12: 405 nodes, 1715 interval evaluations
-base 12 done in 0.001s
-  base 13: 780 nodes, 3303 interval evaluations
+  base 11: 313 nodes, 1171 interval evaluations
+base 11 done in 0.003s
+  base 12: 400 nodes, 1704 interval evaluations
+base 12 done in 0.003s
+  base 13: 817 nodes, 3394 interval evaluations
 base 13 done in 0.001s
-  base 14: 1252 nodes, 5435 interval evaluations
-base 14 done in 0.002s
-  base 15: 2531 nodes, 11047 interval evaluations
-base 15 done in 0.002s
-  base 16: 4155 nodes, 18816 interval evaluations
-base 16 done in 0.003s
-  base 17: 8248 nodes, 36815 interval evaluations
-base 17 done in 0.005s
-  base 18: 14559 nodes, 67690 interval evaluations
+  base 14: 1224 nodes, 5383 interval evaluations
+base 14 done in 0.001s
+  base 15: 2725 nodes, 11567 interval evaluations
+base 15 done in 0.005s
+  base 16: 4073 nodes, 18582 interval evaluations
+base 16 done in 0.002s
+  base 17: 8779 nodes, 38323 interval evaluations
+base 17 done in 0.014s
+  base 18: 14370 nodes, 67153 interval evaluations
 base 18 done in 0.006s
-  base 19: 24880 nodes, 115639 interval evaluations
-base 19 done in 0.008s
-  base 20: 44705 nodes, 210920 interval evaluations
-base 20 done in 0.013s
-  base 21: 84171 nodes, 387793 interval evaluations
+  base 19: 26344 nodes, 119843 interval evaluations
+base 19 done in 0.009s
+  base 20: 44149 nodes, 209322 interval evaluations
+base 20 done in 0.012s
+  base 21: 90428 nodes, 405948 interval evaluations
 base 21 done in 0.020s
-  base 22: 162315 nodes, 770112 interval evaluations
+  base 22: 159692 nodes, 762375 interval evaluations
 base 22 done in 0.030s
-  base 23: 316296 nodes, 1480723 interval evaluations
-base 23 done in 0.054s
-  base 24: 602283 nodes, 2868148 interval evaluations
-base 24 done in 0.093s
-  base 25: 1026365 nodes, 4908240 interval evaluations
-base 25 done in 0.160s
-  base 26: 2033804 nodes, 9631931 interval evaluations
-base 26 done in 0.295s
-  base 27: 3889049 nodes, 18321565 interval evaluations
-base 27 done in 0.431s
-  base 28: 7106553 nodes, 33807549 interval evaluations
-base 28 done in 0.777s
-  base 29: 13664445 nodes, 64057112 interval evaluations
-base 29 done in 1.273s
-  base 30: 26799611 nodes, 126076345 interval evaluations
-base 30 done in 2.370s
-  base 31: 48675957 nodes, 229692476 interval evaluations
-base 31 done in 5.443s
-  base 32: 89318093 nodes, 417191168 interval evaluations
-base 32 done in 9.220s
-  base 33: 202444891 nodes, 932980793 interval evaluations
-base 33 done in 21.777s
+  base 23: 341014 nodes, 1552895 interval evaluations
+base 23 done in 0.064s
+  base 24: 594317 nodes, 2844298 interval evaluations
+base 24 done in 0.106s
+  base 25: 1083034 nodes, 5072466 interval evaluations
+base 25 done in 0.167s
+  base 26: 2010932 nodes, 9564233 interval evaluations
+base 26 done in 0.287s
+  base 27: 4198743 nodes, 19226234 interval evaluations
+base 27 done in 0.467s
+  base 28: 6985818 nodes, 33448317 interval evaluations
+base 28 done in 0.733s
+  base 29: 15023898 nodes, 68036814 interval evaluations
+base 29 done in 1.407s
+  base 30: 26583217 nodes, 125434829 interval evaluations
+base 30 done in 2.483s
+  base 31: 52101672 nodes, 239680582 interval evaluations
+base 31 done in 5.483s
+  base 32: 88025537 nodes, 413347728 interval evaluations
+base 32 done in 8.379s
+  base 33: 221491377 nodes, 989015161 interval evaluations
+base 33 done in 23.704s
