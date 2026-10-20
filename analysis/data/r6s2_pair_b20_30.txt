@@ -1,0 +1,187 @@
+== base 20 v 0 
+  base 20: 82463 nodes, 305356 interval evaluations
+== base 20 v 1 
+  base 20: 81369 nodes, 302074 interval evaluations
+  pair: tested 27055 failed 905 exact-failed 27054
+== base 20 v 2 
+  base 20: 70715 nodes, 270258 interval evaluations
+  pair: tested 26341 failed 10699 exact-failed 26340
+== base 20 v 3 
+  base 20: 73774 nodes, 280599 interval evaluations
+  pair: tested 26001 failed 6136 exact-failed 26000
+== base 20 v 4 
+  base 20: 59356 nodes, 240002 interval evaluations
+  pair: tested 25159 failed 17055 exact-failed 25158
+== base 20 v 5 
+  base 20: 47337 nodes, 207865 interval evaluations
+  pair: tested 22493 failed 22492 exact-failed 22492
+== base 21 v 0 
+  base 21: 163033 nodes, 574889 interval evaluations
+== base 21 v 1 
+  base 21: 163005 nodes, 574805 interval evaluations
+  pair: tested 48557 failed 25 exact-failed 48556
+== base 21 v 2 
+  base 21: 150339 nodes, 537095 interval evaluations
+  pair: tested 47742 failed 11588 exact-failed 47741
+== base 21 v 3 
+  base 21: 155414 nodes, 553809 interval evaluations
+  pair: tested 47530 failed 4812 exact-failed 47529
+== base 21 v 4 
+  base 21: 123801 nodes, 467337 interval evaluations
+  pair: tested 45755 failed 26283 exact-failed 45754
+== base 21 v 5 
+  base 21: 93323 nodes, 386920 interval evaluations
+  pair: tested 39970 failed 39969 exact-failed 39969
+== base 22 v 0 
+  base 22: 302261 nodes, 1118308 interval evaluations
+== base 22 v 1 
+  base 22: 298618 nodes, 1107379 interval evaluations
+  pair: tested 97450 failed 3018 exact-failed 97449
+== base 22 v 2 
+  base 22: 259157 nodes, 989537 interval evaluations
+  pair: tested 94245 failed 38733 exact-failed 94244
+== base 22 v 3 
+  base 22: 270340 nodes, 1026756 interval evaluations
+  pair: tested 93174 failed 22809 exact-failed 93173
+== base 22 v 4 
+  base 22: 216982 nodes, 877900 interval evaluations
+  pair: tested 89648 failed 61423 exact-failed 89647
+== base 22 v 5 
+  base 22: 173740 nodes, 763192 interval evaluations
+  pair: tested 80677 failed 80676 exact-failed 80676
+== base 23 v 0 
+  base 23: 579030 nodes, 2122393 interval evaluations
+== base 23 v 1 
+  base 23: 578797 nodes, 2121694 interval evaluations
+  pair: tested 183514 failed 196 exact-failed 183514
+== base 23 v 2 
+  base 23: 507631 nodes, 1909330 interval evaluations
+  pair: tested 177588 failed 64302 exact-failed 177588
+== base 23 v 3 
+  base 23: 550262 nodes, 2040621 interval evaluations
+  pair: tested 179050 failed 19737 exact-failed 179050
+== base 23 v 4 
+  base 23: 437640 nodes, 1724194 interval evaluations
+  pair: tested 170936 failed 102809 exact-failed 170936
+== base 23 v 5 
+  base 23: 332971 nodes, 1446747 interval evaluations
+  pair: tested 150346 failed 150346 exact-failed 150346
+== base 24 v 0 
+  base 24: 1166554 nodes, 4245720 interval evaluations
+== base 24 v 1 
+  base 24: 1165333 nodes, 4242057 interval evaluations
+  pair: tested 362883 failed 1007 exact-failed 362883
+== base 24 v 2 
+  base 24: 1024426 nodes, 3822044 interval evaluations
+  pair: tested 351271 failed 127594 exact-failed 351271
+== base 24 v 3 
+  base 24: 1073630 nodes, 3986637 interval evaluations
+  pair: tested 349862 failed 60000 exact-failed 349862
+== base 24 v 4 
+  base 24: 841737 nodes, 3344103 interval evaluations
+  pair: tested 333374 failed 222269 exact-failed 333374
+== base 24 v 5 
+  base 24: 669243 nodes, 2888013 interval evaluations
+  pair: tested 296854 failed 296854 exact-failed 296854
+== base 25 v 0 
+  base 25: 1993518 nodes, 7290987 interval evaluations
+== base 25 v 1 
+  base 25: 1943331 nodes, 7140432 interval evaluations
+  pair: tested 622626 failed 41158 exact-failed 622622
+== base 25 v 2 
+  base 25: 1719216 nodes, 6471179 interval evaluations
+  pair: tested 605080 failed 244635 exact-failed 605076
+== base 25 v 3 
+  base 25: 1767213 nodes, 6637604 interval evaluations
+  pair: tested 594990 failed 164114 exact-failed 594986
+== base 25 v 4 
+  base 25: 1431325 nodes, 5719296 interval evaluations
+  pair: tested 573048 failed 388708 exact-failed 573044
+== base 25 v 5 
+  base 25: 1130938 nodes, 4934192 interval evaluations
+  pair: tested 515581 failed 515577 exact-failed 515577
+== base 26 v 0 
+  base 26: 3894520 nodes, 14192574 interval evaluations
+== base 26 v 1 
+  base 26: 3889313 nodes, 14176953 interval evaluations
+  pair: tested 1245619 failed 4266 exact-failed 1245616
+== base 26 v 2 
+  base 26: 3351310 nodes, 12571456 interval evaluations
+  pair: tested 1203326 failed 491464 exact-failed 1203323
+== base 26 v 3 
+  base 26: 3597625 nodes, 13358997 interval evaluations
+  pair: tested 1202794 failed 196026 exact-failed 1202791
+== base 26 v 4 
+  base 26: 2768297 nodes, 11058109 interval evaluations
+  pair: tested 1146721 failed 782191 exact-failed 1146718
+== base 26 v 5 
+  base 26: 2192800 nodes, 9542589 interval evaluations
+  pair: tested 1017422 failed 1017419 exact-failed 1017419
+== base 27 v 0 
+  base 27: 7720378 nodes, 27564863 interval evaluations
+== base 27 v 1 
+  base 27: 7720337 nodes, 27564740 interval evaluations
+  pair: tested 2388100 failed 36 exact-failed 2388100
+== base 27 v 2 
+  base 27: 6820865 nodes, 24878851 interval evaluations
+  pair: tested 2325086 failed 823967 exact-failed 2325086
+== base 27 v 3 
+  base 27: 7282609 nodes, 26328868 interval evaluations
+  pair: tested 2322356 failed 294708 exact-failed 2322356
+== base 27 v 4 
+  base 27: 5672307 nodes, 21911709 interval evaluations
+  pair: tested 2227259 failed 1396166 exact-failed 2227259
+== base 27 v 5 
+  base 27: 4304663 nodes, 18345328 interval evaluations
+  pair: tested 1944614 failed 1944614 exact-failed 1944614
+== base 28 v 0 
+  base 28: 13596926 nodes, 49993629 interval evaluations
+== base 28 v 1 
+  base 28: 13204671 nodes, 48816864 interval evaluations
+  pair: tested 4484191 failed 317521 exact-failed 4484189
+== base 28 v 2 
+  base 28: 11328639 nodes, 43207663 interval evaluations
+  pair: tested 4356033 failed 2046500 exact-failed 4356031
+== base 28 v 3 
+  base 28: 12098825 nodes, 45663327 interval evaluations
+  pair: tested 4311525 failed 1086705 exact-failed 4311523
+== base 28 v 4 
+  base 28: 9483561 nodes, 38427200 interval evaluations
+  pair: tested 4160831 failed 2941621 exact-failed 4160829
+== base 28 v 5 
+  base 28: 7526835 nodes, 33294549 interval evaluations
+  pair: tested 3702855 failed 3702853 exact-failed 3702853
+== base 29 v 0 
+  base 29: 26908928 nodes, 96222394 interval evaluations
+== base 29 v 1 
+  base 29: 26811127 nodes, 95928991 interval evaluations
+  pair: tested 8596052 failed 79491 exact-failed 8596051
+== base 29 v 2 
+  base 29: 23521078 nodes, 86103291 interval evaluations
+  pair: tested 8402245 failed 3131289 exact-failed 8402244
+== base 29 v 3 
+  base 29: 25506361 nodes, 92240040 interval evaluations
+  pair: tested 8396274 failed 959137 exact-failed 8396273
+== base 29 v 4 
+  base 29: 19770305 nodes, 76368549 interval evaluations
+  pair: tested 8101813 failed 5064060 exact-failed 8101812
+== base 29 v 5 
+  base 29: 14899853 nodes, 63589898 interval evaluations
+  pair: tested 6989455 failed 6989454 exact-failed 6989454
+== base 30 v 0 
+  base 30: 53636804 nodes, 191504476 interval evaluations
+== base 30 v 1 
+  base 30: 53592185 nodes, 191370619 interval evaluations
+  pair: tested 17328474 failed 36563 exact-failed 17328471
+== base 30 v 2 
+  base 30: 46937333 nodes, 171491740 interval evaluations
+  pair: tested 16995375 failed 6272639 exact-failed 16995372
+== base 30 v 3 
+  base 30: 49434858 nodes, 179796270 interval evaluations
+  pair: tested 16724474 failed 2692269 exact-failed 16724471
+== base 30 v 4 
+  base 30: 37487841 nodes, 147010670 interval evaluations
+  pair: tested 16175402 failed 11034763 exact-failed 16175399
+== base 30 v 5 
+  base 30: 29466091 nodes, 125826536 interval evaluations
+  pair: tested 14043504 failed 14043501 exact-failed 14043501

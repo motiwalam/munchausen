@@ -1,0 +1,46 @@
+# Round 6, search 2, question 125: dynamic instructions by kind, from
+# analysis/r6s2_bykind.py on callgrind profiles of `fast search 24 -j 1`
+# (builds without GFNI). Columns: kind, first build, second build, change.
+# old: the engine before the residue rule (commit ba24b14~1).
+# fields: the residue engine (commit 9756e6b) with res_add and res_ok
+#   replaced by no-ops, run with --no-residue: the residue fields only.
+# nores: the residue engine, --no-residue: residues computed, never used.
+# res: the residue engine with its rule.
+# All but res visit the same 1,430,261 nodes; res visits 1,166,554.
+
+## old -> fields
+(unknown address)        22,406,197     23,275,775       +869,578
+alu                     209,294,864    209,816,202       +521,338
+alu (memory)             72,293,300     72,331,553        +38,253
+branch                   90,995,264     91,281,077       +285,813
+cmov/set                    405,569        450,288        +44,719
+mov (memory)             12,460,896     12,167,743       -293,153
+mov (register)           64,573,576     61,813,298     -2,760,278
+mov (stack)             141,231,949    167,062,520    +25,830,571
+vector                  350,267,970    350,401,938       +133,968
+vector (stack)           45,647,943     40,191,220     -5,456,723
+total                 1,009,577,528  1,028,791,614    +19,214,086
+## fields -> nores
+(unknown address)        23,275,775     23,237,260        -38,515
+alu                     209,816,202    296,830,082    +87,013,880
+alu (memory)             72,331,553     89,237,601    +16,906,048
+branch                   91,281,077    102,479,417    +11,198,340
+cmov/set                    450,288     18,794,594    +18,344,306
+mov (memory)             12,167,743     26,123,215    +13,955,472
+mov (register)           61,813,298    141,937,940    +80,124,642
+mov (stack)             167,062,520    254,912,657    +87,850,137
+vector                  350,401,938    363,091,815    +12,689,877
+vector (stack)           40,191,220     39,066,307     -1,124,913
+total                 1,028,791,614  1,355,710,888   +326,919,274
+## nores -> res
+(unknown address)        23,237,260     22,114,232     -1,123,028
+alu                     296,830,082    250,446,294    -46,383,788
+alu (memory)             89,237,601     76,005,763    -13,231,838
+branch                  102,479,417     86,204,859    -16,274,558
+cmov/set                 18,794,594     16,311,668     -2,482,926
+mov (memory)             26,123,215     22,001,315     -4,121,900
+mov (register)          141,937,940    119,498,280    -22,439,660
+mov (stack)             254,912,657    211,604,529    -43,308,128
+vector                  363,091,815    310,001,469    -53,090,346
+vector (stack)           39,066,307     32,048,585     -7,017,722
+total                 1,355,710,888  1,146,236,994   -209,473,894

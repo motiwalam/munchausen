@@ -1,0 +1,145 @@
+{
+ "note": "fast search 26 -j 1 on one P-core, medians of 3 alternating runs; old = commit ba24b14~1, nores and res = commit 9756e6b with and without --no-residue, fields = 9756e6b with no-op residue arithmetic and --no-residue",
+ "run1": {
+  "old": {
+   "cycles": 1.3751,
+   "instr": 3.3231,
+   "bmiss": 0.0161,
+   "runs": [
+    [
+     1.3751,
+     3.3231,
+     0.0161
+    ],
+    [
+     1.3704,
+     3.3231,
+     0.0159
+    ],
+    [
+     1.3804,
+     3.3231,
+     0.0162
+    ]
+   ],
+   "nodes": "base 26: 4955060 nodes, 16313626 interval evaluations"
+  },
+  "nores": {
+   "cycles": 1.341,
+   "instr": 4.5008,
+   "bmiss": 0.0148,
+   "runs": [
+    [
+     1.3395,
+     4.5008,
+     0.0148
+    ],
+    [
+     1.341,
+     4.5008,
+     0.0148
+    ],
+    [
+     1.3543,
+     4.5008,
+     0.0153
+    ]
+   ],
+   "nodes": "base 26: 4955060 nodes, 16313626 interval evaluations"
+  },
+  "res": {
+   "cycles": 1.2101,
+   "instr": 3.6745,
+   "bmiss": 0.0151,
+   "runs": [
+    [
+     1.2101,
+     3.6745,
+     0.0151
+    ],
+    [
+     1.2069,
+     3.6745,
+     0.0149
+    ],
+    [
+     1.2102,
+     3.6745,
+     0.0151
+    ]
+   ],
+   "nodes": "base 26: 3894520 nodes, 14192574 interval evaluations"
+  }
+ },
+ "run2": {
+  "old": {
+   "cycles": 1.3774,
+   "instr": 3.3231,
+   "bmiss": 0.0161,
+   "runs": [
+    [
+     1.3694,
+     3.3231,
+     0.0159
+    ],
+    [
+     1.3774,
+     3.3231,
+     0.0161
+    ],
+    [
+     1.3917,
+     3.3231,
+     0.0163
+    ]
+   ],
+   "nodes": "base 26: 4955060 nodes, 16313626 interval evaluations"
+  },
+  "nores": {
+   "cycles": 1.3498,
+   "instr": 4.5008,
+   "bmiss": 0.0151,
+   "runs": [
+    [
+     1.3498,
+     4.5008,
+     0.0151
+    ],
+    [
+     1.3537,
+     4.5008,
+     0.0151
+    ],
+    [
+     1.349,
+     4.5008,
+     0.0148
+    ]
+   ],
+   "nodes": "base 26: 4955060 nodes, 16313626 interval evaluations"
+  },
+  "fields": {
+   "cycles": 1.3931,
+   "instr": 3.3831,
+   "bmiss": 0.0162,
+   "runs": [
+    [
+     1.3893,
+     3.3831,
+     0.0163
+    ],
+    [
+     1.3931,
+     3.3831,
+     0.0162
+    ],
+    [
+     1.3942,
+     3.3831,
+     0.0162
+    ]
+   ],
+   "nodes": "base 26: 4955060 nodes, 16313626 interval evaluations"
+  }
+ }
+}
