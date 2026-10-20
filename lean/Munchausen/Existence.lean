@@ -14,8 +14,12 @@ import Munchausen.Counting
   the ideal `(p/q - 1)` meets `Z` in `(p - q) Z`;
 * Proposition 35.9: the share of multisets without small digits is a product, with its two
   exponential bounds;
-* Theorem 35.13, the last step: a string whose top digits are those of its `F`, with no carry
-  from the rest, is a near-solution, and an exchange below the top makes it a strict one.
+* Theorem 35.13 in full: the steering of the top digits of `F` by copies of one digit per
+  position (`steer`, `steer_step`, `steer_zone`), the last step (a string whose top digits are
+  those of its `F`, with no carry from the rest, is a near-solution, and an exchange below the
+  top makes it a strict one), and `theorem35_13` with the real conditions (a) and (b);
+* Corollary 35.14: near-solutions with `0 < |n - F(n)| < b^(b-2)` for `b ≥ 27`, and with
+  `|n - F(n)| < n / b`, `n / b^2` for `b ≥ 49`, `b ≥ 77`.
 -/
 
 namespace Munchausen
@@ -369,5 +373,711 @@ theorem theorem35_13_strict {b k m : ℕ} (hb : 2 ≤ b) {A Rest Rest' : List �
     intro h; apply hneqZ; linarith
   · rw [abs_lt]
     constructor <;> linarith
+
+/-! ### Theorem 35.13: Steps 1 and 2 -/
+
+/-- `(x + 1)^x ≤ e x^x`, from `1 + 1/x ≤ e^(1/x)`. -/
+lemma add_one_pow_le_exp_mul {x : ℕ} (hx : 1 ≤ x) :
+    ((x : ℝ) + 1) ^ x ≤ Real.exp 1 * (x : ℝ) ^ x := by
+  have hx0 : (0 : ℝ) < x := by exact_mod_cast hx
+  have h1 : (x : ℝ) + 1 = x * (1 + 1 / x) := by field_simp
+  have h2 : 1 + 1 / (x : ℝ) ≤ Real.exp (1 / x) := by
+    have := Real.add_one_le_exp (1 / (x : ℝ)); linarith
+  have h3 : (1 + 1 / (x : ℝ)) ^ x ≤ Real.exp 1 := by
+    calc (1 + 1 / (x : ℝ)) ^ x ≤ Real.exp (1 / x) ^ x :=
+          pow_le_pow_left₀ (by positivity) h2 x
+      _ = Real.exp 1 := by rw [← Real.exp_nat_mul]; congr 1; field_simp
+  rw [h1, mul_pow, mul_comm (Real.exp 1)]
+  exact mul_le_mul_of_nonneg_left h3 (by positivity)
+
+/-- The steering digit (Step 2 of Theorem 35.13): for `1 ≤ M ≤ b^(b-1)` there is a digit
+`1 ≤ x < b` with `x^x ≤ M ≤ e b x^x`. It is the largest `x < b` with `x^x ≤ M`. -/
+lemma exists_steer_digit {b M : ℕ} (hb : 2 ≤ b) (hM1 : 1 ≤ M) (hMb : M ≤ b ^ (b - 1)) :
+    ∃ x, 1 ≤ x ∧ x < b ∧ x ^ x ≤ M ∧ (M : ℝ) ≤ Real.exp 1 * b * (x : ℝ) ^ x := by
+  classical
+  set x := Nat.findGreatest (fun x => x ^ x ≤ M) (b - 1) with hxdef
+  have hx1 : 1 ≤ x := Nat.le_findGreatest (by omega) (by simpa using hM1)
+  have hxb : x ≤ b - 1 := Nat.findGreatest_le _
+  have hxM : x ^ x ≤ M :=
+    Nat.findGreatest_spec (P := fun x => x ^ x ≤ M) (m := 1) (by omega) (by simpa using hM1)
+  refine ⟨x, hx1, by omega, hxM, ?_⟩
+  have hbr : (2 : ℝ) ≤ b := by exact_mod_cast hb
+  rcases Nat.lt_or_ge x (b - 1) with hlt | hge
+  · have hgt : M < (x + 1) ^ (x + 1) := by
+      have := Nat.findGreatest_is_greatest (P := fun x => x ^ x ≤ M) (lt_add_one x)
+        (by omega)
+      simpa using this
+    have h1 : ((x : ℝ) + 1) ^ (x + 1) ≤ b * (Real.exp 1 * (x : ℝ) ^ x) := by
+      rw [pow_succ, mul_comm]
+      have hxb' : (x : ℝ) + 1 ≤ b := by exact_mod_cast (show x + 1 ≤ b by omega)
+      exact mul_le_mul hxb' (add_one_pow_le_exp_mul hx1) (by positivity) (by positivity)
+    have : (M : ℝ) < ((x : ℝ) + 1) ^ (x + 1) := by exact_mod_cast hgt
+    nlinarith
+  · have hx : x = b - 1 := by omega
+    have h1 := add_one_pow_le_exp_mul (x := b - 1) (by omega)
+    have hc : ((b - 1 : ℕ) : ℝ) + 1 = b := by
+      rw [Nat.cast_sub (by omega)]; push_cast; ring
+    rw [hc] at h1
+    have hM : (M : ℝ) ≤ (b : ℝ) ^ (b - 1) := by exact_mod_cast hMb
+    rw [hx]
+    have : (0 : ℝ) ≤ Real.exp 1 * ((b - 1 : ℕ) : ℝ) ^ (b - 1) := by positivity
+    nlinarith
+
+/-- One steering step (Step 2 of Theorem 35.13), for a place value `P` and a zone of the top
+`z` digit values. If one copy adds `v ≤ (b - z - 1) P`, then some number `c` of copies, with
+`c v < z P + v`, puts the digit at `P` below `b - z` and raises the part above it by at most 1.
+The three cases of the library are one argument: stop at the first copy after which the part
+`N = ⌊F / P⌋` reaches the next multiple of `b`; one copy raises `N` by at most `b - z - 1`. -/
+lemma steer {b z P v : ℕ} (Y : ℕ) (hP : 0 < P) (hv : 1 ≤ v) (hz : 1 ≤ z) (hzb : z < b)
+    (hvP : v ≤ (b - z - 1) * P) :
+    ∃ c, c * v < z * P + v ∧ (Y + c * v) / P % b < b - z ∧
+      Y / P / b ≤ (Y + c * v) / P / b ∧ (Y + c * v) / P / b ≤ Y / P / b + 1 := by
+  have hb : 0 < b := by omega
+  set n0 := Y / P with hn0
+  by_cases hr : n0 % b < b - z
+  · exact ⟨0, by nlinarith, by simpa using hr, by simp [hn0], by simp [hn0]⟩
+  push Not at hr
+  have hdm := Nat.div_add_mod n0 b
+  have hml := Nat.mod_lt n0 hb
+  set M := (n0 / b + 1) * b with hM
+  have hMz : M ≤ n0 + z := by
+    have : M = b * (n0 / b) + b := by rw [hM]; ring
+    omega
+  have hMn : n0 < M := by
+    have : M = b * (n0 / b) + b := by rw [hM]; ring
+    omega
+  -- the ceiling of `z P / v` copies suffice
+  obtain ⟨W, hW⟩ : ∃ W, W = z * P + v - 1 := ⟨_, rfl⟩
+  have hd := Nat.div_add_mod W v
+  have hm := Nat.mod_lt W (show 0 < v by omega)
+  set c1 := W / v
+  have hc1v : c1 * v ≤ z * P + v - 1 := by rw [mul_comm]; omega
+  have hzc1 : z * P ≤ c1 * v := by rw [Nat.mul_comm c1 v]; omega
+  have hzP : (Y + z * P) / P = n0 + z := by rw [Nat.add_mul_div_right _ _ hP]
+  have hc1 : M ≤ (Y + c1 * v) / P := by
+    have : (Y + z * P) / P ≤ (Y + c1 * v) / P := Nat.div_le_div_right (by omega)
+    omega
+  have hex : ∃ c, M ≤ (Y + c * v) / P := ⟨c1, hc1⟩
+  classical
+  set c := Nat.find hex
+  have hc : M ≤ (Y + c * v) / P := Nat.find_spec hex
+  have hcc1 : c ≤ c1 := Nat.find_min' hex hc1
+  have hc0 : c ≠ 0 := by
+    intro h0
+    rw [h0, zero_mul, add_zero] at hc
+    omega
+  have hprev : (Y + (c - 1) * v) / P < M := by
+    have := Nat.find_min hex (show c - 1 < c by omega)
+    push Not at this
+    exact this
+  have hstep : (Y + c * v) / P ≤ (Y + (c - 1) * v) / P + (b - z - 1) := by
+    have e : Y + c * v = (Y + (c - 1) * v) + v := by
+      conv_lhs => rw [show c = (c - 1) + 1 by omega]
+      ring
+    rw [e]
+    calc (Y + (c - 1) * v + v) / P ≤ (Y + (c - 1) * v + (b - z - 1) * P) / P :=
+          Nat.div_le_div_right (by omega)
+      _ = (Y + (c - 1) * v) / P + (b - z - 1) := Nat.add_mul_div_right _ _ hP
+  set N' := (Y + c * v) / P with hN'
+  have hN'2 : N' - M < b := by omega
+  have e : N' = (N' - M) + b * (n0 / b + 1) := by
+    rw [show b * (n0 / b + 1) = M by rw [hM, mul_comm]]; omega
+  have hdiv : N' / b = n0 / b + 1 := by
+    conv_lhs => rw [e]
+    rw [Nat.add_mul_div_left _ _ hb, Nat.div_eq_of_lt hN'2, zero_add]
+  have hmod : N' % b = N' - M := by
+    conv_lhs => rw [e]
+    rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hN'2]
+  refine ⟨c, ?_, ?_, ?_, ?_⟩
+  · calc c * v ≤ c1 * v := Nat.mul_le_mul_right _ hcc1
+      _ < z * P + v := by omega
+  · rw [hmod]; omega
+  · rw [hdiv]; omega
+  · rw [hdiv]
+
+/-- Splitting a quotient by a power of `b` (positions of the digits of Theorem 35.13). -/
+lemma div_pow_sub_eq {Y b n i k : ℕ} (hik : i ≤ k) (hkn : k ≤ n) :
+    Y / b ^ (n - i) = Y / b ^ (n - k) / b ^ (k - i) := by
+  rw [Nat.div_div_eq_div_mul, ← pow_add]
+  congr 2
+  omega
+
+/-- No carry: if the part `N` of `Y` above a position has last digit below `X ≤ b - 1` and
+`N ≤ N' ≤ N + 1`, then `N'` has the same higher part and last digit at most `X`. -/
+lemma no_carry {b X N N' : ℕ} (hb0 : 0 < b) (hX : X ≤ b - 1) (hN : N % b < X)
+    (h1 : N ≤ N') (h2 : N' ≤ N + 1) : N' / b = N / b ∧ N' % b ≤ X := by
+  have hd := Nat.div_add_mod N b
+  have e : N' = (N' - b * (N / b)) + b * (N / b) := by omega
+  have hlt : N' - b * (N / b) < b := by omega
+  constructor
+  · rw [e, Nat.add_mul_div_left _ _ hb0, Nat.div_eq_of_lt hlt, zero_add]
+  · conv_lhs => rw [e]
+    rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hlt]
+    omega
+
+/-- If `Y` and `Y'` agree above position `j - 1` (`⌊Y / b^(b-j)⌋`), they agree above every
+position `i < j`, and both are below `b^(b-1)` together. -/
+lemma div_succ_eq_of_div_eq {b j Y Y' : ℕ} (hj : 1 ≤ j) (hjb : j + 2 ≤ b)
+    (hq : Y' / b ^ (b - 1 - j) / b = Y / b ^ (b - 1 - j) / b) :
+    Y' / b ^ (b - 1) = Y / b ^ (b - 1) ∧
+      ∀ i, i < j → Y' / b ^ (b - 1 - i) % b = Y / b ^ (b - 1 - i) % b := by
+  have key : ∀ Z i, i < j → Z / b ^ (b - 1 - i) = Z / b ^ (b - 1 - j) / b / b ^ (j - 1 - i) := by
+    intro Z i hi
+    rw [div_pow_sub_eq (k := j) (by omega) (by omega), show j - i = 1 + (j - 1 - i) by omega,
+      pow_add, pow_one, ← Nat.div_div_eq_div_mul]
+  constructor
+  · have h1 := key Y' 0 (by omega)
+    have h2 := key Y 0 (by omega)
+    simp only [Nat.sub_zero] at h1 h2
+    rw [h1, h2, hq]
+  · intro i hi
+    rw [key Y' i hi, key Y i hi, hq]
+
+/-- One step of Step 2 of Theorem 35.13 at position `j + 1` (place value `b^(b-2-j)`), with a
+zone of the values at least `Xn`. If digits `1, ..., j - 1` of `Y` are at most `X`, digit `j`
+is below `X` and `Y < b^(b-1)`, then copies of one digit `x` keep `Y < b^(b-1)`, make digits
+`1, ..., j` at most `X` and digit `j + 1` below `Xn`; there are at most
+`e (b - Xn) b / (Xn - 1) + 1` copies. -/
+lemma steer_step {b X Xn j Y : ℕ} (hb : 3 ≤ b) (hj : 1 ≤ j) (hjb : j + 2 ≤ b)
+    (hX : X ≤ b - 1) (hXn : 2 ≤ Xn) (hXnb : Xn ≤ b - 1)
+    (h0 : Y / b ^ (b - 1) = 0) (hlow : ∀ i, 1 ≤ i → i < j → Y / b ^ (b - 1 - i) % b ≤ X)
+    (hj' : Y / b ^ (b - 1 - j) % b < X) :
+    ∃ x c : ℕ, 1 ≤ x ∧ x < b ∧ (c : ℝ) ≤ Real.exp 1 * (b - Xn) * b / (Xn - 1) + 1 ∧
+      (Y + c * x ^ x) / b ^ (b - 1) = 0 ∧
+      (∀ i, 1 ≤ i → i ≤ j → (Y + c * x ^ x) / b ^ (b - 1 - i) % b ≤ X) ∧
+      (Y + c * x ^ x) / b ^ (b - 1 - (j + 1)) % b < Xn := by
+  set P := b ^ (b - 1 - (j + 1)) with hPdef
+  have hb0 : 0 < b := by omega
+  have hP : 0 < P := pow_pos hb0 _
+  have hPb : P * b = b ^ (b - 1 - j) := by
+    rw [hPdef, ← pow_succ]; congr 1; omega
+  have hM1 : 1 ≤ (Xn - 1) * P := Nat.mul_pos (by omega) hP
+  have hMb : (Xn - 1) * P ≤ b ^ (b - 1) := by
+    calc (Xn - 1) * P ≤ b * P := Nat.mul_le_mul_right _ (by omega)
+      _ = b ^ (b - 1 - j) := by rw [mul_comm, hPb]
+      _ ≤ b ^ (b - 1) := Nat.pow_le_pow_right hb0 (by omega)
+  obtain ⟨x, hx1, hxb, hxM, hxe⟩ := exists_steer_digit (by omega) hM1 hMb
+  set v := x ^ x
+  have hv : 1 ≤ v := Nat.one_le_pow _ _ hx1
+  obtain ⟨c, hcv, hdig, hge, hle⟩ := steer (b := b) (z := b - Xn) Y hP hv (by omega) (by omega)
+    (by rw [show b - (b - Xn) - 1 = Xn - 1 by omega]; exact hxM)
+  refine ⟨x, c, hx1, hxb, ?_, ?_, ?_, ?_⟩
+  · -- the number of copies
+    have hXn1 : (0 : ℝ) < (Xn : ℝ) - 1 := by
+      have : (2 : ℝ) ≤ Xn := by exact_mod_cast hXn
+      linarith
+    have hvr : (0 : ℝ) < v := by exact_mod_cast hv
+    have hPr : (0 : ℝ) < P := by exact_mod_cast hP
+    have hcvr : (c : ℝ) * v < ((b : ℝ) - Xn) * P + v := by
+      have : ((c * v : ℕ) : ℝ) < (((b - Xn) * P + v : ℕ) : ℝ) := by exact_mod_cast hcv
+      push_cast [Nat.cast_sub (show Xn ≤ b by omega)] at this
+      exact this
+    have hMr : ((Xn : ℝ) - 1) * P ≤ Real.exp 1 * b * v := by
+      have : (((Xn - 1) * P : ℕ) : ℝ) ≤ Real.exp 1 * b * v := by exact_mod_cast hxe
+      push_cast [Nat.cast_sub (show 1 ≤ Xn by omega)] at this
+      exact this
+    have hbXn : (0 : ℝ) ≤ (b : ℝ) - Xn := by
+      have : (Xn : ℝ) ≤ b := by exact_mod_cast (show Xn ≤ b by omega)
+      linarith
+    have h1 : (c : ℝ) < ((b : ℝ) - Xn) * P / v + 1 := by
+      rw [div_add_one hvr.ne', lt_div_iff₀ hvr]; exact hcvr
+    have h2 : ((b : ℝ) - Xn) * P / v ≤ Real.exp 1 * (b - Xn) * b / (Xn - 1) := by
+      rw [div_le_div_iff₀ hvr hXn1]
+      have := mul_le_mul_of_nonneg_left hMr hbXn
+      nlinarith
+    linarith
+  · simp only [Nat.div_div_eq_div_mul, hPb] at hge hle
+    have hq := no_carry hb0 (by omega : X ≤ b - 1) hj' hge hle
+    have := (div_succ_eq_of_div_eq (b := b) (Y := Y) (Y' := Y + c * v) hj hjb hq.1).1
+    rw [h0] at this
+    exact this
+  · intro i hi1 hij
+    simp only [Nat.div_div_eq_div_mul, hPb] at hge hle
+    have hq := no_carry hb0 (by omega : X ≤ b - 1) hj' hge hle
+    rcases Nat.lt_or_ge i j with hlt | hge'
+    · rw [(div_succ_eq_of_div_eq (b := b) (Y := Y) (Y' := Y + c * v) hj hjb hq.1).2 i hlt]
+      exact hlow i hi1 hlt
+    · rw [show i = j by omega]
+      exact hq.2
+  · have : b - (b - Xn) = Xn := by omega
+    rw [this] at hdig
+    exact hdig
+
+
+/-- The first `k` base-`b` digits of `N`, most significant first, have value `N mod b^k`. -/
+lemma P_map_range_digits (b : ℕ) : ∀ (k N : ℕ),
+    P b ((List.range k).map fun i => N / b ^ (k - 1 - i) % b) = N % b ^ k := by
+  intro k
+  induction k with
+  | zero => intro N; simp [Nat.mod_one]
+  | succ k ih =>
+    intro N
+    rw [List.range_succ, List.map_append, List.map_singleton, P_append_singleton,
+      show k + 1 - 1 - k = 0 by omega, pow_zero, Nat.div_one]
+    have hmap : ((List.range k).map fun i => N / b ^ (k + 1 - 1 - i) % b) =
+        (List.range k).map fun i => N / b / b ^ (k - 1 - i) % b := by
+      refine List.map_congr_left fun i hi => ?_
+      have hi : i < k := List.mem_range.1 hi
+      rw [Nat.div_div_eq_div_mul, ← pow_succ', show k - 1 - i + 1 = k + 1 - 1 - i by omega]
+    rw [hmap, ih, pow_succ', Nat.mod_mul, Nat.cast_id]
+
+/-- `F` of a list of nonzero digits is the sum of `d^d`, under either convention. -/
+lemma Fs_eq_sum_pow {m : ℕ} {L : List ℕ} (hL : ∀ d ∈ L, 1 ≤ d) :
+    Fs m L = (L.map fun d => d ^ d).sum := by
+  unfold Fs
+  congr 1
+  exact List.map_congr_left fun d hd => w_of_ne_zero m (by have := hL d hd; omega)
+
+/-- The zone steps of Theorem 35.13 (Step 2 for positions `2, ..., T`): starting from one copy
+of `b - 1` whose digit 1 is below `X`, copies of steering digits make digits `1, ..., j - 1`
+at most `X` and digit `j` below `X`, with at most `e (b - X) b / (X - 1) + 1` copies per
+position. -/
+lemma steer_zone {b X T : ℕ} (hb : 3 ≤ b) (hTb : T + 2 ≤ b) (hX2 : 2 ≤ X) (hXb : X ≤ b - 1)
+    (h1 : (b - 1) ^ (b - 1) / b ^ (b - 2) < X) :
+    ∀ j, 1 ≤ j → j ≤ T → ∃ Lc : List ℕ, (∀ d ∈ Lc, 1 ≤ d ∧ d < b) ∧
+      (Lc.length : ℝ) ≤ ((j - 1 : ℕ) : ℝ) * (Real.exp 1 * (b - X) * b / (X - 1) + 1) ∧
+      ((b - 1) ^ (b - 1) + (Lc.map fun d => d ^ d).sum) / b ^ (b - 1) = 0 ∧
+      (∀ i, 1 ≤ i → i < j →
+        ((b - 1) ^ (b - 1) + (Lc.map fun d => d ^ d).sum) / b ^ (b - 1 - i) % b ≤ X) ∧
+      ((b - 1) ^ (b - 1) + (Lc.map fun d => d ^ d).sum) / b ^ (b - 1 - j) % b < X := by
+  intro j hj
+  induction j, hj using Nat.le_induction with
+  | base =>
+    intro _
+    refine ⟨[], by simp, by simp, ?_, fun i hi1 hi => by omega, ?_⟩
+    · simp only [List.map_nil, List.sum_nil, add_zero]
+      exact Nat.div_eq_of_lt (Nat.pow_lt_pow_left (by omega) (by omega))
+    · simp only [List.map_nil, List.sum_nil, add_zero]
+      rw [show b - 1 - 1 = b - 2 by omega]
+      exact (Nat.mod_le _ _).trans_lt h1
+  | succ j hj ih =>
+    intro hjT
+    obtain ⟨Lc, hLc, hlen, h0, hlow, hj'⟩ := ih (by omega)
+    obtain ⟨x, c, hx1, hxb, hc, h0', hlow', hj''⟩ :=
+      steer_step (X := X) (Xn := X) hb hj (by omega) hXb hX2 hXb h0 hlow hj'
+    refine ⟨Lc ++ List.replicate c x, ?_, ?_, ?_, fun i hi1 hi => ?_, ?_⟩
+    · intro d hd
+      rcases List.mem_append.1 hd with hd | hd
+      · exact hLc d hd
+      · rw [List.eq_of_mem_replicate hd]; exact ⟨hx1, hxb⟩
+    · rw [List.length_append, List.length_replicate, show j + 1 - 1 = (j - 1) + 1 by omega]
+      push_cast
+      linarith
+    · simpa [List.sum_replicate, add_assoc] using h0'
+    · simpa [List.sum_replicate, add_assoc] using hlow' i hi1 (by omega)
+    · simpa [List.sum_replicate, add_assoc] using hj''
+
+/-- `T X^X + b < b^(X + 2)` for `1 ≤ T ≤ b`, `X ≥ 1` and `X < b`: the weights of the matched
+digits and the zeros stay below the place value of digit `T + 1` (Step 3). -/
+lemma E_bound {b T X : ℕ} (hb : 3 ≤ b) (hT : T ≤ b) (hXb : X < b) :
+    T * X ^ X + b < b ^ (X + 2) := by
+  have h1 : X ^ X ≤ b ^ X := Nat.pow_le_pow_left hXb.le X
+  have h2 : 1 ≤ b ^ X := Nat.one_le_pow _ _ (by omega)
+  have h3 : T * X ^ X ≤ b * b ^ X := Nat.mul_le_mul hT h1
+  have h4 : b ≤ b * b ^ X := Nat.le_mul_of_pos_right _ h2
+  have h5 : b ^ (X + 2) = b * b * b ^ X := by ring
+  rw [h5]
+  have : 3 * (b * b ^ X) ≤ b * (b * b ^ X) := Nat.mul_le_mul_right _ hb
+  have h6 : 0 < b * b ^ X := Nat.mul_pos (by omega) (by omega)
+  nlinarith
+
+/-- **Theorem 35.13** (section 35.5.1). Let `b ≥ 3` and `T ≥ 1` with
+(a) `T + 5 ≤ b (1 - e^(-1 + 1/b))` and
+(b) `1 + T (e (T + 4) b / (b - T - 5) + 1) + e b / (b - 2) + 1 + T ≤ b - 2`.
+Then for each convention `m ≤ 1` there is a string `n` of `b - 1` digits with
+`0 < |n - F(n)| < b^(b - 1 - T)` and `n ≥ (b/e - 1) b^(b-2)`.
+
+The second half of (a), `2 (T + 4) ≤ b`, is not needed: the steering stops at the first copy
+after which the part above the steered digit reaches the next multiple of `b`, and one copy
+raises that part by at most `b - z - 1` (`steer`), whatever the size of the zone `z`. The zone
+is `[b - T - 4, b - 1]` for digits 1 to `T` and `{b - 1}` for digit `T + 1`. -/
+theorem theorem35_13 {b T m : ℕ} (hm : m ≤ 1) (hb : 3 ≤ b) (hT : 1 ≤ T)
+    (ha : (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b)))
+    (hbb : 1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 +
+      T ≤ (b : ℝ) - 2) :
+    ∃ n : List ℕ, n.length = b - 1 ∧ (∀ d ∈ n, d < b) ∧ (∀ h : n ≠ [], n.head h ≠ 0) ∧
+      0 < |((P b n : ℕ) : ℤ) - Fs m n| ∧ |((P b n : ℕ) : ℤ) - Fs m n| < (b : ℤ) ^ (b - 1 - T) ∧
+      ((b : ℝ) / Real.exp 1 - 1) * (b : ℝ) ^ (b - 2) ≤ P b n := by
+  have hbr : (3 : ℝ) ≤ b := by exact_mod_cast hb
+  have he3 : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+  have he0 : 0 < Real.exp 1 := Real.exp_pos 1
+  -- `T + 6 ≤ b`
+  have hTb : T + 6 ≤ b := by
+    have : (T : ℝ) + 5 < b := by
+      have := Real.exp_pos (-1 + 1 / (b : ℝ))
+      nlinarith
+    have : T + 5 < b := by exact_mod_cast this
+    omega
+  set X := b - T - 4 with hXdef
+  have hXr : (X : ℝ) = b - T - 4 := by
+    rw [hXdef, Nat.cast_sub (by omega), Nat.cast_sub (by omega)]; push_cast; ring
+  -- `b^(b-1) ≤ e (b-1)^(b-1)`
+  have hθ : (b : ℝ) ^ (b - 1) ≤ Real.exp 1 * ((b - 1 : ℕ) : ℝ) ^ (b - 1) := by
+    have h := add_one_pow_le_exp_mul (x := b - 1) (by omega)
+    rwa [show ((b - 1 : ℕ) : ℝ) + 1 = b by rw [Nat.cast_sub (by omega)]; push_cast; ring] at h
+  -- Step 1: digit 1 of `(b-1)^(b-1)` is below `X`, by (a)
+  have h1 : (b - 1) ^ (b - 1) / b ^ (b - 2) < X := by
+    rw [Nat.div_lt_iff_lt_mul (pow_pos (by omega) _)]
+    have hb0 : (0 : ℝ) < b := by linarith
+    have hq : (1 : ℝ) - 1 / b ≤ Real.exp (-(1 / b)) := by
+      have := Real.add_one_le_exp (-(1 / (b : ℝ))); linarith
+    have hq0 : (0 : ℝ) ≤ 1 - 1 / b := by
+      rw [sub_nonneg, div_le_one hb0]; linarith
+    have hpow : ((b - 1 : ℕ) : ℝ) ^ (b - 1) = (b : ℝ) ^ (b - 1) * (1 - 1 / b) ^ (b - 1) := by
+      rw [← mul_pow]; congr 1; rw [Nat.cast_sub (by omega)]; field_simp; push_cast; ring
+    have hexp : (1 - 1 / (b : ℝ)) ^ (b - 1) ≤ Real.exp (-1 + 1 / b) := by
+      calc (1 - 1 / (b : ℝ)) ^ (b - 1) ≤ Real.exp (-(1 / b)) ^ (b - 1) :=
+            pow_le_pow_left₀ hq0 hq _
+        _ = Real.exp (-1 + 1 / b) := by
+            rw [← Real.exp_nat_mul]; congr 1
+            rw [Nat.cast_sub (by omega)]; field_simp; push_cast; ring
+    have hbb2 : (b : ℝ) ^ (b - 1) = b * (b : ℝ) ^ (b - 2) := by
+      rw [← pow_succ']; congr 1; omega
+    have key : ((b - 1 : ℕ) : ℝ) ^ (b - 1) ≤ ((b : ℝ) - T - 5) * (b : ℝ) ^ (b - 2) := by
+      rw [hpow, hbb2]
+      have hp : (0 : ℝ) ≤ (b : ℝ) ^ (b - 2) := by positivity
+      have : b * Real.exp (-1 + 1 / b) ≤ b - T - 5 := by nlinarith
+      calc (b : ℝ) * (b : ℝ) ^ (b - 2) * (1 - 1 / b) ^ (b - 1)
+          ≤ (b : ℝ) * (b : ℝ) ^ (b - 2) * Real.exp (-1 + 1 / b) :=
+            mul_le_mul_of_nonneg_left hexp (by positivity)
+        _ = (b * Real.exp (-1 + 1 / b)) * (b : ℝ) ^ (b - 2) := by ring
+        _ ≤ ((b : ℝ) - T - 5) * (b : ℝ) ^ (b - 2) := mul_le_mul_of_nonneg_right this hp
+    have : ((b - 1) ^ (b - 1) : ℕ) < X * b ^ (b - 2) := by
+      have hlt : ((b : ℝ) - T - 5) * (b : ℝ) ^ (b - 2) < X * (b : ℝ) ^ (b - 2) := by
+        rw [hXr]; have : (0 : ℝ) < (b : ℝ) ^ (b - 2) := by positivity
+        nlinarith
+      have : (((b - 1) ^ (b - 1) : ℕ) : ℝ) < ((X * b ^ (b - 2) : ℕ) : ℝ) := by
+        push_cast; linarith
+      exact_mod_cast this
+    exact this
+  -- Step 2: the zone steps, then digit `T + 1`
+  obtain ⟨Lc0, hLc0, hlen0, h00, hlow0, hT0⟩ :=
+    steer_zone (X := X) hb (by omega) (by omega) (by omega) h1 T hT le_rfl
+  obtain ⟨x, c, hx1, hxb, hc, h0, hlow, hlast⟩ :=
+    steer_step (X := X) (Xn := b - 1) hb hT (by omega) (by omega) (by omega) le_rfl h00 hlow0 hT0
+  set Lc := Lc0 ++ List.replicate c x with hLcdef
+  have hLc : ∀ d ∈ Lc, 1 ≤ d ∧ d < b := by
+    intro d hd
+    rcases List.mem_append.1 hd with hd | hd
+    · exact hLc0 d hd
+    · rw [List.eq_of_mem_replicate hd]; exact ⟨hx1, hxb⟩
+  set Y := (b - 1) ^ (b - 1) + (Lc.map fun d => d ^ d).sum with hYdef
+  have hYeq : Y = (b - 1) ^ (b - 1) + (Lc0.map fun d => d ^ d).sum + c * x ^ x := by
+    simp [hYdef, hLcdef, List.sum_replicate, add_assoc]
+  rw [← hYeq] at h0 hlow hlast
+  -- the budget: at most `b - 3 - T` copies
+  have hlenr : (Lc.length : ℝ) + T + 1 ≤ (b : ℝ) - 2 := by
+    have hBz : 0 ≤ Real.exp 1 * (b - X) * b / (X - 1) + 1 := by
+      rw [hXr]
+      have : (0 : ℝ) < (b : ℝ) - T - 4 - 1 := by
+        have : ((T + 6 : ℕ) : ℝ) ≤ b := by exact_mod_cast hTb
+        push_cast at this; linarith
+      have : (0 : ℝ) ≤ (b : ℝ) - (b - T - 4) := by linarith
+      positivity
+    have hT1 : ((T - 1 : ℕ) : ℝ) ≤ T := by
+      rw [Nat.cast_sub hT]; push_cast; linarith
+    have e1 : Real.exp 1 * (b - X) * b / (X - 1) + 1 =
+        Real.exp 1 * (T + 4) * b / (b - T - 5) + 1 := by
+      rw [hXr]; congr 2 <;> ring
+    have e2 : Real.exp 1 * ((b : ℝ) - ((b - 1 : ℕ) : ℝ)) * b / (((b - 1 : ℕ) : ℝ) - 1) + 1 =
+        Real.exp 1 * b / (b - 2) + 1 := by
+      rw [Nat.cast_sub (by omega)]; push_cast; congr 2 <;> ring
+    rw [e2] at hc
+    rw [e1] at hBz hlen0
+    have : (Lc.length : ℝ) = Lc0.length + c := by
+      rw [hLcdef, List.length_append, List.length_replicate]; push_cast; ring
+    have h3 : ((T - 1 : ℕ) : ℝ) * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) ≤
+        T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) :=
+      mul_le_mul_of_nonneg_right hT1 hBz
+    linarith
+  have hlen : Lc.length + T + 1 ≤ b - 2 := by
+    have : ((Lc.length + T + 1 : ℕ) : ℝ) ≤ ((b - 2 : ℕ) : ℝ) := by
+      rw [Nat.cast_sub (by omega)]; push_cast; linarith
+    exact_mod_cast this
+  -- Step 3: the string
+  set N := Y / b ^ (b - 1 - T) with hNdef
+  have hb0 : 0 < b := by omega
+  have hNlt : N < b ^ T := by
+    rw [hNdef, Nat.div_lt_iff_lt_mul (pow_pos hb0 _), ← pow_add,
+      show T + (b - 1 - T) = b - 1 by omega]
+    have := Nat.div_add_mod Y (b ^ (b - 1))
+    rw [h0] at this
+    have := Nat.mod_lt Y (pow_pos hb0 (b - 1))
+    omega
+  set A := (List.range T).map fun i => N / b ^ (T - 1 - i) % b with hAdef
+  have hPA : P b A = N := by rw [hAdef, P_map_range_digits, Nat.mod_eq_of_lt hNlt]
+  have hAlen : A.length = T := by simp [hAdef]
+  have hAdig : ∀ a ∈ A, a ≤ X := by
+    intro a ha
+    rw [hAdef, List.mem_map] at ha
+    obtain ⟨i, hi, rfl⟩ := ha
+    have hi : i < T := List.mem_range.1 hi
+    have e : N / b ^ (T - 1 - i) = Y / b ^ (b - 1 - (i + 1)) := by
+      rw [hNdef, Nat.div_div_eq_div_mul, ← pow_add]; congr 2; omega
+    rw [e]
+    exact hlow (i + 1) (by omega) (by omega)
+  -- the leading digit
+  set Y0 := (b - 1) ^ (b - 1)
+  have hY0Y : Y0 ≤ Y := by rw [hYdef]; omega
+  have hlead : ((b : ℝ) / Real.exp 1 - 1) < ((Y0 / b ^ (b - 2) : ℕ) : ℝ) := by
+    have hpos : (0 : ℝ) < (b : ℝ) ^ (b - 2) := by positivity
+    have hfl : (Y0 : ℝ) / (b : ℝ) ^ (b - 2) < ((Y0 / b ^ (b - 2) : ℕ) : ℝ) + 1 := by
+      rw [div_lt_iff₀ hpos]
+      have := Nat.lt_div_mul_add (a := Y0) (pow_pos hb0 (b - 2))
+      have : ((Y0 : ℕ) : ℝ) < (((Y0 / b ^ (b - 2)) * b ^ (b - 2) + b ^ (b - 2) : ℕ) : ℝ) := by
+        exact_mod_cast this
+      push_cast at this; linarith
+    have hbe : (b : ℝ) / Real.exp 1 ≤ (Y0 : ℝ) / (b : ℝ) ^ (b - 2) := by
+      rw [div_le_div_iff₀ he0 hpos]
+      have hbb2 : (b : ℝ) ^ (b - 1) = b * (b : ℝ) ^ (b - 2) := by
+        rw [← pow_succ']; congr 1; omega
+      have : (Y0 : ℝ) = ((b - 1 : ℕ) : ℝ) ^ (b - 1) := by simp [Y0]
+      rw [this]; nlinarith
+    linarith
+  have hdiv_ge : Y0 / b ^ (b - 2) ≤ Y / b ^ (b - 2) := Nat.div_le_div_right hY0Y
+  have hlead_pos : 1 ≤ Y / b ^ (b - 2) := by
+    have : (0 : ℝ) < ((Y0 / b ^ (b - 2) : ℕ) : ℝ) := by
+      have : (1 : ℝ) < (b : ℝ) / Real.exp 1 := by rw [lt_div_iff₀ he0]; linarith
+      linarith
+    have : 0 < Y0 / b ^ (b - 2) := by exact_mod_cast this
+    omega
+  have hN1 : Y / b ^ (b - 2) = N / b ^ (T - 1) := by
+    rw [hNdef, Nat.div_div_eq_div_mul, ← pow_add]; congr 2; omega
+  have hNb : N / b ^ (T - 1) < b := by
+    rw [Nat.div_lt_iff_lt_mul (pow_pos hb0 _), ← pow_succ', show T - 1 + 1 = T by omega]
+    exact hNlt
+  have hAhead : ∀ h : A ≠ [], A.head h ≠ 0 := by
+    intro h
+    have : A.head h = N / b ^ (T - 1) % b := by
+      simp only [hAdef]
+      rw [List.head_map]
+      simp
+    rw [this, Nat.mod_eq_of_lt hNb, ← hN1]
+    omega
+  -- the rest of the string
+  set z0 := b - 2 - T - Lc.length with hz0
+  have hz01 : 1 ≤ z0 := by omega
+  set Rest := (b - 1) :: (Lc ++ List.replicate z0 0) with hRestdef
+  set Rest' := 0 :: (Lc ++ (b - 1) :: List.replicate (z0 - 1) 0) with hRest'def
+  have hRestlen : Rest.length = (b - 2 - T) + 1 := by
+    simp only [hRestdef, List.length_cons, List.length_append, List.length_replicate]; omega
+  have hdR : ∀ d ∈ Rest, d < b := by
+    intro d hd
+    simp only [hRestdef, List.mem_cons, List.mem_append] at hd
+    rcases hd with rfl | hd | hd
+    · omega
+    · exact (hLc d hd).2
+    · rw [List.eq_of_mem_replicate hd]; omega
+  have hperm : Rest.Perm Rest' := by
+    have hz : List.replicate z0 0 = 0 :: List.replicate (z0 - 1) 0 := by
+      rw [← List.replicate_succ, show z0 - 1 + 1 = z0 by omega]
+    rw [hRestdef, hRest'def, hz]
+    refine (List.Perm.cons _ List.perm_middle).trans ?_
+    refine (List.Perm.swap _ _ _).trans ?_
+    exact List.Perm.cons _ List.perm_middle.symm
+  have hne : Rest ≠ Rest' := by
+    rw [hRestdef, hRest'def]; intro h
+    have := List.head_eq_of_cons_eq h
+    omega
+  have hFs : Fs m (A ++ Rest) = Y + (Fs m A + z0 * m) := by
+    rw [hRestdef, Fs_append, Fs_cons, Fs_append, Fs_replicate, w_zero,
+      w_of_ne_zero m (show b - 1 ≠ 0 by omega), Fs_eq_sum_pow (fun d hd => (hLc d hd).1), hYdef]
+    ring
+  have hE : Fs m A + z0 * m < b ^ (b - 2 - T) := by
+    have hA : Fs m A ≤ T * X ^ X := by
+      unfold Fs
+      have := List.sum_le_length_nsmul (A.map (w m)) (X ^ X) (by
+        intro y hy
+        obtain ⟨a, ha, rfl⟩ := List.mem_map.1 hy
+        calc w m a ≤ w m X := w_le_of_le hm (hAdig a ha)
+          _ = X ^ X := w_of_ne_zero m (by omega))
+      simpa [hAlen] using this
+    have hz : z0 * m ≤ b := by
+      calc z0 * m ≤ z0 * 1 := Nat.mul_le_mul_left _ hm
+        _ ≤ b := by omega
+    have := E_bound (T := T) (X := X) hb (by omega) (by omega)
+    rw [show X + 2 = b - 2 - T by omega] at this
+    omega
+  have hYA : Y / b ^ (b - 2 - T + 1) = P b A := by
+    rw [hPA, hNdef, show b - 2 - T + 1 = b - 1 - T by omega]
+  have hdig : Y / b ^ (b - 2 - T) % b ≤ b - 2 := by
+    rw [show b - 2 - T = b - 1 - (T + 1) by omega]; omega
+  have hlow_n : ∀ R : List ℕ, R.length = b - 2 - T + 1 →
+      ((b : ℝ) / Real.exp 1 - 1) * (b : ℝ) ^ (b - 2) ≤ P b (A ++ R) := by
+    intro R hR
+    rw [P_append, hR, hPA]
+    have h2 : (Y / b ^ (b - 2)) * b ^ (b - 2) ≤ b ^ (b - 2 - T + 1) * N := by
+      have hpow : b ^ (b - 2) = b ^ (T - 1) * b ^ (b - 2 - T + 1) := by
+        rw [← pow_add]; congr 1; omega
+      rw [hN1, hpow, ← mul_assoc, mul_comm (b ^ (b - 2 - T + 1))]
+      exact Nat.mul_le_mul_right _ (Nat.div_mul_le_self _ _)
+    have h3 : ((Y0 / b ^ (b - 2) : ℕ) : ℝ) * (b : ℝ) ^ (b - 2) ≤
+        ((b ^ (b - 2 - T + 1) * N + P b R : ℕ) : ℝ) := by
+      have : (Y0 / b ^ (b - 2)) * b ^ (b - 2) ≤ b ^ (b - 2 - T + 1) * N + P b R :=
+        (Nat.mul_le_mul_right _ hdiv_ge).trans (h2.trans (Nat.le_add_right _ _))
+      exact_mod_cast this
+    have hp : (0 : ℝ) ≤ (b : ℝ) ^ (b - 2) := by positivity
+    calc ((b : ℝ) / Real.exp 1 - 1) * (b : ℝ) ^ (b - 2)
+        ≤ ((Y0 / b ^ (b - 2) : ℕ) : ℝ) * (b : ℝ) ^ (b - 2) :=
+          mul_le_mul_of_nonneg_right hlead.le hp
+      _ ≤ _ := by exact_mod_cast h3
+  have hdA : ∀ a ∈ A, a < b := fun a ha => by have := hAdig a ha; omega
+  by_cases hsol : P b (A ++ Rest) = Fs m (A ++ Rest)
+  · -- exchange `b - 1` and a zero below the top `T` digits
+    obtain ⟨hpos, hlt⟩ := theorem35_13_strict (by omega) hRestlen hdR hperm hne hsol
+    have hdR' : ∀ d ∈ Rest', d < b := fun d hd => hdR d (hperm.symm.subset hd)
+    refine ⟨A ++ Rest', ?_, ?_, ?_, hpos, ?_, hlow_n Rest' (hperm.length_eq ▸ hRestlen)⟩
+    · rw [List.length_append, ← hperm.length_eq, hRestlen, hAlen]; omega
+    · intro d hd
+      rcases List.mem_append.1 hd with hd | hd
+      · exact hdA d hd
+      · exact hdR' d hd
+    · intro h
+      have hA0 : A ≠ [] := by rw [← List.length_pos_iff, hAlen]; omega
+      rw [List.head_append_of_ne_nil hA0]
+      exact hAhead hA0
+    · rw [show b - 1 - T = b - 2 - T + 1 by omega]; exact_mod_cast hlt
+  · refine ⟨A ++ Rest, ?_, ?_, ?_, ?_, ?_, hlow_n Rest hRestlen⟩
+    · rw [List.length_append, hRestlen, hAlen]; omega
+    · intro d hd
+      rcases List.mem_append.1 hd with hd | hd
+      · exact hdA d hd
+      · exact hdR d hd
+    · intro h
+      have hA0 : A ≠ [] := by rw [← List.length_pos_iff, hAlen]; omega
+      rw [List.head_append_of_ne_nil hA0]
+      exact hAhead hA0
+    · apply abs_pos.2
+      intro h
+      apply hsol
+      have : ((P b (A ++ Rest) : ℕ) : ℤ) = (Fs m (A ++ Rest) : ℤ) := by linarith
+      exact_mod_cast this
+    · have := theorem35_13_step3 (A := A) (by omega) hRestlen hdR hYA hdig hE hFs
+      rw [show b - 1 - T = b - 2 - T + 1 by omega]; exact_mod_cast this
+/-! ### Corollary 35.14: the thresholds 27, 49 and 77 -/
+
+/-- Condition (a) of Theorem 35.13 holds when `3 (T + 5) ≤ b`, since `e^(-1 + 1/b) ≤ e^(-1/2)
+≤ 2/3`. -/
+lemma theorem35_13_cond_a {b T : ℕ} (h : 3 * (T + 5) ≤ b) :
+    (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b)) := by
+  have hb : (15 : ℝ) ≤ b := by
+    have : (15 : ℕ) ≤ b := by omega
+    exact_mod_cast this
+  have h1 : -1 + 1 / (b : ℝ) ≤ -(1 / 2) := by
+    have : 1 / (b : ℝ) ≤ 1 / 2 := by
+      rw [div_le_div_iff₀ (by linarith) (by norm_num)]; linarith
+    linarith
+  have h2 : Real.exp (-1 + 1 / b) ≤ 2 / 3 := by
+    calc Real.exp (-1 + 1 / b) ≤ Real.exp (-(1 / 2)) := Real.exp_le_exp.2 h1
+      _ = 1 / Real.exp (1 / 2) := by rw [Real.exp_neg, inv_eq_one_div]
+      _ ≤ 2 / 3 := by
+          rw [div_le_div_iff₀ (Real.exp_pos _) (by norm_num)]
+          have := Real.add_one_le_exp (1 / 2 : ℝ)
+          linarith
+  have h' : ((3 * (T + 5) : ℕ) : ℝ) ≤ b := by exact_mod_cast h
+  push_cast at h'
+  nlinarith
+
+/-- Condition (b) of Theorem 35.13 only gets easier as `b` grows: if it holds at `b0` with
+`e` replaced by `2.7182818286 > e`, it holds at every `b ≥ b0`. -/
+lemma theorem35_13_cond_b {b b0 T : ℕ} (h0 : T + 6 ≤ b0) (hb : b0 ≤ b)
+    (h : 1 + T * (2.7182818286 * (T + 4) * b0 / (b0 - T - 5) + 1) +
+      2.7182818286 * b0 / (b0 - 2) + 1 + T ≤ (b0 : ℝ) - 2) :
+    1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 + T ≤
+      (b : ℝ) - 2 := by
+  have he := Real.exp_one_lt_d9
+  have he0 := Real.exp_pos 1
+  have h0r : (T : ℝ) + 6 ≤ b0 := by exact_mod_cast h0
+  have hbr : (b0 : ℝ) ≤ b := by exact_mod_cast hb
+  have hT0 : (0 : ℝ) ≤ T := T.cast_nonneg
+  have hd0 : (0 : ℝ) < b0 - T - 5 := by linarith
+  have hd : (0 : ℝ) < b - T - 5 := by linarith
+  -- `b / (b - c)` falls with `b`
+  have r1 : (b : ℝ) / (b - T - 5) ≤ b0 / (b0 - T - 5) := by
+    rw [div_le_div_iff₀ hd hd0]; nlinarith
+  have r2 : (b : ℝ) / (b - 2) ≤ b0 / (b0 - 2) := by
+    rw [div_le_div_iff₀ (by linarith) (by linarith)]; nlinarith
+  have k1 : Real.exp 1 * (T + 4) * b / (b - T - 5) ≤
+      2.7182818286 * (T + 4) * b0 / (b0 - T - 5) := by
+    rw [mul_div_assoc, mul_div_assoc]
+    have : (0 : ℝ) ≤ b / (b - T - 5) := div_nonneg (by linarith) hd.le
+    have : Real.exp 1 * (T + 4) ≤ 2.7182818286 * (T + 4) := by nlinarith
+    calc Real.exp 1 * (T + 4) * (b / (b - T - 5)) ≤ 2.7182818286 * (T + 4) * (b / (b - T - 5)) :=
+          mul_le_mul_of_nonneg_right this (by positivity)
+      _ ≤ 2.7182818286 * (T + 4) * (b0 / (b0 - T - 5)) :=
+          mul_le_mul_of_nonneg_left r1 (by positivity)
+  have k2 : Real.exp 1 * b / (b - 2) ≤ 2.7182818286 * b0 / (b0 - 2) := by
+    rw [mul_div_assoc, mul_div_assoc]
+    have : (0 : ℝ) ≤ b / (b - 2) := div_nonneg (by linarith) (by linarith)
+    calc Real.exp 1 * (b / (b - 2)) ≤ 2.7182818286 * (b / (b - 2)) :=
+          mul_le_mul_of_nonneg_right (by linarith) this
+      _ ≤ 2.7182818286 * (b0 / (b0 - 2)) := mul_le_mul_of_nonneg_left r2 (by norm_num)
+  have k3 : (T : ℝ) * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) ≤
+      T * (2.7182818286 * (T + 4) * b0 / (b0 - T - 5) + 1) :=
+    mul_le_mul_of_nonneg_left (by linarith) hT0
+  linarith
+
+/-- From Theorem 35.13 with parameter `T`: `|n - F(n)| b^(T-1) < n`, for `b ≥ 6`. -/
+lemma theorem35_13_rel {b T m : ℕ} (hm : m ≤ 1) (hb : 6 ≤ b) (hT : 1 ≤ T)
+    (ha : (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b)))
+    (hbb : 1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 +
+      T ≤ (b : ℝ) - 2) :
+    ∃ n : List ℕ, n.length = b - 1 ∧ (∀ d ∈ n, d < b) ∧ (∀ h : n ≠ [], n.head h ≠ 0) ∧
+      0 < |((P b n : ℕ) : ℤ) - Fs m n| ∧
+      |((P b n : ℕ) : ℤ) - Fs m n| * (b : ℤ) ^ (T - 1) < P b n := by
+  obtain ⟨n, hlen, hd, hh, hpos, hlt, hge⟩ := theorem35_13 hm (by omega) hT ha hbb
+  refine ⟨n, hlen, hd, hh, hpos, ?_⟩
+  have hTb : T + 2 ≤ b := by
+    have : (T : ℝ) + 5 < b := by
+      have := Real.exp_pos (-1 + 1 / (b : ℝ))
+      have h6 : (6 : ℝ) ≤ b := by exact_mod_cast hb
+      have : (0 : ℝ) < b := by linarith
+      nlinarith
+    have : T + 5 < b := by exact_mod_cast this
+    omega
+  have he := Real.exp_one_lt_d9
+  have hbr : (6 : ℝ) ≤ b := by exact_mod_cast hb
+  have hge' : (b : ℝ) ^ (b - 2) ≤ P b n := by
+    have : (1 : ℝ) ≤ b / Real.exp 1 - 1 := by
+      rw [le_sub_iff_add_le, le_div_iff₀ (Real.exp_pos 1)]; linarith
+    have hp : (0 : ℝ) ≤ (b : ℝ) ^ (b - 2) := by positivity
+    nlinarith
+  have hge'' : b ^ (b - 2) ≤ P b n := by exact_mod_cast hge'
+  have hp : (0 : ℤ) < (b : ℤ) ^ (T - 1) := by positivity
+  calc |((P b n : ℕ) : ℤ) - Fs m n| * (b : ℤ) ^ (T - 1)
+      < (b : ℤ) ^ (b - 1 - T) * (b : ℤ) ^ (T - 1) :=
+        mul_lt_mul_of_pos_right hlt hp
+    _ = (b : ℤ) ^ (b - 2) := by rw [← pow_add]; congr 1; omega
+    _ ≤ P b n := by exact_mod_cast hge''
+
+/-- **Corollary 35.14** (section 35.5.1), the thresholds, under either convention. Every base
+`b ≥ 27` has a string `n` of `b - 1` digits with `0 < |n - F(n)| < b^(b-2)` (`T = 1`); every
+base `b ≥ 49` one with `0 < |n - F(n)| < n / b` (`t ≥ 1`, from `T = 2`); and every base
+`b ≥ 77` one with `0 < |n - F(n)| < n / b^2` (`t ≥ 2`, from `T = 3`). The library computes the
+thresholds and extends them by monotonicity; here condition (b) is checked at the threshold
+with `e < 2.7182818286` and carried to larger `b` by `theorem35_13_cond_b`. -/
+theorem corollary35_14 {m : ℕ} (hm : m ≤ 1) :
+    (∀ b, 27 ≤ b → ∃ n : List ℕ, n.length = b - 1 ∧ (∀ d ∈ n, d < b) ∧
+      (∀ h : n ≠ [], n.head h ≠ 0) ∧ 0 < |((P b n : ℕ) : ℤ) - Fs m n| ∧
+      |((P b n : ℕ) : ℤ) - Fs m n| < (b : ℤ) ^ (b - 2)) ∧
+    (∀ b, 49 ≤ b → ∃ n : List ℕ, n.length = b - 1 ∧ (∀ d ∈ n, d < b) ∧
+      (∀ h : n ≠ [], n.head h ≠ 0) ∧ 0 < |((P b n : ℕ) : ℤ) - Fs m n| ∧
+      |((P b n : ℕ) : ℤ) - Fs m n| * b < P b n) ∧
+    (∀ b, 77 ≤ b → ∃ n : List ℕ, n.length = b - 1 ∧ (∀ d ∈ n, d < b) ∧
+      (∀ h : n ≠ [], n.head h ≠ 0) ∧ 0 < |((P b n : ℕ) : ℤ) - Fs m n| ∧
+      |((P b n : ℕ) : ℤ) - Fs m n| * b ^ 2 < P b n) := by
+  refine ⟨fun b hb => ?_, fun b hb => ?_, fun b hb => ?_⟩
+  · obtain ⟨n, h1, h2, h3, h4, h5, -⟩ := theorem35_13 (T := 1) hm (by omega) le_rfl
+      (theorem35_13_cond_a (by omega))
+      (theorem35_13_cond_b (b0 := 27) (by norm_num) hb (by norm_num))
+    exact ⟨n, h1, h2, h3, h4, by simpa [show b - 1 - 1 = b - 2 by omega] using h5⟩
+  · obtain ⟨n, h1, h2, h3, h4, h5⟩ := theorem35_13_rel (T := 2) hm (by omega) (by norm_num)
+      (theorem35_13_cond_a (by omega))
+      (theorem35_13_cond_b (b0 := 49) (by norm_num) hb (by norm_num))
+    exact ⟨n, h1, h2, h3, h4, by simpa using h5⟩
+  · obtain ⟨n, h1, h2, h3, h4, h5⟩ := theorem35_13_rel (T := 3) hm (by omega) (by norm_num)
+      (theorem35_13_cond_a (by omega))
+      (theorem35_13_cond_b (b0 := 77) (by norm_num) hb (by norm_num))
+    exact ⟨n, h1, h2, h3, h4, by simpa using h5⟩
 
 end Munchausen

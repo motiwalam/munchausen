@@ -22,9 +22,9 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (Examples), Conj (Conjectures), MT (ModelTheorems), App (Applications), SR
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares).
 
-Counts of table rows at the time of writing: 156 formalized (one of them a
+Counts of table rows at the time of writing: 157 formalized (one of them a
 list of computed solutions checked by `decide`), 24 partial, 12 rows of open
-problems (15 `Prop`s), 4 refuted conjectures, 79 not formalized and 5 not
+problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized and 5 not
 stated.
 
 ## Chapter 1. Basics
@@ -444,8 +444,8 @@ stated.
 | Proposition 35.8 | none | not formalized (the window of Lemma 20.1 with the mean value theorem) |
 | Proposition 35.9 | `prop35_9_share`, `prop35_9_bounds` [Exist] | partial: the exact share as a product and its two exponential bounds; the limit `-2A` is not formalized |
 | Corollary 35.10, Theorem 35.12 | none | not formalized (asymptotic counts) |
-| Theorem 35.13 | `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | partial: Step 3 (no carry from `E < P_(T+1)`, so `n` and `F(n)` agree in the top digits, and an exchange below the top makes `n ≠ F(n)`); Steps 1 and 2 (the steering, with real bounds) are not formalized |
-| Corollary 35.14 | none | not formalized (asymptotics of the conditions; computed thresholds) |
+| Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
+| Corollary 35.14 | `corollary35_14`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel` [Exist] | partial: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286` and shown to get easier as `b` grows); the asymptotics `T(b) = sqrt(b / e) - O(1)` are not formalized |
 
 ## Open questions stated as `Prop`s
 
