@@ -23,7 +23,7 @@ most 3 threads.
 | So for fixed `p, q` the string `(p, q, x)` is a solution for only finitely many `x`, of either parity, with an effective bound | proven (Corollary F.10) |
 | Middle position, `x` odd: every prime `l` of `x` with `l` prime to `2pA` has `(pA / l) = 1`. If `pA` is not a square (415 of the 440 families with `p, q <= 20`), the `x` that can occur have density 0 | proven (Proposition F.11) |
 | Leading position, `x` even, `x = n f^2`: the 2-adic bound of Theorem 32.2 holds with the unit of `Q(sqrt n)`, so the square part `f^2` of a solution is small, at most `4.5 * 10^9` for `x = 10^20` | proven, weak (Proposition F.12) |
-| Sieve: last position, `p, q <= 10`, odd `x` up to `max(X_A(p), W + q^2/(4p))`, up to `10^10`; all three open cases with small digits up to 20 and `x <= 10^8`. Only known solutions survive | computed (Proposition F.8, section F.5) |
+| Sieve: last position, `p, q <= 10`, odd `x` up to `max(X_A(p), W + q^2/(4p))`, up to `10^10`; all three open cases with small digits up to 20 and `x <= 10^8`, the middle and leading cases to `10^9`. Only known solutions and `R = 0` strings survive | computed (Proposition F.8, section F.5) |
 | Why the middle and leading positions resist: in a real field the regulator enters every height. Middle: `h Reg` is about `x`. Leading: `Reg` is about `sqrt(x)` | proven sizes, measured (section F.4.3) |
 
 ## F.1 The switch to the field of R
@@ -486,7 +486,29 @@ Corollary F.6). In case M with `A > 1` the regulator is between `x/7` and
 Computed. `r6f_ff_sieve.c` on the 1,362 families of
 `r6f_ff_runs.py evidence 20 1e8`: the three open cases with small digits at
 most 20, both conventions where a small digit is 0, and `x <= 10^8`
-(`x` odd in cases L and M, even in case Lead). `RESULT_EVIDENCE`
+(`x` odd in cases L and M, even in case Lead): `6.81 * 10^10` values of
+`x` in 17 minutes on 3 threads. Then the 922 families of cases M and Lead
+for `10^8 < x <= 10^9`: `4.15 * 10^11` more values in 35 minutes
+(`data/r6f_ff_evidence.txt`).
+
+Every survivor is decided exactly by `r6f_ff_runs.py check`.
+
+- 31,622 survivors are `(x, 0, 0)` and `(x, 0, 1)` in the leading position
+  under `0^0 = 0` with `x` an even square. Here `A = 0`, so `R = 0`, and
+  `x b^2 = x^x` has the root `b = x^((x-1)/2)` exactly when `x` is a
+  square: the self-paying digit of Proposition 2.2. They are outside the
+  open regime (`R = 0`).
+- The other 35 survivors have `x <= 7`, or are the swaps `(p, 0, p^p)`
+  with `R = 0`. They are the known solutions `(1,3,1)`, `(3,1,3)`,
+  `(5,1,3)`, `(6,1,5)`, `(1,7,1)` (in their middle or last reading, and
+  `(6,1,5)` also with `x = 6` leading), the `0^0 = 0` strings `(p, 0, 1)`
+  and `(1, 0, 3)`, or strings with an integer root at most the largest
+  digit.
+
+So no 3-digit solution with two digits at most 20 and a large digit in the
+open regime exists with `x <= 10^8` in the last position, or `x <= 10^9` in
+the middle and leading positions. Heuristic 25.12 predicts this: a string
+with large digit `x` is a solution with chance about `x^(-x/2)`.
 
 ## F.6 What failed and why
 
@@ -546,6 +568,7 @@ most 20, both conventions where a small digit is 0, and `x <= 10^8`
 | `analysis/r6f_ff_sieve.c` | sieve for the three positions, either parity, a range of `x` |
 | `analysis/r6f_ff_runs.py` | inputs for the sieve (closure and evidence runs) and the exact check of survivors |
 | `analysis/r6f_ff_classes.gp` | class numbers, orders and regulators of Table F.4.3 |
+| `analysis/data/r6f_ff_bounds.txt`, `r6f_ff_lead.txt` | `X_A(p)`, `X_B(p)` for `p <= 20`; the square-part bound for `q, r <= 20` |
 | `analysis/data/r6f_ff_closure.txt` | Proposition F.8: survivors, decisions, family counts |
 | `analysis/data/r6f_ff_evidence.txt` | section F.5 |
 | `analysis/data/r6f_ff_classes.txt` | Table F.4.3 |
