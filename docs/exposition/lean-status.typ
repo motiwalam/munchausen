@@ -97,7 +97,7 @@
   "short-bases-k": "prop10_4",
   "short-window": "lemma20_1, lemma20_1_root",
   "short-multiset-count": "prop20_2",
-  "thm-almost-all": "theorem11_2 (partial: the weaker bound of L11.6, at most B^(2 alpha + delta) bases, which covers k up to (1/2 - epsilon) ln b / ln ln b)",
+  "thm-almost-all": "theorem20_3, shortBases_density_zero, theorem11_2 (partial: at most B^(alpha + delta) bases for every alpha, so density 0 for k <= (1 - epsilon) ln b / ln ln b; the second-order range with ln ln ln b and the claim that multisets reach no further are not formalized)",
   "short-divisors": "lemma20_4",
   "short-odd-length": "IsNegSolution.odd_length",
   "short-partners": "IsSolution.negPartner",

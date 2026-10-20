@@ -23,7 +23,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 176 formalized, 20 partial, 12
+Counts of table rows at the time of writing: 176 formalized, 21 partial, 12
 rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
@@ -217,7 +217,8 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Lemma 20.1 | `lemma20_1`, `lemma20_1_root` [Window] | formalized |
 | Proposition 20.2 | `prop20_2`, `card_multisets_le`, `sum_inv_le_harmonic`, `card_le_of_window` [Window] | formalized |
 | Lemma 20.4 | `lemma20_4`, `prod_le_lcm_mul_pow` [Window] | formalized (for `r ≥ 1`; see problem 7) |
-| Theorem 20.3, Proposition 20.5 | none | not formalized (asymptotics of the counts of Proposition 20.2 and Lemma 20.4) |
+| Theorem 20.3 | `theorem20_3`, `shortBases_density_zero`, `shortBases_card_le_multiset`, `choose_le_exp` [Almost] | partial: (a) and the first claim of (c): for `α, δ > 0` and all large `B` at most `B^(α + δ)` bases `b ≤ B` have a solution of `2 ≤ k ≤ α ln b / ln ln b` digits (Proposition 20.2 with `X = (ln B)^2` and `C(X + K, K) ≤ (e (X + K)/K)^K`), so for `α < 1` they have density 0; the second-order range of (b), (c) and the converse (d) are not formalized |
+| Proposition 20.5 | none | not formalized (asymptotics of the count of Lemma 20.4) |
 | Lemma 20.6 | `multiple_mem_T` [Res] | formalized |
 | Lemma 20.7 | `lemma20_7`, `step_lemma20_7` [Res] | formalized (for every prime `p`; the library's "odd" is not needed) |
 | Theorem 20.8 | `theorem20_8`, `exists_start`, `exists_generator_avoiding` [Res] | formalized (`p = 7` by a finite check, `p ≥ 11` with three generators) |

@@ -47,7 +47,7 @@ use `decide`, which the kernel checks.
 | `Munchausen/Constructions.lean` | chapter 2 (twins, self-paying digits and the converse of 2.2, swaps, 2-digit solutions, Corollary 2.4, Proposition 2.7), Propositions 4.2, 8.5 and 15.15, Theorems 9.2 and 15.9, chapter 22 (splits, blocks, binomial families) and Theorem 25.5 |
 | `Munchausen/SelfPayingDigits.lean` | Proposition 2.3 (moves and cores), Propositions 8.6, 15.4, 15.5 and 15.8, Theorem 15.14 (chains and cycles), the counts of Propositions 8.5 and 9.3 |
 | `Munchausen/Counting.lean` | Propositions 4.1 and 10.4, the finite form of Theorem 11.2 |
-| `Munchausen/AlmostAll.lean` | Theorem 11.2: almost all bases have no short solution |
+| `Munchausen/AlmostAll.lean` | Theorems 11.2 and 20.3: almost all bases have no short solution, by the string count and by the multiset count |
 | `Munchausen/BaseWindow.lean` | Lemma 20.1 and Proposition 15.17 (the window of the base), Proposition 20.2, Lemma 20.4 |
 | `Munchausen/Polynomial.lean` | `Q_s`, local obstructions (11.1, 19.1), the test modulo 2 (15.11), negative bases (12.2, 12.3), rational roots (16.15) |
 | `Munchausen/Residues.lean` | residues of `x^x - x` modulo 27 and 81, Lemmas 20.6, 20.7, Theorem 20.8, the coverings 15.13 and 20.13 |
