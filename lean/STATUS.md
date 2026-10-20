@@ -23,7 +23,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 176 formalized, 21 partial, 12
+Counts of table rows at the time of writing: 178 formalized, 20 partial, 12
 rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
@@ -442,9 +442,10 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Proposition 35.5 | `invIdeal`, `exchIdeal`, `Exch`, `ringVal_exch`, `prop35_5_one`, `prop35_5_two`, `prop35_5_three_le`, `prop35_5_three`; `invIdealZ`, `prop35_5_three_neg_le`, `prop35_5_three_neg` [Exist] | formalized ((1), (2), and (3) for place values `u β^i` with `i ≥ 0`, and with any integer `i` when `β` is a unit: a string is then a pair `(k, s)` starting at position `-k`) |
 | Proposition 35.6 | `prop35_6`, `prop35_6_rat` [Exist] | formalized (for `Z[t]/(f)` with any `f`, which is `Z[β]` when `f` is the minimal polynomial of the algebraic integer `β`; and for `p/q` in `Z[1/q]`, which covers `-p/q`) |
 | Proposition 35.7 | none | not formalized (convergence of a random walk on a finite group) |
-| Proposition 35.8 | `prop35_8_window`, `prop35_8_root`, `prop35_8_fix`, `prop35_8_count`, `card_le_choose_of_bounded` [Exist] | partial: the window (`p (b-1)^(k-1) < F(c_L) < p b^(k-1) + (M+1) b^(k-2)` and its root form, for `k >= 3` and any `b`, by algebra in place of the mean value theorem), the small part `m(c_S)` fixed by `c_L` and `b`, and `r_j(N) <= C(z0 + j, j)` from Lemma 30.2; the displayed sum over `(c_L, p, b)` is not assembled |
+| Proposition 35.8 | `prop35_8_window`, `prop35_8_root`, `prop35_8_fix`, `prop35_8_count`, `card_le_choose_of_bounded`, `prop35_8_sum`, `rCount`, `window358`, `rCount_le` [Exist] | formalized: the window (`p (b-1)^(k-1) < F(c_L) < p b^(k-1) + (M+1) b^(k-2)` and its root form, for `k >= 3` and any `b`, by algebra in place of the mean value theorem), the small part `m(c_S)` fixed by `c_L` and `b`, `r_j(N) <= C(z0 + j, j)` from Lemma 30.2, the summed bound (the bases `b <= B` with a `k`-digit solution number at most the sum over `(c_L, p)` and the bases of the window of `r(b, c_L)`), and `r(b, c_L) <= C(z0 + j, j)`; "`b` large" is the hypothesis `k w(z(b)) < b - 1` on the threshold |
 | Proposition 35.9 | `prop35_9_share`, `prop35_9_bounds` [Exist] | partial: the exact share as a product and its two exponential bounds; the limit `-2A` is not formalized |
-| Corollary 35.10, Theorem 35.12 | none | not formalized (asymptotic counts) |
+| Corollary 35.10 | none | not formalized (asymptotic count) |
+| Theorem 35.12 | `theorem35_12`, `theorem35_12_density`, `fewLargeBases`, `fewLargeBases'`, `fewLargeBases_card_le`, `Fs_lt_of_sq_lt`, `le_floor_rpow_of_solution` [Exist] | formalized: for real `C >= 1` and `κ, δ > 0`, at most `B^(max(1/2, C κ) + δ)` bases `b <= B` for all large `B` (with `κ = 1/C - ε` the library's form), and density 0 for `C κ < 1` with the conditions in terms of `b`; a digit is large when its weight `w(x)` satisfies `w(x)^2 >= b` |
 | Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
 | Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel`, `NearCond`, `NearCond.mono`, `nearT`, `nearT_mono`, `nearT_thresholds`, `nearExp_mono`, `condA_monotoneOn` [Exist] | formalized: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286`); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; `T(b)` (`nearT`, the largest `T` allowed by (a) and (b)) and `t = T(b) - log_b(e b/(b - e))` do not decrease with `b` (for fixed `T` both conditions get easier: `b (1 - e^(-1 + 1/b))` has derivative `1 - e^(-1 + 1/b) (1 - 1/b) > 0`); `T(b) >= 1, 2, 3` from 27, 49, 77. The second half of (a), `2 (T + 4) <= b`, is not part of `NearCond`, since Theorem 35.13 does not need it |
 
@@ -579,10 +580,11 @@ In order of value and effort:
    `q <= e - 2`. `theorem29_11_two` gives conditions (a) to (c) in both
    directions, and `topCoeff_span`, `exists_topCoeff_mul_ne_zero` are the
    tools on the `ℓ` side.
-3. The asymptotic counts of chapters 20 and 35: Theorem 20.3 from
-   `prop20_2`, then the count of Theorem 35.12 and the summed bound of
-   Proposition 35.8 (`prop35_8_window`, `prop35_8_fix`, `prop35_8_count` are
-   in place).
+3. The finer asymptotics of chapters 20 and 35: the second-order range of
+   Theorem 20.3 (b) to (d), which needs `X_K(B)` to first order and
+   Stirling's formula for `C(X + K, K)`; the limit `-2A` of Proposition 35.9
+   and Corollary 35.10. `theorem20_3`, `choose_le_exp` and `prop35_9_bounds`
+   are the tools.
 5. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
    the model).
 6. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.

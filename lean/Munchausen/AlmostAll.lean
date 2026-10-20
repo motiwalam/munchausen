@@ -346,7 +346,7 @@ lemma shortBases_card_le_multiset {m B : ℕ} {α δ : ℝ} (hα : 0 < α) (hδ 
     have h := prop20_2 (m := m) (B := B) (X := X) hk2
       (fun x hx => le_floor_sq_of_pow_self_lt (by omega) hLL hkr hx)
     have hch : (X + k).choose k ≤ Cb := by
-      show (X + k).choose k ≤ (X + K).choose K
+      change (X + k).choose k ≤ (X + K).choose K
       rw [← Nat.choose_symm_add, ← Nat.choose_symm_add]
       exact Nat.choose_le_choose X (by omega)
     have hk1 : (1 : ℝ) ≤ (k : ℝ) - 1 := by
@@ -458,6 +458,27 @@ lemma eventually_poly_le_exp {δ : ℝ} (hδ : 0 < δ) :
     exact lt_of_mul_lt_mul_left h' hd4.le
   linarith
 
+/-- `α ln B / ln ln B → ∞` for `α > 0`. -/
+lemma tendsto_mul_log_div_log_log {α : ℝ} (hα : 0 < α) :
+    Tendsto (fun B : ℕ => α * log (B : ℝ) / log (log (B : ℝ))) atTop atTop := by
+  have hL : Tendsto (fun B : ℕ => log (B : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  have h1 : Tendsto (fun t : ℝ => t / log t) atTop atTop := by
+    refine tendsto_atTop.2 fun M => ?_
+    have hb := isLittleO_log_id_atTop.bound (show (0 : ℝ) < 1 / (|M| + 1) by positivity)
+    filter_upwards [hb, eventually_gt_atTop (exp 1)] with t h1 ht
+    have ht0 : 0 < t := (exp_pos 1).trans ht
+    have hlog : 1 < log t := by rw [lt_log_iff_exp_lt ht0]; exact ht
+    simp only [norm_eq_abs, id, abs_of_pos ht0, abs_of_pos (by linarith : (0 : ℝ) < log t)]
+      at h1
+    rw [le_div_iff₀ (by linarith)]
+    have : log t * (|M| + 1) ≤ t := by
+      rw [div_mul_eq_mul_div, one_mul, le_div_iff₀ (by positivity)] at h1; linarith
+    nlinarith [le_abs_self M]
+  have h2 := (h1.comp hL).const_mul_atTop hα
+  refine h2.congr fun B => ?_
+  simp only [Function.comp_apply]; ring
+
 /-- **Theorem 20.3** (a) and (c) (section 20.1.3). Let `α > 0` and `δ > 0`. For all large `B`, at
 most `B^(α + δ)` bases `b ≤ B` have a solution with `k ≥ 2` digits and
 `k ≤ α ln b / ln ln b`, under either convention. So for `α < 1` almost all bases have no such
@@ -468,23 +489,7 @@ theorem theorem20_3 (m : ℕ) {α δ : ℝ} (hα : 0 < α) (hδ : 0 < δ) :
   have hL : Tendsto (fun B : ℕ => log (B : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
   have hT : Tendsto (fun B : ℕ => log (log (B : ℝ))) atTop atTop := tendsto_log_atTop.comp hL
-  -- `α L / ln L → ∞`
-  have hKr : Tendsto (fun B : ℕ => α * log (B : ℝ) / log (log (B : ℝ))) atTop atTop := by
-    have h1 : Tendsto (fun t : ℝ => t / log t) atTop atTop := by
-      refine tendsto_atTop.2 fun M => ?_
-      have hb := isLittleO_log_id_atTop.bound (show (0 : ℝ) < 1 / (|M| + 1) by positivity)
-      filter_upwards [hb, eventually_gt_atTop (exp 1)] with t h1 ht
-      have ht0 : 0 < t := (exp_pos 1).trans ht
-      have hlog : 1 < log t := by rw [lt_log_iff_exp_lt ht0]; exact ht
-      simp only [norm_eq_abs, id, abs_of_pos ht0, abs_of_pos (by linarith : (0 : ℝ) < log t)]
-        at h1
-      rw [le_div_iff₀ (by linarith)]
-      have : log t * (|M| + 1) ≤ t := by
-        rw [div_mul_eq_mul_div, one_mul, le_div_iff₀ (by positivity)] at h1; linarith
-      nlinarith [le_abs_self M]
-    have h2 := (h1.comp hL).const_mul_atTop hα
-    refine h2.congr fun B => ?_
-    simp only [Function.comp_apply]; ring
+  have hKr := tendsto_mul_log_div_log_log hα
   obtain ⟨B₀, hB₀⟩ := eventually_atTop.1 ((hT.eventually_ge_atTop (max 1 α)).and
     ((hKr.eventually_ge_atTop 2).and ((hT.eventually (eventually_log_cond hα hδ)).and
       ((hL.eventually (eventually_poly_le_exp hδ)).and (eventually_ge_atTop 16)))))
