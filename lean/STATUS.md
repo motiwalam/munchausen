@@ -560,21 +560,22 @@ the new numbers.
 
 In order of value and effort:
 
-1. Chapter 29 with traces: Lemma 29.8 (1) for `j >= 2`, (2) and (3) (the
-   subfields and trace kernels of `F_(q^f)`, Hensel lifting), then
-   Theorem 29.9, the conclusion of Corollary 29.10, Theorem 29.11 (2)
-   (sufficiency, (b), (c)) and (4), and Remark 29.12. The Chinese remainder
-   setup of `finrank_ker_frobR` and the dual argument of
-   `comp_pow_eq_of_codim_gt` are in place.
-2. Theorem 33.16 under abc to the end: the bounds `rad(N) <= 2 l x` and
-   `abs(R) <= 9 x^2 B^B` of Theorem 25.7 and the bound on `x`, then
-   Corollary 33.17. `ABC`, `abc_le_gcd_mul` and `bounded_of_rpow_le` (used for
-   Theorem 15.10) are the tools.
-3. Theorem 35.13, Steps 1 and 2 (the steering of the top digits by
-   monotonicity, with the real bounds on `theta_i`), and Corollary 35.14.
-4. Chapter 35, smaller items: Proposition 35.5 (3) for negative positions of
-   a unit `beta`, Proposition 35.8 (the window with the small part), and the
-   count of Theorem 35.12.
-5. Smaller items: the `k`-step form of Proposition 30.7, the unbounded
-   number of bases in Proposition 15.15, Corollary 34.7 and Theorem 34.6
-   (they need Theorem 29.1).
+1. Theorem 29.11 (4) and Remark 29.12: for squarefree `B - 1`, Euler's
+   formula `ℓ(x) = ∑ x(β)/M'(β)` over the roots (the trace form of the
+   separable algebra `R`), the elements `u_m = M'^(1 - q^m)`, and the case
+   `q <= e - 2`. `theorem29_11_two` gives conditions (a) to (c) in both
+   directions, and `topCoeff_span`, `exists_topCoeff_mul_ne_zero` are the
+   tools on the `ℓ` side.
+2. Theorem 33.16 for factorials: `rad(x!)` is the primorial, at most `4^x`
+   in Mathlib, which can replace the cited `e^(1.01624 x)` in the bound
+   `x <= max(C', (2 + O(eps)) B)`; the completed square is
+   `three_digit_iff_sq`, and `theorem33_16_bound` is the model.
+3. The asymptotic counts of chapters 20 and 35: Theorem 20.3 from
+   `prop20_2`, then the count of Theorem 35.12 and the summed bound of
+   Proposition 35.8 (`prop35_8_window`, `prop35_8_fix`, `prop35_8_count` are
+   in place).
+4. Corollary 35.14: that `T(b)` does not decrease with `b`, which needs
+   condition (a) to grow with `b` (`b (1 - e^(-1 + 1/b))` is increasing).
+5. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
+   the model).
+6. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.

@@ -34,6 +34,8 @@ by the term `j = e - 1` is the ideal `Q R` with `Q = (B - 1)/P`, where `φ^(k f 
 Theorem 29.11 (2) is the dual argument of (1) carried to the end (`theorem29_11_two`).
 Lemma 29.8 (1) for every `j` (`lemma29_8_one`) counts the fixed points of `x ↦ x^(q^g)` in
 `F_q[T]/(P^a)`: they reduce bijectively onto the roots of `X^(q^g) - X` in the residue field.
+Lemma 29.8 (2) (`lemma29_8_two`) writes the trace to `F_(q^g)` as the sum of the conjugates; the
+image of `φ^j - 1` lies in its kernel, which has at most `q^(f-g)` elements, so they agree.
 -/
 
 open Polynomial Module
