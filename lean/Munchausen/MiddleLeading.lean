@@ -20,6 +20,14 @@ import Munchausen.FieldFamily
   `N(μ) = x^(x+1)`), Lemma 38.5 for `x` prime to `q` (`(-A)^(x+1) μ = ν0 θ^(x+1)` with
   `N(ν0) = (-A)^(x+1)`), Theorem 38.7 when `R = 4x + 1` is a square, the odd `x` of
   Corollary 38.8, and the case `q = 0` of Corollary 38.9.
+* Section 38.6, the exact test for `x ≤ 6000`, replayed by the kernel as a sieve: the odd `x`
+  of `(1, x, 1)`, `(1, x, 0)`, `(1, x, 3)`, `(3, x, 1)`, `(3, x, 0)` and the even `x` of
+  `(x, 1, 1)`, `(x, 1, 0)`.
+
+The ideal-theoretic statements (the factorizations of Lemma 38.1 (b) to (d) and Lemma 38.5 in
+`O_K`, Lemma 38.4 in the biquadratic field), Theorem 38.2 for `k > 1` (Step 1 needs the ideals),
+the computed gaps of Table 38.2.3.1, Theorem 38.6 (Matveev) and Theorem 38.7 for `R` not a
+square (Laurent) are not formalized.
 -/
 
 namespace Munchausen
@@ -694,6 +702,32 @@ lemma pow_self_ge_k1 {x : ℕ} (hx : 9 ≤ x) : 1001000 * (x + 1) ^ 2 ≤ x ^ x 
   have : x ^ 9 = x ^ 7 * x ^ 2 := by ring
   nlinarith
 
+/-- The odd `x ≤ 8` in `b (b + x) = x^x + 1` with `x < b`: only `x = 3` (`b = 4`) and `x = 7`
+(`b = 904`); `x = 1` gives `b = 1`, and `b (b + 5) = 3126` has no root. -/
+lemma mid11_small {b x : ℕ} (hxb : x < b) (hxo : Odd x) (hx8 : x ≤ 8)
+    (heqN : b * (b + x) = x ^ x + 1) : (x = 3 ∧ b = 4) ∨ (x = 7 ∧ b = 904) := by
+  obtain ⟨i, rfl⟩ := hxo
+  have hi : i ≤ 3 := by omega
+  interval_cases i
+  · norm_num at heqN; nlinarith
+  · norm_num at heqN
+    left; refine ⟨rfl, ?_⟩
+    rcases lt_trichotomy b 4 with h | h | h
+    · nlinarith
+    · exact h
+    · nlinarith
+  · norm_num at heqN
+    exfalso
+    rcases le_or_gt b 53 with h | h
+    · nlinarith
+    · nlinarith
+  · norm_num at heqN
+    right; refine ⟨rfl, ?_⟩
+    rcases lt_trichotomy b 904 with h | h | h
+    · nlinarith
+    · exact h
+    · nlinarith
+
 /-- **Corollary 38.3** (a). Under either convention, `(1, x, 1)` and (under `0^0 = 0`)
 `(1, x, 0)` with `x` an odd prime power are solutions only for `x = 3` (base 4) and `x = 7`
 (base 904). This is Theorem 38.2 for `k = 1`, `e = 1`, `a = 0`, with the unit built in `Z[θ]`:
@@ -715,27 +749,7 @@ theorem corollary38_3_a {b m q x l c : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0)) (
     have : ((b * (b + x) : ℕ) : ℤ) = ((x ^ x + 1 : ℕ) : ℤ) := by push_cast; linarith
     exact_mod_cast this
   by_cases hx8 : x ≤ 8
-  · obtain ⟨i, rfl⟩ := hxo
-    have hi : i ≤ 3 := by omega
-    interval_cases i
-    · norm_num at heqN; nlinarith
-    · norm_num at heqN
-      left; refine ⟨rfl, ?_⟩
-      rcases lt_trichotomy b 4 with h | h | h
-      · nlinarith
-      · exact h
-      · nlinarith
-    · norm_num at heqN
-      exfalso
-      rcases le_or_gt b 53 with h | h
-      · nlinarith
-      · nlinarith
-    · norm_num at heqN
-      right; refine ⟨rfl, ?_⟩
-      rcases lt_trichotomy b 904 with h | h | h
-      · nlinarith
-      · exact h
-      · nlinarith
+  · exact mid11_small hxb hxo hx8 heqN
   exfalso
   push Not at hx8
   have hx9 : 9 ≤ x := by obtain ⟨i, rfl⟩ := hxo; omega
@@ -894,5 +908,438 @@ theorem corollary38_3_a {b m q x l c : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0)) (
       have h1 := mul_le_mul hZlo hr2 (by norm_num) (by linarith)
       have h2 := mul_le_mul hZhi hr1 (by linarith) (by norm_num)
       constructor <;> linarith
+
+/-! ### Section 38.4: the leading position -/
+
+/-- The ring `Z[θ]` of section 38.4.1, `θ^2 = x A + q θ`: in `Q(sqrt R)`, `R = q^2 + 4 x A`,
+`θ = (q + sqrt R)/2`. -/
+abbrev LeadRing (x A q : ℤ) := QuadraticAlgebra ℤ (x * A) q
+
+/-- **Section 38.4.1**: `θ θ' = -x A`, `θ + θ' = q`, and for a solution `(x, q, r)`,
+`μ = (U + sqrt R)/2 = x b + θ` has norm `x^(x+1)`. -/
+theorem lead_norms {b m q r x : ℕ} (hs : IsSolution b m [x, q, r]) (hx : x ≠ 0) :
+    QuadraticAlgebra.norm (ω : LeadRing x (leadA m q r) q) = -(x * leadA m q r) ∧
+      star (ω : LeadRing x (leadA m q r) q) + ω = (q : LeadRing x (leadA m q r) q) ∧
+      QuadraticAlgebra.norm ((ω : LeadRing x (leadA m q r) q) +
+        ((x * b : ℤ) : LeadRing x (leadA m q r) q)) = (x : ℤ) ^ (x + 1) := by
+  refine ⟨norm_omega', star_omega_add_omega, ?_⟩
+  rw [norm_omega_add]
+  linear_combination (x : ℤ) * lead_eq hs hx
+
+/-- **Lemma 38.5**, the divisibility, for `x` prime to `q`: `x^(x+1)` divides `μ θ'^(x+1)` in
+`Z[θ]`. At the two roots `r = -x b` and `s = q + x b` of `T^2 - q T - x A` modulo
+`x^(x+1)`, `μ` vanishes at `r` and `θ'` takes the value `r ≡ 0 (mod x)` at `s`; and
+`s - r = U` is prime to `x`. So the part of `(μ)` above `x` and the part of `(θ)` above `x` lie
+on the same primes. -/
+theorem lemma38_5_dvd {b m q r x : ℕ} (hs : IsSolution b m [x, q, r]) (hx : x ≠ 0)
+    (hq : IsCoprime (q : ℤ) x) :
+    (((x ^ (x + 1) : ℕ) : ℤ) : LeadRing x (leadA m q r) q) ∣
+      ((ω : LeadRing x (leadA m q r) q) + ((x * b : ℤ) : LeadRing x (leadA m q r) q)) *
+        (star ω) ^ (x + 1) := by
+  have heq := lead_eq hs hx
+  set A := leadA m q r with hA
+  set U : ℤ := 2 * x * b + q with hU
+  have hUx : IsCoprime U x := by
+    have : U = q + x * (2 * b) := by rw [hU]; ring
+    rw [this]; exact hq.add_mul_left_left _
+  have hM : ((x ^ (x + 1) : ℕ) : ℤ) = (x : ℤ) ^ (x + 1) := by push_cast; rfl
+  set ρ : ℤ := -(x * b) with hρ
+  set σ : ℤ := q + x * b with hσ
+  have hroot : ρ ^ 2 - q * ρ - x * A = (x : ℤ) ^ (x + 1) := by
+    rw [hρ, pow_succ]; linear_combination (x : ℤ) * heq
+  have hroot' : σ ^ 2 - q * σ - x * A = (x : ℤ) ^ (x + 1) := by
+    rw [hσ, pow_succ]; linear_combination (x : ℤ) * heq
+  have hdr : ((x ^ (x + 1) : ℕ) : ℤ) ∣ ρ ^ 2 - q * ρ - x * A := by rw [hroot, hM]
+  have hds : ((x ^ (x + 1) : ℕ) : ℤ) ∣ σ ^ 2 - q * σ - x * A := by rw [hroot', hM]
+  have hrs : IsCoprime (ρ - σ) ((x ^ (x + 1) : ℕ) : ℤ) := by
+    rw [hM, show ρ - σ = -U by rw [hρ, hσ, hU]; ring]
+    exact hUx.pow_right.neg_left
+  refine dvd_of_evalMod hdr hds hrs ?_ ?_
+  · rw [map_mul, map_add, evalMod_omega, map_intCast]
+    have : ((ρ : ℤ) : ZMod (x ^ (x + 1))) + ((x * b : ℤ) : ZMod (x ^ (x + 1))) = 0 := by
+      rw [hρ]; push_cast; ring
+    rw [this, zero_mul]
+  · rw [map_mul, map_pow, star_omega, map_sub, map_intCast, evalMod_omega]
+    have : ((q : ℤ) : ZMod (x ^ (x + 1))) - (σ : ZMod (x ^ (x + 1))) =
+        (((-(x * b) : ℤ)) : ZMod _) := by
+      rw [hσ]; push_cast; ring
+    rw [this, ← Int.cast_pow, (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2, mul_zero]
+    rw [hM]; exact pow_dvd_pow_of_dvd ⟨-(b : ℤ), by ring⟩ _
+
+/-- If `n z = n w` in `Z[ω]` with `n ≠ 0` an integer, then `z = w`. -/
+lemma intCast_mul_cancel {a b n : ℤ} (hn : n ≠ 0) {z w : QuadraticAlgebra ℤ a b}
+    (h : (n : QuadraticAlgebra ℤ a b) * z = n * w) : z = w := by
+  have h1 : n * z.re = n * w.re := by
+    have := congrArg QuadraticAlgebra.re h
+    simpa only [re_mul, re_intCast, im_intCast, mul_zero, zero_mul, add_zero,
+      Int.cast_id] using this
+  have h2 : n * z.im = n * w.im := by
+    have := congrArg QuadraticAlgebra.im h
+    simpa only [im_mul, re_intCast, im_intCast, mul_zero, zero_mul, add_zero,
+      Int.cast_id] using this
+  ext
+  · exact mul_left_cancel₀ hn h1
+  · exact mul_left_cancel₀ hn h2
+
+/-- **Lemma 38.5**, for `x` prime to `q`: `ν = μ / θ^(x+1)` is an S-unit for the primes of
+`A`. In integer form: `(-A)^(x+1) μ = ν0 θ^(x+1)` with `ν0` in `Z[θ]` of norm `(-A)^(x+1)`,
+so `ν = ν0 / (-A)^(x+1)`. For `(x, 1, 1)`, `A = 1`, and `ν0 = ±ν` is a unit of norm `-1` when
+`x` is even (section 38.4.3). -/
+theorem lemma38_5 {b m q r x : ℕ} (hs : IsSolution b m [x, q, r]) (hx : x ≠ 0)
+    (hq : IsCoprime (q : ℤ) x) :
+    ∃ ν0 : LeadRing x (leadA m q r) q,
+      (((-leadA m q r) ^ (x + 1) : ℤ) : LeadRing x (leadA m q r) q) *
+          ((ω : LeadRing x (leadA m q r) q) + ((x * b : ℤ) : LeadRing x (leadA m q r) q)) =
+        ν0 * ω ^ (x + 1) ∧ QuadraticAlgebra.norm ν0 = (-leadA m q r) ^ (x + 1) := by
+  set A := leadA m q r with hA
+  obtain ⟨ν0, hν⟩ := lemma38_5_dvd hs hx hq
+  set μ : LeadRing x A q := ω + ((x * b : ℤ) : LeadRing x A q) with hμ
+  have hθθ : (ω : LeadRing x A q) * star ω = ((-(x * A) : ℤ) : LeadRing x A q) :=
+    omega_mul_star_omega
+  have hxn : ((x : ℤ) ^ (x + 1)) ≠ 0 := pow_ne_zero _ (by exact_mod_cast hx)
+  have key : (((x : ℤ) ^ (x + 1) : ℤ) : LeadRing x A q) *
+        ((((-A) ^ (x + 1) : ℤ) : LeadRing x A q) * μ) =
+      (((x : ℤ) ^ (x + 1) : ℤ) : LeadRing x A q) * (ν0 * ω ^ (x + 1)) := by
+    have : ((x ^ (x + 1) : ℕ) : ℤ) = (x : ℤ) ^ (x + 1) := by push_cast; rfl
+    rw [this] at hν
+    calc (((x : ℤ) ^ (x + 1) : ℤ) : LeadRing x A q) * ((((-A) ^ (x + 1) : ℤ) : LeadRing x A q) * μ)
+        = μ * (ω * star ω) ^ (x + 1) := by rw [hθθ]; push_cast; ring
+      _ = (μ * star ω ^ (x + 1)) * ω ^ (x + 1) := by ring
+      _ = _ := by rw [hν]; ring
+  refine ⟨ν0, intCast_mul_cancel hxn key, ?_⟩
+  have hn := congrArg QuadraticAlgebra.norm hν
+  rw [map_mul, map_pow, QuadraticAlgebra.norm_star, norm_omega', map_mul, norm_intCast] at hn
+  have hnμ := (lead_norms hs hx).2.2
+  rw [← hA, ← hμ] at hnμ
+  rw [hnμ] at hn
+  have hxx : ((x ^ (x + 1) : ℕ) : ℤ) = (x : ℤ) ^ (x + 1) := by push_cast; rfl
+  rw [hxx, show (-((x : ℤ) * A)) = x * (-A) by ring, mul_pow] at hn
+  push_cast at hn
+  have hxn2 : ((x : ℤ) ^ (x + 1)) ^ 2 ≠ 0 := pow_ne_zero _ hxn
+  apply mul_left_cancel₀ hxn2
+  linear_combination -hn
+
+/-- **Theorem 38.7**, the case `R = 4x + 1` a square. If `b (x b + 1) = x^x + 1` with `b ≥ 1`
+and `4x + 1` a square, then `x = 0`. Here `4x + 1 = (2m + 1)^2`, `x = m (m + 1)`, and
+`μ = x b + m + 1`, `μ' = x b - m` are integers with `μ μ' = x^(x+1)`; `μ ≡ 1 (mod m)` and
+`μ' ≡ 1 (mod m + 1)` force `μ = (m + 1)^(x+1)` and `μ' = m^(x+1)` (Lemma 38.5 in
+`Q × Q`), and then `μ - μ' = 2m + 1` is too small. -/
+theorem theorem38_7_square {b x : ℕ} (hb : 1 ≤ b) (heq : b * (x * b + 1) = x ^ x + 1)
+    (hsq : IsSquare (4 * x + 1)) : x = 0 := by
+  obtain ⟨s, hs⟩ := hsq
+  have hsodd : Odd s := by
+    have : Odd (s * s) := by rw [← hs]; exact ⟨2 * x, by ring⟩
+    exact (Nat.odd_mul.1 this).1
+  obtain ⟨m, rfl⟩ := hsodd
+  have hxm : x = m * (m + 1) := by
+    have : 4 * x = 4 * (m * (m + 1)) := by nlinarith
+    omega
+  by_contra hx0
+  have hm : 1 ≤ m := by
+    rcases Nat.eq_zero_or_pos m with rfl | h
+    · rw [zero_mul] at hxm; exact absurd hxm hx0
+    · exact h
+  -- the two factors
+  set P := x * b + m + 1 with hP
+  set Q := x * b - m with hQ
+  have hxb : m < x * b := by
+    have : m < x := by rw [hxm]; nlinarith
+    nlinarith
+  have hPQ : P * Q = m ^ (x + 1) * (m + 1) ^ (x + 1) := by
+    rw [← mul_pow, ← hxm]
+    have h1 : (x : ℤ) * b ^ 2 + b - 1 = x ^ x := by
+      have : ((b * (x * b + 1) : ℕ) : ℤ) = ((x ^ x + 1 : ℕ) : ℤ) := by rw [heq]
+      push_cast at this; linarith
+    have : ((P * Q : ℕ) : ℤ) = ((x ^ (x + 1) : ℕ) : ℤ) := by
+      rw [hP, hQ]; push_cast [Nat.cast_sub hxb.le]
+      have hxmZ : (x : ℤ) = m * (m + 1) := by exact_mod_cast hxm
+      rw [pow_succ, ← h1]
+      linear_combination hxmZ
+    exact_mod_cast this
+  have hPm : Nat.Coprime P (m ^ (x + 1)) := by
+    apply Nat.Coprime.pow_right
+    have : P = m * ((m + 1) * b + 1) + 1 := by rw [hP, hxm]; ring
+    rw [this, Nat.coprime_mul_left_add_left]; exact Nat.coprime_one_left m
+  have hQm : Nat.Coprime Q ((m + 1) ^ (x + 1)) := by
+    apply Nat.Coprime.pow_right
+    have : Q = (m + 1) * (m * b - 1) + 1 := by
+      rw [hQ, hxm]
+      have : 1 ≤ m * b := Nat.one_le_iff_ne_zero.2 (by positivity)
+      zify [this, hxb.le, (show m ≤ m * (m + 1) * b by nlinarith)]
+      ring
+    rw [this, Nat.coprime_mul_left_add_left]; exact Nat.coprime_one_left _
+  have hP1 : P ∣ (m + 1) ^ (x + 1) := hPm.dvd_of_dvd_mul_left ⟨Q, hPQ.symm⟩
+  have hQ1 : Q ∣ m ^ (x + 1) := hQm.dvd_of_dvd_mul_right ⟨P, by rw [← hPQ, mul_comm]⟩
+  have hPle := Nat.le_of_dvd (by positivity) hP1
+  have hQle := Nat.le_of_dvd (by positivity) hQ1
+  have hQ0 : 0 < Q := by omega
+  have hPeq : P = (m + 1) ^ (x + 1) := by
+    by_contra hne
+    have hlt : P < (m + 1) ^ (x + 1) := lt_of_le_of_ne hPle hne
+    have : P * Q < (m + 1) ^ (x + 1) * m ^ (x + 1) :=
+      Nat.mul_lt_mul_of_lt_of_le hlt hQle (by positivity)
+    rw [hPQ] at this; nlinarith
+  have hQeq : Q = m ^ (x + 1) := by
+    have h1 : (m + 1) ^ (x + 1) * Q = (m + 1) ^ (x + 1) * m ^ (x + 1) := by
+      calc (m + 1) ^ (x + 1) * Q = P * Q := by rw [hPeq]
+        _ = _ := by rw [hPQ]; ring
+    exact Nat.eq_of_mul_eq_mul_left (by positivity) h1
+  -- `(m + 1)^(x+1) - m^(x+1) > 2m + 1`
+  have hdiff : P = Q + 2 * m + 1 := by rw [hP, hQ]; omega
+  have hx2 : 2 ≤ x := by rw [hxm]; nlinarith
+  obtain ⟨j, hj⟩ : ∃ j, x + 1 = j + 3 := ⟨x - 2, by omega⟩
+  rw [hPeq, hQeq, hj] at hdiff
+  have h1 : m ^ (j + 1) + 1 ≤ (m + 1) ^ (j + 1) := by
+    have := Nat.pow_lt_pow_left (show m < m + 1 by omega) (show j + 1 ≠ 0 by omega)
+    omega
+  rw [show (m + 1) ^ (j + 3) = (m + 1) ^ 2 * (m + 1) ^ (j + 1) by ring,
+    show m ^ (j + 3) = m ^ 2 * m ^ (j + 1) by ring] at hdiff
+  generalize m ^ (j + 1) = Y at h1 hdiff
+  generalize (m + 1) ^ (j + 1) = Z at h1 hdiff
+  nlinarith
+
+/-- **Corollary 38.8**, odd `x`. Under either convention, `(x, 1, 1)`, and `(x, 1, 0)` under
+`0^0 = 0`, is never a solution with `x` odd: `U = 2 x b + 1` satisfies
+`U^2 = 4 x^(x+1) + 4x + 1` with `x^(x+1)` a square `V^2`, so `2V < U` and
+`4 V + 1 ≤ 4x + 1`, which forces `x = 1`, and then the base would be 1. -/
+theorem corollary38_8_odd {b m q x : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0)) (hxo : Odd x)
+    (hs : IsSolution b m [x, 1, q]) : False := by
+  have hx0 : x ≠ 0 := by rintro rfl; simp at hxo
+  have hA : leadA m 1 q = 1 := by rcases hq with rfl | ⟨rfl, rfl⟩ <;> simp [leadA]
+  have hsq := lead_sq hs hx0
+  rw [hA] at hsq
+  have hxb : x < b := hs.lt_base x (by simp)
+  obtain ⟨i, rfl⟩ := hxo
+  have hN : (2 * (2 * i + 1) * b + 1) ^ 2 =
+      4 * ((2 * i + 1) ^ (i + 1)) ^ 2 + (4 * (2 * i + 1) + 1) := by
+    have : ((2 * (2 * i + 1) * b + 1 : ℕ) : ℤ) ^ 2 =
+        ((4 * ((2 * i + 1) ^ (i + 1)) ^ 2 + (4 * (2 * i + 1) + 1) : ℕ) : ℤ) := by
+      rw [hsq]; push_cast; ring
+    exact_mod_cast this
+  generalize hV : (2 * i + 1) ^ (i + 1) = V at hN
+  generalize hU : 2 * (2 * i + 1) * b + 1 = U at hN
+  have hUV : 2 * V < U := by
+    by_contra h
+    push Not at h
+    have := Nat.pow_le_pow_left h 2
+    nlinarith
+  have h1 : (2 * V + 1) ^ 2 ≤ U ^ 2 := Nat.pow_le_pow_left hUV 2
+  have hVle : V ≤ 2 * i + 1 := by nlinarith
+  rcases Nat.eq_zero_or_pos i with rfl | hi
+  · -- `x = 1`: `b (b + 1) = 2` forces `b = 1`, not a base above the digit 1
+    have := lead_eq hs hx0
+    rw [hA] at this
+    push_cast at this
+    nlinarith
+  · have : (2 * i + 1) ^ 2 ≤ V := by
+      rw [← hV]; exact Nat.pow_le_pow_right (by omega) (by omega)
+    nlinarith
+
+/-- **Corollary 38.9**, the case `q = 0` of the leading position: if `(x, 0, r)` is a solution,
+then `x b^2 = x^x + A`, so `x` divides `A`; for `A ≠ 0` this bounds `x ≤ |A|`. `A = 0` only for
+`(x, 0, 0)` and `(x, 0, 1)` under `0^0 = 0` (`leadA_eq_zero`, `one_le_leadA`). -/
+theorem corollary38_9_q_zero {b m r x : ℕ} (hs : IsSolution b m [x, 0, r]) (hx : x ≠ 0) :
+    (x : ℤ) ∣ leadA m 0 r := by
+  have heq := lead_eq hs hx
+  have : leadA m 0 r = x * (b ^ 2 - x ^ (x - 1)) := by
+    have hxx : (x : ℤ) ^ x = x * x ^ (x - 1) := by rw [← pow_succ']; congr 1; omega
+    push_cast at heq
+    linear_combination -heq - hxx
+  rw [this]; exact dvd_mul_right _ _
+
+/-! ### The exact test of section 38.6 for `x ≤ 6000`
+
+The library tests every odd `x ≤ 6000` in the middle families `(1, x, 1)`, `(1, x, 0)`,
+`(1, x, 3)`, `(3, x, 1)`, `(3, x, 0)` and every even `x ≤ 6000` in `(x, 1, 1)`, `(x, 1, 0)` by
+integer square roots. The kernel replays this as a sieve: for each `x` it finds a prime `l` of
+`primes38` modulo which `D = U^2` is a non-residue (Euler's criterion), except at the solutions
+`x = 1, 3, 7` of `(1, x, 1)`. -/
+
+/-- `D = x^2 + 4 p x^x + 4 p A` of the middle position modulo `l`, by `powRes`. -/
+def resMid (l p A x : ℕ) : ℕ := (x ^ 2 + 4 * p * powRes l x + 4 * p * A) % l
+
+/-- `D = 4 x^(x+1) + q^2 + 4 x A` of the leading position modulo `l`. -/
+def resLead (l q A x : ℕ) : ℕ := (4 * (powRes l x * x) + q ^ 2 + 4 * x * A) % l
+
+lemma natCast_resMid {l p A x : ℕ} (hl : l.Prime) (hx : x ≠ 0) :
+    ((resMid l p A x : ℕ) : ZMod l) =
+      (((x : ℤ) ^ 2 + 4 * p * (x : ℤ) ^ x + 4 * p * A : ℤ) : ZMod l) := by
+  have hp := natCast_pow_self_eq_powRes hl hx
+  push_cast at hp
+  rw [resMid, ZMod.natCast_mod]; push_cast; rw [← hp]
+
+lemma natCast_resLead {l q A x : ℕ} (hl : l.Prime) (hx : x ≠ 0) :
+    ((resLead l q A x : ℕ) : ZMod l) =
+      ((4 * (x : ℤ) ^ (x + 1) + q ^ 2 + 4 * x * A : ℤ) : ZMod l) := by
+  have hp := natCast_pow_self_eq_powRes hl hx
+  push_cast at hp
+  rw [resLead, ZMod.natCast_mod]; push_cast; rw [← hp]; ring
+
+/-- The sieve for the middle position: for a solution `(p, x, q)` with `A = w(p) + w(q) - q`,
+`D = U^2` is a square modulo every prime. -/
+lemma isSquare_resMid {b m p q x A l : ℕ} (hs : IsSolution b m [p, x, q]) (hx : x ≠ 0)
+    (hA : midA m p q = A) (hl : l.Prime) : IsSquare ((resMid l p A x : ℕ) : ZMod l) := by
+  rw [natCast_resMid hl hx]
+  have h := mid_sq hs hx
+  rw [hA] at h
+  have h' : (x : ℤ) ^ 2 + 4 * p * (x : ℤ) ^ x + 4 * p * A = ((2 * p * b + x : ℕ) : ℤ) ^ 2 := by
+    rw [h]; ring
+  exact ⟨(((2 * p * b + x : ℕ) : ℤ) : ZMod l), by rw [h']; push_cast; ring⟩
+
+/-- The sieve for the leading position. -/
+lemma isSquare_resLead {b m q r x A l : ℕ} (hs : IsSolution b m [x, q, r]) (hx : x ≠ 0)
+    (hA : leadA m q r = A) (hl : l.Prime) : IsSquare ((resLead l q A x : ℕ) : ZMod l) := by
+  rw [natCast_resLead hl hx]
+  have h := lead_sq hs hx
+  rw [hA] at h
+  have h' : 4 * (x : ℤ) ^ (x + 1) + q ^ 2 + 4 * x * A = ((2 * x * b + q : ℕ) : ℤ) ^ 2 := by
+    rw [h]; ring
+  exact ⟨(((2 * x * b + q : ℕ) : ℤ) : ZMod l), by rw [h']; push_cast; ring⟩
+
+/-- The primes of the certificates of the exact test. -/
+def primes38 : List ℕ :=
+  [263, 383, 277, 199, 149, 233, 311, 89, 83, 19, 229, 13, 61, 113, 101, 5, 17, 269, 257, 251,
+    271, 7, 389, 167, 359, 367, 307, 107, 173, 11]
+
+lemma primes38_prime : ∀ l ∈ primes38, l.Prime ∧ l ≠ 2 := by
+  simp only [primes38, List.mem_cons, List.not_mem_nil, or_false]
+  rintro l (rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
+    rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
+    rfl) <;> norm_num
+
+/-- `D` of the middle family `(p, A)` is a non-residue modulo a prime of `primes38`. -/
+def okMid (p A x : ℕ) : Bool := primes38.any fun l => nonres l (resMid l p A x)
+
+/-- `D` of the leading family `(q, A)` is a non-residue modulo a prime of `primes38`. -/
+def okLead (q A x : ℕ) : Bool := primes38.any fun l => nonres l (resLead l q A x)
+
+lemma not_okMid {b m p q x A : ℕ} (hs : IsSolution b m [p, x, q]) (hx : x ≠ 0)
+    (hA : midA m p q = A) : okMid p A x = false := by
+  rw [okMid, List.any_eq_false]
+  intro l hl hnr
+  obtain ⟨hlp, hl2⟩ := primes38_prime l hl
+  exact not_isSquare_of_nonres hlp hl2 hnr (isSquare_resMid hs hx hA hlp)
+
+lemma not_okLead {b m q r x A : ℕ} (hs : IsSolution b m [x, q, r]) (hx : x ≠ 0)
+    (hA : leadA m q r = A) : okLead q A x = false := by
+  rw [okLead, List.any_eq_false]
+  intro l hl hnr
+  obtain ⟨hlp, hl2⟩ := primes38_prime l hl
+  exact not_isSquare_of_nonres hlp hl2 hnr (isSquare_resLead hs hx hA hlp)
+
+/-! The four runs, each checked by the kernel. -/
+
+theorem check38_mid_1_1 : (List.range 3000).all (fun i =>
+    2 * i + 1 == 1 || 2 * i + 1 == 3 || 2 * i + 1 == 7 || okMid 1 1 (2 * i + 1)) = true := by
+  decide +kernel
+
+theorem check38_mid_1_25 :
+    (List.range 3000).all (fun i => okMid 1 25 (2 * i + 1)) = true := by
+  decide +kernel
+
+theorem check38_mid_3_27 :
+    (List.range 3000).all (fun i => okMid 3 27 (2 * i + 1)) = true := by
+  decide +kernel
+
+theorem check38_lead_1_1 :
+    (List.range 3000).all (fun i => okLead 1 1 (2 * i + 2)) = true := by
+  decide +kernel
+
+/-- **Section 38.6**, the exact test, `(1, x, 1)` and `(1, x, 0)` (`0^0 = 0`): for odd
+`x ≤ 6000` (prime power or not) the only solutions are `x = 3` in base 4 and `x = 7` in base
+904. -/
+theorem exact38_mid_one {b m q x : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0)) (hxo : Odd x)
+    (hx : x ≤ 6000) (hs : IsSolution b m [1, x, q]) : (x = 3 ∧ b = 4) ∨ (x = 7 ∧ b = 904) := by
+  have hx0 : x ≠ 0 := by rintro rfl; simp at hxo
+  have hA : midA m 1 q = ((1 : ℕ) : ℤ) := by rcases hq with rfl | ⟨rfl, rfl⟩ <;> simp [midA]
+  have hxb : x < b := hs.lt_base x (by simp)
+  have heq := mid_eq hs hx0
+  rw [hA] at heq
+  have heqN : b * (b + x) = x ^ x + 1 := by
+    have : ((b * (b + x) : ℕ) : ℤ) = ((x ^ x + 1 : ℕ) : ℤ) := by push_cast at heq ⊢; linarith
+    exact_mod_cast this
+  have hok := not_okMid hs hx0 hA
+  obtain ⟨i, rfl⟩ := hxo
+  have hc := check38_mid_1_1
+  simp only [List.all_eq_true, List.mem_range] at hc
+  have := hc i (by omega)
+  rw [hok] at this
+  simp only [Bool.or_false, Bool.or_eq_true, beq_iff_eq] at this
+  exact mid11_small hxb ⟨i, rfl⟩ (by omega) heqN
+
+/-- **Section 38.6**, the exact test, `(1, x, 3)`: no solution with `x ≤ 6000` odd. -/
+theorem exact38_mid_three {b m x : ℕ} (hxo : Odd x) (hx : x ≤ 6000)
+    (hs : IsSolution b m [1, x, 3]) : False := by
+  have hx0 : x ≠ 0 := by rintro rfl; simp at hxo
+  have hA : midA m 1 3 = ((25 : ℕ) : ℤ) := by simp [midA, w]
+  have hok := not_okMid hs hx0 hA
+  obtain ⟨i, rfl⟩ := hxo
+  have hc := check38_mid_1_25
+  simp only [List.all_eq_true, List.mem_range] at hc
+  have := hc i (by omega)
+  rw [hok] at this
+  exact Bool.false_ne_true this
+
+/-- **Section 38.6**, the exact test, `(3, x, 1)` and `(3, x, 0)` (`0^0 = 0`): no solution with
+`x ≤ 6000` odd. -/
+theorem exact38_mid_three_one {b m q x : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0)) (hxo : Odd x)
+    (hx : x ≤ 6000) (hs : IsSolution b m [3, x, q]) : False := by
+  have hx0 : x ≠ 0 := by rintro rfl; simp at hxo
+  have hA : midA m 3 q = ((27 : ℕ) : ℤ) := by rcases hq with rfl | ⟨rfl, rfl⟩ <;> simp [midA, w]
+  have hok := not_okMid hs hx0 hA
+  obtain ⟨i, rfl⟩ := hxo
+  have hc := check38_mid_3_27
+  simp only [List.all_eq_true, List.mem_range] at hc
+  have := hc i (by omega)
+  rw [hok] at this
+  exact Bool.false_ne_true this
+
+/-- **Section 38.6**, the exact test, and **Corollary 38.8** for `x ≤ 6000`: `(x, 1, 1)`, and
+`(x, 1, 0)` under `0^0 = 0`, is not a solution for any `x ≤ 6000` (odd `x` by
+`corollary38_8_odd`, even `x` by the kernel). -/
+theorem exact38_lead {b m q x : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0)) (hx : x ≤ 6000)
+    (hs : IsSolution b m [x, 1, q]) : False := by
+  rcases Nat.even_or_odd x with he | ho
+  · have hx0 : x ≠ 0 := by
+      rintro rfl; exact absurd (hs.head_ne_zero (by simp)) (by simp)
+    have hA : leadA m 1 q = ((1 : ℕ) : ℤ) := by
+      rcases hq with rfl | ⟨rfl, rfl⟩ <;> simp [leadA]
+    have hok := not_okLead hs hx0 hA
+    obtain ⟨i, rfl⟩ := he
+    have hc := check38_lead_1_1
+    simp only [List.all_eq_true, List.mem_range] at hc
+    obtain ⟨j, rfl⟩ : ∃ j, i = j + 1 := ⟨i - 1, by omega⟩
+    have := hc j (by omega)
+    rw [show 2 * j + 2 = j + 1 + (j + 1) by ring, hok] at this
+    exact Bool.false_ne_true this
+  · exact corollary38_8_odd hq ho hs
+
+/-- **Theorem 38.7**, the case `R` a square, for the strings: `(x, 1, 1)`, and `(x, 1, 0)` under
+`0^0 = 0`, is not a solution when `R = 4x + 1` is a square (that is, `x = m (m + 1)`). -/
+theorem theorem38_7_square_solution {b m q x : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0))
+    (hs : IsSolution b m [x, 1, q]) (hsq : IsSquare (4 * x + 1)) : False := by
+  have hx0 : x ≠ 0 := by
+    rintro rfl; exact absurd (hs.head_ne_zero (by simp)) (by simp)
+  have hA : leadA m 1 q = 1 := by rcases hq with rfl | ⟨rfl, rfl⟩ <;> simp [leadA]
+  have heq := lead_eq hs hx0
+  rw [hA] at heq
+  have hxb : x < b := hs.lt_base x (by simp)
+  have heqN : b * (x * b + 1) = x ^ x + 1 := by
+    have : ((b * (x * b + 1) : ℕ) : ℤ) = ((x ^ x + 1 : ℕ) : ℤ) := by push_cast at heq ⊢; linarith
+    exact_mod_cast this
+  exact hx0 (theorem38_7_square (by omega) heqN hsq)
+
+/-- **Corollary 38.8**, what is formalized: a solution `(x, 1, 1)`, or `(x, 1, 0)` under
+`0^0 = 0`, needs `x` even, `R = 4x + 1` not a square, and `x > 6000`. The library closes the
+rest with Laurent's bound `x ≤ 4.27 * 10^11` (Theorem 38.7) and the sieve of section 38.5,
+which are not formalized. -/
+theorem corollary38_8_partial {b m q x : ℕ} (hq : q = 1 ∨ (q = 0 ∧ m = 0))
+    (hs : IsSolution b m [x, 1, q]) : Even x ∧ ¬ IsSquare (4 * x + 1) ∧ 6000 < x := by
+  refine ⟨?_, fun h => theorem38_7_square_solution hq hs h, ?_⟩
+  · rcases Nat.even_or_odd x with he | ho
+    · exact he
+    · exact (corollary38_8_odd hq ho hs).elim
+  · by_contra h
+    exact exact38_lead hq (by omega) hs
 
 end Munchausen
