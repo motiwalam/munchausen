@@ -69,7 +69,7 @@
   "model-prop-characters": "prop34_10_uniform (partial: every residue occurs equally often among the d-digit numbers; the sum over characters is about the model)",
   "model-thm-e2": "theorem34_12_parity (partial: F(n) - n = z(n) mod 2 in odd bases; the limit is about the model)",
   "model-thm-near-exist": "theorem35_13, steer, steer_step, theorem35_13_step3, theorem35_13_strict (without the condition 2(T + 4) <= b)",
-  "model-cor-near-exist": "corollary35_14, corollary35_14_lower, corollary35_14_upper (partial: near-solutions for every b >= 27, t >= 2 for every b >= 77, and sqrt(b/e) - 6 <= T(b) < sqrt(b/e); that T(b) does not decrease is not formalized)",
+  "model-cor-near-exist": "corollary35_14, corollary35_14_lower, corollary35_14_upper, nearT_mono, nearExp_mono, nearT_thresholds",
   // Chapter 4
   "search-lem-hull": "lemma31_4, lemma31_4_attained",
   "search-prop-exact": "ExactSearch.found_eq_solutions, ExactSearch.foundWith_eq_solutions, ExactSearch.search_sound (for the Lean version of the search, with the residue rule and the last-digit tests; the Rust code is not verified)",
@@ -97,7 +97,7 @@
   "short-bases-k": "prop10_4",
   "short-window": "lemma20_1, lemma20_1_root",
   "short-multiset-count": "prop20_2",
-  "thm-almost-all": "theorem11_2 (partial: the weaker bound of L11.6, at most B^(2 alpha + delta) bases, which covers k up to (1/2 - epsilon) ln b / ln ln b)",
+  "thm-almost-all": "theorem20_3, shortBases_density_zero, theorem11_2 (partial: at most B^(alpha + delta) bases for every alpha, so density 0 for k <= (1 - epsilon) ln b / ln ln b; the second-order range with ln ln ln b and the claim that multisets reach no further are not formalized)",
   "short-divisors": "lemma20_4",
   "short-odd-length": "IsNegSolution.odd_length",
   "short-partners": "IsSolution.negPartner",
@@ -110,8 +110,9 @@
   "short-member-base": "prop25_17",
   "short-block-route": "P_sub_Fs_append_one, P_sub_Fs_append_zero",
   "short-prop-base-average": "prop35_3, P_one (partial: the exchange of the two sums and the term r = 1; the other terms use the arrangement bound)",
-  "short-abc-three": "theorem33_16_abc, theorem33_16, theorem33_16_bound, theorem33_16_solution, corollary33_17 (partial: for x^x in all three positions and both conventions; the factorion case is not formalized)",
+  "short-abc-three": "theorem33_16_abc, theorem33_16, theorem33_16_bound, theorem33_16_solution, theorem33_16_bound_factorial, theorem33_16_factorion, corollary33_17 (with abc as the hypothesis ABC; for factorions with rad(x!) <= 4^x in place of the cited bound)",
   "short-prop-no-small": "prop35_9_share, prop35_9_bounds (partial: the share as a product and its two exponential bounds; the limit is not formalized)",
+  "short-thm-few-large": "theorem35_12, theorem35_12_density, fewLargeBases_card_le",
   // Chapter 6
   "dio-elementary": "prop18_1_a, prop18_1_b, prop18_1_c, prop18_1_d, prop16_5",
   "dio-no-congruence": "prop16_8_finite",

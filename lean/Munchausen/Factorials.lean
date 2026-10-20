@@ -23,7 +23,8 @@ its digits. The factorion weight is `x!`, with `w(0) = m`.
   `U^2 = N + R`, `R ≠ 0` gives `N ≤ K (rad(N) U |R|)^(1 + ε)`; with `rad(4 l x^x) ≤ 2 l x`
   and `|R| ≤ 9 x^2 B^B` (Theorem 25.7) this bounds the large digit of a 3-digit solution by
   `x ≤ (2 + δ) B + C_δ`, in every position, and gives Corollary 33.17 (with the self-paying
-  exceptions `(x, 0, 0)`, `(x, 0, 1)` under `0^0 = 0`);
+  exceptions `(x, 0, 0)`, `(x, 0, 1)` under `0^0 = 0`); the same bound for 3-digit factorions,
+  with `rad(x!) = x# ≤ 4^x` in place of the cited Rosser-Schoenfeld bound;
 * Theorem 15.10 under abc: finitely many 2-digit solutions in perfect-power bases with one
   weight much smaller than the other.
 -/
@@ -971,6 +972,309 @@ theorem corollary33_17 (habc : ABC) {ε : ℝ} (hε : 0 < ε) :
       have : (r : ℤ) < w m r := by exact_mod_cast this
       linarith
     · exact absurd (hlead q r hs (hq.trans hBB1) (hr.trans hBB1) hR) (not_le.2 hbig)
+
+/-! ### Theorem 33.16 for factorials -/
+
+/-- `rad(x!)` is the primorial of `x`, the product of the primes up to `x`. -/
+lemma rad_factorial (x : ℕ) : rad x.factorial = primorial x := by
+  unfold rad primorial
+  congr 1
+  ext p
+  simp only [Nat.mem_primeFactors, Finset.mem_filter, Finset.mem_range]
+  constructor
+  · rintro ⟨hp, hd, -⟩
+    exact ⟨by have := (Nat.Prime.dvd_factorial hp).1 hd; omega, hp⟩
+  · rintro ⟨hlt, hp⟩
+    exact ⟨hp, (Nat.Prime.dvd_factorial hp).2 (by omega), (Nat.factorial_pos x).ne'⟩
+
+/-- `rad(4 l x!) ≤ 2 l 4^x`, from the primorial bound `x# ≤ 4^x` (proof of Theorem 33.16 for
+factorials, in place of the cited `e^(1.01624 x)`). -/
+lemma rad_four_mul_factorial_le {l : ℕ} (hl : 1 ≤ l) (x : ℕ) :
+    rad (4 * l * x.factorial) ≤ 2 * l * 4 ^ x := by
+  have h4l : 4 * l ≠ 0 := by omega
+  calc rad (4 * l * x.factorial) ≤ rad (4 * l) * rad x.factorial :=
+        rad_mul_le h4l (Nat.factorial_pos x).ne'
+    _ ≤ (rad 4 * rad l) * rad x.factorial :=
+        Nat.mul_le_mul_right _ (rad_mul_le (by norm_num) (by omega))
+    _ ≤ (2 * l) * 4 ^ x := by
+        rw [rad_four, rad_factorial]
+        exact Nat.mul_le_mul (Nat.mul_le_mul_left 2 (rad_le_self (by omega)))
+          (primorial_le_four_pow x)
+
+/-- `9 x^2 B^B ≤ 4 x!` for `B ≥ 1` and `x ≥ 2B + 4`. -/
+lemma nine_mul_sq_pow_le_factorial {x B : ℕ} (hB : 1 ≤ B) (hx : 2 * B + 4 ≤ x) :
+    9 * x ^ 2 * B ^ B ≤ 4 * x.factorial := by
+  obtain ⟨y, rfl⟩ : ∃ y, x = y + 3 := ⟨x - 3, by omega⟩
+  have h1 : B.factorial * (B + 1) ^ (y - B) ≤ (B + (y - B)).factorial :=
+    Nat.factorial_mul_pow_le_factorial
+  rw [show B + (y - B) = y by omega] at h1
+  have h2 : B ^ B ≤ (B + 1) ^ (y - B) :=
+    (Nat.pow_le_pow_left (Nat.le_succ B) B).trans (Nat.pow_le_pow_right (by omega) (by omega))
+  have h3 : B ^ B ≤ y.factorial :=
+    h2.trans (le_trans (Nat.le_mul_of_pos_left _ (Nat.factorial_pos B)) h1)
+  have h4 : (y + 3).factorial = (y + 3) * (y + 2) * (y + 1) * y.factorial := by
+    simp [Nat.factorial_succ]; ring
+  rw [h4]
+  have h5 : 9 * (y + 3) ^ 2 ≤ 4 * ((y + 3) * (y + 2) * (y + 1)) := by nlinarith
+  calc 9 * (y + 3) ^ 2 * B ^ B ≤ 4 * ((y + 3) * (y + 2) * (y + 1)) * y.factorial :=
+        Nat.mul_le_mul h5 h3
+    _ = 4 * ((y + 3) * (y + 2) * (y + 1) * y.factorial) := by ring
+
+/-- **Theorem 33.16** for factorials (section 33.4.1), the bound on `x`. Assume abc. For every
+`δ > 0` there is `C` such that `U^2 = 4 l x! + R` with `1 ≤ l ≤ x`, `1 ≤ B`, `x ≥ 2B + 4`,
+`U > 0`, `R ≠ 0` and `|R| ≤ 9 x^2 B^B` implies `x ≤ (2 + δ) B + C`. The library uses
+`rad(x!) ≤ e^(1.01624 x)` (Rosser and Schoenfeld); the primorial bound `rad(x!) ≤ 4^x` of
+Mathlib does as well, since `x log 4` is small against `log x! ≥ x log x - x`: it changes only
+the constant `C`, which absorbs every `x` below `exp(4/η)`. This is the form
+`x ≤ max(C', (2 + O(ε)) B)` of the library. -/
+theorem theorem33_16_bound_factorial (habc : ABC) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ C : ℝ, ∀ (l x B U : ℕ) (R : ℤ), 1 ≤ l → l ≤ x → 1 ≤ B → 2 * B + 4 ≤ x → 0 < U →
+      R ≠ 0 → |R| ≤ 9 * x ^ 2 * B ^ B → (U : ℤ) ^ 2 = 4 * l * x.factorial + R →
+      (x : ℝ) ≤ (2 + δ) * B + C := by
+  set ε := δ / (8 + δ) with hεdef
+  have h8δ : 0 < 8 + δ := by linarith
+  have hε : 0 < ε := div_pos hδ h8δ
+  have hε1 : ε < 1 := (div_lt_one h8δ).2 (by linarith)
+  obtain ⟨K, hK⟩ := theorem33_16 habc hε hε1.le
+  set η := 2 * δ / ((8 + δ) * (2 + δ)) with hηdef
+  have hη : 0 < η := by positivity
+  have hηeq : (1 - ε) / 2 - η = (1 + ε) / (2 + δ) := by
+    rw [hεdef, hηdef]; field_simp; ring
+  set A := |Real.log (2 * K)| + (1 + ε) * (Real.log 18 + 3) with hA
+  have hlog18 : 0 ≤ Real.log 18 := Real.log_nonneg (by norm_num)
+  have hA0 : 0 ≤ A := by positivity
+  refine ⟨max (Real.exp (4 / η)) ((2 + δ) * A),
+    fun l x B U R hl hlx hB hx hU hR hRb heq => ?_⟩
+  set N := 4 * l * x.factorial with hN
+  have hxpos : 0 < x := by omega
+  have hNpos : 0 < N := by positivity
+  have hxN : x.factorial ≤ N := by rw [hN]; exact Nat.le_mul_of_pos_left _ (by omega)
+  have hRN : |R| ≤ (N : ℤ) := by
+    refine hRb.trans ?_
+    have h1 := nine_mul_sq_pow_le_factorial hB hx
+    have h2 : 4 * x.factorial ≤ N := by rw [hN]; exact Nat.mul_le_mul_right _ (by omega)
+    exact_mod_cast h1.trans h2
+  have main := hK N U R hNpos hU hR hRN (by rw [heq, hN]; push_cast; ring)
+  have hxr : (6 : ℝ) ≤ x := by exact_mod_cast (show 6 ≤ x by omega)
+  have hx0 : (0 : ℝ) < x := by linarith
+  have hBr : (1 : ℝ) ≤ B := by exact_mod_cast hB
+  have hBx : (B : ℝ) ≤ x := by exact_mod_cast (show B ≤ x by omega)
+  have hRpos : (0 : ℝ) < |(R : ℝ)| := abs_pos.2 (by exact_mod_cast hR)
+  have hrad1 : (1 : ℝ) ≤ rad N := by exact_mod_cast one_le_rad N
+  have hP0 : 0 < ((rad N : ℝ) * |(R : ℝ)|) := by positivity
+  have hLHS : 0 < (N : ℝ) ^ ((1 - ε) / 2) := Real.rpow_pos_of_pos (by exact_mod_cast hNpos) _
+  have hK2 : 0 < 2 * K := by
+    by_contra h
+    push Not at h
+    have : 2 * K * ((rad N : ℝ) * |(R : ℝ)|) ^ (1 + ε) ≤ 0 :=
+      mul_nonpos_of_nonpos_of_nonneg h (Real.rpow_nonneg hP0.le _)
+    push_cast at main
+    linarith
+  -- `rad(N) |R| ≤ 18 x^3 4^x B^B`
+  have hradN : (rad N : ℝ) ≤ 2 * x * 4 ^ x := by
+    have h1 := rad_four_mul_factorial_le hl x
+    have h2 : 2 * l * 4 ^ x ≤ 2 * x * 4 ^ x := Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _ hlx)
+    exact_mod_cast h1.trans h2
+  have hRr : |(R : ℝ)| ≤ 9 * x ^ 2 * (B : ℝ) ^ B := by
+    have : ((|R| : ℤ) : ℝ) ≤ ((9 * x ^ 2 * B ^ B : ℕ) : ℝ) := by exact_mod_cast hRb
+    push_cast at this
+    exact this
+  have hprod : (rad N : ℝ) * |(R : ℝ)| ≤ 18 * (x : ℝ) ^ 3 * (4 : ℝ) ^ x * (B : ℝ) ^ B := by
+    calc (rad N : ℝ) * |(R : ℝ)| ≤ (2 * x * 4 ^ x) * (9 * x ^ 2 * (B : ℝ) ^ B) :=
+          mul_le_mul hradN hRr (abs_nonneg _) (by positivity)
+      _ = 18 * (x : ℝ) ^ 3 * (4 : ℝ) ^ x * (B : ℝ) ^ B := by ring
+  -- logarithms
+  have hlog := Real.log_le_log hLHS (by push_cast at main; exact main)
+  rw [Real.log_rpow (by exact_mod_cast hNpos), Real.log_mul hK2.ne'
+    (Real.rpow_pos_of_pos hP0 _).ne', Real.log_rpow hP0] at hlog
+  set L := Real.log x with hL
+  have hL1 : 1 ≤ L := by
+    rw [hL, Real.le_log_iff_exp_le hx0]
+    have := Real.exp_one_lt_d9
+    linarith
+  have hl1 : (x : ℝ) * L - x ≤ Real.log N := by
+    have hst := Stirling.le_log_factorial_stirling (show x ≠ 0 by omega)
+    have hpi : 0 ≤ Real.log (2 * Real.pi) := Real.log_nonneg (by nlinarith [Real.pi_gt_three])
+    have hfN : Real.log (x.factorial : ℝ) ≤ Real.log N :=
+      Real.log_le_log (by exact_mod_cast Nat.factorial_pos x) (by exact_mod_cast hxN)
+    linarith
+  have hlog4 : Real.log 4 < 1.4 := by
+    rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]
+    have := Real.log_two_lt_d9
+    push_cast; linarith
+  have hl2 : Real.log ((rad N : ℝ) * |(R : ℝ)|) ≤
+      Real.log 18 + 3 * L + x * Real.log 4 + B * L := by
+    have := Real.log_le_log hP0 hprod
+    have e : Real.log (18 * (x : ℝ) ^ 3 * (4 : ℝ) ^ x * (B : ℝ) ^ B) =
+        Real.log 18 + 3 * Real.log x + x * Real.log 4 + B * Real.log B := by
+      rw [Real.log_mul (by positivity) (pow_ne_zero B (by linarith : (0 : ℝ) < B).ne'),
+        Real.log_mul (by positivity) (by positivity),
+        Real.log_mul (by norm_num) (pow_ne_zero 3 hx0.ne'), Real.log_pow, Real.log_pow,
+        Real.log_pow]
+      push_cast; ring
+    rw [e] at this
+    have hlogB : Real.log B ≤ Real.log x := Real.log_le_log (by linarith) hBx
+    have : (B : ℝ) * Real.log B ≤ B * Real.log x :=
+      mul_le_mul_of_nonneg_left hlogB (by linarith)
+    linarith
+  have hε0 : 0 ≤ 1 + ε := by linarith
+  have key : (1 - ε) / 2 * (x * L - x) ≤
+      Real.log (2 * K) + (1 + ε) * (Real.log 18 + 3 * L + x * Real.log 4 + B * L) := by
+    have h1 : (1 - ε) / 2 * (x * L - x) ≤ (1 - ε) / 2 * Real.log N :=
+      mul_le_mul_of_nonneg_left hl1 (by linarith)
+    have h2 := mul_le_mul_of_nonneg_left hl2 hε0
+    linarith
+  -- `x c ≤ 4 x` with `c = (1 - ε)/2 + (1 + ε) log 4`
+  have hc : (1 - ε) / 2 + (1 + ε) * Real.log 4 ≤ 4 := by
+    have : 0 ≤ Real.log 4 := Real.log_nonneg (by norm_num)
+    nlinarith
+  have key2 : (1 - ε) / 2 * x * L ≤ (A + (1 + ε) * B) * L + 4 * x := by
+    have h1 : Real.log (2 * K) ≤ |Real.log (2 * K)| * L :=
+      (le_abs_self _).trans (le_mul_of_one_le_right (abs_nonneg _) hL1)
+    have h2 : (1 + ε) * Real.log 18 ≤ (1 + ε) * Real.log 18 * L :=
+      le_mul_of_one_le_right (mul_nonneg hε0 hlog18) hL1
+    have h3 : x * ((1 - ε) / 2 + (1 + ε) * Real.log 4) ≤ x * 4 :=
+      mul_le_mul_of_nonneg_left hc hx0.le
+    have h4 : 3 * (1 + ε) ≤ 3 * (1 + ε) * L :=
+      le_mul_of_one_le_right (by linarith) hL1
+    rw [hA]
+    linear_combination key + h1 + h2 + h3
+  rcases lt_or_ge L (4 / η) with hsmall | hlarge
+  · -- `x < exp(4/η)`
+    have : (x : ℝ) < Real.exp (4 / η) := by
+      rw [hL] at hsmall
+      exact (Real.log_lt_iff_lt_exp hx0).1 hsmall
+    have : (0 : ℝ) ≤ (2 + δ) * B := by positivity
+    linarith [le_max_left (Real.exp (4 / η)) ((2 + δ) * A)]
+  · have h4 : 4 * (x : ℝ) ≤ η * x * L := by
+      have : 4 ≤ η * L := by rwa [div_le_iff₀ hη, mul_comm] at hlarge
+      calc 4 * (x : ℝ) ≤ η * L * x := mul_le_mul_of_nonneg_right this hx0.le
+        _ = η * x * L := by ring
+    have key3 : ((1 - ε) / 2 - η) * x * L ≤ (A + (1 + ε) * B) * L := by
+      linear_combination key2 + h4
+    rw [hηeq] at key3
+    have key4 : (1 + ε) / (2 + δ) * x ≤ A + (1 + ε) * B :=
+      le_of_mul_le_mul_right key3 (by linarith)
+    have h2δ : 0 < 2 + δ := by linarith
+    have h1ε : 0 < 1 + ε := by linarith
+    have : (x : ℝ) ≤ (2 + δ) * A / (1 + ε) + (2 + δ) * B := by
+      rw [div_mul_eq_mul_div, div_le_iff₀ h2δ] at key4
+      rw [div_add' _ _ _ h1ε.ne', le_div_iff₀ h1ε]
+      linear_combination key4
+    have hAε : (2 + δ) * A / (1 + ε) ≤ (2 + δ) * A := by
+      rw [div_le_iff₀ h1ε]
+      exact le_mul_of_one_le_right (by positivity) (by linarith)
+    linarith [le_max_right (Real.exp (4 / η)) ((2 + δ) * A)]
+
+/-- `d ≤ fw(d)`: a digit is at most its factorial weight. -/
+lemma le_fw (m d : ℕ) : d ≤ fw m d := by
+  rcases Nat.eq_zero_or_pos d with rfl | hd
+  · simp
+  · rw [fw_of_ne_zero m hd.ne']; exact Nat.self_le_factorial d
+
+/-- A digit at most `B` has factorial weight at most `B! ≤ B^B` (for `m ≤ 1`, `B ≥ 1`). -/
+lemma fw_le_pow {m u B : ℕ} (hm : m ≤ 1) (hB : 1 ≤ B) (hu : u ≤ B) : fw m u ≤ B ^ B := by
+  rcases Nat.eq_zero_or_pos u with rfl | hu0
+  · simp only [fw_zero]; exact hm.trans (Nat.one_le_pow _ _ (by omega))
+  · rw [fw_of_ne_zero m hu0.ne']
+    exact (Nat.factorial_le hu).trans (Nat.factorial_le_pow B)
+
+/-- The equation of a 3-digit solution for any weight: `d2 b^2 + d1 b + d0 = wt(d2) + wt(d1) +
+wt(d0)`. -/
+lemma IsWSolution.triple_eq {wt : ℕ → ℕ} {b d2 d1 d0 : ℕ} (hs : IsWSolution wt b [d2, d1, d0]) :
+    d2 * b ^ 2 + d1 * b + d0 = wt d2 + (wt d1 + wt d0) := by
+  have := hs.eq
+  rw [P_triple] at this
+  simpa using this
+
+/-- **Theorem 33.16** for 3-digit factorions (section 33.4.1). Assume abc. For every `δ > 0`
+there is `C` such that every 3-digit factorion, under either convention, with two digits at most
+`B ≥ 1` and a third digit `x ≥ 2B + 4` in any position and with `R ≠ 0` has
+`x ≤ (2 + δ) B + C`. Here `U^2 = 4 l x! + R` with `R` as in the table of chapter 33, and in the
+middle `R > 0` always. -/
+theorem theorem33_16_factorion (habc : ABC) {δ : ℝ} (hδ : 0 < δ) :
+    ∃ C : ℝ, ∀ b m B x : ℕ, m ≤ 1 → 1 ≤ B → 2 * B + 4 ≤ x →
+      (∀ p q, IsWSolution (fw m) b [p, q, x] → p ≤ B → q ≤ B →
+        4 * (p : ℤ) * ((fw m p : ℤ) + fw m q - x) + q ^ 2 ≠ 0 → (x : ℝ) ≤ (2 + δ) * B + C) ∧
+      (∀ p r, IsWSolution (fw m) b [p, x, r] → p ≤ B → r ≤ B → (x : ℝ) ≤ (2 + δ) * B + C) ∧
+      (∀ q r, IsWSolution (fw m) b [x, q, r] → q ≤ B → r ≤ B →
+        4 * (x : ℤ) * ((fw m q : ℤ) + fw m r - r) + q ^ 2 ≠ 0 → (x : ℝ) ≤ (2 + δ) * B + C) := by
+  obtain ⟨C, hC⟩ := theorem33_16_bound_factorial habc hδ
+  refine ⟨C, fun b m B x hm hB hx => ?_⟩
+  set W := B ^ B
+  have hW1 : (1 : ℤ) ≤ W := by exact_mod_cast Nat.one_le_pow B B (by omega)
+  have hxB : 2 * (B : ℤ) + 4 ≤ x := by exact_mod_cast hx
+  have hx1 : (1 : ℤ) ≤ x := by linarith
+  have hX : (x : ℤ) ≤ (x : ℤ) ^ 2 := by nlinarith
+  have hX2 : (x : ℤ) ^ 2 ≤ (x : ℤ) ^ 2 * W := le_mul_of_one_le_right (by positivity) hW1
+  have hXW : (x : ℤ) * W ≤ (x : ℤ) ^ 2 * W := mul_le_mul_of_nonneg_right hX (by linarith)
+  have hWc : ((B : ℤ) ^ B) = (W : ℤ) := by simp [W]
+  have hfx : fw m x = x.factorial := fw_of_ne_zero m (by omega)
+  refine ⟨?_, ?_, ?_⟩
+  · intro p q hs hp hq hR
+    have hp1 : 1 ≤ p := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
+    have heq := hs.triple_eq
+    rw [hfx] at heq
+    have hsq := complete_square heq
+    have hwp : (fw m p : ℤ) ≤ W := by exact_mod_cast fw_le_pow hm hB hp
+    have hwq : (fw m q : ℤ) ≤ W := by exact_mod_cast fw_le_pow hm hB hq
+    have h16 := bound_last (p := p) (q := q) (x := x) (B := B) (W := W) (wp := fw m p)
+      (wq := fw m q) (by exact_mod_cast hp1) (by exact_mod_cast hp) (by positivity)
+      (by exact_mod_cast hq) hxB (by positivity) (by positivity) hwp hwq hW1
+    refine hC p x B (2 * p * b + q) _ hp1 (by omega) hB hx ?_ hR ?_ ?_
+    · have hb : 1 ≤ b := by have := hs.lt_base p (by simp); omega
+      exact lt_of_lt_of_le (Nat.mul_pos (Nat.mul_pos (by norm_num) hp1) hb)
+        (Nat.le_add_right _ _)
+    · have := abs_le_of_sixteen_sq_le (by positivity) h16
+      rw [hWc]; linarith
+    · rw [hsq]; push_cast; ring
+  · intro p r hs hp hr
+    have hp1 : 1 ≤ p := Nat.one_le_iff_ne_zero.2 (hs.head_ne_zero (by simp))
+    have heq := hs.triple_eq
+    rw [hfx] at heq
+    have hsq := complete_square heq
+    have hwp : (fw m p : ℤ) ≤ W := by exact_mod_cast fw_le_pow hm hB hp
+    have hwr : (fw m r : ℤ) ≤ W := by exact_mod_cast fw_le_pow hm hB hr
+    have hrw : (r : ℤ) ≤ fw m r := by exact_mod_cast le_fw m r
+    have hwp0 : (0 : ℤ) ≤ fw m p := by positivity
+    have hR0 : 0 < (x : ℤ) ^ 2 + 4 * p * ((fw m p : ℤ) + fw m r - r) := by
+      have : 0 ≤ (p : ℤ) * ((fw m p : ℤ) + fw m r - r) := mul_nonneg (by positivity) (by linarith)
+      nlinarith
+    refine hC p x B (2 * p * b + x) _ hp1 (by omega) hB hx (by omega) hR0.ne' ?_ ?_
+    · rw [abs_of_pos hR0]
+      have hpB : (p : ℤ) ≤ B := by exact_mod_cast hp
+      have hr0 : (0 : ℤ) ≤ r := by positivity
+      have k1 : (p : ℤ) * ((fw m p : ℤ) + fw m r - r) ≤ B * (2 * W) :=
+        mul_le_mul hpB (by linarith) (by linarith) (by linarith)
+      have k3 : 2 * (B : ℤ) * W ≤ x * W := mul_le_mul_of_nonneg_right (by linarith) (by linarith)
+      rw [hWc]
+      linarith
+    · rw [hsq]; push_cast; ring
+  · intro q r hs hq hr hR
+    have heq := hs.triple_eq
+    rw [hfx] at heq
+    have hsq := complete_square heq
+    have hb : 1 ≤ b := by have := hs.lt_base x (by simp); omega
+    have hwq : (fw m q : ℤ) ≤ W := by exact_mod_cast fw_le_pow hm hB hq
+    have hwr : (fw m r : ℤ) ≤ W := by exact_mod_cast fw_le_pow hm hB hr
+    refine hC x x B (2 * x * b + q) _ (by omega) le_rfl hB hx
+      (lt_of_lt_of_le (Nat.mul_pos (Nat.mul_pos (by norm_num) (by omega)) hb)
+        (Nat.le_add_right _ _)) hR ?_ ?_
+    · have hrw : (r : ℤ) ≤ fw m r := by exact_mod_cast le_fw m r
+      have hq0 : (0 : ℤ) ≤ q := by positivity
+      have hwq0 : (0 : ℤ) ≤ fw m q := by positivity
+      have hqB : (q : ℤ) ≤ B := by exact_mod_cast hq
+      have hR0 : 0 ≤ 4 * (x : ℤ) * ((fw m q : ℤ) + fw m r - r) + q ^ 2 := by
+        have : 0 ≤ (x : ℤ) * ((fw m q : ℤ) + fw m r - r) :=
+          mul_nonneg (by linarith) (by linarith)
+        nlinarith
+      rw [abs_of_nonneg hR0]
+      have k1 : (x : ℤ) * ((fw m q : ℤ) + fw m r - r) ≤ x * (2 * W) :=
+        mul_le_mul_of_nonneg_left (by linarith) (by linarith)
+      have k2 : (q : ℤ) ^ 2 ≤ (x : ℤ) ^ 2 := pow_le_pow_left₀ hq0 (by linarith) 2
+      rw [hWc]
+      linarith
+    · rw [hsq]; push_cast; ring
 
 /-! ### Theorem 15.10 under abc -/
 

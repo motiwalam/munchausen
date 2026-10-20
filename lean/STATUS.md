@@ -23,7 +23,7 @@ Window (BaseWindow), Poly (Polynomial), Res (Residues), Adic (AdicLaws), Short
 (SearchRules), Fact (Factorials), MC (ModelComplete), Exist (Existence), TS (TwoSquares),
 ES (the verified exact search, `Search/`).
 
-Counts of table rows at the time of writing: 174 formalized, 22 partial, 12
+Counts of table rows at the time of writing: 178 formalized, 20 partial, 12
 rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 5 not stated, and 1 executable row (the exact search itself).
 
@@ -217,7 +217,8 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Lemma 20.1 | `lemma20_1`, `lemma20_1_root` [Window] | formalized |
 | Proposition 20.2 | `prop20_2`, `card_multisets_le`, `sum_inv_le_harmonic`, `card_le_of_window` [Window] | formalized |
 | Lemma 20.4 | `lemma20_4`, `prod_le_lcm_mul_pow` [Window] | formalized (for `r ≥ 1`; see problem 7) |
-| Theorem 20.3, Proposition 20.5 | none | not formalized (asymptotics of the counts of Proposition 20.2 and Lemma 20.4) |
+| Theorem 20.3 | `theorem20_3`, `shortBases_density_zero`, `shortBases_card_le_multiset`, `choose_le_exp` [Almost] | partial: (a) and the first claim of (c): for `α, δ > 0` and all large `B` at most `B^(α + δ)` bases `b ≤ B` have a solution of `2 ≤ k ≤ α ln b / ln ln b` digits (Proposition 20.2 with `X = (ln B)^2` and `C(X + K, K) ≤ (e (X + K)/K)^K`), so for `α < 1` they have density 0; the second-order range of (b), (c) and the converse (d) are not formalized |
+| Proposition 20.5 | none | not formalized (asymptotics of the count of Lemma 20.4) |
 | Lemma 20.6 | `multiple_mem_T` [Res] | formalized |
 | Lemma 20.7 | `lemma20_7`, `step_lemma20_7` [Res] | formalized (for every prime `p`; the library's "odd" is not needed) |
 | Theorem 20.8 | `theorem20_8`, `exists_start`, `exists_generator_avoiding` [Res] | formalized (`p = 7` by a finite check, `p ≥ 11` with three generators) |
@@ -409,7 +410,7 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Theorem 33.12 | `theorem33_12`, `theorem33_12_member` [Fact] | formalized (every `u ≥ j` gives a member, since then `t_i ≤ (M u)^j ≤ x`; (S3) is stated as `y > M (x + v)` whenever `v^j ≤ x`) |
 | Proposition 33.13 | `prop33_13`, `prop33_13_lt`, `prop33_13_identity` [Fact] | formalized (the consequence for identities with `lam` an integer dividing `t_0`, as the normalization of Corollary 25.3 gives) |
 | Theorem 33.14, Corollary 33.15, Theorem 33.19 | none | not formalized (conditional on abc; the Tschirnhaus reduction is not stated) |
-| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `theorem33_16_bound`, `theorem33_16_solution`, `rad_four_mul_pow_self_le`, `abc_div_gcd` [Fact] | partial: for `x^x` in full: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)`, `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)`, `rad(4 l x^x) ≤ 2 l x`, and `x ≤ (2 + δ) B + C_δ` for every 3-digit solution with `R ≠ 0`, in each of the three positions and under either convention (`ε = δ/(4 + δ)`); the sentence on factorials (with the cited `rad(x!) ≤ e^(1.01624 x)`) is not formalized |
+| Theorem 33.16 | `rad`, `ABC`, `theorem33_16_abc`, `theorem33_16`, `theorem33_16_bound`, `theorem33_16_solution`, `rad_four_mul_pow_self_le`, `abc_div_gcd`; `theorem33_16_bound_factorial`, `theorem33_16_factorion`, `rad_factorial`, `rad_four_mul_factorial_le` [Fact] | formalized: under abc, `N ≤ K (rad(N) U abs(R))^(1+ε)`, `N^((1-ε)/2) ≤ 2 K (rad(N) abs(R))^(1+ε)`, `rad(4 l x^x) ≤ 2 l x`, and `x ≤ (2 + δ) B + C_δ` for every 3-digit solution with `R ≠ 0`, in each of the three positions and under either convention (`ε = δ/(4 + δ)`); the same bound `x ≤ (2 + δ) B + C_δ` for 3-digit factorions, with `rad(x!) = x# ≤ 4^x` (Mathlib) in place of the cited `e^(1.01624 x)` and `log x! ≥ x log x - x` (Stirling): the weaker radical bound changes only the constant `C_δ`, not the slope `2 + δ`, and `(2 + δ) B + C_δ` is the library's `max(C', (2 + O(ε)) B)` |
 | Corollary 33.17 | `corollary33_17`, `isSolution_x_0_0` [Fact] | formalized, corrected (see problem 9): a solution with the large digit last is a member of case (i) (`theorem25_7_i`), the large digit is never in the middle, and in front it needs `0^0 = 0` and the string `(x, 0, 0)` or `(x, 0, 1)` |
 | Corollary 33.18, Proposition 33.20, Table 33.4.1 | none | not formalized (conditional on abc; computation) |
 | Proposition 33.21 | `prop33_21`, `prop33_21_card` [Fact] | formalized (the arithmetic; Theorem 15.14 itself is not formalized) |
@@ -441,11 +442,12 @@ rows of open problems (15 `Prop`s), 4 refuted conjectures, 78 not formalized,
 | Proposition 35.5 | `invIdeal`, `exchIdeal`, `Exch`, `ringVal_exch`, `prop35_5_one`, `prop35_5_two`, `prop35_5_three_le`, `prop35_5_three`; `invIdealZ`, `prop35_5_three_neg_le`, `prop35_5_three_neg` [Exist] | formalized ((1), (2), and (3) for place values `u β^i` with `i ≥ 0`, and with any integer `i` when `β` is a unit: a string is then a pair `(k, s)` starting at position `-k`) |
 | Proposition 35.6 | `prop35_6`, `prop35_6_rat` [Exist] | formalized (for `Z[t]/(f)` with any `f`, which is `Z[β]` when `f` is the minimal polynomial of the algebraic integer `β`; and for `p/q` in `Z[1/q]`, which covers `-p/q`) |
 | Proposition 35.7 | none | not formalized (convergence of a random walk on a finite group) |
-| Proposition 35.8 | `prop35_8_window`, `prop35_8_root`, `prop35_8_fix`, `prop35_8_count`, `card_le_choose_of_bounded` [Exist] | partial: the window (`p (b-1)^(k-1) < F(c_L) < p b^(k-1) + (M+1) b^(k-2)` and its root form, for `k >= 3` and any `b`, by algebra in place of the mean value theorem), the small part `m(c_S)` fixed by `c_L` and `b`, and `r_j(N) <= C(z0 + j, j)` from Lemma 30.2; the displayed sum over `(c_L, p, b)` is not assembled |
+| Proposition 35.8 | `prop35_8_window`, `prop35_8_root`, `prop35_8_fix`, `prop35_8_count`, `card_le_choose_of_bounded`, `prop35_8_sum`, `rCount`, `window358`, `rCount_le` [Exist] | formalized: the window (`p (b-1)^(k-1) < F(c_L) < p b^(k-1) + (M+1) b^(k-2)` and its root form, for `k >= 3` and any `b`, by algebra in place of the mean value theorem), the small part `m(c_S)` fixed by `c_L` and `b`, `r_j(N) <= C(z0 + j, j)` from Lemma 30.2, the summed bound (the bases `b <= B` with a `k`-digit solution number at most the sum over `(c_L, p)` and the bases of the window of `r(b, c_L)`), and `r(b, c_L) <= C(z0 + j, j)`; "`b` large" is the hypothesis `k w(z(b)) < b - 1` on the threshold |
 | Proposition 35.9 | `prop35_9_share`, `prop35_9_bounds` [Exist] | partial: the exact share as a product and its two exponential bounds; the limit `-2A` is not formalized |
-| Corollary 35.10, Theorem 35.12 | none | not formalized (asymptotic counts) |
+| Corollary 35.10 | none | not formalized (asymptotic count) |
+| Theorem 35.12 | `theorem35_12`, `theorem35_12_density`, `fewLargeBases`, `fewLargeBases'`, `fewLargeBases_card_le`, `Fs_lt_of_sq_lt`, `le_floor_rpow_of_solution` [Exist] | formalized: for real `C >= 1` and `κ, δ > 0`, at most `B^(max(1/2, C κ) + δ)` bases `b <= B` for all large `B` (with `κ = 1/C - ε` the library's form), and density 0 for `C κ < 1` with the conditions in terms of `b`; a digit is large when its weight `w(x)` satisfies `w(x)^2 >= b` |
 | Theorem 35.13 | `theorem35_13`, `steer`, `steer_step`, `steer_zone`, `exists_steer_digit`, `add_one_pow_le_exp_mul`, `theorem35_13_step3`, `theorem35_13_strict`, `div_add_eq_of_digit_le`, `P_inj_of_length_eq` [Exist] | formalized (with (a) and (b) as real inequalities, for both conventions; the second half of (a), `2 (T + 4) <= b`, is not needed: the steering stops at the first copy after which the part above the steered digit reaches the next multiple of `b`, so the three cases of Step 2 are one argument, and the zone is `[b - T - 4, b - 1]`) |
-| Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel` [Exist] | partial: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286` and shown to get easier as `b` grows); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; that `T(b)` does not decrease with `b` is not formalized (condition (a) is used only through `3 (T + 5) <= b`) |
+| Corollary 35.14 | `corollary35_14`, `corollary35_14_lower`, `corollary35_14_upper`, `theorem35_13_cond_a`, `theorem35_13_cond_b`, `theorem35_13_rel`, `NearCond`, `NearCond.mono`, `nearT`, `nearT_mono`, `nearT_thresholds`, `nearExp_mono`, `condA_monotoneOn` [Exist] | formalized: the thresholds, for every larger `b`: `0 < abs(n - F(n)) < b^(b-2)` for `b >= 27`, `abs(n - F(n)) < n / b` for `b >= 49` and `< n / b^2` for `b >= 77` (condition (b) checked at the threshold with `e < 2.7182818286`); the size `sqrt(b/e) - 6 <= T(b) < sqrt(b/e)`; `T(b)` (`nearT`, the largest `T` allowed by (a) and (b)) and `t = T(b) - log_b(e b/(b - e))` do not decrease with `b` (for fixed `T` both conditions get easier: `b (1 - e^(-1 + 1/b))` has derivative `1 - e^(-1 + 1/b) (1 - 1/b) > 0`); `T(b) >= 1, 2, 3` from 27, 49, 77. The second half of (a), `2 (T + 4) <= b`, is not part of `NearCond`, since Theorem 35.13 does not need it |
 
 ## Chapter 37. The last digits and two free slots
 
@@ -577,17 +579,15 @@ In order of value and effort:
    separable algebra `R`), the elements `u_m = M'^(1 - q^m)`, and the case
    `q <= e - 2`. `theorem29_11_two` gives conditions (a) to (c) in both
    directions, and `topCoeff_span`, `exists_topCoeff_mul_ne_zero` are the
-   tools on the `ℓ` side.
-2. Theorem 33.16 for factorials: `rad(x!)` is the primorial, at most `4^x`
-   in Mathlib, which can replace the cited `e^(1.01624 x)` in the bound
-   `x <= max(C', (2 + O(eps)) B)`; the completed square is
-   `three_digit_iff_sq`, and `theorem33_16_bound` is the model.
-3. The asymptotic counts of chapters 20 and 35: Theorem 20.3 from
-   `prop20_2`, then the count of Theorem 35.12 and the summed bound of
-   Proposition 35.8 (`prop35_8_window`, `prop35_8_fix`, `prop35_8_count` are
-   in place).
-4. Corollary 35.14: that `T(b)` does not decrease with `b`, which needs
-   condition (a) to grow with `b` (`b (1 - e^(-1 + 1/b))` is increasing).
-5. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
+   tools on the `ℓ` side. The recursion `u_(m+1) = u_1 φ(u_m)` follows from
+   `ℓ ∘ φ = ℓ(c_1 ·)` alone, since `φ` is invertible on the reduced ring;
+   Euler's formula is needed for `u_(f_i) ≡ 1` modulo each factor in the
+   constant case.
+2. The finer asymptotics of chapters 20 and 35: the second-order range of
+   Theorem 20.3 (b) to (d), which needs `X_K(B)` to first order and
+   Stirling's formula for `C(X + K, K)`; the limit `-2A` of Proposition 35.9
+   and Corollary 35.10. `theorem20_3`, `choose_le_exp` and `prop35_9_bounds`
+   are the tools.
+3. Corollary 34.7 and Theorem 34.6 (they need Theorem 29.1, a theorem about
    the model).
-6. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.
+4. Chapter 36 (a census of bases 42 to 46), when it lands on fast-search.

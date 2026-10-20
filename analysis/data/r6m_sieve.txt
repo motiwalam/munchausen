@@ -1,0 +1,14 @@
+# r6f_ff_sieve (chapter 36) runs of the round 6 middle draft, section M.5, 8 threads.
+# Survivors would be printed as "survivor ..." lines; there are none.
+# middle (3, x, 1) under 0^0 = 1 and (3, x, 0) under 0^0 = 0, odd x,
+# 10^9 < x <= 5.07 * 10^10 (Corollary M.3 (b)). Input lines:
+#   3 1 mid 1 999999999 50700000000 1
+#   3 0 mid 0 999999999 50700000000 1
+family 3 1 mid 1 x 999999999..50700000000 par 1 tested 24850000001
+family 3 0 mid 0 x 999999999..50700000000 par 1 tested 24850000001
+# leading (x, 1, 1) under 0^0 = 1 and (x, 1, 0) under 0^0 = 0, even x,
+# 10^9 < x <= 4.265 * 10^11 (Corollary M.8). Input lines:
+#   1 1 lead 1 999999998 426500000000 0
+#   1 0 lead 0 999999998 426500000000 0
+family 1 1 lead 1 x 999999998..426500000000 par 0 tested 212750000002
+family 1 0 lead 0 x 999999998..426500000000 par 0 tested 212750000002

@@ -2,6 +2,8 @@ import Munchausen.FunctionField
 import Munchausen.Counting
 import Munchausen.Applications
 import Munchausen.BaseWindow
+import Munchausen.AlmostAll
+import Munchausen.SearchRules
 
 /-!
 # One heuristic and existence (chapter 35)
@@ -16,7 +18,11 @@ import Munchausen.BaseWindow
   the ideal `(p/q - 1)` meets `Z` in `(p - q) Z`;
 * Proposition 35.8: the window of Lemma 20.1 computed from the large digits contains the base,
   widened by one; the small part `m(c_S)` is fixed by the large part and the base; and the
-  small multisets with a given `m(c_S)` number at most `C(z0 + j, j)` (Lemma 30.2);
+  small multisets with a given `m(c_S)` number at most `C(z0 + j, j)` (Lemma 30.2); the summed
+  bound over the large parts, the leading digits and the bases of their windows;
+* Theorem 35.12: at most `B^(max(1/2, C κ) + δ)` bases `b ≤ B` have a solution of at most
+  `(ln B)^C` digits with at most `κ ln B / ln ln B` digits of weight at least `sqrt(b)`, by the
+  windows computed from the large digits; for `C κ < 1` these bases have density 0;
 * Proposition 35.9: the share of multisets without small digits is a product, with its two
   exponential bounds;
 * Theorem 35.13 in full: the steering of the top digits of `F` by copies of one digit per
@@ -24,7 +30,8 @@ import Munchausen.BaseWindow
   those of its `F`, with no carry from the rest, is a near-solution, and an exchange below the
   top makes it a strict one), and `theorem35_13` with the real conditions (a) and (b);
 * Corollary 35.14: near-solutions with `0 < |n - F(n)| < b^(b-2)` for `b ≥ 27`, and with
-  `|n - F(n)| < n / b`, `n / b^2` for `b ≥ 49`, `b ≥ 77`.
+  `|n - F(n)| < n / b`, `n / b^2` for `b ≥ 49`, `b ≥ 77`; `T(b)` (`nearT`) and the exponent
+  `t = T(b) - log_b(e b/(b - e))` do not decrease with `b`.
 -/
 
 namespace Munchausen
@@ -490,6 +497,681 @@ theorem prop35_8_count {m z0 j y N : ℕ} (hz0 : 2 ≤ z0) (hj : j ≤ 2 * z0 + 
         rcases Multiset.mem_add.1 hx with hx | hx
         · have := (Multiset.mem_filter.1 hx).2; omega
         · rw [Multiset.eq_of_mem_replicate hx]
+
+open Classical in
+/-- `r(b, c_L)` of Proposition 35.8: the number of multisets `c_S` of `j` digits at most `z`
+with `m(c_L) + m(c_S) ≡ 0 (mod b - 1)`, where `m(c) = ∑ g(x) = F(c) - σ(c)`. -/
+noncomputable def rCount (m b z j : ℕ) (cL : Multiset ℕ) : ℕ :=
+  (((stringsLE z j).image fun s : List ℕ => (s : Multiset ℕ)).filter fun cS =>
+    (b - 1) ∣ (cL.map (g m)).sum + (cS.map (g m)).sum).card
+
+/-- The window of Proposition 35.8 for the large part `c_L` and the leading digit `p` of a
+`k`-digit solution with digits at most `X`: the bases `2 ≤ b ≤ B` with
+`b - 1 < (F(c_L)/p)^(1/(k-1)) < b + (X + 1)/(p (k - 1))`. -/
+noncomputable def window358 (m B k X : ℕ) (τ : Multiset ℕ × ℕ) : Finset ℕ := by
+  classical
+  exact (Finset.Icc 2 B).filter fun b =>
+    (b : ℝ) - 1 < ((((τ.1.map (w m)).sum : ℕ) : ℝ) / τ.2) ^ (((k - 1 : ℕ) : ℝ))⁻¹ ∧
+    ((((τ.1.map (w m)).sum : ℕ) : ℝ) / τ.2) ^ (((k - 1 : ℕ) : ℝ))⁻¹ <
+      b + (X + 1 : ℝ) / (τ.2 * ((k - 1 : ℕ) : ℝ))
+
+/-- **Proposition 35.8** (section 35.4.1), the summed bound. Let `k ≥ 3`, `0^0 = m ≤ 1`, let `X`
+bound every digit `x` with `x^x < B^k`, and for each base `b` let `z(b)` be a threshold with
+`k z(b)^(z(b)) < b - 1` (in the form `k w(z(b)) < b - 1`); the digits up to `z(b)` are small.
+Then the number of bases `b ≤ B` with a `k`-digit solution is at most the sum, over the large
+parts `c_L` (multisets of at most `k` digits up to `X`) and the leading digits `p ≤ X`, of
+`r(b, c_L)` over the bases `b` of the window of `(c_L, p)`. -/
+theorem prop35_8_sum {m B k X : ℕ} (z : ℕ → ℕ) (hk : 3 ≤ k) (hm : m ≤ 1)
+    (hX : ∀ x, x ^ x < B ^ k → x ≤ X) (hz : ∀ b ∈ Finset.Icc 2 B, k * w m (z b) < b - 1) :
+    (basesWith m B k).card ≤
+      ∑ τ ∈ ((Finset.range (k + 1)).biUnion fun j =>
+          (stringsLE X j).image fun s : List ℕ => (s : Multiset ℕ)) ×ˢ Finset.Icc 1 X,
+        ∑ b ∈ window358 m B k X τ, rCount m b (z b) (k - Multiset.card τ.1) τ.1 := by
+  classical
+  set T := ((Finset.range (k + 1)).biUnion fun j =>
+          (stringsLE X j).image fun s : List ℕ => (s : Multiset ℕ)) ×ˢ Finset.Icc 1 X
+  set f : Multiset ℕ × ℕ → ℕ → ℕ := fun τ b =>
+    if b ∈ window358 m B k X τ then rCount m b (z b) (k - Multiset.card τ.1) τ.1 else 0
+  -- every base with a solution contributes at least 1
+  have hone : ∀ b ∈ basesWith m B k, 1 ≤ ∑ τ ∈ T, f τ b := by
+    intro b hb
+    simp only [basesWith, Finset.mem_filter, Finset.mem_Icc] at hb
+    obtain ⟨⟨hb2, hbB⟩, s, hslen, hsol⟩ := hb
+    obtain ⟨p, q, t, rfl⟩ : ∃ p q t, s = p :: q :: t := by
+      match s, hslen with
+      | p :: q :: t, _ => exact ⟨p, q, t, rfl⟩
+      | [], h => simp at h; omega
+      | [_], h => simp at h; omega
+    have ht : t ≠ [] := by rintro rfl; simp at hslen; omega
+    have hp1 : 1 ≤ p := by
+      have := hsol.head_ne_zero (by simp); simp at this; omega
+    have hdig : ∀ d ∈ p :: q :: t, d ≤ X := fun d hd =>
+      hX d (by rw [← hslen]; exact hsol.pow_self_lt hb2 hbB hd)
+    set s := p :: q :: t with hsdef
+    set Lg := s.filter fun x => z b < x
+    set Sm := s.filter fun x => ¬ z b < x
+    have hperm : s.Perm (Lg ++ Sm) := (List.filter_append_perm _ s).symm
+    have hFs : Fs m s = Fs m Lg + Fs m Sm := by
+      rw [← Fs_append]; unfold Fs; exact (hperm.map _).sum_eq
+    have hlen : Lg.length + Sm.length = k := by rw [← List.length_append, ← hperm.length_eq, hslen]
+    -- the small part
+    have hSm : Fs m Sm < b - 1 := by
+      have h1 : Fs m Sm ≤ Sm.length * w m (z b) := by
+        unfold Fs
+        have := List.sum_le_length_nsmul (Sm.map (w m)) (w m (z b)) (by
+          intro y hy
+          obtain ⟨x, hx, rfl⟩ := List.mem_map.1 hy
+          have := (List.mem_filter.1 hx).2
+          simp only [not_lt] at this
+          exact w_le_of_le hm (of_decide_eq_true this))
+        simpa using this
+      have h2 : Sm.length * w m (z b) ≤ k * w m (z b) := Nat.mul_le_mul_right _ (by omega)
+      have := hz b (Finset.mem_Icc.2 ⟨hb2, hbB⟩)
+      omega
+    -- the congruence
+    have hcong :
+        (b - 1) ∣ ((Lg : Multiset ℕ).map (g m)).sum + ((Sm : Multiset ℕ).map (g m)).sum := by
+      have h := hsol.sum_g_modEq_zero (by omega)
+      rw [Multiset.map_coe, Multiset.sum_coe, Multiset.map_coe, Multiset.sum_coe,
+        ← List.sum_append, ← List.map_append]
+      rw [(hperm.map (g m)).sum_eq] at h
+      exact (Nat.modEq_zero_iff_dvd).1 h
+    have hτ : ((Lg : Multiset ℕ), p) ∈ T := by
+      refine Finset.mem_product.2 ⟨?_, Finset.mem_Icc.2 ⟨hp1, hdig p (by rw [hsdef]; simp)⟩⟩
+      simp only [Finset.mem_biUnion, Finset.mem_range, Finset.mem_image]
+      exact ⟨Lg.length, by omega, Lg, mem_stringsLE.2 ⟨rfl, fun d hd => hdig d
+        (List.mem_of_mem_filter hd)⟩, rfl⟩
+    have hwin : b ∈ window358 m B k X ((Lg : Multiset ℕ), p) := by
+      have hq : q ≤ X := hdig q (by rw [hsdef]; simp)
+      have hF1 : Fs m Lg ≤ P b s := by rw [hsol.eq, hFs]; omega
+      have hF2 : P b s < Fs m Lg + b := by rw [hsol.eq, hFs]; omega
+      obtain ⟨r1, r2⟩ := prop35_8_root hsol ht hq hF1 hF2
+      have hk1 : k - 1 = t.length + 1 := by rw [← hslen, hsdef]; simp
+      simp only [window358, Finset.mem_filter, Finset.mem_Icc, Multiset.map_coe,
+        Multiset.sum_coe, hk1]
+      exact ⟨⟨hb2, hbB⟩, r1, r2⟩
+    have hr : 1 ≤ rCount m b (z b) (k - Multiset.card (Lg : Multiset ℕ)) (Lg : Multiset ℕ) := by
+      unfold rCount
+      apply Finset.card_pos.2
+      refine ⟨(Sm : Multiset ℕ), Finset.mem_filter.2 ⟨Finset.mem_image.2 ⟨Sm, ?_, rfl⟩, hcong⟩⟩
+      refine mem_stringsLE.2 ⟨by rw [Multiset.coe_card]; omega, fun d hd => ?_⟩
+      have := (List.mem_filter.1 hd).2
+      simp only [not_lt] at this
+      exact of_decide_eq_true this
+    calc 1 ≤ f ((Lg : Multiset ℕ), p) b := by simp only [f, hwin, ite_true]; exact hr
+      _ ≤ ∑ τ ∈ T, f τ b :=
+          Finset.single_le_sum (f := fun τ => f τ b) (fun _ _ => Nat.zero_le _) hτ
+  calc (basesWith m B k).card = ∑ _b ∈ basesWith m B k, 1 := by simp
+    _ ≤ ∑ b ∈ basesWith m B k, ∑ τ ∈ T, f τ b := Finset.sum_le_sum hone
+    _ = ∑ τ ∈ T, ∑ b ∈ basesWith m B k, f τ b := Finset.sum_comm
+    _ ≤ ∑ τ ∈ T, ∑ b ∈ window358 m B k X τ, rCount m b (z b) (k - Multiset.card τ.1) τ.1 := by
+        apply Finset.sum_le_sum
+        intro τ _
+        simp only [f]
+        rw [Finset.sum_ite_mem]
+        exact Finset.sum_le_sum_of_subset (Finset.inter_subset_right)
+
+/-- **Proposition 35.8**, the bound on `r(b, c_L)`: if the small weights stay below `b - 1`
+(`j w(z) < b - 1`, `m ≤ 1`), then `m(c_S)` is fixed by `c_L` and `b`, and by Lemma 30.2
+`r(b, c_L) ≤ C(z0 + j, j)` for `2 ≤ z0` and `j ≤ 2 z0 + 1`. -/
+theorem rCount_le {m b z j z0 : ℕ} (cL : Multiset ℕ) (hm : m ≤ 1)
+    (hz : j * w m z < b - 1) (hz0 : 2 ≤ z0) (hj : j ≤ 2 * z0 + 1) :
+    rCount m b z j cL ≤ (z0 + j).choose j := by
+  classical
+  set S := ((stringsLE z j).image fun s : List ℕ => (s : Multiset ℕ)).filter fun cS =>
+    (b - 1) ∣ (cL.map (g m)).sum + (cS.map (g m)).sum
+  -- `m(c_S) ≤ F(c_S) < b - 1`, so the congruence fixes it
+  have hsmall : ∀ cS ∈ S, (cS.map (g m)).sum < b - 1 := by
+    intro cS hcS
+    obtain ⟨s, hs, rfl⟩ := Finset.mem_image.1 (Finset.mem_filter.1 hcS).1
+    obtain ⟨hsl, hsd⟩ := mem_stringsLE.1 hs
+    rw [Multiset.map_coe, Multiset.sum_coe]
+    have h1 : (s.map (g m)).sum ≤ (s.map (w m)).sum := by
+      apply List.sum_le_sum
+      intro x _
+      exact Nat.sub_le _ _
+    have h2 : (s.map (w m)).sum ≤ s.length * w m z := by
+      have := List.sum_le_length_nsmul (s.map (w m)) (w m z) (by
+        intro y hy
+        obtain ⟨x, hx, rfl⟩ := List.mem_map.1 hy
+        exact w_le_of_le hm (hsd x hx))
+      simpa using this
+    rw [hsl] at h2
+    omega
+  obtain ⟨N, hN⟩ : ∃ N, ∀ cS ∈ S, (cS.map (g m)).sum = N := by
+    by_cases hS : S.Nonempty
+    · obtain ⟨c0, hc0⟩ := hS
+      refine ⟨(c0.map (g m)).sum, fun cS hcS => ?_⟩
+      have d1 := (Finset.mem_filter.1 hcS).2
+      have d2 := (Finset.mem_filter.1 hc0).2
+      have e1 : (cL.map (g m)).sum + (cS.map (g m)).sum ≡ (cL.map (g m)).sum +
+          (c0.map (g m)).sum [MOD b - 1] :=
+        ((Nat.modEq_zero_iff_dvd.2 d1)).trans (Nat.modEq_zero_iff_dvd.2 d2).symm
+      exact Nat.ModEq.eq_of_lt_of_lt (Nat.ModEq.add_left_cancel' _ e1) (hsmall cS hcS)
+        (hsmall c0 hc0)
+    · exact ⟨0, fun cS hcS => absurd ⟨cS, hcS⟩ hS⟩
+  unfold rCount
+  refine prop35_8_count (m := m) (y := z) (N := N) hz0 hj S fun cS hcS => ?_
+  obtain ⟨s, hs, rfl⟩ := Finset.mem_image.1 (Finset.mem_filter.1 hcS).1
+  obtain ⟨hsl, hsd⟩ := mem_stringsLE.1 hs
+  exact ⟨by rw [Multiset.coe_card, hsl], fun x hx => hsd x hx, hN _ hcS⟩
+
+section FewLarge
+
+open Real Filter
+
+/-! ### Theorem 35.12: few large digits -/
+
+/-- If every weight of `S` is below `sqrt(b)` and `S` has at most `sqrt(b)` digits, then
+`F(S) < b`. -/
+lemma Fs_lt_of_sq_lt {b m : ℕ} (hb : 0 < b) (S : List ℕ) (hS : ∀ x ∈ S, w m x ^ 2 < b)
+    (hlen : S.length ^ 2 ≤ b) : Fs m S < b := by
+  set r := Nat.sqrt (b - 1)
+  have hw : ∀ x ∈ S, w m x ≤ r := fun x hx => Nat.le_sqrt'.2 (by have := hS x hx; omega)
+  have h1 : Fs m S ≤ S.length * r := by
+    unfold Fs
+    have := List.sum_le_length_nsmul (S.map (w m)) r (by
+      intro y hy
+      obtain ⟨x, hx, rfl⟩ := List.mem_map.1 hy
+      exact hw x hx)
+    simpa using this
+  have hr : r * r ≤ b - 1 := Nat.sqrt_le (b - 1)
+  have h2 : (S.length * r) * (S.length * r) < b * b := by
+    calc (S.length * r) * (S.length * r) = S.length ^ 2 * (r * r) := by ring
+      _ ≤ b * (b - 1) := Nat.mul_le_mul hlen hr
+      _ < b * b := Nat.mul_lt_mul_of_pos_left (by omega) hb
+  have h3 : S.length * r < b := by
+    by_contra h
+    push Not at h
+    have := Nat.mul_le_mul h h
+    omega
+  omega
+
+/-- `a L^r ≤ e^(c L)` for all large `L`. -/
+lemma eventually_rpow_le_exp (r : ℝ) {a c : ℝ} (ha : 0 < a) (hc : 0 < c) :
+    ∀ᶠ L : ℝ in atTop, a * L ^ r ≤ exp (c * L) := by
+  have h := (tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero r c hc).eventually
+    (gt_mem_nhds (show 0 < 1 / a by positivity))
+  filter_upwards [h] with L hL
+  have hE := exp_pos (c * L)
+  have e : L ^ r * exp (-c * L) * exp (c * L) = L ^ r := by
+    rw [mul_assoc, ← exp_add, show -c * L + c * L = 0 by ring, exp_zero, mul_one]
+  have h2 : L ^ r < 1 / a * exp (c * L) := by
+    rw [← e]; exact mul_lt_mul_of_pos_right hL hE
+  have := mul_lt_mul_of_pos_left h2 ha
+  rw [← mul_assoc, mul_one_div_cancel ha.ne', one_mul] at this
+  exact this.le
+
+open Classical in
+/-- The bases `2 ≤ b ≤ B` with a solution of `2 ≤ k ≤ (ln B)^C` digits of which at most
+`κ ln B / ln ln B` are large, `w(x)^2 ≥ b` (Theorem 35.12), under `0^0 = m`. -/
+noncomputable def fewLargeBases (m : ℕ) (C κ : ℝ) (B : ℕ) : Finset ℕ :=
+  (Finset.Icc 2 B).filter fun b => ∃ s : List ℕ, 2 ≤ s.length ∧
+    (s.length : ℝ) ≤ log B ^ C ∧
+    ((s.filter fun x => b ≤ w m x ^ 2).length : ℝ) ≤ κ * log B / log (log B) ∧ IsSolution b m s
+
+/-- The digit bound of Theorem 35.12: a digit `x` of a solution in base `b ≤ B` with at most
+`(ln B)^C` digits has `x ≤ (ln B)^(C+1)`, once `(ln B)^(C+1) ≥ 3`. -/
+lemma le_floor_rpow_of_solution {b m B : ℕ} {C : ℝ} {s : List ℕ} (hs : IsSolution b m s)
+    (hb : 2 ≤ b) (hbB : b ≤ B) (hlen : (s.length : ℝ) ≤ log B ^ C)
+    (h3 : 3 ≤ log (B : ℝ) ^ (C + 1)) {d : ℕ} (hd : d ∈ s) :
+    d ≤ ⌊log (B : ℝ) ^ (C + 1)⌋₊ := by
+  have hB1 : (1 : ℝ) < B := by exact_mod_cast (show 1 < B by omega)
+  have hL0 : 0 < log (B : ℝ) := log_pos hB1
+  apply Nat.le_floor
+  by_contra hlt
+  push Not at hlt
+  have hd3 : (3 : ℝ) < d := by linarith
+  have hd0 : (0 : ℝ) < d := by linarith
+  have h1 : (d : ℝ) * log d < s.length * log B := by
+    have := hs.pow_self_lt hb hbB hd
+    have : ((d ^ d : ℕ) : ℝ) < ((B ^ s.length : ℕ) : ℝ) := by exact_mod_cast this
+    push_cast at this
+    have := log_lt_log (by positivity) this
+    rwa [log_pow, log_pow] at this
+  have h2 : (s.length : ℝ) * log B ≤ log B ^ (C + 1) := by
+    rw [rpow_add hL0, rpow_one]
+    exact mul_le_mul_of_nonneg_right hlen hL0.le
+  have h3' : 1 ≤ log (d : ℝ) := by
+    rw [le_log_iff_exp_le hd0]
+    have := exp_one_lt_d9
+    linarith
+  have : (d : ℝ) ≤ d * log d := le_mul_of_one_le_right hd0.le h3'
+  linarith
+
+/-- **Theorem 35.12**, for one large `B` (section 35.4.3). Let `L = ln B`, `LL = ln L`,
+`C ≥ 1`, `κ, δ > 0`, and suppose that `B ≥ 16`, `ln ln B ≥ 1`, `L^(C+1) ≥ 3`,
+`L^(2C) ≤ sqrt(B)`, `κ L / LL ≥ 2`, `κ (1 + log(1 + 2 LL/κ)) ≤ (δ/2) LL`,
+`4 (L^(C+1) + 3)^4 ≤ e^(δ L/2)` and `2 ≤ B^δ`. Then at most `B^(max(1/2, C κ) + δ)` bases
+`b ≤ B` have a solution of `2 ≤ k ≤ L^C` digits with at most `κ L / LL` large digits. A base
+`b > sqrt(B)` with such a solution of `k ≥ 3` digits lies in the window of Proposition 35.8
+computed from the large digits `c_L`, the length `k` and the leading digit `p`, because the
+small digits add less than `b`. -/
+lemma fewLargeBases_card_le {m B : ℕ} {C κ δ : ℝ} (hC : 1 ≤ C) (hκ : 0 < κ) (hδ : 0 < δ)
+    (hB : 16 ≤ B) (hLL : max 1 κ ≤ log (log (B : ℝ))) (h3 : 3 ≤ log (B : ℝ) ^ (C + 1))
+    (hkb : log (B : ℝ) ^ (2 * C) ≤ sqrt B) (hKr2 : 2 ≤ κ * log B / log (log B))
+    (hc1 : κ * (1 + log (1 + 2 * log (log (B : ℝ)) / κ)) ≤ δ / 2 * log (log (B : ℝ)))
+    (hc2 : 4 * (log (B : ℝ) ^ (C + 1) + 3) ^ 4 ≤ exp (δ / 2 * log B))
+    (hc3 : 2 ≤ (B : ℝ) ^ δ) :
+    ((fewLargeBases m C κ B).card : ℝ) ≤ (B : ℝ) ^ (max (1 / 2) (C * κ) + δ) := by
+  classical
+  set L := log (B : ℝ) with hLdef
+  set LL := log L with hLLdef
+  have hB1 : (1 : ℝ) < B := by exact_mod_cast (show 1 < B by omega)
+  have hB0 : (0 : ℝ) < B := by linarith
+  have hL0 : 0 < L := log_pos hB1
+  have hLL1 : 1 ≤ LL := (le_max_left _ _).trans hLL
+  have hLLκ : κ ≤ LL := (le_max_right _ _).trans hLL
+  have hL1 : 1 ≤ L := by
+    have := exp_one_le_log hB
+    have := add_one_le_exp 1
+    linarith
+  have hL2 : 2 ≤ L := by
+    have := exp_one_le_log hB
+    have := exp_one_gt_d9
+    linarith
+  set Q := L ^ (C + 1) with hQ
+  have hQe : Q = L * L ^ C := by rw [hQ, rpow_add hL0, rpow_one, mul_comm]
+  have hLC1 : 1 ≤ L ^ C := one_le_rpow hL1 (by linarith)
+  have hLQ : L ≤ Q := by rw [hQe]; exact le_mul_of_one_le_right hL0.le hLC1
+  have hLCQ : L ^ C ≤ Q := by rw [hQe]; exact le_mul_of_one_le_left (by positivity) hL1
+  set X := ⌊Q⌋₊
+  set K2 := ⌊L ^ C⌋₊
+  set Kr := κ * L / LL with hKr
+  set K := ⌊Kr⌋₊
+  have hXQ : (X : ℝ) ≤ Q := Nat.floor_le (by positivity)
+  have hK2 : (K2 : ℝ) ≤ L ^ C := Nat.floor_le (by positivity)
+  have hKKr : (K : ℝ) ≤ Kr := Nat.floor_le (by positivity)
+  have hKge : 2 ≤ K := Nat.le_floor (by exact_mod_cast hKr2)
+  have hK0 : (0 : ℝ) < K := by
+    have : (2 : ℝ) ≤ K := by exact_mod_cast hKge
+    linarith
+  have hKr_le : Kr ≤ 2 * K := by
+    have := Nat.lt_floor_add_one Kr
+    have : (2 : ℝ) ≤ K := by exact_mod_cast hKge
+    linarith
+  have hKL : (K : ℝ) ≤ L := by
+    refine hKKr.trans ?_
+    rw [hKr, div_le_iff₀ (by linarith)]
+    nlinarith
+  -- the triples `(c_L, k, p)` and their windows
+  set Ms : Finset (Multiset ℕ) :=
+    (Finset.range (K + 1)).biUnion fun j => (stringsLE X j).image fun s : List ℕ => (s : Multiset ℕ)
+  set Tset := Ms ×ˢ (Finset.Icc 3 K2 ×ˢ Finset.Icc 1 X)
+  let Y : Multiset ℕ × ℕ × ℕ → ℝ := fun τ =>
+    (((τ.1.map (w m)).sum : ℕ) / (τ.2.2 : ℝ)) ^ (((τ.2.1 - 1 : ℕ) : ℝ))⁻¹
+  let fiber : Multiset ℕ × ℕ × ℕ → Finset ℕ := fun τ =>
+    (Finset.Icc 2 B).filter fun b => (b : ℝ) - 1 < Y τ ∧
+      Y τ < b + (X + 1 : ℝ) / (τ.2.2 * ((τ.2.1 - 1 : ℕ) : ℝ))
+  have hfiber : ∀ τ ∈ Tset, ((fiber τ).card : ℝ) ≤ X + 3 := by
+    intro τ hτ
+    have hτ' := (Finset.mem_product.1 hτ).2
+    have hk3 := (Finset.mem_Icc.1 (Finset.mem_product.1 hτ').1).1
+    have hp1 := (Finset.mem_Icc.1 (Finset.mem_product.1 hτ').2).1
+    set h := (X + 1 : ℝ) / (τ.2.2 * ((τ.2.1 - 1 : ℕ) : ℝ))
+    have hden : (1 : ℝ) ≤ τ.2.2 * ((τ.2.1 - 1 : ℕ) : ℝ) := by
+      have a1 : (1 : ℝ) ≤ τ.2.2 := by exact_mod_cast hp1
+      have a2 : (1 : ℝ) ≤ ((τ.2.1 - 1 : ℕ) : ℝ) := by exact_mod_cast (show 1 ≤ τ.2.1 - 1 by omega)
+      nlinarith
+    have hh : h ≤ X + 1 := div_le_self (by positivity) hden
+    have hh0 : 0 ≤ h := by positivity
+    have := card_le_of_window (fiber τ) (r := Y τ + 1) (δ := h + 1) (by linarith) (by
+      intro b hb
+      have h12 := (Finset.mem_filter.1 hb).2
+      constructor <;> linarith [h12.1, h12.2])
+    linarith
+  -- the containment
+  have hsub : fewLargeBases m C κ B ⊆ ((Finset.Icc 2 B).filter fun b => b ^ 2 ≤ B) ∪
+      basesWith m B 2 ∪ Tset.biUnion fiber := by
+    intro b hb
+    simp only [fewLargeBases, Finset.mem_filter, Finset.mem_Icc] at hb
+    obtain ⟨⟨hb2, hbB⟩, s, hs2, hslen, hslarge, hsol⟩ := hb
+    by_cases hbsq : b ^ 2 ≤ B
+    · exact Finset.mem_union_left _ (Finset.mem_union_left _
+        (Finset.mem_filter.2 ⟨Finset.mem_Icc.2 ⟨hb2, hbB⟩, hbsq⟩))
+    by_cases hlen2 : s.length = 2
+    · refine Finset.mem_union_left _ (Finset.mem_union_right _ ?_)
+      simp only [basesWith, Finset.mem_filter, Finset.mem_Icc]
+      exact ⟨⟨hb2, hbB⟩, s, hlen2, hsol⟩
+    apply Finset.mem_union_right
+    rw [Finset.mem_biUnion]
+    obtain ⟨p, q, t, rfl⟩ : ∃ p q t, s = p :: q :: t := by
+      match s, hs2 with
+      | p :: q :: t, _ => exact ⟨p, q, t, rfl⟩
+    have ht : t ≠ [] := by
+      rintro rfl; simp at hlen2
+    have hdig : ∀ d ∈ p :: q :: t, d ≤ X :=
+      fun d hd => le_floor_rpow_of_solution hsol hb2 hbB hslen h3 hd
+    have hp1 : 1 ≤ p := by
+      have := hsol.head_ne_zero (by simp); simp at this; omega
+    set s := p :: q :: t with hsdef
+    set Lg := s.filter fun x => b ≤ w m x ^ 2
+    set Sm := s.filter fun x => ¬ b ≤ w m x ^ 2
+    have hperm : s.Perm (Lg ++ Sm) := (List.filter_append_perm _ s).symm
+    have hFs : Fs m s = Fs m Lg + Fs m Sm := by
+      rw [← Fs_append]; unfold Fs; exact (hperm.map _).sum_eq
+    -- the small part adds less than `b`
+    have hSm : Fs m Sm < b := by
+      apply Fs_lt_of_sq_lt (by omega)
+      · intro x hx
+        have := (List.mem_filter.1 hx).2
+        simp only [not_le] at this
+        exact of_decide_eq_true this
+      · have hle : Sm.length ≤ s.length := List.length_filter_le _ _
+        have h1 : ((Sm.length ^ 2 : ℕ) : ℝ) ≤ L ^ (2 * C) := by
+          push_cast
+          rw [mul_comm, rpow_mul hL0.le, rpow_two]
+          exact pow_le_pow_left₀ (by positivity) ((Nat.cast_le.2 hle).trans hslen) 2
+        have h2 : sqrt (B : ℝ) < b := by
+          rw [sqrt_lt' (by positivity)]
+          push Not at hbsq
+          exact_mod_cast hbsq
+        have : ((Sm.length ^ 2 : ℕ) : ℝ) < b := by linarith
+        exact_mod_cast this.le
+    refine ⟨((Lg : Multiset ℕ), s.length, p), ?_, ?_⟩
+    · refine Finset.mem_product.2 ⟨?_, Finset.mem_product.2 ⟨?_, ?_⟩⟩
+      · simp only [Ms, Finset.mem_biUnion, Finset.mem_range, Finset.mem_image]
+        refine ⟨Lg.length, ?_, Lg, mem_stringsLE.2 ⟨rfl, fun d hd => hdig d
+          (List.mem_of_mem_filter hd)⟩, rfl⟩
+        exact Nat.lt_succ_of_le (Nat.le_floor hslarge)
+      · refine Finset.mem_Icc.2 ⟨?_, ?_⟩
+        · rw [hsdef]; simp only [List.length_cons]
+          have := List.length_pos_iff.2 ht; omega
+        exact Nat.le_floor hslen
+      · exact Finset.mem_Icc.2 ⟨hp1, hdig p (by rw [hsdef]; simp)⟩
+    · have hq : q ≤ X := hdig q (by rw [hsdef]; simp)
+      have hF1 : Fs m Lg ≤ P b s := by rw [hsol.eq, hFs]; omega
+      have hF2 : P b s < Fs m Lg + b := by rw [hsol.eq, hFs]; omega
+      obtain ⟨r1, r2⟩ := prop35_8_root hsol ht hq hF1 hF2
+      have hlen : s.length - 1 = t.length + 1 := by simp [hsdef]
+      have hY : Y ((Lg : Multiset ℕ), s.length, p) =
+          ((Fs m Lg : ℝ) / p) ^ ((t.length + 1 : ℕ) : ℝ)⁻¹ := by
+        simp only [Y, hlen, Multiset.map_coe, Multiset.sum_coe, Fs]
+      simp only [fiber, Finset.mem_filter, Finset.mem_Icc]
+      refine ⟨⟨hb2, hbB⟩, ?_, ?_⟩
+      · rw [hY]; exact r1
+      · rw [hY]
+        convert r2 using 3
+        simp only [hlen]
+  -- counting
+  set Cb := (X + K).choose K
+  have hMs : (Ms.card : ℝ) ≤ (K + 1) * Cb := by
+    have h1 : Ms.card ≤ ∑ j ∈ Finset.range (K + 1),
+        ((stringsLE X j).image fun s : List ℕ => (s : Multiset ℕ)).card := Finset.card_biUnion_le
+    have h2 : ∀ j ∈ Finset.range (K + 1),
+        ((stringsLE X j).image fun s : List ℕ => (s : Multiset ℕ)).card ≤ Cb := by
+      intro j hj
+      refine (card_multisets_le X j).trans ?_
+      change (X + j).choose j ≤ (X + K).choose K
+      rw [← Nat.choose_symm_add, ← Nat.choose_symm_add]
+      exact Nat.choose_le_choose X (by have := Finset.mem_range.1 hj; omega)
+    have h3 := h1.trans (Finset.sum_le_sum h2)
+    rw [Finset.sum_const, Finset.card_range, smul_eq_mul] at h3
+    exact_mod_cast h3
+  have hT : (Tset.card : ℝ) ≤ (K + 1) * Cb * (L ^ C * Q) := by
+    have e : Tset.card = Ms.card * ((Finset.Icc 3 K2).card * (Finset.Icc 1 X).card) := by
+      simp only [Tset, Finset.card_product]
+    rw [e, Nat.card_Icc, Nat.card_Icc]
+    push_cast
+    have a1 : ((K2 + 1 - 3 : ℕ) : ℝ) ≤ L ^ C := by
+      refine le_trans ?_ hK2; exact_mod_cast (show K2 + 1 - 3 ≤ K2 by omega)
+    have a2 : ((X + 1 - 1 : ℕ) : ℝ) ≤ Q := by
+      refine le_trans ?_ hXQ; exact_mod_cast (show X + 1 - 1 ≤ X by omega)
+    exact mul_le_mul hMs (mul_le_mul a1 a2 (by positivity) (by positivity)) (by positivity)
+      (by positivity)
+  have hsqrt : (((Finset.Icc 2 B).filter fun b => b ^ 2 ≤ B).card : ℝ) ≤ sqrt B := by
+    have hs : ((Finset.Icc 2 B).filter fun b => b ^ 2 ≤ B) ⊆ Finset.Icc 1 (Nat.sqrt B) := by
+      intro b hb
+      obtain ⟨hb1, hb2⟩ := Finset.mem_filter.1 hb
+      exact Finset.mem_Icc.2 ⟨by have := (Finset.mem_Icc.1 hb1).1; omega,
+        Nat.le_sqrt'.2 hb2⟩
+    have := Finset.card_le_card hs
+    rw [Nat.card_Icc, Nat.add_sub_cancel] at this
+    exact (Nat.cast_le.2 this).trans (Real.nat_sqrt_le_real_sqrt)
+  have h2dig : ((basesWith m B 2).card : ℝ) ≤ Q * (Q + 1) := by
+    have := prop10_4 (m := m) (B := B) (X := X) le_rfl (fun x hx => by
+      apply Nat.le_floor
+      by_contra hlt
+      push Not at hlt
+      have hx3 : (3 : ℝ) < x := by linarith
+      have hx0 : (0 : ℝ) < x := by linarith
+      have h1 : (x : ℝ) * log x < 2 * L := by
+        have : ((x ^ x : ℕ) : ℝ) < ((B ^ 2 : ℕ) : ℝ) := by exact_mod_cast hx
+        push_cast at this
+        have := log_lt_log (by positivity) this
+        rwa [log_pow, log_pow] at this
+      have hl1 : 1 ≤ log (x : ℝ) := by
+        rw [le_log_iff_exp_le hx0]; have := exp_one_lt_d9; linarith
+      have : (x : ℝ) ≤ x * log x := le_mul_of_one_le_right hx0.le hl1
+      have h2L : 2 * L ≤ Q := by
+        rw [hQe]
+        have hLC : L ≤ L ^ C := by
+          calc L = L ^ (1 : ℝ) := (rpow_one L).symm
+            _ ≤ L ^ C := rpow_le_rpow_of_exponent_le hL1 hC
+        rw [mul_comm 2 L]
+        exact mul_le_mul_of_nonneg_left (hL2.trans hLC) hL0.le
+      linarith)
+    calc ((basesWith m B 2).card : ℝ) ≤ ((X * (X + 1) ^ (2 - 1) : ℕ) : ℝ) := by
+          exact_mod_cast this
+      _ ≤ Q * (Q + 1) := by
+          push_cast; simp only [pow_one]
+          exact mul_le_mul hXQ (by linarith) (by positivity) (by positivity)
+  have hfib : ((Tset.biUnion fiber).card : ℝ) ≤ Tset.card * (Q + 3) := by
+    have h1 := Finset.card_biUnion_le (s := Tset) (t := fiber)
+    have h1' : ((Tset.biUnion fiber).card : ℝ) ≤ ∑ τ ∈ Tset, ((fiber τ).card : ℝ) := by
+      exact_mod_cast h1
+    refine h1'.trans ?_
+    calc ∑ τ ∈ Tset, ((fiber τ).card : ℝ) ≤ ∑ _τ ∈ Tset, (Q + 3) :=
+          Finset.sum_le_sum fun τ hτ => (hfiber τ hτ).trans (by linarith)
+      _ = Tset.card * (Q + 3) := by rw [Finset.sum_const, nsmul_eq_mul]
+  -- the binomial
+  have hCb : (Cb : ℝ) ≤ exp ((C * κ + δ / 2) * L) := by
+    have h1 := choose_le_exp (n := X + K) (k := K) (by omega) (by omega)
+    refine h1.trans (exp_le_exp.2 ?_)
+    have hratio : ((X + K : ℕ) : ℝ) / K ≤ L ^ C * (1 + 2 * LL / κ) := by
+      rw [div_le_iff₀ hK0]
+      push_cast
+      have e1 : Q = Kr * (L ^ C * LL / κ) := by
+        rw [hKr, hQe]; field_simp
+      have h3 : (X : ℝ) ≤ K * (2 * L ^ C * LL / κ) := by
+        calc (X : ℝ) ≤ Q := hXQ
+          _ = Kr * (L ^ C * LL / κ) := e1
+          _ ≤ (2 * K) * (L ^ C * LL / κ) := mul_le_mul_of_nonneg_right hKr_le (by positivity)
+          _ = K * (2 * L ^ C * LL / κ) := by ring
+      have h4 : (K : ℝ) ≤ K * L ^ C := le_mul_of_one_le_right hK0.le hLC1
+      have : L ^ C * (1 + 2 * LL / κ) * K = K * L ^ C + K * (2 * L ^ C * LL / κ) := by ring
+      linarith
+    have hlog : log (((X + K : ℕ) : ℝ) / K) ≤ C * LL + log (1 + 2 * LL / κ) := by
+      have hpos : 0 < ((X + K : ℕ) : ℝ) / K := by
+        apply div_pos _ hK0; exact_mod_cast (show 0 < X + K by omega)
+      calc log (((X + K : ℕ) : ℝ) / K) ≤ log (L ^ C * (1 + 2 * LL / κ)) :=
+            log_le_log hpos hratio
+        _ = C * LL + log (1 + 2 * LL / κ) := by
+            rw [log_mul (by positivity) (by positivity), log_rpow hL0]
+    have hlog0 : 0 ≤ 1 + C * LL + log (1 + 2 * LL / κ) := by
+      have h2 : 0 ≤ 2 * LL / κ := by positivity
+      have : 0 ≤ log (1 + 2 * LL / κ) := log_nonneg (by linarith)
+      have : 0 ≤ C * LL := by positivity
+      linarith
+    calc (K : ℝ) * (1 + log (((X + K : ℕ) : ℝ) / K))
+        ≤ K * (1 + C * LL + log (1 + 2 * LL / κ)) := by
+          apply mul_le_mul_of_nonneg_left _ hK0.le; linarith
+      _ ≤ Kr * (1 + C * LL + log (1 + 2 * LL / κ)) := mul_le_mul_of_nonneg_right hKKr hlog0
+      _ = C * κ * L + L / LL * (κ * (1 + log (1 + 2 * LL / κ))) := by
+          rw [hKr]; field_simp; ring
+      _ ≤ C * κ * L + L / LL * (δ / 2 * LL) := by gcongr
+      _ = (C * κ + δ / 2) * L := by field_simp
+  -- assembling
+  have hCb1 : (1 : ℝ) ≤ Cb := by exact_mod_cast Nat.choose_pos (by omega)
+  have hpoly : Q * (Q + 1) + (K + 1) * Cb * (L ^ C * Q) * (Q + 3) ≤ Cb * (2 * (Q + 3) ^ 4) := by
+    have hQ0 : 0 ≤ Q := by positivity
+    have a1 : Q * (Q + 1) ≤ (Q + 3) ^ 4 := by nlinarith
+    have a2 : ((K : ℝ) + 1) * (L ^ C * Q) * (Q + 3) ≤ (Q + 3) ^ 4 := by
+      have b1 : (K : ℝ) + 1 ≤ Q + 3 := by linarith
+      have b2 : L ^ C * Q ≤ (Q + 3) * (Q + 3) :=
+        mul_le_mul (by linarith) (by linarith) hQ0 (by positivity)
+      calc ((K : ℝ) + 1) * (L ^ C * Q) * (Q + 3) ≤ (Q + 3) * ((Q + 3) * (Q + 3)) * (Q + 3) := by
+            gcongr
+        _ = (Q + 3) ^ 4 := by ring
+    have : Q * (Q + 1) ≤ Cb * (Q + 3) ^ 4 :=
+      a1.trans (le_mul_of_one_le_left (by positivity) hCb1)
+    have a3 : ((K : ℝ) + 1) * Cb * (L ^ C * Q) * (Q + 3) ≤ Cb * (Q + 3) ^ 4 := by
+      calc ((K : ℝ) + 1) * Cb * (L ^ C * Q) * (Q + 3)
+          = Cb * (((K : ℝ) + 1) * (L ^ C * Q) * (Q + 3)) := by ring
+        _ ≤ Cb * (Q + 3) ^ 4 := mul_le_mul_of_nonneg_left a2 (by positivity)
+    linarith
+  have hcard : ((fewLargeBases m C κ B).card : ℝ) ≤ sqrt B + Cb * (2 * (Q + 3) ^ 4) := by
+    have h1 := Finset.card_le_card hsub
+    have h2 := Finset.card_union_le (((Finset.Icc 2 B).filter fun b => b ^ 2 ≤ B) ∪
+      basesWith m B 2) (Tset.biUnion fiber)
+    have h3 := Finset.card_union_le ((Finset.Icc 2 B).filter fun b => b ^ 2 ≤ B)
+      (basesWith m B 2)
+    have h : ((fewLargeBases m C κ B).card : ℝ) ≤
+        (((Finset.Icc 2 B).filter fun b => b ^ 2 ≤ B).card : ℝ) + (basesWith m B 2).card +
+          (Tset.biUnion fiber).card := by exact_mod_cast h1.trans (h2.trans (by omega))
+    have hT' : (Tset.card : ℝ) * (Q + 3) ≤ (K + 1) * Cb * (L ^ C * Q) * (Q + 3) :=
+      mul_le_mul_of_nonneg_right hT (by positivity)
+    linarith
+  -- the powers of `B`
+  have hBexp : ∀ a : ℝ, (B : ℝ) ^ a = exp (a * L) := fun a => by
+    rw [rpow_def_of_pos hB0, mul_comm]
+  set a := max (1 / 2) (C * κ) + δ
+  have hhalf : 2 * sqrt (B : ℝ) ≤ (B : ℝ) ^ a := by
+    have e : sqrt (B : ℝ) = (B : ℝ) ^ (1 / 2 : ℝ) := sqrt_eq_rpow _
+    have : (B : ℝ) ^ (1 / 2 + δ) ≤ (B : ℝ) ^ a :=
+      rpow_le_rpow_of_exponent_le hB1.le (by simp only [a]; linarith [le_max_left (1 / 2) (C * κ)])
+    rw [rpow_add hB0] at this
+    rw [e]
+    calc 2 * (B : ℝ) ^ (1 / 2 : ℝ) ≤ (B : ℝ) ^ δ * (B : ℝ) ^ (1 / 2 : ℝ) :=
+          mul_le_mul_of_nonneg_right hc3 (rpow_nonneg hB0.le _)
+      _ = (B : ℝ) ^ (1 / 2 : ℝ) * (B : ℝ) ^ δ := mul_comm _ _
+      _ ≤ _ := this
+  have hmain : 2 * (Cb * (2 * (Q + 3) ^ 4)) ≤ (B : ℝ) ^ a := by
+    have : (B : ℝ) ^ (C * κ + δ) ≤ (B : ℝ) ^ a :=
+      rpow_le_rpow_of_exponent_le hB1.le (by simp only [a]; linarith [le_max_right (1 / 2) (C * κ)])
+    rw [hBexp] at this
+    have e : exp ((C * κ + δ) * L) = exp ((C * κ + δ / 2) * L) * exp (δ / 2 * L) := by
+      rw [← exp_add]; ring_nf
+    rw [e] at this
+    have hQ4 : 0 ≤ 2 * (Q + 3) ^ 4 := by positivity
+    calc 2 * (Cb * (2 * (Q + 3) ^ 4)) = Cb * (4 * (Q + 3) ^ 4) := by ring
+      _ ≤ exp ((C * κ + δ / 2) * L) * exp (δ / 2 * L) :=
+          mul_le_mul hCb hc2 (by positivity) (by positivity)
+      _ ≤ _ := this
+  linarith
+
+/-- **Theorem 35.12** (section 35.4.3). Fix `C ≥ 1` and `κ, δ > 0`. For all large `B`, at most
+`B^(max(1/2, C κ) + δ)` bases `b ≤ B` have a solution of `2 ≤ k ≤ (ln B)^C` digits of which at
+most `κ ln B / ln ln B` are large (`w(x)^2 ≥ b`), whatever the number of small digits. With
+`κ = 1/C - ε` this is the library's `B^(max(1/2, 1 - C ε) + o(1))`. -/
+theorem theorem35_12 (m : ℕ) {C κ δ : ℝ} (hC : 1 ≤ C) (hκ : 0 < κ) (hδ : 0 < δ) :
+    ∃ B₀ : ℕ, ∀ B ≥ B₀,
+      ((fewLargeBases m C κ B).card : ℝ) ≤ (B : ℝ) ^ (max (1 / 2) (C * κ) + δ) := by
+  have hL : Tendsto (fun B : ℕ => log (B : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  have hT : Tendsto (fun B : ℕ => log (log (B : ℝ))) atTop atTop := tendsto_log_atTop.comp hL
+  have hKr := tendsto_mul_log_div_log_log hκ
+  -- conditions on `L = ln B`
+  have e3 : ∀ᶠ L : ℝ in atTop, 3 ≤ L ^ (C + 1) := by
+    filter_upwards [eventually_ge_atTop 3] with L hL3
+    calc (3 : ℝ) ≤ L := hL3
+      _ = L ^ (1 : ℝ) := (rpow_one L).symm
+      _ ≤ L ^ (C + 1) := rpow_le_rpow_of_exponent_le (by linarith) (by linarith)
+  have ekb : ∀ᶠ L : ℝ in atTop, L ^ (2 * C) ≤ exp (1 / 2 * L) := by
+    filter_upwards [eventually_rpow_le_exp (2 * C) one_pos (show (0 : ℝ) < 1 / 2 by norm_num)]
+      with L h
+    linarith
+  have ec2 : ∀ᶠ L : ℝ in atTop, 4 * (L ^ (C + 1) + 3) ^ 4 ≤ exp (δ / 2 * L) := by
+    filter_upwards [e3, eventually_ge_atTop 1,
+      eventually_rpow_le_exp (4 * (C + 1)) (show (0 : ℝ) < 64 by norm_num)
+        (show 0 < δ / 2 by positivity)] with L h3 hL1 h
+    have hQ : L ^ (C + 1) + 3 ≤ 2 * L ^ (C + 1) := by linarith
+    have hQ4 : (L ^ (C + 1)) ^ 4 = L ^ (4 * (C + 1)) := by
+      rw [← rpow_natCast, ← rpow_mul (by linarith)]; ring_nf
+    calc 4 * (L ^ (C + 1) + 3) ^ 4 ≤ 4 * (2 * L ^ (C + 1)) ^ 4 := by
+          gcongr
+      _ = 64 * L ^ (4 * (C + 1)) := by rw [mul_pow, hQ4]; ring
+      _ ≤ _ := h
+  have ec3 : ∀ᶠ L : ℝ in atTop, 2 ≤ exp (δ * L) := by
+    filter_upwards [eventually_ge_atTop (1 / δ)] with L hL
+    have : 1 ≤ δ * L := by rwa [div_le_iff₀ hδ, mul_comm] at hL
+    linarith [add_one_le_exp (δ * L)]
+  obtain ⟨B₀, hB₀⟩ := eventually_atTop.1 ((hT.eventually_ge_atTop (max 1 κ)).and
+    ((hKr.eventually_ge_atTop 2).and ((hT.eventually (eventually_log_cond hκ hδ)).and
+      ((hL.eventually (e3.and (ekb.and (ec2.and ec3)))).and (eventually_ge_atTop 16)))))
+  refine ⟨B₀, fun B hB => ?_⟩
+  obtain ⟨h1, h2, h3, ⟨h4, h5, h6, h7⟩, h8⟩ := hB₀ B hB
+  have hB0 : (0 : ℝ) < B := by exact_mod_cast (show 0 < B by omega)
+  refine fewLargeBases_card_le hC hκ hδ h8 h1 h4 ?_ h2 h3 h6 ?_
+  · rw [sqrt_eq_rpow, rpow_def_of_pos hB0]
+    convert h5 using 2; ring
+  · rw [rpow_def_of_pos hB0]
+    convert h7 using 2; ring
+
+open Classical in
+/-- The bases `2 ≤ b ≤ B` with a solution of `2 ≤ k ≤ (ln b)^C` digits of which at most
+`κ ln b / ln ln b` are large (`w(x)^2 ≥ b`), under `0^0 = m`. -/
+noncomputable def fewLargeBases' (m : ℕ) (C κ : ℝ) (B : ℕ) : Finset ℕ :=
+  (Finset.Icc 2 B).filter fun b => ∃ s : List ℕ, 2 ≤ s.length ∧
+    (s.length : ℝ) ≤ log b ^ C ∧
+    ((s.filter fun x => b ≤ w m x ^ 2).length : ℝ) ≤ κ * log b / log (log b) ∧ IsSolution b m s
+
+/-- **Theorem 35.12**, the density statement. For `C ≥ 1` and `0 < κ < 1/C`, almost all bases
+`b` have no solution of length at most `(ln b)^C` with at most `κ ln b / ln ln b` digits of
+weight at least `sqrt(b)`, whatever the number of smaller digits. -/
+theorem theorem35_12_density (m : ℕ) {C κ : ℝ} (hC : 1 ≤ C) (hκ : 0 < κ) (hCκ : C * κ < 1) :
+    Tendsto (fun B : ℕ => ((fewLargeBases' m C κ B).card : ℝ) / B) atTop (nhds 0) := by
+  classical
+  set a := max (1 / 2) (C * κ)
+  have ha : a < 1 := max_lt (by norm_num) hCκ
+  set δ := (1 - a) / 2 with hδ
+  have hδ0 : 0 < δ := by linarith
+  obtain ⟨B₀, hB₀⟩ := theorem35_12 m hC hκ hδ0
+  have hsub : ∀ B, fewLargeBases' m C κ B ⊆ fewLargeBases m C κ B ∪ Finset.Icc 2 15 := by
+    intro B b hb
+    simp only [fewLargeBases', Finset.mem_filter, Finset.mem_Icc] at hb
+    obtain ⟨⟨hb2, hbB⟩, s, hs2, hslen, hsl, hsol⟩ := hb
+    by_cases hb15 : b ≤ 15
+    · exact Finset.mem_union_right _ (Finset.mem_Icc.2 ⟨hb2, hb15⟩)
+    apply Finset.mem_union_left
+    simp only [fewLargeBases, Finset.mem_filter, Finset.mem_Icc]
+    have hb0 : (0 : ℝ) < b := by exact_mod_cast (show 0 < b by omega)
+    have hbB' : (b : ℝ) ≤ B := by exact_mod_cast hbB
+    refine ⟨⟨hb2, hbB⟩, s, hs2, ?_, ?_, hsol⟩
+    · refine hslen.trans (rpow_le_rpow (log_nonneg (by exact_mod_cast (show 1 ≤ b by omega)))
+        (log_le_log hb0 hbB') (by linarith))
+    · refine hsl.trans ?_
+      have hmono : log b / log (log b) ≤ log B / log (log B) :=
+        div_log_le_div_log (exp_one_le_log (by omega)) (log_le_log hb0 hbB')
+      calc κ * log b / log (log b) = κ * (log b / log (log b)) := by ring
+        _ ≤ κ * (log B / log (log B)) := mul_le_mul_of_nonneg_left hmono hκ.le
+        _ = κ * log B / log (log B) := by ring
+  have hlim : Tendsto (fun B : ℕ => (B : ℝ) ^ (a + δ - 1) + 14 / B) atTop (nhds 0) := by
+    have h1 : Tendsto (fun B : ℕ => (B : ℝ) ^ (a + δ - 1)) atTop (nhds 0) :=
+      (tendsto_rpow_neg_atTop (show 0 < 1 - (a + δ) by linarith)).comp
+        tendsto_natCast_atTop_atTop |>.congr' (by
+          filter_upwards with B
+          simp only [Function.comp_apply, neg_sub])
+    have h2 : Tendsto (fun B : ℕ => (14 : ℝ) / B) atTop (nhds 0) :=
+      tendsto_const_div_atTop_nhds_zero_nat 14
+    simpa using h1.add h2
+  refine squeeze_zero' (Eventually.of_forall fun B => by positivity) ?_ hlim
+  filter_upwards [eventually_ge_atTop (max B₀ 1)] with B hB
+  have hB1 : (1 : ℝ) ≤ B := by exact_mod_cast (le_max_right _ _).trans hB
+  have hB0 : (0 : ℝ) < B := by linarith
+  have hc := Finset.card_le_card (hsub B)
+  have hc2 := Finset.card_union_le (fewLargeBases m C κ B) (Finset.Icc 2 15)
+  have hcR : ((fewLargeBases' m C κ B).card : ℝ) ≤ (fewLargeBases m C κ B).card + 14 := by
+    have : (Finset.Icc 2 15).card = 14 := by simp
+    exact_mod_cast hc.trans (hc2.trans (by omega))
+  rw [div_le_iff₀ hB0, add_mul, div_mul_cancel₀ _ hB0.ne']
+  have := hB₀ B ((le_max_left _ _).trans hB)
+  have e : (B : ℝ) ^ (a + δ - 1) * B = (B : ℝ) ^ (a + δ) := by
+    rw [rpow_sub hB0, rpow_one, div_mul_cancel₀ _ hB0.ne']
+  rw [e]
+  linarith
+
+end FewLarge
 
 /-! ### Proposition 35.9 -/
 
@@ -1421,5 +2103,168 @@ theorem corollary35_14_upper {b T : ℕ} (hTb : T + 6 ≤ b)
   have : (T : ℝ) * (Real.exp 1 * (T + 4)) ≤ T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) := by
     apply mul_le_mul_of_nonneg_left _ hT0; linarith
   nlinarith
+
+/-! ### Corollary 35.14: `T(b)` does not decrease -/
+
+lemma hasDerivAt_condA_fun {t : ℝ} (ht : 0 < t) :
+    HasDerivAt (fun s : ℝ => s * (1 - Real.exp (-1 + s⁻¹)))
+      (1 - Real.exp (-1 + t⁻¹) * (1 - t⁻¹)) t := by
+  have h1 : HasDerivAt (fun s : ℝ => -1 + s⁻¹) (-(t ^ 2)⁻¹) t := by
+    simpa using (hasDerivAt_inv ht.ne').const_add (-1 : ℝ)
+  have h2 := (h1.exp).const_sub 1
+  have h3 := (hasDerivAt_id' t).mul h2
+  convert h3 using 1
+  field_simp
+  ring
+
+/-- The right side `b (1 - e^(-1 + 1/b))` of condition (a) of Theorem 35.13 grows with `b`: its
+derivative `1 - e^(-1 + 1/b) (1 - 1/b)` is positive for `b ≥ 1`. -/
+lemma condA_monotoneOn :
+    MonotoneOn (fun s : ℝ => s * (1 - Real.exp (-1 + s⁻¹))) (Set.Ici 1) := by
+  refine monotoneOn_of_hasDerivWithinAt_nonneg (convex_Ici 1)
+    (fun x hx => (hasDerivAt_condA_fun (by simp at hx; linarith)).continuousAt.continuousWithinAt)
+    (fun x hx => (hasDerivAt_condA_fun ?_).hasDerivWithinAt) ?_
+  · rw [interior_Ici] at hx; simp at hx; linarith
+  · intro x hx
+    rw [interior_Ici] at hx
+    simp only [Set.mem_Ioi] at hx
+    have hx0 : 0 < x := by linarith
+    have hinv : x⁻¹ ≤ 1 := inv_le_one_of_one_le₀ hx.le
+    have hinv0 : 0 < x⁻¹ := inv_pos.2 hx0
+    have he : Real.exp (-1 + x⁻¹) ≤ 1 := Real.exp_le_one_iff.2 (by linarith)
+    have : Real.exp (-1 + x⁻¹) * (1 - x⁻¹) ≤ 1 :=
+      calc Real.exp (-1 + x⁻¹) * (1 - x⁻¹) ≤ 1 * 1 :=
+            mul_le_mul he (by linarith) (by linarith) zero_le_one
+        _ = 1 := one_mul 1
+    linarith
+
+/-- Condition (a) of Theorem 35.13 only gets easier as `b` grows. -/
+lemma condA_mono {b b' T : ℕ} (hb : 1 ≤ b) (hbb : b ≤ b')
+    (h : (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b))) :
+    (T : ℝ) + 5 ≤ b' * (1 - Real.exp (-1 + 1 / b')) := by
+  have h1 : (1 : ℝ) ≤ b := by exact_mod_cast hb
+  have h2 : (b : ℝ) ≤ b' := by exact_mod_cast hbb
+  have := condA_monotoneOn (a := (b : ℝ)) (b := (b' : ℝ)) h1 (h1.trans h2) h2
+  simp only [one_div] at h ⊢
+  exact h.trans this
+
+/-- Condition (b) of Theorem 35.13 only gets easier as `b` grows, for `T + 6 ≤ b`. -/
+lemma condB_mono {b b' T : ℕ} (h0 : T + 6 ≤ b) (hb : b ≤ b')
+    (h : 1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 +
+      T ≤ (b : ℝ) - 2) :
+    1 + T * (Real.exp 1 * (T + 4) * b' / (b' - T - 5) + 1) + Real.exp 1 * b' / (b' - 2) + 1 +
+      T ≤ (b' : ℝ) - 2 := by
+  have he0 := Real.exp_pos 1
+  have h0r : (T : ℝ) + 6 ≤ b := by exact_mod_cast h0
+  have hbr : (b : ℝ) ≤ b' := by exact_mod_cast hb
+  have hT0 : (0 : ℝ) ≤ T := T.cast_nonneg
+  have hd0 : (0 : ℝ) < b - T - 5 := by linarith
+  have hd : (0 : ℝ) < b' - T - 5 := by linarith
+  have r1 : (b' : ℝ) / (b' - T - 5) ≤ b / (b - T - 5) := by
+    rw [div_le_div_iff₀ hd hd0]; nlinarith
+  have r2 : (b' : ℝ) / (b' - 2) ≤ b / (b - 2) := by
+    rw [div_le_div_iff₀ (by linarith) (by linarith)]; nlinarith
+  have k1 : Real.exp 1 * (T + 4) * b' / (b' - T - 5) ≤ Real.exp 1 * (T + 4) * b / (b - T - 5) := by
+    rw [mul_div_assoc, mul_div_assoc]
+    exact mul_le_mul_of_nonneg_left r1 (by positivity)
+  have k2 : Real.exp 1 * b' / (b' - 2) ≤ Real.exp 1 * b / (b - 2) := by
+    rw [mul_div_assoc, mul_div_assoc]
+    exact mul_le_mul_of_nonneg_left r2 he0.le
+  have k3 : (T : ℝ) * (Real.exp 1 * (T + 4) * b' / (b' - T - 5) + 1) ≤
+      T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) :=
+    mul_le_mul_of_nonneg_left (by linarith) hT0
+  linarith
+
+/-- The conditions (a) and (b) of Theorem 35.13 for the base `b` and the number `T` of matched
+digits. -/
+def NearCond (b T : ℕ) : Prop :=
+  (T : ℝ) + 5 ≤ b * (1 - Real.exp (-1 + 1 / b)) ∧
+    1 + T * (Real.exp 1 * (T + 4) * b / (b - T - 5) + 1) + Real.exp 1 * b / (b - 2) + 1 + T ≤
+      (b : ℝ) - 2
+
+/-- Condition (a) gives `T + 6 ≤ b`, since `e^(-1 + 1/b) > 0`. -/
+lemma NearCond.add_six_le {b T : ℕ} (h : NearCond b T) : T + 6 ≤ b := by
+  have := Real.exp_pos (-1 + 1 / (b : ℝ))
+  have hb0 : (0 : ℝ) ≤ b := b.cast_nonneg
+  have : (T : ℝ) + 5 < b := by
+    rcases hb0.lt_or_eq with hb | hb
+    · nlinarith [h.1]
+    · have := h.1; rw [← hb] at this; simp at this; linarith
+  have : T + 5 < b := by exact_mod_cast this
+  omega
+
+/-- **Corollary 35.14** (section 35.5.1): for fixed `T`, the conditions (a) and (b) of Theorem
+35.13 hold for every base above one where they hold. -/
+theorem NearCond.mono {b b' T : ℕ} (h : NearCond b T) (hb : b ≤ b') : NearCond b' T := by
+  have h6 := h.add_six_le
+  exact ⟨condA_mono (by omega) hb h.1, condB_mono h6 hb h.2⟩
+
+open Classical in
+/-- `T(b)` of Corollary 35.14: the largest `T` allowed by the conditions (a) and (b) of Theorem
+35.13, and `0` if there is none. Condition (a) forces `T < b`, so the search stops at `b`. -/
+noncomputable def nearT (b : ℕ) : ℕ := Nat.findGreatest (NearCond b) b
+
+lemma nearCond_nearT {b : ℕ} (h : nearT b ≠ 0) : NearCond b (nearT b) := by
+  classical
+  exact Nat.findGreatest_spec (P := NearCond b) (m := nearT b) (Nat.findGreatest_le b)
+    (Nat.findGreatest_of_ne_zero rfl h)
+
+lemma le_nearT {b T : ℕ} (h : NearCond b T) : T ≤ nearT b := by
+  classical
+  have h6 := h.add_six_le
+  exact Nat.le_findGreatest (by omega) h
+
+/-- **Corollary 35.14** (section 35.5.1): `T(b)` does not decrease with `b`, since for fixed `T`
+the left sides of (a) and (b) fall and the right sides grow with `b`. -/
+theorem nearT_mono : Monotone nearT := by
+  intro b b' hb
+  by_cases h : nearT b = 0
+  · rw [h]; exact Nat.zero_le _
+  · exact le_nearT ((nearCond_nearT h).mono hb)
+
+/-- **Corollary 35.14**: `T(b) ≥ 1` for `b ≥ 27`, `T(b) ≥ 2` for `b ≥ 49` and `T(b) ≥ 3` for
+`b ≥ 77`, the thresholds of `corollary35_14`. -/
+theorem nearT_thresholds {b : ℕ} :
+    (27 ≤ b → 1 ≤ nearT b) ∧ (49 ≤ b → 2 ≤ nearT b) ∧ (77 ≤ b → 3 ≤ nearT b) := by
+  refine ⟨fun hb => le_nearT ⟨theorem35_13_cond_a (by omega),
+      theorem35_13_cond_b (b0 := 27) (by norm_num) hb (by norm_num)⟩,
+    fun hb => le_nearT ⟨theorem35_13_cond_a (by omega),
+      theorem35_13_cond_b (b0 := 49) (by norm_num) hb (by norm_num)⟩,
+    fun hb => le_nearT ⟨theorem35_13_cond_a (by omega),
+      theorem35_13_cond_b (b0 := 77) (by norm_num) hb (by norm_num)⟩⟩
+
+/-- **Corollary 35.14**: the exponent `t = T(b) - log_b(e b/(b - e))` of the near-solutions does
+not decrease with `b ≥ 3`, since `T(b)` does not and `log_b(e b/(b - e))` falls: its numerator
+falls and stays positive, and its denominator `log b` grows. -/
+theorem nearExp_mono {b b' : ℕ} (hb : 3 ≤ b) (hbb : b ≤ b') :
+    (nearT b : ℝ) - Real.logb b (Real.exp 1 * b / (b - Real.exp 1)) ≤
+      (nearT b' : ℝ) - Real.logb b' (Real.exp 1 * b' / (b' - Real.exp 1)) := by
+  have hT : (nearT b : ℝ) ≤ nearT b' := by exact_mod_cast nearT_mono hbb
+  have he := Real.exp_one_lt_d9
+  have he0 := Real.exp_pos 1
+  have he1 := Real.exp_one_gt_d9
+  have h3 : (3 : ℝ) ≤ b := by exact_mod_cast hb
+  have hbr : (b : ℝ) ≤ b' := by exact_mod_cast hbb
+  set e := Real.exp 1
+  have hd : 0 < (b : ℝ) - e := by linarith
+  have hd' : 0 < (b' : ℝ) - e := by linarith
+  -- the arguments are at least 1 and fall
+  have hq1 : 1 ≤ e * b' / (b' - e) := by
+    rw [le_div_iff₀ hd']; nlinarith
+  have hq : e * b' / (b' - e) ≤ e * b / (b - e) := by
+    rw [div_le_div_iff₀ hd' hd]; nlinarith [mul_le_mul_of_nonneg_left hbr (sq_nonneg e)]
+  have hl1 : 0 ≤ Real.log (e * b' / (b' - e)) := Real.log_nonneg hq1
+  have hl2 : Real.log (e * b' / (b' - e)) ≤ Real.log (e * b / (b - e)) :=
+    Real.log_le_log (by linarith) hq
+  have hlb : 0 < Real.log b := Real.log_pos (by linarith)
+  have hlb' : Real.log b ≤ Real.log b' := Real.log_le_log (by linarith) hbr
+  have key : Real.logb b' (e * b' / (b' - e)) ≤ Real.logb b (e * b / (b - e)) := by
+    unfold Real.logb
+    calc Real.log (e * b' / (b' - e)) / Real.log b'
+        ≤ Real.log (e * b' / (b' - e)) / Real.log b :=
+          div_le_div_of_nonneg_left hl1 hlb hlb'
+      _ ≤ Real.log (e * b / (b - e)) / Real.log b :=
+          div_le_div_of_nonneg_right hl2 hlb.le
+  linarith
 
 end Munchausen
