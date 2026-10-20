@@ -1317,6 +1317,194 @@ theorem lemma29_8_one {K : Type*} [Field K] [Fintype K] {P : K[X]} (hP : Irreduc
   rw [Module.natCard_eq_pow_finrank (K := K), Nat.card_eq_fintype_card] at hcard
   exact Nat.pow_right_injective Fintype.one_lt_card hcard
 
+/-! ### Lemma 29.8 (2): the image of `φ^j - 1` and the trace -/
+
+section TraceKernel
+
+variable {K : Type*} [Field K] [Fintype K]
+
+/-- The trace from `F_(q^f)` down to `F_(q^g)`, `n = f/g`, written as the sum of the conjugates
+`y^(q^(g i))`, `i < n`: an `F_q`-linear map. -/
+noncomputable def trDown (K L : Type*) [Field K] [Fintype K] [CommRing L] [Algebra K L]
+    (g n : ℕ) : L →ₗ[K] L :=
+  ∑ i ∈ Finset.range n, frobA K L ^ (g * i)
+
+lemma trDown_apply {L : Type*} [CommRing L] [Algebra K L] (g n : ℕ) (y : L) :
+    trDown K L g n y = ∑ i ∈ Finset.range n, y ^ (Fintype.card K ^ (g * i)) := by
+  simp [trDown, LinearMap.sum_apply, frobA_pow_apply]
+
+/-- `Tr(y^(q^g)) = Tr(y)` when `y^(q^(g n)) = y` for every `y`. -/
+lemma trDown_frob {L : Type*} [CommRing L] [Algebra K L] {g n : ℕ}
+    (hper : ∀ y : L, y ^ (Fintype.card K ^ (g * n)) = y) (k : ℕ) (y : L) :
+    trDown K L g n (((frobA K L ^ g) ^ k) y) = trDown K L g n y := by
+  induction k generalizing y with
+  | zero => simp
+  | succ k ih =>
+    rw [pow_succ, Module.End.mul_apply, ih]
+    rw [trDown_apply, trDown_apply, frobA_pow_apply]
+    have e : ∀ i, (y ^ (Fintype.card K ^ g)) ^ (Fintype.card K ^ (g * i)) =
+        y ^ (Fintype.card K ^ (g * (i + 1))) := by
+      intro i; rw [← pow_mul, ← pow_add]; congr 2; ring
+    simp only [e]
+    rcases Nat.eq_zero_or_pos n with rfl | hn
+    · simp
+    have h1 := Finset.sum_range_succ (fun i => y ^ (Fintype.card K ^ (g * i))) n
+    have h2 := Finset.sum_range_succ' (fun i => y ^ (Fintype.card K ^ (g * i))) n
+    rw [hper y] at h1
+    simp only [mul_zero, pow_zero, pow_one] at h2
+    rw [h1] at h2
+    linear_combination -h2
+
+/-- The kernel of the trace has at most `q^(g (n - 1))` elements: they are roots of
+`∑_(i < n) X^(q^(g i))`, a nonzero polynomial of that degree. -/
+lemma natCard_ker_trDown_le {L : Type*} [Field L] [Finite L] [Algebra K L] {g n : ℕ}
+    (hg : 1 ≤ g) (hn : 1 ≤ n) :
+    Nat.card (LinearMap.ker (trDown K L g n)) ≤ Fintype.card K ^ (g * (n - 1)) := by
+  classical
+  set q := Fintype.card K
+  have hq : 2 ≤ q := Fintype.one_lt_card
+  set T : L[X] := ∑ i ∈ Finset.range n, X ^ (q ^ (g * i))
+  have hinj : ∀ i i', q ^ (g * i) = q ^ (g * i') → i = i' := by
+    intro i i' h
+    have := Nat.pow_right_injective hq h
+    exact Nat.eq_of_mul_eq_mul_left (by omega) this
+  have hcoeff : T.coeff (q ^ (g * (n - 1))) = 1 := by
+    rw [finsetSum_coeff, Finset.sum_eq_single (n - 1)]
+    · simp
+    · intro i _ hi
+      rw [coeff_X_pow]
+      split_ifs with h
+      · exact absurd (hinj _ _ h.symm) hi
+      · rfl
+    · intro h; exact absurd (Finset.mem_range.2 (by omega)) h
+  have hT0 : T ≠ 0 := fun h => by simp [h] at hcoeff
+  have hdeg : T.natDegree ≤ q ^ (g * (n - 1)) := by
+    apply natDegree_sum_le_of_forall_le
+    intro i hi
+    rw [natDegree_X_pow]
+    exact Nat.pow_le_pow_right (by omega)
+      (Nat.mul_le_mul_left _ (by have := Finset.mem_range.1 hi; omega))
+  have hsub : ∀ y ∈ LinearMap.ker (trDown K L g n), y ∈ T.roots.toFinset := by
+    intro y hy
+    rw [LinearMap.mem_ker, trDown_apply] at hy
+    rw [Multiset.mem_toFinset, mem_roots hT0, IsRoot, eval_finsetSum]
+    simpa using hy
+  calc Nat.card (LinearMap.ker (trDown K L g n))
+      ≤ Nat.card T.roots.toFinset := by
+        refine Nat.card_mono (Set.toFinite _) fun y hy => hsub y hy
+    _ = T.roots.toFinset.card := Nat.card_eq_finsetCard _
+    _ ≤ T.roots.card := Multiset.toFinset_card_le _
+    _ ≤ T.natDegree := card_roots' T
+    _ ≤ q ^ (g * (n - 1)) := hdeg
+
+/-- **Lemma 29.8 (2)** on the residue field (section 29.2.1): on `L = F_q[T]/(P)`, `P`
+irreducible of degree `f`, the image of `φ^j - 1` (`j ≥ 1`) is the kernel of the trace from `L`
+down to `F_(q^g)`, `g = gcd(j, f)`, written as `∑_(i < f/g) y^(q^(g i))` (additive
+Hilbert 90). It lies in the kernel because the trace is invariant under `φ^g`, and both have
+dimension `f - g`. -/
+theorem lemma29_8_two_field {P : K[X]} (hP : Irreducible P) {j : ℕ} (hj : 1 ≤ j) :
+    have : Fact (Irreducible P) := ⟨hP⟩
+    LinearMap.range (frobA K (AdjoinRoot P) ^ j - 1) =
+      LinearMap.ker (trDown K (AdjoinRoot P) (Nat.gcd j P.natDegree)
+        (P.natDegree / Nat.gcd j P.natDegree)) := by
+  intro inst
+  set q := Fintype.card K
+  set f := P.natDegree
+  set g := Nat.gcd j f
+  set n := f / g
+  have hf : 1 ≤ f := hP.natDegree_pos
+  have hg : 1 ≤ g := Nat.gcd_pos_of_pos_left _ hj
+  have hgn : g * n = f := Nat.mul_div_cancel' (Nat.gcd_dvd_right j f)
+  have hn : 1 ≤ n := by
+    rcases Nat.eq_zero_or_pos n with h | h
+    · rw [h, mul_zero] at hgn; omega
+    · exact h
+  have hfin : Module.Finite K (AdjoinRoot P) := (AdjoinRoot.powerBasis hP.ne_zero).finite
+  have : Finite (AdjoinRoot P) := Module.finite_of_finite K
+  let _ := Fintype.ofFinite (AdjoinRoot P)
+  have hdim : finrank K (AdjoinRoot P) = f := by
+    rw [(AdjoinRoot.powerBasis hP.ne_zero).finrank, AdjoinRoot.powerBasis_dim]
+  have hcardL : Fintype.card (AdjoinRoot P) = q ^ f := by
+    rw [Fintype.card_eq_nat_card, Module.natCard_eq_pow_finrank (K := K),
+      Nat.card_eq_fintype_card, hdim]
+  have hper : ∀ y : AdjoinRoot P, y ^ (q ^ (g * n)) = y := by
+    intro y; rw [hgn, ← hcardL]; exact FiniteField.pow_card y
+  set φ := frobA K (AdjoinRoot P)
+  -- the image lies in the kernel of the trace
+  have hle : LinearMap.range (φ ^ j - 1) ≤ LinearMap.ker (trDown K (AdjoinRoot P) g n) := by
+    rintro _ ⟨y, rfl⟩
+    rw [LinearMap.mem_ker, LinearMap.sub_apply, map_sub, Module.End.one_apply]
+    obtain ⟨t, ht⟩ := Nat.gcd_dvd_left j f
+    rw [show j = g * t from ht, pow_mul, trDown_frob hper, sub_self]
+  -- dimensions
+  have hker : finrank K (LinearMap.ker (φ ^ j - 1)) = g := by
+    have hperL : ∀ v, (φ ^ (0 + f)) v = (φ ^ 0) v := by
+      intro v; rw [frobA_pow_apply, zero_add, ← hcardL, FiniteField.pow_card]; simp
+    rw [ker_pow_sub_one_eq_gcd φ hf hj hperL]
+    have hcard : Nat.card (LinearMap.ker (φ ^ g - 1)) = q ^ g := by
+      rw [← natCard_fixed_field hcardL (Nat.gcd_dvd_right j f)
+        (Nat.one_lt_pow (by omega) Fintype.one_lt_card)]
+      refine Nat.card_congr (Equiv.subtypeEquivRight fun x => ?_)
+      simp only [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero, φ,
+        frobA_pow_apply]
+      exact Iff.rfl
+    rw [Module.natCard_eq_pow_finrank (K := K), Nat.card_eq_fintype_card] at hcard
+    exact Nat.pow_right_injective (Fintype.one_lt_card (α := K)) hcard
+  have hrange : finrank K (LinearMap.range (φ ^ j - 1)) = f - g := by
+    have := LinearMap.finrank_range_add_finrank_ker (φ ^ j - 1)
+    omega
+  have htr : finrank K (LinearMap.ker (trDown K (AdjoinRoot P) g n)) ≤ f - g := by
+    have h1 := natCard_ker_trDown_le (K := K) (L := AdjoinRoot P) hg hn
+    rw [Module.natCard_eq_pow_finrank (K := K), Nat.card_eq_fintype_card] at h1
+    have h2 : g * (n - 1) = f - g := by rw [Nat.mul_sub, mul_one, hgn]
+    rw [h2] at h1
+    exact (Nat.pow_le_pow_iff_right (Fintype.one_lt_card (α := K))).1 h1
+  exact Submodule.eq_of_le_of_finrank_le hle (by omega)
+
+/-- **Lemma 29.8 (2)** (section 29.2.1). On `R_i = F_q[T]/(P^a)`, `a ≥ 1`, the image of
+`φ^j - 1` (`j ≥ 1`) is the preimage, under reduction modulo `P`, of the kernel of the trace from
+`F_(q^f)` down to `F_(q^gcd(j, f))`; it contains the nilradical (`lemma29_8_two_nil`). -/
+theorem lemma29_8_two {P : K[X]} (hP : Irreducible P) {a j : ℕ} (ha : 1 ≤ a) (hj : 1 ≤ j) :
+    have : Fact (Irreducible P) := ⟨hP⟩
+    LinearMap.range (frobA K (AdjoinRoot (P ^ a)) ^ j - 1) =
+      (LinearMap.ker (trDown K (AdjoinRoot P) (Nat.gcd j P.natDegree)
+        (P.natDegree / Nat.gcd j P.natDegree))).comap
+        (AdjoinRoot.algHomOfDvd K (P ^ a) P (dvd_pow_self P (by omega))).toLinearMap := by
+  intro inst
+  set ρ := AdjoinRoot.algHomOfDvd K (P ^ a) P (dvd_pow_self P (by omega))
+  have hρ : ∀ h : K[X], ρ (AdjoinRoot.mk (P ^ a) h) = AdjoinRoot.mk P h := by
+    intro h
+    rw [← AdjoinRoot.aeval_eq, ← Polynomial.aeval_algHom_apply, AdjoinRoot.algHomOfDvd_root,
+      AdjoinRoot.aeval_eq]
+  have hcomm : ∀ x, ρ ((frobA K (AdjoinRoot (P ^ a)) ^ j - 1) x) =
+      (frobA K (AdjoinRoot P) ^ j - 1) (ρ x) := by
+    intro x
+    simp only [LinearMap.sub_apply, Module.End.one_apply, frobA_pow_apply, map_sub, map_pow]
+  have hfield := lemma29_8_two_field hP hj
+  ext x
+  rw [Submodule.mem_comap, AlgHom.toLinearMap_apply, ← hfield]
+  constructor
+  · rintro ⟨z, rfl⟩
+    exact ⟨ρ z, (hcomm z).symm⟩
+  · rintro ⟨y, hy⟩
+    obtain ⟨u, rfl⟩ := AdjoinRoot.mk_surjective y
+    set z := AdjoinRoot.mk (P ^ a) u
+    have hz : ρ z = AdjoinRoot.mk P u := hρ u
+    -- `x - (φ^j - 1) z` reduces to 0, so it is nilpotent
+    have hnil : IsNilpotent (x - (frobA K (AdjoinRoot (P ^ a)) ^ j - 1) z) := by
+      obtain ⟨v, hv⟩ := AdjoinRoot.mk_surjective x
+      have h0 : ρ (x - (frobA K (AdjoinRoot (P ^ a)) ^ j - 1) z) = 0 := by
+        rw [map_sub, hcomm, hz, hy, sub_self]
+      obtain ⟨w, hw⟩ := AdjoinRoot.mk_surjective (x - (frobA K (AdjoinRoot (P ^ a)) ^ j - 1) z)
+      rw [← hw, hρ, AdjoinRoot.mk_eq_zero] at h0
+      refine ⟨a, ?_⟩
+      rw [← hw, ← map_pow, AdjoinRoot.mk_eq_zero]
+      exact pow_dvd_pow_of_dvd h0 a
+    have := Submodule.add_mem _ (LinearMap.mem_range_self _ z) (lemma29_8_two_nil (K := K) hnil hj)
+    simpa using this
+
+end TraceKernel
+
 /-! ### Theorem 29.11 (2): the exact criterion -/
 
 section Theorem29_11_two
