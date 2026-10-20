@@ -553,6 +553,16 @@ finitely many 3-digit solutions with one digit larger than `3 B` are family
 members. This is Conjecture 25.8 (a) for 3 digits in the dominant-digit
 range.
 
+Correction (Lean formalization, 2026-10-19). "Under either convention" is
+false as stated. Under `0^0 = 0` the strings `(x, 0, 0)` and `(x, 0, 1)`
+with `x` leading have `R = 0` and are solutions in base `x^((x-1)/2)` for
+every odd `x >= 5` (and every square `x >= 4`), and they are not case (i)
+members. Theorem 25.7 is stated under `0^0 = 1`. The corrected statement,
+proved in Lean as `corollary33_17` (with the abc bound as a hypothesis):
+the large digit is never in the middle; if it is last, the solution is in
+case (i); if it leads, the convention is `0^0 = 0` and the string is
+`(x, 0, 0)` or `(x, 0, 1)`. Theorem 33.16 is unaffected.
+
 ### 33.4.2 The explicit form
 
 With `c < rad(abc)^(7/4)` (Laishram and Shorey, from Baker's explicit abc

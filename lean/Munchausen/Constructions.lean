@@ -1228,4 +1228,51 @@ theorem prop15_15 {r u t : ℕ} (hr : 2 ≤ r) (hu : 1 ≤ u) (hut : u < t)
   · rw [hP]
     simp [Fs_append, w_of_ne_zero 0 (show c ≠ 0 by omega)]
 
+/-- **Proposition 15.15**, the unbounded count (section 15.6). Under `0^0 = 0`, for every `n`
+some integer is a solution in at least `n` bases: `N = c^c + 1` with `c = 2^u`, `u = 2^n`, in
+the bases `2^(u (2^(2^i) - 1))`, `1 ≤ i ≤ n`, since `2^(2^i) - 1` divides `2^u - 1`. -/
+theorem prop15_15_unbounded (n : ℕ) :
+    ∃ N : ℕ, ∃ S : Finset ℕ, S.card = n ∧ ∀ b ∈ S, IsMunchausen b 0 N := by
+  set u := 2 ^ n with hu
+  have hu1 : 1 ≤ u := Nat.one_le_two_pow
+  let t : ℕ → ℕ := fun i => u * (2 ^ (2 ^ i) - 1)
+  have hd3 : ∀ i, 1 ≤ i → 3 ≤ 2 ^ (2 ^ i) - 1 := by
+    intro i hi
+    have : 4 ≤ 2 ^ (2 ^ i) := by
+      calc 4 = 2 ^ 2 := by norm_num
+        _ ≤ 2 ^ (2 ^ i) := Nat.pow_le_pow_right (by norm_num)
+            (by calc 2 = 2 ^ 1 := by norm_num
+                  _ ≤ 2 ^ i := Nat.pow_le_pow_right (by norm_num) hi)
+    omega
+  have ht : ∀ i, 1 ≤ i → i ≤ n → u < t i ∧ t i ∣ u * (2 ^ u - 1) := by
+    intro i hi hin
+    refine ⟨?_, Nat.mul_dvd_mul_left u ?_⟩
+    · have := hd3 i hi
+      simp only [t]; nlinarith
+    · have e : 2 ^ u = (2 ^ (2 ^ i)) ^ (2 ^ (n - i)) := by
+        rw [← pow_mul, ← pow_add, show i + (n - i) = n by omega]
+      rw [e]
+      simpa using Nat.sub_dvd_pow_sub_pow (x := 2 ^ (2 ^ i)) (y := 1) (n := 2 ^ (n - i))
+  have htinj : Set.InjOn t (Finset.Icc 1 n : Set ℕ) := by
+    intro i _ j _ h
+    simp only [t] at h
+    have h1 : 2 ^ (2 ^ i) - 1 = 2 ^ (2 ^ j) - 1 := Nat.eq_of_mul_eq_mul_left (by omega) h
+    have h2 : 2 ^ (2 ^ i) = 2 ^ (2 ^ j) := by
+      have := Nat.one_le_two_pow (n := 2 ^ i)
+      have := Nat.one_le_two_pow (n := 2 ^ j)
+      omega
+    exact Nat.pow_right_injective le_rfl (Nat.pow_right_injective le_rfl h2)
+  refine ⟨(2 ^ u) ^ (2 ^ u) + 1, (Finset.Icc 1 n).image (fun i => 2 ^ t i), ?_, ?_⟩
+  · rw [Finset.card_image_of_injOn, Nat.card_Icc, Nat.add_sub_cancel]
+    intro i hi j hj h
+    exact htinj hi hj (Nat.pow_right_injective le_rfl h)
+  · intro b hb
+    obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 hb
+    obtain ⟨hi1, hin⟩ := Finset.mem_Icc.1 hi
+    obtain ⟨hut, hdvd⟩ := ht i hi1 hin
+    obtain ⟨hs, hP, -⟩ := prop15_15 (r := 2) le_rfl hu1 hut hdvd
+    have hb : 1 < 2 ^ t i := Nat.one_lt_two_pow (by omega)
+    have := hs.isMunchausen hb
+    rwa [hP] at this
+
 end Munchausen
