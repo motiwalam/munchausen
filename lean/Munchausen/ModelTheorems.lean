@@ -32,6 +32,8 @@ eventually periodic map Euclid's algorithm on exponents gives `∑_(j ∈ S) (φ
 whenever `gcd(S, f) = 1` (`iSup_range_pow_sub_one_eq`). In Theorem 29.9 the part of `R` reached
 by the term `j = e - 1` is the ideal `Q R` with `Q = (B - 1)/P`, where `φ^(k f + 1) = φ`.
 Theorem 29.11 (2) is the dual argument of (1) carried to the end (`theorem29_11_two`).
+Lemma 29.8 (1) for every `j` (`lemma29_8_one`) counts the fixed points of `x ↦ x^(q^g)` in
+`F_q[T]/(P^a)`: they reduce bijectively onto the roots of `X^(q^g) - X` in the residue field.
 -/
 
 open Polynomial Module
@@ -1087,6 +1089,233 @@ theorem corollary29_10_two {B : K[X]} (hB : B.natDegree = 2) : kDim B = omegaF (
   exact theorem29_9 (by omega) hP hPB (by rw [hB]; exact Nat.coprime_one_right _)
 
 end Good
+
+/-! ### Lemma 29.8 (1): the fixed points of `φ^j` -/
+
+section KerPow
+
+variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+
+/-- An eventually periodic map, `φ^(m+f) = φ^m`, has `φ^a = φ^b` from `m` on whenever
+`a ≡ b (mod f)`. -/
+lemma pow_apply_eq_of_modEq (φ : V →ₗ[K] V) {m f : ℕ}
+    (hper : ∀ v, (φ ^ (m + f)) v = (φ ^ m) v) {a c : ℕ} (ha : m ≤ a) (hc : m ≤ c)
+    (hac : a ≡ c [MOD f]) (v : V) : (φ ^ a) v = (φ ^ c) v := by
+  have hperk : ∀ k v, (φ ^ (m + k * f)) v = (φ ^ m) v := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+      intro v
+      rw [show m + (k + 1) * f = k * f + (m + f) by ring, pow_add, Module.End.mul_apply, hper,
+        ← Module.End.mul_apply, ← pow_add, show k * f + m = m + k * f by ring, ih]
+  have key : ∀ a k, m ≤ a → (φ ^ (a + k * f)) v = (φ ^ a) v := by
+    intro a k ha
+    rw [show a + k * f = (a - m) + (m + k * f) by omega, pow_add, Module.End.mul_apply, hperk,
+      ← Module.End.mul_apply, ← pow_add, show a - m + m = a by omega]
+  rcases le_total a c with h | h
+  · obtain ⟨k, hk⟩ := (Nat.modEq_iff_dvd' h).1 hac
+    rw [show c = a + k * f by rw [mul_comm]; omega, key a k ha]
+  · obtain ⟨k, hk⟩ := (Nat.modEq_iff_dvd' h).1 hac.symm
+    rw [show a = c + k * f by rw [mul_comm]; omega, key c k hc]
+
+/-- **Lemma 29.8 (1)**, the reduction to `gcd(j, f)`: for an eventually periodic map,
+`ker(φ^j - 1) = ker(φ^gcd(j, f) - 1)` for `j ≥ 1`. -/
+lemma ker_pow_sub_one_eq_gcd (φ : V →ₗ[K] V) {m f j : ℕ} (hf : 1 ≤ f) (hj : 1 ≤ j)
+    (hper : ∀ v, (φ ^ (m + f)) v = (φ ^ m) v) :
+    LinearMap.ker (φ ^ j - 1) = LinearMap.ker (φ ^ Nat.gcd j f - 1) := by
+  have hfix : ∀ n v, (φ ^ n) v = v → ∀ t, (φ ^ (n * t)) v = v := by
+    intro n v hv t
+    induction t with
+    | zero => simp
+    | succ t ih => rw [Nat.mul_succ, pow_add, Module.End.mul_apply, hv, ih]
+  ext v
+  simp only [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero]
+  constructor
+  · intro hv
+    set g := Nat.gcd j f
+    -- `j t ≡ g (mod f)` for some `t`
+    obtain ⟨t0, ht0⟩ : ∃ t, j * t ≡ g [MOD f] := by
+      rcases Nat.lt_or_ge g f with hlt | hge
+      · obtain ⟨t, -, ht⟩ := Nat.exists_mul_mod_eq_gcd (n := j) (k := f) hlt
+        refine ⟨t, ?_⟩
+        unfold Nat.ModEq
+        rw [ht, Nat.mod_eq_of_lt hlt]
+      · have hg : g = f := le_antisymm (Nat.le_of_dvd (by omega) (Nat.gcd_dvd_right j f)) hge
+        refine ⟨0, ?_⟩
+        rw [hg, mul_zero]
+        unfold Nat.ModEq
+        simp
+    have h1 : (φ ^ (j * (t0 + f * m))) v = v := hfix j v hv _
+    have h2 : (φ ^ (j * (f * m))) v = v := hfix j v hv _
+    have hm1 : m ≤ j * (f * m) := by
+      calc m ≤ f * m := Nat.le_mul_of_pos_left m hf
+        _ ≤ j * (f * m) := Nat.le_mul_of_pos_left _ hj
+    have hmod : g + j * (f * m) ≡ j * (t0 + f * m) [MOD f] := by
+      have e1 : j * (f * m) ≡ 0 [MOD f] := by
+        rw [Nat.modEq_zero_iff_dvd]; exact ⟨j * m, by ring⟩
+      have e2 : j * (t0 + f * m) = j * t0 + j * (f * m) := by ring
+      rw [e2]
+      exact Nat.ModEq.add ht0.symm (e1.trans e1.symm)
+    calc (φ ^ g) v = (φ ^ g) ((φ ^ (j * (f * m))) v) := by rw [h2]
+      _ = (φ ^ (g + j * (f * m))) v := by rw [pow_add, Module.End.mul_apply]
+      _ = (φ ^ (j * (t0 + f * m))) v :=
+          pow_apply_eq_of_modEq φ hper (by omega) (by nlinarith) hmod v
+      _ = v := h1
+  · intro hv
+    obtain ⟨t, ht⟩ := Nat.gcd_dvd_left j f
+    rw [ht]
+    exact hfix _ v hv t
+
+end KerPow
+
+section FixedCount
+
+/-- In a finite field `L` with `q^f` elements, `x ↦ x^(q^g)` has exactly `q^g` fixed points when
+`g ∣ f` and `q^g > 1`: they are the roots of `X^(q^g) - X`, a divisor of `X^(q^f) - X`, which
+splits with distinct roots. -/
+lemma natCard_fixed_field {L : Type*} [Field L] [Fintype L] {q f g : ℕ}
+    (hL : Fintype.card L = q ^ f) (hgf : g ∣ f) (hq : 1 < q ^ g) :
+    Nat.card {y : L // y ^ (q ^ g) = y} = q ^ g := by
+  classical
+  set Pg : L[X] := X ^ (q ^ g) - X
+  set Pf : L[X] := X ^ Fintype.card L - X
+  have hPf0 : Pf ≠ 0 := FiniteField.X_pow_card_sub_X_ne_zero L Fintype.one_lt_card
+  have hPg0 : Pg ≠ 0 := FiniteField.X_pow_card_sub_X_ne_zero L hq
+  have hdvd : Pg ∣ Pf := by
+    simp only [Pg, Pf, hL]
+    exact dvd_pow_pow_sub_self_of_dvd hgf
+  have hsplit : Splits Pf := by
+    rw [splits_iff_card_roots, FiniteField.roots_X_pow_card_sub_X,
+      FiniteField.X_pow_card_sub_X_natDegree_eq L Fintype.one_lt_card]
+    simp
+  have hcard : Pg.roots.card = q ^ g := by
+    rw [splits_iff_card_roots.1 (hsplit.of_dvd hPf0 hdvd)]
+    exact FiniteField.X_pow_card_sub_X_natDegree_eq L hq
+  have hnodup : Pg.roots.Nodup := by
+    refine Multiset.nodup_of_le (Polynomial.roots.le_of_dvd hPf0 hdvd) ?_
+    rw [FiniteField.roots_X_pow_card_sub_X]
+    exact Finset.univ.nodup
+  have hmem : ∀ y : L, y ∈ Pg.roots.toFinset ↔ y ^ (q ^ g) = y := by
+    intro y
+    rw [Multiset.mem_toFinset, mem_roots hPg0]
+    simp [Pg, sub_eq_zero]
+  rw [Nat.card_congr (Equiv.subtypeEquivRight fun y => (hmem y).symm), Nat.card_eq_fintype_card,
+    Fintype.card_coe, Multiset.toFinset_card_of_nodup hnodup, hcard]
+
+variable {K : Type*} [Field K] [Fintype K]
+
+/-- In `F_q[T]/(P^a)`, `P` irreducible of degree `f` and `a ≥ 1`, the fixed points of
+`x ↦ x^(q^g)` for `g ∣ f`, `g ≥ 1`, number `q^g`: reduction modulo `P` is a bijection onto the
+fixed points of the residue field (the lifting of Lemma 29.8 (1), here by `x ↦ z^(q^(f a))`). -/
+lemma natCard_fixed_pow_local {P : K[X]} (hP : Irreducible P) {a g : ℕ} (ha : 1 ≤ a)
+    (hg : 1 ≤ g) (hgf : g ∣ P.natDegree) :
+    Nat.card {x : AdjoinRoot (P ^ a) // x ^ (Fintype.card K ^ g) = x} =
+      Fintype.card K ^ g := by
+  classical
+  set q := Fintype.card K
+  set f := P.natDegree
+  have hq : 2 ≤ q := Fintype.one_lt_card
+  have : Fact (Irreducible P) := ⟨hP⟩
+  have hfin : Module.Finite K (AdjoinRoot P) := (AdjoinRoot.powerBasis hP.ne_zero).finite
+  have : Finite (AdjoinRoot P) := Module.finite_of_finite K
+  let _ := Fintype.ofFinite (AdjoinRoot P)
+  have hcardL : Fintype.card (AdjoinRoot P) = q ^ f := by
+    rw [Fintype.card_eq_nat_card, Module.natCard_eq_pow_finrank (K := K),
+      Nat.card_eq_fintype_card, (AdjoinRoot.powerBasis hP.ne_zero).finrank,
+      AdjoinRoot.powerBasis_dim]
+  -- reduction modulo `P`
+  let ρ : AdjoinRoot (P ^ a) →ₐ[K] AdjoinRoot P :=
+    AdjoinRoot.algHomOfDvd K (P ^ a) P (dvd_pow_self P (by omega))
+  have hρ : ∀ h : K[X], ρ (AdjoinRoot.mk (P ^ a) h) = AdjoinRoot.mk P h := by
+    intro h
+    rw [← AdjoinRoot.aeval_eq, ← Polynomial.aeval_algHom_apply, AdjoinRoot.algHomOfDvd_root,
+      AdjoinRoot.aeval_eq]
+  -- elements with the same reduction have the same `q^a`-th power
+  have hnil : ∀ w w' : AdjoinRoot (P ^ a), ρ w = ρ w' → w ^ (q ^ a) = w' ^ (q ^ a) := by
+    intro w w' h
+    obtain ⟨u, rfl⟩ := AdjoinRoot.mk_surjective w
+    obtain ⟨u', rfl⟩ := AdjoinRoot.mk_surjective w'
+    rw [hρ, hρ, AdjoinRoot.mk_eq_mk] at h
+    rw [← map_pow, ← map_pow, AdjoinRoot.mk_eq_mk, ← sub_pow_card_pow]
+    exact (pow_dvd_pow P (Nat.lt_pow_self (by omega)).le).trans (pow_dvd_pow_of_dvd h _)
+  -- the bijection
+  let toL : {x : AdjoinRoot (P ^ a) // x ^ (q ^ g) = x} →
+      {y : AdjoinRoot P // y ^ (q ^ g) = y} :=
+    fun x => ⟨ρ x.1, by rw [← map_pow, x.2]⟩
+  have hiter : ∀ {R : Type _} [CommRing R] (x : R), x ^ (q ^ g) = x →
+      ∀ n, x ^ (q ^ (g * n)) = x := by
+    intro R _ x hx n
+    induction n with
+    | zero => simp
+    | succ n ih => rw [Nat.mul_succ, pow_add, pow_mul, ih, hx]
+  have hbij : Function.Bijective toL := by
+    constructor
+    · rintro ⟨x, hx⟩ ⟨x', hx'⟩ h
+      have h' : ρ x = ρ x' := congrArg Subtype.val h
+      apply Subtype.ext
+      have hd : (x - x') ^ (q ^ g) = x - x' := by rw [sub_pow_card_pow, hx, hx']
+      have hd0 : ρ (x - x') = 0 := by rw [map_sub, h', sub_self]
+      have h1 := hiter (x - x') hd a
+      have h2 := hnil (x - x') 0 (by rw [hd0, map_zero])
+      have h3 : (x - x') ^ (q ^ (g * a)) = 0 := by
+        have hle : q ^ a ≤ q ^ (g * a) :=
+          Nat.pow_le_pow_right (by omega) (Nat.le_mul_of_pos_left _ hg)
+        rw [show q ^ (g * a) = q ^ a + (q ^ (g * a) - q ^ a) by omega, pow_add, h2,
+          zero_pow (pow_ne_zero _ (by omega)), zero_mul]
+      rw [h1] at h3
+      exact sub_eq_zero.1 h3
+    · rintro ⟨y, hy⟩
+      obtain ⟨u, hu⟩ := AdjoinRoot.mk_surjective (y : AdjoinRoot P)
+      set z := AdjoinRoot.mk (P ^ a) u
+      have hz : ρ z = y := by rw [hρ, hu]
+      have hfa : a ≤ f * a := Nat.le_mul_of_pos_left a hP.natDegree_pos
+      have hyL : ∀ n, y ^ (q ^ (f * n)) = y := by
+        intro n
+        rw [pow_mul, ← hcardL]
+        exact FiniteField.pow_card_pow n y
+      have hyg : ∀ n, y ^ (q ^ (g + n)) = y ^ (q ^ n) := by
+        intro n; rw [pow_add, pow_mul, hy]
+      refine ⟨⟨z ^ (q ^ (f * a)), ?_⟩, ?_⟩
+      · -- `z^(q^(f a + g)) = z^(q^(f a))`
+        have e1 : (z ^ (q ^ (f * a))) ^ (q ^ g) =
+            (z ^ (q ^ (f * a - a + g))) ^ (q ^ a) := by
+          rw [← pow_mul, ← pow_mul, ← pow_add, ← pow_add]
+          congr 2; omega
+        have e2 : z ^ (q ^ (f * a)) = (z ^ (q ^ (f * a - a))) ^ (q ^ a) := by
+          rw [← pow_mul, ← pow_add]; congr 2; omega
+        rw [e1, e2]
+        apply hnil
+        rw [map_pow, map_pow, hz, show f * a - a + g = g + (f * a - a) by ring, hyg]
+      · apply Subtype.ext
+        simp only [toL, map_pow, hz]
+        exact hyL a
+  rw [Nat.card_congr (Equiv.ofBijective toL hbij)]
+  exact natCard_fixed_field hcardL hgf (Nat.one_lt_pow (by omega) (by omega))
+
+end FixedCount
+
+/-- **Lemma 29.8 (1)** (section 29.2.1). In `R_i = F_q[T]/(P^a)`, `P` irreducible of degree `f`
+and `a ≥ 1`, the kernel of `φ^j - 1` (`j ≥ 1`) has dimension `gcd(j, f)`. The kernel is that of
+`φ^gcd(j, f) - 1`, since `φ^(a+f) = φ^a`, and its `q^gcd(j, f)` elements are the lifts of the
+subfield `F_(q^gcd(j, f))` of the residue field. -/
+theorem lemma29_8_one {K : Type*} [Field K] [Fintype K] {P : K[X]} (hP : Irreducible P)
+    {a j : ℕ} (ha : 1 ≤ a) (hj : 1 ≤ j) :
+    finrank K (LinearMap.ker (frobA K (AdjoinRoot (P ^ a)) ^ j - 1)) = Nat.gcd j P.natDegree := by
+  have hf : 1 ≤ P.natDegree := hP.natDegree_pos
+  have := (AdjoinRoot.powerBasis (pow_ne_zero a hP.ne_zero)).finite
+  rw [ker_pow_sub_one_eq_gcd _ hf hj (m := a)
+    (fun v => by rw [frobA_pow_apply, frobA_pow_apply]; exact pow_card_pow_add_local hP a v)]
+  set g := Nat.gcd j P.natDegree
+  have hg : 1 ≤ g := Nat.gcd_pos_of_pos_left _ hj
+  have hcard : Nat.card (LinearMap.ker (frobA K (AdjoinRoot (P ^ a)) ^ g - 1)) =
+      Fintype.card K ^ g := by
+    rw [← natCard_fixed_pow_local hP ha hg (Nat.gcd_dvd_right j _)]
+    refine Nat.card_congr (Equiv.subtypeEquivRight fun x => ?_)
+    simp only [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply, sub_eq_zero,
+      frobA_pow_apply]
+  rw [Module.natCard_eq_pow_finrank (K := K), Nat.card_eq_fintype_card] at hcard
+  exact Nat.pow_right_injective Fintype.one_lt_card hcard
 
 /-! ### Theorem 29.11 (2): the exact criterion -/
 
